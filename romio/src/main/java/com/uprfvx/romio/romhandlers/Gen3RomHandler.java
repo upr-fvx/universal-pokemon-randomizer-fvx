@@ -148,6 +148,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
     private static final int CFRU_DPE_SPRIGATITO_INTERNAL_ID = 1294;
     private static final int CFRU_DPE_PECHARUNT_INTERNAL_ID = 1439;
+    private static final int CFRU_DPE_TMHMMOVES_POINTER_LOCATION = 0x125A8C;
+    private static final int CFRU_DPE_TMHMLEARNSETS_POINTER_LOCATION = 0x43C68;
+    private static final int CFRU_DPE_TM_COUNT = 120;
+    private static final int CFRU_DPE_HM_COUNT = 8;
+    private static final int CFRU_DPE_TMHM_COUNT = CFRU_DPE_TM_COUNT + CFRU_DPE_HM_COUNT;
+    private static final int CFRU_DPE_TMHM_COMPAT_BYTES = 16;
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -2923,6 +2929,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public List<Integer> getTMMoves() {
         List<Integer> tms = new ArrayList<>();
+        if (useCfruDpeTmHm128Slots()) {
+            int offset = getCfruDpeTmHmMovesOffset();
+            for (int i = 0; i < CFRU_DPE_TM_COUNT; i++) {
+                tms.add(readWord(offset + i * 2));
+            }
+            return tms;
+        }
         int offset = romEntry.getIntValue("TmMoves");
         for (int i = 1; i <= Gen3Constants.tmCount; i++) {
             tms.add(readWord(offset + (i - 1) * 2));
@@ -2932,11 +2945,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public List<Integer> getHMMoves() {
+        if (useCfruDpeTmHm128Slots()) {
+            List<Integer> hms = new ArrayList<>();
+            int offset = getCfruDpeTmHmMovesOffset();
+            for (int i = CFRU_DPE_TM_COUNT; i < CFRU_DPE_TMHM_COUNT; i++) {
+                hms.add(readWord(offset + i * 2));
+            }
+            return hms;
+        }
         return Gen3Constants.hmMoves;
     }
 
 	@Override
 	public void setTMMoves(List<Integer> moveIndexes) {
+        if (useCfruDpeTmHm128Slots()) {
+            writeCfruDpeTMMoves(moveIndexes);
+            return;
+        }
 		if (!mapLoadingDone) {
 			preprocessMaps();
 			mapLoadingDone = true;
@@ -2958,6 +2983,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			System.arraycopy(rom, offset, rom, otherOffset, Gen3Constants.tmCount * 2);
 		}
 	}
+
+    private void writeCfruDpeTMMoves(List<Integer> moveIndexes) {
+        if (moveIndexes.size() < CFRU_DPE_TM_COUNT) {
+            throw new IllegalArgumentException("Expected at least " + CFRU_DPE_TM_COUNT + " CFRU/DPE TM moves");
+        }
+        int offset = getCfruDpeTmHmMovesOffset();
+        for (int i = 0; i < CFRU_DPE_TM_COUNT; i++) {
+            writeWord(offset + i * 2, moveIndexes.get(i));
+        }
+    }
 
 	private void writeTMItemPalettes(List<Integer> moveIndexes) {
 		int iiOffset = romEntry.getIntValue("ItemImages");
@@ -3017,17 +3052,38 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public int getTMCount() {
+        if (useCfruDpeTmHm128Slots()) {
+            return CFRU_DPE_TM_COUNT;
+        }
         return Gen3Constants.tmCount;
     }
 
     @Override
     public int getHMCount() {
+        if (useCfruDpeTmHm128Slots()) {
+            return CFRU_DPE_HM_COUNT;
+        }
         return Gen3Constants.hmCount;
     }
 
     @Override
     public Map<Species, boolean[]> getTMHMCompatibility() {
         Map<Species, boolean[]> compat = new TreeMap<>();
+        if (useCfruDpeTmHm128Slots()) {
+            int offset = getCfruDpeTmHmCompatibilityOffset();
+            for (int i = 1; i <= numRealPokemon; i++) {
+                Species pkmn = speciesList.get(i);
+                int compatOffset = getCfruDpeTmHmCompatibilityOffsetForSpecies(offset, pkmn);
+                boolean[] flags = new boolean[CFRU_DPE_TMHM_COUNT + 1];
+                if (compatOffset >= 0) {
+                    for (int j = 0; j < CFRU_DPE_TMHM_COMPAT_BYTES; j++) {
+                        readByteIntoFlags(flags, j * 8 + 1, compatOffset + j);
+                    }
+                }
+                compat.put(pkmn, flags);
+            }
+            return compat;
+        }
         int offset = romEntry.getIntValue("PokemonTMHMCompat");
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pkmn = speciesList.get(i);
@@ -3043,6 +3099,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setTMHMCompatibility(Map<Species, boolean[]> compatData) {
+        if (useCfruDpeTmHm128Slots()) {
+            int offset = getCfruDpeTmHmCompatibilityOffset();
+            for (Map.Entry<Species, boolean[]> compatEntry : compatData.entrySet()) {
+                boolean[] flags = compatEntry.getValue();
+                int compatOffset = getCfruDpeTmHmCompatibilityOffsetForSpecies(offset, compatEntry.getKey());
+                if (flags == null || compatOffset < 0) {
+                    continue;
+                }
+                for (int j = 0; j < CFRU_DPE_TMHM_COMPAT_BYTES; j++) {
+                    writeByte(compatOffset + j, getByteFromFlags(flags, j * 8 + 1));
+                }
+            }
+            return;
+        }
         int offset = romEntry.getIntValue("PokemonTMHMCompat");
         for (Map.Entry<Species, boolean[]> compatEntry : compatData.entrySet()) {
             Species pkmn = compatEntry.getKey();
@@ -3052,6 +3122,40 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 writeByte(compatOffset + j, getByteFromFlags(flags, j * 8 + 1));
             }
         }
+    }
+
+    private boolean useCfruDpeTmHm128Slots() {
+        return useCfruDpeGen9SpeciesCount;
+    }
+
+    private int getCfruDpeTmHmMovesOffset() {
+        return readRequiredCfruDpePointer(CFRU_DPE_TMHMMOVES_POINTER_LOCATION,
+                CFRU_DPE_TMHM_COUNT * 2, "CFRU/DPE gTMHMMoves");
+    }
+
+    private int getCfruDpeTmHmCompatibilityOffset() {
+        return readRequiredCfruDpePointer(CFRU_DPE_TMHMLEARNSETS_POINTER_LOCATION,
+                CFRU_DPE_TMHM_COMPAT_BYTES, "CFRU/DPE gTMHMLearnsets");
+    }
+
+    private int readRequiredCfruDpePointer(int pointerLocation, int requiredLength, String pointerName) {
+        int offset = readPointer(pointerLocation, true);
+        if (offset < 0 || offset + requiredLength > rom.length) {
+            throw new RomIOException(pointerName + " pointer at 0x" + Integer.toHexString(pointerLocation) + " is invalid");
+        }
+        return offset;
+    }
+
+    private int getCfruDpeTmHmCompatibilityOffsetForSpecies(int baseOffset, Species pkmn) {
+        if (pkmn == null) {
+            return -1;
+        }
+        int speciesIndex = pkmn.getSpeciesSetIdentityNumber();
+        int compatOffset = baseOffset + speciesIndex * CFRU_DPE_TMHM_COMPAT_BYTES;
+        if (speciesIndex < 0 || compatOffset < 0 || compatOffset + CFRU_DPE_TMHM_COMPAT_BYTES > rom.length) {
+            return -1;
+        }
+        return compatOffset;
     }
 
     @Override

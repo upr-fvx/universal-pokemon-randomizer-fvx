@@ -1082,8 +1082,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean giveToRegularPokemon = settings.isRandomizeHeldItemsForRegularTrainerPokemon();
         boolean highestLevelOnly = settings.isHighestLevelGetsItemsForTrainers();
 
-        List<Move> moves = romHandler.getMoves();
-        Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
+        boolean needsMoveContext = settings.isSensibleItemsOnlyForTrainers();
+        List<Move> moves = needsMoveContext ? romHandler.getMoves() : Collections.emptyList();
+        Map<Integer, List<MoveLearnt>> movesets = null;
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
             if (t.shouldNotGetBuffs()) {
@@ -1110,21 +1111,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 if (highestLevelPoke == null) {
                     continue; // should never happen - trainer had zero pokes
                 }
-                int[] moveset = highestLevelPoke.isResetMoves() ?
-                        romHandler.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
-                                        highestLevelPoke.getSpecies(), highestLevelPoke.getForme()).getNumber(),
-                                movesets,
-                                highestLevelPoke.getLevel()) :
-                        highestLevelPoke.getMoves();
+                if (needsMoveContext && highestLevelPoke.isResetMoves() && movesets == null) {
+                    movesets = romHandler.getMovesLearnt();
+                }
+                int[] moveset = getMovesetForTrainerHeldItem(highestLevelPoke, needsMoveContext, movesets);
                 randomizeHeldItem(highestLevelPoke, settings, moves, moveset);
             } else {
                 for (TrainerPokemon tp : t.getPokemon()) {
-                    int[] moveset = tp.isResetMoves() ?
-                            romHandler.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
-                                            tp.getSpecies(), tp.getForme()).getNumber(),
-                                    movesets,
-                                    tp.getLevel()) :
-                            tp.getMoves();
+                    if (needsMoveContext && tp.isResetMoves() && movesets == null) {
+                        movesets = romHandler.getMovesLearnt();
+                    }
+                    int[] moveset = getMovesetForTrainerHeldItem(tp, needsMoveContext, movesets);
                     randomizeHeldItem(tp, settings, moves, moveset);
                     if (t.isRequiresUniqueHeldItems()) {
                         while (!t.pokemonHaveUniqueHeldItems()) {
@@ -1135,6 +1132,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
             }
         }
         changesMade = true;
+    }
+
+    private int[] getMovesetForTrainerHeldItem(TrainerPokemon tp, boolean needsMoveContext,
+                                               Map<Integer, List<MoveLearnt>> movesets) {
+        if (!needsMoveContext) {
+            return tp.getMoves();
+        }
+        return tp.isResetMoves() ?
+                romHandler.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
+                                tp.getSpecies(), tp.getForme()).getNumber(),
+                        movesets,
+                        tp.getLevel()) :
+                tp.getMoves();
     }
 
     private void randomizeHeldItem(TrainerPokemon tp, Settings settings, List<Move> moves, int[] moveset) {

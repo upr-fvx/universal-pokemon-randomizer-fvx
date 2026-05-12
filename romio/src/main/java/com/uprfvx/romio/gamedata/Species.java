@@ -1340,7 +1340,6 @@ public class Species implements Comparable<Species> {
         for (Evolution evo : original.getEvolutionsFrom()) {
             Evolution evoCopy = new Evolution(copy, originalToCopies.get(evo.getTo()),
                     evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
-            evoCopy.setForme(evo.getForme());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
         }

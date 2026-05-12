@@ -427,10 +427,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
                         int extraInfo = readWord(evoEntry, i * 8 + 2);
                         int forme = evoEntry[i * 8 + 6];
+                        // forme == -1 is used internally to mean "keep the forme upon evolving".
+                        // Most mons use this value, and it is what makes e.g. Burmy->Wormadam
+                        // and Flabébé->Floette work as expected.
+                        if (forme == -1) {
+                            forme = 0;
+                        }
                         int level = evoEntry[i * 8 + 7];
-                        Species pkTo = getInternalForme(species, forme);
+                        Species pkTo = pokes[species].getForme(forme);
                         Evolution evo = new Evolution(pkFrom, pkTo, et, extraInfo);
-                        evo.setForme(forme);
                         if (et.usesLevelThreshold()) {
                             evo.updateEvolutionMethod(evo.getType(), level);
                         }
@@ -444,7 +449,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 if (pkFrom.getNumber() == SpeciesIDs.nincada) {
                     Species shedinja = pokes[SpeciesIDs.shedinja];
                     Evolution evo = new Evolution(pkFrom, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
-                    evo.setForme(-1);
                     pkFrom.getEvolutionsFrom().add(evo);
                     shedinja.getEvolutionsTo().add(evo);
                 }
@@ -489,7 +493,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     int formNum = readWord(megaEvoEntry, evo * 8);
                     int method = readWord(megaEvoEntry, evo * 8 + 2);
                     if (method >= 1) {
-                        Species mega = getInternalForme(pk.getNumber(), formNum);
+                        Species mega = pk.getForme(formNum);
                         boolean needsItem = method == 1; // true for every mega but Mega Rayquaza, which has method==2.
                         Item item = items.get(readWord(megaEvoEntry, evo * 8 + 4));
                         MegaEvolution megaEvo = new MegaEvolution(pk, mega, needsItem, item);
@@ -738,7 +742,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     }
                     writeWord(evoEntry, evosWritten * 8 + 2, extraInfo);
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
-                    evoEntry[evosWritten * 8 + 6] = (byte) evo.getForme();
+                    evoEntry[evosWritten * 8 + 6] = (byte) toPK.getFormeNumber();
                     byte level;
                     if (evo.getType().usesLevelThreshold()) {
                         level = (byte) evo.getExtraInfo();
@@ -2816,13 +2820,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35,
                                     evo.getEstimatedEvoLvl());
-                            extraEntry.setForme(evo.getForme());
                         } else if (evo.getType() == EvolutionType.MAGNETIC_FIELD) {
                             markImprovedEvolutions(pkmn);
                             extraEntry = new Evolution(evo.getFrom(), evo.getTo(),
                                     EvolutionType.LEVEL, useEstimatedLevels ? evo.getEstimatedEvoLvl() : 35,
                                     evo.getEstimatedEvoLvl());
-                            extraEntry.setForme(evo.getForme());
                         }
                     }
                 }

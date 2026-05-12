@@ -618,19 +618,6 @@ public class SpeciesTest {
     }
 
     @Test
-    public void transferAttributesToCopy_WithEvolutions_FormeGetsCopied() {
-        use(a, b, aCopy, bCopy);
-        Evolution evolution = new Evolution(a, b, EvolutionType.LEVEL, 1);
-        evolution.setForme(2);
-        a.getEvolutionsFrom().add(evolution);
-        b.getEvolutionsTo().add(evolution);
-
-        transferAttributesToCopies();
-
-        assertEquals(2, aCopy.getEvolutionsFrom().getFirst().getForme());
-    }
-
-    @Test
     public void transferAttributesToCopy_WithMegaEvolutions_MatchingMegaEvolutionsFromAndToAreSame() {
         use(a, b, aCopy, bCopy);
         MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);

@@ -138,6 +138,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final String CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX = "[CFRU-DPE-PALETTE] ";
     private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
     private static final int CFRU_DPE_XERNEAS_INTERNAL_ID = 824;
+    private static final int CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE = 3;
+    private static final int CFRU_DPE_MAX_LEARNABLE_MOVES = 50;
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
     private static final int CFRU_DPE_SPRIGATITO_INTERNAL_ID = 1294;
     private static final int CFRU_DPE_PECHARUNT_INTERNAL_ID = 1439;
@@ -2393,8 +2395,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return false;
     }
 
-    @Override
+	@Override
 	public Map<Integer, List<MoveLearnt>> getMovesLearnt() {
+        if (useCfruDpeGen9SpeciesCount && !jamboMovesetHack) {
+            return getCfruDpeMovesLearnt();
+        }
+
 		Map<Integer, List<MoveLearnt>> movesets = new TreeMap<>();
 		int baseOffset = romEntry.getIntValue("PokemonMovesets");
 		for (int i = 1; i <= numRealPokemon; i++) {
@@ -2406,6 +2412,43 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		}
 		return movesets;
 	}
+
+    private Map<Integer, List<MoveLearnt>> getCfruDpeMovesLearnt() {
+        Map<Integer, List<MoveLearnt>> movesets = new TreeMap<>();
+        int baseOffset = romEntry.getIntValue("PokemonMovesets");
+        for (int i = 1; i <= numRealPokemon; i++) {
+            Species pk = speciesList.get(i);
+            int internalSpecies = pokedexToInternal[pk.getNumber()];
+            int pointerOffset = baseOffset + internalSpecies * 4;
+            int movesLearntOffset = readPointer(pointerOffset, true);
+            List<MoveLearnt> moves = movesLearntOffset == -1
+                    ? new ArrayList<>()
+                    : readCfruDpeMovesLearnt(movesLearntOffset);
+            movesets.put(pk.getNumber(), moves);
+        }
+        return movesets;
+    }
+
+    private List<MoveLearnt> readCfruDpeMovesLearnt(int offset) {
+        List<MoveLearnt> moves = new ArrayList<>();
+        for (int i = 0; i < CFRU_DPE_MAX_LEARNABLE_MOVES
+                && offset + CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE <= rom.length; i++) {
+            int move = readWord(offset);
+            int level = rom[offset + 2] & 0xFF;
+            if (move == 0 && level == 0xFF) {
+                break;
+            }
+            if (isLoadedMoveId(move)) {
+                moves.add(new MoveLearnt(move, level));
+            }
+            offset += CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE;
+        }
+        return moves;
+    }
+
+    private boolean isLoadedMoveId(int move) {
+        return move > 0 && moves != null && move < moves.length && moves[move] != null;
+    }
 
 	private List<MoveLearnt> readMovesLearnt(int offset) {
 		List<MoveLearnt> moves = new ArrayList<>();
@@ -3842,6 +3885,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public String abilityName(int number) {
+        if (number < 0 || abilityNames == null || number >= abilityNames.length || abilityNames[number] == null) {
+            return "ability #" + number;
+        }
         return abilityNames[number];
     }
 

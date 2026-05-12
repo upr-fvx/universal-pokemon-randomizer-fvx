@@ -313,10 +313,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int iPokemonCount = 0;
             int namesOffset = romEntry.getIntValue("PokemonNames");
             int nameLen = romEntry.getIntValue("PokemonNameLength");
-            int nameScanStopIndex;
-            int nameScanStopOffset;
-            int nameScanStopLength;
-            int nameScanStopFirstByte;
+            int nameScanStopIndex = -1;
+            int nameScanStopOffset = -1;
+            int nameScanStopLength = -1;
+            int nameScanStopFirstByte = -1;
             while (true) {
                 int nameOffset = namesOffset + (iPokemonCount + 1) * nameLen;
                 int nameStrLen = lengthOfStringAt(nameOffset);

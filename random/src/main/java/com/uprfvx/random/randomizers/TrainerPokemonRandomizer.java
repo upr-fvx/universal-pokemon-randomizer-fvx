@@ -6,6 +6,7 @@ import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.romhandlers.Gen3RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
@@ -99,6 +100,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
         if (banIrregularAltFormes) {
             banned.addAll(romHandler.getIrregularFormes());
+        }
+        if (isExtendedBpreHack()) {
+            banned.addAll(cachedAll.filter(this::isNotUsableTrainerSpecies));
         }
         cachedAll.removeAll(banned);
 
@@ -642,11 +646,26 @@ public class TrainerPokemonRandomizer extends Randomizer {
             return 0;
         }
         List<Integer> abilitiesList = Arrays.asList(species.getAbility1(), species.getAbility2(), species.getAbility3());
-        int slot = random.nextInt(romHandler.abilitiesPerSpecies());
-        while (abilitiesList.get(slot) == 0) {
-            slot = random.nextInt(romHandler.abilitiesPerSpecies());
+        List<Integer> validSlots = new ArrayList<>();
+        for (int i = 0; i < romHandler.abilitiesPerSpecies(); i++) {
+            if (abilitiesList.get(i) != 0) {
+                validSlots.add(i);
+            }
         }
+        if (validSlots.isEmpty()) {
+            return 1;
+        }
+        int slot = validSlots.get(random.nextInt(validSlots.size()));
         return slot + 1;
+    }
+
+    private boolean isExtendedBpreHack() {
+        return romHandler instanceof Gen3RomHandler && ((Gen3RomHandler) romHandler).hasExtendedBpreHackSpeciesPool();
+    }
+
+    private boolean isNotUsableTrainerSpecies(Species species) {
+        return species.getBST() == 0
+                || (species.getAbility1() == 0 && species.getAbility2() == 0 && species.getAbility3() == 0);
     }
 
     private int getValidAbilitySlotFromOriginal(Species species, int originalAbilitySlot) {

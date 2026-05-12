@@ -524,16 +524,16 @@ public class RandomizationLogger {
         String evoTypeStr = getBS("Log.pe." + evo.getType());
 
         if (evo.getType().usesItem()) {
-            String itemName = romHandler.getItems().get(evo.getExtraInfo()).getName();
+            String itemName = evolutionItemName(evo.getExtraInfo());
             evoTypeStr = String.format(evoTypeStr, itemName);
         } else if (evo.getType().usesMove()) {
-            String moveName = romHandler.getMoves().get(evo.getExtraInfo()).name;
+            String moveName = evolutionMoveName(evo.getExtraInfo());
             evoTypeStr = String.format(evoTypeStr, moveName);
         } else if (evo.getType().usesSpecies()) {
-            String speciesName = romHandler.getSpecies().get(evo.getExtraInfo()).getFullName();
+            String speciesName = evolutionSpeciesName(evo.getExtraInfo());
             evoTypeStr = String.format(evoTypeStr, speciesName);
         } else if (evo.getType().usesLocation()) {
-            List<String> locationNames = romHandler.getLocationNamesForEvolution(evo.getType());
+            List<String> locationNames = evolutionLocationNames(evo.getType());
             if (locationNames.isEmpty()) {
                 locationNames = Collections.singletonList(getBS("Log.pe.nowhere"));
             }
@@ -549,6 +549,38 @@ public class RandomizationLogger {
         }
 
         return sb.toString();
+    }
+
+    private String evolutionItemName(int itemId) {
+        List<Item> items = romHandler.getItems();
+        if (itemId >= 0 && itemId < items.size() && items.get(itemId) != null) {
+            return items.get(itemId).getName();
+        }
+        return "unknown item #" + itemId;
+    }
+
+    private String evolutionMoveName(int moveId) {
+        List<Move> moves = romHandler.getMoves();
+        if (moveId >= 0 && moveId < moves.size() && moves.get(moveId) != null) {
+            return moves.get(moveId).name;
+        }
+        return "unknown move #" + moveId;
+    }
+
+    private String evolutionSpeciesName(int speciesId) {
+        List<Species> species = romHandler.getSpecies();
+        if (speciesId >= 0 && speciesId < species.size() && species.get(speciesId) != null) {
+            return species.get(speciesId).getFullName();
+        }
+        return "unknown species #" + speciesId;
+    }
+
+    private List<String> evolutionLocationNames(EvolutionType evolutionType) {
+        try {
+            return romHandler.getLocationNamesForEvolution(evolutionType);
+        } catch (RuntimeException e) {
+            return Collections.singletonList("unknown location");
+        }
     }
 
     private boolean shouldLogSpeciesTraits() {
@@ -1377,4 +1409,3 @@ public class RandomizationLogger {
         return names;
     }
 }
-

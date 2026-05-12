@@ -2248,9 +2248,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		int dataSize = trainer.getPokemon().size() * (trainer.pokemonHaveCustomMoves() ? 16 : 8);
 		byte[] pokemonData = new byte[dataSize];
 
-		// Get current movesets in case we need to reset them for certain
-		// trainer mons.
-		Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
+		Map<Integer, List<MoveLearnt>> movesets = null;
 
 		if (trainer.pokemonHaveCustomMoves()) {
 			// custom moves, blocks of 16 bytes
@@ -2271,6 +2269,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 					writeWord(pokemonData, tpIndex * 16 + 14, 0);
 				}
 				if (tp.isResetMoves()) {
+					if (movesets == null) {
+						movesets = this.getMovesLearnt();
+					}
 					int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
 					for (int m = 0; m < 4; m++) {
 						writeWord(pokemonData, tpIndex * 16 + movesStart + m * 2, pokeMoves[m]);

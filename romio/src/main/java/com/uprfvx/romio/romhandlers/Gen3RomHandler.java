@@ -2533,7 +2533,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         public void setPokemon(Gen3RomHandler parent, Species pkmn) {
-            int value = parent.pokedexToInternal[pkmn.getNumber()];
+            if (pkmn == null) {
+                return;
+            }
+            int value = parent.getStaticPokemonInternalSpeciesId(pkmn);
             for (int offset : speciesOffsets) {
                 parent.writeWord(offset, value);
             }
@@ -2647,15 +2650,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         if (romEntry.hasTweakFile("StaticFirstBattleTweak")) {
             StaticEncounter startingFirstBattle = staticPokemon.get(romEntry.getIntValue("StaticFirstBattleOffset"));
-            int startingSpeciesOffset = romEntry.getIntValue("StaticFirstBattleSpeciesOffset");
-            writeWord(startingSpeciesOffset, pokedexToInternal[startingFirstBattle.getSpecies().getNumber()]);
+            if (startingFirstBattle.getSpecies() != null) {
+                int startingSpeciesOffset = romEntry.getIntValue("StaticFirstBattleSpeciesOffset");
+                writeWord(startingSpeciesOffset, getStaticPokemonInternalSpeciesId(startingFirstBattle.getSpecies()));
+            }
             int startingLevelOffset = romEntry.getIntValue("StaticFirstBattleLevelOffset");
             writeByte(startingLevelOffset, (byte) startingFirstBattle.getLevel());
         } else if (romEntry.hasTweakFile("GhostMarowakTweak")) {
             StaticEncounter ghostMarowak = staticPokemon.get(romEntry.getIntValue("GhostMarowakOffset"));
-            int[] ghostMarowakSpeciesOffsets = romEntry.getArrayValue("GhostMarowakSpeciesOffsets");
-            for (int offset : ghostMarowakSpeciesOffsets) {
-                writeWord(offset, pokedexToInternal[ghostMarowak.getSpecies().getNumber()]);
+            if (ghostMarowak.getSpecies() != null) {
+                int[] ghostMarowakSpeciesOffsets = romEntry.getArrayValue("GhostMarowakSpeciesOffsets");
+                for (int offset : ghostMarowakSpeciesOffsets) {
+                    writeWord(offset, getStaticPokemonInternalSpeciesId(ghostMarowak.getSpecies()));
+                }
             }
             int[] ghostMarowakLevelOffsets = romEntry.getArrayValue("GhostMarowakLevelOffsets");
             for (int offset : ghostMarowakLevelOffsets) {
@@ -2667,7 +2674,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // will infinite loop trying and failing to make the Pokemon female. For Pokemon that cannot
             // be female, change the specified gender to something that actually works.
             int ghostMarowakGenderOffset = romEntry.getIntValue("GhostMarowakGenderOffset");
-            if (ghostMarowak.getSpecies().getGenderRatio() == 0 || ghostMarowak.getSpecies().getGenderRatio() == 0xFF) {
+            if (ghostMarowak.getSpecies() != null
+                    && (ghostMarowak.getSpecies().getGenderRatio() == 0
+                    || ghostMarowak.getSpecies().getGenderRatio() == 0xFF)) {
                 // 0x00 is 100% male, and 0xFF is indeterminate gender
                 writeByte(ghostMarowakGenderOffset, (byte) ghostMarowak.getSpecies().getGenderRatio());
             }
@@ -2675,6 +2684,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         setRoamers(staticPokemon);
         return true;
+    }
+
+    private int getStaticPokemonInternalSpeciesId(Species species) {
+        if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     private void getRoamers(List<StaticEncounter> statics) throws IOException {

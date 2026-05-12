@@ -132,6 +132,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private String[] pokeNames;
     private int pickupItemsTableOffset;
     private boolean useCfruDpeGen9SpeciesCount;
+    private final Map<Species, byte[]> originalCfruDpeNormalPaletteBytes = new IdentityHashMap<>();
+    private final Map<Species, byte[]> originalCfruDpeShinyPaletteBytes = new IdentityHashMap<>();
     private static final String CFRU_DPE_DIAGNOSTIC_PREFIX = "[temporary CFRU/DPE species diagnostics] ";
     private static final String CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX = "[CFRU-DPE-PALETTE] ";
     private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
@@ -4600,6 +4602,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int skippedNormalPalettes = 0;
         int skippedShinyPalettes = 0;
         List<String> skippedExamples = new ArrayList<>();
+        originalCfruDpeNormalPaletteBytes.clear();
+        originalCfruDpeShinyPaletteBytes.clear();
         for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
 
@@ -4618,12 +4622,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             } else {
                 pk.setShinyPalette(shinyPalette);
             }
+
+            rememberLoadedCfruDpePokemonPalette(pk, normalPalette, shinyPalette);
         }
         if (skippedNormalPalettes > 0 || skippedShinyPalettes > 0) {
             System.err.println(CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX
                     + "skipped invalid pokemon palettes during load: normal=" + skippedNormalPalettes
                     + " shiny=" + skippedShinyPalettes
                     + " examples=" + skippedExamples);
+        }
+    }
+
+    private void rememberLoadedCfruDpePokemonPalette(Species pk, Palette normalPalette, Palette shinyPalette) {
+        if (normalPalette != null) {
+            originalCfruDpeNormalPaletteBytes.put(pk, normalPalette.toBytes());
+        }
+        if (shinyPalette != null) {
+            originalCfruDpeShinyPaletteBytes.put(pk, shinyPalette.toBytes());
         }
     }
 
@@ -4667,6 +4682,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void savePokemonPalettes() {
+        if (useCfruDpeGen9SpeciesCount && !hasChangedCfruDpePokemonPalettes()) {
+            System.err.println(CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX
+                    + "skipped unchanged pokemon palette save for CFRU/DPE Gen9 BPRE");
+            return;
+        }
+
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
         int skippedPaletteSaves = 0;
@@ -4705,6 +4726,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     + "skipped pokemon palette saves with missing loaded palettes: count=" + skippedPaletteSaves
                     + " examples=" + skippedExamples);
         }
+    }
+
+    private boolean hasChangedCfruDpePokemonPalettes() {
+        for (Species pk : getSpeciesSet()) {
+            if (hasChangedCfruDpePokemonPalette(pk.getNormalPalette(), originalCfruDpeNormalPaletteBytes.get(pk))
+                    || hasChangedCfruDpePokemonPalette(pk.getShinyPalette(), originalCfruDpeShinyPaletteBytes.get(pk))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasChangedCfruDpePokemonPalette(Palette currentPalette, byte[] originalBytes) {
+        if (currentPalette == null) {
+            return originalBytes != null;
+        }
+        return originalBytes == null || !Arrays.equals(currentPalette.toBytes(), originalBytes);
     }
 
     @Override

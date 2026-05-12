@@ -129,8 +129,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private int pokedexCount;
     private String[] pokeNames;
     private int pickupItemsTableOffset;
+    private boolean useCfruDpeGen9SpeciesCount;
     private static final String CFRU_DPE_DIAGNOSTIC_PREFIX = "[temporary CFRU/DPE species diagnostics] ";
     private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
+    private static final int CFRU_DPE_XERNEAS_INTERNAL_ID = 824;
+    private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
+    private static final int CFRU_DPE_SPRIGATITO_INTERNAL_ID = 1294;
+    private static final int CFRU_DPE_PECHARUNT_INTERNAL_ID = 1439;
     private static final Map<String, Integer> SPECIES_ID_BY_NORMALIZED_NAME = speciesIdsByNormalizedName();
 
     // Misc.
@@ -167,6 +172,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         super.midLoadingSetUp();
         isRomHack = false;
         jamboMovesetHack = false;
+        useCfruDpeGen9SpeciesCount = false;
         if (romEntry.getRomCode().equals("BPRE") && romEntry.getVersion() == 0) {
             basicBPRE10HackSupport();
         }
@@ -320,6 +326,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (lastName.equals("?") || lastName.equals("-")) {
                 iPokemonCount--;
             }
+            int countAfterNameAndStatsCheck = iPokemonCount;
+            useCfruDpeGen9SpeciesCount = hasCfruDpeGen9SpeciesCount(countAfterNameAndStatsCheck);
 
             // Jambo's Moves Learnt table hack?
             // need to check this before using moveset pointers
@@ -338,12 +346,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // if a slot has an invalid moveset pointer, it's not a real slot
             // Before that, grab the moveset table from a known pointer to it.
             romEntry.putIntValue("PokemonMovesets", movesetsTable);
-            while (iPokemonCount >= 0) {
-                int movesetPtr = readPointer(movesetsTable + iPokemonCount * 4, true);
-                if (movesetPtr == -1) {
-                    iPokemonCount--;
-                } else {
-                    break;
+            if (!useCfruDpeGen9SpeciesCount) {
+                while (iPokemonCount >= 0) {
+                    int movesetPtr = readPointer(movesetsTable + iPokemonCount * 4, true);
+                    if (movesetPtr == -1) {
+                        iPokemonCount--;
+                    } else {
+                        break;
+                    }
                 }
             }
 
@@ -354,16 +364,25 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // so if we run into an invalid one
             // then we can cut off the count
             int pdOffset = romEntry.getIntValue("PokedexOrder");
-            for (int i = 1; i <= iPokemonCount; i++) {
-                int pdEntry = readWord(pdOffset + (i - 1) * 2);
-                if (pdEntry > 1023) {
-                    iPokemonCount = i - 1;
-                    break;
+            if (!useCfruDpeGen9SpeciesCount) {
+                for (int i = 1; i <= iPokemonCount; i++) {
+                    int pdEntry = readWord(pdOffset + (i - 1) * 2);
+                    if (pdEntry > 1023) {
+                        iPokemonCount = i - 1;
+                        break;
+                    }
                 }
+            } else {
+                iPokemonCount = countAfterNameAndStatsCheck;
             }
 
             // write new pokemon count
             romEntry.putIntValue("PokemonCount", iPokemonCount);
+            if (useCfruDpeGen9SpeciesCount) {
+                System.err.println(CFRU_DPE_DIAGNOSTIC_PREFIX
+                        + "using PokemonNames+BaseStats PokemonCount=" + iPokemonCount
+                        + "; skipped Moveset/PokedexOrder count caps for CFRU/DPE Gen9 BPRE");
+            }
 
             // update some key offsets from known pointers
             romEntry.putIntValue("PokemonTMHMCompat", readPointer(0x43C68));
@@ -429,6 +448,48 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return csum != 3716707868L;
     }
 
+    private boolean hasCfruDpeGen9SpeciesCount(int nameCount) {
+        return isRomHack
+                && "BPRE".equals(romEntry.getRomCode())
+                && nameCount >= CFRU_DPE_PECHARUNT_INTERNAL_ID
+                && hasExpectedPokemonName(CFRU_DPE_XERNEAS_INTERNAL_ID, "Xerneas")
+                && hasExpectedPokemonName(CFRU_DPE_HAKAMO_O_INTERNAL_ID, "Hakamo-o")
+                && hasExpectedPokemonName(CFRU_DPE_SPRIGATITO_INTERNAL_ID, "Sprigatito")
+                && hasExpectedPokemonName(CFRU_DPE_PECHARUNT_INTERNAL_ID, "Pecharunt")
+                && hasPlausibleBaseStats(CFRU_DPE_XERNEAS_INTERNAL_ID)
+                && hasPlausibleBaseStats(CFRU_DPE_HAKAMO_O_INTERNAL_ID)
+                && hasPlausibleBaseStats(CFRU_DPE_SPRIGATITO_INTERNAL_ID)
+                && hasPlausibleBaseStats(CFRU_DPE_PECHARUNT_INTERNAL_ID);
+    }
+
+    private boolean hasExpectedPokemonName(int internalSpeciesId, String expectedName) {
+        int namesOffset = romEntry.getIntValue("PokemonNames");
+        int nameLen = romEntry.getIntValue("PokemonNameLength");
+        if (namesOffset + (internalSpeciesId + 1) * nameLen > rom.length) {
+            return false;
+        }
+        String actualName = readFixedLengthString(namesOffset + internalSpeciesId * nameLen, nameLen);
+        return expectedName.equals(actualName);
+    }
+
+    private boolean hasPlausibleBaseStats(int internalSpeciesId) {
+        int statsOffset = romEntry.getIntValue("PokemonStats") + internalSpeciesId * Gen3Constants.baseStatsEntrySize;
+        if (statsOffset + Gen3Constants.baseStatsEntrySize > rom.length) {
+            return false;
+        }
+        int hp = rom[statsOffset + Gen3Constants.bsHPOffset] & 0xFF;
+        int attack = rom[statsOffset + Gen3Constants.bsAttackOffset] & 0xFF;
+        int defense = rom[statsOffset + Gen3Constants.bsDefenseOffset] & 0xFF;
+        int speed = rom[statsOffset + Gen3Constants.bsSpeedOffset] & 0xFF;
+        int spAtk = rom[statsOffset + Gen3Constants.bsSpAtkOffset] & 0xFF;
+        int spDef = rom[statsOffset + Gen3Constants.bsSpDefOffset] & 0xFF;
+        int primaryType = rom[statsOffset + Gen3Constants.bsPrimaryTypeOffset] & 0xFF;
+        int secondaryType = rom[statsOffset + Gen3Constants.bsSecondaryTypeOffset] & 0xFF;
+        return hp > 0 && attack > 0 && defense > 0 && speed > 0 && spAtk > 0 && spDef > 0
+                && primaryType < Gen3Constants.typeTable.length
+                && secondaryType < Gen3Constants.typeTable.length;
+    }
+
     private void loadPokedexOrder() {
         int pdOffset = romEntry.getIntValue("PokedexOrder");
         int numInternalPokes = romEntry.getIntValue("PokemonCount");
@@ -438,6 +499,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 1; i <= numInternalPokes; i++) {
             int dexEntry = readWord(rom, pdOffset + (i - 1) * 2);
             if (dexEntry != 0) {
+                if (useCfruDpeGen9SpeciesCount && dexEntry >= pokedexToInternal.length) {
+                    continue;
+                }
                 internalToPokedex[i] = dexEntry;
                 // take the first pokemon only for each dex entry
                 if (pokedexToInternal[dexEntry] == 0) {

@@ -141,6 +141,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
     private static final int CFRU_DPE_SPRIGATITO_INTERNAL_ID = 1294;
     private static final int CFRU_DPE_PECHARUNT_INTERNAL_ID = 1439;
+    // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
+    private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
+    private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
     private static final Map<String, Integer> SPECIES_ID_BY_NORMALIZED_NAME = speciesIdsByNormalizedName();
 
     // Misc.
@@ -2031,7 +2034,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // See GenerateWildMon in wild_encounter.c in pokefirered
             banned.add(pokes[SpeciesIDs.unown]);
         }
+        if (useCfruDpeGen9SpeciesCount) {
+            addCfruDpeWildBannedSpecies(banned, CFRU_DPE_SPECIES_NONE_INTERNAL_ID);
+            addCfruDpeWildBannedSpecies(banned, CFRU_DPE_SPECIES_EGG_INTERNAL_ID);
+        }
         return banned;
+    }
+
+    private void addCfruDpeWildBannedSpecies(SpeciesSet banned, int internalSpeciesId) {
+        if (pokesInternal != null && internalSpeciesId >= 0 && internalSpeciesId < pokesInternal.length) {
+            Species species = pokesInternal[internalSpeciesId];
+            if (species != null) {
+                banned.add(species);
+            }
+        }
     }
 
     @Override

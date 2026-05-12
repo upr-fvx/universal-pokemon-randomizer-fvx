@@ -3356,7 +3356,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int numInternalPokes = romEntry.getIntValue("PokemonCount");
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
-            int idx = pokedexToInternal[pk.getNumber()];
+            int idx = getEvolutionInternalSpeciesId(pk);
             int evoOffset = baseOffset + (idx) * 0x28;
             for (int j = 0; j < 5; j++) {
                 int method = readWord(evoOffset + j * 8);
@@ -3382,7 +3382,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int baseOffset = romEntry.getIntValue("PokemonEvolutions");
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
-            int idx = pokedexToInternal[pk.getNumber()];
+            int idx = getEvolutionInternalSpeciesId(pk);
             int evoOffset = baseOffset + (idx) * 0x28;
             int evosWritten = 0;
             for (Evolution evo : pk.getEvolutionsFrom()) {
@@ -3392,7 +3392,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     extraInfo = Gen3Constants.itemIDToInternal(extraInfo);
                 }
                 writeWord(evoOffset + 2, extraInfo);
-                writeWord(evoOffset + 4, pokedexToInternal[evo.getTo().getNumber()]);
+                writeWord(evoOffset + 4, getEvolutionInternalSpeciesId(evo.getTo()));
                 writeWord(evoOffset + 6, 0);
                 evoOffset += 8;
                 evosWritten++;
@@ -3409,6 +3409,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 evosWritten++;
             }
         }
+    }
+
+    private int getEvolutionInternalSpeciesId(Species species) {
+        if (usesInternalSpeciesIdentityForExtendedBpreHack()) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     @Override

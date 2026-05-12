@@ -131,6 +131,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private int pickupItemsTableOffset;
     private boolean useCfruDpeGen9SpeciesCount;
     private static final String CFRU_DPE_DIAGNOSTIC_PREFIX = "[temporary CFRU/DPE species diagnostics] ";
+    private static final String CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX = "[CFRU-DPE-PALETTE] ";
     private static final int CFRU_DPE_DIAGNOSTIC_SAMPLE_LIMIT = 12;
     private static final int CFRU_DPE_XERNEAS_INTERNAL_ID = 824;
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
@@ -4368,6 +4369,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void loadPokemonPalettes() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
+        if (useCfruDpeGen9SpeciesCount) {
+            loadPokemonPalettesDefensively(normalPaletteTableOffset, shinyPaletteTableOffset);
+            return;
+        }
         for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
 
@@ -4379,6 +4384,70 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
+    private void loadPokemonPalettesDefensively(int normalPaletteTableOffset, int shinyPaletteTableOffset) {
+        int skippedNormalPalettes = 0;
+        int skippedShinyPalettes = 0;
+        List<String> skippedExamples = new ArrayList<>();
+        for (Species pk : getSpeciesSet()) {
+            int pokeNumber = pokedexToInternal[pk.getNumber()];
+
+            Palette normalPalette = readPaletteDefensively(normalPaletteTableOffset, pokeNumber, pk, "normal",
+                    skippedExamples);
+            if (normalPalette == null) {
+                skippedNormalPalettes++;
+            } else {
+                pk.setNormalPalette(normalPalette);
+            }
+
+            Palette shinyPalette = readPaletteDefensively(shinyPaletteTableOffset, pokeNumber, pk, "shiny",
+                    skippedExamples);
+            if (shinyPalette == null) {
+                skippedShinyPalettes++;
+            } else {
+                pk.setShinyPalette(shinyPalette);
+            }
+        }
+        if (skippedNormalPalettes > 0 || skippedShinyPalettes > 0) {
+            System.err.println(CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX
+                    + "skipped invalid pokemon palettes during load: normal=" + skippedNormalPalettes
+                    + " shiny=" + skippedShinyPalettes
+                    + " examples=" + skippedExamples);
+        }
+    }
+
+    private Palette readPaletteDefensively(int paletteTableOffset, int pokeNumber, Species pk, String paletteKind,
+                                           List<String> skippedExamples) {
+        int pointerOffset = paletteTableOffset + pokeNumber * 8;
+        int paletteOffset;
+        try {
+            paletteOffset = readPointer(pointerOffset, true);
+            if (paletteOffset == -1) {
+                recordSkippedPaletteExample(skippedExamples, pk, pokeNumber, pointerOffset, paletteKind,
+                        "invalid pointer");
+                return null;
+            }
+            return readPalette(paletteOffset);
+        } catch (RuntimeException ex) {
+            recordSkippedPaletteExample(skippedExamples, pk, pokeNumber, pointerOffset, paletteKind,
+                    ex.getClass().getSimpleName());
+            return null;
+        }
+    }
+
+    private void recordSkippedPaletteExample(List<String> skippedExamples, Species pk, int pokeNumber,
+                                             int pointerOffset, String paletteKind, String reason) {
+        if (skippedExamples.size() >= 8) {
+            return;
+        }
+        int identityNumber = pk == null ? 0 : pk.getSpeciesSetIdentityNumber();
+        String name = pk == null ? "<null>" : pk.getName();
+        skippedExamples.add(paletteKind + ":name=" + name
+                + " identity=" + identityNumber
+                + " tableIndex=" + pokeNumber
+                + " pointerOffset=" + String.format(Locale.ROOT, "0x%X", pointerOffset)
+                + " reason=" + reason);
+    }
+
     private Palette readPalette(int palOffset) {
         byte[] paletteBytes = DSDecmp.Decompress(rom, palOffset);
         return new Palette(paletteBytes);
@@ -4388,10 +4457,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void savePokemonPalettes() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
+        int skippedPaletteSaves = 0;
+        List<String> skippedExamples = useCfruDpeGen9SpeciesCount ? new ArrayList<>() : Collections.emptyList();
         for (Species pk : getSpeciesSet()) {
             int pokeNumber = pokedexToInternal[pk.getNumber()];
             int normalPalPointerOffset = normalPaletteTableOffset + pokeNumber * 8;
             int shinyPalPointerOffset = shinyPaletteTableOffset + pokeNumber * 8;
+
+            if (useCfruDpeGen9SpeciesCount && (pk.getNormalPalette() == null || pk.getShinyPalette() == null)) {
+                skippedPaletteSaves++;
+                recordSkippedPaletteExample(skippedExamples, pk, pokeNumber, normalPalPointerOffset, "save",
+                        "missing loaded palette");
+                continue;
+            }
 
             if (pk.getNumber() == SpeciesIDs.unown) {
                 int[] altFormeNormalPointerOffsets = IntStream.range(0, Gen3Constants.unownFormeCount - 1)
@@ -4409,6 +4487,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 rewriteCompressedPalette(normalPalPointerOffset, pk.getNormalPalette());
                 rewriteCompressedPalette(shinyPalPointerOffset, pk.getShinyPalette());
             }
+        }
+        if (skippedPaletteSaves > 0) {
+            System.err.println(CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX
+                    + "skipped pokemon palette saves with missing loaded palettes: count=" + skippedPaletteSaves
+                    + " examples=" + skippedExamples);
         }
     }
 

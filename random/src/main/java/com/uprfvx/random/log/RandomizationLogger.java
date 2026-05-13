@@ -155,13 +155,21 @@ public class RandomizationLogger {
         log.printf(getBS("Log.baseGame"), gameName);
         log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
-        log.printf(getBS("Log.settings"), settings.toString());
+        log.printf(getBS("Log.settings"), settingsStringForLog());
         log.println();
         log.printf(getBS("Log.problems"));
         log.println();
         log.printf(getBS("Log.wikiLink"), SysConstants.WIKI_URL);
         log.printf(getBS("Log.githubIssuesLink"), SysConstants.ISSUES_URL);
         printSectionSeparator();
+    }
+
+    private String settingsStringForLog() {
+        try {
+            return settings.toString();
+        } catch (NullPointerException ex) {
+            return "unavailable (" + ex.getMessage() + ")";
+        }
     }
 
     private void logTableOfContents() {
@@ -801,7 +809,7 @@ public class RandomizationLogger {
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
         List<Move> moves = romHandler.getMoves();
         for (Species pk : romHandler.getSpeciesInclFormes()) {
-            if (pk == null || pk.isActuallyCosmetic()) {
+            if (pk == null || pk.isActuallyCosmetic() || isUnavailableMovesetLogSpecies(pk)) {
                 continue;
             }
 
@@ -822,24 +830,34 @@ public class RandomizationLogger {
                         pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpatk(), pk.getSpdef(), pk.getSpeed());
             }
 
-            List<MoveLearnt> data = moveData.get(pk.getNumber());
+            List<MoveLearnt> data = movesetForSpecies(pk, moveData);
+            if (data == null) {
+                log.println("Level-up moves unavailable for this species.");
+            } else {
             for (MoveLearnt ml : data) {
+                if (ml == null) {
+                    log.println("invalid move entry");
+                    continue;
+                }
                 try {
                     if (ml.level == 0) {
                         log.print("Learnt upon evolution: ");
                     } else {
                         log.printf("Level %-2d: ", ml.level);
                     }
-                    log.println(formatMovesetMove(moves.get(ml.move), pk));
-                } catch (NullPointerException ex) {
+                    Move mv = ml.move >= 0 && ml.move < moves.size() ? moves.get(ml.move) : null;
+                    log.println(formatMovesetMove(mv, pk));
+                } catch (NullPointerException | IndexOutOfBoundsException ex) {
                     log.printf("invalid move at level %-2d %n", ml.level);
                 }
             }
-            List<Integer> eggMove = eggMoves.get(pk.getNumber());
+            }
+            List<Integer> eggMove = movesetForSpecies(pk, eggMoves);
             if (eggMove != null && !eggMove.isEmpty()) {
                 log.println("Egg Moves:");
                 for (Integer move : eggMove) {
-                    log.println(" - " + formatMovesetMove(moves.get(move), pk));
+                    Move mv = move != null && move >= 0 && move < moves.size() ? moves.get(move) : null;
+                    log.println(" - " + formatMovesetMove(mv, pk));
                 }
             }
             log.println();
@@ -847,7 +865,25 @@ public class RandomizationLogger {
         printSectionSeparator();
     }
 
+    private <T> List<T> movesetForSpecies(Species species, Map<Integer, List<T>> movesets) {
+        if (species == null || movesets == null) {
+            return null;
+        }
+        int identityNumber = species.getSpeciesSetIdentityNumber();
+        if (identityNumber > 0 && movesets.containsKey(identityNumber)) {
+            return movesets.get(identityNumber);
+        }
+        return movesets.get(species.getNumber());
+    }
+
+    private boolean isUnavailableMovesetLogSpecies(Species species) {
+        return species.getPrimaryType(false) == null || "Bad Egg".equals(species.getFullName());
+    }
+
     private String formatMovesetMove(Move mv, Species learner) {
+        if (mv == null) {
+            return "unavailable move data";
+        }
         StringBuilder sb = new StringBuilder();
         int maxMoveNameLength = romHandler.getMaxMoveNameLength();
         sb.append(String.format("%-" + maxMoveNameLength + "s| %-8s | %-8s | POW=%3s | PP=%2d | ACC=%3.0f%%",

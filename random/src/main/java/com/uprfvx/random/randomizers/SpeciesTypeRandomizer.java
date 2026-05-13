@@ -29,12 +29,18 @@ public class SpeciesTypeRandomizer extends Randomizer {
         boolean dualTypeOnly = settings.isDualTypeOnly();
 
         BasicSpeciesAction<Species> basicAction = pk -> {
+            if (pk.getPrimaryType(false) == null) {
+                return;
+            }
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             double chance = pk.getEvolutionsFrom().size() == 1 ? GSTC_HAS_EVO : GSTC_NO_EVO;
             assignRandomSecondaryType(pk, chance, dualTypeOnly);
         };
         EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
+            if (evFrom.getPrimaryType(false) == null || evTo.getPrimaryType(false) == null) {
+                return;
+            }
             evTo.setPrimaryType(evFrom.getPrimaryType(false));
             evTo.setSecondaryType(evFrom.getSecondaryType(false));
 
@@ -44,6 +50,9 @@ public class SpeciesTypeRandomizer extends Randomizer {
             }
         };
         BasicSpeciesAction<Species> noEvoAction = pk -> {
+            if (pk.getPrimaryType(false) == null) {
+                return;
+            }
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);

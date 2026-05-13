@@ -1502,8 +1502,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         pkmn.setSpatk(rom[offset + Gen3Constants.bsSpAtkOffset] & 0xFF);
         pkmn.setSpdef(rom[offset + Gen3Constants.bsSpDefOffset] & 0xFF);
         // Type
-        pkmn.setPrimaryType(Gen3Constants.typeTable[rom[offset + Gen3Constants.bsPrimaryTypeOffset] & 0xFF]);
-        pkmn.setSecondaryType(Gen3Constants.typeTable[rom[offset + Gen3Constants.bsSecondaryTypeOffset] & 0xFF]);
+        pkmn.setPrimaryType(byteToBaseStatsType(rom[offset + Gen3Constants.bsPrimaryTypeOffset] & 0xFF));
+        pkmn.setSecondaryType(byteToBaseStatsType(rom[offset + Gen3Constants.bsSecondaryTypeOffset] & 0xFF));
         // Only one type?
         if (pkmn.getSecondaryType(false) == pkmn.getPrimaryType(false)) {
             pkmn.setSecondaryType(null);
@@ -1555,10 +1555,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         writeByte(offset + Gen3Constants.bsSpeedOffset, (byte) pkmn.getSpeed());
         writeByte(offset + Gen3Constants.bsSpAtkOffset, (byte) pkmn.getSpatk());
         writeByte(offset + Gen3Constants.bsSpDefOffset, (byte) pkmn.getSpdef());
-        writeByte(offset + Gen3Constants.bsPrimaryTypeOffset, Gen3Constants.typeToByte(pkmn.getPrimaryType(false)));
-        writeByte(offset + Gen3Constants.bsSecondaryTypeOffset, Gen3Constants.typeToByte(
-                pkmn.getSecondaryType(false) == null ? pkmn.getPrimaryType(false) : pkmn.getSecondaryType(false)
-        ));
+        writeByte(offset + Gen3Constants.bsPrimaryTypeOffset, baseStatsTypeToByte(
+                pkmn.getPrimaryType(false), offset + Gen3Constants.bsPrimaryTypeOffset));
+        writeByte(offset + Gen3Constants.bsSecondaryTypeOffset, baseStatsTypeToByte(
+                pkmn.getSecondaryType(false) == null ? pkmn.getPrimaryType(false) : pkmn.getSecondaryType(false),
+                offset + Gen3Constants.bsSecondaryTypeOffset));
         writeByte(offset + Gen3Constants.bsCatchRateOffset, (byte) pkmn.getCatchRate());
         writeByte(offset + Gen3Constants.bsGrowthCurveOffset, pkmn.getGrowthCurve().toByte());
 
@@ -1592,6 +1593,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeByte(offset + Gen3Constants.bsSecondaryEggGroupOffset, secondaryEggGroupByte);
             writeByte(offset + Gen3Constants.bsEggCyclesOffset, (byte) bi.getEggCycles());
         }
+    }
+
+    private Type byteToBaseStatsType(int typeByte) {
+        if (useCfruDpeGen9SpeciesCount && typeByte == 0x17) {
+            return Type.FAIRY;
+        }
+        return Gen3Constants.typeTable[typeByte];
+    }
+
+    private byte baseStatsTypeToByte(Type type, int existingOffset) {
+        if (useCfruDpeGen9SpeciesCount && type == Type.FAIRY) {
+            return 0x17;
+        }
+        if (useCfruDpeGen9SpeciesCount && type == null && (rom[existingOffset] & 0xFF) == 0x18) {
+            return 0x18;
+        }
+        return Gen3Constants.typeToByte(type);
     }
 
     private void loadPokemonNames() {
@@ -5137,15 +5155,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private TypeTable readTypeTable() {
-        TypeTable typeTable = new TypeTable(Type.getAllTypes(3));
+        TypeTable typeTable = new TypeTable(useCfruDpeGen9SpeciesCount ? Type.getAllTypes(6) : Type.getAllTypes(3));
         int currentOffset = romEntry.getIntValue("TypeEffectivenessOffset");
         int attackingType = rom[currentOffset];
         while (attackingType != GBConstants.typeTableTerminator) {
             if (rom[currentOffset] != GBConstants.typeTableForesightTerminator) {
                 int defendingType = rom[currentOffset + 1];
                 int effectivenessInternal = rom[currentOffset + 2];
-                Type attacking = Gen3Constants.typeTable[attackingType];
-                Type defending = Gen3Constants.typeTable[defendingType];
+                Type attacking = byteToBaseStatsType(attackingType & 0xFF);
+                Type defending = byteToBaseStatsType(defendingType & 0xFF);
+                if (attacking == null || defending == null) {
+                    currentOffset += 3;
+                    attackingType = rom[currentOffset];
+                    continue;
+                }
                 Effectiveness effectiveness = switch (effectivenessInternal) {
                     case 20 -> Effectiveness.DOUBLE;
                     case 10 -> Effectiveness.NEUTRAL;

@@ -144,8 +144,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_MOVE_SPLIT_SPECIAL = 1;
     private static final int CFRU_DPE_MOVE_SPLIT_STATUS = 2;
     private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION = 0x3EA7C;
+    private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET = 0x25D7B4;
     private static final int CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE = 3;
     private static final int CFRU_DPE_MAX_LEARNABLE_MOVES = 50;
+    private static final int CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START = 0x1219A48;
+    private static final int CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END = 0x1600000;
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
     private static final int CFRU_DPE_SPRIGATITO_INTERNAL_ID = 1294;
     private static final int CFRU_DPE_PECHARUNT_INTERNAL_ID = 1439;
@@ -2471,15 +2474,30 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int baseOffset = romEntry.getIntValue("PokemonMovesets");
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
-            int internalSpecies = pokedexToInternal[pk.getNumber()];
+            int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(pk);
+            if (internalSpecies <= 0 || internalSpecies == CFRU_DPE_SPECIES_EGG_INTERNAL_ID) {
+                continue;
+            }
             int pointerOffset = baseOffset + internalSpecies * 4;
             int movesLearntOffset = readPointer(pointerOffset, true);
             List<MoveLearnt> moves = movesLearntOffset == -1
                     ? new ArrayList<>()
                     : readCfruDpeMovesLearnt(movesLearntOffset);
-            movesets.put(pk.getNumber(), moves);
+            movesets.put(internalSpecies, moves);
         }
         return movesets;
+    }
+
+    @Override
+    public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
+        if (useCfruDpeGen9SpeciesCount && !movesets.containsKey(pkmn) && pkmn > 0
+                && pkmn < pokedexToInternal.length) {
+            int internalSpecies = pokedexToInternal[pkmn];
+            if (movesets.containsKey(internalSpecies)) {
+                return super.getMovesAtLevel(internalSpecies, movesets, level);
+            }
+        }
+        return super.getMovesAtLevel(pkmn, movesets, level);
     }
 
     private List<MoveLearnt> readCfruDpeMovesLearnt(int offset) {
@@ -2546,12 +2564,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void setCfruDpeMovesLearnt(Map<Integer, List<MoveLearnt>> movesets) {
         int baseOffset = getCfruDpeLevelUpLearnsetsOffset();
-        Map<Integer, byte[]> dataByOffset = new TreeMap<>();
-        Set<Integer> skippedSharedPointerOffsets = new TreeSet<>();
-        int boundedWrites = 0;
-        int skippedGrowth = 0;
+        validateCfruDpeLevelUpLearnsetsTable(baseOffset);
+
+        Map<Integer, String> blobKeyBySpecies = new TreeMap<>();
+        Map<String, byte[]> uniqueBlobs = new LinkedHashMap<>();
+        Map<Integer, Set<String>> newBlobKeysByOldPointer = new TreeMap<>();
+        Map<Integer, Integer> oldPointerReferenceCounts = new TreeMap<>();
+        int plannedBlobBytes = 0;
         int skippedPlaceholderSpecies = 0;
-        int skippedInvalidPointer = 0;
         int skippedInvalidMoves = 0;
 
         for (int i = 1; i <= numRealPokemon; i++) {
@@ -2564,15 +2584,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
             int pointerOffset = baseOffset + internalSpecies * 4;
             int movesLearntOffset = readPointer(pointerOffset, true);
-            if (movesLearntOffset <= 0 || !isCfruDpeMovesLearntSafeForInPlaceWrite(movesLearntOffset)) {
-                skippedInvalidPointer++;
-                continue;
+            if (movesLearntOffset > 0) {
+                oldPointerReferenceCounts.merge(movesLearntOffset, 1, Integer::sum);
             }
 
             List<MoveLearnt> moves = movesets.get(internalSpecies);
-            if (moves == null) {
-                moves = movesets.get(pk.getNumber());
-            }
             if (moves == null) {
                 continue;
             }
@@ -2586,40 +2602,118 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 }
             }
 
-            int oldLength = lengthOfCfruDpeMovesLearntAt(movesLearntOffset);
             byte[] newData = cfruDpeMovesLearntToBytes(validMoves);
-            if (newData.length > oldLength) {
-                skippedGrowth++;
-                continue;
-            }
-
-            byte[] previousData = dataByOffset.get(movesLearntOffset);
-            if (previousData != null && !Arrays.equals(previousData, newData)) {
-                skippedSharedPointerOffsets.add(movesLearntOffset);
-                continue;
-            }
-            if (previousData == null) {
-                dataByOffset.put(movesLearntOffset, newData);
-                boundedWrites++;
+            String blobKey = Base64.getEncoder().encodeToString(newData);
+            plannedBlobBytes += newData.length;
+            uniqueBlobs.putIfAbsent(blobKey, newData);
+            blobKeyBySpecies.put(internalSpecies, blobKey);
+            if (movesLearntOffset > 0) {
+                newBlobKeysByOldPointer.computeIfAbsent(movesLearntOffset, offset -> new TreeSet<>()).add(blobKey);
             }
         }
 
-        for (Map.Entry<Integer, byte[]> entry : dataByOffset.entrySet()) {
-            if (!skippedSharedPointerOffsets.contains(entry.getKey())) {
-                writeBytes(entry.getKey(), entry.getValue());
+        int oldSharedPointerGroups = 0;
+        for (int referenceCount : oldPointerReferenceCounts.values()) {
+            if (referenceCount > 1) {
+                oldSharedPointerGroups++;
             }
         }
 
-        if (skippedGrowth > 0 || !skippedSharedPointerOffsets.isEmpty() || skippedPlaceholderSpecies > 0
-                || skippedInvalidPointer > 0 || skippedInvalidMoves > 0) {
-            System.out.println("[CFRU-DPE-LEARNSET-WRITE] boundedWrites=" + boundedWrites
-                    + " skippedGrowth=" + skippedGrowth
-                    + " needsRepoint=" + skippedGrowth
-                    + " skippedSharedPointer=" + skippedSharedPointerOffsets.size()
-                    + " skippedPlaceholderSpecies=" + skippedPlaceholderSpecies
-                    + " skippedInvalidPointer=" + skippedInvalidPointer
-                    + " skippedInvalidMoves=" + skippedInvalidMoves);
+        int brokenSharedPointerGroups = 0;
+        for (Set<String> newBlobKeys : newBlobKeysByOldPointer.values()) {
+            if (newBlobKeys.size() > 1) {
+                brokenSharedPointerGroups++;
+            }
         }
+
+        int writtenBlobBytes = calculateCfruDpeLearnsetBlobBytes(uniqueBlobs.values());
+        int blobStartOffset = allocateCfruDpeLearnsetBlobSpace(writtenBlobBytes);
+        Map<String, Integer> blobOffsetByKey = writeCfruDpeLearnsetBlobs(uniqueBlobs, blobStartOffset);
+
+        for (Map.Entry<Integer, String> entry : blobKeyBySpecies.entrySet()) {
+            int pointerOffset = baseOffset + entry.getKey() * 4;
+            writePointer(pointerOffset, blobOffsetByKey.get(entry.getValue()));
+        }
+
+        System.out.println("[CFRU-DPE-LEARNSET-REPOINT] pointerTable=0x" + Integer.toHexString(baseOffset)
+                + " freeSpace=0x" + Integer.toHexString(blobStartOffset)
+                + "-0x" + Integer.toHexString(blobStartOffset + writtenBlobBytes)
+                + " plannedBlobBytes=" + plannedBlobBytes
+                + " writtenBlobBytes=" + writtenBlobBytes
+                + " uniqueBlobCount=" + uniqueBlobs.size()
+                + " dedupedBlobCount=" + (blobKeyBySpecies.size() - uniqueBlobs.size())
+                + " pointertableEntriesUpdated=" + blobKeyBySpecies.size()
+                + " skippedPlaceholderSpecies=" + skippedPlaceholderSpecies
+                + " skippedInvalidMoves=" + skippedInvalidMoves
+                + " oldSharedPointerGroups=" + oldSharedPointerGroups
+                + " brokenSharedPointerGroups=" + brokenSharedPointerGroups);
+    }
+
+    private void validateCfruDpeLevelUpLearnsetsTable(int baseOffset) {
+        int tableLength = (CFRU_DPE_PECHARUNT_INTERNAL_ID + 1) * GBConstants.longSize;
+        if (baseOffset != CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET) {
+            throw new RomIOException("Unexpected CFRU/DPE gLevelUpLearnsets table offset 0x"
+                    + Integer.toHexString(baseOffset) + ", expected 0x"
+                    + Integer.toHexString(CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET) + ".");
+        }
+        if (baseOffset < 0 || baseOffset + tableLength > rom.length) {
+            throw new RomIOException("CFRU/DPE gLevelUpLearnsets table is outside the ROM: base=0x"
+                    + Integer.toHexString(baseOffset) + ", length=0x" + Integer.toHexString(tableLength) + ".");
+        }
+    }
+
+    private int calculateCfruDpeLearnsetBlobBytes(Collection<byte[]> blobs) {
+        int length = 0;
+        for (byte[] blob : blobs) {
+            length = alignCfruDpeLearnsetBlobOffset(length);
+            length += blob.length;
+        }
+        return length;
+    }
+
+    private int allocateCfruDpeLearnsetBlobSpace(int length) {
+        int freeSpaceLength = CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END - CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START;
+        if (length <= 0) {
+            throw new RomIOException("No CFRU/DPE learnset blob data was planned for writing.");
+        }
+        if (length > freeSpaceLength) {
+            throw new RomIOException("CFRU/DPE learnset blob needs " + length
+                    + " bytes, exceeding the validated free-space region of " + freeSpaceLength + " bytes.");
+        }
+        int offset = alignCfruDpeLearnsetBlobOffset(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START);
+        if (offset + length > CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END) {
+            throw new RomIOException("CFRU/DPE learnset blob allocation 0x" + Integer.toHexString(offset)
+                    + "-0x" + Integer.toHexString(offset + length)
+                    + " exceeds the validated free-space region 0x"
+                    + Integer.toHexString(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START)
+                    + "-0x" + Integer.toHexString(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END) + ".");
+        }
+        if (isRomSpaceUsed(offset, length)) {
+            throw new RomIOException("CFRU/DPE learnset blob allocation 0x" + Integer.toHexString(offset)
+                    + "-0x" + Integer.toHexString(offset + length)
+                    + " is not fully free in the validated free-space region.");
+        }
+        return offset;
+    }
+
+    private Map<String, Integer> writeCfruDpeLearnsetBlobs(Map<String, byte[]> blobs, int startOffset) {
+        Map<String, Integer> blobOffsetByKey = new HashMap<>();
+        int offset = startOffset;
+        for (Map.Entry<String, byte[]> entry : blobs.entrySet()) {
+            offset = startOffset + alignCfruDpeLearnsetBlobOffset(offset - startOffset);
+            blobOffsetByKey.put(entry.getKey(), offset);
+            writeBytes(offset, entry.getValue());
+            offset += entry.getValue().length;
+        }
+        return blobOffsetByKey;
+    }
+
+    private int alignCfruDpeLearnsetBlobOffset(int offset) {
+        int remainder = offset % GBConstants.longSize;
+        if (remainder == 0) {
+            return offset;
+        }
+        return offset + GBConstants.longSize - remainder;
     }
 
     private int getCfruDpeLearnsetInternalSpeciesId(Species pk) {

@@ -115,6 +115,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         }
                     }
                     newStatic.getSpeciesHolder().setSpecies(newPK);
+                    randomizeCosmeticForme(newStatic);
 
                     if (legendariesLeft.isEmpty()) {
                         legendariesLeft.addAll(legendariesPool);
@@ -127,6 +128,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         ultraBeastsLeft.remove(newPK);
                     }
                     newStatic.getSpeciesHolder().setSpecies(newPK);
+                    randomizeCosmeticForme(newStatic);
 
                     if (ultraBeastsLeft.isEmpty()) {
                         ultraBeastsLeft.addAll(ultraBeastsPool);
@@ -143,6 +145,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         }
                     }
                     newStatic.getSpeciesHolder().setSpecies(newPK);
+                    randomizeCosmeticForme(newStatic);
 
                     if (nonlegsLeft.isEmpty()) {
                         nonlegsLeft.addAll(nonlegsPool);
@@ -236,6 +239,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     pokemonLeft.remove(newPK);
                 }
                 newStatic.getSpeciesHolder().setSpecies(newPK);
+                randomizeCosmeticForme(newStatic);
 
                 if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(pokemonPool);
@@ -268,6 +272,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                 }
                 newStatic.getSpeciesHolder().setSpecies(newPK);
+                randomizeCosmeticForme(newStatic);
 
                 pokemonLeft.remove(newPK);
                 if (pokemonLeft.isEmpty()) {
@@ -359,6 +364,7 @@ public class StaticPokemonRandomizer extends Randomizer {
 
                 pokemonLeft.remove(newPK);
                 newTotem.getSpeciesHolder().setSpecies(newPK);
+                randomizeCosmeticForme(newTotem);
                 newTotem.setResetMoves(true);
                 newTotem.setLevel(old.getLevel());
 
@@ -396,6 +402,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     pokemonLeft.remove(newAllyPK);
 
                     StaticEncounter newAlly = new StaticEncounter(newAllyPK);
+                    randomizeCosmeticForme(newAlly);
                     newAlly.setResetMoves(true);
                     newAlly.setLevel(oldAlly.getLevel());
                     if (levelModifier != 0) {
@@ -493,6 +500,18 @@ public class StaticPokemonRandomizer extends Randomizer {
         }
 
         return finalPool.getRandomSimilarStrengthSpecies(current, banSamePokemon, random);
+    }
+
+    /**
+     * If possible, sets the Species of the given StaticEncounter to a random cosmetic forme.<br>
+     * Does nothing if StaticEncounter doesn't allow alt formes, or if the Species doesn't have any cosmetic alt formes.
+     */
+    private void randomizeCosmeticForme(StaticEncounter se) {
+        SpeciesHolder sh = se.getSpeciesHolder();
+        if (sh.isAltFormeAllowed() && sh.getSpecies().isBaseForme()) {
+            Species base = sh.getSpecies().getBaseForme();
+            sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
+        }
     }
 
 }

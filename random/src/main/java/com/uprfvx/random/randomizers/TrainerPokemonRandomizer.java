@@ -230,7 +230,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     if (evolveAsFarAsLegal) {
                         newSp = evolveAsFarAsLegal(oldSp, tpLevel, evoLvlModifier);
                         tp.getSpeciesHolder().setSpecies(newSp);
-                        setFormeForTrainerPokemon(tp);
+                        randomizeCosmeticForme(tp);
                         tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSp, tp.getAbilitySlot()));
                     } else {
                         newSp = oldSp;
@@ -264,7 +264,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
                     //We've chosen! Now to set it.
                     tp.getSpeciesHolder().setSpecies(newSp);
-                    setFormeForTrainerPokemon(tp);
+                    randomizeCosmeticForme(tp);
                     tp.setAbilitySlot(getRandomAbilitySlot(newSp));
                     tp.setResetMoves(true);
                 }
@@ -707,7 +707,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 Species starter = startersByLevel.floorEntry(bestPoke.getLevel()).getValue();
 
                 bestPoke.getSpeciesHolder().setSpecies(starter);
-                setFormeForTrainerPokemon(bestPoke);
+                randomizeCosmeticForme(bestPoke);
                 bestPoke.setResetMoves(true);
                 bestPoke.setAbilitySlot(abilitySlot);
             }
@@ -749,10 +749,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
         return species;
     }
 
-    private void setFormeForTrainerPokemon(TrainerPokemon tp) {
-        // TODO: account for this really setting random cosmetic forme
+    /**
+     * If possible, sets the Species of the given TrainerPokemon to a random cosmetic forme.<br>
+     * Does nothing if TrainerPokemon doesn't allow alt formes, or if the Species doesn't have any cosmetic alt formes.
+     */
+    private void randomizeCosmeticForme(TrainerPokemon tp) {
         SpeciesHolder sh = tp.getSpeciesHolder();
-        if (sh.isAltFormeAllowed()) {
+        if (sh.isAltFormeAllowed() && sh.getSpecies().isBaseForme()) {
             Species base = sh.getSpecies().getBaseForme();
             sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
         }
@@ -917,7 +920,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 Species newSpecies = evolveAsFarAsLegal(tp.getSpecies(), tp.getLevel(), evoLvlModifier);
                 if (newSpecies != tp.getSpecies()) {
                     tp.getSpeciesHolder().setSpecies(newSpecies);
-                    setFormeForTrainerPokemon(tp);
+                    randomizeCosmeticForme(tp);
                     tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
                 }
             }

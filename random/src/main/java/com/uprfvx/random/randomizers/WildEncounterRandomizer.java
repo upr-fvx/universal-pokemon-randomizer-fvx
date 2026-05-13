@@ -395,7 +395,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 }
 
                 enc.getSpeciesHolder().setSpecies(replacement);
-                setFormeForEncounter(enc);
+                randomizeCosmeticForme(enc);
             }
 
             if (area.isForceMultipleSpecies()) {
@@ -553,7 +553,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 }
 
                 enc.getSpeciesHolder().setSpecies(replacement);
-                setFormeForEncounter(enc);
+                randomizeCosmeticForme(enc);
             }
 
         }
@@ -1248,10 +1248,13 @@ public class WildEncounterRandomizer extends Randomizer {
         return prepped;
     }
 
-    private void setFormeForEncounter(Encounter enc) {
-        // TODO: what's up with this? Bad name if its intent is to set a random cosmetic forme.
+    /**
+     * If possible, sets the Species of the given Encounter to a random cosmetic forme.<br>
+     * Does nothing if Encounter doesn't allow alt formes, or if the Species doesn't have any cosmetic alt formes.
+     */
+    private void randomizeCosmeticForme(Encounter enc) {
         SpeciesHolder sh = enc.getSpeciesHolder();
-        if (sh.isAltFormeAllowed()) {
+        if (sh.isAltFormeAllowed() && sh.getSpecies().isBaseForme()) {
             Species base = sh.getSpecies().getBaseForme();
             sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
         }

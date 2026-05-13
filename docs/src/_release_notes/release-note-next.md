@@ -37,7 +37,10 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of a new feature here.] (Issue #[issue num])
 
 ### Static Pokemon
-- (Gen 3) [The description of a changed feature here.]
+- If a Static Pokémon slot allows for alt formes, and a Pokémon with cosmetic formes (e.g. Burmy, Flabébé, Unown) is put in that slot, that Pokémon will have a random cosmetic forme instead of always having the forme that corresponds with id=0.
+
+### In-Game Trades
+- (Gen 7) If a Pokémon with cosmetic formes (e.g. Burmy, Flabébé, Unown) is randomly chosen as the given Pokémon of a trade, that Pokémon will have a random cosmetic forme instead of always having the forme that corresponds with id=0. 
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

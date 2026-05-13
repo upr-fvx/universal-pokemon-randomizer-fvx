@@ -25,7 +25,14 @@ public class EncounterHeldItemRandomizer extends Randomizer {
         boolean banBadItems = settings.isBanBadRandomWildPokemonHeldItems();
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        possible.removeIf(this::isUnsafeEncounterHeldItem);
+        if (possible.isEmpty()) {
+            throw new IllegalStateException("No safe encounter held items are available for randomization.");
+        }
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            if (shouldSkipSpecies(pk)) {
+                continue;
+            }
             if (pk.getGuaranteedHeldItem() == null && pk.getCommonHeldItem() == null && pk.getRareHeldItem() == null
                     && pk.getDarkGrassHeldItem() == null) {
                 // No held items at all, skip
@@ -103,5 +110,14 @@ public class EncounterHeldItemRandomizer extends Randomizer {
         while (pk.getRareHeldItem().equals(pk.getCommonHeldItem())) {
             pk.setRareHeldItem(possible.get(random.nextInt(possible.size())));
         }
+    }
+
+    private boolean shouldSkipSpecies(Species pk) {
+        return pk == null || pk.getHp() == 0 || pk.getAttack() == 0
+                || pk.getDefense() == 0 || pk.getSpeed() == 0 || pk.getSpatk() == 0 || pk.getSpdef() == 0;
+    }
+
+    private boolean isUnsafeEncounterHeldItem(Item item) {
+        return item == null || item.getName() == null || item.getName().startsWith("item #");
     }
 }

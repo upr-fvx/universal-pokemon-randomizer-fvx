@@ -1397,7 +1397,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     forme = 0;
                 }
                 Encounter e = new Encounter(pk, level);
-                e.setFormeNumber(forme);
+                SpeciesHolder sh = e.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 e.setMaxLevel(maxLevel);
                 area.add(e);
             }
@@ -1412,7 +1414,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int level = data[offset + 8 + i * 8];
             if (species != 0) {
                 Encounter e = new Encounter(pokes[species], level);
-                e.setFormeNumber(0);
                 e.setMaxLevel(level);
                 area.add(e);
             }
@@ -1772,7 +1773,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private void writeEncounters(byte[] data, int offset, List<Encounter> encounters) {
         for (int i = 0; i < encounters.size(); i++) {
             Encounter encounter = encounters.get(i);
-            int speciesAndFormeData = (encounter.getFormeNumber() << 11) + encounter.getSpecies().getBaseNumber();
+            int speciesAndFormeData = (encounter.getSpeciesHolder().getFormeNumber() << 11)
+                    + encounter.getSpecies().getBaseNumber();
             writeWord(data, offset + i * 4, speciesAndFormeData);
             data[offset + 2 + i * 4] = (byte) encounter.getLevel();
             data[offset + 3 + i * 4] = (byte) encounter.getMaxLevel();

@@ -76,4 +76,12 @@ public class SpeciesHolder {
         this.formeNumber = formeNumber;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SpeciesHolder other) {
+            return formeNumber == other.formeNumber && altFormeAllowed == other.altFormeAllowed
+                    && baseSpecies.equals(other.baseSpecies);
+        }
+        return false;
+    }
 }

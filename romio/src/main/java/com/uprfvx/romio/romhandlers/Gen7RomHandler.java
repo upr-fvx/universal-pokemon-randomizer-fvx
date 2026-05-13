@@ -1244,7 +1244,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int forme = speciesAndFormeData >> 11;
             if (species != 0) {
                 Encounter enc = new Encounter(pokes[species], minLevel);
-                enc.setFormeNumber(forme);
+                SpeciesHolder sh = enc.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 enc.setMaxLevel(maxLevel);
                 area.add(enc);
 
@@ -1253,7 +1255,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     species = readWord(encounterTable, offset + (40 * j)) & 0x7FF;
                     forme = readWord(encounterTable, offset + (40 * j)) >> 11;
                     Encounter sos = new Encounter(pokes[species], minLevel);
-                    sos.setFormeNumber(forme);
+                    SpeciesHolder sosSH = sos.getSpeciesHolder();
+                    sosSH.setAltFormeAllowed();
+                    sosSH.setFormeNumber(forme);
                     sos.setMaxLevel(maxLevel);
                     sos.setSOS(true);
                     sos.setSosType(SOSType.GENERIC);
@@ -1269,7 +1273,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int forme = readWord(encounterTable, offset) >> 11;
             if (species != 0) {
                 Encounter weatherSOS = new Encounter(pokes[species], minLevel);
-                weatherSOS.setFormeNumber(forme);
+                SpeciesHolder weatherSOSSH = weatherSOS.getSpeciesHolder();
+                weatherSOSSH.setAltFormeAllowed();
+                weatherSOSSH.setFormeNumber(forme);
                 weatherSOS.setMaxLevel(maxLevel);
                 weatherSOS.setSOS(true);
                 weatherSOS.setSosType(getSOSTypeForIndex(i));
@@ -1356,13 +1362,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         for (int i = 0; i < numberOfEncounterSlots; i++) {
             int currentOffset = offset + 0xC + (i * 4);
             Encounter enc = encounterIterator.next();
-            int speciesAndFormeData = (enc.getFormeNumber() << 11) + enc.getSpecies().getBaseNumber();
+            int speciesAndFormeData = (enc.getSpeciesHolder().getFormeNumber() << 11)
+                    + enc.getSpecies().getBaseNumber();
             writeWord(encounterTable, currentOffset, speciesAndFormeData);
 
             // SOS encounters for this encounter
             for (int j = 1; j < 8; j++) {
                 Encounter sosEncounter = encounterIterator.next();
-                speciesAndFormeData = (sosEncounter.getFormeNumber() << 11) + sosEncounter.getSpecies().getBaseNumber();
+                speciesAndFormeData = (sosEncounter.getSpeciesHolder().getFormeNumber() << 11)
+                        + sosEncounter.getSpecies().getBaseNumber();
                 writeWord(encounterTable, currentOffset + (40 * j), speciesAndFormeData);
             }
         }
@@ -1372,7 +1380,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < 6; i++) {
                 int currentOffset = offset + 0x14C + (i * 4);
                 Encounter weatherSOSEncounter = encounterIterator.next();
-                int speciesAndFormeData = (weatherSOSEncounter.getFormeNumber() << 11) + weatherSOSEncounter.getSpecies().getBaseNumber();
+                int speciesAndFormeData = (weatherSOSEncounter.getSpeciesHolder().getFormeNumber() << 11)
+                        + weatherSOSEncounter.getSpecies().getBaseNumber();
                 writeWord(encounterTable, currentOffset, speciesAndFormeData);
             }
         }

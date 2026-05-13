@@ -23,13 +23,13 @@ package com.uprfvx.romio.gamedata;
 /*----------------------------------------------------------------------------*/
 
 /**
- * Contains one wild Pokemon slot
+ * Contains one wild Pokemon slot. The {@link Species} and forme info is largely held by a {@link SpeciesHolder},
+ * but can also be gotten through {@link #getSpecies()}.
  */
 public class Encounter {
-    // TODO: internally some encounters can't be alt formes; enforce it at this level
 
-    private Species baseSpecies;
-    private int formeNumber;
+    private final SpeciesHolder speciesHolder;
+
     private int level;
     private int maxLevel;
 
@@ -37,35 +37,21 @@ public class Encounter {
     private boolean isSOS;
     private SOSType sosType;
 
+    // TODO: how to do if species is not a base forme? currently it throws an exception
     public Encounter (Species species, int level) {
-        setSpecies(species);
+        this.speciesHolder = new SpeciesHolder(species);
         this.level = level;
     }
 
-    public Species getSpecies() {
-        return baseSpecies.getForme(formeNumber);
-    }
-
-    public void setSpecies(Species species) {
-        this.baseSpecies = species.getBaseForme();
-        this.formeNumber = species.getFormeNumber();
-    }
-
-    public int getFormeNumber() {
-        return formeNumber;
+    public SpeciesHolder getSpeciesHolder() {
+        return speciesHolder;
     }
 
     /**
-     * Sets the formeNumber.
-     * @param formeNumber The forme number to set.
-     * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
+     * Short for {@link #getSpeciesHolder()}.{@link SpeciesHolder#getSpecies() getSpecies()}
      */
-    public void setFormeNumber(int formeNumber) {
-        if (!baseSpecies.isValidFormeNumber(formeNumber)) {
-            throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
-                    + baseSpecies.getNumberAndFullName());
-        }
-        this.formeNumber = formeNumber;
+    public Species getSpecies() {
+        return speciesHolder.getSpecies();
     }
 
     public int getLevel() {
@@ -112,8 +98,8 @@ public class Encounter {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Encounter other) {
-            return level == other.level && maxLevel == other.maxLevel && baseSpecies.equals(other.baseSpecies)
-                    && formeNumber == other.formeNumber && isSOS == other.isSOS && sosType == other.sosType;
+            return level == other.level && maxLevel == other.maxLevel && speciesHolder.equals(other.speciesHolder)
+                    && isSOS == other.isSOS && sosType == other.sosType;
         }
         return false;
     }

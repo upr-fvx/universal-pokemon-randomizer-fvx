@@ -394,7 +394,7 @@ public class WildEncounterRandomizer extends Randomizer {
                     }
                 }
 
-                enc.setSpecies(replacement);
+                enc.getSpeciesHolder().setSpecies(replacement);
                 setFormeForEncounter(enc);
             }
 
@@ -552,7 +552,7 @@ public class WildEncounterRandomizer extends Randomizer {
                     replacement = awd.areaMap.get(enc.getSpecies());
                 }
 
-                enc.setSpecies(replacement);
+                enc.getSpeciesHolder().setSpecies(replacement);
                 setFormeForEncounter(enc);
             }
 
@@ -890,7 +890,7 @@ public class WildEncounterRandomizer extends Randomizer {
             // This is very unlikely to happen in practice, even with very
             // restrictive settings, so it should be okay to break logic here.
             while (area.stream().distinct().count() == 1) {
-                area.getFirst().setSpecies(rSpecService.randomSpecies(random));
+                area.getFirst().getSpeciesHolder().setSpecies(rSpecService.randomSpecies(random));
             }
         }
 
@@ -1250,9 +1250,11 @@ public class WildEncounterRandomizer extends Randomizer {
 
     private void setFormeForEncounter(Encounter enc) {
         // TODO: what's up with this? Bad name if its intent is to set a random cosmetic forme.
-        Species sp = enc.getSpecies();
-        enc.setFormeNumber(sp.getRandomCosmeticFormeNumber(random));
-        enc.setSpecies(sp.getBaseForme());
+        SpeciesHolder sh = enc.getSpeciesHolder();
+        if (sh.isAltFormeAllowed()) {
+            Species base = sh.getSpecies().getBaseForme();
+            sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
+        }
     }
 
     public void changeCatchRates() {

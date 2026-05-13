@@ -2688,12 +2688,30 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     + Integer.toHexString(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START)
                     + "-0x" + Integer.toHexString(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END) + ".");
         }
-        if (isRomSpaceUsed(offset, length)) {
-            throw new RomIOException("CFRU/DPE learnset blob allocation 0x" + Integer.toHexString(offset)
-                    + "-0x" + Integer.toHexString(offset + length)
-                    + " is not fully free in the validated free-space region.");
+        while (offset + length <= CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END) {
+            if (isCfruDpeLearnsetBlobSpaceFree(offset, length)) {
+                return offset;
+            }
+            offset = alignCfruDpeLearnsetBlobOffset(offset + 1);
         }
-        return offset;
+        throw new RomIOException("No free CFRU/DPE learnset blob allocation of " + length
+                + " bytes was found in the validated free-space region 0x"
+                + Integer.toHexString(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START)
+                + "-0x" + Integer.toHexString(CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END) + ".");
+    }
+
+    private boolean isCfruDpeLearnsetBlobSpaceFree(int offset, int length) {
+        if (offset < CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_START
+                || offset + length > CFRU_DPE_LEARNSET_REPOINT_FREE_SPACE_END
+                || offset + length > rom.length) {
+            return false;
+        }
+        for (int i = 0; i < length; i++) {
+            if ((rom[offset + i] & 0xFF) != 0xFF) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private Map<String, Integer> writeCfruDpeLearnsetBlobs(Map<String, byte[]> blobs, int startOffset) {

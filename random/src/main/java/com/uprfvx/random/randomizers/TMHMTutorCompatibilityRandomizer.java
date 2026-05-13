@@ -183,15 +183,25 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
         List<Integer> tmMoves = romHandler.getTMMoves();
+        int skippedMissingMovesets = 0;
         for (Species pkmn : compat.keySet()) {
-            List<MoveLearnt> moveset = movesets.get(pkmn.getNumber());
+            List<MoveLearnt> moveset = getMovesetForSpecies(pkmn, movesets);
             boolean[] pkmnCompat = compat.get(pkmn);
+            if (moveset == null || pkmnCompat == null) {
+                skippedMissingMovesets++;
+                continue;
+            }
             for (MoveLearnt ml : moveset) {
                 if (tmMoves.contains(ml.move)) {
                     int tmIndex = tmMoves.indexOf(ml.move);
-                    pkmnCompat[tmIndex + 1] = true;
+                    if (tmIndex + 1 < pkmnCompat.length) {
+                        pkmnCompat[tmIndex + 1] = true;
+                    }
                 }
             }
+        }
+        if (skippedMissingMovesets > 0) {
+            System.out.println("[CFRU-DPE-TM-SANITY] skippedMissingMovesets=" + skippedMissingMovesets);
         }
         romHandler.setTMHMCompatibility(compat);
         tmhmChangesMade = true;
@@ -301,18 +311,39 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
         List<Integer> mtMoves = romHandler.getMoveTutorMoves();
+        int skippedMissingMovesets = 0;
         for (Species pkmn : compat.keySet()) {
-            List<MoveLearnt> moveset = movesets.get(pkmn.getNumber());
+            List<MoveLearnt> moveset = getMovesetForSpecies(pkmn, movesets);
             boolean[] pkmnCompat = compat.get(pkmn);
+            if (moveset == null || pkmnCompat == null) {
+                skippedMissingMovesets++;
+                continue;
+            }
             for (MoveLearnt ml : moveset) {
                 if (mtMoves.contains(ml.move)) {
                     int mtIndex = mtMoves.indexOf(ml.move);
-                    pkmnCompat[mtIndex + 1] = true;
+                    if (mtIndex + 1 < pkmnCompat.length) {
+                        pkmnCompat[mtIndex + 1] = true;
+                    }
                 }
             }
         }
+        if (skippedMissingMovesets > 0) {
+            System.out.println("[CFRU-DPE-TUTOR-SANITY] skippedMissingMovesets=" + skippedMissingMovesets);
+        }
         romHandler.setMoveTutorCompatibility(compat);
         tutorChangesMade = true;
+    }
+
+    private List<MoveLearnt> getMovesetForSpecies(Species species, Map<Integer, List<MoveLearnt>> movesets) {
+        if (species == null || movesets == null) {
+            return null;
+        }
+        int identityNumber = species.getSpeciesSetIdentityNumber();
+        if (identityNumber > 0 && movesets.containsKey(identityNumber)) {
+            return movesets.get(identityNumber);
+        }
+        return movesets.get(species.getNumber());
     }
 
     public void ensureMoveTutorEvolutionSanity() {

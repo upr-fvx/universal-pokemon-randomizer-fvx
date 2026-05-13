@@ -154,6 +154,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_HM_COUNT = 8;
     private static final int CFRU_DPE_TMHM_COUNT = CFRU_DPE_TM_COUNT + CFRU_DPE_HM_COUNT;
     private static final int CFRU_DPE_TMHM_COMPAT_BYTES = 16;
+    private static final int CFRU_DPE_MOVE_TUTOR_MOVES_POINTER_LOCATION = 0x120BE4;
+    private static final int CFRU_DPE_MOVE_TUTOR_COMPATIBILITY_POINTER_LOCATION = 0x120C30;
+    private static final int CFRU_DPE_MOVE_TUTOR_COUNT = 152;
+    private static final int CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES = 19;
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -3168,6 +3172,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (!hasMoveTutors()) {
             return new ArrayList<>();
         }
+        if (useCfruDpeMoveTutorScope()) {
+            return getCfruDpeMoveTutorMoves();
+        }
         List<Integer> mts = new ArrayList<>();
         int moveCount = romEntry.getIntValue("MoveTutorMoves");
         int offset = romEntry.getIntValue("MoveTutorData");
@@ -3182,6 +3189,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		if (!hasMoveTutors()) {
 			return;
 		}
+        if (useCfruDpeMoveTutorScope()) {
+            writeCfruDpeMoveTutorMoves(moveIndexes);
+            return;
+        }
         writeMoveTutorMoves(moveIndexes);
         writeMoveTutorText(moveIndexes);
 	}
@@ -3262,6 +3273,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (!hasMoveTutors()) {
             return new TreeMap<>();
         }
+        if (useCfruDpeMoveTutorScope()) {
+            return getCfruDpeMoveTutorCompatibility();
+        }
         Map<Species, boolean[]> compat = new TreeMap<>();
         int moveCount = romEntry.getIntValue("MoveTutorMoves");
         int offset = romEntry.getIntValue("MoveTutorCompatibility");
@@ -3283,6 +3297,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (!hasMoveTutors()) {
             return;
         }
+        if (useCfruDpeMoveTutorScope()) {
+            setCfruDpeMoveTutorCompatibility(compatData);
+            return;
+        }
         int moveCount = romEntry.getIntValue("MoveTutorMoves");
         int offset = romEntry.getIntValue("MoveTutorCompatibility");
         int bytesRequired = ((moveCount + 7) & ~7) / 8;
@@ -3294,6 +3312,88 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 writeByte(compatOffset + j, getByteFromFlags(flags, j * 8 + 1));
             }
         }
+    }
+
+    private boolean useCfruDpeMoveTutorScope() {
+        return useCfruDpeGen9SpeciesCount;
+    }
+
+    private List<Integer> getCfruDpeMoveTutorMoves() {
+        List<Integer> moves = new ArrayList<>();
+        int offset = getCfruDpeMoveTutorMovesOffset();
+        for (int i = 0; i < CFRU_DPE_MOVE_TUTOR_COUNT; i++) {
+            moves.add(readWord(offset + i * 2));
+        }
+        return moves;
+    }
+
+    private void writeCfruDpeMoveTutorMoves(List<Integer> moveIndexes) {
+        if (moveIndexes.size() != CFRU_DPE_MOVE_TUTOR_COUNT) {
+            throw new IllegalArgumentException("Wrong amount of CFRU/DPE move tutor moves.");
+        }
+        int offset = getCfruDpeMoveTutorMovesOffset();
+        for (int i = 0; i < CFRU_DPE_MOVE_TUTOR_COUNT; i++) {
+            int move = moveIndexes.get(i);
+            if (!isLoadedMoveId(move)) {
+                throw new IllegalArgumentException("Invalid CFRU/DPE move tutor move: " + move);
+            }
+            writeWord(offset + i * 2, move);
+        }
+    }
+
+    private Map<Species, boolean[]> getCfruDpeMoveTutorCompatibility() {
+        Map<Species, boolean[]> compat = new TreeMap<>();
+        int offset = getCfruDpeMoveTutorCompatibilityOffset();
+        for (int i = 1; i <= numRealPokemon; i++) {
+            Species pkmn = speciesList.get(i);
+            int compatOffset = getCfruDpeMoveTutorCompatibilityOffsetForSpecies(offset, pkmn);
+            if (compatOffset < 0) {
+                continue;
+            }
+            boolean[] flags = new boolean[CFRU_DPE_MOVE_TUTOR_COUNT + 1];
+            for (int j = 0; j < CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES; j++) {
+                readByteIntoFlags(flags, j * 8 + 1, compatOffset + j);
+            }
+            compat.put(pkmn, flags);
+        }
+        return compat;
+    }
+
+    private void setCfruDpeMoveTutorCompatibility(Map<Species, boolean[]> compatData) {
+        int offset = getCfruDpeMoveTutorCompatibilityOffset();
+        for (Map.Entry<Species, boolean[]> compatEntry : compatData.entrySet()) {
+            Species pkmn = compatEntry.getKey();
+            boolean[] flags = compatEntry.getValue();
+            int compatOffset = getCfruDpeMoveTutorCompatibilityOffsetForSpecies(offset, pkmn);
+            if (compatOffset < 0 || flags == null) {
+                continue;
+            }
+            for (int j = 0; j < CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES; j++) {
+                writeByte(compatOffset + j, getByteFromFlags(flags, j * 8 + 1));
+            }
+        }
+    }
+
+    private int getCfruDpeMoveTutorMovesOffset() {
+        return readRequiredCfruDpePointer(CFRU_DPE_MOVE_TUTOR_MOVES_POINTER_LOCATION,
+                CFRU_DPE_MOVE_TUTOR_COUNT * 2, "CFRU/DPE gMoveTutorMoves");
+    }
+
+    private int getCfruDpeMoveTutorCompatibilityOffset() {
+        return readRequiredCfruDpePointer(CFRU_DPE_MOVE_TUTOR_COMPATIBILITY_POINTER_LOCATION,
+                CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES, "CFRU/DPE gTutorLearnsets");
+    }
+
+    private int getCfruDpeMoveTutorCompatibilityOffsetForSpecies(int baseOffset, Species pkmn) {
+        if (pkmn == null) {
+            return -1;
+        }
+        int speciesIndex = pkmn.getSpeciesSetIdentityNumber();
+        int compatOffset = baseOffset + speciesIndex * CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES;
+        if (speciesIndex < 0 || compatOffset < 0 || compatOffset + CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES > rom.length) {
+            return -1;
+        }
+        return compatOffset;
     }
 
     // For dynamic offsets later

@@ -115,6 +115,14 @@ public class Gen3Constants {
 
     public static final int tmCount = 50, hmCount = 8;
 
+    public static final int cfruDpeItemCount = 799, cfruDpeMaxItemID = cfruDpeItemCount - 1;
+
+    public static final int cfruDpeBoosterEnergy = ItemIDs.UNIQUE_OFFSET + 0x2E7;
+    public static final int cfruDpeTeraOrb = ItemIDs.UNIQUE_OFFSET + 0x306;
+    public static final int cfruDpePortablePC = ItemIDs.UNIQUE_OFFSET + 0x307;
+    public static final int cfruDpeFreeSpace1 = ItemIDs.UNIQUE_OFFSET + 0x308;
+    public static final int cfruDpeShinySpace20 = ItemIDs.UNIQUE_OFFSET + 0x31E;
+
     public static final List<Integer> hmMoves = Arrays.asList(
             MoveIDs.cut, MoveIDs.fly, MoveIDs.surf, MoveIDs.strength, MoveIDs.flash, MoveIDs.rockSmash, MoveIDs.waterfall, MoveIDs.dive);
 
@@ -557,6 +565,7 @@ public class Gen3Constants {
     public static final Set<Integer> bannedItems = setupBannedItems();
     private static final Set<Integer> badItemsRSE = setupBadItemsRSE();
     private static final Set<Integer> badItemsFRLG = setupBadItemsFRLG();
+    public static final Set<Integer> cfruDpeEncounterHeldItemBannedItems = setupCfruDpeEncounterHeldItemBannedItems();
     public static final Set<Integer> opShopItems = setupOPShopItems();
 
     private static Set<Integer> setupBannedItems() {
@@ -591,6 +600,19 @@ public class Gen3Constants {
         addBetween(set, ItemIDs.tinyMushroom, ItemIDs.bigMushroom);
         addBetween(set, ItemIDs.pearl, ItemIDs.nugget);
         set.add(ItemIDs.luckyEgg);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupCfruDpeEncounterHeldItemBannedItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.masterBall, ItemIDs.premierBall); // balls
+        addBetween(set, ItemIDs.mail1, ItemIDs.mail12); // mail
+        addBetween(set, ItemIDs.tm01, ItemIDs.tm50);
+        addBetween(set, ItemIDs.hm01, ItemIDs.hm08);
+
+        // Modern CFRU/DPE special/system/form items. Keep them loadable for preservation, but not pickable.
+        addBetween(set, ItemIDs.UNIQUE_OFFSET + 0x2E7, ItemIDs.UNIQUE_OFFSET + 0x307);
+        addBetween(set, cfruDpeFreeSpace1, cfruDpeShinySpace20);
         return Collections.unmodifiableSet(set);
     }
 

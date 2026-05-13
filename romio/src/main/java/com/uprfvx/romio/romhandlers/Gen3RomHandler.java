@@ -1518,10 +1518,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         // Held Items?
-        int item1ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
-        Item item1 = item1ID >= 0 && item1ID < items.size() ? items.get(item1ID) : null;
-        int item2ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsRareHeldItemOffset));
-        Item item2 = item2ID >= 0 && item2ID < items.size() ? items.get(item2ID) : null;
+        int rawItem1ID = readWord(offset + Gen3Constants.bsCommonHeldItemOffset);
+        int item1ID = Gen3Constants.itemIDToStandard(rawItem1ID);
+        Item item1 = itemForBaseStatsHeldItem(item1ID, rawItem1ID);
+        int rawItem2ID = readWord(offset + Gen3Constants.bsRareHeldItemOffset);
+        int item2ID = Gen3Constants.itemIDToStandard(rawItem2ID);
+        Item item2 = itemForBaseStatsHeldItem(item2ID, rawItem2ID);
 
         if (Objects.equals(item1, item2)) {
             // guaranteed
@@ -4763,20 +4765,34 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     public void loadItems() {
         int nameOffs = romEntry.getIntValue("ItemData");
         int structLen = romEntry.getIntValue("ItemEntrySize");
-        int internalCount = romEntry.getIntValue("ItemCount");
+        int internalCount = getItemLoadInternalLimit(nameOffs, structLen);
 
-        int lastItemID = Gen3Constants.getLastItemID(romEntry.getRomType());
+        int lastItemID = Math.max(Gen3Constants.getLastItemID(romEntry.getRomType()),
+                Gen3Constants.itemIDToStandard(internalCount));
         items = new ArrayList<>(Collections.nCopies(lastItemID + 1, null));
 
         for (int internal = 1; internal <= internalCount; internal++) {
             int id = Gen3Constants.itemIDToStandard(internal);
-            String name = readVariableLengthString(nameOffs + structLen * internal);
-            items.set(id, new Item(id, name));
+            String name = readItemNameOrFallback(nameOffs + structLen * internal, internal);
+            Item item = new Item(id, name);
+            if (isCfruDpeItemNameFallback(name)) {
+                item.setAllowed(false);
+                item.setBad(true);
+            }
+            items.set(id, item);
         }
 
         Gen3Constants.bannedItems.stream().filter(id -> id < items.size())
                 .map(items::get).filter(Objects::nonNull)
                 .forEach(item -> item.setAllowed(false));
+        if (useCfruDpeGen9SpeciesCount) {
+            Gen3Constants.cfruDpeEncounterHeldItemBannedItems.stream().filter(id -> id < items.size())
+                    .map(items::get).filter(Objects::nonNull)
+                    .forEach(item -> {
+                        item.setAllowed(false);
+                        item.setBad(true);
+                    });
+        }
         for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
         }
@@ -4785,6 +4801,77 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 items.get(id).setBad(true);
             }
         }
+    }
+
+    private int getItemLoadInternalLimit(int nameOffs, int structLen) {
+        int configuredLimit = romEntry.getIntValue("ItemCount");
+        if (!useCfruDpeGen9SpeciesCount) {
+            return configuredLimit;
+        }
+        int cfruDpeLimit = Gen3Constants.cfruDpeMaxItemID;
+        int lastEntryOffset = nameOffs + structLen * cfruDpeLimit;
+        if (nameOffs >= 0 && structLen > 0 && offsetInRom(nameOffs, structLen)
+                && offsetInRom(lastEntryOffset, structLen)
+                && hasPlausibleItemName(nameOffs + structLen * cfruDpeLimit)) {
+            return cfruDpeLimit;
+        }
+        return Math.max(configuredLimit, 778);
+    }
+
+    private String readItemNameOrFallback(int offset, int internalId) {
+        try {
+            if (offsetInRom(offset, 1)) {
+                String name = readVariableLengthString(offset);
+                if (isPlausibleItemName(name)) {
+                    return name;
+                }
+            }
+        } catch (RuntimeException ignored) {
+            // Fall through to a visible placeholder; the item remains loadable for preserve/reload.
+        }
+        return "item #" + internalId;
+    }
+
+    private Item itemForBaseStatsHeldItem(int standardId, int internalId) {
+        if (standardId <= 0) {
+            return null;
+        }
+        if (standardId >= items.size()) {
+            if (!useCfruDpeGen9SpeciesCount) {
+                return null;
+            }
+            while (items.size() <= standardId) {
+                items.add(null);
+            }
+        }
+        Item item = items.get(standardId);
+        if (item == null && useCfruDpeGen9SpeciesCount) {
+            item = new Item(standardId, "item #" + internalId);
+            item.setAllowed(false);
+            item.setBad(true);
+            items.set(standardId, item);
+        }
+        return item;
+    }
+
+    private boolean hasPlausibleItemName(int offset) {
+        try {
+            if (!offsetInRom(offset, 1)) {
+                return false;
+            }
+            return isPlausibleItemName(readVariableLengthString(offset));
+        } catch (RuntimeException ignored) {
+            return false;
+        }
+    }
+
+    private boolean isPlausibleItemName(String name) {
+        return name != null && !name.isBlank() && name.length() <= 32
+                && !name.contains("\\x") && !name.contains("[") && !name.contains("]");
+    }
+
+    private boolean isCfruDpeItemNameFallback(String name) {
+        return !isPlausibleItemName(name) || name.startsWith("item #");
     }
 
     @Override

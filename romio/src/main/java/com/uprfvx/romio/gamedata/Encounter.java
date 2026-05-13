@@ -37,8 +37,18 @@ public class Encounter {
     private boolean isSOS;
     private SOSType sosType;
 
-    // TODO: how to do if species is not a base forme? currently it throws an exception
-    public Encounter (Species species, int level) {
+    /**
+     * Creates an Encounter with the given {@link Species} and level.
+     * @param species The Species used for the Encounter. Must be a base forme.
+     * @param level The level for the Encounter, or min level if a max level is given later. Must be non-negative.
+     * @throws NullPointerException if species is null.
+     * @throws IllegalArgumentException if species is not a base forme.
+     * @throws IllegalArgumentException if level is negative.
+     */
+    public Encounter(Species species, int level) {
+        if (level < 0) {
+            throw new IllegalArgumentException("level must be non-negative");
+        }
         this.speciesHolder = new SpeciesHolder(species);
         this.level = level;
     }

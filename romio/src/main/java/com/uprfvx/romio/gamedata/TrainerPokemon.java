@@ -67,7 +67,18 @@ public class TrainerPokemon {
 
     private boolean isAddedTeamMember = false;
 
+    /**
+     * Creates a TrainerPokemon with the given {@link Species} and level.
+     * @param species The Species used for the Encounter. Must be a base forme.
+     * @param level The level for the Encounter, or min level if a max level is given later. Must be non-negative.
+     * @throws NullPointerException if species is null.
+     * @throws IllegalArgumentException if species is not a base forme.
+     * @throws IllegalArgumentException if level is negative.
+     */
     public TrainerPokemon(Species species, int level) {
+        if (level < 0) {
+            throw new IllegalArgumentException("level must be non-negative");
+        }
         this.speciesHolder = new SpeciesHolder(species);
         this.level = level;
     }

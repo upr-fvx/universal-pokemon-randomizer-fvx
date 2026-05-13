@@ -54,8 +54,9 @@ public class StaticEncounter {
     private final List<StaticEncounter> linkedEncounters;
 
     /**
-     * Creates a StaticEncounter with the given species.
-     * @throws NullPointerException if species is null
+     * Creates a StaticEncounter with the given {@link Species}.
+     * @throws IllegalArgumentException if species is not a base forme.
+     * @throws NullPointerException if species is null.
      */
     public StaticEncounter(Species species) {
         this.speciesHolder = new SpeciesHolder(species);

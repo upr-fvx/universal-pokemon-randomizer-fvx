@@ -69,6 +69,9 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         // copy abilities straight up evolution lines
         // still keep WG as an exception, though
         copyUpEvolutionsHelper.apply(evolutionSanity, false, pk -> {
+            if (!isAbilityRandomizationCandidate(pk, maxAbility)) {
+                return;
+            }
             if (pk.getAbility1() != AbilityIDs.wonderGuard && pk.getAbility2() != AbilityIDs.wonderGuard
                     && pk.getAbility3() != AbilityIDs.wonderGuard) {
                 // Pick first ability
@@ -91,6 +94,10 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                 }
             }
         }, (evFrom, evTo, toMonIsFinalEvo) -> {
+            if (!isAbilityRandomizationCandidate(evFrom, maxAbility)
+                    || !isAbilityRandomizationCandidate(evTo, maxAbility)) {
+                return;
+            }
             if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
                     && evTo.getAbility3() != AbilityIDs.wonderGuard) {
                 evTo.setAbility1(evFrom.getAbility1());
@@ -101,12 +108,17 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
 
         romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
+                .filter(pk -> isAbilityRandomizationCandidate(pk.getBaseForme(), maxAbility))
                 .forEach(pk -> pk.copyBaseFormeAbilities(pk.getBaseForme()));
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
                 if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
                     continue;
+                if (!isAbilityRandomizationCandidate(megaEvo.getFrom(), maxAbility)
+                        || !isAbilityRandomizationCandidate(megaEvo.getTo(), maxAbility)) {
+                    continue;
+                }
                 megaEvo.getTo().setAbility1(megaEvo.getFrom().getAbility1());
                 megaEvo.getTo().setAbility2(megaEvo.getFrom().getAbility2());
                 megaEvo.getTo().setAbility3(megaEvo.getFrom().getAbility3());
@@ -114,6 +126,22 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         }
 
         changesMade = true;
+    }
+
+    private boolean isAbilityRandomizationCandidate(Species species, int maxAbility) {
+        if (species == null || species.getBST() == 0) {
+            return false;
+        }
+        if (species.getAbility1() == 0 && species.getAbility2() == 0 && species.getAbility3() == 0) {
+            return false;
+        }
+        return isAbilityIdValidForRandomization(species.getAbility1(), maxAbility)
+                && isAbilityIdValidForRandomization(species.getAbility2(), maxAbility)
+                && isAbilityIdValidForRandomization(species.getAbility3(), maxAbility);
+    }
+
+    private boolean isAbilityIdValidForRandomization(int ability, int maxAbility) {
+        return ability >= 0 && ability <= maxAbility;
     }
 
     private int pickRandomAbilityVariation(int selectedAbility, int... alreadySetAbilities) {

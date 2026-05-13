@@ -88,7 +88,7 @@ public class Gen3Constants {
             bsSpAtkOffset = 4, bsSpDefOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7,
             bsCatchRateOffset = 8, bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsGenderRatioOffset = 16,
             bsEggCyclesOffset = 17, bsGrowthCurveOffset = 19, bsPrimaryEggGroupOffset = 20, bsSecondaryEggGroupOffset = 21,
-            bsAbility1Offset = 22, bsAbility2Offset = 23;
+            bsAbility1Offset = 22, bsAbility2Offset = 23, bsHiddenAbilityOffset = 26;
 
     public static final byte textTerminator = (byte) 0xFF, textVariable = (byte) 0xFD, textPadding = (byte) 0x00;
 
@@ -180,7 +180,8 @@ public class Gen3Constants {
 
     public static final int evolutionMethodCount = 15;
 
-    public static final int cacophonyIndex = 76, airLockIndex = 77, highestAbilityIndex = 77;
+    public static final int cacophonyIndex = 76, airLockIndex = 77, highestAbilityIndex = 77,
+            cfruDpeHighestAbilityIndex = 0xFE;
 
     public static final int emMeteorFallsStevenIndex = 804;
 

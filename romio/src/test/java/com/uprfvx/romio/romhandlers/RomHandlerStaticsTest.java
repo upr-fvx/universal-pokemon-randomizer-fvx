@@ -75,7 +75,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
     private String toLongString(StaticEncounter se, boolean isLinkedEncounter) {
         StringBuilder sb = new StringBuilder();
         sb.append(se.getSpecies().getFullName());
-        sb.append(" forme=").append(se.getFormeNumber());
+        sb.append(" forme=").append(se.getSpeciesHolder().getFormeNumber());
         sb.append(" level=").append(se.getLevel());
         if (se.getMaxLevel() > 0) {
             sb.append(" maxLevel=").append(se.getMaxLevel());

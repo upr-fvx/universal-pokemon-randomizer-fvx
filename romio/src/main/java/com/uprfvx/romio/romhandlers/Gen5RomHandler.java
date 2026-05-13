@@ -1213,7 +1213,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     int abilityAndFlag = trpoke[pokeOffs + 1];
                     tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
                     tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
-                    tpk.setFormeNumber(formnum);
+                    SpeciesHolder sh = tpk.getSpeciesHolder();
+                    sh.setAltFormeAllowed();
+                    sh.setFormeNumber(formnum);
                     pokeOffs += 8;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -1385,7 +1387,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     writeWord(trpoke, pokeOffs, difficulty | abilityAndFlag << 8);
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
                     writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.getFormeNumber());
+                    writeWord(trpoke, pokeOffs + 6, tp.getSpeciesHolder().getFormeNumber());
                     // no form info, so no byte 6/7
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
@@ -1840,12 +1842,16 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             Species basePK = statP.getPokemon(this, scriptNARC);
             int formeNumber = statP.getForme(scriptNARC);
             StaticEncounter se = new StaticEncounter(basePK);
-            se.setFormeNumber(formeNumber);
+            SpeciesHolder sh = se.getSpeciesHolder();
+            sh.setAltFormeAllowed();
+            sh.setFormeNumber(formeNumber);
             se.setLevel(statP.getLevel(scriptNARC, 0));
             se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x-> x == currentOffset));
             for (int levelEntry = 1; levelEntry < statP.getLevelCount(); levelEntry++) {
                 StaticEncounter linkedStatic = new StaticEncounter(basePK);
-                linkedStatic.setFormeNumber(formeNumber);
+                SpeciesHolder linkedSH = linkedStatic.getSpeciesHolder();
+                linkedSH.setAltFormeAllowed();
+                linkedSH.setFormeNumber(formeNumber);
                 linkedStatic.setLevel(statP.getLevel(scriptNARC, levelEntry));
                 se.getLinkedEncounters().add(linkedStatic);
             }
@@ -1888,7 +1894,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                             for (int group = 0; group < 4; group++) {
                                 Species newPK = pokes[readWord(hhEntry, version * 78 + raritySlot * 26 + group * 2)];
                                 StaticEncounter se = new StaticEncounter(newPK);
-                                se.setFormeNumber(hhEntry[version * 78 + raritySlot * 26 + 20 + group]);
+                                SpeciesHolder sh = se.getSpeciesHolder();
+                                sh.setAltFormeAllowed();
+                                sh.setFormeNumber(hhEntry[version * 78 + raritySlot * 26 + 20 + group]);
                                 se.setLevel(hhEntry[version * 78 + raritySlot * 26 + 12 + group]);
                                 se.setMaxLevel(hhEntry[version * 78 + raritySlot * 26 + 8 + group]);
                                 se.setEgg(false);
@@ -1959,7 +1967,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         for (DSStaticPokemon statP : romEntry.getStaticPokemon()) {
             StaticEncounter se = statics.next();
             statP.setPokemon(this, scriptNARC, se.getSpecies().getBaseForme());
-            statP.setForme(scriptNARC, se.getFormeNumber());
+            statP.setForme(scriptNARC, se.getSpeciesHolder().getFormeNumber());
             statP.setLevel(scriptNARC, se.getLevel(), 0);
             for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
                 StaticEncounter linkedStatic = se.getLinkedEncounters().get(i);
@@ -2007,7 +2015,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                                     default -> 30;
                                 };
                                 hhEntry[version * 78 + raritySlot * 26 + 16 + group] = (byte) genderRatio;
-                                hhEntry[version * 78 + raritySlot * 26 + 20 + group] = (byte) se.getFormeNumber(); // forme
+                                hhEntry[version * 78 + raritySlot * 26 + 20 + group] = (byte) se.getSpeciesHolder().getFormeNumber();
                                 hhEntry[version * 78 + raritySlot * 26 + 12 + group] = (byte) se.getLevel();
                                 hhEntry[version * 78 + raritySlot * 26 + 8 + group] = (byte) se.getMaxLevel();
                                 for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
@@ -2015,7 +2023,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                                     group++;
                                     writeWord(hhEntry, version * 78 + raritySlot * 26 + group * 2, linkedStatic.getSpecies().getBaseNumber());
                                     hhEntry[version * 78 + raritySlot * 26 + 16 + group] = (byte) genderRatio;
-                                    hhEntry[version * 78 + raritySlot * 26 + 20 + group] = (byte) linkedStatic.getFormeNumber(); // forme
+                                    hhEntry[version * 78 + raritySlot * 26 + 20 + group] = (byte) linkedStatic.getSpeciesHolder().getFormeNumber();
                                     hhEntry[version * 78 + raritySlot * 26 + 12 + group] = (byte) linkedStatic.getLevel();
                                     hhEntry[version * 78 + raritySlot * 26 + 8 + group] = (byte) linkedStatic.getMaxLevel();
                                 }

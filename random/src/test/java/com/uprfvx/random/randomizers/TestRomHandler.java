@@ -401,9 +401,9 @@ public class TestRomHandler extends AbstractRomHandler {
         for(StaticEncounter orig : originalStatics) {
             StaticEncounter copy = new StaticEncounter(orig);
             Species spec = originalToTest.get(orig.getSpecies());
-            copy.setSpecies(spec);
+            copy.getSpeciesHolder().setSpecies(spec);
             for(StaticEncounter linked : copy.getLinkedEncounters()) {
-                linked.setSpecies(spec);
+                linked.getSpeciesHolder().setSpecies(spec);
             }
             copiedStatics.add(copy);
         }
@@ -421,7 +421,7 @@ public class TestRomHandler extends AbstractRomHandler {
         for(Trainer original : originalTrainers) {
             Trainer copy = new Trainer(original);
             for(TrainerPokemon tp : copy.getPokemon()) {
-                tp.setSpecies(originalToTest.get(tp.getSpecies()));
+                tp.getSpeciesHolder().setSpecies(originalToTest.get(tp.getSpecies()));
             }
             copiedTrainers.add(copy);
         }

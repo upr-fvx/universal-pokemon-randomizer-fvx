@@ -26,19 +26,21 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents a static encounter or a gift Pokémon
+ * Represents a static encounter or a gift Pokémon. The {@link Species} and forme info is largely
+ * held by a {@link SpeciesHolder}, but can also be gotten through {@link #getSpecies()}.
  */
 public class StaticEncounter {
-    // TODO: internally some static encounters can't be alt formes; enforce it at this level
     // TODO: test cases
 
-    private Species baseSpecies;
-    private int formeNumber = 0;
+    private final SpeciesHolder speciesHolder;
+
     private int level;
     private int maxLevel = 0;
+
     private Item heldItem;
     private boolean isEgg = false;
     private boolean resetMoves = false;
+
     private boolean restrictedPool = false;
     private List<Species> restrictedList = new ArrayList<>();
 
@@ -56,8 +58,8 @@ public class StaticEncounter {
      * @throws NullPointerException if species is null
      */
     public StaticEncounter(Species species) {
+        this.speciesHolder = new SpeciesHolder(species);
         this.linkedEncounters = new ArrayList<>();
-        setSpecies(species);
     }
 
     /**
@@ -66,8 +68,7 @@ public class StaticEncounter {
      * @param original The StaticEncounter to copy.
      */
     public StaticEncounter(StaticEncounter original) {
-        this.baseSpecies = original.baseSpecies;
-        this.formeNumber = original.formeNumber;
+        this.speciesHolder = new SpeciesHolder(original.speciesHolder);
         this.level = original.level;
         this.maxLevel = original.maxLevel;
         this.heldItem = original.heldItem;
@@ -77,45 +78,21 @@ public class StaticEncounter {
         this.restrictedList = new ArrayList<>(original.restrictedList);
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
-            StaticEncounter newLinked = new StaticEncounter(baseSpecies); //is there a reason to not use the copy constructor here?
-            newLinked.formeNumber = oldLinked.formeNumber;
-            newLinked.level = oldLinked.level;
-            newLinked.maxLevel = oldLinked.maxLevel;
-            newLinked.heldItem = oldLinked.heldItem;
-            newLinked.isEgg = oldLinked.isEgg;
-            newLinked.resetMoves = oldLinked.resetMoves;
-            newLinked.restrictedPool = oldLinked.restrictedPool;
-            newLinked.restrictedList = new ArrayList<>(oldLinked.restrictedList);
+            // linked encounters don't have their own linked encounters, so this shouldn't deadlock
+            StaticEncounter newLinked = new StaticEncounter(oldLinked);
             this.linkedEncounters.add(newLinked);
         }
     }
 
-    public Species getSpecies() {
-        return baseSpecies.getForme(formeNumber);
-    }
-
-    public void setSpecies(Species species) {
-        this.baseSpecies = species.getBaseForme();
-        this.formeNumber = species.getFormeNumber();
-        linkedEncounters.forEach(le -> le.setSpecies(species));
-    }
-
-    public int getFormeNumber() {
-        return formeNumber;
+    public SpeciesHolder getSpeciesHolder() {
+        return speciesHolder;
     }
 
     /**
-     * Sets the formeNumber.
-     * @param formeNumber The forme number to set.
-     * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
+     * Short for {@link #getSpeciesHolder()}.{@link SpeciesHolder#getSpecies() getSpecies()}
      */
-    public void setFormeNumber(int formeNumber) {
-        if (!baseSpecies.isValidFormeNumber(formeNumber)) {
-            throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
-                    + baseSpecies.getNumberAndFullName());
-        }
-        this.formeNumber = formeNumber;
-        linkedEncounters.forEach(le -> le.setFormeNumber(formeNumber));
+    public Species getSpecies() {
+        return speciesHolder.getSpecies();
     }
 
     public int getLevel() {
@@ -234,13 +211,13 @@ public class StaticEncounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(baseSpecies, level);
+        return Objects.hash(getSpecies(), level);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof StaticEncounter other) {
-            return Objects.equals(other.baseSpecies, baseSpecies) && other.formeNumber == formeNumber && other.level == level
+            return other.level == level && other.speciesHolder.equals(speciesHolder)
                     && other.maxLevel == maxLevel && other.isEgg == isEgg && other.resetMoves == resetMoves
                     && other.restrictedPool == restrictedPool && Objects.equals(other.restrictedList, restrictedList)
                     && Objects.equals(other.linkedEncounters, linkedEncounters);

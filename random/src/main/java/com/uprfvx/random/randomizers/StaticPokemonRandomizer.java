@@ -114,7 +114,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                             legendariesLeft.remove(newPK);
                         }
                     }
-                    newStatic.setSpecies(newPK);
+                    newStatic.getSpeciesHolder().setSpecies(newPK);
 
                     if (legendariesLeft.isEmpty()) {
                         legendariesLeft.addAll(legendariesPool);
@@ -126,7 +126,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         newPK = ultraBeastsLeft.getRandomSpecies(random);
                         ultraBeastsLeft.remove(newPK);
                     }
-                    newStatic.setSpecies(newPK);
+                    newStatic.getSpeciesHolder().setSpecies(newPK);
 
                     if (ultraBeastsLeft.isEmpty()) {
                         ultraBeastsLeft.addAll(ultraBeastsPool);
@@ -142,7 +142,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                             nonlegsLeft.remove(newPK);
                         }
                     }
-                    newStatic.setSpecies(newPK);
+                    newStatic.getSpeciesHolder().setSpecies(newPK);
 
                     if (nonlegsLeft.isEmpty()) {
                         nonlegsLeft.addAll(nonlegsPool);
@@ -235,7 +235,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     }
                     pokemonLeft.remove(newPK);
                 }
-                newStatic.setSpecies(newPK);
+                newStatic.getSpeciesHolder().setSpecies(newPK);
 
                 if (pokemonLeft.isEmpty()) {
                     pokemonLeft.addAll(pokemonPool);
@@ -267,7 +267,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                         pokemonLeft.remove(newPK);
                     }
                 }
-                newStatic.setSpecies(newPK);
+                newStatic.getSpeciesHolder().setSpecies(newPK);
 
                 pokemonLeft.remove(newPK);
                 if (pokemonLeft.isEmpty()) {
@@ -358,7 +358,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 }
 
                 pokemonLeft.remove(newPK);
-                newTotem.setSpecies(newPK);
+                newTotem.getSpeciesHolder().setSpecies(newPK);
                 newTotem.setResetMoves(true);
                 newTotem.setLevel(old.getLevel());
 
@@ -370,7 +370,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                     pokemonLeft.removeAll(banned);
                 }
             } else {
-                newTotem.setSpecies(old.getSpecies());
+                newTotem.getSpeciesHolder().setSpecies(old.getSpecies());
                 newTotem.setLevel(old.getLevel());
                 if (levelModifier != 0) {
                     newTotem.setLevel(applyPercentageLevelModifier(newTotem.getLevel(), levelModifier));

@@ -16,11 +16,23 @@ public class SpeciesHolder {
     private int formeNumber = 0;
     private boolean altFormeAllowed;
 
+    /**
+     * Creates a SpeciesHolder for the given baseSpecies.
+     * @param baseSpecies a species which is a base forme.
+     * @throws NullPointerException if baseSpecies is null.
+     * @throws IllegalArgumentException if baseSpecies is not a base forme.
+     */
     public SpeciesHolder(Species baseSpecies) {
         if (!baseSpecies.isBaseForme()) {
             throw new IllegalArgumentException(baseSpecies.getNumberAndFullName() + "is not a base forme.");
         }
         this.baseSpecies = baseSpecies;
+    }
+
+    public SpeciesHolder(SpeciesHolder original) {
+        this.baseSpecies = original.baseSpecies;
+        this.formeNumber = original.formeNumber;
+        this.altFormeAllowed = original.altFormeAllowed;
     }
 
     public Species getSpecies() {

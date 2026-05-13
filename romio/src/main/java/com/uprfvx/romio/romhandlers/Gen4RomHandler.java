@@ -2730,7 +2730,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                         abilitySlot = 1;
                     }
                     tpk.setAbilitySlot(abilitySlot);
-                    tpk.setFormeNumber(formnum);
+                    SpeciesHolder sh = tpk.getSpeciesHolder();
+                    sh.setAltFormeAllowed();
+                    sh.setFormeNumber(formnum);
                     pokeOffs += 6;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -2858,7 +2860,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					writeWord(trpoke, pokeOffs, difficulty | ability << 8);
 					writeWord(trpoke, pokeOffs + 2, tp.getLevel());
 					writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
-					trpoke[pokeOffs + 5] |= (byte) (tp.getFormeNumber() << 2);
+					trpoke[pokeOffs + 5] |= (byte) (tp.getSpeciesHolder().getFormeNumber() << 2);
 					pokeOffs += 6;
 					if (tr.pokemonHaveItems()) {
 						int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -3326,7 +3328,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                 Species basePK = statP.getPokemon(this, scriptNARC);
                 int formeNumber = statP.getForme(scriptNARC);
                 StaticEncounter se = new StaticEncounter(basePK);
-                se.setFormeNumber(formeNumber);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(formeNumber);
 				se.setLevel(statP.getLevel(scriptNARC, 0));
 				se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x -> x == currentOffset));
 				for (int levelEntry = 1; levelEntry < statP.getLevelCount(); levelEntry++) {
@@ -3420,7 +3424,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			for (DSStaticPokemon statP : romEntry.getStaticPokemon()) {
 				StaticEncounter se = statics.next();
 				statP.setPokemon(this, scriptNARC, se.getSpecies().getBaseForme());
-				statP.setForme(scriptNARC, se.getFormeNumber());
+				statP.setForme(scriptNARC, se.getSpeciesHolder().getFormeNumber());
 				statP.setLevel(scriptNARC, se.getLevel(), 0);
 				for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
 					StaticEncounter linkedStatic = se.getLinkedEncounters().get(i);

@@ -957,7 +957,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     forme = 0;
                 }
                 StaticEncounter se = new StaticEncounter(pk);
-                se.setFormeNumber(forme);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 5]);
                 starters.add(se);
             }
@@ -997,12 +999,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
                 Species starter = starterIter.next();
                 StaticEncounter newStatic = new StaticEncounter(starter.getBaseForme());
-                newStatic.setFormeNumber(starter.getFormeNumber());
+                SpeciesHolder sh = newStatic.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(starter.getFormeNumber());
+
                 writeWord(staticCRO,offset+i*size, newStatic.getSpecies().getBaseNumber());
-                staticCRO[offset+i*size + 4] = (byte) newStatic.getFormeNumber();
+                staticCRO[offset+i*size + 4] = (byte) newStatic.getSpeciesHolder().getFormeNumber();
 //                staticCRO[offset+i*size + 5] = (byte)newStatic.level;
                 writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.getSpecies().getBaseNumber());
-                displayCRO[displayOffset+displayIndex*0x54+2] = (byte) newStatic.getFormeNumber();
+                displayCRO[displayOffset+displayIndex*0x54+2] = (byte) newStatic.getSpeciesHolder().getFormeNumber();
                 if (displayIndex < 3) {
                     starterText.set(starterTextIndices[displayIndex],
                             "[VAR PKNAME(0000)]");
@@ -1905,7 +1910,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int abilityAndFlag = trpoke[pokeOffs + 1];
                     tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
                     tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
-                    tpk.setFormeNumber(formnum);
+                    SpeciesHolder sh = tpk.getSpeciesHolder();
+                    sh.setAltFormeAllowed();
+                    sh.setFormeNumber(formnum);
                     pokeOffs += 8;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -2030,7 +2037,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     trpoke[pokeOffs + 1] = abilityAndFlag;
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
                     writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.getFormeNumber());
+                    writeWord(trpoke, pokeOffs + 6, tp.getSpeciesHolder().getFormeNumber());
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
                         int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -2190,7 +2197,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     forme = 0;
                 }
                 StaticEncounter se = new StaticEncounter(pokes[species]);
-                se.setFormeNumber(forme);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 3]);
                 short heldItem = (short)IOFunctions.read2ByteInt(staticCRO,offset+i*size + 4);
                 if (heldItem < 0) {
@@ -2215,7 +2224,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     forme = 0;
                 }
                 StaticEncounter se = new StaticEncounter(pk);
-                se.setFormeNumber(forme);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 5]);
                 int heldItem = IOFunctions.readFullInt(staticCRO,offset+i*size + 12);
                 if (heldItem < 0) {
@@ -2292,7 +2303,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             forme = 0;
         }
         StaticEncounter se = new StaticEncounter(pk);
-        se.setFormeNumber(forme);
+        SpeciesHolder sh = se.getSpeciesHolder();
+        sh.setAltFormeAllowed();
+        sh.setFormeNumber(forme);
         se.setLevel(level);
         return se;
     }
@@ -2312,7 +2325,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < staticCount; i++) {
                 StaticEncounter se = staticIter.next();
                 writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
-                staticCRO[offset+i*size + 2] = (byte) se.getFormeNumber();
+                staticCRO[offset+i*size + 2] = (byte) se.getSpeciesHolder().getFormeNumber();
                 staticCRO[offset+i*size + 3] = (byte) se.getLevel();
                 if (se.getHeldItem() == null) {
                     writeWord(staticCRO,offset+i*size + 4,-1);
@@ -2331,7 +2344,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (skipStarters.contains(i)) continue;
                 StaticEncounter se = staticIter.next();
                 writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
-                staticCRO[offset+i*size + 4] = (byte) se.getFormeNumber();
+                staticCRO[offset+i*size + 4] = (byte) se.getSpeciesHolder().getFormeNumber();
                 staticCRO[offset+i*size + 5] = (byte) se.getLevel();
                 if (se.getHeldItem() == null) {
                     IOFunctions.writeFullInt(staticCRO,offset+i*size + 12,-1);
@@ -2350,14 +2363,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     while (currentCount != Gen6Constants.xyTrashCanEncounterCount) {
                         StaticEncounter se = staticIter.next();
                         IOFunctions.writeFullInt(code, offset, se.getSpecies().getBaseNumber());
-                        IOFunctions.writeFullInt(code, offset + 4, se.getFormeNumber());
+                        IOFunctions.writeFullInt(code, offset + 4, se.getSpeciesHolder().getFormeNumber());
                         IOFunctions.writeFullInt(code, offset + 8, se.getLevel());
                         offset += Gen6Constants.xyTrashEncounterDataLength;
                         currentCount++;
                         for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
                             StaticEncounter linkedEncounter = se.getLinkedEncounters().get(i);
                             IOFunctions.writeFullInt(code, offset, linkedEncounter.getSpecies().getBaseNumber());
-                            IOFunctions.writeFullInt(code, offset + 4, linkedEncounter.getFormeNumber());
+                            IOFunctions.writeFullInt(code, offset + 4, linkedEncounter.getSpeciesHolder().getFormeNumber());
                             IOFunctions.writeFullInt(code, offset + 8, linkedEncounter.getLevel());
                             offset += Gen6Constants.xyTrashEncounterDataLength;
                             currentCount++;

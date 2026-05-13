@@ -27,12 +27,12 @@ package com.uprfvx.romio.gamedata;
 import java.util.Arrays;
 
 /**
- * Represents a Pokemon owned by a {@link Trainer}.
+ * Represents a Pokemon owned by a {@link Trainer}. The {@link Species} and forme info is largely
+ * held by a {@link SpeciesHolder}, but can also be gotten through {@link #getSpecies()}.
  */
 public class TrainerPokemon {
 
-    private Species baseSpecies;
-    private int formeNumber;
+    private final SpeciesHolder speciesHolder;
 
     private int level;
 
@@ -68,13 +68,12 @@ public class TrainerPokemon {
     private boolean isAddedTeamMember = false;
 
     public TrainerPokemon(Species species, int level) {
-        setSpecies(species);
+        this.speciesHolder = new SpeciesHolder(species);
         this.level = level;
     }
 
     public TrainerPokemon(TrainerPokemon original) {
-        baseSpecies = original.baseSpecies;
-        formeNumber = original.formeNumber;
+        speciesHolder = new SpeciesHolder(original.speciesHolder);
 
         level = original.level;
 
@@ -101,30 +100,15 @@ public class TrainerPokemon {
         isAddedTeamMember = original.isAddedTeamMember;
     }
 
-    public Species getSpecies() {
-        return baseSpecies.getForme(formeNumber);
-    }
-
-    public void setSpecies(Species species) {
-        this.baseSpecies = species.getBaseForme();
-        this.formeNumber = species.getFormeNumber();
-    }
-
-    public int getFormeNumber() {
-        return formeNumber;
+    public SpeciesHolder getSpeciesHolder() {
+        return speciesHolder;
     }
 
     /**
-     * Sets the formeNumber.
-     * @param formeNumber The forme number to set.
-     * @throws IllegalArgumentException if formeNumber is not a valid forme for {@link #baseSpecies}.
+     * Short for {@link #getSpeciesHolder()}.{@link SpeciesHolder#getSpecies() getSpecies()}
      */
-    public void setFormeNumber(int formeNumber) {
-        if (!baseSpecies.isValidFormeNumber(formeNumber)) {
-            throw new IllegalArgumentException("formeNumber=" + formeNumber + " is not valid for "
-                    + baseSpecies.getNumberAndFullName());
-        }
-        this.formeNumber = formeNumber;
+    public Species getSpecies() {
+        return speciesHolder.getSpecies();
     }
 
     public int getLevel() {

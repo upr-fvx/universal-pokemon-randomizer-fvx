@@ -229,8 +229,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     // We do not want to randomize Pkmn that were not added to the team
                     if (evolveAsFarAsLegal) {
                         newSp = evolveAsFarAsLegal(oldSp, tpLevel, evoLvlModifier);
-                        tp.setSpecies(newSp);
-                        setFormeForTrainerPokemon(tp, newSp);
+                        tp.getSpeciesHolder().setSpecies(newSp);
+                        setFormeForTrainerPokemon(tp);
                         tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSp, tp.getAbilitySlot()));
                     } else {
                         newSp = oldSp;
@@ -263,8 +263,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             bannedForReplacement);
 
                     //We've chosen! Now to set it.
-                    tp.setSpecies(newSp);
-                    setFormeForTrainerPokemon(tp, newSp);
+                    tp.getSpeciesHolder().setSpecies(newSp);
+                    setFormeForTrainerPokemon(tp);
                     tp.setAbilitySlot(getRandomAbilitySlot(newSp));
                     tp.setResetMoves(true);
                 }
@@ -706,8 +706,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
                 Species starter = startersByLevel.floorEntry(bestPoke.getLevel()).getValue();
 
-                bestPoke.setSpecies(starter);
-                setFormeForTrainerPokemon(bestPoke, starter);
+                bestPoke.getSpeciesHolder().setSpecies(starter);
+                setFormeForTrainerPokemon(bestPoke);
                 bestPoke.setResetMoves(true);
                 bestPoke.setAbilitySlot(abilitySlot);
             }
@@ -749,9 +749,13 @@ public class TrainerPokemonRandomizer extends Randomizer {
         return species;
     }
 
-    private void setFormeForTrainerPokemon(TrainerPokemon tp, Species sp) {
+    private void setFormeForTrainerPokemon(TrainerPokemon tp) {
         // TODO: account for this really setting random cosmetic forme
-        tp.setFormeNumber(sp.getRandomCosmeticFormeNumber(random));
+        SpeciesHolder sh = tp.getSpeciesHolder();
+        if (sh.isAltFormeAllowed()) {
+            Species base = sh.getSpecies().getBaseForme();
+            sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
+        }
     }
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {
@@ -912,8 +916,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             for (TrainerPokemon tp : t.getPokemon()) {
                 Species newSpecies = evolveAsFarAsLegal(tp.getSpecies(), tp.getLevel(), evoLvlModifier);
                 if (newSpecies != tp.getSpecies()) {
-                    tp.setSpecies(newSpecies);
-                    setFormeForTrainerPokemon(tp, newSpecies);
+                    tp.getSpeciesHolder().setSpecies(newSpecies);
+                    setFormeForTrainerPokemon(tp);
                     tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
                 }
             }

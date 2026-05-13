@@ -220,8 +220,13 @@ public class SpeciesMovesetRandomizer extends Randomizer {
             double atkSpAtkRatio = pkmn.getAttackSpecialAttackRatio();
 
             if (pkmn.isActuallyCosmetic()) {
+                int baseFormeKey = speciesIDForMovesetMap(pkmn.getBaseForme(), movesets);
+                List<Integer> baseFormeMoves = movesets.get(baseFormeKey);
+                if (baseFormeMoves == null) {
+                    continue;
+                }
                 for (int i = 0; i < moves.size(); i++) {
-                    moves.set(i, movesets.get(pkmn.getBaseForme().getNumber()).get(i));
+                    moves.set(i, baseFormeMoves.get(i));
                 }
                 continue;
             }
@@ -333,7 +338,8 @@ public class SpeciesMovesetRandomizer extends Randomizer {
         allBanned.addAll(romHandler.getIllegalMoves());
 
         for (Move mv : allMoves) {
-            if (mv != null && !GlobalConstants.bannedRandomMoves[mv.number] && !allBanned.contains(mv.number)) {
+            if (mv != null && !isMoveFlagged(GlobalConstants.bannedRandomMoves, mv.number)
+                    && !allBanned.contains(mv.number)) {
                 validMoves.add(mv);
                 if (mv.type != null) {
                     if (!validTypeMoves.containsKey(mv.type)) {
@@ -342,7 +348,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
                     validTypeMoves.get(mv.type).add(mv);
                 }
 
-                if (!GlobalConstants.bannedForDamagingMove[mv.number]) {
+                if (!isMoveFlagged(GlobalConstants.bannedForDamagingMove, mv.number)) {
                     if (mv.isGoodDamaging(romHandler.getPerfectAccuracy())) {
                         validDamagingMoves.add(mv);
                         if (mv.type != null) {
@@ -432,11 +438,26 @@ public class SpeciesMovesetRandomizer extends Randomizer {
     // (The non-hacky way might be to make it a TreeSet.)
     private Species findSpeciesInPoolWithSpeciesID(Collection<Species> speciesPool, int speciesID) {
         for (Species sp : speciesPool) {
-            if (sp.getNumber() == speciesID) {
+            if (sp.getNumber() == speciesID || sp.getSpeciesSetIdentityNumber() == speciesID) {
                 return sp;
             }
         }
         return null;
+    }
+
+    private int speciesIDForMovesetMap(Species species, Map<Integer, ?> movesets) {
+        if (species == null) {
+            return 0;
+        }
+        int identityNumber = species.getSpeciesSetIdentityNumber();
+        if (movesets.containsKey(identityNumber)) {
+            return identityNumber;
+        }
+        return species.getNumber();
+    }
+
+    private boolean isMoveFlagged(boolean[] flags, int moveNumber) {
+        return moveNumber >= 0 && moveNumber < flags.length && flags[moveNumber];
     }
 
     public void orderDamagingMovesByDamage() {

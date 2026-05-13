@@ -143,6 +143,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_MOVE_SPLIT_PHYSICAL = 0;
     private static final int CFRU_DPE_MOVE_SPLIT_SPECIAL = 1;
     private static final int CFRU_DPE_MOVE_SPLIT_STATUS = 2;
+    private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION = 0x3EA7C;
     private static final int CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE = 3;
     private static final int CFRU_DPE_MAX_LEARNABLE_MOVES = 50;
     private static final int CFRU_DPE_HAKAMO_O_INTERNAL_ID = 1000;
@@ -2528,6 +2529,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
 	@Override
 	public void setMovesLearnt(Map<Integer, List<MoveLearnt>> movesets) {
+        if (useCfruDpeGen9SpeciesCount && !jamboMovesetHack) {
+            setCfruDpeMovesLearnt(movesets);
+            return;
+        }
+
 		int baseOffset = romEntry.getIntValue("PokemonMovesets");
 		for (int i = 1; i <= numRealPokemon; i++) {
 			Species pk = speciesList.get(i);
@@ -2537,6 +2543,147 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 					this::lengthOfMovesLearntAt);
 		}
 	}
+
+    private void setCfruDpeMovesLearnt(Map<Integer, List<MoveLearnt>> movesets) {
+        int baseOffset = getCfruDpeLevelUpLearnsetsOffset();
+        Map<Integer, byte[]> dataByOffset = new TreeMap<>();
+        Set<Integer> skippedSharedPointerOffsets = new TreeSet<>();
+        int boundedWrites = 0;
+        int skippedGrowth = 0;
+        int skippedPlaceholderSpecies = 0;
+        int skippedInvalidPointer = 0;
+        int skippedInvalidMoves = 0;
+
+        for (int i = 1; i <= numRealPokemon; i++) {
+            Species pk = speciesList.get(i);
+            int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(pk);
+            if (internalSpecies <= 0 || internalSpecies == CFRU_DPE_SPECIES_EGG_INTERNAL_ID) {
+                skippedPlaceholderSpecies++;
+                continue;
+            }
+
+            int pointerOffset = baseOffset + internalSpecies * 4;
+            int movesLearntOffset = readPointer(pointerOffset, true);
+            if (movesLearntOffset <= 0 || !isCfruDpeMovesLearntSafeForInPlaceWrite(movesLearntOffset)) {
+                skippedInvalidPointer++;
+                continue;
+            }
+
+            List<MoveLearnt> moves = movesets.get(internalSpecies);
+            if (moves == null) {
+                moves = movesets.get(pk.getNumber());
+            }
+            if (moves == null) {
+                continue;
+            }
+
+            List<MoveLearnt> validMoves = new ArrayList<>();
+            for (MoveLearnt ml : moves) {
+                if (ml != null && isLoadedMoveId(ml.move)) {
+                    validMoves.add(ml);
+                } else {
+                    skippedInvalidMoves++;
+                }
+            }
+
+            int oldLength = lengthOfCfruDpeMovesLearntAt(movesLearntOffset);
+            byte[] newData = cfruDpeMovesLearntToBytes(validMoves);
+            if (newData.length > oldLength) {
+                skippedGrowth++;
+                continue;
+            }
+
+            byte[] previousData = dataByOffset.get(movesLearntOffset);
+            if (previousData != null && !Arrays.equals(previousData, newData)) {
+                skippedSharedPointerOffsets.add(movesLearntOffset);
+                continue;
+            }
+            if (previousData == null) {
+                dataByOffset.put(movesLearntOffset, newData);
+                boundedWrites++;
+            }
+        }
+
+        for (Map.Entry<Integer, byte[]> entry : dataByOffset.entrySet()) {
+            if (!skippedSharedPointerOffsets.contains(entry.getKey())) {
+                writeBytes(entry.getKey(), entry.getValue());
+            }
+        }
+
+        if (skippedGrowth > 0 || !skippedSharedPointerOffsets.isEmpty() || skippedPlaceholderSpecies > 0
+                || skippedInvalidPointer > 0 || skippedInvalidMoves > 0) {
+            System.out.println("[CFRU-DPE-LEARNSET-WRITE] boundedWrites=" + boundedWrites
+                    + " skippedGrowth=" + skippedGrowth
+                    + " needsRepoint=" + skippedGrowth
+                    + " skippedSharedPointer=" + skippedSharedPointerOffsets.size()
+                    + " skippedPlaceholderSpecies=" + skippedPlaceholderSpecies
+                    + " skippedInvalidPointer=" + skippedInvalidPointer
+                    + " skippedInvalidMoves=" + skippedInvalidMoves);
+        }
+    }
+
+    private int getCfruDpeLearnsetInternalSpeciesId(Species pk) {
+        int identity = pk.getSpeciesSetIdentityNumber();
+        if (identity > 0) {
+            return identity;
+        }
+        return pokedexToInternal[pk.getNumber()];
+    }
+
+    private byte[] cfruDpeMovesLearntToBytes(List<MoveLearnt> movesLearnt) {
+        int moveCount = Math.min(movesLearnt.size(), CFRU_DPE_MAX_LEARNABLE_MOVES);
+        byte[] bytes = new byte[moveCount * CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE
+                + CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE];
+        for (int i = 0; i < moveCount; i++) {
+            MoveLearnt moveLearnt = movesLearnt.get(i);
+            int offset = i * CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE;
+            writeWord(bytes, offset, moveLearnt.move);
+            bytes[offset + 2] = (byte) moveLearnt.level;
+        }
+        int terminatorOffset = moveCount * CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE;
+        writeWord(bytes, terminatorOffset, 0);
+        bytes[terminatorOffset + 2] = (byte) 0xFF;
+        return bytes;
+    }
+
+    private int lengthOfCfruDpeMovesLearntAt(int offset) {
+        int length = 0;
+        for (int i = 0; i < CFRU_DPE_MAX_LEARNABLE_MOVES
+                && offset + length + CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE <= rom.length; i++) {
+            int entryOffset = offset + length;
+            int move = readWord(entryOffset);
+            int level = rom[entryOffset + 2] & 0xFF;
+            length += CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE;
+            if (move == 0 && level == 0xFF) {
+                return length;
+            }
+        }
+        return length;
+    }
+
+    private boolean isCfruDpeMovesLearntSafeForInPlaceWrite(int offset) {
+        if (offset <= 0) {
+            return false;
+        }
+        for (int i = 0; i < CFRU_DPE_MAX_LEARNABLE_MOVES
+                && offset + CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE <= rom.length; i++) {
+            int move = readWord(offset);
+            int level = rom[offset + 2] & 0xFF;
+            if (move == 0 && level == 0xFF) {
+                return true;
+            }
+            if (!isLoadedMoveId(move)) {
+                return false;
+            }
+            offset += CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE;
+        }
+        return false;
+    }
+
+    private int getCfruDpeLevelUpLearnsetsOffset() {
+        return readRequiredCfruDpePointer(CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION,
+                CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE, "CFRU/DPE gLevelUpLearnsets");
+    }
 
 	private byte[] movesLearntToBytes(List<MoveLearnt> movesLearnt) {
 		int entrySize = jamboMovesetHack ? 3 : 2;

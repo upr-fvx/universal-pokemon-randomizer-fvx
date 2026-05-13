@@ -1513,6 +1513,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // Abilities
         pkmn.setAbility1(rom[offset + Gen3Constants.bsAbility1Offset] & 0xFF);
         pkmn.setAbility2(rom[offset + Gen3Constants.bsAbility2Offset] & 0xFF);
+        if (useCfruDpeGen9SpeciesCount) {
+            pkmn.setAbility3(rom[offset + Gen3Constants.bsHiddenAbilityOffset] & 0xFF);
+        }
 
         // Held Items?
         int item1ID = Gen3Constants.itemIDToStandard(readWord(offset + Gen3Constants.bsCommonHeldItemOffset));
@@ -1567,6 +1570,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         writeByte(offset + Gen3Constants.bsAbility2Offset, (byte) (
                 pkmn.getAbility2() == 0 ? pkmn.getAbility1() :
                         pkmn.getAbility2())); // required to not break evos with random ability
+        if (useCfruDpeGen9SpeciesCount) {
+            writeByte(offset + Gen3Constants.bsHiddenAbilityOffset, (byte) pkmn.getAbility3());
+        }
 
         // Held items
         if (pkmn.getGuaranteedHeldItem() != null) {
@@ -4455,20 +4461,35 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public int abilitiesPerSpecies() {
-        return 2;
+        return useCfruDpeGen9SpeciesCount ? 3 : 2;
     }
 
     @Override
     public int highestAbilityIndex() {
-        return Gen3Constants.highestAbilityIndex;
+        return useCfruDpeGen9SpeciesCount ? Gen3Constants.cfruDpeHighestAbilityIndex : Gen3Constants.highestAbilityIndex;
     }
 
     private void loadAbilityNames() {
         int nameoffs = romEntry.getIntValue("AbilityNames");
         int namelen = romEntry.getIntValue("AbilityNameLength");
-        abilityNames = new String[Gen3Constants.highestAbilityIndex + 1];
-        for (int i = 0; i <= Gen3Constants.highestAbilityIndex; i++) {
-            abilityNames[i] = readFixedLengthString(nameoffs + namelen * i, namelen);
+        int highestAbilityIndex = highestAbilityIndex();
+        abilityNames = new String[highestAbilityIndex + 1];
+        if (nameoffs <= 0 || namelen <= 0) {
+            return;
+        }
+        for (int i = 0; i <= highestAbilityIndex; i++) {
+            int offset = nameoffs + namelen * i;
+            if (offset < 0 || offset + namelen > rom.length) {
+                continue;
+            }
+            try {
+                String abilityName = readFixedLengthString(offset, namelen);
+                if (abilityName != null && !abilityName.isBlank()) {
+                    abilityNames[i] = abilityName;
+                }
+            } catch (RuntimeException ignored) {
+                abilityNames[i] = null;
+            }
         }
     }
 

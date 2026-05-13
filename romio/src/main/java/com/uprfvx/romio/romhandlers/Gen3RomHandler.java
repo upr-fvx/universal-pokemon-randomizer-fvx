@@ -158,6 +158,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_MOVE_TUTOR_COMPATIBILITY_POINTER_LOCATION = 0x120C30;
     private static final int CFRU_DPE_MOVE_TUTOR_COUNT = 152;
     private static final int CFRU_DPE_MOVE_TUTOR_COMPAT_BYTES = 19;
+    private static final int CFRU_DPE_EGG_MOVES_POINTER_LOCATION = 0x45C50;
+    private static final int CFRU_DPE_EGG_MOVES_SPECIES_OFFSET = 20000;
+    private static final int CFRU_DPE_EGG_MOVES_TERMINATOR = 0xFFFF;
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -443,6 +446,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             romEntry.putIntValue("PokemonTMHMCompat", readPointer(0x43C68));
             romEntry.putIntValue("PokemonEvolutions", readPointer(0x42F6C));
             romEntry.putIntValue("MoveTutorCompatibility", readPointer(0x120C30));
+            if (useCfruDpeEggMoves()) {
+                romEntry.putIntValue("EggMoves", getCfruDpeEggMovesOffset());
+            }
             int descsTable = readPointer(0xE5440);
             romEntry.putIntValue("MoveDescriptions", descsTable);
             int trainersTable = readPointer(0xFC00);
@@ -2573,6 +2579,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public Map<Integer, List<Integer>> getEggMoves() {
+        if (useCfruDpeEggMoves()) {
+            return getCfruDpeEggMoves();
+        }
+
         Map<Integer, List<Integer>> eggMoves = new TreeMap<>();
         int offset = romEntry.getIntValue("EggMoves");
         int currentSpecies = 0;
@@ -2604,6 +2614,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setEggMoves(Map<Integer, List<Integer>> eggMoves) {
+        if (useCfruDpeEggMoves()) {
+            setCfruDpeEggMoves(eggMoves);
+            return;
+        }
+
         int offset = romEntry.getIntValue("EggMoves");
         for (int species : eggMoves.keySet()) {
             IOFunctions.write2ByteInt(rom, offset, pokedexToInternal[species] + 20000);
@@ -2613,6 +2628,63 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 offset += 2;
             }
         }
+    }
+
+    private Map<Integer, List<Integer>> getCfruDpeEggMoves() {
+        Map<Integer, List<Integer>> eggMoves = new TreeMap<>();
+        int offset = getCfruDpeEggMovesOffset();
+        int currentSpecies = 0;
+        List<Integer> currentMoves = new ArrayList<>();
+        int val = IOFunctions.read2ByteInt(rom, offset);
+
+        while (val != CFRU_DPE_EGG_MOVES_TERMINATOR) {
+            if (val > CFRU_DPE_EGG_MOVES_SPECIES_OFFSET) {
+                if (!currentMoves.isEmpty()) {
+                    eggMoves.put(currentSpecies, currentMoves);
+                }
+                currentSpecies = val - CFRU_DPE_EGG_MOVES_SPECIES_OFFSET;
+                currentMoves = new ArrayList<>();
+            } else if (isLoadedMoveId(val)) {
+                currentMoves.add(val);
+            }
+            offset += 2;
+            if (offset + 2 > rom.length) {
+                throw new RomIOException("CFRU/DPE gEggMoves stream is unterminated");
+            }
+            val = IOFunctions.read2ByteInt(rom, offset);
+        }
+
+        if (!currentMoves.isEmpty()) {
+            eggMoves.put(currentSpecies, currentMoves);
+        }
+        return eggMoves;
+    }
+
+    private void setCfruDpeEggMoves(Map<Integer, List<Integer>> eggMoves) {
+        int offset = getCfruDpeEggMovesOffset();
+        for (int species : eggMoves.keySet()) {
+            if (species <= 0) {
+                continue;
+            }
+            IOFunctions.write2ByteInt(rom, offset, species + CFRU_DPE_EGG_MOVES_SPECIES_OFFSET);
+            offset += 2;
+            for (int move : eggMoves.get(species)) {
+                if (!isLoadedMoveId(move)) {
+                    continue;
+                }
+                IOFunctions.write2ByteInt(rom, offset, move);
+                offset += 2;
+            }
+        }
+        IOFunctions.write2ByteInt(rom, offset, CFRU_DPE_EGG_MOVES_TERMINATOR);
+    }
+
+    private boolean useCfruDpeEggMoves() {
+        return useCfruDpeGen9SpeciesCount;
+    }
+
+    private int getCfruDpeEggMovesOffset() {
+        return readRequiredCfruDpePointer(CFRU_DPE_EGG_MOVES_POINTER_LOCATION, 2, "CFRU/DPE gEggMoves");
     }
 
     public static class StaticPokemon {

@@ -2730,11 +2730,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
             // entryOffset + 0 is the identifier for the text box string. We simply ignore it.
-            trade.setRequestedSpecies(pokes[rom[entryOffset + 1] & 0xFF]);
-            trade.setGivenSpecies(pokes[rom[entryOffset + 2] & 0xFF]);
+            Species requested = pokes[rom[entryOffset + 1] & 0xFF];
+            Species given = pokes[rom[entryOffset + 2] & 0xFF];
+            InGameTrade trade = new InGameTrade(requested, given);
             trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
             int atkdef = rom[entryOffset + 3 + nicknameLength] & 0xFF;
             int spdspc = rom[entryOffset + 4 + nicknameLength] & 0xFF;

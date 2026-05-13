@@ -3639,9 +3639,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (offset > 0) {
             offset += prefix.length() / 2;
             for (int i = 0; i < count; i++) {
-                InGameTrade trade = new InGameTrade();
+                Species requested = pokes[IOFunctions.read2ByteInt(code,offset + 0x20)];
+                Species given = pokes[IOFunctions.read2ByteInt(code,offset)];
+                InGameTrade trade = new InGameTrade(requested, given);
                 trade.setNickname(tradeStrings.get(textOffset + i));
-                trade.setGivenSpecies(pokes[IOFunctions.read2ByteInt(code,offset)]);
                 trade.setIVs(new int[6]);
                 for (int iv = 0; iv < 6; iv++) {
                     trade.getIVs()[iv] = code[offset + 5 + iv];
@@ -3649,7 +3650,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 trade.setOtId(IOFunctions.read2ByteInt(code,offset + 0xE));
                 trade.setHeldItem(items.get(IOFunctions.read2ByteInt(code,offset + 0x10)));
                 trade.setOtName(tradeStrings.get(textOffset + count + i));
-                trade.setRequestedSpecies(pokes[IOFunctions.read2ByteInt(code,offset + 0x20)]);
                 trades.add(trade);
                 offset += Gen6Constants.ingameTradeSize;
             }

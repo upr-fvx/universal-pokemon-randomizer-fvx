@@ -3415,10 +3415,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                     unusedOffset++;
                     continue;
                 }
-                InGameTrade trade = new InGameTrade();
                 byte[] tfile = tradeNARC.files.get(entry);
+                Species requested = pokes[readLong(tfile, 0x5C)];
+                Species given = pokes[readLong(tfile, 4)];
+                InGameTrade trade = new InGameTrade(requested, given);
                 trade.setNickname(tradeStrings.get(entry * 2));
-                trade.setGivenSpecies(pokes[readLong(tfile, 4)]);
                 trade.setIVs(new int[6]);
                 for (int iv = 0; iv < 6; iv++) {
                     trade.getIVs()[iv] = readLong(tfile, 0x10 + iv * 4);
@@ -3426,7 +3427,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 trade.setOtId(readWord(tfile, 0x34));
                 trade.setHeldItem(items.get(readLong(tfile, 0x4C)));
                 trade.setOtName(tradeStrings.get(entry * 2 + 1));
-                trade.setRequestedSpecies(pokes[readLong(tfile, 0x5C)]);
                 trades.add(trade);
             }
         } catch (Exception ex) {

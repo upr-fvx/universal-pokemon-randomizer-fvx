@@ -5064,9 +5064,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 					continue;
 				}
 				byte[] tfile = tradeNARC.files.get(i);
-				InGameTrade trade = new InGameTrade();
+                Species requested = pokes[readLong(tfile, 0x4C)];
+                Species given = pokes[readLong(tfile, 0)];
+                InGameTrade trade = new InGameTrade(requested, given);
 				trade.setNickname(tradeStrings.get(i));
-				trade.setGivenSpecies(pokes[readLong(tfile, 0)]);
 				trade.setIVs(new int[6]);
 				for (int iv = 0; iv < 6; iv++) {
 					trade.getIVs()[iv] = readLong(tfile, 4 + iv * 4);
@@ -5074,7 +5075,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				trade.setOtId(readWord(tfile, 0x20));
 				trade.setOtName(tradeStrings.get(i + tradeCount));
 				trade.setHeldItem(items.get(readLong(tfile, 0x3C)));
-				trade.setRequestedSpecies(pokes[readLong(tfile, 0x4C)]);
 				trades.add(trade);
 			}
 		} catch (IOException ex) {

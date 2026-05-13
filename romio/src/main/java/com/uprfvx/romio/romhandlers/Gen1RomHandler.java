@@ -2728,10 +2728,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
-            trade.setRequestedSpecies(pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]]);
-            trade.setGivenSpecies(pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]]);
+            Species requested = pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]];
+            Species given = pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]];
+            InGameTrade trade = new InGameTrade(requested, given);
             trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
             trades.add(trade);
         }

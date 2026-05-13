@@ -70,7 +70,7 @@ public class TradeRandomizer extends Randomizer {
                 given = rSpecService.randomSpecies(random);
             }
             usedGivens.add(given);
-            trade.setGivenSpecies(given);
+            trade.getGivenSpeciesHolder().setSpecies(given);
 
             // requested pokemon?
             if (oldgiven == trade.getRequestedSpecies()) {

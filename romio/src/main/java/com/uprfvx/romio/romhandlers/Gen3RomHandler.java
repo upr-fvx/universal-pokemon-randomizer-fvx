@@ -3712,10 +3712,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 unusedOffset++;
                 continue;
             }
-            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
+            Species requested = pokesInternal[readWord(entryOffset + 56)];
+            Species given = pokesInternal[readWord(entryOffset + 12)];
+            InGameTrade trade = new InGameTrade(requested, given);
             trade.setNickname(readVariableLengthString(entryOffset));
-            trade.setGivenSpecies(pokesInternal[readWord(entryOffset + 12)]);
             trade.setIVs(new int[6]);
             for (int i = 0; i < 6; i++) {
                 trade.getIVs()[i] = rom[entryOffset + 14 + i] & 0xFF;
@@ -3724,7 +3725,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int heldItemID = Gen3Constants.itemIDToStandard(readWord(entryOffset + 40));
             trade.setHeldItem(items.get(heldItemID));
             trade.setOtName(readVariableLengthString(entryOffset + 43));
-            trade.setRequestedSpecies(pokesInternal[readWord(entryOffset + 56)]);
             trades.add(trade);
         }
 

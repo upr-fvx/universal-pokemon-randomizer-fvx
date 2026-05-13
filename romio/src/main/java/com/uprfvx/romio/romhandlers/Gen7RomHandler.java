@@ -359,9 +359,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    // a temporary method, or it's temporarily separate from getInternalForme(int, int) at least.
-    // TODO: remove / merge when done
     private int getInternalForme(int formeNumber) {
+        // TODO: when is it relevant to actually check for these formes?
         // Forme 30 & 31 are "fake" formes - really stand-ins for
         // "region-appropriate Scatterbug/Spewpa/Vivillon" & "random cosmetic forme".
         // Thus, they don't modify what species should be returned here.
@@ -370,26 +369,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             return 0;
         }
         return formeNumber;
-    }
-
-    /**
-     * Should be used instead of {@link Species#getForme(int)},
-     * because that does
-     * @param speciesID The species ID of the base forme.
-     * @param formeNumber The internal forme number. Note that this is
-     */
-    private Species getInternalForme(int speciesID, int formeNumber) {
-        Species pk = pokes[speciesID];
-
-        // Forme 30 & 31 are "fake" formes - really stand-ins for
-        // "region-appropriate Scatterbug/Spewpa/Vivillon" & "random cosmetic forme".
-        // Thus, they don't modify what species should be returned here.
-        // Likewise, -1 stands for "keep the forme upon evolution" in the evo data.
-        if (formeNumber != 30 && formeNumber != 31 && formeNumber != -1) {
-            pk = pk.getForme(formeNumber);
-        }
-
-        return pk;
     }
 
     private String[] readPokemonNames() {
@@ -3192,13 +3171,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             int numberOfIngameTrades = tradesFile.length / 0x34;
             for (int i = 0; i < numberOfIngameTrades; i++) {
                 int offset = i * 0x34;
-                InGameTrade trade = new InGameTrade();
+
                 int givenSpecies = IOFunctions.read2ByteInt(tradesFile, offset);
-                int givenForme = tradesFile[offset + 4];
                 int requestedSpecies = IOFunctions.read2ByteInt(tradesFile, offset + 0x2C);
-                Species requestedPokemon = pokes[requestedSpecies];
-                trade.setGivenSpecies(getInternalForme(givenSpecies, givenForme));
-                trade.setRequestedSpecies(requestedPokemon);
+                InGameTrade trade = new InGameTrade(pokes[requestedSpecies], pokes[givenSpecies]);
+                int givenForme = getInternalForme(tradesFile[offset + 4]);
+                SpeciesHolder givenSH = trade.getGivenSpeciesHolder();
+                givenSH.setAltFormeAllowed();
+                givenSH.setFormeNumber(givenForme);
+
                 trade.setNickname(tradeStrings.get(IOFunctions.read2ByteInt(tradesFile, offset + 2)));
                 trade.setOtName(tradeStrings.get(IOFunctions.read2ByteInt(tradesFile, offset + 0x18)));
                 trade.setOtId(IOFunctions.readFullInt(tradesFile, offset + 0x10));
@@ -3228,14 +3209,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < numberOfIngameTrades; i++) {
                 InGameTrade trade = trades.get(i);
                 int offset = i * 0x34;
-                Species givenSpecies = trade.getGivenSpecies();
-                int forme = 0;
-                if (!givenSpecies.isBaseForme()) {
-                    forme = givenSpecies.getFormeNumber();
-                    givenSpecies = givenSpecies.getBaseForme();
-                }
-                IOFunctions.write2ByteInt(tradesFile, offset, givenSpecies.getNumber());
-                tradesFile[offset + 4] = (byte) forme;
+                IOFunctions.write2ByteInt(tradesFile, offset, trade.getGivenSpecies().getBaseNumber());
+                tradesFile[offset + 4] = (byte) trade.getGivenSpeciesHolder().getFormeNumber();
                 IOFunctions.write2ByteInt(tradesFile, offset + 0x2C, trade.getRequestedSpecies().getNumber());
                 tradeStrings.set(IOFunctions.read2ByteInt(tradesFile, offset + 2), trade.getNickname());
                 tradeStrings.set(IOFunctions.read2ByteInt(tradesFile, offset + 0x18), trade.getOtName());

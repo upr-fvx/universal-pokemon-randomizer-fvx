@@ -1424,14 +1424,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 
 			// up to 204, 5 sets of "sea" encounters to go, each 44 bytes long
-			int offset = 204;
-            int seaAreaLen = 44;
+			int startOffset = 204;
 			for (int i = 0; i < 5; i++) {
                 if (i == 1) continue;
 
-				int rate = readLong(b, offset + i * seaAreaLen);
+                int offset = startOffset + i * Gen4Constants.dpptWaterAreaSize;
+				int rate = readLong(b, offset);
                 if (rate == 0) continue;
-                List<Encounter> seaEncounters = readSeaEncountersDPPt(b, offset + i * seaAreaLen + 4, 5);
+                List<Encounter> seaEncounters = readSeaEncountersDPPt(b, offset + 4, 5);
 
 				EncounterArea seaArea = new EncounterArea(seaEncounters);
 				seaArea.setDisplayName(mapName + " " + Gen4Constants.dpptWaterSlotSetNames[i]);
@@ -2451,15 +2451,15 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			}
 
 			// up to 204, 5 sets of "sea" encounters to go
-			int offset = 204;
+			int startOffset = 204;
 			for (int i = 0; i < 5; i++) {
+                if (i == 1) continue;
+
+                int offset = startOffset + i * Gen4Constants.dpptWaterAreaSize;
 				int rate = readLong(b, offset);
-				offset += 4;
-				List<Encounter> seaEncounters = readSeaEncountersDPPt(b, offset, 5);
-				offset += 40;
-				if (rate == 0 || i == 1) {
-					continue;
-				}
+                if (rate == 0) continue;
+				List<Encounter> seaEncounters = readSeaEncountersDPPt(b, offset + 4, 5);
+
 				for (Encounter enc : seaEncounters) {
 					target.add(enc, 0, index);
 					target.add(enc, 1, index);

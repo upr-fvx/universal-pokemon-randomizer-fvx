@@ -1090,6 +1090,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return category;
     }
 
+    private byte cfruDpeMoveSplitFromCategory(MoveCategory category, byte existingSplit) {
+        if (category == MoveCategory.PHYSICAL) {
+            return CFRU_DPE_MOVE_SPLIT_PHYSICAL;
+        }
+        if (category == MoveCategory.SPECIAL) {
+            return CFRU_DPE_MOVE_SPLIT_SPECIAL;
+        }
+        if (category == MoveCategory.STATUS) {
+            return CFRU_DPE_MOVE_SPLIT_STATUS;
+        }
+        return existingSplit;
+    }
+
     private void loadStatChangesFromEffect(Move move, int secondaryEffectChance) {
         switch (move.effectIndex) {
             case Gen3Constants.noDamageAtkPlusOneEffect:
@@ -1485,10 +1498,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int stringOffset = nameoffs + i * namelen;
             writeFixedLengthString(newMoveName, stringOffset, namelen);
 
-            // TODO: where does this 0xC come from?
-            writeBytes(offs + i * 0xC, new byte[] { (byte) moves[i].effectIndex,
+            int moveOffset = offs + i * GEN3_BATTLE_MOVE_ENTRY_SIZE;
+            writeBytes(moveOffset, new byte[] { (byte) moves[i].effectIndex,
                     (byte) moves[i].power, Gen3Constants.typeToByte(moves[i].type),
                     (byte) hitratio, (byte) moves[i].pp });
+            if (useCfruDpeGen9SpeciesCount) {
+                rom[moveOffset + 10] = cfruDpeMoveSplitFromCategory(moves[i].category, rom[moveOffset + 10]);
+            }
         }
     }
 

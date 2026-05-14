@@ -202,9 +202,9 @@ public class EvolutionRandomizer extends Randomizer {
             }
             if (sameType) {
                 if (from.getNumber() == SpeciesIDs.eevee && !evolveEveryLevel) {
-                    filters.add(to -> to.hasSharedType(evo.getTo()));
+                    filters.add(to -> hasUsableSharedType(to, evo.getTo()));
                 } else {
-                    filters.add(to -> to.hasSharedType(from));
+                    filters.add(to -> hasUsableSharedType(to, from));
                 }
             }
 
@@ -215,6 +215,11 @@ public class EvolutionRandomizer extends Randomizer {
                 return true;
             };
             return pokemonPool.filter(combinedFilter);
+        }
+
+        private boolean hasUsableSharedType(Species candidate, Species reference) {
+            return candidate != null && reference != null && candidate.getPrimaryType(false) != null
+                    && candidate.hasSharedType(reference);
         }
 
         private boolean isAlreadyChosenAsOtherSplitEvo(Species from, Species to) {

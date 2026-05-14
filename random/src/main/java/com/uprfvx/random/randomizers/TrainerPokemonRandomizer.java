@@ -69,6 +69,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
         boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
         boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
+        boolean hasAnyTypeDiversity = bossDiversity || importantDiversity || regularDiversity;
 
         boolean skipOriginalTeamMembers = settings.getTrainersMod() == Settings.TrainersMod.UNCHANGED;
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
@@ -105,6 +106,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
             banned.addAll(cachedAll.filter(this::isNotUsableTrainerSpecies));
         }
         cachedAll.removeAll(banned);
+        if (isExtendedBpreHack() && (hasAnyTypeTheme || hasAnyTypeDiversity)) {
+            cachedAll.removeIf(sp -> !hasUsablePrimaryType(sp));
+        }
 
         SpeciesSet wonderGuardPokemon = null;
         if(noEarlyWonderGuard) {
@@ -270,7 +274,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             cacheReplacement,
                             evolveAsFarAsLegal,
                             usedTypes,
-                            bannedForReplacement);
+                            bannedForReplacement,
+                            forceTypeDiverse && typeForTrainer == null);
 
                     //We've chosen! Now to set it.
                     tp.setSpecies(newSp);
@@ -318,10 +323,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     private static void updateUsedTypes(boolean forceTypeDiverse, Type typeForTrainer, Set<Type> usedTypes, Species sp) {
-        if(forceTypeDiverse && typeForTrainer == null) {
+        if(forceTypeDiverse && typeForTrainer == null && hasUsablePrimaryType(sp)) {
             usedTypes.add(sp.getPrimaryType(false));
-            if(sp.hasSecondaryType(false)) {
-                usedTypes.add(sp.getSecondaryType(false));
+            Type secondaryType = sp.getSecondaryType(false);
+            if(secondaryType != null) {
+                usedTypes.add(secondaryType);
             }
         }
     }
@@ -484,7 +490,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                                                boolean doNotUsePrematureEvos,
                                                Type type, boolean usePlacementHistory, boolean swapMegaEvos,
                                                SpeciesSet useInsteadOfCached, boolean evolveAsFarAsLegal,
-                                               Set<Type> bannedTypes, SpeciesSet bannedPokemon) {
+                                               Set<Type> bannedTypes, SpeciesSet bannedPokemon,
+                                               boolean requireUsableTypeForDiversity) {
         SpeciesSet cacheOrReplacement;
         if(useInsteadOfCached == null) {
             cacheOrReplacement = cachedAll;
@@ -530,6 +537,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
             }
         }
 
+        if (requireUsableTypeForDiversity) {
+            pickFrom = pickFrom.filter(TrainerPokemonRandomizer::hasUsablePrimaryType);
+        }
+
         if(!bannedTypes.isEmpty()) {
             pickFrom = pickFrom.filter(sp -> !bannedTypes.contains(sp.getPrimaryType(false)) &&
                     (!sp.hasSecondaryType(false) ||
@@ -557,7 +568,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //the cache replacement has no valid Pokemon
             //recurse using the cache
             return pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
-                    swapMegaEvos, null, evolveAsFarAsLegal, bannedTypes, bannedPokemon);
+                    swapMegaEvos, null, evolveAsFarAsLegal, bannedTypes, bannedPokemon, requireUsableTypeForDiversity);
         }
 
         withoutBannedPokemon = pickFrom.filter(pk -> !bannedPokemon.contains(pk));
@@ -567,7 +578,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             //rather than using banned pokemon from the provided set,
             //see if we can get a non-banned pokemon from the cache
             Species cachePick = pickTrainerPokeReplacement(current, level, usePowerLevels, alreadyPlaced, doNotUsePrematureEvos, type, usePlacementHistory,
-                    swapMegaEvos, null, evolveAsFarAsLegal ,bannedTypes, bannedPokemon);
+                    swapMegaEvos, null, evolveAsFarAsLegal ,bannedTypes, bannedPokemon, requireUsableTypeForDiversity);
             if(withoutBannedPokemon.contains(cachePick)) {
                 return cachePick;
             }
@@ -666,6 +677,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private boolean isNotUsableTrainerSpecies(Species species) {
         return species.getBST() == 0
                 || (species.getAbility1() == 0 && species.getAbility2() == 0 && species.getAbility3() == 0);
+    }
+
+    private static boolean hasUsablePrimaryType(Species species) {
+        return species != null && species.getPrimaryType(false) != null;
     }
 
     private int getValidAbilitySlotFromOriginal(Species species, int originalAbilitySlot) {

@@ -117,6 +117,8 @@ public class Gen3Constants {
 
     public static final int cfruDpeItemCount = 799, cfruDpeMaxItemID = cfruDpeItemCount - 1;
 
+    public static final int cfruDpeTypeFairy = 0x17, cfruDpeTypeStellar = 0x18;
+
     public static final int cfruDpeBoosterEnergy = ItemIDs.UNIQUE_OFFSET + 0x2E7;
     public static final int cfruDpeTeraOrb = ItemIDs.UNIQUE_OFFSET + 0x306;
     public static final int cfruDpePortablePC = ItemIDs.UNIQUE_OFFSET + 0x307;

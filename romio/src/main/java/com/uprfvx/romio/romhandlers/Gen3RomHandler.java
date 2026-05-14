@@ -168,6 +168,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
+
+    private record RawTypeEffectivenessEntry(byte attacker, byte defender, byte effectiveness) {}
     private static final Map<String, Integer> SPECIES_ID_BY_NORMALIZED_NAME = speciesIdsByNormalizedName();
 
     // Misc.
@@ -5270,8 +5272,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (rom[currentOffset] != GBConstants.typeTableForesightTerminator) {
                 int defendingType = rom[currentOffset + 1];
                 int effectivenessInternal = rom[currentOffset + 2];
-                Type attacking = byteToBaseStatsType(attackingType & 0xFF);
-                Type defending = byteToBaseStatsType(defendingType & 0xFF);
+                Type attacking = byteToTypeChartType(attackingType & 0xFF);
+                Type defending = byteToTypeChartType(defendingType & 0xFF);
                 if (attacking == null || defending == null) {
                     currentOffset += 3;
                     attackingType = rom[currentOffset];
@@ -5300,10 +5302,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void writeTypeTable(TypeTable typeTable) {
-        if (typeTable.nonNeutralEffectivenessCount() > Gen3Constants.nonNeutralEffectivenessCount) {
+        List<RawTypeEffectivenessEntry> preservedMainPart = preservedUnsupportedTypeChartEntries(false);
+        List<RawTypeEffectivenessEntry> preservedForesightPart = preservedUnsupportedTypeChartEntries(true);
+        int writableNonNeutralCount = typeTable.nonNeutralEffectivenessCount()
+                + preservedMainPart.size() + preservedForesightPart.size();
+        int maxWritableNonNeutralCount = typeChartNonNeutralCapacity();
+
+        if (writableNonNeutralCount > maxWritableNonNeutralCount) {
             throw new IllegalArgumentException("Too many non-neutral Effectiveness-es. Was "
-                    + typeTable.nonNeutralEffectivenessCount() + ", has to be at most " +
-                    Gen3Constants.nonNeutralEffectivenessCount);
+                    + writableNonNeutralCount + ", has to be at most " +
+                    maxWritableNonNeutralCount);
         }
         int tableOffset = romEntry.getIntValue("TypeEffectivenessOffset");
 
@@ -5311,6 +5319,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         ByteArrayOutputStream ghostImmunities = new ByteArrayOutputStream();
 
         prepareTypeTableParts(typeTable, mainPart, ghostImmunities);
+        writeRawTypeEffectivenessEntries(preservedMainPart, mainPart);
+        writeRawTypeEffectivenessEntries(preservedForesightPart, ghostImmunities);
         writeTypeTableParts(tableOffset, mainPart, ghostImmunities);
     }
 
@@ -5326,11 +5336,77 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         case HALF -> 5;
                         default -> 0;
                     };
-                    part.write(Gen3Constants.typeToByte(attacker));
-                    part.write(Gen3Constants.typeToByte(defender));
+                    part.write(typeChartTypeToByte(attacker));
+                    part.write(typeChartTypeToByte(defender));
                     part.write(effectivenessInternal);
                 }
             }
+        }
+    }
+
+    private Type byteToTypeChartType(int typeByte) {
+        if (useCfruDpeGen9SpeciesCount && typeByte == Gen3Constants.cfruDpeTypeFairy) {
+            return Type.FAIRY;
+        }
+        return Gen3Constants.typeTable[typeByte];
+    }
+
+    private byte typeChartTypeToByte(Type type) {
+        if (useCfruDpeGen9SpeciesCount && type == Type.FAIRY) {
+            return Gen3Constants.cfruDpeTypeFairy;
+        }
+        return Gen3Constants.typeToByte(type);
+    }
+
+    private int typeChartNonNeutralCapacity() {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return Gen3Constants.nonNeutralEffectivenessCount;
+        }
+        return currentTypeChartTripletsBeforeEndTable() - 1;
+    }
+
+    private int currentTypeChartTripletsBeforeEndTable() {
+        int currentOffset = romEntry.getIntValue("TypeEffectivenessOffset");
+        int triplets = 0;
+        while (rom[currentOffset] != GBConstants.typeTableTerminator) {
+            triplets++;
+            currentOffset += 3;
+        }
+        return triplets;
+    }
+
+    private List<RawTypeEffectivenessEntry> preservedUnsupportedTypeChartEntries(boolean afterForesight) {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return Collections.emptyList();
+        }
+
+        List<RawTypeEffectivenessEntry> entries = new ArrayList<>();
+        int currentOffset = romEntry.getIntValue("TypeEffectivenessOffset");
+        boolean inForesightPart = false;
+
+        while (rom[currentOffset] != GBConstants.typeTableTerminator) {
+            if (rom[currentOffset] == GBConstants.typeTableForesightTerminator) {
+                inForesightPart = true;
+            } else if (inForesightPart == afterForesight && hasUnsupportedTypeChartType(currentOffset)) {
+                entries.add(new RawTypeEffectivenessEntry(rom[currentOffset],
+                        rom[currentOffset + 1], rom[currentOffset + 2]));
+            }
+            currentOffset += 3;
+        }
+
+        return entries;
+    }
+
+    private boolean hasUnsupportedTypeChartType(int offset) {
+        return byteToTypeChartType(rom[offset] & 0xFF) == null
+                || byteToTypeChartType(rom[offset + 1] & 0xFF) == null;
+    }
+
+    private void writeRawTypeEffectivenessEntries(List<RawTypeEffectivenessEntry> entries, ByteArrayOutputStream part) {
+        for (RawTypeEffectivenessEntry entry : entries) {
+            part.write(entry.attacker());
+            part.write(entry.defender());
+            part.write(entry.effectiveness());
         }
     }
 

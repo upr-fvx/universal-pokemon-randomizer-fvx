@@ -1062,6 +1062,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private Type typeFromMoveData(int typeIndex) {
+        if (useCfruDpeGen9SpeciesCount && typeIndex == 0x17) {
+            return Type.FAIRY;
+        }
         if (typeIndex >= 0 && typeIndex < Gen3Constants.typeTable.length
                 && Gen3Constants.typeTable[typeIndex] != null) {
             return Gen3Constants.typeTable[typeIndex];
@@ -1500,12 +1503,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
             int moveOffset = offs + i * GEN3_BATTLE_MOVE_ENTRY_SIZE;
             writeBytes(moveOffset, new byte[] { (byte) moves[i].effectIndex,
-                    (byte) moves[i].power, Gen3Constants.typeToByte(moves[i].type),
+                    (byte) moves[i].power, moveDataTypeToByte(moves[i].type),
                     (byte) hitratio, (byte) moves[i].pp });
             if (useCfruDpeGen9SpeciesCount) {
                 rom[moveOffset + 10] = cfruDpeMoveSplitFromCategory(moves[i].category, rom[moveOffset + 10]);
             }
         }
+    }
+
+    private byte moveDataTypeToByte(Type type) {
+        if (useCfruDpeGen9SpeciesCount && type == Type.FAIRY) {
+            return 0x17;
+        }
+        return Gen3Constants.typeToByte(type);
     }
 
     public List<Move> getMoves() {

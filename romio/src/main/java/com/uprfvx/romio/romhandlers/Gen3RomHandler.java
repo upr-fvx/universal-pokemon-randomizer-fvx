@@ -4931,7 +4931,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         for (int offset : itemOffs) {
             Item item = items.get(Gen3Constants.itemIDToStandard(readWord(offset)));
-            if (item.isAllowed()) {
+            if (isFieldItemRandomizerApiSlot(item)) {
                 fieldItems.add(item);
             }
         }
@@ -4950,12 +4950,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         for (int offset : itemOffs) {
             Item current = items.get(Gen3Constants.itemIDToStandard(readWord(offset)));
-            if (current.isAllowed()) {
+            if (isFieldItemRandomizerApiSlot(current)) {
                 // Replace it
                 writeWord(offset, Gen3Constants.itemIDToInternal(iterItems.next().getId()));
             }
         }
 
+    }
+
+    private boolean isFieldItemRandomizerApiSlot(Item item) {
+        return item != null && (item.isAllowed() || (useCfruDpeGen9SpeciesCount && item.isTM()));
     }
 
     @Override

@@ -369,7 +369,13 @@ public class WildEncounterRandomizer extends Randomizer {
                 Species current = enc.getSpecies();
 
                 Species replacement;
-                if(useMapping && zoneMap.containsKey(current)) {
+                if (isUnresolvedEncounterSpecies(current)) {
+                    replacement = pickReplacementForUnresolvedEncounter(area, zoneType);
+                    if (useMapping || catchEmAll) {
+                        removeFromRemaining(replacement);
+                    }
+
+                } else if(useMapping && zoneMap.containsKey(current)) {
                     //checking the map first lets us avoid creating a pointless allowedForReplacement set
                     replacement = zoneMap.get(current);
 
@@ -733,6 +739,35 @@ public class WildEncounterRandomizer extends Randomizer {
             }
             return possiblyAllowed;
             //If it didn't work for allowed, we have no recourse; let the calling function deal with it.
+        }
+
+        private boolean isUnresolvedEncounterSpecies(Species current) {
+            return current == null;
+        }
+
+        private Species pickReplacementForUnresolvedEncounter(EncounterArea area, Type theme) {
+            SpeciesSet allowedForReplacement = setupAllowedForUnresolvedEncounter(area, theme);
+            if (allowedForReplacement.isEmpty()) {
+                throw new RandomizationException("Could not find a wild Species replacement for an unresolved encounter slot!");
+            }
+            return allowedForReplacement.getRandomSpecies(random);
+        }
+
+        private SpeciesSet setupAllowedForUnresolvedEncounter(EncounterArea area, Type theme) {
+            SpeciesSet possibleReplacements;
+            if (theme == null) {
+                possibleReplacements = !remaining.isEmpty() ? remaining : allowed;
+            } else {
+                SpeciesSet remainingOfType = remainingByType.get(theme);
+                if (remainingOfType != null && !remainingOfType.isEmpty()) {
+                    possibleReplacements = remainingOfType;
+                } else {
+                    SpeciesSet allowedOfType = allowedByType.get(theme);
+                    possibleReplacements = allowedOfType != null ? allowedOfType : new SpeciesSet();
+                }
+
+            }
+            return removeBannedSpecies(possibleReplacements, area.getBannedSpecies());
         }
 
         /**

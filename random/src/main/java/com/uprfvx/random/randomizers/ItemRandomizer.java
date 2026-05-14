@@ -89,23 +89,41 @@ public class ItemRandomizer extends Randomizer {
      * Randomizes TM field items, by modifying the input list.
      */
     private void randomizeTMFieldItems(List<Item> tms) {
-        List<Item> allTMs = romHandler.getItems().stream()
-                .filter(Objects::nonNull).filter(Item::isTM)
-                .collect(Collectors.toList());
-        Set<Item> requiredTMs = romHandler.getRequiredFieldTMs();
-
         int neededTMAmount = tms.size();
+        Set<Item> newTMs = romHandler.getRequiredFieldTMs().stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
-        Set<Item> newTMs = new HashSet<>(requiredTMs);
-        while (newTMs.size() < neededTMAmount && newTMs.size() < allTMs.size()) {
-            newTMs.add(allTMs.get(random.nextInt(allTMs.size()))); // duplicates get automatically ignored by the Set
+        if (newTMs.size() > neededTMAmount) {
+            throw new RandomizationException("Could not randomize TM field items, more required TMs than TM field item slots.");
         }
+
+        List<Item> fillerTMs = new ArrayList<>();
+        Set<Item> seenTMs = new HashSet<>(newTMs);
+        addUniqueTMFillers(fillerTMs, seenTMs, romHandler.getItems());
+        addUniqueTMFillers(fillerTMs, seenTMs, tms);
+
+        int fillerNeeded = neededTMAmount - newTMs.size();
+        if (fillerTMs.size() < fillerNeeded) {
+            throw new RandomizationException("Could not randomize TM field items, not enough TM filler items.");
+        }
+
+        Collections.shuffle(fillerTMs, random);
+        newTMs.addAll(fillerTMs.subList(0, fillerNeeded));
         if (newTMs.size() != neededTMAmount) {
             throw new RandomizationException("Could not randomize TM field items, too many TMs requested.");
         }
 
         tms.clear();
         tms.addAll(newTMs);
+    }
+
+    private void addUniqueTMFillers(List<Item> fillerTMs, Set<Item> seenTMs, Collection<Item> candidates) {
+        for (Item item : candidates) {
+            if (item != null && item.isTM() && seenTMs.add(item)) {
+                fillerTMs.add(item);
+            }
+        }
     }
 
     /**

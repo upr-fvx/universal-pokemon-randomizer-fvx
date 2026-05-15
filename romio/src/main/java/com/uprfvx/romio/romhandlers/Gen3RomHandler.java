@@ -5065,6 +5065,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 continue;
             }
             InGameTrade trade = trades.get(tradeOffset++);
+            if (!canWriteInGameTrade(trade)) {
+                continue;
+            }
             int entryOffset = tableOffset + entry * entryLength;
             writeFixedLengthString(trade.getNickname(), entryOffset, 12);
             writeWord(entryOffset + 12, pokedexToInternal[trade.getGivenSpecies().getNumber()]);
@@ -5078,6 +5081,28 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeFixedLengthString(trade.getOtName(), entryOffset + 43, 11);
             writeWord(entryOffset + 56, pokedexToInternal[trade.getRequestedSpecies().getNumber()]);
         }
+    }
+
+    private boolean canWriteInGameTrade(InGameTrade trade) {
+        return trade != null
+                && canWriteInGameTradeSpecies(trade.getGivenSpecies())
+                && canWriteInGameTradeSpecies(trade.getRequestedSpecies());
+    }
+
+    private boolean canWriteInGameTradeSpecies(Species species) {
+        if (species == null || species.getNumber() <= 0 || species.getNumber() >= pokedexToInternal.length
+                || species.getName() == null) {
+            return false;
+        }
+        if (isPlaceholderTradeSpeciesName(species.getName())) {
+            return false;
+        }
+        int internalSpecies = pokedexToInternal[species.getNumber()];
+        return internalSpecies > 0 && internalSpecies < pokesInternal.length && pokesInternal[internalSpecies] != null;
+    }
+
+    private boolean isPlaceholderTradeSpeciesName(String name) {
+        return name.equals("Bad Egg") || name.equals("?") || name.toLowerCase().contains("unused");
     }
 
     @Override

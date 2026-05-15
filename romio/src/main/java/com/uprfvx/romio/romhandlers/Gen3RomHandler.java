@@ -4278,14 +4278,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int pickupItemCount = romEntry.getIntValue("PickupItemCount");
         int sizeOfPickupEntry = romEntry.getRomType() == Gen3Constants.RomType_Em ? 2 : 4;
 
-        // If we haven't found the pickup table for this ROM already, find it.
-        if (pickupItemsTableOffset == 0) {
-            String pickupTableStartLocator = romEntry.getStringValue("PickupTableStartLocator");
-            int offset = find(pickupTableStartLocator);
-            if (offset > 0) {
-                pickupItemsTableOffset = offset;
-            }
-        }
+        resolvePickupItemsTableOffset(pickupItemCount, sizeOfPickupEntry);
 
         // Assuming we've found the pickup table, extract the items out of it.
         if (pickupItemsTableOffset > 0) {
@@ -4350,6 +4343,64 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 IOFunctions.write2ByteInt(rom, itemOffset, itemInternalID);
             }
         }
+    }
+
+    private void resolvePickupItemsTableOffset(int pickupItemCount, int sizeOfPickupEntry) {
+        if (pickupItemsTableOffset > 0) {
+            return;
+        }
+
+        String pickupTableStartLocator = romEntry.getStringValue("PickupTableStartLocator");
+        int offset = find(pickupTableStartLocator);
+        if (offset > 0) {
+            pickupItemsTableOffset = offset;
+            return;
+        }
+
+        if (useCfruDpeGen9SpeciesCount) {
+            pickupItemsTableOffset = findCfruDpePickupItemsTableByEntryMetadata(pickupTableStartLocator,
+                    pickupItemCount, sizeOfPickupEntry);
+        }
+    }
+
+    private int findCfruDpePickupItemsTableByEntryMetadata(String pickupTableStartLocator, int pickupItemCount,
+            int sizeOfPickupEntry) {
+        if (pickupTableStartLocator.length() % 2 != 0 || pickupItemCount <= 0 || sizeOfPickupEntry < 4) {
+            return 0;
+        }
+
+        byte[] locatorBytes = new byte[pickupTableStartLocator.length() / 2];
+        for (int i = 0; i < locatorBytes.length; i++) {
+            locatorBytes[i] = (byte) Integer.parseInt(pickupTableStartLocator.substring(i * 2, i * 2 + 2), 16);
+        }
+
+        int uniqueMatch = 0;
+        int matches = 0;
+        int tableLength = pickupItemCount * sizeOfPickupEntry;
+        for (int offset = 0; offset + tableLength <= rom.length; offset++) {
+            if (matchesCfruDpePickupEntryMetadata(offset, locatorBytes, sizeOfPickupEntry)) {
+                uniqueMatch = offset;
+                matches++;
+                if (matches > 1) {
+                    return 0;
+                }
+            }
+        }
+        return matches == 1 ? uniqueMatch : 0;
+    }
+
+    private boolean matchesCfruDpePickupEntryMetadata(int offset, byte[] locatorBytes, int sizeOfPickupEntry) {
+        for (int locatorOffset = 0; locatorOffset + 1 < locatorBytes.length; locatorOffset += 2) {
+            int entryOffset = locatorOffset % sizeOfPickupEntry;
+            if (entryOffset == 0) {
+                continue;
+            }
+            if (offset + locatorOffset + 1 >= rom.length || rom[offset + locatorOffset] != locatorBytes[locatorOffset]
+                    || rom[offset + locatorOffset + 1] != locatorBytes[locatorOffset + 1]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

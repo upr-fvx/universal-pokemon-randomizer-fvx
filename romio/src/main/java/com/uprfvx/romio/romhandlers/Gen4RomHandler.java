@@ -1654,11 +1654,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 			int surfingRate = b[1] & 0xFF;
 			if (surfingRate != 0) {
-				List<Encounter> surfingEncounters = readSeaEncountersHGSS(b, 100, 5);
-				EncounterArea surfingArea = new EncounterArea(surfingEncounters);
-				surfingArea.setIdentifiers(mapName + " Surfing", mapIndex, EncounterType.SURFING);
-				surfingArea.setRate(surfingRate);
-				encounterAreas.add(surfingArea);
+				readSurfingEncountersHGSS(encounterAreas, b, mapName, mapIndex, surfingRate);
 			}
 
 			int rockSmashRate = b[2] & 0xFF;
@@ -1728,6 +1724,16 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 //		if (!radioArea.isEmpty()) {
 //			encounterAreas.add(radioArea);
 //		}
+	}
+
+	private void readSurfingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b, String mapName, int mapIndex, int surfingRate) {
+		// Swarm replaces slot 0
+
+		List<Encounter> surfingEncounters = readSeaEncountersHGSS(b, 100, 5);
+		EncounterArea surfingArea = new EncounterArea(surfingEncounters);
+		surfingArea.setIdentifiers(mapName + " Surfing", mapIndex, EncounterType.SURFING);
+		surfingArea.setRate(surfingRate);
+		encounterAreas.add(surfingArea);
 	}
 
 	private void readFishingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,

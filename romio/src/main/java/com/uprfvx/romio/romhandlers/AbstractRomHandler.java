@@ -44,6 +44,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -215,30 +216,36 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public void condenseLevelEvolutions(int maxLevel) {
-        // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen
-        if (maxLevel < getHighestEvoLvl()) {
+        highestEvoLvl = condenseLevelEvolutions(getSpeciesSetInclFormes(), highestEvoLvl, maxLevel,
+                this::markImprovedEvolutions);
+    }
+
+    static int condenseLevelEvolutions(Iterable<Species> speciesSet, int highestEvoLvl, int maxLevel,
+                                       Consumer<Species> markImprovedEvolution) {
+        // Only condense level evolutions if a level smaller than the highest original evo level in the ROM is chosen.
+        if (maxLevel < highestEvoLvl) {
             int maxIntermediateLevel = (int) Math.ceil(0.75 * maxLevel);
             // search for level evolutions
-            for (Species pk : getSpeciesSetInclFormes()) {
+            for (Species pk : speciesSet) {
                 if (pk != null) {
                     for (Evolution checkEvo : pk.getEvolutionsFrom()) {
                         if (checkEvo.getType().usesLevelThreshold()) {
                             // If evo is intermediate and too high, bring it down
                             // Else if it's just too high, bring it down
                             if (checkEvo.getExtraInfo() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                                markImprovedEvolutions(pk);
+                                markImprovedEvolution.accept(pk);
                                 checkEvo.updateEvolutionMethod(checkEvo.getType(), maxIntermediateLevel);
                             } else if (checkEvo.getExtraInfo() > maxLevel) {
-                                markImprovedEvolutions(pk);
+                                markImprovedEvolution.accept(pk);
                                 checkEvo.updateEvolutionMethod(checkEvo.getType(), maxLevel);
                             }
                         } else {
                             // For all other evolutions, the estimated evolution levels have to be condensed if necessary
                             if (checkEvo.getEstimatedEvoLvl() > maxIntermediateLevel && !checkEvo.getTo().getEvolutionsFrom().isEmpty()) {
-                                markImprovedEvolutions(pk);
+                                markImprovedEvolution.accept(pk);
                                 checkEvo.setEstimatedEvoLvl(maxIntermediateLevel);
                             } else if (checkEvo.getEstimatedEvoLvl() > maxLevel) {
-                                markImprovedEvolutions(pk);
+                                markImprovedEvolution.accept(pk);
                                 checkEvo.setEstimatedEvoLvl(maxLevel);
                             }
                         }
@@ -246,8 +253,9 @@ public abstract class AbstractRomHandler implements RomHandler {
                 }
             }
             // Finally, update the highest evo level in the ROM
-            highestEvoLvl = maxLevel;
+            return maxLevel;
         }
+        return highestEvoLvl;
     }
 
     protected void estimateEvolutionLevels() {

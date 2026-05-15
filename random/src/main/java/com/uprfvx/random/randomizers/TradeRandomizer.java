@@ -13,11 +13,29 @@ import java.util.Random;
 
 public class TradeRandomizer extends Randomizer {
 
+    private int skippedNullRequestedSpeciesTrades;
+    private int skippedUnsafeSpeciesTrades;
+
     public TradeRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
 
+    public int getSkippedNullRequestedSpeciesTrades() {
+        return skippedNullRequestedSpeciesTrades;
+    }
+
+    public int getSkippedUnsafeSpeciesTrades() {
+        return skippedUnsafeSpeciesTrades;
+    }
+
+    public boolean hasSkippedTrades() {
+        return skippedNullRequestedSpeciesTrades + skippedUnsafeSpeciesTrades > 0;
+    }
+
     public void randomizeIngameTrades() {
+        skippedNullRequestedSpeciesTrades = 0;
+        skippedUnsafeSpeciesTrades = 0;
+        boolean changedAnyTrade = false;
         boolean randomizeRequest = settings.getInGameTradesMod() == Settings.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED;
         boolean randomNickname = settings.isRandomizeInGameTradesNicknames();
         boolean randomOT = settings.isRandomizeInGameTradesOTs();
@@ -63,6 +81,19 @@ public class TradeRandomizer extends Randomizer {
         int trnameCount = trainerNames.size();
 
         for (InGameTrade trade : trades) {
+            if (trade == null) {
+                skippedUnsafeSpeciesTrades++;
+                continue;
+            }
+            if (trade.getRequestedSpecies() == null) {
+                skippedNullRequestedSpeciesTrades++;
+                continue;
+            }
+            if (!isSafeTradeSpecies(trade.getGivenSpecies()) || !isSafeTradeSpecies(trade.getRequestedSpecies())) {
+                skippedUnsafeSpeciesTrades++;
+                continue;
+            }
+
             // pick new given pokemon
             Species oldgiven = trade.getGivenSpecies();
             Species given = rSpecService.randomSpecies(random);
@@ -120,11 +151,26 @@ public class TradeRandomizer extends Randomizer {
             if (randomItem) {
                 trade.setHeldItem(possibleItems.get(random.nextInt(possibleItems.size())));
             }
+            changedAnyTrade = true;
         }
 
         // things that the game doesn't support should just be ignored
-        romHandler.setInGameTrades(trades);
-        changesMade = true;
+        if (changedAnyTrade) {
+            romHandler.setInGameTrades(trades);
+        }
+        changesMade = changedAnyTrade;
+    }
+
+    private boolean isSafeTradeSpecies(Species species) {
+        if (species == null || species.getNumber() <= 0 || species.getName() == null) {
+            return false;
+        }
+        return !isPlaceholderTradeSpeciesName(species.getName())
+                && romHandler.getSpeciesSetInclFormes().contains(species);
+    }
+
+    private boolean isPlaceholderTradeSpeciesName(String name) {
+        return name.equals("Bad Egg") || name.equals("?") || name.toLowerCase().contains("unused");
     }
 
 }

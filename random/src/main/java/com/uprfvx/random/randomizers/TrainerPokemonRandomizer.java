@@ -1011,6 +1011,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
             // First pass: find lowest and highest level while copying the original Pokemon
             // and checking if more than one Pokemon has the highest level in the team
             for (TrainerPokemon tpk : t.getPokemon()) {
+                if (tpk == null || tpk.getSpecies() == null) {
+                    continue;
+                }
                 int curLevel= tpk.getLevel();
                 if (curLevel == highest) {
                     duplicateHighest = true; // Seen this highest level more than once
@@ -1030,6 +1033,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
             // six Pokemon and have a 6v12 battle
             int maxPokemon = t.getMultiBattleStatus() != Trainer.MultiBattleStatus.NEVER ? 3 : 6;
             int originalSize = originalPokes.size();
+            if (originalSize == 0) {
+                continue;
+            }
             // Determine max level of additional Pokemon, either
             // 1. the highest level in the original team if there is more than one Pokemon with that level
             // 2. the highest level in the original team - 1 if there is only one Pokemon of that level (keep the Ace of the trainer)

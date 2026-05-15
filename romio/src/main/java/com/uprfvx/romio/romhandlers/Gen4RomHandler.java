@@ -1432,9 +1432,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
         for (int i = 0; i < walkingAreas.size(); i++) {
             String areaName = Gen4Constants.dpptWalkingAreaNames[i];
             String displayName = String.format("%s Grass/Cave (%s)", mapName, areaName);
-            walkingAreas.get(i).setIdentifiers(displayName, mapID, EncounterType.WALKING);
+            walkingAreas.get(i).setIdentifiers(displayName, mapID, Gen4Constants.dpptWalkingAreaTypes[i]);
         }
-		// TODO: swarm and radar and the dual slots should not be EncounterType.WALKING!!
         walkingAreas.forEach(area -> area.setRate(walkingRate));
         encounterAreas.addAll(walkingAreas);
 
@@ -1691,6 +1690,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			levels[i] = b[8 + i] & 0xFF;
 		}
 
+		// TODO: rearrange these encounters, so they're more in line with what DPPt has
 		List<EncounterArea> walkingAreas = new ArrayList<>();
 
 		readNormalWalkingEncountersHGSS(walkingAreas, b, levels);
@@ -1722,9 +1722,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void readSwarmEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
 		// swarm mon replaces slots 0, 1
-		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 188, 2);
-		swarm.get(0).setLevel(levels[0]);
-		swarm.get(1).setLevel(levels[1]);
+		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 188, 1);
+		swarm.getFirst().setLevel(levels[0]);
 		walkingAreas.add(swarm);
 	}
 
@@ -1744,14 +1743,22 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		}
 	}
 
-	private void readSurfingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b, String mapName, int mapIndex, int surfingRate) {
-		// Swarm replaces slot 0
-		// TODO: read swarm handling
-		List<Encounter> surfingEncounters = readSeaEncountersHGSS(b, 100, 5);
-		EncounterArea surfingArea = new EncounterArea(surfingEncounters);
-		surfingArea.setIdentifiers(mapName + " Surfing", mapIndex, EncounterType.SURFING);
-		surfingArea.setRate(surfingRate);
-		encounterAreas.add(surfingArea);
+	private void readSurfingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b, String mapName, int mapID, int surfingRate) {
+		EncounterArea combined = new EncounterArea(readSeaEncountersHGSS(b, 100, 5));
+		EncounterArea always = new EncounterArea(combined.subList(1, 5));
+		EncounterArea noSwarm = new EncounterArea(combined.subList(0, 1));
+
+		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 190, 1);
+		swarm.getFirst().setLevel(noSwarm.getFirst().getLevel());
+
+		List<EncounterArea> surfingAreas = List.of(always, noSwarm, swarm);
+		for (int i = 0; i < surfingAreas.size(); i++) {
+			String areaName = Gen4Constants.hgssSurfingAreaNames[i];
+			String displayName = String.format("%s Surfing (%s)", mapName, areaName);
+			surfingAreas.get(i).setIdentifiers(displayName, mapID, Gen4Constants.hgssSurfingAreaTypes[i]);
+		}
+
+		encounterAreas.addAll(surfingAreas);
 	}
 
 	private void readFishingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,

@@ -647,9 +647,17 @@ public class Gen4Constants {
     public static final int[] dpptAlternateSlots = new int[] { 0, 1, 2, 3, 2, 3, 4, 5, 10, 11, 8, 9, 8, 9, 8, 9, 8, 9,
             8, 9 };
 
-    public static final String[] dpptWalkingAreaNames = new String[] { "Always", "Morning", "Day", "Night",
+    public static final String[] dpptWalkingAreaNames = new String[] {
+            "Always", "Morning", "Day", "Night",
             "No Swarm", "Swarm", "No Radar", "Radar", "No Dual Slot", "Dual Slot Ruby", "Dual Slot Sapphire",
-            "Dual Slot Emerald", "Dual Slot FireRed", "Dual Slot LeafGreen" };
+            "Dual Slot Emerald", "Dual Slot FireRed", "Dual Slot LeafGreen"
+    };
+    public static final EncounterType[] dpptWalkingAreaTypes = new EncounterType[] {
+            EncounterType.WALKING, EncounterType.WALKING, EncounterType.WALKING, EncounterType.WALKING,
+            EncounterType.WALKING, EncounterType.SPECIAL, EncounterType.WALKING, EncounterType.SPECIAL,
+            EncounterType.WALKING, EncounterType.SPECIAL, EncounterType.SPECIAL,
+            EncounterType.SPECIAL, EncounterType.SPECIAL, EncounterType.SPECIAL,
+    };
 
     public static final String[] dpptWaterSlotAreaNames = new String[] { "Surfing", "Filler", "Old Rod", "Good Rod",
             "Super Rod" };
@@ -659,6 +667,14 @@ public class Gen4Constants {
             "Always / Day", "No Swarm / Day", "No Sounds / Day",
             "Always / Night", "No Swarm / Night", "No Sounds / Night",
             "Swarm", "Hoenn Sounds", "Sinnoh Sounds"
+    };
+
+    public static final String[] hgssSurfingAreaNames = new String[] {
+            "Always", "No Swarm", "Swarm"
+    };
+
+    public static final EncounterType[] hgssSurfingAreaTypes = new EncounterType[] {
+            EncounterType.SURFING, EncounterType.SURFING, EncounterType.SPECIAL
     };
 
     public static final String[] hgssTimeOfDayNames = new String[] { "Morning", "Day", "Night" };

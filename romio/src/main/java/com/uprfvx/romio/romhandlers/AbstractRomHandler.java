@@ -354,26 +354,36 @@ public abstract class AbstractRomHandler implements RomHandler {
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 EvolutionType et = evo.getType();
 
-                if (et == EvolutionType.LEVEL_DUSK) {
+                if (shouldUpdateTimeBasedEvolution(evo)) {
                     markImprovedEvolutions(pk);
-                    evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.duskStone);
-                } else if (et.usesTime()) {
-                    markImprovedEvolutions(pk);
-                    if (hadEvolutionOfType(pk, et.oppositeTime())) {
-                        // Here we have just ascertained that this Species evolves by time,
-                        // and that this evolution is paired; it has another similar evolution
-                        // at the opposite time.
-                        // E.g. Eevee -> Espeon/Umbreon, which is a HAPPINESS_DAY/HAPPINESS_NIGHT pair.
-                        // In this case, we can't just remove the time-based-less,
-                        // so instead we use Sun/Moon Stone.
-                        int item = et.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
-                        evo.updateEvolutionMethod(EvolutionType.STONE, item);
-                    } else {
-                        evo.updateEvolutionMethod(et.timeless(), evo.getExtraInfo());
-                    }
+                    boolean hasOppositeTimeEvolution = et.oppositeTime() != null && hadEvolutionOfType(pk, et.oppositeTime());
+                    updateTimeBasedEvolution(evo, hasOppositeTimeEvolution);
                 }
             }
         }
+    }
+
+    static boolean shouldUpdateTimeBasedEvolution(Evolution evo) {
+        EvolutionType type = evo.getType();
+        return type == EvolutionType.LEVEL_DUSK || type.usesTime();
+    }
+
+    static boolean updateTimeBasedEvolution(Evolution evo, boolean hasOppositeTimeEvolution) {
+        EvolutionType type = evo.getType();
+        if (type == EvolutionType.LEVEL_DUSK) {
+            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.duskStone);
+        } else if (type.usesTime()) {
+            if (hasOppositeTimeEvolution) {
+                // Paired split evos need separate triggers instead of only removing the time condition.
+                int item = type.isDayType() ? ItemIDs.sunStone : ItemIDs.moonStone;
+                evo.updateEvolutionMethod(EvolutionType.STONE, item);
+            } else {
+                evo.updateEvolutionMethod(type.timeless(), evo.getExtraInfo());
+            }
+        } else {
+            return false;
+        }
+        return true;
     }
 
     protected boolean hadEvolutionOfType(Species pk, EvolutionType et) {

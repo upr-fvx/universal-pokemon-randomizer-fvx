@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>{{ page.title }} - UPR FVX</title>
+		<link rel="stylesheet" href="{{ site.baseurl }}/assets/css/styles.css">
+	</head>
+	
+	<body>
+		<header>
+		{% include title.html %}
+		</header>
+		
+		<main>
+			<nav>
+				{% include navigation.html %}
+			</nav>
+			
+			<div id="content">
+				{{ content }}
+			</div>
+		</main>
+
+		<footer>
+		{% include siteinfo.html %}
+		</footer>
+	</body>
+  
+</html>

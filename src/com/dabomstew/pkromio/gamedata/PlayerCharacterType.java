@@ -1,6 +1,0 @@
-package com.dabomstew.pkromio.gamedata;
-
-public enum PlayerCharacterType {
-    PC1, // Red, Chris, Brendan...
-    PC2  // Kris, May, Leaf...
-}

@@ -1,0 +1,3 @@
+If you want to contribute something to the codebase, we recommended to create an issue for it first (using the `Contribution Idea` template). This way, we can discuss how to accomplish this, and possibly whether it is a good fit for the Randomizer. 
+
+In case you have already implemented your idea in code, you should still create a `Contribution Idea` issue, to ensure every Pull Request has an associated Issue.

@@ -1,0 +1,185 @@
+:root {
+	--color1: #D0F0D0;
+	--color2: #F8F8D8;
+	--color3: #D8D0B0;
+	--color4: #EDE4C2;
+}
+
+body {
+	color: #000000;
+	background: var(--color1);
+	background-image: url("../images/background.png");
+	font-family: calibri, sans-serif;
+}
+
+header {
+  text-align: center;
+  font-size: 200%;
+  font-weight: bold;
+  font-family: verdana, sans-serif;
+  margin: 20px;
+}
+header a, header a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+main {
+	max-width: 900px;
+	padding: 0;
+	margin: auto;  
+	
+	background: var(--color2);
+	border: 4px ridge;
+	border-color: var(--color3);
+}
+@media screen and (min-width: 600px) {
+	main {
+		display: grid;
+		grid-template-columns: 200px auto;
+	}
+}
+
+main nav {
+  background: var(--color3);
+  padding: 0px 2px 4px 2px;
+  margin: 0px;
+}
+main nav #buttondiv {
+  display: none;
+}
+main nav ul {
+  padding: 0px;
+  margin: 0px;
+  text-align: center;
+  list-style-type: none;
+  background: var(--color3);
+}
+main nav li {
+  padding: 4px;
+  margin-top: 4px;
+  background: var(--color2);
+}
+main nav a, main nav a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+@media (scripting: enabled) {
+	main nav #buttondiv {
+		display: block;
+		max-width: 100px;
+		margin: auto;  
+		padding: 0;
+		text-align: center;
+	}
+	main nav button {
+		width: 32px;
+		height: 32px;
+		background-color: var(--color3);
+		border: none;
+		cursor: pointer;
+	}
+	main nav .hamburgerbutton {
+		background-image: url("icon_hamburger.png");
+	}
+	main nav .crossbutton {
+		background-image: url("icon_cross.png");
+	}
+	main nav ul {
+		display: none;
+	}
+}
+@media screen and (min-width: 600px) {
+	main nav {
+		grid-column: 1;
+		padding: 0px 4px 0px 2px;
+	}
+	main nav button {
+		display: none;
+	}
+	main nav ul {
+		display: block;
+		margin: 0px 0px 4px 0px;
+		text-align: left;
+	}
+	main nav ul ul {
+		color: black;
+		margin: 0px 0px 2px 0px;
+	}
+	main nav ul ul li {
+		margin-top: 2px;
+		background-color: var(--color4);
+        font-size: 80%;
+	}
+}
+
+#content {
+	margin: 20px;
+}
+@media screen and (min-width: 600px) {
+	#content {
+		grid-column: 2;
+	}
+}
+
+.wikipagelist {
+	border: 4px ridge;
+	padding: 10px;
+	border-color: var(--color3);
+}
+
+table, th, td {
+	border: 2px solid;
+	border-color: var(--color3);
+	border-collapse: collapse;
+}
+
+th {
+  background-color: var(--color4);
+}
+
+th, td {
+	padding: 5px;
+}
+
+.versiontable {
+    width: 100%;
+}
+
+#content li {
+	margin-top: 4px;
+}
+#content ul { 
+	padding-left: 20px;
+}
+
+code, div.highlight {
+  background-color: var(--color4);
+}
+div.highlight {
+  padding: 5px;
+  overflow: auto;
+}
+pre.highlight {
+  margin: 0px;
+}
+
+img {
+  max-width: 100%;
+}
+
+.screenshot {
+  max-width: 256px;
+}
+
+footer {
+  margin-top: 0px;
+  text-align: center;
+}
+footer img {
+  vertical-align: middle;
+}
+
+.current {
+  color: green;
+}

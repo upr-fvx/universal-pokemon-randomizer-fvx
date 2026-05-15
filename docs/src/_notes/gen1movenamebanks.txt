@@ -1,0 +1,184 @@
+
+== Gen 1 move name bank offsets ==
+
+We want to be able to repoint the move names, because when randomizing the move names they may end up
+longer than the original names. Then, they won't fit in their original location. 
+And to "move" a piece of data, you have to repoint it.
+
+Since the GameBoy relies on bank switching, we must find both the offsets for 
+the 2-byte pointer to the move names (not done here), and the offsets where 
+the games refer to the bank of the move names, preparing a switch.
+
+We start by grep-ing "MoveNames" in the pret/pokeyellow repository, finding four usages of BANK(MoveNames).
+The Randomizer has tooling for finding offsets across all games, if we have a hex search string,
+and a relative offset to the start of that hex search string.
+
+Below, we have identified those two variables for the four locations. 
+
+NN: knowable byte, constant between games
+XX: unknowable byte, varying between games
+!!: target byte, whose offset we are looking for 
+
+---
+
+```
+EnemyCanExecuteChargingMove:
+			ld hl, wEnemyBattleStatus1
+CB A6		res CHARGING_UP, [hl] ; no longer charging up for attack
+CB B6		res INVULNERABLE, [hl] ; no longer invulnerable to typical attacks
+FA XX XX	ld a, [wEnemyMoveNum]
+XX XX XX	ld [wNameListIndex], a
+XX !!		ld a, BANK(MoveNames)
+			ld [wPredefBank], a
+			ld a, MOVE_NAME
+			ld [wNameListType], a
+			call GetName
+			ld de, wNameBuffer
+			call CopyToStringBuffer
+```
+
+search = CB A6 CB B6 FA
+offset = +11
+
+---
+
+```
+GetCurrentMove:
+NN XX XX	ldh a, [hWhoseTurn]
+A7 			and a
+CA XX XX	jp z, .player
+11 XX XX	ld de, wEnemyMoveNum
+NN XX XX	ld a, [wEnemySelectedMove]
+NN NN   	jr .selected
+.player
+NN XX XX	ld de, wPlayerMoveNum
+			; Apply InitBattleVariables to TestBattle.
+NN XX XX		ld a, [wStatusFlags7]
+NN NN		bit BIT_TEST_BATTLE, a
+NN XX XX 	ld a, [wTestBattlePlayerSelectedMove]
+NN NN 		jr nz, .selected
+NN XX XX	ld a, [wPlayerSelectedMove]
+.selected
+NN XX XX 	ld [wNameListIndex], a
+NN			dec a
+NN XX XX 	ld hl, Moves
+NN NN		ld bc, MOVE_LENGTH
+NN XX XX	call AddNTimes
+NN !! 		ld a, BANK(Moves)
+NN XX XX	call FarCopyData
+
+NN XX		ld a, BANK(MoveNames)
+NN XX XX	ld [wPredefBank], a
+NN NN		ld a, MOVE_NAME
+NN XX XX 	ld [wNameListType], a
+NN XX XX	call GetName
+NN XX XX	ld de, wNameBuffer
+NN XX XX	jp CopyToStringBuffer
+
+LoadEnemyMonData:
+NN XX XX 	ld a, [wLinkState]
+NN NN 		cp LINK_STATE_BATTLING
+NN XX XX 	jp z, LoadEnemyMonFromParty
+NN XX XX	ld a, [wEnemyMonSpecies2]
+NN XX XX 	ld [wEnemyMonSpecies], a
+NN XX XX	ld [wCurSpecies], a
+NN XX XX	call GetMonHeader
+NN XX XX	ld a, [wEnemyBattleStatus3]
+NN NN		bit TRANSFORMED, a ; is enemy mon transformed?
+NN XX XX	ld hl, wTransformedEnemyMonOriginalDVs ; original DVs before transforming
+NN XX XX 	ld a, [hli]
+NN XX XX	ld b, [hl]
+NN NN		jr nz, .storeDVs
+NN XX XX	ld a, [wIsInBattle]
+FE 02	cp $2 ; is it a trainer battle?
+; fixed DVs for trainer mon
+3E 98	ld a, ATKDEFDV_TRAINER
+06 88 	ld b, SPDSPCDV_TRAINER
+NN NN	jr z, .storeDVs
+```
+
+search = FE 02 3E 98 06 88
+offset = -53
+
+This one was particularly tricky, since any longer (>3) strings of knowable bytes were far away from the target byte. 
+
+---
+
+```
+FormatMovesString:
+	ld hl, wMoves
+	ld de, wMovesString
+	ld b, $0
+.printMoveNameLoop
+NN XX XX	ld a, [hli]
+A7			and a ; end of move list?
+28 NN		jr z, .printDashLoop ; print dashes when no moves are left
+E5			push hl
+NN XX XX	ld [wNameListIndex], a
+NN !!		ld a, BANK(MoveNames)
+NN XX XX	ld [wPredefBank], a
+NN 02		ld a, MOVE_NAME
+NN XX XX	ld [wNameListType], a
+NN XX XX	call GetName
+NN XX XX	ld hl, wNameBuffer
+.copyNameLoop
+2A		ld a, [hli]
+FE 50	cp '@'
+28 04	jr z, .doneCopyingName
+12		ld [de], a
+13		inc de
+18		jr .copyNameLoop
+.doneCopyingName
+```
+
+search = FE 50 28 04 12 13 18
+offset = -15
+
+This search results in two different offsets, because .copyNameLoop is duplicated elsewhere.
+The first offset in ROM / the one whose bank coincides with the other searches is the relevant one.
+
+---
+```
+HMMoves::
+INCLUDE "data/moves/hm_moves.asm"
+
+GetMoveName::
+E5			push hl
+3E 02  		ld a, MOVE_NAME
+EA XX XX	ld [wNameListType], a
+NN XX XX	ld a, [wNamedObjectIndex]
+NN XX XX	ld [wNameListIndex], a
+NN !!		ld a, BANK(MoveNames)
+	ld [wPredefBank], a
+	call GetName
+	ld de, wNameBuffer
+	pop hl
+	ret
+```
+
+`E5 3E 02 EA` gives us two possible offsets, but we can eliminate the other by expanding hm_moves.asm 
+
+```
+	db CUT
+	db FLY
+	db SURF
+	db STRENGTH
+	db FLASH
+FF	db -1 ; end
+	
+GetMoveName::
+E5			push hl
+3E 02  		ld a, MOVE_NAME
+EA XX XX	ld [wNameListType], a
+NN XX XX	ld a, [wNamedObjectIndex]
+NN XX XX	ld [wNameListIndex], a
+NN !!		ld a, BANK(MoveNames)
+			ld [wPredefBank], a
+			call GetName
+			ld de, wNameBuffer
+			pop hl
+			ret
+```
+
+search = FF E5 3E 02 EA
+offset = 14

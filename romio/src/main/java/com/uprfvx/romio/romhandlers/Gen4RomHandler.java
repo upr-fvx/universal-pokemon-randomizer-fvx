@@ -1434,6 +1434,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
             String displayName = String.format("%s Grass/Cave (%s)", mapName, areaName);
             walkingAreas.get(i).setIdentifiers(displayName, mapID, EncounterType.WALKING);
         }
+		// TODO: swarm and radar and the dual slots should not be EncounterType.WALKING!!
         walkingAreas.forEach(area -> area.setRate(walkingRate));
         encounterAreas.addAll(walkingAreas);
 
@@ -1683,52 +1684,69 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readWalkingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,
-										   String mapName, int mapIndex, int landRate) {
-
+										   String mapName, int mapID, int walkingRate) {
 		// The levels are reused for every time of day
-		int[] walkingLevels = new int[12];
+		int[] levels = new int[12];
 		for (int i = 0; i < 12; i++) {
-			walkingLevels[i] = b[8 + i] & 0xFF;
+			levels[i] = b[8 + i] & 0xFF;
 		}
 
-		// TODO: format/split properly
+		List<EncounterArea> walkingAreas = new ArrayList<>();
 
+		readNormalWalkingEncountersHGSS(walkingAreas, b, levels);
+		readSwarmEncountersHGSS(walkingAreas, b, levels);
+		readSoundsEncountersHGSS(walkingAreas, b, levels);
+
+		for (int i = 0; i < walkingAreas.size(); i++) {
+			String areaName = Gen4Constants.hgssWalkingAreaNames[i];
+			String displayName = String.format("%s Grass/Cave (%s)", mapName, areaName);
+			walkingAreas.get(i).setIdentifiers(displayName, mapID, EncounterType.WALKING);
+		}
+		// TODO: ensure swarm and sounds don't use EncounterType.WALKING
+		walkingAreas.forEach(area -> area.setRate(walkingRate));
+		encounterAreas.addAll(walkingAreas);
+	}
+
+	private void readNormalWalkingEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
+		for (int i = 0; i < 3; i++) {
+			Species[] combinedPokes = readPokemonHGSS(b, 20 + i * 24, 12);
+			EncounterArea combined = new EncounterArea(stitchEncsToLevels(combinedPokes, levels));
+
+			EncounterArea always = new EncounterArea(combined.subList(6, 12));
+			EncounterArea noSwarm = new EncounterArea(combined.subList(0, 2));
+			EncounterArea noRadio = new EncounterArea(combined.subList(2, 6));
+
+			walkingAreas.addAll(List.of(noSwarm, noRadio, always));
+		}
+	}
+
+	private void readSwarmEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
 		// swarm mon replaces slots 0, 1
-		// radio mon 0 replaces slots 2, 3
-		// radio mon 1 replaces slots 4, 5
+		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 188, 2);
+		swarm.get(0).setLevel(levels[0]);
+		swarm.get(1).setLevel(levels[1]);
+		walkingAreas.add(swarm);
+	}
 
-//		Species[][] walkingPokes = new Species[3][12];
-//		walkingPokes[0] = readPokemonHGSS(b, 20, 12);
-//		walkingPokes[1] = readPokemonHGSS(b, 44, 12);
-//		walkingPokes[2] = readPokemonHGSS(b, 68, 12);
-//
-//		for (int i = 0; i < 3; i++) {
-//			EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[i], walkingLevels));
-//			walkingArea.setRate(landRate);
-//			walkingArea.setIdentifiers(
-//					mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave",
-//					mapIndex, EncounterType.WALKING);
-//			encounterAreas.add(walkingArea);
-//		}
-//
-//		// Swarm
-//		EncounterArea swarmArea = readOptionalEncounterAreaHGSS(b, offset, 2);
-//		swarmArea.setIdentifiers(mapName + " Swarms", mapIndex, EncounterType.SPECIAL);
-//		if (!swarmArea.isEmpty()) {
-//			encounterAreas.add(swarmArea);
-//		}
-//
-//		// Hoenn/Sinnoh Radio
-//		EncounterArea radioArea = readOptionalEncounterAreaHGSS(b, 92, 4);
-//		radioArea.setIdentifiers(mapName + " Hoenn/Sinnoh Radio", mapIndex, EncounterType.SPECIAL);
-//		if (!radioArea.isEmpty()) {
-//			encounterAreas.add(radioArea);
-//		}
+	private void readSoundsEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
+		// sounds mon 0 replaces slots 2, 3
+		// sounds mon 1 replaces slots 4, 5
+		for (int i = 0; i < 2; i++) {
+			EncounterArea sounds = readOptionalEncounterAreaHGSS(b, 92 + i * 4, 2);
+			// These levels are a bit misleading, since the sounds mons use the levels
+			// of both of the slots they replace each. E.g. a sounds mon replacing slot 3
+			// will use the level of slot 3, but we only show slot 2's level to the user.
+			// This lie is overshadowed either way by the lie that these Encounter objects
+			// have modifiable levels.
+			sounds.get(0).setLevel(levels[2]);
+			sounds.get(1).setLevel(levels[4]);
+			walkingAreas.add(sounds);
+		}
 	}
 
 	private void readSurfingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b, String mapName, int mapIndex, int surfingRate) {
 		// Swarm replaces slot 0
-
+		// TODO: read swarm handling
 		List<Encounter> surfingEncounters = readSeaEncountersHGSS(b, 100, 5);
 		EncounterArea surfingArea = new EncounterArea(surfingEncounters);
 		surfingArea.setIdentifiers(mapName + " Surfing", mapIndex, EncounterType.SURFING);
@@ -1739,6 +1757,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void readFishingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,
 	                                       String mapName, int mapIndex,
 										   int oldRodRate, int goodRodRate, int superRodRate) {
+		// TODO: implement
 		// Swarm replaces different slots for different rods
 		// old rod   -> 2
 		// good rod  -> 0, 2, 3

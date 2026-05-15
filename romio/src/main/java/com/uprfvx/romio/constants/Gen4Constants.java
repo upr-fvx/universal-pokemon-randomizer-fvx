@@ -654,6 +654,13 @@ public class Gen4Constants {
     public static final String[] dpptWaterSlotAreaNames = new String[] { "Surfing", "Filler", "Old Rod", "Good Rod",
             "Super Rod" };
 
+    public static final String[] hgssWalkingAreaNames = new String[] {
+            "Always / Morning", "No Swarm / Morning", "No Sounds / Morning",
+            "Always / Day", "No Swarm / Day", "No Sounds / Day",
+            "Always / Night", "No Swarm / Night", "No Sounds / Night",
+            "Swarm", "Hoenn Sounds", "Sinnoh Sounds"
+    };
+
     public static final String[] hgssTimeOfDayNames = new String[] { "Morning", "Day", "Night" };
 
     public static final int hgssGoodRodReplacementIndex = 3, hgssSuperRodReplacementIndex = 1;

@@ -4094,60 +4094,54 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (Species pkmn : pokes) {
             if (pkmn != null) {
                 for (Evolution evo : pkmn.getEvolutionsFrom()) {
-                    // Not trades, but impossible without trading
-                    if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                        if (evo.getType() == EvolutionType.HAPPINESS_DAY) {
-                            // happiness day change to Sun Stone
-                            markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.sunStone, useEstimatedLevels);
-                        }
-                        if (evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
-                            // happiness night change to Moon Stone
-                            markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.moonStone, useEstimatedLevels);
-                        }
-                        if (evo.getType() == EvolutionType.HIGH_BEAUTY) {
-                            // beauty change to level 35 (or estimated level if useEstimatedLevels)
-                            markImprovedEvolutions(pkmn);
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
-                        }
-                    }
-                    // Pure Trade
-                    if (evo.getType() == EvolutionType.TRADE) {
-                        // Haunter, Machoke, Kadabra, Graveler
-                        // Make it into level 37 (or estimated level if useEstimatedLevels), we're done.
+                    if (shouldUpdateImpossibleEvolution(evo, romEntry.getRomType() == Gen3Constants.RomType_FRLG)) {
                         markImprovedEvolutions(pkmn);
-                        evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
-                    }
-                    // Trade w/ Held Item
-                    if (evo.getType() == EvolutionType.TRADE_ITEM) {
-                        markImprovedEvolutions(pkmn);
-                        if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
-                            // Poliwhirl: Lv 37 (or estimated level if useEstimatedLevels)
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
-                        } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
-                            // Slowpoke: Water Stone
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
-                        } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
-                            // Seadra: Lv 40 (or estimated level if useEstimatedLevels)
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
-                        } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
-                                && evo.getExtraInfo() == ItemIDs.deepSeaTooth) {
-                            // Clamperl -> Huntail: Lv30 (or estimated level if useEstimatedLevels)
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
-                        } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl
-                                && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
-                            // Clamperl -> Gorebyss: Water Stone
-                            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
-                        } else {
-                            // Onix, Scyther or Porygon: Lv30 (or estimated level if useEstimatedLevels)
-                            evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
-                        }
+                        updateImpossibleEvolution(evo, romEntry.getRomType() == Gen3Constants.RomType_FRLG, useEstimatedLevels);
                     }
                 }
             }
         }
 
+    }
+
+    static boolean shouldUpdateImpossibleEvolution(Evolution evo, boolean isFrlg) {
+        EvolutionType type = evo.getType();
+        return type == EvolutionType.TRADE || type == EvolutionType.TRADE_ITEM ||
+                (isFrlg && (type == EvolutionType.HAPPINESS_DAY ||
+                        type == EvolutionType.HAPPINESS_NIGHT || type == EvolutionType.HIGH_BEAUTY));
+    }
+
+    static boolean updateImpossibleEvolution(Evolution evo, boolean isFrlg, boolean useEstimatedLevels) {
+        if (!shouldUpdateImpossibleEvolution(evo, isFrlg)) {
+            return false;
+        }
+
+        // Not trades, but impossible without trading in FRLG.
+        if (isFrlg && evo.getType() == EvolutionType.HAPPINESS_DAY) {
+            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.sunStone, useEstimatedLevels);
+        } else if (isFrlg && evo.getType() == EvolutionType.HAPPINESS_NIGHT) {
+            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.moonStone, useEstimatedLevels);
+        } else if (isFrlg && evo.getType() == EvolutionType.HIGH_BEAUTY) {
+            // Beauty changes to level 35, or estimated level if useEstimatedLevels is enabled.
+            evo.updateEvolutionMethod(EvolutionType.LEVEL, 35, useEstimatedLevels);
+        } else if (evo.getType() == EvolutionType.TRADE) {
+            // Haunter, Machoke, Kadabra, Graveler: level 37, or estimated level if enabled.
+            evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
+        } else if (evo.getFrom().getNumber() == SpeciesIDs.poliwhirl) {
+            evo.updateEvolutionMethod(EvolutionType.LEVEL, 37, useEstimatedLevels);
+        } else if (evo.getFrom().getNumber() == SpeciesIDs.slowpoke) {
+            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
+        } else if (evo.getFrom().getNumber() == SpeciesIDs.seadra) {
+            evo.updateEvolutionMethod(EvolutionType.LEVEL, 40, useEstimatedLevels);
+        } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl && evo.getExtraInfo() == ItemIDs.deepSeaTooth) {
+            evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
+        } else if (evo.getFrom().getNumber() == SpeciesIDs.clamperl && evo.getExtraInfo() == ItemIDs.deepSeaScale) {
+            evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.waterStone, useEstimatedLevels);
+        } else {
+            // Onix, Scyther, Porygon, or any other trade-item evolution.
+            evo.updateEvolutionMethod(EvolutionType.LEVEL, 30, useEstimatedLevels);
+        }
+        return true;
     }
 
     @Override

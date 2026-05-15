@@ -1093,7 +1093,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return category;
     }
 
-    private byte cfruDpeMoveSplitFromCategory(MoveCategory category, byte existingSplit) {
+    static byte cfruDpeMoveSplitFromCategory(MoveCategory category, byte existingSplit) {
         if (category == MoveCategory.PHYSICAL) {
             return CFRU_DPE_MOVE_SPLIT_PHYSICAL;
         }
@@ -1502,16 +1502,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeFixedLengthString(newMoveName, stringOffset, namelen);
 
             int moveOffset = offs + i * GEN3_BATTLE_MOVE_ENTRY_SIZE;
-            writeBytes(moveOffset, new byte[] { (byte) moves[i].effectIndex,
-                    (byte) moves[i].power, moveDataTypeToByte(moves[i].type),
-                    (byte) hitratio, (byte) moves[i].pp });
-            if (useCfruDpeGen9SpeciesCount) {
-                rom[moveOffset + 10] = cfruDpeMoveSplitFromCategory(moves[i].category, rom[moveOffset + 10]);
-            }
+            writeGen3BattleMoveData(rom, moveOffset, moves[i], hitratio, useCfruDpeGen9SpeciesCount);
         }
     }
 
-    private byte moveDataTypeToByte(Type type) {
+    static void writeGen3BattleMoveData(byte[] data, int moveOffset, Move move, int hitratio,
+                                        boolean useCfruDpeGen9SpeciesCount) {
+        data[moveOffset] = (byte) move.effectIndex;
+        data[moveOffset + 1] = (byte) move.power;
+        data[moveOffset + 2] = moveDataTypeToByte(move.type, useCfruDpeGen9SpeciesCount);
+        data[moveOffset + 3] = (byte) hitratio;
+        data[moveOffset + 4] = (byte) move.pp;
+        if (useCfruDpeGen9SpeciesCount) {
+            data[moveOffset + 10] = cfruDpeMoveSplitFromCategory(move.category, data[moveOffset + 10]);
+        }
+    }
+
+    static byte moveDataTypeToByte(Type type, boolean useCfruDpeGen9SpeciesCount) {
         if (useCfruDpeGen9SpeciesCount && type == Type.FAIRY) {
             return 0x17;
         }

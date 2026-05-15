@@ -27,7 +27,6 @@ import com.uprfvx.romio.GFXFunctions;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.*;
-import com.uprfvx.romio.constants.enctaggers.Gen4EncounterAreaTagger;
 import com.uprfvx.romio.exceptions.RomIOException;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.palettes.Palette;
@@ -1635,104 +1634,136 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	private void readMainEncountersHGSS(List<EncounterArea> encounterAreas) throws IOException {
         String encountersFile = romEntry.getFile("WildPokemon");
 		NARCArchive encounterData = readNARC(encountersFile);
-		// Credit for
+		// Credit to
 		// https://github.com/magical/pokemon-encounters/blob/master/nds/encounters-gen4-johto.py
+		// and the pokeheartgold decompilation
 		// for the structure for this.
-		int[] amounts = new int[] { 0, 5, 2, 5, 5, 5 };
-		int mapIndex = -1;
+		int actualMapIndex = 0;
 		for (byte[] b : encounterData.files) {
-			mapIndex++;
-			boolean badMapIndex = false;
-			if(mapIndex == Gen4Constants.nationalParkBadMapIndex) {
+			int mapIndex = actualMapIndex;
+			if (mapIndex == Gen4Constants.nationalParkBadMapIndex) {
 				mapIndex = Gen4Constants.nationalParkMapIndex;
-				badMapIndex = true; //this is. a terrible way to do this, but it works.
-			}
-			if (!wildMapNames.containsKey(mapIndex)) {
-				wildMapNames.put(mapIndex, "? Unknown ?");
-			}
-			String mapName = wildMapNames.get(mapIndex);
-			int[] rates = new int[6];
-			rates[0] = b[0] & 0xFF;
-			rates[1] = b[1] & 0xFF;
-			rates[2] = b[2] & 0xFF;
-			rates[3] = b[3] & 0xFF;
-			rates[4] = b[4] & 0xFF;
-			rates[5] = b[5] & 0xFF;
-			// Up to 8 after the rates
-			// Walking has to be handled on its own because the levels
-			// are reused for every time of day
-			int[] walkingLevels = new int[12];
-			for (int i = 0; i < 12; i++) {
-				walkingLevels[i] = b[8 + i] & 0xFF;
-			}
-			// Up to 20 now (12 for levels)
-			Species[][] walkingPokes = new Species[3][12];
-			walkingPokes[0] = readPokemonHGSS(b, 20, 12);
-			walkingPokes[1] = readPokemonHGSS(b, 44, 12);
-			walkingPokes[2] = readPokemonHGSS(b, 68, 12);
-			// Up to 92 now (12*2*3 for pokemon)
-			if (rates[0] != 0) {
-                for (int i = 0; i < 3; i++) {
-                    EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[i], walkingLevels));
-                    walkingArea.setRate(rates[0]);
-                    walkingArea.setIdentifiers(
-                            mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave",
-                            mapIndex, EncounterType.WALKING);
-                    encounterAreas.add(walkingArea);
-                }
 			}
 
-            // TODO: Are these "replacements"? In which case we need to deal with them like in DPPt.
-			// TODO: these are time dependent (only on wednesdays/thursdays),
-			//  should they not be excluded when useTimeOfDay == false ?
-			// Hoenn/Sinnoh Radio
-			EncounterArea radioArea = readOptionalEncounterAreaHGSS(b, 92, 4);
-			radioArea.setIdentifiers(mapName + " Hoenn/Sinnoh Radio", mapIndex, EncounterType.SPECIAL);
-			if (!radioArea.isEmpty()) {
-				encounterAreas.add(radioArea);
+			String mapName = wildMapNames.getOrDefault(mapIndex, "? Unknown ?");
+
+			int walkingRate = b[0] & 0xFF;
+			if (walkingRate != 0) {
+				readWalkingEncountersHGSS(encounterAreas, b, mapName, mapIndex, walkingRate);
 			}
 
-			// Up to 100 now... 2*2*2 for radio pokemon
-			// Time to handle Surfing, Rock Smash, Rods
-			int offset = 100;
-			for (int i = 1; i < 6; i++) {
-				List<Encounter> seaEncounters = readSeaEncountersHGSS(b, offset, amounts[i]);
-				offset += 4 * amounts[i];
-				if (rates[i] != 0) {
-					// Valid area.
-					EncounterArea seaArea = new EncounterArea(seaEncounters);
-					seaArea.setIdentifiers(mapName + " " + Gen4Constants.hgssNonWalkingAreaNames[i], mapIndex,
-							Gen4Constants.hgssNonWalkingAreaTypes[i]);
-					seaArea.setRate(rates[i]);
-					encounterAreas.add(seaArea);
-				}
+			int surfingRate = b[1] & 0xFF;
+			if (surfingRate != 0) {
+				List<Encounter> surfingEncounters = readSeaEncountersHGSS(b, 100, 5);
+				EncounterArea surfingArea = new EncounterArea(surfingEncounters);
+				surfingArea.setIdentifiers(mapName + " Surfing", mapIndex, EncounterType.SURFING);
+				surfingArea.setRate(surfingRate);
+				encounterAreas.add(surfingArea);
 			}
 
-			// Swarms
-			EncounterArea swarmArea = readOptionalEncounterAreaHGSS(b, offset, 2);
-			swarmArea.setIdentifiers(mapName + " Swarms", mapIndex, EncounterType.SPECIAL);
-			if (!swarmArea.isEmpty()) {
-				encounterAreas.add(swarmArea);
+			int rockSmashRate = b[2] & 0xFF;
+			if (rockSmashRate != 0) {
+				List<Encounter> rockSmashEncounters = readSeaEncountersHGSS(b, 120, 2);
+				EncounterArea rockSmashArea = new EncounterArea(rockSmashEncounters);
+				rockSmashArea.setIdentifiers(mapName + " Rock Smash", mapIndex, EncounterType.INTERACT);
+				rockSmashArea.setRate(rockSmashRate);
+				encounterAreas.add(rockSmashArea);
 			}
 
-			// TODO: Disable these... somehow when useTimeOfDay == false. It's tricky since I don't know what
-			//  encounters are being replaced in the usual fishing area/how it works
-			EncounterArea nightFishingReplacementArea = readOptionalEncounterAreaHGSS(b, offset + 4, 1);
-			nightFishingReplacementArea.setIdentifiers(mapName + " Night Fishing Replacement", mapIndex,
-					EncounterType.FISHING);
-			if (!nightFishingReplacementArea.isEmpty()) {
-				encounterAreas.add(nightFishingReplacementArea);
-			}
-			EncounterArea fishingSwarmsArea = readOptionalEncounterAreaHGSS(b, offset + 6, 1);
-			fishingSwarmsArea.setIdentifiers(mapName + " Fishing Swarm", mapIndex, EncounterType.SPECIAL);
-			if (!fishingSwarmsArea.isEmpty()) {
-				encounterAreas.add(fishingSwarmsArea);
+			int oldRodRate = b[3] & 0xFF;
+			int goodRodRate = b[4] & 0xFF;
+			int superRodRate = b[5] & 0xFF;
+			// Assuming that if a map has fishing encounters, it has all of them
+			if (oldRodRate != 0 && goodRodRate != 0 && superRodRate != 0) {
+				readFishingEncountersHGSS(encounterAreas, b, mapName, mapIndex, oldRodRate, goodRodRate, superRodRate);
+			} else if (oldRodRate != goodRodRate || oldRodRate != superRodRate) {
+				throw new RomIOException(String.format("There are fishing encounters for some rod(s), but not all! " +
+						"oldRodRate=0x%s, goodRodRate=0x%s, superRodRate=0x%s", Integer.toHexString(oldRodRate),
+						Integer.toHexString(goodRodRate), Integer.toHexString(superRodRate)));
 			}
 
-			if(badMapIndex) {
-				mapIndex = Gen4Constants.nationalParkBadMapIndex;
-			}
+			actualMapIndex++;
 		}
+	}
+
+	private void readWalkingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,
+										   String mapName, int mapIndex, int landRate) {
+
+		// The levels are reused for every time of day
+		int[] walkingLevels = new int[12];
+		for (int i = 0; i < 12; i++) {
+			walkingLevels[i] = b[8 + i] & 0xFF;
+		}
+
+		// TODO: format/split properly
+
+		// swarm mon replaces slots 0, 1
+		// radio mon 0 replaces slots 2, 3
+		// radio mon 1 replaces slots 4, 5
+
+//		Species[][] walkingPokes = new Species[3][12];
+//		walkingPokes[0] = readPokemonHGSS(b, 20, 12);
+//		walkingPokes[1] = readPokemonHGSS(b, 44, 12);
+//		walkingPokes[2] = readPokemonHGSS(b, 68, 12);
+//
+//		for (int i = 0; i < 3; i++) {
+//			EncounterArea walkingArea = new EncounterArea(stitchEncsToLevels(walkingPokes[i], walkingLevels));
+//			walkingArea.setRate(landRate);
+//			walkingArea.setIdentifiers(
+//					mapName + " " + Gen4Constants.hgssTimeOfDayNames[i] + " Grass/Cave",
+//					mapIndex, EncounterType.WALKING);
+//			encounterAreas.add(walkingArea);
+//		}
+//
+//		// Swarm
+//		EncounterArea swarmArea = readOptionalEncounterAreaHGSS(b, offset, 2);
+//		swarmArea.setIdentifiers(mapName + " Swarms", mapIndex, EncounterType.SPECIAL);
+//		if (!swarmArea.isEmpty()) {
+//			encounterAreas.add(swarmArea);
+//		}
+//
+//		// Hoenn/Sinnoh Radio
+//		EncounterArea radioArea = readOptionalEncounterAreaHGSS(b, 92, 4);
+//		radioArea.setIdentifiers(mapName + " Hoenn/Sinnoh Radio", mapIndex, EncounterType.SPECIAL);
+//		if (!radioArea.isEmpty()) {
+//			encounterAreas.add(radioArea);
+//		}
+	}
+
+	private void readFishingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,
+	                                       String mapName, int mapIndex,
+										   int oldRodRate, int goodRodRate, int superRodRate) {
+		// Swarm replaces different slots for different rods
+		// old rod   -> 2
+		// good rod  -> 0, 2, 3
+		// super rod -> 0, 1, 2, 3, 4
+
+		// Night-only replaces different slots for different rods
+		// good rod  -> 3
+		// super rod -> 1
+
+		// Oh hurray the replacement slots overlap :)
+
+//		// Valid area.
+//		EncounterArea seaArea = new EncounterArea(seaEncounters);
+//		seaArea.setIdentifiers(mapName + " " + Gen4Constants.hgssNonWalkingAreaNames[i], mapIndex,
+//				Gen4Constants.hgssNonWalkingAreaTypes[i]);
+//		seaArea.setRate(seaRates[i]);
+//		encounterAreas.add(seaArea);
+//
+//		// TODO: Disable these... somehow when useTimeOfDay == false. It's tricky since I don't know what
+//		//  encounters are being replaced in the usual fishing area/how it works
+//		EncounterArea nightFishingReplacementArea = readOptionalEncounterAreaHGSS(b, offset + 4, 1);
+//		nightFishingReplacementArea.setIdentifiers(mapName + " Night Fishing Replacement", mapIndex,
+//				EncounterType.FISHING);
+//		if (!nightFishingReplacementArea.isEmpty()) {
+//			encounterAreas.add(nightFishingReplacementArea);
+//		}
+//		EncounterArea fishingSwarmsArea = readOptionalEncounterAreaHGSS(b, offset + 6, 1);
+//		fishingSwarmsArea.setIdentifiers(mapName + " Fishing Swarm", mapIndex, EncounterType.SPECIAL);
+//		if (!fishingSwarmsArea.isEmpty()) {
+//			encounterAreas.add(fishingSwarmsArea);
+//		}
 	}
 
 	private void readExtraEncountersHGSS(List<EncounterArea> encounterAreas) throws IOException {

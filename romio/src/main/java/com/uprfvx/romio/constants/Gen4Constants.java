@@ -663,10 +663,17 @@ public class Gen4Constants {
             "Super Rod" };
 
     public static final String[] hgssWalkingAreaNames = new String[] {
-            "Always / Morning", "No Swarm / Morning", "No Sounds / Morning",
-            "Always / Day", "No Swarm / Day", "No Sounds / Day",
-            "Always / Night", "No Swarm / Night", "No Sounds / Night",
-            "Swarm", "Hoenn Sounds", "Sinnoh Sounds"
+            "Always / Morning", "Always / Day", "Always / Night",
+            "No Swarm / Morning", "No Swarm / Day", "No Swarm / Night", "Swarm",
+            "No Sounds / Morning", "No Sounds / Day", "No Sounds / Night",
+            "Hoenn Sounds", "Sinnoh Sounds"
+    };
+
+    public static final EncounterType[] hgssWalkingAreaTypes = new EncounterType[] {
+            EncounterType.WALKING, EncounterType.WALKING, EncounterType.WALKING,
+            EncounterType.WALKING, EncounterType.WALKING, EncounterType.WALKING, EncounterType.SPECIAL,
+            EncounterType.WALKING, EncounterType.WALKING, EncounterType.WALKING,
+            EncounterType.SPECIAL, EncounterType.SPECIAL
     };
 
     public static final String[] hgssSurfingAreaNames = new String[] {

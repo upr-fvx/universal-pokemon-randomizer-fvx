@@ -1690,46 +1690,52 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			levels[i] = b[8 + i] & 0xFF;
 		}
 
-		// TODO: rearrange these encounters, so they're more in line with what DPPt has
-		List<EncounterArea> walkingAreas = new ArrayList<>();
+		List<List<EncounterArea>> normalsByTime = readNormalWalkingEncountersHGSS(b, levels);
+		EncounterArea swarm = readSwarmEncountersHGSS(b, levels);
+		List<EncounterArea> sounds = readSoundsEncountersHGSS(b, levels);
 
-		readNormalWalkingEncountersHGSS(walkingAreas, b, levels);
-		readSwarmEncountersHGSS(walkingAreas, b, levels);
-		readSoundsEncountersHGSS(walkingAreas, b, levels);
-
+		List<EncounterArea> walkingAreas = List.of(
+				normalsByTime.get(0).get(0), normalsByTime.get(1).get(0), normalsByTime.get(2).get(0),
+				normalsByTime.get(0).get(1), normalsByTime.get(1).get(1), normalsByTime.get(2).get(1),
+				swarm,
+				normalsByTime.get(0).get(2), normalsByTime.get(1).get(2), normalsByTime.get(2).get(2),
+				sounds.get(0), sounds.get(1)
+		);
 		for (int i = 0; i < walkingAreas.size(); i++) {
 			String areaName = Gen4Constants.hgssWalkingAreaNames[i];
 			String displayName = String.format("%s Grass/Cave (%s)", mapName, areaName);
-			walkingAreas.get(i).setIdentifiers(displayName, mapID, EncounterType.WALKING);
+			walkingAreas.get(i).setIdentifiers(displayName, mapID, Gen4Constants.hgssWalkingAreaTypes[i]);
 		}
-		// TODO: ensure swarm and sounds don't use EncounterType.WALKING
 		walkingAreas.forEach(area -> area.setRate(walkingRate));
 		encounterAreas.addAll(walkingAreas);
 	}
 
-	private void readNormalWalkingEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
+	private List<List<EncounterArea>> readNormalWalkingEncountersHGSS(byte[] b, int[] levels) {
+		List<List<EncounterArea>> normalByTime = new ArrayList<>();
 		for (int i = 0; i < 3; i++) {
-			Species[] combinedPokes = readPokemonHGSS(b, 20 + i * 24, 12);
+            Species[] combinedPokes = readPokemonHGSS(b, 20 + i * 24, 12);
 			EncounterArea combined = new EncounterArea(stitchEncsToLevels(combinedPokes, levels));
 
 			EncounterArea always = new EncounterArea(combined.subList(6, 12));
 			EncounterArea noSwarm = new EncounterArea(combined.subList(0, 2));
 			EncounterArea noRadio = new EncounterArea(combined.subList(2, 6));
 
-			walkingAreas.addAll(List.of(noSwarm, noRadio, always));
+			normalByTime.add(List.of(noSwarm, noRadio, always));
 		}
+		return normalByTime;
 	}
 
-	private void readSwarmEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
+	private EncounterArea readSwarmEncountersHGSS(byte[] b, int[] levels) {
 		// swarm mon replaces slots 0, 1
 		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 188, 1);
 		swarm.getFirst().setLevel(levels[0]);
-		walkingAreas.add(swarm);
+		return swarm;
 	}
 
-	private void readSoundsEncountersHGSS(List<EncounterArea> walkingAreas, byte[] b, int[] levels) {
+	private List<EncounterArea> readSoundsEncountersHGSS(byte[] b, int[] levels) {
 		// sounds mon 0 replaces slots 2, 3
 		// sounds mon 1 replaces slots 4, 5
+		List<EncounterArea> soundsAreas = new ArrayList<>();
 		for (int i = 0; i < 2; i++) {
 			EncounterArea sounds = readOptionalEncounterAreaHGSS(b, 92 + i * 4, 2);
 			// These levels are a bit misleading, since the sounds mons use the levels
@@ -1739,8 +1745,9 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			// have modifiable levels.
 			sounds.get(0).setLevel(levels[2]);
 			sounds.get(1).setLevel(levels[4]);
-			walkingAreas.add(sounds);
+			soundsAreas.add(sounds);
 		}
+		return soundsAreas;
 	}
 
 	private void readSurfingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b, String mapName, int mapID, int surfingRate) {
@@ -1750,6 +1757,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 190, 1);
 		swarm.getFirst().setLevel(noSwarm.getFirst().getLevel());
+		swarm.getFirst().setMaxLevel(noSwarm.getFirst().getMaxLevel());
 
 		List<EncounterArea> surfingAreas = List.of(always, noSwarm, swarm);
 		for (int i = 0; i < surfingAreas.size(); i++) {
@@ -1775,6 +1783,21 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// super rod -> 1
 
 		// Oh hurray the replacement slots overlap :)
+
+		// oldRodAlways:           0, 1, 3, 4
+		// oldRodNoSwarm:          2
+		// oldRodSwarm:            2
+
+		// goodRodAlways:          1, 4
+		// goodRodNoSwarmAlways:   0, 2
+		// goodRodNoSwarmNoNight:  3
+		// goodRodNoSwarmNight:    3
+		// goodRodSwarm:           0, 2, 3
+
+		// superRodNoSwarmAlways:  0, 2, 3, 4
+		// superRodNoSwarmNoNight: 1
+		// superRodNoSwarmNight:   1
+		// superRodSwarm:          0, 1, 2, 3, 4
 
 //		// Valid area.
 //		EncounterArea seaArea = new EncounterArea(seaEncounters);

@@ -112,6 +112,38 @@ public class LearnsetDecisionTest {
         assertEquals(1025, highSpecies.getNumber());
     }
 
+    @Test
+    public void guaranteedStartingMovesAddsOnlyExpectedLevelOneSlots() {
+        Species highSpecies = species(1025, "HighSpecies");
+        Map<Integer, List<MoveLearnt>> movesets = new LinkedHashMap<>();
+        movesets.put(highSpecies.getNumber(), new ArrayList<>(List.of(
+                new MoveLearnt(10, 1),
+                new MoveLearnt(11, 7))));
+        Set<Integer> allowedMoves = Set.of(40, 41, 42, 43, 44, 45);
+        LearnsetTestRomHandler romHandler = LearnsetTestRomHandler.create(List.of(highSpecies),
+                movesets, moves(allowedMoves));
+        romHandler.supportsFourStartingMoves = true;
+        Settings settings = new Settings();
+        settings.setMovesetsMod(Settings.MovesetsMod.COMPLETELY_RANDOM);
+        settings.setStartWithGuaranteedMoves(true);
+        settings.setGuaranteedMoveCount(4);
+
+        SpeciesMovesetRandomizer randomizer = new SpeciesMovesetRandomizer(romHandler.proxy, settings, new Random(3));
+        randomizer.randomizeMovesLearnt();
+
+        List<MoveLearnt> written = romHandler.writtenMovesets.get(highSpecies.getNumber());
+        assertTrue(randomizer.isChangesMade());
+        assertEquals(1, romHandler.setMovesLearntCalls);
+        assertFalse(written.isEmpty());
+        assertEquals(5, written.size());
+        assertEquals(List.of(1, 1, 1, 1, 7), written.stream()
+                .map(moveLearnt -> moveLearnt.level)
+                .collect(Collectors.toList()));
+        assertEquals(4, written.stream().filter(moveLearnt -> moveLearnt.level == 1).count());
+        assertTrue(written.stream().allMatch(moveLearnt -> allowedMoves.contains(moveLearnt.move)));
+        assertEquals(1025, highSpecies.getNumber());
+    }
+
     private static Species species(int number, String name) {
         Species species = new Species(number);
         species.setName(name);
@@ -193,6 +225,7 @@ public class LearnsetDecisionTest {
         private TypeService typeService;
         private Map<Integer, List<MoveLearnt>> writtenMovesets;
         private int setMovesLearntCalls;
+        private boolean supportsFourStartingMoves;
 
         private LearnsetTestRomHandler(List<Species> species, Map<Integer, List<MoveLearnt>> movesets,
                                        List<Move> moves) {
@@ -233,7 +266,7 @@ public class LearnsetDecisionTest {
                 case "getHMMoves", "getGameBreakingMoves", "getMovesBannedFromLevelup", "getIllegalMoves" ->
                         Collections.<Integer>emptyList();
                 case "getPerfectAccuracy" -> 100;
-                case "supportsFourStartingMoves" -> false;
+                case "supportsFourStartingMoves" -> supportsFourStartingMoves;
                 case "toString" -> "LearnsetTestRomHandler";
                 case "hashCode" -> System.identityHashCode(this);
                 case "equals" -> proxy == args[0];

@@ -15,4 +15,11 @@ public class Gen3CfruDpeLearnsetPointerTest {
         assertEquals(0x25D7B4 + 1439 * 4,
                 Gen3RomHandler.cfruDpeLevelUpLearnsetPointerOffset(tableOffset, 1439));
     }
+
+    @Test
+    public void cfruDpeGen9LearnsetsOverrideGenericJamboMovesetDetection() {
+        assertEquals(true, Gen3RomHandler.shouldUseCfruDpeLevelUpLearnsets(true, true));
+        assertEquals(true, Gen3RomHandler.shouldUseCfruDpeLevelUpLearnsets(true, false));
+        assertEquals(false, Gen3RomHandler.shouldUseCfruDpeLevelUpLearnsets(false, true));
+    }
 }

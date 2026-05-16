@@ -103,7 +103,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
             banned.addAll(romHandler.getIrregularFormes());
         }
         if (isExtendedBpreHack()) {
+            Gen3RomHandler gen3RomHandler = (Gen3RomHandler) romHandler;
+            Map<Integer, List<MoveLearnt>> movesets = gen3RomHandler.getMovesLearnt();
             banned.addAll(cachedAll.filter(this::isNotUsableTrainerSpecies));
+            banned.addAll(CfruDpeRandomPoolAssetGuard.unusableSpecies(cachedAll,
+                    species -> gen3RomHandler.hasUsableCfruDpeRandomPoolSpeciesAssets(species, movesets)));
         }
         cachedAll.removeAll(banned);
         if (isExtendedBpreHack() && (hasAnyTypeTheme || hasAnyTypeDiversity)) {

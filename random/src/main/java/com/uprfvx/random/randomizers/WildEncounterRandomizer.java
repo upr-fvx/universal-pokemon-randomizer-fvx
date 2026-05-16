@@ -3,6 +3,7 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.romhandlers.Gen3RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
@@ -65,6 +66,7 @@ public class WildEncounterRandomizer extends Randomizer {
         SpeciesSet banned = getBannedForWildEncounters(banIrregularAltFormes, abilitiesAreRandomized);
         SpeciesSet allowed = new SpeciesSet(rSpecService.getSpecies(noLegendaries, allowAltFormes, false));
         allowed.removeAll(banned);
+        removeUnusableExtendedBpreWildSpecies(allowed, banned);
 
         // apply level modifier
         applyLevelModifier(levelModifier, encounterAreas);
@@ -98,6 +100,19 @@ public class WildEncounterRandomizer extends Randomizer {
 
         // set encounters
         romHandler.setEncounters(useTimeOfDay, encounterAreas);
+    }
+
+    private void removeUnusableExtendedBpreWildSpecies(SpeciesSet allowed, SpeciesSet banned) {
+        if (!(romHandler instanceof Gen3RomHandler gen3RomHandler)
+                || !gen3RomHandler.hasExtendedBpreHackSpeciesPool()) {
+            return;
+        }
+
+        Map<Integer, List<MoveLearnt>> movesets = gen3RomHandler.getMovesLearnt();
+        SpeciesSet unusable = CfruDpeRandomPoolAssetGuard.unusableSpecies(allowed,
+                species -> gen3RomHandler.hasUsableCfruDpeRandomPoolSpeciesAssets(species, movesets));
+        allowed.removeAll(unusable);
+        banned.addAll(unusable);
     }
 
     /**

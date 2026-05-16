@@ -4031,6 +4031,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int numInternalPokes = romEntry.getIntValue("PokemonCount");
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
+            if (pk == null) {
+                continue;
+            }
             int idx = getEvolutionInternalSpeciesId(pk);
             int evoOffset = baseOffset + (idx) * 0x28;
             for (int j = 0; j < 5; j++) {
@@ -4038,15 +4041,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 int evolvingTo = readWord(evoOffset + j * 8 + 4);
                 if (method >= 1 && method <= Gen3Constants.evolutionMethodCount && evolvingTo >= 1
                         && evolvingTo <= numInternalPokes) {
+                    Species evolvingToSpecies = pokesInternal[evolvingTo];
+                    if (evolvingToSpecies == null) {
+                        continue;
+                    }
                     EvolutionType et = Gen3Constants.evolutionTypeFromIndex(method);
                     int extraInfo = readWord(evoOffset + j * 8 + 2);
                     if (et.usesItem()) {
                         extraInfo = Gen3Constants.itemIDToStandard(extraInfo);
                     }
-                    Evolution evo = new Evolution(pk, pokesInternal[evolvingTo], et, extraInfo);
+                    Evolution evo = new Evolution(pk, evolvingToSpecies, et, extraInfo);
                     if (!pk.getEvolutionsFrom().contains(evo)) {
                         pk.getEvolutionsFrom().add(evo);
-                        pokesInternal[evolvingTo].getEvolutionsTo().add(evo);
+                        evolvingToSpecies.getEvolutionsTo().add(evo);
                     }
                 }
             }
@@ -4057,6 +4064,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int baseOffset = romEntry.getIntValue("PokemonEvolutions");
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
+            if (pk == null) {
+                continue;
+            }
             int idx = getEvolutionInternalSpeciesId(pk);
             int evoOffset = baseOffset + (idx) * 0x28;
             int evosWritten = 0;

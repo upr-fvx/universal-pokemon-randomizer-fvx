@@ -186,6 +186,34 @@ public class WildCatchLevelDecisionTest {
         }
     }
 
+    @Test
+    public void blockWildLegendariesKeepsLegendaryOutOfSyntheticEncounterPool() {
+        Species legendary = species(150, "LegendaryCurrent", 3);
+        Species highOne = species(1025, "HighOne", 120);
+        Species highTwo = species(1100, "HighTwo", 120);
+        Set<Species> allowed = Set.of(highOne, highTwo);
+        EncounterArea area = area("Legendary Route", 12, EncounterType.WALKING, "Route C", 30,
+                encounter(legendary, 45, 55), encounter(highOne, 12));
+        WildTestRomHandler romHandler = WildTestRomHandler.create(List.of(legendary, highOne, highTwo),
+                List.of(area));
+        List<SlotShape> before = slotShapes(List.of(area));
+        Settings settings = new Settings();
+        settings.setRandomizeWildPokemon(true);
+        settings.setBlockWildLegendaries(true);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NONE);
+
+        new WildEncounterRandomizer(romHandler.proxy, settings, new Random(7)).randomizeEncounters();
+
+        assertEquals(1, romHandler.setEncountersCalls);
+        assertEquals(before, slotShapes(List.of(area)));
+        assertFalse(area.isEmpty());
+        for (Encounter encounter : area) {
+            assertTrue(allowed.contains(encounter.getSpecies()));
+            assertFalse(encounter.getSpecies().isLegendary());
+            assertTrue(encounter.getSpecies().getNumber() > 1000);
+        }
+    }
+
     private static List<Species> speciesRange(int firstNumber, int count) {
         List<Species> species = new ArrayList<>();
         for (int i = 0; i < count; i++) {

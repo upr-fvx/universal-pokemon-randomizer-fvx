@@ -2594,7 +2594,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
 	@Override
 	public Map<Integer, List<MoveLearnt>> getMovesLearnt() {
-        if (useCfruDpeGen9SpeciesCount && !jamboMovesetHack) {
+        if (shouldUseCfruDpeLevelUpLearnsets(useCfruDpeGen9SpeciesCount, jamboMovesetHack)) {
             return getCfruDpeMovesLearnt();
         }
 
@@ -2689,7 +2689,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
 	@Override
 	public void setMovesLearnt(Map<Integer, List<MoveLearnt>> movesets) {
-        if (useCfruDpeGen9SpeciesCount && !jamboMovesetHack) {
+        if (shouldUseCfruDpeLevelUpLearnsets(useCfruDpeGen9SpeciesCount, jamboMovesetHack)) {
             setCfruDpeMovesLearnt(movesets);
             return;
         }
@@ -2939,8 +2939,57 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE, "CFRU/DPE gLevelUpLearnsets");
     }
 
+    static boolean shouldUseCfruDpeLevelUpLearnsets(boolean useCfruDpeGen9SpeciesCount, boolean jamboMovesetHack) {
+        return useCfruDpeGen9SpeciesCount;
+    }
+
     static int cfruDpeLevelUpLearnsetPointerOffset(int baseOffset, int internalSpecies) {
         return baseOffset + internalSpecies * GBConstants.longSize;
+    }
+
+    public String getCfruDpeLearnsetDiagnostics(Species species, Map<Integer, List<MoveLearnt>> movesets,
+                                                int moveLimit) {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return "CFRU/DPE learnset diagnostics unavailable: not an extended Gen9 BPRE pool.";
+        }
+        if (species == null) {
+            return "internal=<none> species=<null>";
+        }
+
+        int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(species);
+        int tableOffset = getCfruDpeLevelUpLearnsetsOffset();
+        int pointerOffset = cfruDpeLevelUpLearnsetPointerOffset(tableOffset, internalSpecies);
+        int rawPointer = safeReadLong(pointerOffset);
+        int resolvedPointer = safeReadPointer(pointerOffset);
+        List<MoveLearnt> moves = movesets == null ? null : movesets.get(internalSpecies);
+
+        return "internal=" + internalSpecies
+                + " speciesNumber=" + species.getNumber()
+                + " identity=" + species.getSpeciesSetIdentityNumber()
+                + " fullName=" + species.getFullName()
+                + " movesLearntCount=" + (moves == null ? "<missing>" : moves.size())
+                + " firstMoves=" + summarizeMovesLearnt(moves, moveLimit)
+                + " learnsetPointerRaw=" + hexValueOrNone(rawPointer)
+                + " learnsetPointerValid=" + (resolvedPointer != -1);
+    }
+
+    private String summarizeMovesLearnt(List<MoveLearnt> moves, int moveLimit) {
+        if (moves == null) {
+            return "<missing>";
+        }
+        if (moves.isEmpty()) {
+            return "[]";
+        }
+        int limit = Math.max(0, Math.min(moveLimit, moves.size()));
+        List<String> summary = new ArrayList<>();
+        for (int i = 0; i < limit; i++) {
+            MoveLearnt move = moves.get(i);
+            summary.add(move.move + "@" + move.level);
+        }
+        if (moves.size() > limit) {
+            summary.add("...");
+        }
+        return summary.toString();
     }
 
 	private byte[] movesLearntToBytes(List<MoveLearnt> movesLearnt) {

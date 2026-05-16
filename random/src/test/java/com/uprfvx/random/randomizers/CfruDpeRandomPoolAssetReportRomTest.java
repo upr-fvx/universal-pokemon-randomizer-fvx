@@ -49,7 +49,7 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         CfruDpeRandomPoolAssetGuard.Summary summary = CfruDpeRandomPoolAssetGuard.summarize(candidates,
                 species -> statusFor(romHandler, movesets, species), EXAMPLE_LIMIT);
 
-        writeSummary(buildSummary(romHandler, summary));
+        writeSummary(buildSummary(romHandler, movesets, summary));
         assertTrue(summary.candidateCountBeforeGuard() >= summary.acceptedCountAfterGuard());
     }
 
@@ -115,7 +115,8 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         return new CfruDpeRandomPoolAssetGuard.AssetStatus(internalIdentity, speciesName, issues);
     }
 
-    private static String buildSummary(Gen3RomHandler romHandler, CfruDpeRandomPoolAssetGuard.Summary summary) {
+    private static String buildSummary(Gen3RomHandler romHandler, Map<Integer, List<MoveLearnt>> movesets,
+                                       CfruDpeRandomPoolAssetGuard.Summary summary) {
         StringBuilder report = new StringBuilder();
         appendLine(report, "[CFRU-DPE-POOL-ASSET-REPORT]");
         appendLine(report, "ROM recognized: code=" + romHandler.getROMCode()
@@ -135,6 +136,7 @@ public class CfruDpeRandomPoolAssetReportRomTest {
             appendLine(report, "  " + example.sanitizedLine());
         }
         appendOgerponStatuses(report, summary);
+        appendOgerponLearnsetDiagnostics(report, romHandler, movesets);
         return report.toString();
     }
 
@@ -181,6 +183,22 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         }
         for (CfruDpeRandomPoolAssetGuard.AssetStatus status : matches) {
             appendLine(report, "  " + label + ": " + status.sanitizedLine());
+        }
+    }
+
+    private static void appendOgerponLearnsetDiagnostics(StringBuilder report, Gen3RomHandler romHandler,
+                                                         Map<Integer, List<MoveLearnt>> movesets) {
+        appendLine(report, "Ogerpon learnset diagnostics:");
+        List<Species> matches = romHandler.getSpecies().stream()
+                .filter(species -> species != null && species.getName() != null)
+                .filter(species -> species.getName().toLowerCase(Locale.ROOT).contains("ogerpon"))
+                .toList();
+        if (matches.isEmpty()) {
+            appendLine(report, "  <not loaded>");
+            return;
+        }
+        for (Species species : matches) {
+            appendLine(report, "  " + romHandler.getCfruDpeLearnsetDiagnostics(species, movesets, 8));
         }
     }
 

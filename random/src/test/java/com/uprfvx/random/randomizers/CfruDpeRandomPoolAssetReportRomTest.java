@@ -15,6 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -28,9 +31,10 @@ public class CfruDpeRandomPoolAssetReportRomTest {
     private static final String ROM_PATH_PROPERTY = "uprfvx.cfruDpePoolAssetReportRom";
     private static final String ROM_PATH_ENV = "UPRFVX_CFRU_DPE_POOL_ASSET_REPORT_ROM";
     private static final int EXAMPLE_LIMIT = 20;
+    private static final String REPORT_FILE_NAME = "cfru-dpe-pool-asset-report.txt";
 
     @Test
-    public void cfruDpePoolAssetReportOptIn() {
+    public void cfruDpePoolAssetReportOptIn() throws IOException {
         String romPath = configuredRomPath();
         assumeTrue(romPath != null && !romPath.isBlank(),
                 "Set -D" + ROM_PATH_PROPERTY + "=<private-rom> to run the CFRU/DPE pool asset report.");
@@ -45,7 +49,7 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         CfruDpeRandomPoolAssetGuard.Summary summary = CfruDpeRandomPoolAssetGuard.summarize(candidates,
                 species -> statusFor(romHandler, movesets, species), EXAMPLE_LIMIT);
 
-        printSummary(romHandler, summary);
+        writeSummary(buildSummary(romHandler, summary));
         assertTrue(summary.candidateCountBeforeGuard() >= summary.acceptedCountAfterGuard());
     }
 
@@ -111,38 +115,59 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         return new CfruDpeRandomPoolAssetGuard.AssetStatus(internalIdentity, speciesName, issues);
     }
 
-    private static void printSummary(Gen3RomHandler romHandler, CfruDpeRandomPoolAssetGuard.Summary summary) {
-        System.out.println("[CFRU-DPE-POOL-ASSET-REPORT]");
-        System.out.println("ROM recognized: code=" + romHandler.getROMCode()
+    private static String buildSummary(Gen3RomHandler romHandler, CfruDpeRandomPoolAssetGuard.Summary summary) {
+        StringBuilder report = new StringBuilder();
+        appendLine(report, "[CFRU-DPE-POOL-ASSET-REPORT]");
+        appendLine(report, "ROM recognized: code=" + romHandler.getROMCode()
                 + " version=" + romHandler.getRomVersionForDiagnostics()
                 + " isRomHack=" + romHandler.isRomHackForDiagnostics());
-        System.out.println("PokemonCount=" + romHandler.getCfruDpePokemonCountForDiagnostics()
+        appendLine(report, "PokemonCount=" + romHandler.getCfruDpePokemonCountForDiagnostics()
                 + " PokedexCount=" + romHandler.getCfruDpePokedexCountForDiagnostics()
                 + " maxInternalSpeciesId=" + romHandler.getCfruDpeMaxInternalSpeciesIdForDiagnostics());
-        System.out.println("candidate count before guard=" + summary.candidateCountBeforeGuard());
-        System.out.println("accepted count after guard=" + summary.acceptedCountAfterGuard());
-        System.out.println("excluded count=" + summary.excludedCount());
+        appendLine(report, "candidate count before guard=" + summary.candidateCountBeforeGuard());
+        appendLine(report, "accepted count after guard=" + summary.acceptedCountAfterGuard());
+        appendLine(report, "excluded count=" + summary.excludedCount());
         for (CfruDpeRandomPoolAssetIssue reason : CfruDpeRandomPoolAssetIssue.values()) {
-            System.out.println("excluded " + reason.getLabel() + "=" + summary.countFor(reason));
+            appendLine(report, "excluded " + reason.getLabel() + "=" + summary.countFor(reason));
         }
-        System.out.println("sanitized examples, max " + EXAMPLE_LIMIT + ":");
+        appendLine(report, "sanitized examples, max " + EXAMPLE_LIMIT + ":");
         for (CfruDpeRandomPoolAssetGuard.AssetStatus example : summary.examples()) {
-            System.out.println("  " + example.sanitizedLine());
+            appendLine(report, "  " + example.sanitizedLine());
         }
-        printOgerponStatuses(summary);
+        appendOgerponStatuses(report, summary);
+        return report.toString();
     }
 
-    private static void printOgerponStatuses(CfruDpeRandomPoolAssetGuard.Summary summary) {
-        System.out.println("Ogerpon/Forme status:");
-        printNamedOgerponStatus("base Ogerpon", summary, "ogerpon", true);
-        printNamedOgerponStatus("Wellspring", summary, "wellspring", false);
-        printNamedOgerponStatus("Hearthflame", summary, "hearthflame", false);
-        printNamedOgerponStatus("Cornerstone", summary, "cornerstone", false);
-        printNamedOgerponStatus("Terastal", summary, "terastal", false);
+    private static void writeSummary(String report) throws IOException {
+        System.out.print(report);
+        System.out.flush();
+
+        Path reportPath = reportPath();
+        Files.createDirectories(reportPath.getParent());
+        Files.writeString(reportPath, report, StandardCharsets.UTF_8);
+        System.out.println("Report file: " + reportPath);
     }
 
-    private static void printNamedOgerponStatus(String label, CfruDpeRandomPoolAssetGuard.Summary summary,
-                                                String namePart, boolean exactMatch) {
+    private static Path reportPath() {
+        Path userDir = Paths.get(System.getProperty("user.dir"));
+        Path randomDir = userDir.getFileName() != null && userDir.getFileName().toString().equals("random")
+                ? userDir
+                : userDir.resolve("random");
+        return randomDir.resolve("build").resolve("reports").resolve("diagnostics").resolve(REPORT_FILE_NAME);
+    }
+
+    private static void appendOgerponStatuses(StringBuilder report, CfruDpeRandomPoolAssetGuard.Summary summary) {
+        appendLine(report, "Ogerpon/Forme status:");
+        appendNamedOgerponStatus(report, "base Ogerpon", summary, "ogerpon", true);
+        appendNamedOgerponStatus(report, "Wellspring", summary, "wellspring", false);
+        appendNamedOgerponStatus(report, "Hearthflame", summary, "hearthflame", false);
+        appendNamedOgerponStatus(report, "Cornerstone", summary, "cornerstone", false);
+        appendNamedOgerponStatus(report, "Terastal", summary, "terastal", false);
+    }
+
+    private static void appendNamedOgerponStatus(StringBuilder report, String label,
+                                                 CfruDpeRandomPoolAssetGuard.Summary summary, String namePart,
+                                                 boolean exactMatch) {
         List<CfruDpeRandomPoolAssetGuard.AssetStatus> matches = summary.ogerponStatuses().stream()
                 .filter(status -> status.speciesName() != null)
                 .filter(status -> {
@@ -151,11 +176,15 @@ public class CfruDpeRandomPoolAssetReportRomTest {
                 })
                 .toList();
         if (matches.isEmpty()) {
-            System.out.println("  " + label + ": <not loaded>");
+            appendLine(report, "  " + label + ": <not loaded>");
             return;
         }
         for (CfruDpeRandomPoolAssetGuard.AssetStatus status : matches) {
-            System.out.println("  " + label + ": " + status.sanitizedLine());
+            appendLine(report, "  " + label + ": " + status.sanitizedLine());
         }
+    }
+
+    private static void appendLine(StringBuilder report, String line) {
+        report.append(line).append(System.lineSeparator());
     }
 }

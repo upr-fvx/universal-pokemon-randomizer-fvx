@@ -1659,7 +1659,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 			int rockSmashRate = b[2] & 0xFF;
 			if (rockSmashRate != 0) {
-				List<Encounter> rockSmashEncounters = readSeaEncountersHGSS(b, 120, 2);
+				List<Encounter> rockSmashEncounters = readSeaEncountersHGSS(b, 110, 2);
 				EncounterArea rockSmashArea = new EncounterArea(rockSmashEncounters);
 				rockSmashArea.setIdentifiers(mapName + " Rock Smash", mapIndex, EncounterType.INTERACT);
 				rockSmashArea.setRate(rockSmashRate);
@@ -1770,9 +1770,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void readFishingEncountersHGSS(List<EncounterArea> encounterAreas, byte[] b,
-	                                       String mapName, int mapIndex,
+	                                       String mapName, int mapID,
 										   int oldRodRate, int goodRodRate, int superRodRate) {
-		// TODO: implement
 		// Swarm replaces different slots for different rods
 		// old rod   -> 2
 		// good rod  -> 0, 2, 3
@@ -1782,43 +1781,55 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		// good rod  -> 3
 		// super rod -> 1
 
-		// Oh hurray the replacement slots overlap :)
+		// These replacement slots overlap, which everyone is super excited about
 
-		// oldRodAlways:           0, 1, 3, 4
-		// oldRodNoSwarm:          2
-		// oldRodSwarm:            2
+		EncounterArea oldRodCombined = new EncounterArea(readSeaEncountersHGSS(b, 114, 5));
+		EncounterArea goodRodCombined = new EncounterArea(readSeaEncountersHGSS(b, 124, 5));
+		EncounterArea superRodCombined = new EncounterArea(readSeaEncountersHGSS(b, 134, 5));
 
-		// goodRodAlways:          1, 4
-		// goodRodNoSwarmAlways:   0, 2
-		// goodRodNoSwarmNoNight:  3
-		// goodRodNoSwarmNight:    3
-		// goodRodSwarm:           0, 2, 3
+		EncounterArea oldRodAlways = subArea(oldRodCombined, 0, 1, 3, 4);
+		EncounterArea oldRodNoSwarm = subArea(oldRodCombined, 2);
+		EncounterArea goodRodAlways = subArea(goodRodCombined, 1, 4);
+		EncounterArea goodRodNoSwarmAlways = subArea(goodRodCombined, 0, 2);
+		EncounterArea goodRodNoSwarmNoNight = subArea(goodRodCombined, 3);
+		EncounterArea superRodNoSwarmAlways = subArea(superRodCombined, 0, 2, 3, 4);
+		EncounterArea superRodNoSwarmNoNight = subArea(superRodCombined, 1);
 
-		// superRodNoSwarmAlways:  0, 2, 3, 4
-		// superRodNoSwarmNoNight: 1
-		// superRodNoSwarmNight:   1
-		// superRodSwarm:          0, 1, 2, 3, 4
+		EncounterArea swarm = readOptionalEncounterAreaHGSS(b, 192, 1);
+		EncounterArea night = readOptionalEncounterAreaHGSS(b, 190, 1);
 
-//		// Valid area.
-//		EncounterArea seaArea = new EncounterArea(seaEncounters);
-//		seaArea.setIdentifiers(mapName + " " + Gen4Constants.hgssNonWalkingAreaNames[i], mapIndex,
-//				Gen4Constants.hgssNonWalkingAreaTypes[i]);
-//		seaArea.setRate(seaRates[i]);
-//		encounterAreas.add(seaArea);
-//
-//		// TODO: Disable these... somehow when useTimeOfDay == false. It's tricky since I don't know what
-//		//  encounters are being replaced in the usual fishing area/how it works
-//		EncounterArea nightFishingReplacementArea = readOptionalEncounterAreaHGSS(b, offset + 4, 1);
-//		nightFishingReplacementArea.setIdentifiers(mapName + " Night Fishing Replacement", mapIndex,
-//				EncounterType.FISHING);
-//		if (!nightFishingReplacementArea.isEmpty()) {
-//			encounterAreas.add(nightFishingReplacementArea);
-//		}
-//		EncounterArea fishingSwarmsArea = readOptionalEncounterAreaHGSS(b, offset + 6, 1);
-//		fishingSwarmsArea.setIdentifiers(mapName + " Fishing Swarm", mapIndex, EncounterType.SPECIAL);
-//		if (!fishingSwarmsArea.isEmpty()) {
-//			encounterAreas.add(fishingSwarmsArea);
-//		}
+		// we use the lowest levels where the swarm/night mons appear for their levels
+		swarm.getFirst().setLevel(oldRodNoSwarm.getFirst().getLevel());
+		swarm.getFirst().setMaxLevel(oldRodNoSwarm.getFirst().getMaxLevel());
+		night.getFirst().setLevel(goodRodNoSwarmNoNight.getFirst().getLevel());
+		night.getFirst().setMaxLevel(goodRodNoSwarmNoNight.getFirst().getMaxLevel());
+
+		List<EncounterArea> fishingAreas = List.of(
+				oldRodAlways, oldRodNoSwarm, goodRodAlways, goodRodNoSwarmAlways, goodRodNoSwarmNoNight,
+				superRodNoSwarmAlways, superRodNoSwarmNoNight, swarm, night
+		);
+		for (int i = 0; i < fishingAreas.size(); i++) {
+			String rodName = Gen4Constants.hgssFishingRodNames[i];
+			String areaName = Gen4Constants.hgssFishingAreaNames[i];
+			String displayName = String.format("%s %s Rod (%s)", mapName, rodName, areaName);
+			fishingAreas.get(i).setIdentifiers(displayName, mapID, EncounterType.FISHING);
+		}
+		swarm.setEncounterType(EncounterType.SPECIAL);
+		List.of(oldRodAlways, oldRodNoSwarm).forEach(area -> area.setRate(oldRodRate));
+		List.of(goodRodAlways, goodRodNoSwarmAlways, goodRodNoSwarmNoNight)
+				.forEach(area -> area.setRate(goodRodRate));
+		List.of(superRodNoSwarmAlways, superRodNoSwarmNoNight)
+				.forEach(area -> area.setRate(superRodRate));
+
+		encounterAreas.addAll(fishingAreas);
+	}
+
+	private EncounterArea subArea(EncounterArea source, int... slots) {
+		EncounterArea newArea = new EncounterArea();
+		for (int i : slots) {
+			newArea.add(source.get(i));
+		}
+		return newArea;
 	}
 
 	private void readExtraEncountersHGSS(List<EncounterArea> encounterAreas) throws IOException {
@@ -1834,6 +1845,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		int lastCreatedID = wildMapNames.size() - 1;
 		for (byte[] b : headbuttEncounterData.files) {
 			mapID++;
+
+			// TODO: do we need to split normal and special trees?
 
 			// Each headbutt encounter file starts with four bytes, which I believe are used
 			// to indicate the number of "normal" and "special" trees that are available in

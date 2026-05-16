@@ -2612,14 +2612,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private Map<Integer, List<MoveLearnt>> getCfruDpeMovesLearnt() {
         Map<Integer, List<MoveLearnt>> movesets = new TreeMap<>();
-        int baseOffset = romEntry.getIntValue("PokemonMovesets");
+        int baseOffset = getCfruDpeLevelUpLearnsetsOffset();
+        validateCfruDpeLevelUpLearnsetsTable(baseOffset);
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
             int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(pk);
             if (internalSpecies <= 0 || internalSpecies == CFRU_DPE_SPECIES_EGG_INTERNAL_ID) {
                 continue;
             }
-            int pointerOffset = baseOffset + internalSpecies * 4;
+            int pointerOffset = cfruDpeLevelUpLearnsetPointerOffset(baseOffset, internalSpecies);
             int movesLearntOffset = readPointer(pointerOffset, true);
             List<MoveLearnt> moves = movesLearntOffset == -1
                     ? new ArrayList<>()
@@ -2723,7 +2724,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 continue;
             }
 
-            int pointerOffset = baseOffset + internalSpecies * 4;
+            int pointerOffset = cfruDpeLevelUpLearnsetPointerOffset(baseOffset, internalSpecies);
             int movesLearntOffset = readPointer(pointerOffset, true);
             if (movesLearntOffset > 0) {
                 oldPointerReferenceCounts.merge(movesLearntOffset, 1, Integer::sum);
@@ -2772,7 +2773,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         Map<String, Integer> blobOffsetByKey = writeCfruDpeLearnsetBlobs(uniqueBlobs, blobStartOffset);
 
         for (Map.Entry<Integer, String> entry : blobKeyBySpecies.entrySet()) {
-            int pointerOffset = baseOffset + entry.getKey() * 4;
+            int pointerOffset = cfruDpeLevelUpLearnsetPointerOffset(baseOffset, entry.getKey());
             writePointer(pointerOffset, blobOffsetByKey.get(entry.getValue()));
         }
 
@@ -2936,6 +2937,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private int getCfruDpeLevelUpLearnsetsOffset() {
         return readRequiredCfruDpePointer(CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION,
                 CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE, "CFRU/DPE gLevelUpLearnsets");
+    }
+
+    static int cfruDpeLevelUpLearnsetPointerOffset(int baseOffset, int internalSpecies) {
+        return baseOffset + internalSpecies * GBConstants.longSize;
     }
 
 	private byte[] movesLearntToBytes(List<MoveLearnt> movesLearnt) {

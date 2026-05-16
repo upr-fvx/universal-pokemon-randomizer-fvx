@@ -1066,35 +1066,56 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private BattleStyle createTrainerStyle(BattleStyle style) {
+    private BattleStyle createTrainerStyle(BattleStyle style, int pokemonCount) {
         // Unchanged: passes style through
         // Randomize: Select a random Style to use
         // Single Style: passes style through, as the selected style is already picked.
         BattleStyle trainerStyle = new BattleStyle(style.getModification(), style.getStyle());
         if (trainerStyle.getModification() == BattleStyle.Modification.RANDOM) {
-            int styleCount = BattleStyle.Style.values().length;
-            if (romHandler.generationOfPokemon() < 5 || romHandler.generationOfPokemon() > 6)
-                styleCount = 2; // Remove triple & rotation as options
-            trainerStyle.setStyle(BattleStyle.Style.values()[random.nextInt(styleCount)]);
+            List<BattleStyle.Style> validStyles = new ArrayList<>();
+            BattleStyle.Style[] styles = BattleStyle.Style.values();
+            for (int i = 0; i < getAvailableBattleStyleCount(); i++) {
+                BattleStyle candidateStyle = new BattleStyle(BattleStyle.Modification.RANDOM, styles[i]);
+                if (pokemonCount >= candidateStyle.getRequiredPokemonCount()) {
+                    validStyles.add(styles[i]);
+                }
+            }
+            if (validStyles.isEmpty()) {
+                return null;
+            }
+            trainerStyle.setStyle(validStyles.get(random.nextInt(validStyles.size())));
+        } else if (pokemonCount < trainerStyle.getRequiredPokemonCount()) {
+            return null;
         }
         return trainerStyle;
+    }
+
+    private int getAvailableBattleStyleCount() {
+        if (romHandler.generationOfPokemon() < 5 || romHandler.generationOfPokemon() > 6) {
+            return 2; // Remove triple & rotation as options
+        }
+        return BattleStyle.Style.values().length;
     }
 
     public void modifyBattleStyle() {
         if (settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED)
             return;
         List<Trainer> trainers = romHandler.getTrainers();
+        boolean changedAnyTrainer = false;
         for (Trainer tr : trainers) {
             if (!(tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
-                tr.setCurrBattleStyle(createTrainerStyle(settings.getBattleStyle()));
-                while (tr.getPokemon().size() < tr.getCurrBattleStyle().getRequiredPokemonCount()) {
-                    tr.getPokemon().add(tr.getPokemon().get(0).copy());
+                BattleStyle trainerStyle = createTrainerStyle(settings.getBattleStyle(), tr.getPokemon().size());
+                if (trainerStyle != null) {
+                    tr.setCurrBattleStyle(trainerStyle);
+                    tr.setForcedDoubleBattle(true);
+                    changedAnyTrainer = true;
                 }
-                tr.setForcedDoubleBattle(true);
             }
         }
-        romHandler.makeDoubleBattleModePossible();
-        changesMade = true;
+        if (changedAnyTrainer) {
+            romHandler.makeDoubleBattleModePossible();
+            changesMade = true;
+        }
     }
 
     public void randomizeTrainerHeldItems() {

@@ -148,6 +148,44 @@ public class WildCatchLevelDecisionTest {
         }
     }
 
+    @Test
+    public void multiAreaRandomizationPreservesAreaAndSlotStructure() {
+        Species highOne = species(1025, "HighOne", 120);
+        Species highTwo = species(1100, "HighTwo", 120);
+        Species highThree = species(1200, "HighThree", 120);
+        Species highFour = species(1300, "HighFour", 120);
+        Species highFive = species(1400, "HighFive", 120);
+        Set<Species> allowed = Set.of(highOne, highTwo, highThree, highFour, highFive);
+        EncounterArea routeGrass = area("Route Grass", 10, EncounterType.WALKING, "Route A", 35,
+                encounter(highOne, 2, 4), encounter(highTwo, 5), encounter(highThree, 6, 9));
+        EncounterArea routeSurf = area("Route Surf", 10, EncounterType.SURFING, "Route A", 20,
+                encounter(highFour, 18, 25));
+        EncounterArea caveFishing = area("Cave Fishing", 11, EncounterType.FISHING, "Cave B", 45,
+                encounter(highFive, 12), encounter(highOne, 15, 20), encounter(highTwo, 30, 40),
+                encounter(highThree, 50));
+        List<EncounterArea> areas = List.of(routeGrass, routeSurf, caveFishing);
+        WildTestRomHandler romHandler = WildTestRomHandler.create(List.of(highOne, highTwo, highThree,
+                highFour, highFive), areas);
+        List<SlotShape> before = slotShapes(areas);
+        Settings settings = new Settings();
+        settings.setRandomizeWildPokemon(true);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.MAP);
+        settings.setSplitWildZoneByEncounterTypes(true);
+
+        new WildEncounterRandomizer(romHandler.proxy, settings, new Random(6)).randomizeEncounters();
+
+        assertEquals(1, romHandler.setEncountersCalls);
+        assertEquals(before, slotShapes(areas));
+        assertEquals(List.of(3, 1, 4), areas.stream().map(EncounterArea::size).collect(Collectors.toList()));
+        for (EncounterArea area : areas) {
+            assertFalse(area.isEmpty());
+            for (Encounter encounter : area) {
+                assertTrue(allowed.contains(encounter.getSpecies()));
+                assertTrue(encounter.getSpecies().getNumber() > 1000);
+            }
+        }
+    }
+
     private static List<Species> speciesRange(int firstNumber, int count) {
         List<Species> species = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -189,6 +227,14 @@ public class WildCatchLevelDecisionTest {
     private static EncounterArea area(String name, Encounter... encounters) {
         EncounterArea area = new EncounterArea(List.of(encounters));
         area.setIdentifiers(name, 1, EncounterType.WALKING, name);
+        return area;
+    }
+
+    private static EncounterArea area(String name, int mapIndex, EncounterType encounterType, String locationTag,
+                                      int rate, Encounter... encounters) {
+        EncounterArea area = new EncounterArea(List.of(encounters));
+        area.setIdentifiers(name, mapIndex, encounterType, locationTag);
+        area.setRate(rate);
         return area;
     }
 

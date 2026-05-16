@@ -14,6 +14,7 @@ public class Gen3CfruDpeLearnsetPointerTest {
                 Gen3RomHandler.cfruDpeLevelUpLearnsetPointerOffset(tableOffset, 1427));
         assertEquals(0x25D7B4 + 1439 * 4,
                 Gen3RomHandler.cfruDpeLevelUpLearnsetPointerOffset(tableOffset, 1439));
+        assertEquals((1439 + 1) * 4, Gen3RomHandler.cfruDpeLevelUpLearnsetsTableLength());
     }
 
     @Test

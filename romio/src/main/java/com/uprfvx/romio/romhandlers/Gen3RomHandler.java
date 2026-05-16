@@ -2947,6 +2947,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return baseOffset + internalSpecies * GBConstants.longSize;
     }
 
+    static int cfruDpeLevelUpLearnsetsTableLength() {
+        return (CFRU_DPE_PECHARUNT_INTERNAL_ID + 1) * GBConstants.longSize;
+    }
+
     public String getCfruDpeLearnsetDiagnostics(Species species, Map<Integer, List<MoveLearnt>> movesets,
                                                 int moveLimit) {
         if (!useCfruDpeGen9SpeciesCount) {
@@ -2958,19 +2962,92 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(species);
         int tableOffset = getCfruDpeLevelUpLearnsetsOffset();
-        int pointerOffset = cfruDpeLevelUpLearnsetPointerOffset(tableOffset, internalSpecies);
-        int rawPointer = safeReadLong(pointerOffset);
-        int resolvedPointer = safeReadPointer(pointerOffset);
+        CfruDpeLearnsetTableEntry tableEntry = cfruDpeLearnsetTableEntry(tableOffset, internalSpecies);
         List<MoveLearnt> moves = movesets == null ? null : movesets.get(internalSpecies);
+        int canonicalSpeciesId = cfruDpeCanonicalSpeciesId(species);
+        CfruDpeLearnsetTableEntry canonicalEntry = canonicalSpeciesId > 0
+                ? cfruDpeLearnsetTableEntry(tableOffset, canonicalSpeciesId)
+                : CfruDpeLearnsetTableEntry.missing(canonicalSpeciesId);
+        List<MoveLearnt> canonicalMoves = canonicalSpeciesId > 0 && movesets != null ? movesets.get(canonicalSpeciesId) : null;
 
         return "internal=" + internalSpecies
+                + " tableIndex=" + tableEntry.tableIndex()
                 + " speciesNumber=" + species.getNumber()
                 + " identity=" + species.getSpeciesSetIdentityNumber()
                 + " fullName=" + species.getFullName()
                 + " movesLearntCount=" + (moves == null ? "<missing>" : moves.size())
                 + " firstMoves=" + summarizeMovesLearnt(moves, moveLimit)
-                + " learnsetPointerRaw=" + hexValueOrNone(rawPointer)
-                + " learnsetPointerValid=" + (resolvedPointer != -1);
+                + " learnsetPointerOffset=" + hexOffset(tableEntry.pointerOffset())
+                + " learnsetPointerRaw=" + hexValueOrNone(tableEntry.rawPointer())
+                + " learnsetPointerValid=" + tableEntry.pointerValid()
+                + " canonicalSpeciesId=" + diagInt(canonicalSpeciesId)
+                + " canonicalPointerOffset=" + hexOffset(canonicalEntry.pointerOffset())
+                + " canonicalPointerRaw=" + hexValueOrNone(canonicalEntry.rawPointer())
+                + " canonicalPointerValid=" + canonicalEntry.pointerValid()
+                + " canonicalMovesLearntCount=" + (canonicalMoves == null ? "<missing>" : canonicalMoves.size());
+    }
+
+    public String getCfruDpeLevelUpLearnsetsTableDiagnostics() {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return "gLevelUpLearnsets diagnostics unavailable: not an extended Gen9 BPRE pool.";
+        }
+        int tableOffset = getCfruDpeLevelUpLearnsetsOffset();
+        return "gLevelUpLearnsets basePointer=" + hexOffset(tableOffset)
+                + " expectedBase=" + hexOffset(CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET)
+                + " maxTableIndex=" + CFRU_DPE_PECHARUNT_INTERNAL_ID
+                + " tableLength=" + hexOffset(cfruDpeLevelUpLearnsetsTableLength());
+    }
+
+    public List<String> getCfruDpeLearnsetNeighborhoodDiagnostics(int startIndex, int endIndex,
+                                                                  Map<Integer, List<MoveLearnt>> movesets,
+                                                                  int moveLimit) {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return List.of("CFRU/DPE learnset neighborhood unavailable: not an extended Gen9 BPRE pool.");
+        }
+        int tableOffset = getCfruDpeLevelUpLearnsetsOffset();
+        int start = Math.max(1, startIndex);
+        int end = Math.min(endIndex, pokesInternal == null ? 0 : pokesInternal.length - 1);
+        List<String> diagnostics = new ArrayList<>();
+        for (int tableIndex = start; tableIndex <= end; tableIndex++) {
+            Species species = pokesInternal[tableIndex];
+            CfruDpeLearnsetTableEntry entry = cfruDpeLearnsetTableEntry(tableOffset, tableIndex);
+            List<MoveLearnt> moves = movesets == null ? null : movesets.get(tableIndex);
+            diagnostics.add("tableIndex=" + tableIndex
+                    + " name=" + (species == null ? "<null>" : species.getFullName())
+                    + " identity=" + (species == null ? "<none>" : species.getSpeciesSetIdentityNumber())
+                    + " speciesNumber=" + (species == null ? "<none>" : species.getNumber())
+                    + " canonicalSpeciesId=" + (species == null ? "<none>" : diagInt(cfruDpeCanonicalSpeciesId(species)))
+                    + " pointerOffset=" + hexOffset(entry.pointerOffset())
+                    + " rawPointer=" + hexValueOrNone(entry.rawPointer())
+                    + " pointerValid=" + entry.pointerValid()
+                    + " movesLearntCount=" + (moves == null ? "<missing>" : moves.size())
+                    + " firstMoves=" + summarizeMovesLearnt(moves, moveLimit));
+        }
+        return diagnostics;
+    }
+
+    private CfruDpeLearnsetTableEntry cfruDpeLearnsetTableEntry(int tableOffset, int tableIndex) {
+        if (tableIndex <= 0) {
+            return CfruDpeLearnsetTableEntry.missing(tableIndex);
+        }
+        int pointerOffset = cfruDpeLevelUpLearnsetPointerOffset(tableOffset, tableIndex);
+        int rawPointer = safeReadLong(pointerOffset);
+        int resolvedPointer = safeReadPointer(pointerOffset);
+        return new CfruDpeLearnsetTableEntry(tableIndex, pointerOffset, rawPointer, resolvedPointer != -1);
+    }
+
+    private int cfruDpeCanonicalSpeciesId(Species species) {
+        if (species == null) {
+            return -1;
+        }
+        Integer speciesId = SPECIES_ID_BY_NORMALIZED_NAME.get(normalizeSpeciesName(species.getName()));
+        return speciesId == null ? -1 : speciesId;
+    }
+
+    private record CfruDpeLearnsetTableEntry(int tableIndex, int pointerOffset, int rawPointer, boolean pointerValid) {
+        private static CfruDpeLearnsetTableEntry missing(int tableIndex) {
+            return new CfruDpeLearnsetTableEntry(tableIndex, -1, -1, false);
+        }
     }
 
     private String summarizeMovesLearnt(List<MoveLearnt> moves, int moveLimit) {

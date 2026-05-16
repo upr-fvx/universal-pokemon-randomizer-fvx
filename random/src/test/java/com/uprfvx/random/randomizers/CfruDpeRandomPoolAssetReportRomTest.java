@@ -135,8 +135,11 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         for (CfruDpeRandomPoolAssetGuard.AssetStatus example : summary.examples()) {
             appendLine(report, "  " + example.sanitizedLine());
         }
+        appendLine(report, "CFRU/DPE learnset table:");
+        appendLine(report, "  " + romHandler.getCfruDpeLevelUpLearnsetsTableDiagnostics());
         appendOgerponStatuses(report, summary);
         appendOgerponLearnsetDiagnostics(report, romHandler, movesets);
+        appendLearnsetNeighborhoodDiagnostics(report, romHandler, movesets);
         return report.toString();
     }
 
@@ -199,6 +202,14 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         }
         for (Species species : matches) {
             appendLine(report, "  " + romHandler.getCfruDpeLearnsetDiagnostics(species, movesets, 8));
+        }
+    }
+
+    private static void appendLearnsetNeighborhoodDiagnostics(StringBuilder report, Gen3RomHandler romHandler,
+                                                              Map<Integer, List<MoveLearnt>> movesets) {
+        appendLine(report, "CFRU/DPE learnset neighborhood 1418..1439:");
+        for (String line : romHandler.getCfruDpeLearnsetNeighborhoodDiagnostics(1418, 1439, movesets, 4)) {
+            appendLine(report, "  " + line);
         }
     }
 

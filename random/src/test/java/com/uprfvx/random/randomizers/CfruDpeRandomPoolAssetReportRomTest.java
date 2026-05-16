@@ -5,10 +5,16 @@ import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.gamedata.MoveLearnt;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.constants.Gen3Constants;
+import com.uprfvx.romio.romio.RomOpener;
 import com.uprfvx.romio.romhandlers.Gen3RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Locale;
@@ -52,12 +58,47 @@ public class CfruDpeRandomPoolAssetReportRomTest {
     }
 
     private static Gen3RomHandler loadGen3Rom(String romPath) {
-        RomHandler.Factory factory = new Gen3RomHandler.Factory();
-        assertTrue(factory.isLoadable(romPath), "Configured ROM is not loadable as a Gen3 ROM.");
-        Gen3RomHandler romHandler = (Gen3RomHandler) factory.create();
-        assertTrue(romHandler.loadRom(romPath), "Configured Gen3 ROM could not be loaded.");
+        File romFile = new File(romPath);
+        RomOpener.Results results = new RomOpener().openRomFile(romFile);
+        assertTrue(results.wasOpeningSuccessful(), () -> "Configured ROM could not be opened through RomOpener; "
+                + "failType=" + results.getFailType()
+                + " " + sanitizedHeaderSummary(romFile));
+
+        RomHandler loadedHandler = results.getRomHandler();
+        assertTrue(loadedHandler instanceof Gen3RomHandler,
+                () -> "Configured ROM opened with non-Gen3 handler; handler="
+                        + loadedHandler.getClass().getSimpleName()
+                        + " code=" + loadedHandler.getROMCode());
+        Gen3RomHandler romHandler = (Gen3RomHandler) loadedHandler;
         romHandler.getRestrictedSpeciesService().setRestrictions(new GenRestrictions());
         return romHandler;
+    }
+
+    private static String sanitizedHeaderSummary(File romFile) {
+        try (RandomAccessFile raf = new RandomAccessFile(romFile, "r")) {
+            if (raf.length() <= Gen3Constants.romVersionOffset) {
+                return "header=<too-short>";
+            }
+            byte[] romCodeBytes = new byte[4];
+            raf.seek(Gen3Constants.romCodeOffset);
+            raf.readFully(romCodeBytes);
+            raf.seek(Gen3Constants.romVersionOffset);
+            int version = raf.readUnsignedByte();
+            return "headerCode=" + sanitizeRomCode(new String(romCodeBytes, StandardCharsets.US_ASCII))
+                    + " headerVersion=" + version
+                    + " fileLengthBytes=" + raf.length();
+        } catch (IOException ex) {
+            return "header=<unreadable>";
+        }
+    }
+
+    private static String sanitizeRomCode(String romCode) {
+        StringBuilder sanitized = new StringBuilder();
+        for (int i = 0; i < romCode.length(); i++) {
+            char c = romCode.charAt(i);
+            sanitized.append(Character.isLetterOrDigit(c) ? c : '?');
+        }
+        return sanitized.toString();
     }
 
     private static CfruDpeRandomPoolAssetGuard.AssetStatus statusFor(Gen3RomHandler romHandler,

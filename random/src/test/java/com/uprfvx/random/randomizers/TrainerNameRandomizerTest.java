@@ -13,7 +13,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -101,6 +103,77 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
+    void trainerNameRandomizerAllowsAsciiNameInsideInternalLimit() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("ALICE");
+        handler.maxTrainerNameLength = 4;
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("BOY"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertEquals(List.of("ANA"), handler.writtenTrainerNames);
+        assertTrue(handler.writtenTrainerNames.stream()
+                .allMatch(name -> handler.internalLength(name) <= handler.maxTrainerNameLength));
+    }
+
+    @Test
+    void trainerNameRandomizerAllowsNameExactlyAtInternalLimit() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("ALICE");
+        handler.maxTrainerNameLength = 4;
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("BEXX"), List.of("BOY"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertEquals(List.of("BEXX"), handler.writtenTrainerNames);
+        assertEquals(handler.maxTrainerNameLength, handler.internalLength(handler.writtenTrainerNames.get(0)));
+    }
+
+    @Test
+    void trainerNameRandomizerRejectsNameOverInternalLimit() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("AL");
+        handler.maxTrainerNameLength = 3;
+        handler.internalLengths.put("WIDE", 4);
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("WIDE"), List.of("BOY"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertEquals(List.of("AL"), handler.writtenTrainerNames);
+        assertTrue(handler.internalLength("WIDE") > handler.maxTrainerNameLength);
+    }
+
+    @Test
+    void trainerNameRandomizerUsesInternalLengthWhenItDiffersFromJavaLength() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("AL");
+        handler.maxTrainerNameLength = 5;
+        handler.internalLengths.put("TOK", 6);
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("TOK"), List.of("BOY"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertEquals(List.of("AL"), handler.writtenTrainerNames);
+        assertTrue("TOK".length() <= handler.maxTrainerNameLength);
+        assertTrue(handler.internalLength("TOK") > handler.maxTrainerNameLength);
+    }
+
+    @Test
+    void trainerNameRandomizerAllowsEscapedTokenWhenInternalLengthFits() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("AL");
+        handler.maxTrainerNameLength = 1;
+        handler.internalLengths.put("\\x01", 1);
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("\\x01"), List.of("BOY"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertEquals(List.of("\\x01"), handler.writtenTrainerNames);
+        assertTrue("\\x01".length() > handler.maxTrainerNameLength);
+        assertEquals(handler.maxTrainerNameLength, handler.internalLength("\\x01"));
+    }
+
+    @Test
     void trainerNameRandomizerRespectsMaxLengthWithClass() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerNameMode = RomHandler.TrainerNameMode.MAX_LENGTH_WITH_CLASS;
@@ -141,13 +214,37 @@ class TrainerNameRandomizerDecisions {
         assertEquals(4, handler.writtenTrainerClassNames.get(1).length());
     }
 
+    @Test
+    void trainerClassNameRandomizerDocumentsJavaLengthRiskWhenInternalLengthDiffers() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerClassNames = List.of("OLD");
+        handler.maxTrainerClassNameLength = 3;
+        handler.internalLengths.put("TOK", 6);
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("TOK"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerClassNames();
+
+        assertEquals(List.of("TOK"), handler.writtenTrainerClassNames);
+        assertTrue("TOK".length() <= handler.maxTrainerClassNameLength);
+        assertTrue(handler.internalLength("TOK") > handler.maxTrainerClassNameLength);
+    }
+
     private static Settings settings() {
-        Settings settings = new Settings();
-        settings.setCustomNames(new CustomNamesSet(
+        return settings(
                 List.of("ANA", "BEX", "CODY", "DORA", "ELI"),
                 List.of("BOY", "GIRL", "DUO", "TEAM"),
                 List.of("ANA & BEX", "CODY & DORA"),
-                List.of("PAIR", "TEAM"),
+                List.of("PAIR", "TEAM"));
+    }
+
+    private static Settings settings(List<String> trainerNames, List<String> trainerClasses,
+                                     List<String> doublesTrainerNames, List<String> doublesTrainerClasses) {
+        Settings settings = new Settings();
+        settings.setCustomNames(new CustomNamesSet(
+                trainerNames,
+                trainerClasses,
+                doublesTrainerNames,
+                doublesTrainerClasses,
                 Collections.emptyList()));
         return settings;
     }
@@ -170,6 +267,7 @@ class TrainerNameRandomizerDecisions {
         private int maxSumOfTrainerNameLengths = Integer.MAX_VALUE;
         private boolean fixedTrainerClassNamesLength;
         private int maxTrainerClassNameLength = 10;
+        private final Map<String, Integer> internalLengths = new HashMap<>();
         private boolean setTrainerNamesCalled;
         private boolean setTrainerClassNamesCalled;
         private List<String> writtenTrainerNames = new ArrayList<>();
@@ -210,12 +308,16 @@ class TrainerNameRandomizerDecisions {
                 case "fixedTrainerClassNamesLength" -> fixedTrainerClassNamesLength;
                 case "maxTrainerClassNameLength" -> maxTrainerClassNameLength;
                 case "getDoublesTrainerClasses" -> doublesTrainerClasses;
-                case "internalStringLength" -> ((String) args[0]).length();
+                case "internalStringLength" -> internalLength((String) args[0]);
                 case "toString" -> "TrainerNameRandomizerTestRomHandler";
                 case "hashCode" -> System.identityHashCode(this);
                 case "equals" -> proxy == args[0];
                 default -> throw new UnsupportedOperationException(method.getName());
             };
+        }
+
+        private int internalLength(String string) {
+            return internalLengths.getOrDefault(string, string.length());
         }
 
         @SuppressWarnings("unchecked")

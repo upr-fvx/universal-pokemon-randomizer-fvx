@@ -729,6 +729,41 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return usesInternalSpeciesIdentityForExtendedBpreHack();
     }
 
+    public boolean hasUsableCfruDpeRandomPoolSpeciesAssets(Species species,
+                                                           Map<Integer, List<MoveLearnt>> movesets) {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return true;
+        }
+        if (species == null) {
+            return false;
+        }
+
+        int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(species);
+        if (internalSpecies <= 0
+                || internalSpecies == CFRU_DPE_SPECIES_EGG_INTERNAL_ID
+                || pokesInternal == null
+                || internalSpecies >= pokesInternal.length
+                || pokesInternal[internalSpecies] == null) {
+            return false;
+        }
+
+        List<MoveLearnt> moves = movesets == null ? null : movesets.get(internalSpecies);
+        if (moves == null || moves.isEmpty()) {
+            return false;
+        }
+
+        return hasValidCfruDpeRandomPoolAssetPointer("PokemonFrontImages", internalSpecies)
+                && hasValidCfruDpeRandomPoolAssetPointer("PokemonNormalPalettes", internalSpecies);
+    }
+
+    private boolean hasValidCfruDpeRandomPoolAssetPointer(String tableKey, int internalSpecies) {
+        int tableOffset = romEntry.getIntValue(tableKey);
+        int pointerOffset = tableOffset + internalSpecies * 8;
+        return pointerOffset >= 0
+                && pointerOffset + GBConstants.longSize <= rom.length
+                && readPointer(pointerOffset, true) != -1;
+    }
+
     private static Map<String, Integer> speciesIdsByNormalizedName() {
         Map<String, Integer> speciesIdsByName = new HashMap<>();
         try {

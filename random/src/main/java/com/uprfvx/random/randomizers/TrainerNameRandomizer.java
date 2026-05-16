@@ -205,7 +205,7 @@ public class TrainerNameRandomizer extends Randomizer {
                 String changeTo = trainerClassName;
                 if (pickFrom != null && !pickFrom.isEmpty()) {
                     changeTo = pickFrom.get(random.nextInt(pickFrom.size()));
-                    while (changeTo.length() > maxLength) {
+                    while (romHandler.internalStringLength(changeTo) > maxLength) {
                         changeTo = pickFrom.get(random.nextInt(pickFrom.size()));
                     }
                 }

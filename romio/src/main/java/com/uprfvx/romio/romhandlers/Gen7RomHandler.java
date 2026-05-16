@@ -223,6 +223,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 loadBasicPokeStats(pokes[i],pokeGarc.getFile(i),formeMappings);
                 pokes[i].setName(pokeNames[i]);
                 pokes[i].setGeneration(generationOf(pokes[i]));
+
+                if (GlobalConstants.baseFormesWithFormeSuffixes.containsKey(i)) {
+                    pokes[i].setFormeSuffix(GlobalConstants.baseFormesWithFormeSuffixes.get(i));
+                }
             }
 
             Map<Integer, Integer> withConceptualBaseFormes = Gen7Constants.getAltFormesWithConceptualBaseFormes(getROMType());

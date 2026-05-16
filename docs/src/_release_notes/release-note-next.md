@@ -48,6 +48,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - (Log) Made the "Pokemon Base Statistics / Types / Abilities" list include alt forms immediately after their base forms, instead of at the very end.
+- (Log+GUI) Gave form suffixes to the base forms of Pokemon with non-obvious base forms. **E.g.** "Wormadam" -> "Wormadam-Plant". This applies to: Wormadam, Basculin, Pumpkaboo, Gourgeist, Oricorio, and Lycanroc. 
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes

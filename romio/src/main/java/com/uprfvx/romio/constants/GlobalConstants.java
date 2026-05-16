@@ -27,6 +27,7 @@ package com.uprfvx.romio.constants;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -175,6 +176,17 @@ public class GlobalConstants {
 
     public static final List<Integer> requiresOtherMove = Arrays.asList(
             MoveIDs.spitUp, MoveIDs.swallow, MoveIDs.dreamEater, MoveIDs.nightmare
+    );
+
+    // Because some base formes are non-obvious, they deserve forme suffixes to explain themselves
+    public static final Map<Integer, String> baseFormesWithFormeSuffixes = Map.of(
+            SpeciesIDs.wormadam, "-Plant",
+            SpeciesIDs.basculin, "-Red",
+            SpeciesIDs.meowstic, "-M",
+            SpeciesIDs.pumpkaboo, "-S",
+            SpeciesIDs.gourgeist, "-S",
+            SpeciesIDs.oricorio, "-Baile",
+            SpeciesIDs.lycanroc, "-Midday"
     );
 
     public static final int vanillaHappinessToEvolve = 220, easierHappinessToEvolve = 160;

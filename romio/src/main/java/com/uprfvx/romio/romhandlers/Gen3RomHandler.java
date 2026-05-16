@@ -731,29 +731,74 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     public boolean hasUsableCfruDpeRandomPoolSpeciesAssets(Species species,
                                                            Map<Integer, List<MoveLearnt>> movesets) {
+        return getCfruDpeRandomPoolSpeciesAssetIssues(species, movesets).isEmpty();
+    }
+
+    public EnumSet<CfruDpeRandomPoolAssetIssue> getCfruDpeRandomPoolSpeciesAssetIssues(Species species,
+                                                                                       Map<Integer, List<MoveLearnt>> movesets) {
+        EnumSet<CfruDpeRandomPoolAssetIssue> issues = EnumSet.noneOf(CfruDpeRandomPoolAssetIssue.class);
         if (!useCfruDpeGen9SpeciesCount) {
-            return true;
+            return issues;
         }
         if (species == null) {
-            return false;
+            issues.add(CfruDpeRandomPoolAssetIssue.NULL_SPECIES);
+            return issues;
         }
 
-        int internalSpecies = getCfruDpeLearnsetInternalSpeciesId(species);
+        int internalSpecies = getCfruDpeRandomPoolInternalSpeciesId(species);
         if (internalSpecies <= 0
                 || internalSpecies == CFRU_DPE_SPECIES_EGG_INTERNAL_ID
                 || pokesInternal == null
                 || internalSpecies >= pokesInternal.length
                 || pokesInternal[internalSpecies] == null) {
-            return false;
+            issues.add(CfruDpeRandomPoolAssetIssue.NO_USABLE_LEARNSET);
+            return issues;
         }
 
         List<MoveLearnt> moves = movesets == null ? null : movesets.get(internalSpecies);
         if (moves == null || moves.isEmpty()) {
-            return false;
+            issues.add(CfruDpeRandomPoolAssetIssue.NO_USABLE_LEARNSET);
         }
+        if (!hasValidCfruDpeRandomPoolAssetPointer("PokemonFrontImages", internalSpecies)) {
+            issues.add(CfruDpeRandomPoolAssetIssue.INVALID_FRONT_BATTLE_SPRITE_POINTER);
+        }
+        if (!hasValidCfruDpeRandomPoolAssetPointer("PokemonNormalPalettes", internalSpecies)) {
+            issues.add(CfruDpeRandomPoolAssetIssue.INVALID_NORMAL_PALETTE_POINTER);
+        }
+        return issues;
+    }
 
-        return hasValidCfruDpeRandomPoolAssetPointer("PokemonFrontImages", internalSpecies)
-                && hasValidCfruDpeRandomPoolAssetPointer("PokemonNormalPalettes", internalSpecies);
+    public int getCfruDpeRandomPoolInternalSpeciesId(Species species) {
+        return species == null ? 0 : getCfruDpeLearnsetInternalSpeciesId(species);
+    }
+
+    public int getCfruDpePokemonCountForDiagnostics() {
+        return romEntry.getIntValue("PokemonCount");
+    }
+
+    public int getCfruDpePokedexCountForDiagnostics() {
+        return pokedexCount;
+    }
+
+    public int getCfruDpeMaxInternalSpeciesIdForDiagnostics() {
+        int maxInternalSpeciesId = 0;
+        if (pokesInternal == null) {
+            return maxInternalSpeciesId;
+        }
+        for (int i = 1; i < pokesInternal.length; i++) {
+            if (pokesInternal[i] != null) {
+                maxInternalSpeciesId = i;
+            }
+        }
+        return maxInternalSpeciesId;
+    }
+
+    public int getRomVersionForDiagnostics() {
+        return romEntry.getVersion();
+    }
+
+    public boolean isRomHackForDiagnostics() {
+        return isRomHack;
     }
 
     private boolean hasValidCfruDpeRandomPoolAssetPointer(String tableKey, int internalSpecies) {

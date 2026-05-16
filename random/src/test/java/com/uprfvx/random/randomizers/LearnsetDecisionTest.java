@@ -70,6 +70,48 @@ public class LearnsetDecisionTest {
                 .allMatch(moveLearnt -> allowedMoves.contains(moveLearnt.move)));
     }
 
+    @Test
+    public void orderDamagingMovesByDamageOnlyReordersDamagingMovesWithinExistingSlots() {
+        Species highSpecies = species(1025, "HighSpecies");
+        Map<Integer, List<MoveLearnt>> movesets = new LinkedHashMap<>();
+        movesets.put(highSpecies.getNumber(), new ArrayList<>(List.of(
+                new MoveLearnt(30, 0),
+                new MoveLearnt(31, 1),
+                new MoveLearnt(32, 8),
+                new MoveLearnt(33, 20),
+                new MoveLearnt(34, 50))));
+        Map<Integer, List<Integer>> levelsBefore = levelsBySpecies(movesets);
+        Map<Integer, Integer> sizesBefore = sizesBySpecies(movesets);
+        Set<Integer> originalMovePool = movesets.get(highSpecies.getNumber()).stream()
+                .map(moveLearnt -> moveLearnt.move)
+                .collect(Collectors.toSet());
+        LearnsetTestRomHandler romHandler = LearnsetTestRomHandler.create(List.of(highSpecies),
+                movesets, indexedMoves(
+                        move(30, 10),
+                        move(31, 90),
+                        move(32, 40),
+                        move(33, 120),
+                        move(34, 0)));
+
+        SpeciesMovesetRandomizer randomizer = new SpeciesMovesetRandomizer(romHandler.proxy, new Settings(),
+                new Random(2));
+        randomizer.orderDamagingMovesByDamage();
+
+        List<MoveLearnt> ordered = romHandler.writtenMovesets.get(highSpecies.getNumber());
+        assertTrue(randomizer.isChangesMade());
+        assertEquals(1, romHandler.setMovesLearntCalls);
+        assertFalse(ordered.isEmpty());
+        assertEquals(sizesBefore, sizesBySpecies(romHandler.writtenMovesets));
+        assertEquals(levelsBefore, levelsBySpecies(romHandler.writtenMovesets));
+        assertEquals(List.of(30, 32, 31, 33, 34), ordered.stream()
+                .map(moveLearnt -> moveLearnt.move)
+                .collect(Collectors.toList()));
+        assertEquals(originalMovePool, ordered.stream()
+                .map(moveLearnt -> moveLearnt.move)
+                .collect(Collectors.toSet()));
+        assertEquals(1025, highSpecies.getNumber());
+    }
+
     private static Species species(int number, String name) {
         Species species = new Species(number);
         species.setName(name);
@@ -88,17 +130,33 @@ public class LearnsetDecisionTest {
     private static List<Move> moves(Set<Integer> moveNumbers) {
         List<Move> moves = new ArrayList<>();
         for (int moveNumber : moveNumbers) {
-            Move move = new Move();
-            move.number = moveNumber;
-            move.name = "Move" + moveNumber;
-            move.power = 80;
-            move.pp = 15;
-            move.hitratio = 100;
-            move.type = Type.NORMAL;
-            move.category = moveNumber % 2 == 0 ? MoveCategory.PHYSICAL : MoveCategory.SPECIAL;
-            moves.add(move);
+            moves.add(move(moveNumber, 80));
         }
         return moves;
+    }
+
+    private static List<Move> indexedMoves(Move... moves) {
+        int maxMoveNumber = 0;
+        for (Move move : moves) {
+            maxMoveNumber = Math.max(maxMoveNumber, move.number);
+        }
+        List<Move> indexedMoves = new ArrayList<>(Collections.nCopies(maxMoveNumber + 1, null));
+        for (Move move : moves) {
+            indexedMoves.set(move.number, move);
+        }
+        return indexedMoves;
+    }
+
+    private static Move move(int moveNumber, int power) {
+        Move move = new Move();
+        move.number = moveNumber;
+        move.name = "Move" + moveNumber;
+        move.power = power;
+        move.pp = 15;
+        move.hitratio = 100;
+        move.type = Type.NORMAL;
+        move.category = moveNumber % 2 == 0 ? MoveCategory.PHYSICAL : MoveCategory.SPECIAL;
+        return move;
     }
 
     private static Map<Integer, List<Integer>> levelsBySpecies(Map<Integer, List<MoveLearnt>> movesets) {

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -214,6 +215,42 @@ public class WildCatchLevelDecisionTest {
         }
     }
 
+    @Test
+    public void randomizeEncountersReloadsSyntheticWriterStateWithEqualSlotData() {
+        Species highOne = species(1025, "HighOne", 120);
+        Species highTwo = species(1100, "HighTwo", 120);
+        Species highThree = species(1200, "HighThree", 120);
+        Set<Species> allowed = Set.of(highOne, highTwo, highThree);
+        EncounterArea grass = area("Reload Grass", 20, EncounterType.WALKING, "Reload Route", 30,
+                encounter(highOne, 4, 6), encounter(highTwo, 7));
+        EncounterArea surf = area("Reload Surf", 20, EncounterType.SURFING, "Reload Route", 15,
+                encounter(highThree, 18, 24));
+        List<EncounterArea> areas = List.of(grass, surf);
+        WildTestRomHandler romHandler = WildTestRomHandler.createReloadable(List.of(highOne, highTwo, highThree),
+                areas);
+        List<SlotShape> before = slotShapes(areas);
+        Settings settings = new Settings();
+        settings.setRandomizeWildPokemon(true);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
+
+        new WildEncounterRandomizer(romHandler.proxy, settings, new Random(8)).randomizeEncounters();
+        List<EncounterArea> reloaded = romHandler.proxy.getEncounters(false);
+
+        assertEquals(1, romHandler.setEncountersCalls);
+        assertEquals(before, slotShapes(reloaded));
+        assertEquals(romHandler.writtenSlots, encounterSlots(reloaded));
+        assertNotSame(romHandler.writtenEncounterAreas, reloaded);
+        assertNotSame(romHandler.writtenEncounterAreas.get(0), reloaded.get(0));
+        assertNotSame(romHandler.writtenEncounterAreas.get(0).get(0), reloaded.get(0).get(0));
+        for (EncounterArea area : reloaded) {
+            assertFalse(area.isEmpty());
+            for (Encounter encounter : area) {
+                assertTrue(allowed.contains(encounter.getSpecies()));
+                assertTrue(encounter.getSpecies().getNumber() > 1000);
+            }
+        }
+    }
+
     private static List<Species> speciesRange(int firstNumber, int count) {
         List<Species> species = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -281,26 +318,83 @@ public class WildCatchLevelDecisionTest {
                              int encounterRate, int level, int maxLevel) {
     }
 
+    private static List<EncounterSlot> encounterSlots(List<EncounterArea> areas) {
+        List<EncounterSlot> slots = new ArrayList<>();
+        for (EncounterArea area : areas) {
+            for (Encounter encounter : area) {
+                slots.add(new EncounterSlot(area.getDisplayName(), area.getMapIndex(), area.getEncounterType(),
+                        area.getLocationTag(), area.getRate(), encounter.getLevel(), encounter.getMaxLevel(),
+                        encounter.getSpecies().getNumber()));
+            }
+        }
+        return slots;
+    }
+
+    private record EncounterSlot(String areaName, int mapIndex, EncounterType encounterType, String locationTag,
+                                 int encounterRate, int level, int maxLevel, int speciesNumber) {
+    }
+
+    private static List<EncounterArea> deepCopyAreas(List<EncounterArea> areas) {
+        List<EncounterArea> copies = new ArrayList<>();
+        for (EncounterArea area : areas) {
+            EncounterArea copy = new EncounterArea();
+            copy.setIdentifiers(area.getDisplayName(), area.getMapIndex(), area.getEncounterType(),
+                    area.getLocationTag());
+            copy.setRate(area.getRate());
+            copy.setPostGame(area.isPostGame());
+            if (area.isPartiallyPostGame()) {
+                copy.setPartiallyPostGameCutoff(area.getPartiallyPostGameCutoff());
+            }
+            copy.setForceMultipleSpecies(area.isForceMultipleSpecies());
+            copy.banAllSpecies(area.getBannedSpecies());
+            for (Encounter encounter : area) {
+                copy.add(copyEncounter(encounter));
+            }
+            copies.add(copy);
+        }
+        return copies;
+    }
+
+    private static Encounter copyEncounter(Encounter encounter) {
+        Encounter copy = new Encounter();
+        copy.setSpecies(encounter.getSpecies());
+        copy.setLevel(encounter.getLevel());
+        copy.setMaxLevel(encounter.getMaxLevel());
+        copy.setFormeNumber(encounter.getFormeNumber());
+        copy.setSOS(encounter.isSOS());
+        copy.setSosType(encounter.getSosType());
+        return copy;
+    }
+
     private static SpeciesSet speciesSet(List<Species> species) {
         SpeciesSet speciesSet = new SpeciesSet();
         speciesSet.addAll(species);
         return speciesSet;
     }
 
+    @SuppressWarnings("unchecked")
+    private static List<EncounterArea> encounterAreasArgument(Object[] args) {
+        return (List<EncounterArea>) args[1];
+    }
+
     private static class WildTestRomHandler implements InvocationHandler {
         private final SpeciesSet speciesSet;
         private final List<Species> species;
         private final List<EncounterArea> encounters;
+        private final boolean reloadable;
         private RomHandler proxy;
         private RestrictedSpeciesService restrictedSpeciesService;
         private TypeService typeService;
         private int setEncountersCalls;
         private boolean guaranteedCatchEnabled;
+        private List<EncounterArea> writtenEncounterAreas;
+        private List<EncounterSlot> writtenSlots;
 
-        private WildTestRomHandler(List<Species> species, List<EncounterArea> encounters) {
+        private WildTestRomHandler(List<Species> species, List<EncounterArea> encounters, boolean reloadable) {
             this.species = species;
             this.speciesSet = speciesSet(species);
             this.encounters = encounters;
+            this.reloadable = reloadable;
         }
 
         private static WildTestRomHandler create(List<Species> species) {
@@ -308,7 +402,16 @@ public class WildCatchLevelDecisionTest {
         }
 
         private static WildTestRomHandler create(List<Species> species, List<EncounterArea> encounters) {
-            WildTestRomHandler handler = new WildTestRomHandler(species, encounters);
+            return create(species, encounters, false);
+        }
+
+        private static WildTestRomHandler createReloadable(List<Species> species, List<EncounterArea> encounters) {
+            return create(species, encounters, true);
+        }
+
+        private static WildTestRomHandler create(List<Species> species, List<EncounterArea> encounters,
+                                                 boolean reloadable) {
+            WildTestRomHandler handler = new WildTestRomHandler(species, encounters, reloadable);
             handler.proxy = (RomHandler) Proxy.newProxyInstance(
                     RomHandler.class.getClassLoader(), new Class<?>[] {RomHandler.class}, handler);
             handler.restrictedSpeciesService = new RestrictedSpeciesService(handler.proxy);
@@ -327,9 +430,14 @@ public class WildCatchLevelDecisionTest {
                 case "getAltFormes", "getIrregularFormes", "getBannedForWildEncounters" -> new SpeciesSet();
                 case "getMegaEvolutions" -> Collections.<MegaEvolution>emptyList();
                 case "getTypeTable" -> new TypeTable(List.of(Type.NORMAL));
-                case "getEncounters" -> encounters;
+                case "getEncounters" -> reloadable ? deepCopyAreas(
+                        writtenEncounterAreas == null ? encounters : writtenEncounterAreas) : encounters;
                 case "setEncounters" -> {
                     setEncountersCalls++;
+                    if (reloadable) {
+                        writtenEncounterAreas = deepCopyAreas(encounterAreasArgument(args));
+                        writtenSlots = encounterSlots(writtenEncounterAreas);
+                    }
                     yield null;
                 }
                 case "enableGuaranteedPokemonCatching" -> {

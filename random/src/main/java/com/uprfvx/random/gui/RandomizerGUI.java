@@ -3866,17 +3866,9 @@ public class RandomizerGUI {
         List<Species> currentStarters = romHandler.getStarters();
         List<Species> allPokes =
                 romHandler.generationOfPokemon() >= 6 ?
-                        romHandler.getSpeciesInclFormes()
-                                .stream()
-                                .filter(pk -> pk == null || !pk.isCosmeticReplacement())
-                                .toList() :
-                        romHandler.getSpecies();
-        String[] pokeNames = new String[allPokes.size()];
-        pokeNames[0] = "Random";
-        for (int i = 1; i < allPokes.size(); i++) {
-            pokeNames[i] = allPokes.get(i).getFullName();
-
-        }
+                        DropdownSpeciesHelper.getDropdownSpecies(romHandler.getSpeciesInclFormes(), true) :
+                        DropdownSpeciesHelper.getDropdownSpecies(romHandler.getSpecies(), false);
+        String[] pokeNames = DropdownSpeciesHelper.getDropdownSpeciesNames(allPokes);
 
         spComboBox1.setModel(new DefaultComboBoxModel<>(pokeNames));
         spComboBox1.setSelectedIndex(allPokes.indexOf(currentStarters.get(0)));

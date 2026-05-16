@@ -143,6 +143,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_MOVE_SPLIT_PHYSICAL = 0;
     private static final int CFRU_DPE_MOVE_SPLIT_SPECIAL = 1;
     private static final int CFRU_DPE_MOVE_SPLIT_STATUS = 2;
+    private static final int CFRU_RUNTIME_LEVEL_UP_LEARNSETS_POINTER_LOCATION = 0x43E20;
     private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION = 0x3EA7C;
     private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET = 0x25D7B4;
     private static final int CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE = 3;
@@ -2792,13 +2793,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void validateCfruDpeLevelUpLearnsetsTable(int baseOffset) {
-        int tableLength = (CFRU_DPE_PECHARUNT_INTERNAL_ID + 1) * GBConstants.longSize;
-        if (baseOffset != CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET) {
+        int tableLength = cfruDpeLevelUpLearnsetsTableLength();
+        boolean isRuntimeTable = hasValidCfruRuntimeLevelUpLearnsetsPointer(rom)
+                && baseOffset == readCfruRuntimeLevelUpLearnsetsOffset(rom);
+        boolean isExpectedFallbackTable = baseOffset == CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET;
+        if (!isRuntimeTable && !isExpectedFallbackTable) {
             throw new RomIOException("Unexpected CFRU/DPE gLevelUpLearnsets table offset 0x"
-                    + Integer.toHexString(baseOffset) + ", expected 0x"
-                    + Integer.toHexString(CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET) + ".");
+                    + Integer.toHexString(baseOffset) + ", expected fallback 0x"
+                    + Integer.toHexString(CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET)
+                    + " or valid CFRU runtime pointer table.");
         }
-        if (baseOffset < 0 || baseOffset + tableLength > rom.length) {
+        if (!isCfruDpeLevelUpLearnsetsTableInRom(rom, baseOffset)) {
             throw new RomIOException("CFRU/DPE gLevelUpLearnsets table is outside the ROM: base=0x"
                     + Integer.toHexString(baseOffset) + ", length=0x" + Integer.toHexString(tableLength) + ".");
         }
@@ -2935,12 +2940,44 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private int getCfruDpeLevelUpLearnsetsOffset() {
-        return readRequiredCfruDpePointer(CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION,
+        int fallbackOffset = readRequiredCfruDpePointer(CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION,
                 CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE, "CFRU/DPE gLevelUpLearnsets");
+        return chooseCfruDpeLevelUpLearnsetsOffset(rom, fallbackOffset);
     }
 
     static boolean shouldUseCfruDpeLevelUpLearnsets(boolean useCfruDpeGen9SpeciesCount, boolean jamboMovesetHack) {
         return useCfruDpeGen9SpeciesCount;
+    }
+
+    static int chooseCfruDpeLevelUpLearnsetsOffset(byte[] rom, int fallbackOffset) {
+        int runtimeOffset = readCfruRuntimeLevelUpLearnsetsOffset(rom);
+        return isCfruDpeLevelUpLearnsetsTableInRom(rom, runtimeOffset) ? runtimeOffset : fallbackOffset;
+    }
+
+    static int readCfruRuntimeLevelUpLearnsetsOffset(byte[] rom) {
+        return readPointerFromRom(rom, CFRU_RUNTIME_LEVEL_UP_LEARNSETS_POINTER_LOCATION);
+    }
+
+    static boolean hasValidCfruRuntimeLevelUpLearnsetsPointer(byte[] rom) {
+        return isCfruDpeLevelUpLearnsetsTableInRom(rom, readCfruRuntimeLevelUpLearnsetsOffset(rom));
+    }
+
+    private static int readPointerFromRom(byte[] rom, int offset) {
+        if (rom == null || offset < 0 || offset > rom.length - GBConstants.longSize) {
+            return -1;
+        }
+        int rawPointer = (rom[offset] & 0xFF)
+                + ((rom[offset + 1] & 0xFF) << 8)
+                + ((rom[offset + 2] & 0xFF) << 16)
+                + (((rom[offset + 3] & 0xFF)) << 24);
+        int resolvedPointer = rawPointer - 0x8000000;
+        return resolvedPointer >= 0 && resolvedPointer <= rom.length ? resolvedPointer : -1;
+    }
+
+    private static boolean isCfruDpeLevelUpLearnsetsTableInRom(byte[] rom, int tableOffset) {
+        return rom != null
+                && tableOffset >= 0
+                && tableOffset <= rom.length - cfruDpeLevelUpLearnsetsTableLength();
     }
 
     static int cfruDpeLevelUpLearnsetPointerOffset(int baseOffset, int internalSpecies) {
@@ -2992,8 +3029,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return "gLevelUpLearnsets diagnostics unavailable: not an extended Gen9 BPRE pool.";
         }
         int tableOffset = getCfruDpeLevelUpLearnsetsOffset();
+        int runtimeRawPointer = safeReadLong(CFRU_RUNTIME_LEVEL_UP_LEARNSETS_POINTER_LOCATION);
+        int runtimeOffset = readCfruRuntimeLevelUpLearnsetsOffset(rom);
         return "gLevelUpLearnsets basePointer=" + hexOffset(tableOffset)
                 + " expectedBase=" + hexOffset(CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET)
+                + " cfruRuntimeLearnsetPointerRaw=" + hexValueOrNone(runtimeRawPointer)
+                + " cfruRuntimeLearnsetPointerOffset=" + hexOffset(runtimeOffset)
+                + " cfruRuntimeLearnsetPointerValid=" + hasValidCfruRuntimeLevelUpLearnsetsPointer(rom)
+                + " chosenLearnsetTableBase=" + hexOffset(tableOffset)
                 + " maxTableIndex=" + CFRU_DPE_PECHARUNT_INTERNAL_ID
                 + " tableLength=" + hexOffset(cfruDpeLevelUpLearnsetsTableLength());
     }

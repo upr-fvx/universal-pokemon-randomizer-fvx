@@ -118,6 +118,36 @@ public class WildCatchLevelDecisionTest {
         assertEquals(1, romHandler.setEncountersCalls);
     }
 
+    @Test
+    public void randomizeEncountersKeepsSyntheticSlotsAndUsesAllowedHighNumberedSpecies() {
+        Species highOne = species(1025, "HighOne", 120);
+        Species highTwo = species(1100, "HighTwo", 120);
+        Species highThree = species(1200, "HighThree", 120);
+        Set<Species> allowed = Set.of(highOne, highTwo, highThree);
+        EncounterArea grass = area("Synthetic High Grass", encounter(highOne, 5, 7), encounter(highTwo, 8));
+        grass.setRate(25);
+        EncounterArea surf = area("Synthetic High Surf", encounter(highTwo, 20), encounter(highThree, 25, 30));
+        surf.setRate(15);
+        WildTestRomHandler romHandler = WildTestRomHandler.create(List.of(highOne, highTwo, highThree),
+                List.of(grass, surf));
+        List<SlotShape> before = slotShapes(List.of(grass, surf));
+        Settings settings = new Settings();
+        settings.setRandomizeWildPokemon(true);
+        settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
+
+        new WildEncounterRandomizer(romHandler.proxy, settings, new Random(5)).randomizeEncounters();
+
+        assertEquals(1, romHandler.setEncountersCalls);
+        assertEquals(before, slotShapes(List.of(grass, surf)));
+        for (EncounterArea area : List.of(grass, surf)) {
+            assertFalse(area.isEmpty());
+            for (Encounter encounter : area) {
+                assertTrue(allowed.contains(encounter.getSpecies()));
+                assertTrue(encounter.getSpecies().getNumber() > 1000);
+            }
+        }
+    }
+
     private static List<Species> speciesRange(int firstNumber, int count) {
         List<Species> species = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -160,6 +190,21 @@ public class WildCatchLevelDecisionTest {
         EncounterArea area = new EncounterArea(List.of(encounters));
         area.setIdentifiers(name, 1, EncounterType.WALKING, name);
         return area;
+    }
+
+    private static List<SlotShape> slotShapes(List<EncounterArea> areas) {
+        List<SlotShape> shapes = new ArrayList<>();
+        for (EncounterArea area : areas) {
+            for (Encounter encounter : area) {
+                shapes.add(new SlotShape(area.getDisplayName(), area.getMapIndex(), area.getEncounterType(),
+                        area.getLocationTag(), area.getRate(), encounter.getLevel(), encounter.getMaxLevel()));
+            }
+        }
+        return shapes;
+    }
+
+    private record SlotShape(String areaName, int mapIndex, EncounterType encounterType, String locationTag,
+                             int encounterRate, int level, int maxLevel) {
     }
 
     private static SpeciesSet speciesSet(List<Species> species) {

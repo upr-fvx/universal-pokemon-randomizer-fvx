@@ -144,6 +144,35 @@ public class LearnsetDecisionTest {
         assertEquals(1025, highSpecies.getNumber());
     }
 
+    @Test
+    public void evolutionMovesForAllAddsOnlyExpectedEvolutionMoveSlot() {
+        Species highSpecies = species(1025, "HighSpecies");
+        Map<Integer, List<MoveLearnt>> movesets = new LinkedHashMap<>();
+        movesets.put(highSpecies.getNumber(), new ArrayList<>(List.of(
+                new MoveLearnt(10, 1),
+                new MoveLearnt(11, 16))));
+        Set<Integer> allowedMoves = Set.of(50, 51, 52, 53, 54, 55);
+        LearnsetTestRomHandler romHandler = LearnsetTestRomHandler.create(List.of(highSpecies),
+                movesets, moves(allowedMoves));
+        Settings settings = new Settings();
+        settings.setMovesetsMod(Settings.MovesetsMod.COMPLETELY_RANDOM);
+        settings.setEvolutionMovesForAll(true);
+
+        SpeciesMovesetRandomizer randomizer = new SpeciesMovesetRandomizer(romHandler.proxy, settings, new Random(4));
+        randomizer.randomizeMovesLearnt();
+
+        List<MoveLearnt> written = romHandler.writtenMovesets.get(highSpecies.getNumber());
+        assertTrue(randomizer.isChangesMade());
+        assertEquals(1, romHandler.setMovesLearntCalls);
+        assertFalse(written.isEmpty());
+        assertEquals(3, written.size());
+        assertEquals(List.of(0, 1, 16), written.stream()
+                .map(moveLearnt -> moveLearnt.level)
+                .collect(Collectors.toList()));
+        assertTrue(written.stream().allMatch(moveLearnt -> allowedMoves.contains(moveLearnt.move)));
+        assertEquals(1025, highSpecies.getNumber());
+    }
+
     private static Species species(int number, String name) {
         Species species = new Species(number);
         species.setName(name);

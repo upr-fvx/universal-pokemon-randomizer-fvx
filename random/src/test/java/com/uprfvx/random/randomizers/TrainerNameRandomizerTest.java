@@ -61,6 +61,19 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
+    void trainerNameRandomizerChangesAtLeastOneNonEmptyTrainerNameWhenPoolDiffers() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("ALICE");
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("BOY"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertTrue(handler.setTrainerNamesCalled);
+        assertEquals(List.of("ANA"), handler.writtenTrainerNames);
+        assertNotEquals(handler.trainerNames, handler.writtenTrainerNames);
+    }
+
+    @Test
     void trainerNameRandomizerUsesDoublesPoolForNamesWithAmpersand() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerNames = List.of("AL & BOB", "CAL & DEE");
@@ -203,6 +216,21 @@ class TrainerNameRandomizerDecisions {
         assertTrue(handler.trainerClassPool.contains(handler.writtenTrainerClassNames.get(0)));
         assertTrue(handler.doublesTrainerClassPool.contains(handler.writtenTrainerClassNames.get(1)));
         assertTrue(handler.trainerClassPool.contains(handler.writtenTrainerClassNames.get(2)));
+    }
+
+    @Test
+    void trainerClassNameRandomizerIsSeparateFromTrainerNameRandomizer() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerNames = List.of("ALICE");
+        handler.trainerClassNames = List.of("BURGLAR");
+
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("ENGINEER"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerNames();
+
+        assertTrue(handler.setTrainerNamesCalled);
+        assertFalse(handler.setTrainerClassNamesCalled);
+        assertEquals(List.of("ANA"), handler.writtenTrainerNames);
+        assertEquals(List.of("BURGLAR"), handler.trainerClassNames);
     }
 
     @Test

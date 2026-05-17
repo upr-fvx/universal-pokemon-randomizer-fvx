@@ -21,6 +21,9 @@ class GameRandomizerStarterRivalSyncTest {
         assertTrue(trainerPokemonFlow.contains("startersChanged && !rivalCarriesStarterThroughout"));
         assertTrue(trainerPokemonFlow.contains("romHandler.generationOfPokemon() == 3"));
         assertTrue(trainerPokemonFlow.contains("trainerPokeRandomizer.makeFirstRivalCarryStarter()"));
+        assertTrue(trainerPokemonFlow.indexOf("trainerPokeRandomizer.randomizeTrainerPokes()")
+                < trainerPokemonFlow.indexOf("trainerPokeRandomizer.makeFirstRivalCarryStarter()"),
+                "Opening Rival starter sync must run after Trainer Pokemon randomization");
     }
 
     @Test

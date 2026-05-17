@@ -565,9 +565,6 @@ public class GameRandomizer {
 
         boolean startersChanged = settings.getStartersMod() != Settings.StartersMod.UNCHANGED;
         boolean rivalCarriesStarterThroughout = settings.isRivalCarriesStarterThroughout();
-        if (startersChanged && !rivalCarriesStarterThroughout && romHandler.generationOfPokemon() == 3) {
-            trainerPokeRandomizer.makeFirstRivalCarryStarter();
-        }
 
         if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || startersChanged)
                 && rivalCarriesStarterThroughout) {
@@ -578,6 +575,10 @@ public class GameRandomizer {
             trainerPokeRandomizer.randomizeTrainerPokes();
         } else if (settings.isTrainersEvolveTheirPokemon()) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
+        }
+
+        if (startersChanged && !rivalCarriesStarterThroughout && romHandler.generationOfPokemon() == 3) {
+            trainerPokeRandomizer.makeFirstRivalCarryStarter();
         }
     }
 

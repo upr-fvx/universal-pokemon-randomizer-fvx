@@ -830,7 +830,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
+    public void makeFirstRivalCarryStarter() {
+        List<Trainer> currentTrainers = romHandler.getTrainers();
+        rivalCarriesStarterUpdate(currentTrainers, "RIVAL", 1, 1);
+        rivalCarriesStarterUpdate(currentTrainers, "FRIEND", 2, 1);
+        changesMade = true;
+    }
+
     private void rivalCarriesStarterUpdate(List<Trainer> currentTrainers, String prefix, int pokemonOffset) {
+        rivalCarriesStarterUpdate(currentTrainers, prefix, pokemonOffset, Integer.MAX_VALUE);
+    }
+
+    private void rivalCarriesStarterUpdate(List<Trainer> currentTrainers, String prefix, int pokemonOffset,
+                                           int maxEncounterToUpdate) {
         // Find the highest rival battle #
         int highestRivalNum = 0;
         for (Trainer t : currentTrainers) {
@@ -844,6 +856,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             // This rival type not used in this game
             return;
         }
+
+        highestRivalNum = Math.min(highestRivalNum, maxEncounterToUpdate);
 
         // Get the starters
         // us 0 1 2 => them 0+n 1+n 2+n

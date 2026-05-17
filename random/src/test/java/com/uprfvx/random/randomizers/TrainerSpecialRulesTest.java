@@ -85,6 +85,32 @@ public class TrainerSpecialRulesTest {
     }
 
     @Test
+    public void firstRivalCarryStarterSyncsOnlyOpeningRivalAndFriendBattles() {
+        Species playerStarter = species(101, "PlayerStarter");
+        Species rivalStarter = species(102, "RivalStarter");
+        Species friendStarter = species(103, "FriendStarter");
+        Species filler = species(301, "Filler");
+        Trainer firstRival = trainer(1, "RIVAL1-0", pokemon(filler, 5));
+        Trainer laterRival = trainer(2, "RIVAL2-0", pokemon(filler, 20));
+        Trainer firstFriend = trainer(3, "FRIEND1-0", pokemon(filler, 5));
+        Trainer laterFriend = trainer(4, "FRIEND2-0", pokemon(filler, 20));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(playerStarter, rivalStarter, friendStarter, filler),
+                List.of(firstRival, laterRival, firstFriend, laterFriend),
+                List.of(playerStarter, rivalStarter, friendStarter),
+                Collections.emptyList());
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
+        randomizer.makeFirstRivalCarryStarter();
+
+        assertSame(rivalStarter, firstRival.getPokemon().get(0).getSpecies());
+        assertSame(friendStarter, firstFriend.getPokemon().get(0).getSpecies());
+        assertSame(filler, laterRival.getPokemon().get(0).getSpecies());
+        assertSame(filler, laterFriend.getPokemon().get(0).getSpecies());
+        assertTrue(randomizer.isChangesMade());
+    }
+
+    @Test
     public void trainerEvolutionAndLevelModifierMutateSyntheticTrainerPokemon() {
         Species basic = species(401, "Basic");
         Species stageTwo = species(402, "StageTwo");

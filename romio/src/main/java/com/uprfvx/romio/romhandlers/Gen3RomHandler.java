@@ -5507,7 +5507,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             int entryOffset = tableOffset + entry * entryLength;
             writeFixedLengthString(trade.getNickname(), entryOffset, 12);
-            writeWord(entryOffset + 12, pokedexToInternal[trade.getGivenSpecies().getNumber()]);
+            writeWord(entryOffset + 12, getInGameTradeInternalSpeciesId(trade.getGivenSpecies()));
             for (int i = 0; i < 6; i++) {
                 writeByte(entryOffset + 14 + i, (byte) trade.getIVs()[i]);
             }
@@ -5516,30 +5516,55 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     : Gen3Constants.itemIDToInternal(trade.getHeldItem().getId());
             writeWord(entryOffset + 40, heldItemInternalID);
             writeFixedLengthString(trade.getOtName(), entryOffset + 43, 11);
-            writeWord(entryOffset + 56, pokedexToInternal[trade.getRequestedSpecies().getNumber()]);
+            writeWord(entryOffset + 56, getInGameTradeInternalSpeciesId(trade.getRequestedSpecies()));
         }
     }
 
     private boolean canWriteInGameTrade(InGameTrade trade) {
-        return canWriteInGameTrade(trade, pokedexToInternal, pokesInternal);
+        return canWriteInGameTrade(trade, pokedexToInternal, pokesInternal, usesInternalSpeciesIdentityForExtendedBpreHack());
     }
 
     static boolean canWriteInGameTrade(InGameTrade trade, int[] pokedexToInternal, Species[] pokesInternal) {
-        return trade != null
-                && canWriteInGameTradeSpecies(trade.getGivenSpecies(), pokedexToInternal, pokesInternal)
-                && canWriteInGameTradeSpecies(trade.getRequestedSpecies(), pokedexToInternal, pokesInternal);
+        return canWriteInGameTrade(trade, pokedexToInternal, pokesInternal, false);
     }
 
-    private static boolean canWriteInGameTradeSpecies(Species species, int[] pokedexToInternal, Species[] pokesInternal) {
-        if (species == null || species.getNumber() <= 0 || species.getNumber() >= pokedexToInternal.length
-                || species.getName() == null) {
+    static boolean canWriteInGameTrade(InGameTrade trade, int[] pokedexToInternal, Species[] pokesInternal,
+                                       boolean useSpeciesSetIdentity) {
+        return trade != null
+                && canWriteInGameTradeSpecies(trade.getGivenSpecies(), pokedexToInternal, pokesInternal,
+                        useSpeciesSetIdentity)
+                && canWriteInGameTradeSpecies(trade.getRequestedSpecies(), pokedexToInternal, pokesInternal,
+                        useSpeciesSetIdentity);
+    }
+
+    private static boolean canWriteInGameTradeSpecies(Species species, int[] pokedexToInternal, Species[] pokesInternal,
+                                                      boolean useSpeciesSetIdentity) {
+        if (species == null || species.getName() == null) {
             return false;
         }
         if (isPlaceholderTradeSpeciesName(species.getName())) {
             return false;
         }
-        int internalSpecies = pokedexToInternal[species.getNumber()];
+        int internalSpecies = getInGameTradeInternalSpeciesId(species, pokedexToInternal, useSpeciesSetIdentity);
         return internalSpecies > 0 && internalSpecies < pokesInternal.length && pokesInternal[internalSpecies] != null;
+    }
+
+    private int getInGameTradeInternalSpeciesId(Species species) {
+        return getInGameTradeInternalSpeciesId(species, pokedexToInternal, usesInternalSpeciesIdentityForExtendedBpreHack());
+    }
+
+    static int getInGameTradeInternalSpeciesId(Species species, int[] pokedexToInternal,
+                                               boolean useSpeciesSetIdentity) {
+        if (species == null) {
+            return 0;
+        }
+        if (useSpeciesSetIdentity) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        if (species.getNumber() <= 0 || species.getNumber() >= pokedexToInternal.length) {
+            return 0;
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     private static boolean isPlaceholderTradeSpeciesName(String name) {

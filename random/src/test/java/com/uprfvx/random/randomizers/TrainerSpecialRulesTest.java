@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -107,6 +108,28 @@ public class TrainerSpecialRulesTest {
         assertSame(friendStarter, firstFriend.getPokemon().get(0).getSpecies());
         assertSame(filler, laterRival.getPokemon().get(0).getSpecies());
         assertSame(filler, laterFriend.getPokemon().get(0).getSpecies());
+        assertTrue(randomizer.isChangesMade());
+    }
+
+    @Test
+    public void firstRivalCarryStarterUsesRandomizedCounterStarterSlot() {
+        Species beedrillSlot = species(15, "Beedrill");
+        Species counterSlot = species(102, "RandomizedCounterSlot");
+        Species thirdSlot = species(103, "RandomizedThirdSlot");
+        Species vanillaSquirtle = species(7, "Squirtle");
+        Trainer firstRivalForBeedrillSlot = trainer(1, "RIVAL1-0", pokemon(vanillaSquirtle, 5));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(beedrillSlot, counterSlot, thirdSlot, vanillaSquirtle),
+                List.of(firstRivalForBeedrillSlot),
+                List.of(beedrillSlot, counterSlot, thirdSlot),
+                Collections.emptyList());
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
+        randomizer.makeFirstRivalCarryStarter();
+
+        Species rivalSpecies = firstRivalForBeedrillSlot.getPokemon().get(0).getSpecies();
+        assertSame(counterSlot, rivalSpecies);
+        assertNotSame(vanillaSquirtle, rivalSpecies);
         assertTrue(randomizer.isChangesMade());
     }
 

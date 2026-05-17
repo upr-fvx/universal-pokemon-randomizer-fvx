@@ -77,12 +77,75 @@ class Gen3TrainerTextDisplayNameSyncTest {
         assertEquals(12, romHandler.maxTrainerClassNameLength());
     }
 
+    @Test
+    void vanillaTrainerClassNamesUseStaticTableOffset() throws Exception {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+        Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
+        romEntry.putIntValue("TrainerClassNames", 0x80);
+        romEntry.putIntValue("TrainerClassCount", 2);
+        romEntry.putIntValue("TrainerClassNameLength", 13);
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "rom", new byte[0x400]);
+
+        assertEquals(0x80, romHandler.getTrainerClassNamesOffsetForDiagnostics());
+    }
+
+    @Test
+    void cfruDpeTrainerClassNamesUseRuntimePointerWhenAvailable() {
+        byte[] rom = new byte[Gen3RomHandler.CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION + 4];
+        writePointer(rom, Gen3RomHandler.CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION, 0x200);
+
+        int offset = Gen3RomHandler.chooseCfruDpeTrainerClassNamesOffset(rom, 0x80, 26);
+
+        assertEquals(0x200, offset);
+    }
+
+    @Test
+    void cfruDpeTrainerClassNamesFallBackToStaticOffsetWhenRuntimePointerInvalid() {
+        byte[] rom = new byte[Gen3RomHandler.CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION + 4];
+
+        int offset = Gen3RomHandler.chooseCfruDpeTrainerClassNamesOffset(rom, 0x80, 26);
+
+        assertEquals(0x80, offset);
+    }
+
+    @Test
+    void cfruDpeSetTrainerClassNamesWritesRuntimeTableThatGetReads() throws Exception {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+        Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
+        romEntry.putIntValue("TrainerClassNames", 0x80);
+        romEntry.putIntValue("TrainerClassCount", 2);
+        romEntry.putIntValue("TrainerClassNameLength", 13);
+
+        byte[] rom = new byte[Gen3RomHandler.CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION + 4];
+        writePointer(rom, Gen3RomHandler.CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION, 0x200);
+
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "rom", rom);
+        setField(romHandler, "useCfruDpeGen9SpeciesCount", true);
+        romHandler.initTextTables();
+
+        romHandler.setTrainerClassNames(List.of("TUBER", "BUG CATCHER"));
+
+        assertEquals(0x200, romHandler.getTrainerClassNamesOffsetForDiagnostics());
+        assertEquals(List.of("TUBER", "BUG CATCHER"), romHandler.getTrainerClassNames());
+        assertEquals(0, rom[0x80]);
+    }
+
     private static Trainer trainer(int trainerClass, String name, String fullDisplayName) {
         Trainer trainer = new Trainer();
         trainer.setTrainerclass(trainerClass);
         trainer.setName(name);
         trainer.setFullDisplayName(fullDisplayName);
         return trainer;
+    }
+
+    private static void writePointer(byte[] rom, int offset, int tableOffset) {
+        int pointer = tableOffset + 0x8000000;
+        rom[offset] = (byte) pointer;
+        rom[offset + 1] = (byte) (pointer >> 8);
+        rom[offset + 2] = (byte) (pointer >> 16);
+        rom[offset + 3] = (byte) (pointer >> 24);
     }
 
     private static void setField(Object target, String name, Object value) throws Exception {

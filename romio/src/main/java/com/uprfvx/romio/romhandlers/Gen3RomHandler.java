@@ -4793,6 +4793,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
+    public void setTrainerNames(List<String> trainerNames) {
+        super.setTrainerNames(trainerNames);
+        refreshTrainerFullDisplayNames();
+    }
+
+    @Override
     public TrainerNameMode trainerNameMode() {
         return TrainerNameMode.MAX_LENGTH;
     }
@@ -4828,6 +4834,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         Iterator<String> trainerClassNamesIterator = trainerClassNames.iterator();
         for (int i = 0; i < amount; i++) {
             writeFixedLengthString(trainerClassNamesIterator.next(), baseOffset + i * length, length);
+        }
+        refreshTrainerFullDisplayNames(trainerClassNames);
+    }
+
+    private void refreshTrainerFullDisplayNames() {
+        refreshTrainerFullDisplayNames(getTrainerClassNames());
+    }
+
+    void refreshTrainerFullDisplayNames(List<String> trainerClassNames) {
+        for (Trainer trainer : trainers) {
+            int trainerClass = trainer.getTrainerclass();
+            if (trainerClass >= 0 && trainerClass < trainerClassNames.size() && trainer.getName() != null) {
+                trainer.setFullDisplayName(trainerClassNames.get(trainerClass) + " " + trainer.getName());
+            }
         }
     }
 

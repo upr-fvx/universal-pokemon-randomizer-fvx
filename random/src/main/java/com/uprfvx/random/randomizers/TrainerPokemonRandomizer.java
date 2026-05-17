@@ -4,6 +4,7 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.AbilityIDs;
+import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.Gen3RomHandler;
@@ -731,32 +732,36 @@ public class TrainerPokemonRandomizer extends Randomizer {
                                       NavigableMap<Integer, Species> startersByLevel, int abilitySlot) {
         for (Trainer t : currentTrainers) {
             if (t.getTag() != null && t.getTag().equals(tag)) {
-
-                TrainerPokemon bestPoke = t.getPokemon().get(0);
-
-                if (t.getForceStarterPosition() >= 0) {
-                    bestPoke = t.getPokemon().get(t.getForceStarterPosition());
-                } else {
-                    // Change the highest level pokemon, not the last.
-                    // BUT: last gets +2 lvl priority (effectively +1)
-                    // same as above, equal priority = earlier wins
-                    int trainerPkmnCount = t.getPokemon().size();
-                    for (int i = 1; i < trainerPkmnCount; i++) {
-                        int levelBonus = (i == trainerPkmnCount - 1) ? 2 : 0;
-                        if (t.getPokemon().get(i).getLevel() + levelBonus > bestPoke.getLevel()) {
-                            bestPoke = t.getPokemon().get(i);
-                        }
-                    }
-                }
-                Species starter = startersByLevel.floorEntry(bestPoke.getLevel()).getValue();
-
-                bestPoke.setSpecies(starter);
-                setFormeForTrainerPokemon(bestPoke, starter);
-                bestPoke.setResetMoves(true);
-                bestPoke.setAbilitySlot(abilitySlot);
+                changeStarterForTrainer(t, startersByLevel, abilitySlot);
             }
         }
 
+    }
+
+    private void changeStarterForTrainer(Trainer trainer, NavigableMap<Integer, Species> startersByLevel,
+                                         int abilitySlot) {
+        TrainerPokemon bestPoke = trainer.getPokemon().get(0);
+
+        if (trainer.getForceStarterPosition() >= 0) {
+            bestPoke = trainer.getPokemon().get(trainer.getForceStarterPosition());
+        } else {
+            // Change the highest level pokemon, not the last.
+            // BUT: last gets +2 lvl priority (effectively +1)
+            // same as above, equal priority = earlier wins
+            int trainerPkmnCount = trainer.getPokemon().size();
+            for (int i = 1; i < trainerPkmnCount; i++) {
+                int levelBonus = (i == trainerPkmnCount - 1) ? 2 : 0;
+                if (trainer.getPokemon().get(i).getLevel() + levelBonus > bestPoke.getLevel()) {
+                    bestPoke = trainer.getPokemon().get(i);
+                }
+            }
+        }
+        Species starter = startersByLevel.floorEntry(bestPoke.getLevel()).getValue();
+
+        bestPoke.setSpecies(starter);
+        setFormeForTrainerPokemon(bestPoke, starter);
+        bestPoke.setResetMoves(true);
+        bestPoke.setAbilitySlot(abilitySlot);
     }
 
     private Species fullyEvolve(Species species) {
@@ -834,7 +839,34 @@ public class TrainerPokemonRandomizer extends Randomizer {
         List<Trainer> currentTrainers = romHandler.getTrainers();
         rivalCarriesStarterUpdate(currentTrainers, "RIVAL", 1, 1);
         rivalCarriesStarterUpdate(currentTrainers, "FRIEND", 2, 1);
+        if (isFireRedLeafGreenRom()) {
+            syncFrlgOpeningRivalTrainerIds(currentTrainers, romHandler.getStarters());
+        }
         changesMade = true;
+    }
+
+    private boolean isFireRedLeafGreenRom() {
+        return romHandler instanceof Gen3RomHandler gen3RomHandler
+                && gen3RomHandler.getRomEntry().getRomType() == Gen3Constants.RomType_FRLG;
+    }
+
+    void syncFrlgOpeningRivalTrainerIds(List<Trainer> currentTrainers, List<Species> starters) {
+        syncFrlgOpeningRivalTrainerId(currentTrainers, 328, starters.get(1));
+        syncFrlgOpeningRivalTrainerId(currentTrainers, 326, starters.get(2));
+        syncFrlgOpeningRivalTrainerId(currentTrainers, 327, starters.get(0));
+    }
+
+    private void syncFrlgOpeningRivalTrainerId(List<Trainer> currentTrainers, int trainerId, Species starter) {
+        NavigableMap<Integer, Species> startersByLevel = getEvolutionsByLevel(starter, 1, 100);
+        int abilitySlot = getRandomAbilitySlot(starter);
+        while (abilitySlot == 3) {
+            abilitySlot = getRandomAbilitySlot(starter);
+        }
+        for (Trainer trainer : currentTrainers) {
+            if (trainer.getIndex() == trainerId) {
+                changeStarterForTrainer(trainer, startersByLevel, abilitySlot);
+            }
+        }
     }
 
     private void rivalCarriesStarterUpdate(List<Trainer> currentTrainers, String prefix, int pokemonOffset) {

@@ -139,7 +139,9 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         appendLine(report, "  " + romHandler.getCfruDpeLevelUpLearnsetsTableDiagnostics());
         appendOgerponStatuses(report, summary);
         appendOgerponLearnsetDiagnostics(report, romHandler, movesets);
+        appendOgerponSpritePaletteDiagnostics(report, romHandler);
         appendLearnsetNeighborhoodDiagnostics(report, romHandler, movesets);
+        appendSpritePaletteNeighborhoodDiagnostics(report, romHandler);
         return report.toString();
     }
 
@@ -205,10 +207,32 @@ public class CfruDpeRandomPoolAssetReportRomTest {
         }
     }
 
+    private static void appendOgerponSpritePaletteDiagnostics(StringBuilder report, Gen3RomHandler romHandler) {
+        appendLine(report, "Ogerpon front sprite/palette diagnostics:");
+        List<Species> matches = romHandler.getSpecies().stream()
+                .filter(species -> species != null && species.getName() != null)
+                .filter(species -> species.getName().toLowerCase(Locale.ROOT).contains("ogerpon"))
+                .toList();
+        if (matches.isEmpty()) {
+            appendLine(report, "  <not loaded>");
+            return;
+        }
+        for (Species species : matches) {
+            appendLine(report, "  " + romHandler.getCfruDpeSpritePaletteDiagnostics(species));
+        }
+    }
+
     private static void appendLearnsetNeighborhoodDiagnostics(StringBuilder report, Gen3RomHandler romHandler,
                                                               Map<Integer, List<MoveLearnt>> movesets) {
         appendLine(report, "CFRU/DPE learnset neighborhood 1418..1439:");
         for (String line : romHandler.getCfruDpeLearnsetNeighborhoodDiagnostics(1418, 1439, movesets, 4)) {
+            appendLine(report, "  " + line);
+        }
+    }
+
+    private static void appendSpritePaletteNeighborhoodDiagnostics(StringBuilder report, Gen3RomHandler romHandler) {
+        appendLine(report, "CFRU/DPE front sprite/palette neighborhood 1418..1439:");
+        for (String line : romHandler.getCfruDpeSpritePaletteNeighborhoodDiagnostics(1418, 1439)) {
             appendLine(report, "  " + line);
         }
     }

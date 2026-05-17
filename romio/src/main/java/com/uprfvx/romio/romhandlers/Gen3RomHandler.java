@@ -810,6 +810,87 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 && readPointer(pointerOffset, true) != -1;
     }
 
+    public String getCfruDpeSpritePaletteDiagnostics(Species species) {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return "CFRU/DPE sprite/palette diagnostics unavailable: not an extended Gen9 BPRE pool.";
+        }
+        if (species == null) {
+            return "internal=<none> species=<null>";
+        }
+
+        int internalSpecies = getCfruDpeRandomPoolInternalSpeciesId(species);
+        CfruDpeAssetPointerTableEntry frontSpriteEntry =
+                cfruDpeAssetPointerTableEntry("PokemonFrontImages", internalSpecies);
+        CfruDpeAssetPointerTableEntry normalPaletteEntry =
+                cfruDpeAssetPointerTableEntry("PokemonNormalPalettes", internalSpecies);
+        int canonicalSpeciesId = cfruDpeCanonicalSpeciesId(species);
+        CfruDpeAssetPointerTableEntry canonicalFrontSpriteEntry = canonicalSpeciesId > 0
+                ? cfruDpeAssetPointerTableEntry("PokemonFrontImages", canonicalSpeciesId)
+                : CfruDpeAssetPointerTableEntry.missing(canonicalSpeciesId);
+        CfruDpeAssetPointerTableEntry canonicalNormalPaletteEntry = canonicalSpeciesId > 0
+                ? cfruDpeAssetPointerTableEntry("PokemonNormalPalettes", canonicalSpeciesId)
+                : CfruDpeAssetPointerTableEntry.missing(canonicalSpeciesId);
+
+        return "internal=" + internalSpecies
+                + " speciesNumber=" + species.getNumber()
+                + " identity=" + species.getSpeciesSetIdentityNumber()
+                + " fullName=" + species.getFullName()
+                + " frontSpriteTableIndex=" + frontSpriteEntry.tableIndex()
+                + " frontSpritePointerOffset=" + hexOffset(frontSpriteEntry.pointerOffset())
+                + " frontSpriteRawPointer=" + hexValueOrNone(frontSpriteEntry.rawPointer())
+                + " frontSpritePointerValid=" + frontSpriteEntry.pointerValid()
+                + " paletteTableIndex=" + normalPaletteEntry.tableIndex()
+                + " palettePointerOffset=" + hexOffset(normalPaletteEntry.pointerOffset())
+                + " paletteRawPointer=" + hexValueOrNone(normalPaletteEntry.rawPointer())
+                + " palettePointerValid=" + normalPaletteEntry.pointerValid()
+                + " canonicalSpeciesId=" + diagInt(canonicalSpeciesId)
+                + " canonicalFrontSpritePointerOffset=" + hexOffset(canonicalFrontSpriteEntry.pointerOffset())
+                + " canonicalFrontSpriteRawPointer=" + hexValueOrNone(canonicalFrontSpriteEntry.rawPointer())
+                + " canonicalFrontSpritePointerValid=" + canonicalFrontSpriteEntry.pointerValid()
+                + " canonicalPalettePointerOffset=" + hexOffset(canonicalNormalPaletteEntry.pointerOffset())
+                + " canonicalPaletteRawPointer=" + hexValueOrNone(canonicalNormalPaletteEntry.rawPointer())
+                + " canonicalPalettePointerValid=" + canonicalNormalPaletteEntry.pointerValid();
+    }
+
+    public List<String> getCfruDpeSpritePaletteNeighborhoodDiagnostics(int startIndex, int endIndex) {
+        if (!useCfruDpeGen9SpeciesCount) {
+            return List.of("CFRU/DPE sprite/palette neighborhood unavailable: not an extended Gen9 BPRE pool.");
+        }
+        int start = Math.max(1, startIndex);
+        int end = Math.min(endIndex, pokesInternal == null ? 0 : pokesInternal.length - 1);
+        List<String> diagnostics = new ArrayList<>();
+        for (int tableIndex = start; tableIndex <= end; tableIndex++) {
+            Species species = pokesInternal[tableIndex];
+            CfruDpeAssetPointerTableEntry frontSpriteEntry =
+                    cfruDpeAssetPointerTableEntry("PokemonFrontImages", tableIndex);
+            CfruDpeAssetPointerTableEntry normalPaletteEntry =
+                    cfruDpeAssetPointerTableEntry("PokemonNormalPalettes", tableIndex);
+            diagnostics.add("tableIndex=" + tableIndex
+                    + " name=" + (species == null ? "<null>" : species.getFullName())
+                    + " identity=" + (species == null ? "<none>" : species.getSpeciesSetIdentityNumber())
+                    + " speciesNumber=" + (species == null ? "<none>" : species.getNumber())
+                    + " canonicalSpeciesId=" + (species == null ? "<none>" : diagInt(cfruDpeCanonicalSpeciesId(species)))
+                    + " frontSpritePointerOffset=" + hexOffset(frontSpriteEntry.pointerOffset())
+                    + " frontSpriteRawPointer=" + hexValueOrNone(frontSpriteEntry.rawPointer())
+                    + " frontSpritePointerValid=" + frontSpriteEntry.pointerValid()
+                    + " palettePointerOffset=" + hexOffset(normalPaletteEntry.pointerOffset())
+                    + " paletteRawPointer=" + hexValueOrNone(normalPaletteEntry.rawPointer())
+                    + " palettePointerValid=" + normalPaletteEntry.pointerValid());
+        }
+        return diagnostics;
+    }
+
+    private CfruDpeAssetPointerTableEntry cfruDpeAssetPointerTableEntry(String tableKey, int tableIndex) {
+        if (tableIndex <= 0) {
+            return CfruDpeAssetPointerTableEntry.missing(tableIndex);
+        }
+        int tableOffset = romEntry.getIntValue(tableKey);
+        int pointerOffset = tableOffset + tableIndex * 8;
+        int rawPointer = safeReadLong(pointerOffset);
+        int resolvedPointer = safeReadPointer(pointerOffset);
+        return new CfruDpeAssetPointerTableEntry(tableIndex, pointerOffset, rawPointer, resolvedPointer != -1);
+    }
+
     private static Map<String, Integer> speciesIdsByNormalizedName() {
         Map<String, Integer> speciesIdsByName = new HashMap<>();
         try {
@@ -3090,6 +3171,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private record CfruDpeLearnsetTableEntry(int tableIndex, int pointerOffset, int rawPointer, boolean pointerValid) {
         private static CfruDpeLearnsetTableEntry missing(int tableIndex) {
             return new CfruDpeLearnsetTableEntry(tableIndex, -1, -1, false);
+        }
+    }
+
+    private record CfruDpeAssetPointerTableEntry(int tableIndex, int pointerOffset, int rawPointer,
+                                                 boolean pointerValid) {
+        private static CfruDpeAssetPointerTableEntry missing(int tableIndex) {
+            return new CfruDpeAssetPointerTableEntry(tableIndex, -1, -1, false);
         }
     }
 

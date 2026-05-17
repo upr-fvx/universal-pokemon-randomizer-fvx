@@ -32,9 +32,7 @@ public class CfruDpeEvolutionReportRomTest {
     private static final String INPUT_ROM_ENV = "UPRFVX_CFRU_DPE_EVOLUTION_REPORT_INPUT_ROM";
     private static final String OUTPUT_ROM_ENV = "UPRFVX_CFRU_DPE_EVOLUTION_REPORT_OUTPUT_ROM";
     private static final String REPORT_FILE_NAME = "cfru-dpe-evolution-report.txt";
-    private static final int EVOLUTION_SLOTS = 5;
     private static final int EVOLUTION_ENTRY_SIZE = 8;
-    private static final int EVOLUTION_ROW_SIZE = 0x28;
     private static final List<String> TARGET_SPECIES = List.of(
             "Bulbasaur", "Ivysaur", "Venusaur",
             "Charmander", "Charmeleon", "Charizard",
@@ -84,9 +82,12 @@ public class CfruDpeEvolutionReportRomTest {
         appendLine(report, "  PokemonCount=" + romHandler.getCfruDpePokemonCountForDiagnostics()
                 + " PokedexCount=" + romHandler.getCfruDpePokedexCountForDiagnostics()
                 + " evolutionTableOffset=" + hex(evolutionBaseOffset));
+        appendLine(report, "  evolutionSlotsPerSpecies="
+                + romHandler.getEvolutionSlotsPerSpeciesForDiagnostics()
+                + " evolutionRowSize=" + hex(romHandler.getEvolutionRowSizeForDiagnostics()));
 
         for (String speciesName : TARGET_SPECIES) {
-            appendSpeciesReport(report, romHandler, evolutionBaseOffset, speciesName);
+            appendSpeciesReport(report, romHandler, speciesName);
         }
         appendLine(report, "");
     }
@@ -108,7 +109,7 @@ public class CfruDpeEvolutionReportRomTest {
     }
 
     private static void appendSpeciesReport(StringBuilder report, Gen3RomHandler romHandler,
-                                            int evolutionBaseOffset, String speciesName) throws Exception {
+                                            String speciesName) throws Exception {
         Species species = findSpecies(romHandler, speciesName);
         appendLine(report, "  " + speciesName + ":");
         if (species == null) {
@@ -123,9 +124,9 @@ public class CfruDpeEvolutionReportRomTest {
                 + " identity=" + identity
                 + " species number=" + speciesNumber);
 
-        int rowOffset = evolutionBaseOffset + internalId * EVOLUTION_ROW_SIZE;
+        int rowOffset = romHandler.getEvolutionRowOffsetForDiagnostics(species);
         appendLine(report, "    raw evolution row offset=" + hex(rowOffset));
-        for (int slot = 0; slot < EVOLUTION_SLOTS; slot++) {
+        for (int slot = 0; slot < romHandler.getEvolutionSlotsPerSpeciesForDiagnostics(); slot++) {
             int entryOffset = rowOffset + slot * EVOLUTION_ENTRY_SIZE;
             int method = readWord(romHandler, entryOffset);
             int parameter = readWord(romHandler, entryOffset + 2);

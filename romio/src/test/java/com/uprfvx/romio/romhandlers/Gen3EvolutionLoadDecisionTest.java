@@ -54,6 +54,81 @@ public class Gen3EvolutionLoadDecisionTest {
         assertSame(sourceEvolutions.get(0), target.getEvolutionsTo().get(0));
     }
 
+    @Test
+    public void vanillaEvolutionRowsUseFiveSlots() throws Exception {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+        Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
+        romEntry.putIntValue("PokemonEvolutions", 0x1000);
+
+        Species bulbasaur = new Species(1);
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "pokedexToInternal", new int[] {0, 1});
+
+        assertEquals(5, romHandler.getEvolutionSlotsPerSpeciesForDiagnostics());
+        assertEquals(0x28, romHandler.getEvolutionRowSizeForDiagnostics());
+        assertEquals(0x1028, romHandler.getEvolutionRowOffsetForDiagnostics(bulbasaur));
+    }
+
+    @Test
+    public void cfruDpeEvolutionRowsUseSixteenSlots() throws Exception {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+        Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
+        romEntry.setRomCode("BPRE");
+        romEntry.putIntValue("PokemonCount", Gen3Constants.unhackedMaxPokedex + 1);
+        romEntry.putIntValue("PokemonEvolutions", 0x1000);
+
+        Species bulbasaur = new Species(1);
+        bulbasaur.setSpeciesSetIdentityNumber(1);
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "isRomHack", true);
+        setField(romHandler, "useCfruDpeGen9SpeciesCount", true);
+
+        assertEquals(16, romHandler.getEvolutionSlotsPerSpeciesForDiagnostics());
+        assertEquals(0x80, romHandler.getEvolutionRowSizeForDiagnostics());
+        assertEquals(0x1080, romHandler.getEvolutionRowOffsetForDiagnostics(bulbasaur));
+    }
+
+    @Test
+    public void cfruDpeLoadEvolutionsReadsSixteenSlotRows() throws Exception {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+        Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
+        romEntry.setRomCode("BPRE");
+        romEntry.putIntValue("PokemonCount", Gen3Constants.unhackedMaxPokedex + 1);
+        romEntry.putIntValue("PokemonEvolutions", 0);
+
+        Species source = new Species(1);
+        source.setName("Bulbasaur");
+        source.setSpeciesSetIdentityNumber(1);
+        Species target = new Species(2);
+        target.setName("Ivysaur");
+        target.setSpeciesSetIdentityNumber(2);
+
+        byte[] rom = new byte[0x300];
+        int sourceEvolutionOffset = 0x80;
+        writeWord(rom, sourceEvolutionOffset, Gen3Constants.evolutionTypeToIndex(EvolutionType.LEVEL));
+        writeWord(rom, sourceEvolutionOffset + 2, 16);
+        writeWord(rom, sourceEvolutionOffset + 4, 2);
+
+        setField(romHandler, "rom", rom);
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "isRomHack", true);
+        setField(romHandler, "useCfruDpeGen9SpeciesCount", true);
+        setField(romHandler, "speciesList", Arrays.asList(null, source, target));
+        setField(romHandler, "numRealPokemon", 2);
+        setField(romHandler, "pokes", new Species[] {null, source, target});
+        Species[] pokesInternal = new Species[Gen3Constants.unhackedMaxPokedex + 2];
+        pokesInternal[1] = source;
+        pokesInternal[2] = target;
+        setField(romHandler, "pokesInternal", pokesInternal);
+
+        romHandler.loadEvolutions();
+
+        List<Evolution> sourceEvolutions = source.getEvolutionsFrom();
+        assertEquals(1, sourceEvolutions.size());
+        assertSame(target, sourceEvolutions.get(0).getTo());
+        assertEquals(16, sourceEvolutions.get(0).getExtraInfo());
+    }
+
     private static void writeWord(byte[] rom, int offset, int value) {
         rom[offset] = (byte) value;
         rom[offset + 1] = (byte) (value >> 8);

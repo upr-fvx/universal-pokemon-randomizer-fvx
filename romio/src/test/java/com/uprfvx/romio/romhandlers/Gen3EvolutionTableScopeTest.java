@@ -16,13 +16,19 @@ public class Gen3EvolutionTableScopeTest {
         String source = Files.readString(gen3RomHandlerSourcePath());
         String loadEvolutions = methodBody(source, "public void loadEvolutions()");
         String writeEvolutions = methodBody(source, "private void writeEvolutions()");
+        String rowOffset = methodBody(source, "private int getEvolutionRowOffset(int baseOffset, Species species)");
+        String slotsPerSpecies = methodBody(source, "private int getEvolutionSlotsPerSpecies()");
         String internalSpeciesId = methodBody(source, "private int getEvolutionInternalSpeciesId(Species species)");
 
-        assertTrue(loadEvolutions.contains("int idx = getEvolutionInternalSpeciesId(pk);"));
+        assertTrue(loadEvolutions.contains("int evoOffset = getEvolutionRowOffset(baseOffset, pk);"));
         assertTrue(loadEvolutions.contains("Species evolvingToSpecies = pokesInternal[evolvingTo];"));
-        assertTrue(writeEvolutions.contains("int idx = getEvolutionInternalSpeciesId(pk);"));
+        assertTrue(writeEvolutions.contains("int evoOffset = getEvolutionRowOffset(baseOffset, pk);"));
+        assertTrue(writeEvolutions.contains("if (evosWritten == evolutionSlotsPerSpecies)"));
         assertTrue(writeEvolutions.contains("writeWord(evoOffset + 4, getEvolutionInternalSpeciesId(evo.getTo()))"));
 
+        assertTrue(rowOffset.contains("getEvolutionInternalSpeciesId(species) * getEvolutionRowSize()"));
+        assertTrue(slotsPerSpecies.contains("useCfruDpeGen9SpeciesCount ? CFRU_DPE_EVOLUTION_SLOTS_PER_MON"));
+        assertTrue(slotsPerSpecies.contains("GEN3_EVOLUTION_SLOTS_PER_MON"));
         assertTrue(internalSpeciesId.contains("usesInternalSpeciesIdentityForExtendedBpreHack()"));
         assertTrue(internalSpeciesId.contains("return species.getSpeciesSetIdentityNumber();"));
         assertTrue(internalSpeciesId.contains("return pokedexToInternal[species.getNumber()];"));

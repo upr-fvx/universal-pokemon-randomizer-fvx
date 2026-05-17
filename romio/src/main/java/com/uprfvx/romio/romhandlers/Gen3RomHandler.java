@@ -166,6 +166,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_EGG_MOVES_POINTER_LOCATION = 0x45C50;
     private static final int CFRU_DPE_EGG_MOVES_SPECIES_OFFSET = 20000;
     private static final int CFRU_DPE_EGG_MOVES_TERMINATOR = 0xFFFF;
+    private static final int GEN3_EVOLUTION_SLOTS_PER_MON = 5;
+    private static final int CFRU_DPE_EVOLUTION_SLOTS_PER_MON = 16;
+    private static final int GEN3_EVOLUTION_ENTRY_SIZE = 8;
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -779,6 +782,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     public int getCfruDpePokedexCountForDiagnostics() {
         return pokedexCount;
+    }
+
+    public int getEvolutionSlotsPerSpeciesForDiagnostics() {
+        return getEvolutionSlotsPerSpecies();
+    }
+
+    public int getEvolutionRowSizeForDiagnostics() {
+        return getEvolutionRowSize();
+    }
+
+    public int getEvolutionRowOffsetForDiagnostics(Species species) {
+        return getEvolutionRowOffset(romEntry.getIntValue("PokemonEvolutions"), species);
     }
 
     public int getCfruDpeMaxInternalSpeciesIdForDiagnostics() {
@@ -4375,14 +4390,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         int baseOffset = romEntry.getIntValue("PokemonEvolutions");
         int numInternalPokes = romEntry.getIntValue("PokemonCount");
+        int evolutionSlotsPerSpecies = getEvolutionSlotsPerSpecies();
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
             if (pk == null) {
                 continue;
             }
-            int idx = getEvolutionInternalSpeciesId(pk);
-            int evoOffset = baseOffset + (idx) * 0x28;
-            for (int j = 0; j < 5; j++) {
+            int evoOffset = getEvolutionRowOffset(baseOffset, pk);
+            for (int j = 0; j < evolutionSlotsPerSpecies; j++) {
                 int method = readWord(evoOffset + j * 8);
                 int evolvingTo = readWord(evoOffset + j * 8 + 4);
                 if (method >= 1 && method <= Gen3Constants.evolutionMethodCount && evolvingTo >= 1
@@ -4408,13 +4423,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void writeEvolutions() {
         int baseOffset = romEntry.getIntValue("PokemonEvolutions");
+        int evolutionSlotsPerSpecies = getEvolutionSlotsPerSpecies();
         for (int i = 1; i <= numRealPokemon; i++) {
             Species pk = speciesList.get(i);
             if (pk == null) {
                 continue;
             }
-            int idx = getEvolutionInternalSpeciesId(pk);
-            int evoOffset = baseOffset + (idx) * 0x28;
+            int evoOffset = getEvolutionRowOffset(baseOffset, pk);
             int evosWritten = 0;
             for (Evolution evo : pk.getEvolutionsFrom()) {
                 writeWord(evoOffset, Gen3Constants.evolutionTypeToIndex(evo.getType()));
@@ -4427,11 +4442,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 writeWord(evoOffset + 6, 0);
                 evoOffset += 8;
                 evosWritten++;
-                if (evosWritten == 5) {
+                if (evosWritten == evolutionSlotsPerSpecies) {
                     break;
                 }
             }
-            while (evosWritten < 5) {
+            while (evosWritten < evolutionSlotsPerSpecies) {
                 writeWord(evoOffset, 0);
                 writeWord(evoOffset + 2, 0);
                 writeWord(evoOffset + 4, 0);
@@ -4440,6 +4455,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 evosWritten++;
             }
         }
+    }
+
+    private int getEvolutionRowOffset(int baseOffset, Species species) {
+        return baseOffset + getEvolutionInternalSpeciesId(species) * getEvolutionRowSize();
+    }
+
+    private int getEvolutionRowSize() {
+        return getEvolutionSlotsPerSpecies() * GEN3_EVOLUTION_ENTRY_SIZE;
+    }
+
+    private int getEvolutionSlotsPerSpecies() {
+        return useCfruDpeGen9SpeciesCount ? CFRU_DPE_EVOLUTION_SLOTS_PER_MON : GEN3_EVOLUTION_SLOTS_PER_MON;
     }
 
     private int getEvolutionInternalSpeciesId(Species species) {

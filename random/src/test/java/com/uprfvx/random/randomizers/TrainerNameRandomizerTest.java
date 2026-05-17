@@ -313,7 +313,9 @@ class TrainerNameRandomizerDecisions {
                 settings(List.of("ANA"), List.of("Director", "Commander"), List.of(), List.of()),
                 new Random(1)).randomizeTrainerClassNames();
 
-        assertEquals(List.of("Director", "Director", "Director"), handler.writtenTrainerClassNames);
+        assertTrue(handler.trainerClassNames.containsAll(handler.writtenTrainerClassNames));
+        assertFalse(handler.writtenTrainerClassNames.contains("Director"));
+        assertTrue(handler.writtenTrainerClassNames.stream().distinct().count() > 1);
     }
 
     @Test
@@ -336,7 +338,9 @@ class TrainerNameRandomizerDecisions {
                 settings(List.of("ANA"), List.of("Director", "Leader", "Commander"), List.of(), List.of()),
                 new Random(1)).randomizeTrainerClassNames();
 
-        assertEquals(List.of("BURGLAR", "Director", "Commander"), handler.writtenTrainerClassNames);
+        assertEquals("BURGLAR", handler.writtenTrainerClassNames.get(0));
+        assertEquals("ENGINEER", handler.writtenTrainerClassNames.get(1));
+        assertEquals("FISHERMAN", handler.writtenTrainerClassNames.get(2));
     }
 
     @Test

@@ -563,9 +563,14 @@ public class GameRandomizer {
             trainerPokeRandomizer.modifyBattleStyle();
         }
 
-        if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
-                || settings.getStartersMod() != Settings.StartersMod.UNCHANGED)
-                && settings.isRivalCarriesStarterThroughout()) {
+        boolean startersChanged = settings.getStartersMod() != Settings.StartersMod.UNCHANGED;
+        boolean rivalCarriesStarterThroughout = settings.isRivalCarriesStarterThroughout();
+        if (startersChanged && !rivalCarriesStarterThroughout && romHandler.generationOfPokemon() == 3) {
+            trainerPokeRandomizer.makeFirstRivalCarryStarter();
+        }
+
+        if ((settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || startersChanged)
+                && rivalCarriesStarterThroughout) {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 

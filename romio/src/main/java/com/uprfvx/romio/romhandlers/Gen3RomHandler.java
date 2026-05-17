@@ -144,6 +144,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int CFRU_DPE_MOVE_SPLIT_SPECIAL = 1;
     private static final int CFRU_DPE_MOVE_SPLIT_STATUS = 2;
     private static final int CFRU_RUNTIME_LEVEL_UP_LEARNSETS_POINTER_LOCATION = 0x43E20;
+    static final int CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION = 0x11B4B4;
     private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_POINTER_LOCATION = 0x3EA7C;
     private static final int CFRU_DPE_LEVEL_UP_LEARNSETS_EXPECTED_TABLE_OFFSET = 0x25D7B4;
     private static final int CFRU_DPE_LEVEL_UP_MOVE_ENTRY_SIZE = 3;
@@ -3062,6 +3063,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return isCfruDpeLevelUpLearnsetsTableInRom(rom, readCfruRuntimeLevelUpLearnsetsOffset(rom));
     }
 
+    static int chooseCfruDpeTrainerClassNamesOffset(byte[] rom, int fallbackOffset, int requiredLength) {
+        int runtimeOffset = readCfruRuntimeTrainerClassNamesOffset(rom);
+        return isTableInRom(rom, runtimeOffset, requiredLength) ? runtimeOffset : fallbackOffset;
+    }
+
+    static int readCfruRuntimeTrainerClassNamesOffset(byte[] rom) {
+        return readPointerFromRom(rom, CFRU_RUNTIME_TRAINER_CLASS_NAMES_POINTER_LOCATION);
+    }
+
     private static int readPointerFromRom(byte[] rom, int offset) {
         if (rom == null || offset < 0 || offset > rom.length - GBConstants.longSize) {
             return -1;
@@ -3075,9 +3085,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private static boolean isCfruDpeLevelUpLearnsetsTableInRom(byte[] rom, int tableOffset) {
+        return isTableInRom(rom, tableOffset, cfruDpeLevelUpLearnsetsTableLength());
+    }
+
+    private static boolean isTableInRom(byte[] rom, int tableOffset, int requiredLength) {
         return rom != null
+                && requiredLength >= 0
                 && tableOffset >= 0
-                && tableOffset <= rom.length - cfruDpeLevelUpLearnsetsTableLength();
+                && tableOffset <= rom.length - requiredLength;
     }
 
     static int cfruDpeLevelUpLearnsetPointerOffset(int baseOffset, int internalSpecies) {
@@ -4816,7 +4831,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public List<String> getTrainerClassNames() {
-        int baseOffset = romEntry.getIntValue("TrainerClassNames");
+        int baseOffset = getTrainerClassNamesOffset();
         int amount = romEntry.getIntValue("TrainerClassCount");
         int length = romEntry.getIntValue("TrainerClassNameLength");
         List<String> trainerClassNames = new ArrayList<>();
@@ -4828,7 +4843,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setTrainerClassNames(List<String> trainerClassNames) {
-        int baseOffset = romEntry.getIntValue("TrainerClassNames");
+        int baseOffset = getTrainerClassNamesOffset();
         int amount = romEntry.getIntValue("TrainerClassCount");
         int length = romEntry.getIntValue("TrainerClassNameLength");
         Iterator<String> trainerClassNamesIterator = trainerClassNames.iterator();
@@ -4836,6 +4851,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeFixedLengthString(trainerClassNamesIterator.next(), baseOffset + i * length, length);
         }
         refreshTrainerFullDisplayNames(trainerClassNames);
+    }
+
+    int getTrainerClassNamesOffsetForDiagnostics() {
+        return getTrainerClassNamesOffset();
+    }
+
+    private int getTrainerClassNamesOffset() {
+        int fallbackOffset = romEntry.getIntValue("TrainerClassNames");
+        if (!useCfruDpeGen9SpeciesCount) {
+            return fallbackOffset;
+        }
+        int requiredLength = romEntry.getIntValue("TrainerClassCount")
+                * romEntry.getIntValue("TrainerClassNameLength");
+        return chooseCfruDpeTrainerClassNamesOffset(rom, fallbackOffset, requiredLength);
     }
 
     private void refreshTrainerFullDisplayNames() {

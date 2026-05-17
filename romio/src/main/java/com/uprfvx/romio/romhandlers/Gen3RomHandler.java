@@ -2378,7 +2378,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             tr.setOffset(trOffset);
             tr.setIndex(i);
             int trainerclass = rom[trOffset + 1] & 0xFF;
-            tr.setTrainerclass((rom[trOffset + 2] & 0x80) > 0 ? 1 : 0);
+            tr.setTrainerclass(trainerclass);
 
             int pokeDataType = rom[trOffset] & 0xFF;
             if (rom[trOffset + (entryLen - 16)] == 0x01) {

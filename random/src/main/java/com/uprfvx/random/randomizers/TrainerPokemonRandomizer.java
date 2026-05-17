@@ -851,9 +851,20 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     void syncFrlgOpeningRivalTrainerIds(List<Trainer> currentTrainers, List<Species> starters) {
-        syncFrlgOpeningRivalTrainerId(currentTrainers, 328, starters.get(1));
-        syncFrlgOpeningRivalTrainerId(currentTrainers, 326, starters.get(2));
-        syncFrlgOpeningRivalTrainerId(currentTrainers, 327, starters.get(0));
+        List<Integer> trainerIdsByPlayerStarterSlot = getFrlgOpeningRivalTrainerIdsByPlayerStarterSlot();
+        syncFrlgOpeningRivalTrainerId(currentTrainers, trainerIdsByPlayerStarterSlot.get(0), starters.get(1));
+        syncFrlgOpeningRivalTrainerId(currentTrainers, trainerIdsByPlayerStarterSlot.get(1), starters.get(2));
+        syncFrlgOpeningRivalTrainerId(currentTrainers, trainerIdsByPlayerStarterSlot.get(2), starters.get(0));
+    }
+
+    private List<Integer> getFrlgOpeningRivalTrainerIdsByPlayerStarterSlot() {
+        if (romHandler instanceof Gen3RomHandler gen3RomHandler) {
+            List<Integer> trainerIds = gen3RomHandler.getFrlgOakLabRivalTrainerIdsByPlayerStarterSlot();
+            if (trainerIds.size() == 3) {
+                return trainerIds;
+            }
+        }
+        return List.of(328, 327, 326);
     }
 
     private void syncFrlgOpeningRivalTrainerId(List<Trainer> currentTrainers, int trainerId, Species starter) {

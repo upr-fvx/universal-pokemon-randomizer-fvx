@@ -33,7 +33,59 @@ class Gen3TrainerTextDisplayNameSyncTest {
         romHandler.refreshTrainerFullDisplayNames(List.of("UNUSED", "ENGINEER"));
 
         assertEquals("Quinn", trainer.getName());
+        assertEquals(1, trainer.getTrainerclass());
         assertEquals("ENGINEER Quinn", trainer.getFullDisplayName());
+    }
+
+    @Test
+    void trainerRecordLayoutKeepsClassIdSeparateFromMusicGenderAndSprite() {
+        assertEquals(1, Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET);
+        assertEquals(2, Gen3RomHandler.GEN3_TRAINER_ENCOUNTER_MUSIC_GENDER_OFFSET);
+        assertEquals(3, Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET);
+        assertEquals(4, Gen3RomHandler.GEN3_TRAINER_NAME_OFFSET);
+    }
+
+    @Test
+    void trainerClassNameTextRemapDoesNotChangeTrainerClassIdOrSpriteRecordBytes() throws Exception {
+        RomBackedTestableGen3RomHandler romHandler = new RomBackedTestableGen3RomHandler();
+        Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
+        romEntry.putIntValue("TrainerClassNames", 0x20);
+        romEntry.putIntValue("TrainerClassCount", 3);
+        romEntry.putIntValue("TrainerClassNameLength", 13);
+
+        int trainerOffset = 0x100;
+        byte[] rom = new byte[0x200];
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET] = 1;
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_ENCOUNTER_MUSIC_GENDER_OFFSET] = (byte) 0x82;
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET] = 7;
+
+        Trainer trainer = trainer(1, "Pi", "BUG CATCHER Pi");
+        trainer.setOffset(trainerOffset);
+        romHandler.addTrainer(trainer);
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "rom", rom);
+        romHandler.initTextTables();
+
+        romHandler.setTrainerClassNames(List.of("UNUSED", "PKMN RANGER", "TUBER"));
+
+        assertEquals(1, trainer.getTrainerclass());
+        assertEquals("PKMN RANGER Pi", trainer.getFullDisplayName());
+        assertEquals(1, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET]);
+        assertEquals((byte) 0x82, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_ENCOUNTER_MUSIC_GENDER_OFFSET]);
+        assertEquals(7, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET]);
+    }
+
+    @Test
+    void proposedTrainerClassAssignmentWouldNeedToChangeTrainerClassId() {
+        TestableGen3RomHandler romHandler = new TestableGen3RomHandler();
+        Trainer trainer = trainer(1, "Pi", "BUG CATCHER Pi");
+        romHandler.addTrainer(trainer);
+
+        trainer.setTrainerclass(2);
+        romHandler.refreshTrainerFullDisplayNames(List.of("UNUSED", "BUG CATCHER", "PKMN RANGER"));
+
+        assertEquals(2, trainer.getTrainerclass());
+        assertEquals("PKMN RANGER Pi", trainer.getFullDisplayName());
     }
 
     @Test
@@ -178,6 +230,12 @@ class Gen3TrainerTextDisplayNameSyncTest {
 
         List<Trainer> loadedTrainers() {
             return trainers;
+        }
+    }
+
+    private static class RomBackedTestableGen3RomHandler extends Gen3RomHandler {
+        void addTrainer(Trainer trainer) {
+            trainers.add(trainer);
         }
     }
 }

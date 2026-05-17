@@ -170,6 +170,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     private static final int GEN3_EVOLUTION_SLOTS_PER_MON = 5;
     private static final int CFRU_DPE_EVOLUTION_SLOTS_PER_MON = 16;
     private static final int GEN3_EVOLUTION_ENTRY_SIZE = 8;
+    static final int GEN3_TRAINER_CLASS_OFFSET = 1;
+    static final int GEN3_TRAINER_ENCOUNTER_MUSIC_GENDER_OFFSET = 2;
+    static final int GEN3_TRAINER_PIC_OFFSET = 3;
+    static final int GEN3_TRAINER_NAME_OFFSET = 4;
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -2378,7 +2382,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Trainer tr = new Trainer();
             tr.setOffset(trOffset);
             tr.setIndex(i);
-            int trainerclass = rom[trOffset + 1] & 0xFF;
+            int trainerclass = rom[trOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
             tr.setTrainerclass(trainerclass);
 
             int pokeDataType = rom[trOffset] & 0xFF;
@@ -2387,7 +2391,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
             int pointerToPokes = readPointer(trOffset + (entryLen - 4));
-            tr.setName(this.readVariableLengthString(trOffset + 4));
+            tr.setName(this.readVariableLengthString(trOffset + GEN3_TRAINER_NAME_OFFSET));
             tr.setFullDisplayName(tcnames.get(trainerclass) + " " + tr.getName());
             // Pokemon structure data is like
             // IV IV LV SP SP
@@ -2548,7 +2552,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
 
             writeByte(trOffset, (byte) tr.getPoketype());
-            writeFixedLengthString(tr.getName(), trOffset + 4, nameLen);
+            writeFixedLengthString(tr.getName(), trOffset + GEN3_TRAINER_NAME_OFFSET, nameLen);
             writeByte(trOffset + (entryLen - 8), (byte) tr.getPokemon().size());
             if (tr.isForcedDoubleBattle()) {
                 if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE)

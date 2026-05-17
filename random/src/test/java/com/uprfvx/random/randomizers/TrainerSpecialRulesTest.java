@@ -154,9 +154,10 @@ public class TrainerSpecialRulesTest {
         TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
         randomizer.syncFrlgOpeningRivalTrainerIds(handler.trainers, starters);
 
-        assertSame(sceptile, rivalSquirtle.getPokemon().get(0).getSpecies());
-        assertSame(cubchoo, rivalBulbasaur.getPokemon().get(0).getSpecies());
+        assertSame(cubchoo, rivalSquirtle.getPokemon().get(0).getSpecies());
+        assertSame(sceptile, rivalBulbasaur.getPokemon().get(0).getSpecies());
         assertSame(krookodile, rivalCharmander.getPokemon().get(0).getSpecies());
+        assertNotSame(squirtle, rivalSquirtle.getPokemon().get(0).getSpecies());
         assertNotSame(bulbasaur, rivalBulbasaur.getPokemon().get(0).getSpecies());
     }
 

@@ -2089,6 +2089,47 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return true;
     }
 
+    public List<Integer> getFrlgOakLabRivalTrainerIdsByPlayerStarterSlot() {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return Collections.emptyList();
+        }
+        return findFrlgOakLabRivalTrainerIdsByPlayerStarterSlot(rom, romEntry.getIntValue("StarterPokemon"));
+    }
+
+    static List<Integer> findFrlgOakLabRivalTrainerIdsByPlayerStarterSlot(byte[] rom, int starterPokemonOffset) {
+        List<Integer> trainerIdsInScriptOrder = new ArrayList<>();
+        int searchStart = Math.max(0, starterPokemonOffset);
+        int searchEnd = Math.min(rom.length - 14, starterPokemonOffset + 4096);
+        for (int offset = searchStart; offset <= searchEnd && trainerIdsInScriptOrder.size() < 3; offset++) {
+            if ((rom[offset] & 0xFF) != 0x5C || (rom[offset + 1] & 0xFF) != 0x09) {
+                continue;
+            }
+            int helperFlags = readLittleEndianWord(rom, offset + 4);
+            if (helperFlags != 3) {
+                continue;
+            }
+            int trainerId = readLittleEndianWord(rom, offset + 2);
+            if (!trainerIdsInScriptOrder.contains(trainerId)) {
+                trainerIdsInScriptOrder.add(trainerId);
+            }
+        }
+        if (trainerIdsInScriptOrder.size() < 3) {
+            return Collections.emptyList();
+        }
+
+        // In FRLG's Oak Lab script order, the commands appear as rival Squirtle,
+        // rival Charmander, then rival Bulbasaur. Player starter slots branch to
+        // Charmander, Bulbasaur, Squirtle respectively.
+        return List.of(
+                trainerIdsInScriptOrder.get(1),
+                trainerIdsInScriptOrder.get(2),
+                trainerIdsInScriptOrder.get(0));
+    }
+
+    private static int readLittleEndianWord(byte[] data, int offset) {
+        return (data[offset] & 0xFF) | ((data[offset + 1] & 0xFF) << 8);
+    }
+
     @Override
     public List<Item> getStarterHeldItems() {
         List<Item> sHeldItems = new ArrayList<>();

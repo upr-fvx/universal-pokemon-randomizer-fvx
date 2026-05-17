@@ -139,83 +139,114 @@ public class TrainerNameRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    @SuppressWarnings("unchecked")
     public void randomizeTrainerClassNames() {
-        CustomNamesSet customNames = settings.getCustomNames();
-
         if (!romHandler.canChangeTrainerText()) {
             return;
-        }
-
-        // index 0 = singles, index 1 = doubles
-        List<String>[] allTrainerClasses = new List[]{new ArrayList<String>(), new ArrayList<String>()};
-        Map<Integer, List<String>>[] trainerClassesByLength = new Map[]{new HashMap<Integer, List<String>>(),
-                new HashMap<Integer, List<String>>()};
-
-        // Read names data
-        for (String trainerClassName : customNames.getTrainerClasses()) {
-            allTrainerClasses[0].add(trainerClassName);
-            int len = romHandler.internalStringLength(trainerClassName);
-            if (trainerClassesByLength[0].containsKey(len)) {
-                trainerClassesByLength[0].get(len).add(trainerClassName);
-            } else {
-                List<String> namesOfThisLength = new ArrayList<>();
-                namesOfThisLength.add(trainerClassName);
-                trainerClassesByLength[0].put(len, namesOfThisLength);
-            }
-        }
-
-        for (String trainerClassName : customNames.getDoublesTrainerClasses()) {
-            allTrainerClasses[1].add(trainerClassName);
-            int len = romHandler.internalStringLength(trainerClassName);
-            if (trainerClassesByLength[1].containsKey(len)) {
-                trainerClassesByLength[1].get(len).add(trainerClassName);
-            } else {
-                List<String> namesOfThisLength = new ArrayList<>();
-                namesOfThisLength.add(trainerClassName);
-                trainerClassesByLength[1].put(len, namesOfThisLength);
-            }
         }
 
         // Get the current trainer names data
         List<String> currentClassNames = romHandler.getTrainerClassNames();
         boolean mustBeSameLength = romHandler.fixedTrainerClassNamesLength();
-        int maxLength = romHandler.maxTrainerClassNameLength();
 
-        // Init the translation map and new list
-        Map<String, String> translation = new HashMap<>();
+        // Init the translation maps and new list
         List<String> newClassNames = new ArrayList<>();
 
         int numTrainerClasses = currentClassNames.size();
         List<Integer> doublesClasses = romHandler.getDoublesTrainerClasses();
+        Set<Integer> doublesClassIndexes = new HashSet<>(doublesClasses);
+        List<String>[] existingTrainerClasses = existingTrainerClassesByMode(currentClassNames, doublesClassIndexes);
+        Map<Integer, List<String>>[] existingTrainerClassesByLength =
+                existingTrainerClassesByLength(existingTrainerClasses);
+        Map<String, String>[] translations = existingTrainerClassTranslations(
+                existingTrainerClasses, existingTrainerClassesByLength, mustBeSameLength);
 
         // Start choosing
         for (int i = 0; i < numTrainerClasses; i++) {
             String trainerClassName = currentClassNames.get(i);
-            if (translation.containsKey(trainerClassName)) {
-                // use an already picked translation
-                newClassNames.add(translation.get(trainerClassName));
-            } else {
-                int idx = doublesClasses.contains(i) ? 1 : 0;
-                List<String> pickFrom = allTrainerClasses[idx];
-                int intStrLen = romHandler.internalStringLength(trainerClassName);
-                if (mustBeSameLength) {
-                    pickFrom = trainerClassesByLength[idx].get(intStrLen);
-                }
-                String changeTo = trainerClassName;
-                if (pickFrom != null && !pickFrom.isEmpty()) {
-                    changeTo = pickFrom.get(random.nextInt(pickFrom.size()));
-                    while (romHandler.internalStringLength(changeTo) > maxLength) {
-                        changeTo = pickFrom.get(random.nextInt(pickFrom.size()));
-                    }
-                }
-                translation.put(trainerClassName, changeTo);
-                newClassNames.add(changeTo);
-            }
+            int idx = doublesClassIndexes.contains(i) ? 1 : 0;
+            newClassNames.add(translations[idx].getOrDefault(trainerClassName, trainerClassName));
         }
 
         // Done choosing, save
         romHandler.setTrainerClassNames(newClassNames);
         changesMade = true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String>[] existingTrainerClassesByMode(List<String> currentClassNames, Set<Integer> doublesClasses) {
+        List<String>[] existingTrainerClasses = new List[]{new ArrayList<String>(), new ArrayList<String>()};
+        for (int i = 0; i < currentClassNames.size(); i++) {
+            int idx = doublesClasses.contains(i) ? 1 : 0;
+            String trainerClassName = currentClassNames.get(i);
+            if (!existingTrainerClasses[idx].contains(trainerClassName)) {
+                existingTrainerClasses[idx].add(trainerClassName);
+            }
+        }
+        return existingTrainerClasses;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<Integer, List<String>>[] existingTrainerClassesByLength(List<String>[] existingTrainerClasses) {
+        Map<Integer, List<String>>[] existingTrainerClassesByLength = new Map[]{new HashMap<Integer, List<String>>(),
+                new HashMap<Integer, List<String>>()};
+        for (int i = 0; i < existingTrainerClasses.length; i++) {
+            for (String trainerClassName : existingTrainerClasses[i]) {
+                int len = romHandler.internalStringLength(trainerClassName);
+                existingTrainerClassesByLength[i].computeIfAbsent(len, ignored -> new ArrayList<>())
+                        .add(trainerClassName);
+            }
+        }
+        return existingTrainerClassesByLength;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, String>[] existingTrainerClassTranslations(List<String>[] existingTrainerClasses,
+                                                                   Map<Integer, List<String>>[]
+                                                                           existingTrainerClassesByLength,
+                                                                   boolean mustBeSameLength) {
+        Map<String, String>[] translations = new Map[]{new HashMap<String, String>(), new HashMap<String, String>()};
+        for (int i = 0; i < translations.length; i++) {
+            if (mustBeSameLength) {
+                for (List<String> sameLengthClasses : existingTrainerClassesByLength[i].values()) {
+                    translations[i].putAll(shuffledTranslations(sameLengthClasses));
+                }
+            } else {
+                translations[i].putAll(shuffledTranslations(existingTrainerClasses[i]));
+            }
+        }
+        return translations;
+    }
+
+    private Map<String, String> shuffledTranslations(List<String> classNames) {
+        Map<String, String> translations = new HashMap<>();
+        if (classNames.isEmpty()) {
+            return translations;
+        }
+
+        List<String> shuffledClassNames = new ArrayList<>(classNames);
+        if (shuffledClassNames.size() > 1) {
+            int tries = 0;
+            do {
+                Collections.shuffle(shuffledClassNames, random);
+                tries++;
+            } while (hasIdentityMapping(classNames, shuffledClassNames) && tries < 100);
+            if (hasIdentityMapping(classNames, shuffledClassNames)) {
+                Collections.rotate(shuffledClassNames, 1);
+            }
+        }
+
+        for (int i = 0; i < classNames.size(); i++) {
+            translations.put(classNames.get(i), shuffledClassNames.get(i));
+        }
+        return translations;
+    }
+
+    private boolean hasIdentityMapping(List<String> originals, List<String> replacements) {
+        for (int i = 0; i < originals.size(); i++) {
+            if (originals.get(i).equals(replacements.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 }

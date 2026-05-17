@@ -304,6 +304,52 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
+    void gen3StyleClassNamesUseMaxLengthNotSameLengthBuckets() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerClassNames = List.of("BURGLAR", "ENGINEER", "FISHERMAN");
+        handler.maxTrainerClassNameLength = 8;
+
+        Map<Integer, List<String>> validBySourceLength = validClassCandidatesBySourceLength(
+                handler,
+                List.of("Director", "Commander"),
+                handler.trainerClassNames);
+
+        assertFalse(handler.fixedTrainerClassNamesLength);
+        assertEquals(List.of("Director"), validBySourceLength.get(7));
+        assertEquals(List.of("Director"), validBySourceLength.get(8));
+        assertEquals(List.of("Director"), validBySourceLength.get(9));
+
+        new TrainerNameRandomizer(handler.proxy,
+                settings(List.of("ANA"), List.of("Director", "Commander"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerClassNames();
+
+        assertEquals(List.of("Director", "Director", "Director"), handler.writtenTrainerClassNames);
+    }
+
+    @Test
+    void sameLengthModeWouldNotMapEveryCommonLengthToDirector() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerClassNames = List.of("BURGLAR", "ENGINEER", "FISHERMAN");
+        handler.fixedTrainerClassNamesLength = true;
+        handler.maxTrainerClassNameLength = 9;
+
+        Map<Integer, List<String>> validBySourceLength = validClassCandidatesBySourceLength(
+                handler,
+                List.of("Director", "Leader", "Commander"),
+                handler.trainerClassNames);
+
+        assertEquals(Collections.emptyList(), validBySourceLength.get(7));
+        assertEquals(List.of("Director"), validBySourceLength.get(8));
+        assertEquals(List.of("Commander"), validBySourceLength.get(9));
+
+        new TrainerNameRandomizer(handler.proxy,
+                settings(List.of("ANA"), List.of("Director", "Leader", "Commander"), List.of(), List.of()),
+                new Random(1)).randomizeTrainerClassNames();
+
+        assertEquals(List.of("BURGLAR", "Director", "Commander"), handler.writtenTrainerClassNames);
+    }
+
+    @Test
     void trainerNameAndClassRandomizersDoNotAlterStarterEvolutionChain() {
         Species bulbasaur = species(1, "Bulbasaur");
         Species ivysaur = species(2, "Ivysaur");
@@ -348,6 +394,22 @@ class TrainerNameRandomizerDecisions {
                 doublesTrainerClasses,
                 Collections.emptyList()));
         return settings;
+    }
+
+    private static Map<Integer, List<String>> validClassCandidatesBySourceLength(TrainerNameTestRomHandler handler,
+                                                                                List<String> candidateClasses,
+                                                                                List<String> sourceClasses) {
+        Map<Integer, List<String>> validBySourceLength = new HashMap<>();
+        for (String sourceClass : sourceClasses) {
+            int sourceLength = handler.internalLength(sourceClass);
+            List<String> validCandidates = candidateClasses.stream()
+                    .filter(candidate -> handler.internalLength(candidate) <= handler.maxTrainerClassNameLength)
+                    .filter(candidate -> !handler.fixedTrainerClassNamesLength
+                            || handler.internalLength(candidate) == sourceLength)
+                    .collect(Collectors.toList());
+            validBySourceLength.put(sourceLength, validCandidates);
+        }
+        return validBySourceLength;
     }
 
     private static Species species(int number, String name) {

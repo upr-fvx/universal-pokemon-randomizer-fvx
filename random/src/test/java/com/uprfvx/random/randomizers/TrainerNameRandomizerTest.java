@@ -2,6 +2,9 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
+import com.uprfvx.romio.gamedata.Evolution;
+import com.uprfvx.romio.gamedata.EvolutionType;
+import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.services.RestrictedSpeciesService;
@@ -17,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -271,6 +275,33 @@ class TrainerNameRandomizerDecisions {
         assertEquals(handler.maxTrainerClassNameLength, handler.internalLength("\\x01"));
     }
 
+    @Test
+    void trainerNameAndClassRandomizersDoNotAlterStarterEvolutionChain() {
+        Species bulbasaur = species(1, "Bulbasaur");
+        Species ivysaur = species(2, "Ivysaur");
+        Species venusaur = species(3, "Venusaur");
+        Species squirtle = species(7, "Squirtle");
+        Species wartortle = species(8, "Wartortle");
+        addEvolution(bulbasaur, ivysaur, 16);
+        addEvolution(ivysaur, venusaur, 32);
+        addEvolution(squirtle, wartortle, 16);
+        List<Species> starterChain = List.of(bulbasaur, ivysaur, venusaur, squirtle, wartortle);
+        Map<Integer, List<String>> evolutionsBefore = evolutionTargetsBySpecies(starterChain);
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.species = starterChain;
+
+        TrainerNameRandomizer randomizer = new TrainerNameRandomizer(handler.proxy, settings(), new Random(9));
+        randomizer.randomizeTrainerNames();
+        randomizer.randomizeTrainerClassNames();
+
+        assertTrue(randomizer.isChangesMade());
+        assertEquals(evolutionsBefore, evolutionTargetsBySpecies(starterChain));
+        assertEquals(List.of("Ivysaur:LEVEL:16"), evolutionTargetsBySpecies(List.of(bulbasaur)).get(1));
+        assertEquals(List.of("Venusaur:LEVEL:32"), evolutionTargetsBySpecies(List.of(ivysaur)).get(2));
+        assertEquals(List.of("Wartortle:LEVEL:16"), evolutionTargetsBySpecies(List.of(squirtle)).get(7));
+        assertTrue(venusaur.getEvolutionsFrom().isEmpty());
+    }
+
     private static Settings settings() {
         return settings(
                 List.of("ANA", "BEX", "CODY", "DORA", "ELI"),
@@ -291,10 +322,34 @@ class TrainerNameRandomizerDecisions {
         return settings;
     }
 
+    private static Species species(int number, String name) {
+        Species species = new Species(number);
+        species.setName(name);
+        return species;
+    }
+
+    private static void addEvolution(Species from, Species to, int level) {
+        Evolution evolution = new Evolution(from, to, EvolutionType.LEVEL, level);
+        from.getEvolutionsFrom().add(evolution);
+        to.getEvolutionsTo().add(evolution);
+    }
+
+    private static Map<Integer, List<String>> evolutionTargetsBySpecies(List<Species> species) {
+        Map<Integer, List<String>> evolutions = new HashMap<>();
+        for (Species current : species) {
+            evolutions.put(current.getNumber(), current.getEvolutionsFrom().stream()
+                    .map(evolution -> evolution.getTo().getName() + ":" + evolution.getType() + ":"
+                            + evolution.getExtraInfo())
+                    .collect(Collectors.toList()));
+        }
+        return evolutions;
+    }
+
     private static class TrainerNameTestRomHandler implements InvocationHandler {
         private RomHandler proxy;
         private RestrictedSpeciesService restrictedSpeciesService;
         private TypeService typeService;
+        private List<Species> species = Collections.emptyList();
         private boolean canChangeTrainerText = true;
         private List<String> trainerNames = List.of("ALICE");
         private List<String> trainerNamePool = List.of("ANA", "BEX", "CODY", "DORA", "ELI");
@@ -329,7 +384,12 @@ class TrainerNameRandomizerDecisions {
             return switch (method.getName()) {
                 case "getRestrictedSpeciesService" -> restrictedSpeciesService;
                 case "getTypeService" -> typeService;
-                case "getSpeciesSetInclFormes" -> new SpeciesSet();
+                case "getSpeciesSetInclFormes", "getSpeciesSet" -> {
+                    SpeciesSet speciesSet = new SpeciesSet();
+                    speciesSet.addAll(species);
+                    yield speciesSet;
+                }
+                case "getSpeciesInclFormes", "getSpecies" -> species;
                 case "canChangeTrainerText" -> canChangeTrainerText;
                 case "getTrainerNames" -> trainerNames;
                 case "setTrainerNames" -> {

@@ -1,6 +1,8 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.gamedata.Evolution;
+import com.uprfvx.romio.gamedata.EvolutionType;
 import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveCategory;
@@ -211,6 +213,39 @@ public class LearnsetDecisionTest {
         assertEquals(1025, highSpecies.getNumber());
     }
 
+    @Test
+    public void randomizeMovesLearntDoesNotAlterStarterEvolutionChain() {
+        Species bulbasaur = species(1, "Bulbasaur");
+        Species ivysaur = species(2, "Ivysaur");
+        Species venusaur = species(3, "Venusaur");
+        Species squirtle = species(7, "Squirtle");
+        Species wartortle = species(8, "Wartortle");
+        addEvolution(bulbasaur, ivysaur, 16);
+        addEvolution(ivysaur, venusaur, 32);
+        addEvolution(squirtle, wartortle, 16);
+        Map<Integer, List<String>> evolutionsBefore = evolutionTargetsBySpecies(List.of(bulbasaur, ivysaur,
+                venusaur, squirtle, wartortle));
+        Map<Integer, List<MoveLearnt>> movesets = new LinkedHashMap<>();
+        movesets.put(bulbasaur.getNumber(), movesLearnt(10, 1, 11, 7, 12, 14));
+        movesets.put(ivysaur.getNumber(), movesLearnt(10, 1, 11, 7, 12, 14));
+        movesets.put(venusaur.getNumber(), movesLearnt(10, 1, 11, 7, 12, 14));
+        movesets.put(squirtle.getNumber(), movesLearnt(10, 1, 11, 7, 12, 14));
+        movesets.put(wartortle.getNumber(), movesLearnt(10, 1, 11, 7, 12, 14));
+        LearnsetTestRomHandler romHandler = LearnsetTestRomHandler.create(List.of(bulbasaur, ivysaur, venusaur,
+                squirtle, wartortle), movesets, moves(Set.of(40, 41, 42, 43, 44, 45, 46, 47)));
+        Settings settings = new Settings();
+        settings.setMovesetsMod(Settings.MovesetsMod.COMPLETELY_RANDOM);
+
+        new SpeciesMovesetRandomizer(romHandler.proxy, settings, new Random(5)).randomizeMovesLearnt();
+
+        assertEquals(evolutionsBefore, evolutionTargetsBySpecies(List.of(bulbasaur, ivysaur, venusaur,
+                squirtle, wartortle)));
+        assertEquals(List.of("Ivysaur:LEVEL:16"), evolutionTargetsBySpecies(List.of(bulbasaur)).get(1));
+        assertEquals(List.of("Venusaur:LEVEL:32"), evolutionTargetsBySpecies(List.of(ivysaur)).get(2));
+        assertEquals(List.of("Wartortle:LEVEL:16"), evolutionTargetsBySpecies(List.of(squirtle)).get(7));
+        assertTrue(venusaur.getEvolutionsFrom().isEmpty());
+    }
+
     private static Species species(int number, String name) {
         Species species = new Species(number);
         species.setName(name);
@@ -218,6 +253,23 @@ public class LearnsetDecisionTest {
         species.setAttack(60);
         species.setSpatk(60);
         return species;
+    }
+
+    private static void addEvolution(Species from, Species to, int level) {
+        Evolution evolution = new Evolution(from, to, EvolutionType.LEVEL, level);
+        from.getEvolutionsFrom().add(evolution);
+        to.getEvolutionsTo().add(evolution);
+    }
+
+    private static Map<Integer, List<String>> evolutionTargetsBySpecies(List<Species> species) {
+        Map<Integer, List<String>> evolutions = new LinkedHashMap<>();
+        for (Species current : species) {
+            evolutions.put(current.getNumber(), current.getEvolutionsFrom().stream()
+                    .map(evolution -> evolution.getTo().getName() + ":" + evolution.getType() + ":"
+                            + evolution.getExtraInfo())
+                    .collect(Collectors.toList()));
+        }
+        return evolutions;
     }
 
     private static List<MoveLearnt> movesLearnt(int moveOne, int levelOne, int moveTwo, int levelTwo,

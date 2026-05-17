@@ -228,6 +228,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 loadBasicPokeStats(pokes[i], pokeNarc.files.get(i), formeMappings);
                 pokes[i].setName(pokeNames[i]);
                 pokes[i].setGeneration(generationOf(pokes[i]));
+
+                if (GlobalConstants.baseFormesWithFormeSuffixes.containsKey(i)) {
+                    pokes[i].setFormeSuffix(GlobalConstants.baseFormesWithFormeSuffixes.get(i));
+                }
             }
 
             int i = Gen5Constants.pokemonCount + 1;

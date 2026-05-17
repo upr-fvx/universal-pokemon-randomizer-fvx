@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -71,9 +72,45 @@ public class LearnsetDecisionTest {
     }
 
     @Test
+    public void randomizeMovesLearntSkipsEmptyOrNullMovesetsAndKeepsValidSpeciesRandomized() {
+        Species emptySpecies = species(0, "Bad Egg");
+        Species nullSpecies = species(1, "DummySpecies");
+        Species validSpecies = species(25, "ValidSpecies");
+        Map<Integer, List<MoveLearnt>> movesets = new LinkedHashMap<>();
+        movesets.put(emptySpecies.getNumber(), new ArrayList<>());
+        movesets.put(nullSpecies.getNumber(), null);
+        movesets.put(validSpecies.getNumber(), movesLearnt(10, 1, 11, 7, 12, 14));
+        Set<Integer> allowedMoves = Set.of(40, 41, 42, 43, 44, 45, 46, 47);
+        LearnsetTestRomHandler romHandler = LearnsetTestRomHandler.create(List.of(emptySpecies, nullSpecies,
+                validSpecies), movesets, moves(allowedMoves));
+        romHandler.supportsFourStartingMoves = true;
+        Settings settings = new Settings();
+        settings.setMovesetsMod(Settings.MovesetsMod.COMPLETELY_RANDOM);
+        settings.setStartWithGuaranteedMoves(true);
+        settings.setGuaranteedMoveCount(4);
+        settings.setEvolutionMovesForAll(true);
+
+        SpeciesMovesetRandomizer randomizer = new SpeciesMovesetRandomizer(romHandler.proxy, settings, new Random(2));
+        randomizer.randomizeMovesLearnt();
+
+        assertTrue(randomizer.isChangesMade());
+        assertEquals(1, romHandler.setMovesLearntCalls);
+        assertTrue(romHandler.writtenMovesets.get(emptySpecies.getNumber()).isEmpty());
+        assertNull(romHandler.writtenMovesets.get(nullSpecies.getNumber()));
+        List<MoveLearnt> validMoveset = romHandler.writtenMovesets.get(validSpecies.getNumber());
+        assertFalse(validMoveset.isEmpty());
+        assertTrue(validMoveset.stream().allMatch(moveLearnt -> allowedMoves.contains(moveLearnt.move)));
+        assertEquals(List.of(0, 1, 1, 1, 1, 7, 14), validMoveset.stream()
+                .map(moveLearnt -> moveLearnt.level)
+                .collect(Collectors.toList()));
+    }
+
+    @Test
     public void orderDamagingMovesByDamageOnlyReordersDamagingMovesWithinExistingSlots() {
+        Species emptySpecies = species(0, "Bad Egg");
         Species highSpecies = species(1025, "HighSpecies");
         Map<Integer, List<MoveLearnt>> movesets = new LinkedHashMap<>();
+        movesets.put(emptySpecies.getNumber(), new ArrayList<>());
         movesets.put(highSpecies.getNumber(), new ArrayList<>(List.of(
                 new MoveLearnt(30, 0),
                 new MoveLearnt(31, 1),
@@ -100,6 +137,7 @@ public class LearnsetDecisionTest {
         List<MoveLearnt> ordered = romHandler.writtenMovesets.get(highSpecies.getNumber());
         assertTrue(randomizer.isChangesMade());
         assertEquals(1, romHandler.setMovesLearntCalls);
+        assertTrue(romHandler.writtenMovesets.get(emptySpecies.getNumber()).isEmpty());
         assertFalse(ordered.isEmpty());
         assertEquals(sizesBefore, sizesBySpecies(romHandler.writtenMovesets));
         assertEquals(levelsBefore, levelsBySpecies(romHandler.writtenMovesets));

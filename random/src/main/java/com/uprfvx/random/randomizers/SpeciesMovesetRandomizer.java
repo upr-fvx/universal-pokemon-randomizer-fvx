@@ -39,7 +39,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
             List<MoveLearnt> moves = movesets.get(pkmnNum);
             int lv1AttackingMove = 0;
             Species pkmn = findSpeciesInPoolWithSpeciesID(rSpecService.getAll(true), pkmnNum);
-            if (pkmn == null) {
+            if (pkmn == null || moves == null || moves.isEmpty()) {
                 continue;
             }
 
@@ -69,8 +69,13 @@ public class SpeciesMovesetRandomizer extends Randomizer {
             }
 
             if (pkmn.isActuallyCosmetic()) {
+                int baseFormeKey = speciesIDForMovesetMap(pkmn.getBaseForme(), movesets);
+                List<MoveLearnt> baseMoves = movesets.get(baseFormeKey);
+                if (baseMoves == null || baseMoves.size() < moves.size()) {
+                    continue;
+                }
                 for (int i = 0; i < moves.size(); i++) {
-                    moves.get(i).move = movesets.get(pkmn.getBaseForme().getNumber()).get(i).move;
+                    moves.get(i).move = baseMoves.get(i).move;
                 }
                 continue;
             }
@@ -465,13 +470,23 @@ public class SpeciesMovesetRandomizer extends Randomizer {
         List<Move> allMoves = romHandler.getMoves();
         for (Integer pkmn : movesets.keySet()) {
             List<MoveLearnt> moves = movesets.get(pkmn);
+            if (moves == null || moves.isEmpty()) {
+                continue;
+            }
 
             // Build up a list of damaging moves and their positions
             List<Integer> damagingMoveIndices = new ArrayList<>();
             List<Move> damagingMoves = new ArrayList<>();
             for (int i = 0; i < moves.size(); i++) {
                 if (moves.get(i).level == 0) continue; // Don't reorder evolution move
-                Move mv = allMoves.get(moves.get(i).move);
+                int moveNumber = moves.get(i).move;
+                if (moveNumber < 0 || moveNumber >= allMoves.size()) {
+                    continue;
+                }
+                Move mv = allMoves.get(moveNumber);
+                if (mv == null) {
+                    continue;
+                }
                 if (mv.power > 1) {
                     // considered a damaging move for this purpose
                     damagingMoveIndices.add(i);

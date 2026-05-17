@@ -2114,6 +2114,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public List<EncounterArea> getEncounters(boolean useTimeOfDay) {
+        // Gen3 currently models only the base WildPokemon header table. CFRU/DPE runtime
+        // hooks such as day/night headers, swarms, DexNav, and other special wild sources
+        // are intentionally outside this Standard/Fallback encounter path.
         if (!mapLoadingDone) {
             preprocessMaps();
             mapLoadingDone = true;
@@ -2231,6 +2234,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounterAreas) {
+        // See getEncounters(boolean): useTimeOfDay is not a Gen3 CFRU/DPE table selector here.
         // Support Deoxys/Mew catches in E/FR/LG
         attemptObedienceEvolutionPatches();
 

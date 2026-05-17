@@ -205,7 +205,7 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
-    void trainerNameRandomizerClassNamesUseSingleAndDoublesPools() {
+    void trainerNameRandomizerClassNamesShuffleExistingSingleAndDoublesClasses() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerClassNames = List.of("LAD", "DUO", "LASS");
         handler.doublesTrainerClasses = List.of(1);
@@ -213,9 +213,10 @@ class TrainerNameRandomizerDecisions {
         new TrainerNameRandomizer(handler.proxy, settings(), new Random(7)).randomizeTrainerClassNames();
 
         assertTrue(handler.setTrainerClassNamesCalled);
-        assertTrue(handler.trainerClassPool.contains(handler.writtenTrainerClassNames.get(0)));
-        assertTrue(handler.doublesTrainerClassPool.contains(handler.writtenTrainerClassNames.get(1)));
-        assertTrue(handler.trainerClassPool.contains(handler.writtenTrainerClassNames.get(2)));
+        assertTrue(List.of("LAD", "LASS").contains(handler.writtenTrainerClassNames.get(0)));
+        assertEquals("DUO", handler.writtenTrainerClassNames.get(1));
+        assertTrue(List.of("LAD", "LASS").contains(handler.writtenTrainerClassNames.get(2)));
+        assertFalse(handler.trainerClassPool.contains(handler.writtenTrainerClassNames.get(0)));
     }
 
     @Test
@@ -247,60 +248,49 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
-    void trainerClassNameRandomizerAllowsClassNameInsideInternalLimit() {
+    void trainerClassNameRandomizerUsesOnlyOriginalClassNames() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
-        handler.trainerClassNames = List.of("OLD");
-        handler.maxTrainerClassNameLength = 3;
+        handler.trainerClassNames = List.of("BURGLAR", "ENGINEER", "FISHERMAN", "CUE BALL");
+        handler.trainerClassPool = List.of("Director");
 
-        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("FIT"), List.of(), List.of()),
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("Director"), List.of(), List.of()),
                 new Random(1)).randomizeTrainerClassNames();
 
-        assertEquals(List.of("FIT"), handler.writtenTrainerClassNames);
-        assertTrue(handler.internalLength(handler.writtenTrainerClassNames.get(0)) <= handler.maxTrainerClassNameLength);
+        assertTrue(handler.trainerClassNames.containsAll(handler.writtenTrainerClassNames));
+        assertFalse(handler.writtenTrainerClassNames.contains("Director"));
     }
 
     @Test
-    void trainerClassNameRandomizerAllowsClassNameExactlyAtInternalLimit() {
+    void trainerClassNameRandomizerDoesNotCollapseToSingleCustomClassWhenExistingClassesAreAvailable() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
-        handler.trainerClassNames = List.of("OLD");
-        handler.maxTrainerClassNameLength = 4;
+        handler.trainerClassNames = List.of("BURGLAR", "ENGINEER", "FISHERMAN", "CUE BALL");
+        handler.trainerClassPool = List.of("Director");
 
-        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("TEAM"), List.of(), List.of()),
+        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("Director"), List.of(), List.of()),
                 new Random(1)).randomizeTrainerClassNames();
 
-        assertEquals(List.of("TEAM"), handler.writtenTrainerClassNames);
-        assertEquals(handler.maxTrainerClassNameLength, handler.internalLength(handler.writtenTrainerClassNames.get(0)));
+        assertTrue(handler.writtenTrainerClassNames.stream().distinct().count() > 1);
+        assertFalse(handler.writtenTrainerClassNames.stream().allMatch("Director"::equals));
     }
 
     @Test
-    void trainerClassNameRandomizerRejectsClassNameOverInternalLimit() {
+    void trainerClassNameRandomizerChangesAtLeastOneClassWhenPossible() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
-        handler.trainerClassNames = List.of("OLD");
-        handler.maxTrainerClassNameLength = 3;
-        handler.internalLengths.put("TOK", 6);
+        handler.trainerClassNames = List.of("BURGLAR", "ENGINEER", "FISHERMAN", "CUE BALL");
 
-        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("TOK", "FIT"), List.of(), List.of()),
-                new Random(1)).randomizeTrainerClassNames();
+        new TrainerNameRandomizer(handler.proxy, settings(), new Random(1)).randomizeTrainerClassNames();
 
-        assertEquals(List.of("FIT"), handler.writtenTrainerClassNames);
-        assertTrue("TOK".length() <= handler.maxTrainerClassNameLength);
-        assertTrue(handler.internalLength("TOK") > handler.maxTrainerClassNameLength);
-        assertTrue(handler.internalLength(handler.writtenTrainerClassNames.get(0)) <= handler.maxTrainerClassNameLength);
+        assertNotEquals(handler.trainerClassNames, handler.writtenTrainerClassNames);
     }
 
     @Test
-    void trainerClassNameRandomizerUsesInternalLengthWhenJavaLengthWouldReject() {
+    void trainerClassNameRandomizerKeepsIdentityWhenNoAlternativeExists() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerClassNames = List.of("OLD");
-        handler.maxTrainerClassNameLength = 1;
-        handler.internalLengths.put("\\x01", 1);
 
-        new TrainerNameRandomizer(handler.proxy, settings(List.of("ANA"), List.of("\\x01"), List.of(), List.of()),
-                new Random(1)).randomizeTrainerClassNames();
+        new TrainerNameRandomizer(handler.proxy, settings(), new Random(1)).randomizeTrainerClassNames();
 
-        assertEquals(List.of("\\x01"), handler.writtenTrainerClassNames);
-        assertTrue("\\x01".length() > handler.maxTrainerClassNameLength);
-        assertEquals(handler.maxTrainerClassNameLength, handler.internalLength("\\x01"));
+        assertEquals(List.of("OLD"), handler.writtenTrainerClassNames);
     }
 
     @Test

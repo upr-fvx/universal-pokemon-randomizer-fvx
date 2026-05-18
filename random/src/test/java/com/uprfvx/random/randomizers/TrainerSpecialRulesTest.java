@@ -135,18 +135,18 @@ public class TrainerSpecialRulesTest {
 
     @Test
     public void frlgOpeningRivalTrainerIdsUseRandomizedCounterStarterSlots() {
-        Species cubchoo = species(613, "Cubchoo");
-        Species krookodile = species(553, "Krookodile");
-        Species sceptile = species(254, "Sceptile");
+        Species hattrem = species(857, "Hattrem");
+        Species clefairy = species(35, "Clefairy");
+        Species golisopod = species(768, "Golisopod");
         Species squirtle = species(7, "Squirtle");
         Species bulbasaur = species(1, "Bulbasaur");
         Species charmander = species(4, "Charmander");
         Trainer rivalSquirtle = trainer(326, null, pokemon(squirtle, 5));
         Trainer rivalBulbasaur = trainer(327, null, pokemon(bulbasaur, 5));
         Trainer rivalCharmander = trainer(328, null, pokemon(charmander, 5));
-        List<Species> starters = List.of(cubchoo, krookodile, sceptile);
+        List<Species> starters = List.of(hattrem, clefairy, golisopod);
         TrainerTestRomHandler handler = TrainerTestRomHandler.create(
-                List.of(cubchoo, krookodile, sceptile, squirtle, bulbasaur, charmander),
+                List.of(hattrem, clefairy, golisopod, squirtle, bulbasaur, charmander),
                 List.of(rivalSquirtle, rivalBulbasaur, rivalCharmander),
                 starters,
                 Collections.emptyList());
@@ -154,11 +154,12 @@ public class TrainerSpecialRulesTest {
         TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
         randomizer.syncFrlgOpeningRivalTrainerIds(handler.trainers, starters);
 
-        assertSame(cubchoo, rivalSquirtle.getPokemon().get(0).getSpecies());
-        assertSame(sceptile, rivalBulbasaur.getPokemon().get(0).getSpecies());
-        assertSame(krookodile, rivalCharmander.getPokemon().get(0).getSpecies());
+        assertSame(golisopod, rivalSquirtle.getPokemon().get(0).getSpecies());
+        assertSame(hattrem, rivalBulbasaur.getPokemon().get(0).getSpecies());
+        assertSame(clefairy, rivalCharmander.getPokemon().get(0).getSpecies());
         assertNotSame(squirtle, rivalSquirtle.getPokemon().get(0).getSpecies());
         assertNotSame(bulbasaur, rivalBulbasaur.getPokemon().get(0).getSpecies());
+        assertNotSame(golisopod, rivalBulbasaur.getPokemon().get(0).getSpecies());
     }
 
     @Test

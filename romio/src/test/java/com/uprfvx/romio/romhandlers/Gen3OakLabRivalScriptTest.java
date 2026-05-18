@@ -23,7 +23,7 @@ public class Gen3OakLabRivalScriptTest {
 
         List<Integer> trainerIds = Gen3RomHandler.findFrlgOakLabRivalTrainerIdsByPlayerStarterSlot(rom, 64);
 
-        assertEquals(List.of(902, 903, 901), trainerIds);
+        assertEquals(List.of(902, 901, 903), trainerIds);
     }
 
     @Test

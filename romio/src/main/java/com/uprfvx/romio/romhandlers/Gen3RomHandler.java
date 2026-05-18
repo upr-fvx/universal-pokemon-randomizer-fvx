@@ -2275,12 +2275,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
 
         // In FRLG's Oak Lab script order, the commands appear as rival Squirtle,
-        // rival Charmander, then rival Bulbasaur. Player starter slots branch to
-        // Charmander, Bulbasaur, Squirtle respectively.
+        // rival Charmander, then rival Bulbasaur. UPR-FVX starter slots branch to
+        // Charmander, Squirtle, Bulbasaur respectively.
         return List.of(
                 trainerIdsInScriptOrder.get(1),
-                trainerIdsInScriptOrder.get(2),
-                trainerIdsInScriptOrder.get(0));
+                trainerIdsInScriptOrder.get(0),
+                trainerIdsInScriptOrder.get(2));
     }
 
     static List<FrlgOakLabTrainerBattleCommand> findFrlgOakLabTrainerBattleCommandsNearStarterPokemon(byte[] rom,

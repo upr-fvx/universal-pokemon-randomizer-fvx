@@ -742,6 +742,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return usesInternalSpeciesIdentityForExtendedBpreHack();
     }
 
+    int getTrainerCountForDiagnostics() {
+        return romEntry.getIntValue("TrainerCount");
+    }
+
+    int getTrainerDataOffsetForDiagnostics() {
+        return romEntry.getIntValue("TrainerData");
+    }
+
+    int getTrainerEntrySizeForDiagnostics() {
+        return romEntry.getIntValue("TrainerEntrySize");
+    }
+
     public boolean hasUsableCfruDpeRandomPoolSpeciesAssets(Species species,
                                                            Map<Integer, List<MoveLearnt>> movesets) {
         return getCfruDpeRandomPoolSpeciesAssetIssues(species, movesets).isEmpty();
@@ -2104,7 +2116,24 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
             return Collections.emptyList();
         }
-        return findFrlgOakLabTrainerBattleCommands(rom, romEntry.getIntValue("StarterPokemon"));
+        return findFrlgOakLabTrainerBattleCommandsNearStarterPokemon(rom, romEntry.getIntValue("StarterPokemon"));
+    }
+
+    List<FrlgOakLabTrainerBattleCommand> getFrlgTrainerBattleCommandsForDiagnostics() {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return Collections.emptyList();
+        }
+        return findFrlgTrainerBattleCommands(rom, 0, rom.length);
+    }
+
+    List<FrlgOakLabScriptCommand> getFrlgOakLabScriptCommandsNearStarterFlowForDiagnostics() {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return Collections.emptyList();
+        }
+        int starterPokemonOffset = romEntry.getIntValue("StarterPokemon");
+        int start = Math.max(0, starterPokemonOffset - 4096);
+        int end = Math.min(rom.length, starterPokemonOffset + Gen3Constants.frlgStarter2Offset + 8192);
+        return findFrlgScriptCommands(rom, start, end);
     }
 
     List<FrlgOakLabStarterScriptSlot> getFrlgOakLabStarterScriptSlotsForDiagnostics() {
@@ -2112,6 +2141,55 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return Collections.emptyList();
         }
         return readFrlgOakLabStarterScriptSlots(rom, romEntry.getIntValue("StarterPokemon"));
+    }
+
+    List<FrlgKantoStarterLiteralCandidate> getFrlgKantoStarterLiteralCandidatesForDiagnostics() {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return Collections.emptyList();
+        }
+        return findFrlgKantoStarterLiteralCandidates(rom, romEntry.getIntValue("StarterPokemon"));
+    }
+
+    List<FrlgRawTrainerPartyDiagnostics> getRawTrainerPartyDiagnostics(List<Integer> trainerIds) {
+        List<FrlgRawTrainerPartyDiagnostics> diagnostics = new ArrayList<>();
+        int baseOffset = romEntry.getIntValue("TrainerData");
+        int entryLen = romEntry.getIntValue("TrainerEntrySize");
+        for (int trainerId : trainerIds) {
+            int trainerOffset = baseOffset + trainerId * entryLen;
+            if (trainerOffset < 0 || trainerOffset + entryLen > rom.length) {
+                diagnostics.add(FrlgRawTrainerPartyDiagnostics.missing(trainerId, trainerOffset));
+                continue;
+            }
+            int partyFlags = rom[trainerOffset] & 0xFF;
+            int partySize = rom[trainerOffset + (entryLen - 8)] & 0xFF;
+            int partyPointer = readPointer(trainerOffset + (entryLen - 4), true);
+            List<FrlgRawTrainerPokemonDiagnostics> party = new ArrayList<>();
+            int stride = (partyFlags & 1) == 1 ? 16 : 8;
+            int safePartySize = Math.min(partySize, 6);
+            if (partyPointer != -1 && safePartySize > 0 && partyPointer + safePartySize * stride <= rom.length) {
+                for (int i = 0; i < safePartySize; i++) {
+                    int pokemonOffset = partyPointer + i * stride;
+                    int level = readLittleEndianWord(rom, pokemonOffset + 2);
+                    int rawSpecies = readLittleEndianWord(rom, pokemonOffset + 4);
+                    party.add(new FrlgRawTrainerPokemonDiagnostics(i, pokemonOffset, level, rawSpecies,
+                            getFrlgOakLabSpeciesNameForDiagnostics(rawSpecies)));
+                }
+            }
+            diagnostics.add(new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, partyFlags, partySize,
+                    partyPointer, partyPointer != -1, party));
+        }
+        return diagnostics;
+    }
+
+    List<FrlgRawTrainerPartyDiagnostics> getRawTrainerKantoStarterPartyCandidatesForDiagnostics() {
+        List<FrlgRawTrainerPartyDiagnostics> diagnostics = new ArrayList<>();
+        int maxTrainerId = Math.min(Math.max(romEntry.getIntValue("TrainerCount") + 512, 512), 1200);
+        for (FrlgRawTrainerPartyDiagnostics trainer : getRawTrainerPartyDiagnostics(rangeOneTo(maxTrainerId))) {
+            if (trainer.party().stream().anyMatch(pokemon -> isKantoStarterRawSpecies(pokemon.rawSpeciesId()))) {
+                diagnostics.add(trainer);
+            }
+        }
+        return diagnostics;
     }
 
     String getFrlgOakLabSpeciesNameForDiagnostics(int rawSpeciesId) {
@@ -2143,8 +2221,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     static List<Integer> findFrlgOakLabRivalTrainerIdsByPlayerStarterSlot(byte[] rom, int starterPokemonOffset) {
         List<Integer> trainerIdsInScriptOrder = new ArrayList<>();
-        for (FrlgOakLabTrainerBattleCommand command : findFrlgOakLabTrainerBattleCommands(rom, starterPokemonOffset)) {
-            if (command.helperFlags() != 3) {
+        for (FrlgOakLabTrainerBattleCommand command : findFrlgOakLabTrainerBattleCommandsNearStarterPokemon(rom, starterPokemonOffset)) {
+            if (command.battleType() != 9 || command.argument() != 3) {
                 continue;
             }
             int trainerId = command.trainerId();
@@ -2168,19 +2246,124 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 trainerIdsInScriptOrder.get(0));
     }
 
-    static List<FrlgOakLabTrainerBattleCommand> findFrlgOakLabTrainerBattleCommands(byte[] rom,
-                                                                                    int starterPokemonOffset) {
+    static List<FrlgOakLabTrainerBattleCommand> findFrlgOakLabTrainerBattleCommandsNearStarterPokemon(byte[] rom,
+                                                                                                      int starterPokemonOffset) {
+        int searchStart = Math.max(0, starterPokemonOffset - 4096);
+        int searchEnd = Math.min(rom.length, starterPokemonOffset + 8192);
+        return findFrlgTrainerBattleCommands(rom, searchStart, searchEnd);
+    }
+
+    static List<FrlgOakLabTrainerBattleCommand> findFrlgTrainerBattleCommands(byte[] rom, int searchStart,
+                                                                              int searchEndExclusive) {
         List<FrlgOakLabTrainerBattleCommand> commands = new ArrayList<>();
-        int searchStart = Math.max(0, starterPokemonOffset);
-        int searchEnd = Math.min(rom.length - 14, starterPokemonOffset + 4096);
-        for (int offset = searchStart; offset <= searchEnd; offset++) {
-            if ((rom[offset] & 0xFF) != 0x5C || (rom[offset + 1] & 0xFF) != 0x09) {
+        int start = Math.max(0, searchStart);
+        int end = Math.min(rom.length - 6, searchEndExclusive);
+        for (int offset = start; offset < end; offset++) {
+            if ((rom[offset] & 0xFF) != 0x5C) {
                 continue;
             }
-            commands.add(new FrlgOakLabTrainerBattleCommand(offset, readLittleEndianWord(rom, offset + 2),
+            int battleType = rom[offset + 1] & 0xFF;
+            if (battleType > 16) {
+                continue;
+            }
+            commands.add(new FrlgOakLabTrainerBattleCommand(offset, battleType, readLittleEndianWord(rom, offset + 2),
                     readLittleEndianWord(rom, offset + 4)));
         }
         return commands;
+    }
+
+    static List<FrlgOakLabScriptCommand> findFrlgScriptCommands(byte[] rom, int searchStart,
+                                                                int searchEndExclusive) {
+        List<FrlgOakLabScriptCommand> commands = new ArrayList<>();
+        int start = Math.max(0, searchStart);
+        int end = Math.min(rom.length - 12, searchEndExclusive);
+        for (int offset = start; offset < end; offset++) {
+            int opcode = rom[offset] & 0xFF;
+            switch (opcode) {
+                case 0x16 -> commands.add(new FrlgOakLabScriptCommand(offset, "setvar",
+                        readLittleEndianWord(rom, offset + 1), readLittleEndianWord(rom, offset + 3)));
+                case 0x15 -> commands.add(new FrlgOakLabScriptCommand(offset, "copyvar",
+                        readLittleEndianWord(rom, offset + 1), readLittleEndianWord(rom, offset + 3)));
+                case 0x5C -> {
+                    int battleType = rom[offset + 1] & 0xFF;
+                    if (battleType <= 16) {
+                        commands.add(new FrlgOakLabScriptCommand(offset, "trainerbattle" + battleType,
+                                readLittleEndianWord(rom, offset + 2), readLittleEndianWord(rom, offset + 4)));
+                    }
+                }
+                case 0x75 -> commands.add(new FrlgOakLabScriptCommand(offset, "showpokepic",
+                        readLittleEndianWord(rom, offset + 1), -1));
+                case 0x79 -> commands.add(new FrlgOakLabScriptCommand(offset, "givepokemon",
+                        readLittleEndianWord(rom, offset + 1), rom[offset + 3] & 0xFF));
+                case 0x7D -> commands.add(new FrlgOakLabScriptCommand(offset, "bufferpokemon",
+                        rom[offset + 1] & 0xFF, readLittleEndianWord(rom, offset + 2)));
+                default -> {
+                    // not an Oak Lab-relevant command
+                }
+            }
+        }
+        return commands;
+    }
+
+    static List<FrlgKantoStarterLiteralCandidate> findFrlgKantoStarterLiteralCandidates(byte[] rom,
+                                                                                       int starterPokemonOffset) {
+        List<FrlgKantoStarterLiteralCandidate> candidates = new ArrayList<>();
+        int[] rawSpeciesIds = {SpeciesIDs.bulbasaur, SpeciesIDs.charmander, SpeciesIDs.squirtle};
+        int starterWindowStart = Math.max(0, starterPokemonOffset - 4096);
+        int starterWindowEnd = Math.min(rom.length - 1, starterPokemonOffset + Gen3Constants.frlgStarter2Offset + 8192);
+        for (int offset = 0; offset < rom.length - 1; offset++) {
+            int rawValue = readLittleEndianWord(rom, offset);
+            for (int rawSpeciesId : rawSpeciesIds) {
+                if (rawValue != rawSpeciesId) {
+                    continue;
+                }
+                String context = offset >= starterWindowStart && offset <= starterWindowEnd
+                        ? "starter-script-window"
+                        : nearbyScriptOpcodeContext(rom, offset);
+                if (context != null) {
+                    candidates.add(new FrlgKantoStarterLiteralCandidate(offset, rawValue, context));
+                }
+            }
+        }
+        return candidates;
+    }
+
+    private static List<Integer> rangeOneTo(int inclusiveEnd) {
+        List<Integer> values = new ArrayList<>();
+        for (int i = 1; i <= inclusiveEnd; i++) {
+            values.add(i);
+        }
+        return values;
+    }
+
+    private static boolean isKantoStarterRawSpecies(int rawSpeciesId) {
+        return rawSpeciesId == SpeciesIDs.bulbasaur
+                || rawSpeciesId == SpeciesIDs.charmander
+                || rawSpeciesId == SpeciesIDs.squirtle;
+    }
+
+    private static String nearbyScriptOpcodeContext(byte[] rom, int rawValueOffset) {
+        int start = Math.max(0, rawValueOffset - 4);
+        int end = Math.min(rom.length - 1, rawValueOffset + 1);
+        for (int offset = start; offset <= end; offset++) {
+            int opcode = rom[offset] & 0xFF;
+            if (opcode == 0x16 && rawValueOffset == offset + 3) {
+                return "setvar-value";
+            }
+            if (opcode == 0x75 && rawValueOffset == offset + 1) {
+                return "showpokepic-species";
+            }
+            if (opcode == 0x79 && rawValueOffset == offset + 1) {
+                return "givepokemon-species";
+            }
+            if (opcode == 0x7D && rawValueOffset == offset + 2) {
+                return "bufferpokemon-species";
+            }
+            if (opcode == 0x5C && rawValueOffset == offset + 2) {
+                return "trainerbattle-trainer-id";
+            }
+        }
+        return null;
     }
 
     private static int readLittleEndianWord(byte[] data, int offset) {
@@ -2191,7 +2374,26 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                                        int rivalSpeciesOffset, int rivalRawSpeciesId) {
     }
 
-    record FrlgOakLabTrainerBattleCommand(int offset, int trainerId, int helperFlags) {
+    record FrlgOakLabTrainerBattleCommand(int offset, int battleType, int trainerId, int argument) {
+    }
+
+    record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {
+    }
+
+    record FrlgKantoStarterLiteralCandidate(int offset, int rawSpeciesId, String context) {
+    }
+
+    record FrlgRawTrainerPokemonDiagnostics(int partyIndex, int offset, int level, int rawSpeciesId,
+                                            String decodedSpeciesName) {
+    }
+
+    record FrlgRawTrainerPartyDiagnostics(int trainerId, int trainerOffset, int partyFlags, int partySize,
+                                          int partyPointer, boolean partyPointerValid,
+                                          List<FrlgRawTrainerPokemonDiagnostics> party) {
+        static FrlgRawTrainerPartyDiagnostics missing(int trainerId, int trainerOffset) {
+            return new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, -1, -1, -1, false,
+                    Collections.emptyList());
+        }
     }
 
     @Override

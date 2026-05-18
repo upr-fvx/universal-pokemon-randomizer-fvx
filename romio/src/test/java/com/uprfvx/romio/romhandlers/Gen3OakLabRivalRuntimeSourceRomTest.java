@@ -39,6 +39,9 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         report.add("ROM code=" + romHandler.getRomEntry().getRomCode()
                 + " version=" + romHandler.getRomEntry().getVersion()
                 + " romType=" + romHandler.getRomEntry().getRomType());
+        report.add("trainerDataOffset=" + hex(romHandler.getTrainerDataOffsetForDiagnostics())
+                + " trainerEntrySize=" + romHandler.getTrainerEntrySizeForDiagnostics()
+                + " loadedTrainerCount=" + romHandler.getTrainerCountForDiagnostics());
         report.add("trainerPokemonSpeciesWriteMode="
                 + (romHandler.usesInternalSpeciesIdentityForTrainerPokemonDiagnostics()
                 ? "internal SpeciesSet identity" : "vanilla internal species id"));
@@ -70,34 +73,144 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                     + " rivalDecoded=" + romHandler.getFrlgOakLabSpeciesNameForDiagnostics(slot.rivalRawSpeciesId()));
         }
 
-        List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> commands =
+        report.add("script commands near Oak Lab starter flow:");
+        appendScriptCommands(report, romHandler.getFrlgOakLabScriptCommandsNearStarterFlowForDiagnostics(), 120);
+
+        List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> nearbyTrainerBattleCommands =
                 romHandler.getFrlgOakLabTrainerBattleCommandsForDiagnostics();
-        report.add("trainerbattle 9 commands near StarterPokemon:");
-        for (Gen3RomHandler.FrlgOakLabTrainerBattleCommand command : commands) {
-            report.add("  offset=" + hex(command.offset())
-                    + " trainerId=" + command.trainerId()
-                    + " helperFlags=" + command.helperFlags());
-        }
+        report.add("trainerbattle commands near StarterPokemon:");
+        appendTrainerBattleCommands(report, nearbyTrainerBattleCommands, 80);
+
+        List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> globalTrainerBattleCommands =
+                romHandler.getFrlgTrainerBattleCommandsForDiagnostics();
+        report.add("trainerbattle commands in whole ROM:");
+        appendTrainerBattleCommands(report, globalTrainerBattleCommands, 200);
+
+        report.add("Kanto starter raw species literal candidates:");
+        appendLiteralCandidates(report, romHandler.getFrlgKantoStarterLiteralCandidatesForDiagnostics(), romHandler, 240);
 
         List<Integer> idsByPlayerSlot = romHandler.getFrlgOakLabRivalTrainerIdsByPlayerStarterSlot();
         report.add("candidate trainer ids by player starter slot=" + idsByPlayerSlot);
-        report.add("candidate trainer parties:");
-        for (int trainerId : candidateTrainerIds(idsByPlayerSlot, commands)) {
+        Set<Integer> candidateIds = candidateTrainerIds(idsByPlayerSlot, nearbyTrainerBattleCommands,
+                globalTrainerBattleCommands);
+        report.add("loaded candidate trainer parties:");
+        for (int trainerId : candidateIds) {
             Trainer trainer = findTrainer(romHandler.getTrainers(), trainerId);
             report.add("  trainerId=" + trainerId + " party=" + formatParty(trainer));
         }
+        report.add("raw candidate trainer parties:");
+        for (Gen3RomHandler.FrlgRawTrainerPartyDiagnostics trainer
+                : romHandler.getRawTrainerPartyDiagnostics(new ArrayList<>(candidateIds))) {
+            appendRawTrainerParty(report, trainer);
+        }
+
+        report.add("loaded trainer parties containing Bulbasaur/Charmander/Squirtle:");
+        int loadedCount = 0;
+        for (Trainer trainer : romHandler.getTrainers()) {
+            if (containsKantoStarter(trainer)) {
+                if (loadedCount++ < 120) {
+                    report.add("  trainerId=" + trainer.getIndex() + " party=" + formatParty(trainer));
+                }
+            }
+        }
+        report.add("  total=" + loadedCount + " reported=" + Math.min(loadedCount, 120));
+
+        report.add("raw trainer parties containing Bulbasaur/Charmander/Squirtle:");
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawKantoStarterCandidates =
+                romHandler.getRawTrainerKantoStarterPartyCandidatesForDiagnostics();
+        int rawCount = 0;
+        for (Gen3RomHandler.FrlgRawTrainerPartyDiagnostics trainer : rawKantoStarterCandidates) {
+            if (rawCount++ >= 160) {
+                break;
+            }
+            appendRawTrainerParty(report, trainer);
+        }
+        report.add("  total=" + rawKantoStarterCandidates.size()
+                + " reported=" + Math.min(rawKantoStarterCandidates.size(), 160));
+    }
+
+    private static void appendRawTrainerParty(List<String> report,
+                                              Gen3RomHandler.FrlgRawTrainerPartyDiagnostics trainer) {
+            report.add("  trainerId=" + trainer.trainerId()
+                    + " trainerOffset=" + hex(trainer.trainerOffset())
+                    + " partyFlags=" + trainer.partyFlags()
+                    + " partySize=" + trainer.partySize()
+                    + " partyPointer=" + hexOrMissing(trainer.partyPointer())
+                    + " partyPointerValid=" + trainer.partyPointerValid());
+            for (Gen3RomHandler.FrlgRawTrainerPokemonDiagnostics pokemon : trainer.party()) {
+                report.add("    partyIndex=" + pokemon.partyIndex()
+                        + " offset=" + hex(pokemon.offset())
+                        + " level=" + pokemon.level()
+                        + " rawSpeciesId=" + pokemon.rawSpeciesId()
+                        + " decoded=" + pokemon.decodedSpeciesName());
+            }
     }
 
     private static Set<Integer> candidateTrainerIds(List<Integer> idsByPlayerSlot,
-                                                    List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> commands) {
+                                                    List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> nearbyCommands,
+                                                    List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> globalCommands) {
         Set<Integer> ids = new LinkedHashSet<>(idsByPlayerSlot);
-        for (Gen3RomHandler.FrlgOakLabTrainerBattleCommand command : commands) {
+        for (Gen3RomHandler.FrlgOakLabTrainerBattleCommand command : nearbyCommands) {
             ids.add(command.trainerId());
+        }
+        for (Gen3RomHandler.FrlgOakLabTrainerBattleCommand command : globalCommands) {
+            if (command.trainerId() >= 320 && command.trainerId() <= 340) {
+                ids.add(command.trainerId());
+            }
         }
         ids.add(326);
         ids.add(327);
         ids.add(328);
         return ids;
+    }
+
+    private static void appendScriptCommands(List<String> report,
+                                             List<Gen3RomHandler.FrlgOakLabScriptCommand> commands,
+                                             int limit) {
+        int count = 0;
+        for (Gen3RomHandler.FrlgOakLabScriptCommand command : commands) {
+            if (count++ >= limit) {
+                break;
+            }
+            report.add("  offset=" + hex(command.offset())
+                    + " command=" + command.command()
+                    + " arg1=" + hex(command.firstArgument())
+                    + " arg2=" + signedHex(command.secondArgument()));
+        }
+        report.add("  total=" + commands.size() + " reported=" + Math.min(commands.size(), limit));
+    }
+
+    private static void appendTrainerBattleCommands(List<String> report,
+                                                    List<Gen3RomHandler.FrlgOakLabTrainerBattleCommand> commands,
+                                                    int limit) {
+        int count = 0;
+        for (Gen3RomHandler.FrlgOakLabTrainerBattleCommand command : commands) {
+            if (count++ >= limit) {
+                break;
+            }
+            report.add("  offset=" + hex(command.offset())
+                    + " battleType=" + command.battleType()
+                    + " trainerId=" + command.trainerId()
+                    + " arg=" + command.argument());
+        }
+        report.add("  total=" + commands.size() + " reported=" + Math.min(commands.size(), limit));
+    }
+
+    private static void appendLiteralCandidates(List<String> report,
+                                                List<Gen3RomHandler.FrlgKantoStarterLiteralCandidate> candidates,
+                                                Gen3RomHandler romHandler,
+                                                int limit) {
+        int count = 0;
+        for (Gen3RomHandler.FrlgKantoStarterLiteralCandidate candidate : candidates) {
+            if (count++ >= limit) {
+                break;
+            }
+            report.add("  offset=" + hex(candidate.offset())
+                    + " rawSpeciesId=" + candidate.rawSpeciesId()
+                    + " decoded=" + romHandler.getFrlgOakLabSpeciesNameForDiagnostics(candidate.rawSpeciesId())
+                    + " context=" + candidate.context());
+        }
+        report.add("  total=" + candidates.size() + " reported=" + Math.min(candidates.size(), limit));
     }
 
     private static Trainer findTrainer(List<Trainer> trainers, int trainerId) {
@@ -119,6 +232,17 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
             party.add((species == null ? "?" : species.getFullName()) + " Lv" + pokemon.getLevel());
         }
         return party.toString();
+    }
+
+    private static boolean containsKantoStarter(Trainer trainer) {
+        return trainer.getPokemon().stream()
+                .map(TrainerPokemon::getSpecies)
+                .filter(species -> species != null)
+                .map(Species::getName)
+                .map(Gen3OakLabRivalRuntimeSourceRomTest::normalize)
+                .anyMatch(name -> name.equals("bulbasaur")
+                        || name.equals("charmander")
+                        || name.equals("squirtle"));
     }
 
     private static List<Species> configuredStarters(Gen3RomHandler romHandler) {
@@ -181,5 +305,13 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
 
     private static String hex(int value) {
         return String.format(Locale.ROOT, "0x%X", value);
+    }
+
+    private static String hexOrMissing(int value) {
+        return value < 0 ? "<missing>" : hex(value);
+    }
+
+    private static String signedHex(int value) {
+        return value < 0 ? "<none>" : hex(value);
     }
 }

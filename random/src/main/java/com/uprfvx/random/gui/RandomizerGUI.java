@@ -24,6 +24,7 @@ package com.uprfvx.random.gui;
 
 import com.uprfvx.random.*;
 import com.uprfvx.random.cli.CliRandomizer;
+import com.uprfvx.random.cli.SettingsProfileGenerator;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.exceptions.InvalidSupplementFilesException;
 import com.uprfvx.random.exceptions.RandomizationException;
@@ -4151,6 +4152,10 @@ public class RandomizerGUI {
             // snip the "cli" flag arg off the args array and invoke command
             String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
             int exitCode = CliRandomizer.invoke(commandArgs);
+            System.exit(exitCode);
+        } else if (firstCliArg.equals("settings-profile")) {
+            String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
+            int exitCode = SettingsProfileGenerator.invoke(commandArgs);
             System.exit(exitCode);
         } else {
             launcherInput = firstCliArg;

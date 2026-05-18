@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -139,6 +142,48 @@ public class Gen3OakLabRivalScriptTest {
         assertFalse(source.partyPointerValid());
         assertEquals(-1, source.firstPokemonOffset());
         assertEquals(-1, source.firstRawSpeciesId());
+    }
+
+    @Test
+    public void targetedTrainerRuntimeSourceIdsParseExplicitIdsAndKnownGroups() {
+        Set<Integer> trainerIds = Gen3OakLabRivalRuntimeSourceRomTest.parseTargetTrainerIds(
+                "0x14B, 331 rival2 brock");
+
+        assertEquals(new LinkedHashSet<>(List.of(0x14B, 0x149, 0x14A, 0x19E)), trainerIds);
+    }
+
+    @Test
+    public void targetedTrainerRuntimeSourceIdsParseGymGroup() {
+        Set<Integer> trainerIds = Gen3OakLabRivalRuntimeSourceRomTest.parseTargetTrainerIds("gym");
+
+        assertTrue(trainerIds.contains(0x8E));
+        assertTrue(trainerIds.contains(0x19E));
+        assertTrue(trainerIds.contains(0x15E));
+    }
+
+    @Test
+    public void targetedTrainerRuntimeSourceIdsRejectUnknownTokens() {
+        assertThrows(IllegalArgumentException.class,
+                () -> Gen3OakLabRivalRuntimeSourceRomTest.parseTargetTrainerIds("route22"));
+    }
+
+    @Test
+    public void targetedTrainerRuntimeSourceFilterKeepsOnlyRequestedTrainerIds() {
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
+                new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(10, 0, 0x14B, 0,
+                        100, 0, 1, 200, true, true, 200, 25),
+                new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(20, 0, 0x19E, 0,
+                        300, 0, 1, 400, true, true, 400, 74),
+                new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(30, 0, 0x120, 0,
+                        500, 0, 1, 600, true, true, 600, 16));
+        Set<Integer> trainerIds = new LinkedHashSet<>(List.of(0x14B, 0x19E));
+
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> filtered =
+                Gen3OakLabRivalRuntimeSourceRomTest.filterRuntimeSourcesByTrainerIds(sources, trainerIds);
+
+        assertEquals(2, filtered.size());
+        assertEquals(0x14B, filtered.get(0).trainerId());
+        assertEquals(0x19E, filtered.get(1).trainerId());
     }
 
     @Test

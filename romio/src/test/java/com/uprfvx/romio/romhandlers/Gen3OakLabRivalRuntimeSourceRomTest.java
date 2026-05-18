@@ -50,6 +50,7 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         List<Species> configuredStarters = configuredStarters(romHandler);
         if (!configuredStarters.isEmpty()) {
             romHandler.setStarters(configuredStarters);
+            appendExpectedRawPartySync(report, romHandler, configuredStarters);
             appendState(report, "after in-memory setStarters", romHandler);
         }
 
@@ -144,6 +145,22 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                         + " rawSpeciesId=" + pokemon.rawSpeciesId()
                         + " decoded=" + pokemon.decodedSpeciesName());
             }
+    }
+
+    private static void appendExpectedRawPartySync(List<String> report, Gen3RomHandler romHandler,
+                                                   List<Species> starters) {
+        List<Integer> idsByPlayerSlot = romHandler.getFrlgOakLabRivalTrainerIdsByPlayerStarterSlot();
+        if (idsByPlayerSlot.size() != 3) {
+            return;
+        }
+        report.add("");
+        report.add("expected raw Oak Lab rival party sync after in-memory setStarters:");
+        report.add("  playerSlot=0 trainerId=" + idsByPlayerSlot.get(0)
+                + " expectedRival=" + starters.get(1).getFullName());
+        report.add("  playerSlot=1 trainerId=" + idsByPlayerSlot.get(1)
+                + " expectedRival=" + starters.get(2).getFullName());
+        report.add("  playerSlot=2 trainerId=" + idsByPlayerSlot.get(2)
+                + " expectedRival=" + starters.get(0).getFullName());
     }
 
     private static Set<Integer> candidateTrainerIds(List<Integer> idsByPlayerSlot,

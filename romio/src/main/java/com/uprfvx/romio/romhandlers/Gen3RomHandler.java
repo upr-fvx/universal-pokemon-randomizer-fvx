@@ -2039,6 +2039,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // Support Deoxys/Mew starters in E/FR/LG
         attemptObedienceEvolutionPatches();
         writeStarterBytes(starters);
+        writeFrlgOakLabRivalRawTrainerParties(starters);
         writeStarterText(starters);
         return true;
 
@@ -2077,6 +2078,42 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return species.getSpeciesSetIdentityNumber();
         }
         return pokedexToInternal[species.getNumber()];
+    }
+
+    private void writeFrlgOakLabRivalRawTrainerParties(List<Species> starters) {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return;
+        }
+
+        List<Integer> trainerIdsByPlayerStarterSlot = getFrlgOakLabRivalTrainerIdsByPlayerStarterSlot();
+        if (trainerIdsByPlayerStarterSlot.size() != 3) {
+            return;
+        }
+
+        writeFirstRawTrainerPokemonSpecies(trainerIdsByPlayerStarterSlot.get(0), starters.get(1));
+        writeFirstRawTrainerPokemonSpecies(trainerIdsByPlayerStarterSlot.get(1), starters.get(2));
+        writeFirstRawTrainerPokemonSpecies(trainerIdsByPlayerStarterSlot.get(2), starters.get(0));
+    }
+
+    private void writeFirstRawTrainerPokemonSpecies(int trainerId, Species species) {
+        int pokemonOffset = getFirstRawTrainerPokemonOffset(rom, romEntry.getIntValue("TrainerData"),
+                romEntry.getIntValue("TrainerEntrySize"), trainerId);
+        if (pokemonOffset < 0 || pokemonOffset + 5 >= rom.length) {
+            return;
+        }
+        writeWord(pokemonOffset + 4, getTrainerPokemonInternalSpeciesId(species));
+    }
+
+    static int getFirstRawTrainerPokemonOffset(byte[] rom, int baseOffset, int entryLen, int trainerId) {
+        int trainerOffset = baseOffset + trainerId * entryLen;
+        if (trainerOffset < 0 || trainerOffset + entryLen > rom.length) {
+            return -1;
+        }
+        int partySize = rom[trainerOffset + (entryLen - 8)] & 0xFF;
+        if (partySize <= 0 || partySize > 6) {
+            return -1;
+        }
+        return readPointerFromRom(rom, trainerOffset + (entryLen - 4));
     }
 
     private void writeStarterText(List<Species> starters) {

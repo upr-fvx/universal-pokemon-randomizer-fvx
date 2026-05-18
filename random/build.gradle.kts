@@ -30,7 +30,7 @@ dependencies {
 tasks.jar {
     archiveFileName.set("UPR-FVX.jar")
     manifest {
-        attributes("Main-Class" to "com.uprfvx.random.gui.RandomizerGUI")
+        attributes("Main-Class" to "com.uprfvx.random.RandomizerLauncher")
     }
 
     // Makes the jar fat (include all runtime dependencies)
@@ -41,6 +41,7 @@ tasks.jar {
         exclude("META-INF/LICENSE")
     }
 }
+
 
 tasks.register<Delete>("clearReleaseDir") {
     group = "release setup"
@@ -266,4 +267,3 @@ tasks.register<Test>("testROMs") {
         includeTestsMatching("*Updater*Test")
     }
 }
-

@@ -187,6 +187,69 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
+    public void runtimeTrainerSyncTargetsLoadConfirmedValidRowsOutsideTrainerCount() {
+        byte[] rom = new byte[24000];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int loadedTrainerCount = 256;
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x14B, 18000, 2);
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x149, 18100, 2);
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x14A, 18200, 2);
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x19E, 18300, 2);
+
+        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> targets =
+                Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize,
+                        loadedTrainerCount);
+
+        assertEquals(4, targets.size());
+        assertEquals(0x14B, targets.get(0).trainerId());
+        assertEquals("RIVAL2-0", targets.get(0).tag());
+        assertEquals(0x149, targets.get(1).trainerId());
+        assertEquals(0x14A, targets.get(2).trainerId());
+        assertEquals(0x19E, targets.get(3).trainerId());
+        assertEquals("GYM1-LEADER", targets.get(3).tag());
+    }
+
+    @Test
+    public void runtimeTrainerSyncTargetsSkipLoadedOrInvalidRows() {
+        byte[] rom = new byte[24000];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int loadedTrainerCount = 0x19F;
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x14B, 18000, 2);
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x19E, 18300, 7);
+
+        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> loadedTargets =
+                Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize,
+                        loadedTrainerCount);
+        assertTrue(loadedTargets.isEmpty());
+
+        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> invalidTargets =
+                Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize, 256);
+        assertEquals(1, invalidTargets.size());
+        assertEquals(0x14B, invalidTargets.get(0).trainerId());
+    }
+
+    @Test
+    public void runtimeTrainerDataRowValidationRequiresFullRawPartyBounds() {
+        byte[] rom = new byte[2048];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int trainerId = 26;
+        int trainerOffset = trainerDataOffset + trainerId * trainerEntrySize;
+        rom[trainerOffset] = 1;
+        rom[trainerOffset + (trainerEntrySize - 8)] = 2;
+        writePointer(rom, trainerOffset + (trainerEntrySize - 4), 2024);
+
+        assertFalse(Gen3RomHandler.isValidFrlgRuntimeTrainerDataRow(
+                rom, trainerDataOffset, trainerEntrySize, trainerId));
+
+        writePointer(rom, trainerOffset + (trainerEntrySize - 4), 1980);
+        assertTrue(Gen3RomHandler.isValidFrlgRuntimeTrainerDataRow(
+                rom, trainerDataOffset, trainerEntrySize, trainerId));
+    }
+
+    @Test
     public void referenceOakLabSourceUsesRivalStarterScriptVariableBeforeBattle() throws IOException {
         Path oakLabScriptPath = referenceSourcePath("data/maps/PalletTown_ProfessorOaksLab/scripts.inc");
         assumeTrue(Files.isRegularFile(oakLabScriptPath), "pret FireRed reference source is not available");
@@ -237,6 +300,17 @@ public class Gen3OakLabRivalScriptTest {
     private static void writeWord(byte[] rom, int offset, int value) {
         rom[offset] = (byte) (value & 0xFF);
         rom[offset + 1] = (byte) ((value >>> 8) & 0xFF);
+    }
+
+    private static void writeTrainerDataRow(byte[] rom, int trainerDataOffset, int trainerEntrySize, int trainerId,
+                                            int partyOffset, int partySize) {
+        int trainerOffset = trainerDataOffset + trainerId * trainerEntrySize;
+        rom[trainerOffset + (trainerEntrySize - 8)] = (byte) partySize;
+        writePointer(rom, trainerOffset + (trainerEntrySize - 4), partyOffset);
+        for (int i = 0; i < Math.min(partySize, 6); i++) {
+            writeWord(rom, partyOffset + i * 8 + 2, 10 + i);
+            writeWord(rom, partyOffset + i * 8 + 4, 100 + i);
+        }
     }
 
     private static void writePointer(byte[] rom, int offset, int value) {

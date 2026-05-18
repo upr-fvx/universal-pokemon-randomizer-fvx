@@ -10,6 +10,15 @@ same list. The ROM writer later serializes trainer parties through
 `Gen3RomHandler.saveTrainers()`, and the game runtime may still read a different
 scripted trainer ID, copied raw party data, or another CFRU/DPE runtime source.
 
+The CFRU/DPE FireRed trainer runtime-party fix keeps the scope deliberately
+small: confirmed valid FRLG trainerbattle runtime sources for Rival 2
+(`0x14B`, `0x149`, `0x14A`) and Brock (`0x19E`) are loaded into the trainer
+model only when their raw `TrainerData` row is outside `TrainerCount`, has a
+valid party pointer, and has a plausible party size. The same rows are then
+serialized back during trainer saving, so a randomized trainer log entry is
+backed by the raw trainerbattle runtime source instead of only by the loaded
+model.
+
 Current hypotheses:
 
 - A script uses a different `trainerbattle` trainer ID than the vanilla FRLG

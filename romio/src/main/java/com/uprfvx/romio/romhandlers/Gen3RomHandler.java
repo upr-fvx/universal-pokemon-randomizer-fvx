@@ -56,6 +56,11 @@ import java.util.stream.IntStream;
 public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private static final String CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX = "[CFRU-DPE-COUNT-DIAG] ";
+    private static final List<FrlgRuntimeTrainerSyncTarget> FRLG_RUNTIME_TRAINER_SYNC_TARGETS = List.of(
+            new FrlgRuntimeTrainerSyncTarget(0x14B, "RIVAL2-0"),
+            new FrlgRuntimeTrainerSyncTarget(0x149, "RIVAL2-1"),
+            new FrlgRuntimeTrainerSyncTarget(0x14A, "RIVAL2-2"),
+            new FrlgRuntimeTrainerSyncTarget(0x19E, "GYM1-LEADER"));
 
     public static class Factory extends RomHandler.Factory {
 
@@ -2116,6 +2121,37 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return readPointerFromRom(rom, trainerOffset + (entryLen - 4));
     }
 
+    static List<FrlgRuntimeTrainerSyncTarget> findFrlgRuntimeTrainerDataRowsToLoad(byte[] rom, int baseOffset,
+                                                                                   int entryLen,
+                                                                                   int loadedTrainerCount) {
+        List<FrlgRuntimeTrainerSyncTarget> targets = new ArrayList<>();
+        for (FrlgRuntimeTrainerSyncTarget target : FRLG_RUNTIME_TRAINER_SYNC_TARGETS) {
+            if (target.trainerId() < loadedTrainerCount) {
+                continue;
+            }
+            if (isValidFrlgRuntimeTrainerDataRow(rom, baseOffset, entryLen, target.trainerId())) {
+                targets.add(target);
+            }
+        }
+        return targets;
+    }
+
+    static boolean isValidFrlgRuntimeTrainerDataRow(byte[] rom, int baseOffset, int entryLen, int trainerId) {
+        int trainerOffset = baseOffset + trainerId * entryLen;
+        if (rom == null || baseOffset < 0 || entryLen <= 8
+                || trainerOffset < 0 || trainerOffset + entryLen > rom.length) {
+            return false;
+        }
+        int partyFlags = rom[trainerOffset] & 0xFF;
+        int partySize = rom[trainerOffset + (entryLen - 8)] & 0xFF;
+        int partyPointer = readPointerFromRom(rom, trainerOffset + (entryLen - 4));
+        int stride = (partyFlags & 1) == 1 ? 16 : 8;
+        return partySize > 0 && partySize <= 6
+                && partyPointer != -1
+                && partyPointer >= 0
+                && partyPointer + partySize * stride <= rom.length;
+    }
+
     private void writeStarterText(List<Species> starters) {
         writeEventText(romEntry.getStarterTexts(), id -> {
             Species starter = starters.get(id);
@@ -2470,6 +2506,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
+    record FrlgRuntimeTrainerSyncTarget(int trainerId, String tag) {
+    }
+
     record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {
     }
 
@@ -2763,97 +2802,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int entryLen = romEntry.getIntValue("TrainerEntrySize");
         List<String> tcnames = this.getTrainerClassNames();
         for (int i = 1; i < amount; i++) {
-            // Trainer entries are 40 bytes
-            // Team flags; 1 byte; 0x01 = custom moves, 0x02 = held item
-            // Class; 1 byte
-            // Encounter Music and gender; 1 byte
-            // Battle Sprite; 1 byte
-            // Name; 12 bytes; 0xff terminated
-            // Items; 2 bytes each, 4 item slots
-            // Battle Mode; 1 byte; 0 means single, 1 means double.
-            // 3 bytes not used
-            // AI Flags; 1 byte
-            // 3 bytes not used
-            // Number of pokemon in team; 1 byte
-            // 3 bytes not used
-            // Pointer to pokemon; 4 bytes
-            // https://github.com/pret/pokefirered/blob/3dce3407d5f9bca69d61b1cf1b314fb1e921d572/include/battle.h#L111
             int trOffset = baseOffset + i * entryLen;
-            Trainer tr = new Trainer();
-            tr.setOffset(trOffset);
-            tr.setIndex(i);
-            int trainerclass = rom[trOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
-            tr.setTrainerclass(trainerclass);
-
-            int pokeDataType = rom[trOffset] & 0xFF;
-            if (rom[trOffset + (entryLen - 16)] == 0x01) {
-                tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
-            }
-            int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
-            int pointerToPokes = readPointer(trOffset + (entryLen - 4));
-            tr.setName(this.readVariableLengthString(trOffset + GEN3_TRAINER_NAME_OFFSET));
-            tr.setFullDisplayName(tcnames.get(trainerclass) + " " + tr.getName());
-            // Pokemon structure data is like
-            // IV IV LV SP SP
-            // (HI HI)
-            // (M1 M1 M2 M2 M3 M3 M4 M4)
-            // IV is a "difficulty" level between 0 and 255 to represent 0 to 31 IVs.
-            //     These IVs affect all attributes. For the vanilla games, the majority
-            //     of trainers have 0 IVs; Elite Four members will have 31 IVs.
-            // https://github.com/pret/pokeemerald/blob/6c38837b266c0dd36ccdd04559199282daa7a8a0/include/data.h#L22
-            if (pokeDataType == 0) {
-                // blocks of 8 bytes
-                for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
-                    // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
-                    thisPoke.setAbilitySlot(1);
-                    tr.getPokemon().add(thisPoke);
-                }
-            } else if (pokeDataType == 2) {
-                // blocks of 8 bytes
-                for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
-                    int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 8 + 6));
-                    thisPoke.setHeldItem(items.get(itemID));
-                    thisPoke.setAbilitySlot(1);
-                    tr.getPokemon().add(thisPoke);
-                }
-            } else if (pokeDataType == 1) {
-                // blocks of 16 bytes
-                for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
-                    for (int move = 0; move < 4; move++) {
-                        thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
-                    }
-                    thisPoke.setAbilitySlot(1);
-                    tr.getPokemon().add(thisPoke);
-                }
-            } else if (pokeDataType == 3) {
-                // blocks of 16 bytes
-                for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
-                    thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
-                    int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 16 + 6));
-                    thisPoke.setHeldItem(items.get(itemID));
-                    for (int move = 0; move < 4; move++) {
-                        thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 8 + (move*2));
-                    }
-                    thisPoke.setAbilitySlot(1);
-                    tr.getPokemon().add(thisPoke);
-                }
-            }
-            trainers.add(tr);
+            trainers.add(readTrainerDataRow(i, trOffset, entryLen, tcnames));
         }
 
         if (romEntry.getRomType() == Gen3Constants.RomType_Em) {
@@ -2867,6 +2817,88 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Gen3Constants.setMultiBattleStatusEm(trainers);
         } else {
             Gen3Constants.trainerTagsFRLG(trainers);
+            loadFrlgRuntimeTrainerSourceRows(baseOffset, amount, entryLen, tcnames);
+        }
+    }
+
+    private Trainer readTrainerDataRow(int trainerId, int trOffset, int entryLen, List<String> tcnames) {
+        // Trainer entries are 40 bytes. The party pointer can also be referenced directly by FRLG trainerbattle scripts.
+        Trainer tr = new Trainer();
+        tr.setOffset(trOffset);
+        tr.setIndex(trainerId);
+        int trainerclass = rom[trOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
+        tr.setTrainerclass(trainerclass);
+
+        int pokeDataType = rom[trOffset] & 0xFF;
+        if (rom[trOffset + (entryLen - 16)] == 0x01) {
+            tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+        }
+        int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
+        int pointerToPokes = readPointer(trOffset + (entryLen - 4));
+        tr.setName(this.readVariableLengthString(trOffset + GEN3_TRAINER_NAME_OFFSET));
+        tr.setFullDisplayName(tcnames.get(trainerclass) + " " + tr.getName());
+        // Pokemon structure data is like IV IV LV SP SP, optionally HI HI and/or four move words.
+        if (pokeDataType == 0) {
+            for (int poke = 0; poke < numPokes; poke++) {
+                TrainerPokemon thisPoke = new TrainerPokemon();
+                thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
+                thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
+                thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
+                thisPoke.setAbilitySlot(1);
+                tr.getPokemon().add(thisPoke);
+            }
+        } else if (pokeDataType == 2) {
+            for (int poke = 0; poke < numPokes; poke++) {
+                TrainerPokemon thisPoke = new TrainerPokemon();
+                thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
+                thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
+                thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
+                int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 8 + 6));
+                thisPoke.setHeldItem(items.get(itemID));
+                thisPoke.setAbilitySlot(1);
+                tr.getPokemon().add(thisPoke);
+            }
+        } else if (pokeDataType == 1) {
+            for (int poke = 0; poke < numPokes; poke++) {
+                TrainerPokemon thisPoke = new TrainerPokemon();
+                thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
+                thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
+                thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
+                for (int move = 0; move < 4; move++) {
+                    thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 6 + (move * 2));
+                }
+                thisPoke.setAbilitySlot(1);
+                tr.getPokemon().add(thisPoke);
+            }
+        } else if (pokeDataType == 3) {
+            for (int poke = 0; poke < numPokes; poke++) {
+                TrainerPokemon thisPoke = new TrainerPokemon();
+                thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
+                thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
+                thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
+                int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 16 + 6));
+                thisPoke.setHeldItem(items.get(itemID));
+                for (int move = 0; move < 4; move++) {
+                    thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 8 + (move * 2));
+                }
+                thisPoke.setAbilitySlot(1);
+                tr.getPokemon().add(thisPoke);
+            }
+        }
+        return tr;
+    }
+
+    private void loadFrlgRuntimeTrainerSourceRows(int baseOffset, int loadedTrainerCount, int entryLen,
+                                                  List<String> tcnames) {
+        for (FrlgRuntimeTrainerSyncTarget target : findFrlgRuntimeTrainerDataRowsToLoad(rom, baseOffset, entryLen,
+                loadedTrainerCount)) {
+            if (findTrainerByIndex(target.trainerId()) != null) {
+                continue;
+            }
+            int trOffset = baseOffset + target.trainerId() * entryLen;
+            Trainer tr = readTrainerDataRow(target.trainerId(), trOffset, entryLen, tcnames);
+            tr.setTag(target.tag());
+            trainers.add(tr);
         }
     }
 
@@ -2943,28 +2975,51 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 1; i < amount; i++) {
             int trOffset = baseOffset + i * entryLen;
             Trainer tr = trainerIterator.next();
-
-            // When rewriting the Pokémon data (in particular the pointer),
-            // it needs to use parts of the old trainer data - thus those are overwritten
-            // after
-            int pokemonPointerOffset = trOffset + (entryLen - 4);
-            new DataRewriter<Trainer>().rewriteData(pokemonPointerOffset, tr, this::trainerPokemonToBytes,
-                    (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
-
-            writeByte(trOffset, (byte) tr.getPoketype());
-            writeFixedLengthString(tr.getName(), trOffset + GEN3_TRAINER_NAME_OFFSET, nameLen);
-            writeByte(trOffset + (entryLen - 8), (byte) tr.getPokemon().size());
-            if (tr.isForcedDoubleBattle()) {
-                if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE)
-                    writeByte(trOffset + (entryLen - 16), (byte) 0x01);
-                else
-                    writeByte(trOffset + (entryLen - 16), (byte) 0x00);
-            }
+            writeTrainerDataRow(tr, trOffset, entryLen, nameLen);
         }
 
         if (romEntry.getRomType() == Gen3Constants.RomType_Em) {
             writeMossdeepStevenTrainer();
+        } else if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+            saveFrlgRuntimeTrainerSourceRows(baseOffset, amount, entryLen, nameLen);
         }
+    }
+
+    private void writeTrainerDataRow(Trainer tr, int trOffset, int entryLen, int nameLen) {
+        // The old party pointer/data length must be read before the row metadata is overwritten.
+        int pokemonPointerOffset = trOffset + (entryLen - 4);
+        new DataRewriter<Trainer>().rewriteData(pokemonPointerOffset, tr, this::trainerPokemonToBytes,
+                (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
+
+        writeByte(trOffset, (byte) tr.getPoketype());
+        writeFixedLengthString(tr.getName(), trOffset + GEN3_TRAINER_NAME_OFFSET, nameLen);
+        writeByte(trOffset + (entryLen - 8), (byte) tr.getPokemon().size());
+        if (tr.isForcedDoubleBattle()) {
+            if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE)
+                writeByte(trOffset + (entryLen - 16), (byte) 0x01);
+            else
+                writeByte(trOffset + (entryLen - 16), (byte) 0x00);
+        }
+    }
+
+    private void saveFrlgRuntimeTrainerSourceRows(int baseOffset, int loadedTrainerCount, int entryLen, int nameLen) {
+        for (FrlgRuntimeTrainerSyncTarget target : findFrlgRuntimeTrainerDataRowsToLoad(rom, baseOffset, entryLen,
+                loadedTrainerCount)) {
+            Trainer tr = findTrainerByIndex(target.trainerId());
+            if (tr == null) {
+                continue;
+            }
+            writeTrainerDataRow(tr, baseOffset + target.trainerId() * entryLen, entryLen, nameLen);
+        }
+    }
+
+    private Trainer findTrainerByIndex(int trainerId) {
+        for (Trainer trainer : trainers) {
+            if (trainer.getIndex() == trainerId) {
+                return trainer;
+            }
+        }
+        return null;
     }
 
 	private byte[] trainerPokemonToBytes(Trainer trainer) {

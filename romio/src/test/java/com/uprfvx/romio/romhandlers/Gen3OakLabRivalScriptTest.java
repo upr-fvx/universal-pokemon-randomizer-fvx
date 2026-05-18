@@ -90,6 +90,58 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
+    public void trainerBattleRuntimeSourceMapsScriptTrainerIdToRawTrainerParty() {
+        byte[] rom = new byte[2048];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int trainerId = 17;
+        int trainerOffset = trainerDataOffset + trainerId * trainerEntrySize;
+        int partyOffset = 1400;
+        rom[trainerOffset] = 0;
+        rom[trainerOffset + (trainerEntrySize - 8)] = 1;
+        writePointer(rom, trainerOffset + (trainerEntrySize - 4), partyOffset);
+        writeWord(rom, partyOffset + 2, 12);
+        writeWord(rom, partyOffset + 4, 321);
+        writeTrainerBattle(rom, 64, 0, trainerId, 0);
+
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources =
+                Gen3RomHandler.findFrlgTrainerBattleRuntimeSources(rom, trainerDataOffset, trainerEntrySize, 0,
+                        rom.length);
+
+        assertEquals(1, sources.size());
+        Gen3RomHandler.FrlgTrainerBattleRuntimeSource source = sources.get(0);
+        assertEquals(64, source.scriptOffset());
+        assertEquals(trainerId, source.trainerId());
+        assertEquals(trainerOffset, source.trainerOffset());
+        assertEquals(partyOffset, source.partyPointer());
+        assertTrue(source.trainerEntryValid());
+        assertTrue(source.partyPointerValid());
+        assertEquals(partyOffset, source.firstPokemonOffset());
+        assertEquals(321, source.firstRawSpeciesId());
+    }
+
+    @Test
+    public void trainerBattleRuntimeSourceKeepsInvalidTrainerRowsVisible() {
+        byte[] rom = new byte[512];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int trainerId = 50;
+        writeTrainerBattle(rom, 64, 0, trainerId, 0);
+
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources =
+                Gen3RomHandler.findFrlgTrainerBattleRuntimeSources(rom, trainerDataOffset, trainerEntrySize, 0,
+                        rom.length);
+
+        assertEquals(1, sources.size());
+        Gen3RomHandler.FrlgTrainerBattleRuntimeSource source = sources.get(0);
+        assertEquals(trainerId, source.trainerId());
+        assertFalse(source.trainerEntryValid());
+        assertFalse(source.partyPointerValid());
+        assertEquals(-1, source.firstPokemonOffset());
+        assertEquals(-1, source.firstRawSpeciesId());
+    }
+
+    @Test
     public void referenceOakLabSourceUsesRivalStarterScriptVariableBeforeBattle() throws IOException {
         Path oakLabScriptPath = referenceSourcePath("data/maps/PalletTown_ProfessorOaksLab/scripts.inc");
         assumeTrue(Files.isRegularFile(oakLabScriptPath), "pret FireRed reference source is not available");

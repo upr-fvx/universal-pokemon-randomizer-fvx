@@ -87,6 +87,9 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         report.add("trainerbattle commands in whole ROM:");
         appendTrainerBattleCommands(report, globalTrainerBattleCommands, 200);
 
+        report.add("trainerbattle runtime sources in whole ROM:");
+        appendTrainerBattleRuntimeSources(report, romHandler.getFrlgTrainerBattleRuntimeSourcesForDiagnostics(), 240);
+
         report.add("Kanto starter raw species literal candidates:");
         appendLiteralCandidates(report, romHandler.getFrlgKantoStarterLiteralCandidatesForDiagnostics(), romHandler, 240);
 
@@ -211,6 +214,30 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                     + " arg=" + command.argument());
         }
         report.add("  total=" + commands.size() + " reported=" + Math.min(commands.size(), limit));
+    }
+
+    private static void appendTrainerBattleRuntimeSources(List<String> report,
+                                                          List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources,
+                                                          int limit) {
+        int count = 0;
+        for (Gen3RomHandler.FrlgTrainerBattleRuntimeSource source : sources) {
+            if (count++ >= limit) {
+                break;
+            }
+            report.add("  scriptOffset=" + hex(source.scriptOffset())
+                    + " battleType=" + source.battleType()
+                    + " trainerId=" + source.trainerId()
+                    + " arg=" + source.argument()
+                    + " trainerOffset=" + hex(source.trainerOffset())
+                    + " trainerEntryValid=" + source.trainerEntryValid()
+                    + " partyFlags=" + source.partyFlags()
+                    + " partySize=" + source.partySize()
+                    + " partyPointer=" + hexOrMissing(source.partyPointer())
+                    + " partyPointerValid=" + source.partyPointerValid()
+                    + " firstPokemonOffset=" + hexOrMissing(source.firstPokemonOffset())
+                    + " firstRawSpeciesId=" + source.firstRawSpeciesId());
+        }
+        report.add("  total=" + sources.size() + " reported=" + Math.min(sources.size(), limit));
     }
 
     private static void appendLiteralCandidates(List<String> report,

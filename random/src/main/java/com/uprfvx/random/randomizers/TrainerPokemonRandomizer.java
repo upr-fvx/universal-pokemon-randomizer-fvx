@@ -864,7 +864,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 return trainerIds;
             }
         }
-        return List.of(328, 327, 326);
+        return List.of(328, 326, 327);
     }
 
     private void syncFrlgOpeningRivalTrainerId(List<Trainer> currentTrainers, int trainerId, Species starter) {

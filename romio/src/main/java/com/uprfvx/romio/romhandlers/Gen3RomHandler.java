@@ -2163,6 +2163,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return findFrlgTrainerBattleCommands(rom, 0, rom.length);
     }
 
+    List<FrlgTrainerBattleRuntimeSource> getFrlgTrainerBattleRuntimeSourcesForDiagnostics() {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return Collections.emptyList();
+        }
+        return findFrlgTrainerBattleRuntimeSources(rom, romEntry.getIntValue("TrainerData"),
+                romEntry.getIntValue("TrainerEntrySize"), 0, rom.length);
+    }
+
     List<FrlgOakLabScriptCommand> getFrlgOakLabScriptCommandsNearStarterFlowForDiagnostics() {
         if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
             return Collections.emptyList();
@@ -2309,6 +2317,44 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return commands;
     }
 
+    static List<FrlgTrainerBattleRuntimeSource> findFrlgTrainerBattleRuntimeSources(byte[] rom, int trainerDataOffset,
+                                                                                    int trainerEntrySize,
+                                                                                    int searchStart,
+                                                                                    int searchEndExclusive) {
+        List<FrlgTrainerBattleRuntimeSource> sources = new ArrayList<>();
+        for (FrlgOakLabTrainerBattleCommand command : findFrlgTrainerBattleCommands(rom, searchStart,
+                searchEndExclusive)) {
+            sources.add(readFrlgTrainerBattleRuntimeSource(rom, trainerDataOffset, trainerEntrySize, command));
+        }
+        return sources;
+    }
+
+    private static FrlgTrainerBattleRuntimeSource readFrlgTrainerBattleRuntimeSource(byte[] rom, int trainerDataOffset,
+                                                                                    int trainerEntrySize,
+                                                                                    FrlgOakLabTrainerBattleCommand command) {
+        int trainerOffset = trainerDataOffset + command.trainerId() * trainerEntrySize;
+        if (rom == null || trainerDataOffset < 0 || trainerEntrySize <= 8
+                || trainerOffset < 0 || trainerOffset + trainerEntrySize > rom.length) {
+            return FrlgTrainerBattleRuntimeSource.missing(command, trainerOffset);
+        }
+
+        int partyFlags = rom[trainerOffset] & 0xFF;
+        int partySize = rom[trainerOffset + (trainerEntrySize - 8)] & 0xFF;
+        int partyPointer = readPointerFromRom(rom, trainerOffset + (trainerEntrySize - 4));
+        int firstPokemonOffset = -1;
+        int firstRawSpeciesId = -1;
+        int stride = (partyFlags & 1) == 1 ? 16 : 8;
+        boolean partyPointerValid = partyPointer != -1 && partySize > 0 && partySize <= 6
+                && partyPointer + stride <= rom.length;
+        if (partyPointerValid) {
+            firstPokemonOffset = partyPointer;
+            firstRawSpeciesId = readLittleEndianWord(rom, firstPokemonOffset + 4);
+        }
+        return new FrlgTrainerBattleRuntimeSource(command.offset(), command.battleType(), command.trainerId(),
+                command.argument(), trainerOffset, partyFlags, partySize, partyPointer, true, partyPointerValid,
+                firstPokemonOffset, firstRawSpeciesId);
+    }
+
     static List<FrlgOakLabScriptCommand> findFrlgScriptCommands(byte[] rom, int searchStart,
                                                                 int searchEndExclusive) {
         List<FrlgOakLabScriptCommand> commands = new ArrayList<>();
@@ -2412,6 +2458,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     record FrlgOakLabTrainerBattleCommand(int offset, int battleType, int trainerId, int argument) {
+    }
+
+    record FrlgTrainerBattleRuntimeSource(int scriptOffset, int battleType, int trainerId, int argument,
+                                          int trainerOffset, int partyFlags, int partySize, int partyPointer,
+                                          boolean trainerEntryValid, boolean partyPointerValid,
+                                          int firstPokemonOffset, int firstRawSpeciesId) {
+        static FrlgTrainerBattleRuntimeSource missing(FrlgOakLabTrainerBattleCommand command, int trainerOffset) {
+            return new FrlgTrainerBattleRuntimeSource(command.offset(), command.battleType(), command.trainerId(),
+                    command.argument(), trainerOffset, -1, -1, -1, false, false, -1, -1);
+        }
     }
 
     record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {

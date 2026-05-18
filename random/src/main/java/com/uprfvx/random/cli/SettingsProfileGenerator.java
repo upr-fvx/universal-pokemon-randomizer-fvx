@@ -24,6 +24,7 @@ import java.util.function.Consumer;
  */
 public final class SettingsProfileGenerator {
 
+    private static final Map<String, String> UNSUPPORTED_OVERLAY_REASONS = new LinkedHashMap<>();
     private static final Map<String, Consumer<Settings>> FEATURE_OVERLAYS = buildFeatureOverlays();
     private static final Map<String, List<String>> PROFILE_OVERLAYS = buildProfileOverlays();
 
@@ -39,6 +40,14 @@ public final class SettingsProfileGenerator {
             Arguments arguments = Arguments.parse(args);
             if (arguments.help) {
                 printUsage();
+                return 0;
+            }
+            if (arguments.listFeatures) {
+                printFeatureOverlays();
+                return 0;
+            }
+            if (arguments.listProfiles) {
+                printProfileOverlays();
                 return 0;
             }
 
@@ -98,13 +107,45 @@ public final class SettingsProfileGenerator {
     private static void applyFeature(Settings settings, String featureId) {
         Consumer<Settings> overlay = FEATURE_OVERLAYS.get(normalize(featureId));
         if (overlay == null) {
-            throw new IllegalArgumentException("Unsupported settings feature overlay: " + featureId);
+            throw new IllegalArgumentException("Unknown settings feature overlay: " + featureId);
         }
         overlay.accept(settings);
     }
 
     private static Map<String, Consumer<Settings>> buildFeatureOverlays() {
         Map<String, Consumer<Settings>> overlays = new LinkedHashMap<>();
+
+        overlays.put("MODE-FOE-RANDOM", s -> s.setTrainersMod(Settings.TrainersMod.RANDOM));
+        overlays.put("MODE-FOE-EVEN-DISTRIBUTION", s -> s.setTrainersMod(Settings.TrainersMod.DISTRIBUTED));
+        overlays.put("MODE-FOE-MAIN-PLAYTHROUGH", s -> s.setTrainersMod(Settings.TrainersMod.MAINPLAYTHROUGH));
+        overlays.put("MODE-FOE-TYPE-THEMED", s -> s.setTrainersMod(Settings.TrainersMod.TYPE_THEMED));
+        overlays.put("MODE-FOE-KEEP-THEMED", s -> s.setTrainersMod(Settings.TrainersMod.KEEP_THEMED));
+
+        overlays.put("MODE-WILD-ENCOUNTER-SET", s -> setWildZoneMode(s, Settings.WildPokemonZoneMod.ENCOUNTER_SET));
+        overlays.put("MODE-WILD-MAP", s -> setWildZoneMode(s, Settings.WildPokemonZoneMod.MAP));
+        overlays.put("MODE-WILD-NAMED-LOCATION", s -> setWildZoneMode(s, Settings.WildPokemonZoneMod.NAMED_LOCATION));
+        overlays.put("MODE-WILD-GAME", s -> setWildZoneMode(s, Settings.WildPokemonZoneMod.GAME));
+        overlays.put("MODE-WILD-CATCH-EM-ALL", s -> {
+            s.setRandomizeWildPokemon(true);
+            s.setCatchEmAllEncounters(true);
+        });
+
+        overlays.put("MODE-TYPE-RANDOM", s -> s.setTypeEffectivenessMod(Settings.TypeEffectivenessMod.RANDOM));
+        overlays.put("MODE-TYPE-RANDOM-BALANCED", s -> s.setTypeEffectivenessMod(Settings.TypeEffectivenessMod.RANDOM_BALANCED));
+        overlays.put("MODE-TYPE-KEEP-IDENTITIES", s -> s.setTypeEffectivenessMod(Settings.TypeEffectivenessMod.KEEP_IDENTITIES));
+        overlays.put("MODE-TYPE-INVERSE", s -> s.setTypeEffectivenessMod(Settings.TypeEffectivenessMod.INVERSE));
+
+        overlays.put("MODE-GEN-LIMIT-1-9", unsupported("MODE-GEN-LIMIT-1-9",
+                "Exact Gen 1-9 restrictions cannot be represented by the current GenRestrictions Settings format."));
+        overlays.put("MODE-GEN-LIMIT-1-9-NO-RELATIVES", unsupported("MODE-GEN-LIMIT-1-9-NO-RELATIVES",
+                "Exact Gen 1-9 restrictions cannot be represented by the current GenRestrictions Settings format."));
+        overlays.put("MODE-GEN-LIMIT-1-9-NO-MEGAS", unsupported("MODE-GEN-LIMIT-1-9-NO-MEGAS",
+                "Exact Gen 1-9 restrictions cannot be represented by the current GenRestrictions Settings format."));
+        overlays.put("MODE-GEN-LIMIT-1-9-NO-GMAX", unsupported("MODE-GEN-LIMIT-1-9-NO-GMAX",
+                "Gigantamax-specific pool exclusion has no dedicated Settings field."));
+
+        overlays.put("MODE-INTRO-RANDOM", s -> s.setRandomizeIntroMon(true));
+        overlays.put("MODE-NO-RANDOM-INTRO", s -> s.setRandomizeIntroMon(false));
 
         overlays.put("FVX-GEN-001", s -> s.setLimitPokemon(true));
         overlays.put("FVX-GEN-002", s -> s.setBanPrematureEvos(true));
@@ -143,7 +184,7 @@ public final class SettingsProfileGenerator {
         overlays.put("FVX-TRAIT-027", s -> s.setRemoveTimeBasedEvolutions(true));
         overlays.put("FVX-TRAIT-028", s -> s.setExpCurveMod(Settings.ExpCurveMod.STRONG_LEGENDARIES));
 
-        overlays.put("FVX-SST-001", unsupported("Custom starters require ROM-specific species IDs."));
+        overlays.put("FVX-SST-001", unsupported("FVX-SST-001", "Custom starters require ROM-specific species IDs."));
         overlays.put("FVX-SST-002", s -> s.setStartersMod(Settings.StartersMod.COMPLETELY_RANDOM));
         overlays.put("FVX-SST-003", s -> s.setStartersMod(Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS));
         overlays.put("FVX-SST-004", s -> s.setStartersMod(Settings.StartersMod.RANDOM_BASIC));
@@ -176,7 +217,8 @@ public final class SettingsProfileGenerator {
         overlays.put("FVX-MOVE-003", s -> s.setRandomizeMovePPs(true));
         overlays.put("FVX-MOVE-004", s -> s.setRandomizeMoveTypes(true));
         overlays.put("FVX-MOVE-005", s -> s.setRandomizeMoveNames(true));
-        overlays.put("FVX-MOVE-006", unsupported("Update Moves to Generation is intentionally out of scope for CFRU/DPE Gen9 profiles."));
+        overlays.put("FVX-MOVE-006", unsupported("FVX-MOVE-006",
+                "Update Moves to Generation is intentionally out of scope for CFRU/DPE Gen9 profiles."));
         overlays.put("FVX-MOVE-007", s -> s.setMovesetsMod(Settings.MovesetsMod.COMPLETELY_RANDOM));
         overlays.put("FVX-MOVE-008", s -> s.setStartWithGuaranteedMoves(true));
         overlays.put("FVX-MOVE-009", s -> s.setReorderDamagingMoves(true));
@@ -291,8 +333,10 @@ public final class SettingsProfileGenerator {
         overlays.put("FVX-GFX-002", s -> s.setPokemonPalettesFollowTypes(true));
         overlays.put("FVX-GFX-003", s -> s.setPokemonPalettesFollowEvolutions(true));
         overlays.put("FVX-GFX-004", s -> s.setPokemonPalettesShinyFromNormal(true));
-        overlays.put("FVX-GFX-005", unsupported("Custom Player Graphics are supplied through the randomizer CLI, not .rnqs settings."));
-        overlays.put("FVX-GFX-006", unsupported("Character replacement is part of Custom Player Graphics, not .rnqs settings."));
+        overlays.put("FVX-GFX-005", unsupported("FVX-GFX-005",
+                "Custom Player Graphics are supplied through the randomizer CLI, not .rnqs settings."));
+        overlays.put("FVX-GFX-006", unsupported("FVX-GFX-006",
+                "Character replacement is part of Custom Player Graphics, not .rnqs settings."));
 
         overlays.put("FVX-MISC-001", s -> enableMiscTweak(s, MiscTweak.FASTEST_TEXT));
         overlays.put("FVX-MISC-002", s -> enableMiscTweak(s, MiscTweak.RUNNING_SHOES_INDOORS));
@@ -354,13 +398,23 @@ public final class SettingsProfileGenerator {
                 "FVX-MISC-005", "FVX-MISC-006", "FVX-MISC-007", "FVX-MISC-008",
                 "FVX-MISC-009", "FVX-MISC-010", "FVX-MISC-011", "FVX-MISC-012"));
         profiles.put("11_SPECIAL_WILD", Collections.singletonList("FVX-SPECIAL-WILD-001"));
+        profiles.put("FOE_MODE_VARIANTS", Collections.singletonList("MODE-FOE-RANDOM"));
+        profiles.put("WILD_LOCATION_VARIANTS", Collections.singletonList("MODE-WILD-ENCOUNTER-SET"));
+        profiles.put("GENERAL_RESTRICTIONS_VARIANTS", Arrays.asList("FVX-GEN-001", "MODE-NO-RANDOM-INTRO"));
+        profiles.put("TYPE_EFFECTIVENESS_EXACT_VARIANTS", Collections.singletonList("MODE-TYPE-RANDOM"));
         return Collections.unmodifiableMap(profiles);
     }
 
-    private static Consumer<Settings> unsupported(String reason) {
+    private static Consumer<Settings> unsupported(String overlayId, String reason) {
+        UNSUPPORTED_OVERLAY_REASONS.put(normalize(overlayId), reason);
         return s -> {
-            throw new IllegalArgumentException(reason);
+            throw new IllegalArgumentException("Unsupported settings feature overlay " + overlayId + ": " + reason);
         };
+    }
+
+    private static void setWildZoneMode(Settings settings, Settings.WildPokemonZoneMod zoneMod) {
+        settings.setRandomizeWildPokemon(true);
+        settings.setWildPokemonZoneMod(zoneMod);
     }
 
     private static void enableMiscTweak(Settings settings, MiscTweak tweak) {
@@ -372,7 +426,27 @@ public final class SettingsProfileGenerator {
     }
 
     private static void printUsage() {
-        System.out.println("Usage: settings-profile --base-settings <file.rnqs> --output-settings <file.rnqs> [--profile ID] [--enable FEATURE_ID]");
+        System.out.println("Usage: settings-profile [--help] [--list-features] [--list-profiles]");
+        System.out.println("       settings-profile --base-settings <file.rnqs> --output-settings <file.rnqs> [--profile ID] [--enable OVERLAY_ID]");
+        System.out.println();
+        System.out.println("No ROM is loaded. Profiles and feature overlays modify only Settings API state.");
+    }
+
+    private static void printFeatureOverlays() {
+        for (String overlayId : FEATURE_OVERLAYS.keySet()) {
+            String unsupportedReason = UNSUPPORTED_OVERLAY_REASONS.get(overlayId);
+            if (unsupportedReason == null) {
+                System.out.println(overlayId + "\tsupported");
+            } else {
+                System.out.println(overlayId + "\tunsupported\t" + unsupportedReason);
+            }
+        }
+    }
+
+    private static void printProfileOverlays() {
+        for (Map.Entry<String, List<String>> profile : PROFILE_OVERLAYS.entrySet()) {
+            System.out.println(profile.getKey() + "\t" + String.join(",", profile.getValue()));
+        }
     }
 
     private static final class Arguments {
@@ -381,6 +455,8 @@ public final class SettingsProfileGenerator {
         private final List<String> enabledFeatures = new ArrayList<>();
         private final List<String> profiles = new ArrayList<>();
         private boolean help;
+        private boolean listFeatures;
+        private boolean listProfiles;
 
         private static Arguments parse(String[] args) {
             Arguments parsed = new Arguments();
@@ -390,6 +466,12 @@ public final class SettingsProfileGenerator {
                     case "-h":
                     case "--help":
                         parsed.help = true;
+                        break;
+                    case "--list-features":
+                        parsed.listFeatures = true;
+                        break;
+                    case "--list-profiles":
+                        parsed.listProfiles = true;
                         break;
                     case "--base-settings":
                         parsed.baseSettings = Paths.get(requireValue(args, ++i, arg));
@@ -407,7 +489,8 @@ public final class SettingsProfileGenerator {
                         throw new IllegalArgumentException("Unknown argument: " + arg);
                 }
             }
-            if (!parsed.help && parsed.enabledFeatures.isEmpty() && parsed.profiles.isEmpty()) {
+            if (!parsed.help && !parsed.listFeatures && !parsed.listProfiles
+                    && parsed.enabledFeatures.isEmpty() && parsed.profiles.isEmpty()) {
                 throw new IllegalArgumentException("No --enable or --profile overlays were provided.");
             }
             return parsed;

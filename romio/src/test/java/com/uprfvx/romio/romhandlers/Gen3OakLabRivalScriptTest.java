@@ -57,6 +57,39 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
+    public void rawTrainerPartyOffsetCanReadTrainerRowsOutsideLoadedTrainerCount() {
+        byte[] rom = new byte[2048];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int trainerId = 26;
+        int trainerOffset = trainerDataOffset + trainerId * trainerEntrySize;
+        int partyOffset = 1600;
+        rom[trainerOffset + (trainerEntrySize - 8)] = 1;
+        writePointer(rom, trainerOffset + (trainerEntrySize - 4), partyOffset);
+
+        int firstPokemonOffset = Gen3RomHandler.getFirstRawTrainerPokemonOffset(
+                rom, trainerDataOffset, trainerEntrySize, trainerId);
+
+        assertEquals(partyOffset, firstPokemonOffset);
+    }
+
+    @Test
+    public void rawTrainerPartyOffsetSkipsEmptyOrInvalidRawRows() {
+        byte[] rom = new byte[2048];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        int emptyTrainerId = 26;
+        int invalidPointerTrainerId = 27;
+        int invalidTrainerOffset = trainerDataOffset + invalidPointerTrainerId * trainerEntrySize;
+        rom[invalidTrainerOffset + (trainerEntrySize - 8)] = 1;
+
+        assertEquals(-1, Gen3RomHandler.getFirstRawTrainerPokemonOffset(
+                rom, trainerDataOffset, trainerEntrySize, emptyTrainerId));
+        assertEquals(-1, Gen3RomHandler.getFirstRawTrainerPokemonOffset(
+                rom, trainerDataOffset, trainerEntrySize, invalidPointerTrainerId));
+    }
+
+    @Test
     public void referenceOakLabSourceUsesRivalStarterScriptVariableBeforeBattle() throws IOException {
         Path oakLabScriptPath = referenceSourcePath("data/maps/PalletTown_ProfessorOaksLab/scripts.inc");
         assumeTrue(Files.isRegularFile(oakLabScriptPath), "pret FireRed reference source is not available");
@@ -107,6 +140,14 @@ public class Gen3OakLabRivalScriptTest {
     private static void writeWord(byte[] rom, int offset, int value) {
         rom[offset] = (byte) (value & 0xFF);
         rom[offset + 1] = (byte) ((value >>> 8) & 0xFF);
+    }
+
+    private static void writePointer(byte[] rom, int offset, int value) {
+        int pointer = value + 0x8000000;
+        rom[offset] = (byte) (pointer & 0xFF);
+        rom[offset + 1] = (byte) ((pointer >>> 8) & 0xFF);
+        rom[offset + 2] = (byte) ((pointer >>> 16) & 0xFF);
+        rom[offset + 3] = (byte) ((pointer >>> 24) & 0xFF);
     }
 
     private static Path referenceSourcePath(String relativePath) {

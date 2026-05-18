@@ -52,5 +52,4 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (Gen [N]) Fixed [...]. 
-- (GUI) Fixed [...].
+- (Gen 7) Fixed non-Ultra Beasts static encounters occasionally being randomized into Ultra Beasts when "Swap Legendaries & Swap Standards" is used.

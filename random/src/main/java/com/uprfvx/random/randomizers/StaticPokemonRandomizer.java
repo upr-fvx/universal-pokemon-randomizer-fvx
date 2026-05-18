@@ -91,6 +91,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                 nonlegsLeft = nonlegsLeft.filter(pk -> !pk.isEssentiallyCosmetic());
             }
             SpeciesSet ultraBeastsLeft = new SpeciesSet(rSpecService.getUltrabeasts(false));
+            legendariesLeft.removeAll(ultraBeastsLeft);
+            nonlegsLeft.removeAll(ultraBeastsLeft);
             legendariesLeft.removeAll(banned);
             nonlegsLeft.removeAll(banned);
             ultraBeastsLeft.removeAll(banned);

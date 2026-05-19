@@ -284,13 +284,31 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
+    void trainerClassNameRandomizerAvoidsClassIdIdentityMappingsWhenAlternativesExist() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerClassNames = List.of("BUG CATCHER", "PSYCHIC", "ELITE 4", "COOLTRAINER");
+
+        TrainerNameRandomizer randomizer = new TrainerNameRandomizer(handler.proxy, settings(), new Random(1));
+        randomizer.randomizeTrainerClassNames();
+
+        Map<Integer, Integer> mapping = randomizer.getTrainerClassIdMapping();
+        assertEquals(handler.trainerClassNames.size(), mapping.size());
+        for (int classId = 0; classId < handler.trainerClassNames.size(); classId++) {
+            assertNotEquals(classId, mapping.get(classId));
+        }
+        assertNotEquals("BUG CATCHER", handler.writtenTrainerClassNames.get(0));
+    }
+
+    @Test
     void trainerClassNameRandomizerKeepsIdentityWhenNoAlternativeExists() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerClassNames = List.of("OLD");
 
-        new TrainerNameRandomizer(handler.proxy, settings(), new Random(1)).randomizeTrainerClassNames();
+        TrainerNameRandomizer randomizer = new TrainerNameRandomizer(handler.proxy, settings(), new Random(1));
+        randomizer.randomizeTrainerClassNames();
 
         assertEquals(List.of("OLD"), handler.writtenTrainerClassNames);
+        assertEquals(Map.of(0, 0), randomizer.getTrainerClassIdMapping());
     }
 
     @Test

@@ -160,19 +160,14 @@ public class TrainerNameRandomizer extends Randomizer {
         int numTrainerClasses = currentClassNames.size();
         List<Integer> doublesClasses = romHandler.getDoublesTrainerClasses();
         Set<Integer> doublesClassIndexes = new HashSet<>(doublesClasses);
-        List<String>[] existingTrainerClasses = existingTrainerClassesByMode(currentClassNames, doublesClassIndexes);
-        Map<Integer, List<String>>[] existingTrainerClassesByLength =
-                existingTrainerClassesByLength(existingTrainerClasses);
-        Map<String, String>[] translations = existingTrainerClassTranslations(
-                existingTrainerClasses, existingTrainerClassesByLength, mustBeSameLength);
+        List<Integer> targetClassIds = randomizedTrainerClassIdTargets(currentClassNames, doublesClassIndexes,
+                mustBeSameLength);
 
         // Start choosing
         for (int i = 0; i < numTrainerClasses; i++) {
-            String trainerClassName = currentClassNames.get(i);
-            int idx = doublesClassIndexes.contains(i) ? 1 : 0;
-            newClassNames.add(translations[idx].getOrDefault(trainerClassName, trainerClassName));
+            newClassNames.add(currentClassNames.get(targetClassIds.get(i)));
+            trainerClassIdMapping.put(i, targetClassIds.get(i));
         }
-        trainerClassIdMapping.putAll(classIdMappingForNames(currentClassNames, newClassNames, doublesClassIndexes));
 
         // Done choosing, save
         romHandler.setTrainerClassNames(newClassNames);
@@ -187,76 +182,57 @@ public class TrainerNameRandomizer extends Randomizer {
         return Collections.unmodifiableList(originalTrainerClassNames);
     }
 
-    @SuppressWarnings("unchecked")
-    private List<String>[] existingTrainerClassesByMode(List<String> currentClassNames, Set<Integer> doublesClasses) {
-        List<String>[] existingTrainerClasses = new List[]{new ArrayList<String>(), new ArrayList<String>()};
+    private List<Integer> randomizedTrainerClassIdTargets(
+            List<String> currentClassNames, Set<Integer> doublesClassIndexes, boolean mustBeSameLength) {
+        List<Integer> targetClassIds = new ArrayList<>();
         for (int i = 0; i < currentClassNames.size(); i++) {
-            int idx = doublesClasses.contains(i) ? 1 : 0;
-            String trainerClassName = currentClassNames.get(i);
-            if (!existingTrainerClasses[idx].contains(trainerClassName)) {
-                existingTrainerClasses[idx].add(trainerClassName);
+            targetClassIds.add(i);
+        }
+        for (List<Integer> bucket : trainerClassIdBuckets(currentClassNames, doublesClassIndexes, mustBeSameLength)) {
+            List<Integer> shuffledTargets = shuffledTrainerClassIds(bucket, currentClassNames);
+            for (int i = 0; i < bucket.size(); i++) {
+                targetClassIds.set(bucket.get(i), shuffledTargets.get(i));
             }
         }
-        return existingTrainerClasses;
+        return targetClassIds;
     }
 
-    @SuppressWarnings("unchecked")
-    private Map<Integer, List<String>>[] existingTrainerClassesByLength(List<String>[] existingTrainerClasses) {
-        Map<Integer, List<String>>[] existingTrainerClassesByLength = new Map[]{new HashMap<Integer, List<String>>(),
-                new HashMap<Integer, List<String>>()};
-        for (int i = 0; i < existingTrainerClasses.length; i++) {
-            for (String trainerClassName : existingTrainerClasses[i]) {
-                int len = romHandler.internalStringLength(trainerClassName);
-                existingTrainerClassesByLength[i].computeIfAbsent(len, ignored -> new ArrayList<>())
-                        .add(trainerClassName);
-            }
-        }
-        return existingTrainerClassesByLength;
-    }
-
-    @SuppressWarnings("unchecked")
-    private Map<String, String>[] existingTrainerClassTranslations(List<String>[] existingTrainerClasses,
-                                                                   Map<Integer, List<String>>[]
-                                                                           existingTrainerClassesByLength,
-                                                                   boolean mustBeSameLength) {
-        Map<String, String>[] translations = new Map[]{new HashMap<String, String>(), new HashMap<String, String>()};
-        for (int i = 0; i < translations.length; i++) {
+    private List<List<Integer>> trainerClassIdBuckets(
+            List<String> currentClassNames, Set<Integer> doublesClassIndexes, boolean mustBeSameLength) {
+        Map<String, List<Integer>> bucketsByKey = new LinkedHashMap<>();
+        for (int classId = 0; classId < currentClassNames.size(); classId++) {
+            int mode = doublesClassIndexes.contains(classId) ? 1 : 0;
+            String key;
             if (mustBeSameLength) {
-                for (List<String> sameLengthClasses : existingTrainerClassesByLength[i].values()) {
-                    translations[i].putAll(shuffledTranslations(sameLengthClasses));
-                }
+                key = mode + ":" + romHandler.internalStringLength(currentClassNames.get(classId));
             } else {
-                translations[i].putAll(shuffledTranslations(existingTrainerClasses[i]));
+                key = String.valueOf(mode);
             }
+            bucketsByKey.computeIfAbsent(key, ignored -> new ArrayList<>()).add(classId);
         }
-        return translations;
+        return new ArrayList<>(bucketsByKey.values());
     }
 
-    private Map<String, String> shuffledTranslations(List<String> classNames) {
-        Map<String, String> translations = new HashMap<>();
-        if (classNames.isEmpty()) {
-            return translations;
+    private List<Integer> shuffledTrainerClassIds(List<Integer> classIds, List<String> currentClassNames) {
+        List<Integer> shuffledClassIds = new ArrayList<>(classIds);
+        if (shuffledClassIds.size() <= 1) {
+            return shuffledClassIds;
         }
 
-        List<String> shuffledClassNames = new ArrayList<>(classNames);
-        if (shuffledClassNames.size() > 1) {
-            int tries = 0;
-            do {
-                Collections.shuffle(shuffledClassNames, random);
-                tries++;
-            } while (hasIdentityMapping(classNames, shuffledClassNames) && tries < 100);
-            if (hasIdentityMapping(classNames, shuffledClassNames)) {
-                Collections.rotate(shuffledClassNames, 1);
-            }
+        int tries = 0;
+        do {
+            Collections.shuffle(shuffledClassIds, random);
+            tries++;
+        } while ((hasIdentityClassIdMapping(classIds, shuffledClassIds)
+                || hasAvoidableClassNameIdentityMapping(classIds, shuffledClassIds, currentClassNames))
+                && tries < 100);
+        if (hasIdentityClassIdMapping(classIds, shuffledClassIds)) {
+            Collections.rotate(shuffledClassIds, 1);
         }
-
-        for (int i = 0; i < classNames.size(); i++) {
-            translations.put(classNames.get(i), shuffledClassNames.get(i));
-        }
-        return translations;
+        return shuffledClassIds;
     }
 
-    private boolean hasIdentityMapping(List<String> originals, List<String> replacements) {
+    private boolean hasIdentityClassIdMapping(List<Integer> originals, List<Integer> replacements) {
         for (int i = 0; i < originals.size(); i++) {
             if (originals.get(i).equals(replacements.get(i))) {
                 return true;
@@ -265,28 +241,28 @@ public class TrainerNameRandomizer extends Randomizer {
         return false;
     }
 
-    private Map<Integer, Integer> classIdMappingForNames(
-            List<String> currentClassNames, List<String> newClassNames, Set<Integer> doublesClassIndexes) {
-        Map<Integer, Integer> mapping = new HashMap<>();
-        for (int oldClassId = 0; oldClassId < currentClassNames.size(); oldClassId++) {
-            int idx = doublesClassIndexes.contains(oldClassId) ? 1 : 0;
-            String targetClassName = newClassNames.get(oldClassId);
-            int targetClassId = classIdForName(currentClassNames, doublesClassIndexes, targetClassName, idx);
-            if (targetClassId >= 0) {
-                mapping.put(oldClassId, targetClassId);
+    private boolean hasAvoidableClassNameIdentityMapping(
+            List<Integer> originals, List<Integer> replacements, List<String> currentClassNames) {
+        for (int i = 0; i < originals.size(); i++) {
+            int sourceClassId = originals.get(i);
+            int targetClassId = replacements.get(i);
+            String sourceName = currentClassNames.get(sourceClassId);
+            String targetName = currentClassNames.get(targetClassId);
+            if (sourceName.equals(targetName) && hasDifferentClassNameCandidate(sourceName, originals,
+                    currentClassNames)) {
+                return true;
             }
         }
-        return mapping;
+        return false;
     }
 
-    private int classIdForName(
-            List<String> classNames, Set<Integer> doublesClassIndexes, String targetClassName, int targetMode) {
-        for (int classId = 0; classId < classNames.size(); classId++) {
-            int idx = doublesClassIndexes.contains(classId) ? 1 : 0;
-            if (idx == targetMode && classNames.get(classId).equals(targetClassName)) {
-                return classId;
+    private boolean hasDifferentClassNameCandidate(String sourceName, List<Integer> classIds,
+                                                   List<String> currentClassNames) {
+        for (int classId : classIds) {
+            if (!sourceName.equals(currentClassNames.get(classId))) {
+                return true;
             }
         }
-        return -1;
+        return false;
     }
 }

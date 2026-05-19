@@ -43,6 +43,10 @@ and uses an observed `trainerPic` from that target class. The class-name text
 table is restored to the original class labels so the displayed class, class ID
 and visible pic describe the same target class.
 
+The class-name mapping is class-ID based and avoids identity mappings when an
+alternative target class exists in the same allowed pool. If a pool has only one
+valid class, identity is allowed because no different target exists.
+
 This is a chaotic opt-in visual consistency mode. It is not a lore/plausibility
 mode, not a regular-only stable mode and not a promise that a trainer remains in
 the same narrative role.

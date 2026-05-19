@@ -3457,6 +3457,38 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             List<String> warnings) {
     }
 
+    record FrlgWildEncounterOutputAuditReport(
+            FrlgWildEncounterOutputAuditSummary summary,
+            List<FrlgWildEncounterOutputAuditRow> rows) {
+    }
+
+    record FrlgWildEncounterOutputAuditSummary(
+            int totalEncounterSlots,
+            int changedSlots,
+            int unchangedSlots) {
+
+        double changedPercentage() {
+            return totalEncounterSlots == 0 ? 0.0 : (changedSlots * 100.0) / totalEncounterSlots;
+        }
+    }
+
+    record FrlgWildEncounterOutputAuditRow(
+            int areaIndex,
+            String areaName,
+            int mapIndex,
+            String locationTag,
+            EncounterType encounterType,
+            int encounterRate,
+            int slotIndex,
+            int level,
+            int maxLevel,
+            int baseSpeciesId,
+            String baseSpeciesName,
+            int outputSpeciesId,
+            String outputSpeciesName,
+            boolean changedFromBase) {
+    }
+
     record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {
     }
 
@@ -3668,6 +3700,74 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return getEncounters(useTimeOfDay).stream()
                 .sorted(Comparator.comparingInt(a -> locationTagsTraverseOrder.indexOf(a.getLocationTag())))
                 .collect(Collectors.toList());
+    }
+
+    FrlgWildEncounterOutputAuditReport getFrlgWildEncounterOutputAuditForDiagnostics(
+            Gen3RomHandler outputRomHandler) {
+        List<EncounterArea> baseAreas = getEncounters(false);
+        List<EncounterArea> outputAreas = outputRomHandler == null ? List.of() : outputRomHandler.getEncounters(false);
+        return buildFrlgWildEncounterOutputAudit(baseAreas, outputAreas);
+    }
+
+    static FrlgWildEncounterOutputAuditReport buildFrlgWildEncounterOutputAudit(
+            List<EncounterArea> baseAreas,
+            List<EncounterArea> outputAreas) {
+        List<FrlgWildEncounterOutputAuditRow> rows = new ArrayList<>();
+        int changed = 0;
+        int unchanged = 0;
+
+        for (int areaIndex = 0; areaIndex < baseAreas.size(); areaIndex++) {
+            EncounterArea baseArea = baseAreas.get(areaIndex);
+            EncounterArea outputArea = areaIndex < outputAreas.size() ? outputAreas.get(areaIndex) : null;
+            int baseSlotCount = baseArea.size();
+            for (int slotIndex = 0; slotIndex < baseSlotCount; slotIndex++) {
+                Encounter baseEncounter = baseArea.get(slotIndex);
+                Encounter outputEncounter = outputArea != null && slotIndex < outputArea.size()
+                        ? outputArea.get(slotIndex)
+                        : null;
+                int baseSpeciesId = speciesNumberForDiagnostics(baseEncounter);
+                int outputSpeciesId = speciesNumberForDiagnostics(outputEncounter);
+                boolean changedFromBase = baseSpeciesId != outputSpeciesId;
+                if (changedFromBase) {
+                    changed++;
+                } else {
+                    unchanged++;
+                }
+                rows.add(new FrlgWildEncounterOutputAuditRow(areaIndex,
+                        baseArea.getDisplayName(),
+                        baseArea.getMapIndex(),
+                        baseArea.getLocationTag(),
+                        baseArea.getEncounterType(),
+                        baseArea.getRate(),
+                        slotIndex,
+                        baseEncounter.getLevel(),
+                        baseEncounter.getMaxLevel(),
+                        baseSpeciesId,
+                        speciesNameForDiagnostics(baseEncounter),
+                        outputSpeciesId,
+                        speciesNameForDiagnostics(outputEncounter),
+                        changedFromBase));
+            }
+        }
+
+        FrlgWildEncounterOutputAuditSummary summary =
+                new FrlgWildEncounterOutputAuditSummary(rows.size(), changed, unchanged);
+        return new FrlgWildEncounterOutputAuditReport(summary, rows);
+    }
+
+    private static int speciesNumberForDiagnostics(Encounter encounter) {
+        return encounter == null || encounter.getSpecies() == null ? -1 : encounter.getSpecies().getNumber();
+    }
+
+    private static String speciesNameForDiagnostics(Encounter encounter) {
+        if (encounter == null) {
+            return "<missing>";
+        }
+        Species species = encounter.getSpecies();
+        if (species == null) {
+            return "<unknown>";
+        }
+        return species.getName();
     }
 
     @Override

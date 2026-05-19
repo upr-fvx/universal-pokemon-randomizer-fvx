@@ -14,10 +14,12 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TrainerClassSpriteSyncRandomizerTest {
@@ -58,6 +60,28 @@ class TrainerClassSpriteSyncRandomizerTest {
         assertEquals(0, lass.getTrainerclass());
         assertEquals(7, lass.getTrainerPic());
         assertEquals("YOUNGSTER B", lass.getFullDisplayName());
+    }
+
+    @Test
+    void spriteSyncFollowsNonIdentityTrainerClassNameMapping() {
+        Trainer bugCatcher = trainer(0, 7, "A", null);
+        Trainer psychic = trainer(1, 8, "B", null);
+        Trainer elite = trainer(2, 9, "C", "ELITE1");
+        TestHandler handler = new TestHandler(List.of(bugCatcher, psychic, elite), true,
+                List.of("BUG CATCHER", "PSYCHIC", "ELITE 4"));
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settingsWithNames(), new Random(1));
+
+        nameRandomizer.randomizeTrainerClassNames();
+        int targetClass = nameRandomizer.getTrainerClassIdMapping().get(0);
+        Map<Integer, Integer> picByClass = Map.of(0, 7, 1, 8, 2, 9);
+
+        new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer)
+                .randomizeTrainerClassSprites();
+
+        assertNotEquals(0, targetClass);
+        assertEquals(targetClass, bugCatcher.getTrainerclass());
+        assertEquals(picByClass.get(targetClass), bugCatcher.getTrainerPic());
     }
 
     @Test

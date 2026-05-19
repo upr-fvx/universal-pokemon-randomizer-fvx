@@ -86,6 +86,26 @@ public class TrainerSpecialRulesTest {
     }
 
     @Test
+    public void rivalCarriesVanillaCounterStarterWhenStartersAreUnchanged() {
+        Species squirtle = species(7, "Squirtle");
+        Species charmander = species(4, "Charmander");
+        Species bulbasaur = species(1, "Bulbasaur");
+        Species freelyRandomized = species(301, "FreelyRandomized");
+        Trainer rivalForSquirtleChoice = trainer(1, "RIVAL1-0", pokemon(freelyRandomized, 5));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(squirtle, charmander, bulbasaur, freelyRandomized),
+                List.of(rivalForSquirtleChoice),
+                List.of(squirtle, charmander, bulbasaur),
+                Collections.emptyList());
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
+        randomizer.makeRivalCarryStarter();
+
+        assertSame(charmander, rivalForSquirtleChoice.getPokemon().get(0).getSpecies());
+        assertTrue(randomizer.isChangesMade());
+    }
+
+    @Test
     public void firstRivalCarryStarterSyncsOnlyOpeningRivalAndFriendBattles() {
         Species playerStarter = species(101, "PlayerStarter");
         Species rivalStarter = species(102, "RivalStarter");
@@ -160,6 +180,52 @@ public class TrainerSpecialRulesTest {
         assertNotSame(squirtle, rivalSquirtle.getPokemon().get(0).getSpecies());
         assertNotSame(bulbasaur, rivalBulbasaur.getPokemon().get(0).getSpecies());
         assertNotSame(golisopod, rivalBulbasaur.getPokemon().get(0).getSpecies());
+    }
+
+    @Test
+    public void foeRandomizationDoesNotOverwriteRivalStarterAfterCorrection() {
+        Species playerStarter = species(101, "PlayerStarter");
+        Species rivalStarter = species(102, "RivalStarter");
+        Species friendStarter = species(103, "FriendStarter");
+        Species filler = species(301, "Filler");
+        Species replacement = species(302, "Replacement");
+        Trainer laterRival = trainer(331, "RIVAL2-0", pokemon(filler, 20), pokemon(filler, 18));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(playerStarter, rivalStarter, friendStarter, filler, replacement),
+                List.of(laterRival),
+                List.of(playerStarter, rivalStarter, friendStarter),
+                Collections.emptyList());
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
+        settings.setRivalCarriesStarterThroughout(true);
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, settings, new Random(17));
+
+        randomizer.makeRivalCarryStarter();
+        randomizer.randomizeTrainerPokes();
+        randomizer.makeRivalCarryStarter();
+
+        assertSame(rivalStarter, laterRival.getPokemon().get(0).getSpecies());
+        assertTrue(laterRival.getPokemon().get(1).isResetMoves());
+    }
+
+    @Test
+    public void runtimeSourceRivalRowsCarryCounterStarterWhenTaggedFromKnownRuntimeSource() {
+        Species playerStarter = species(101, "PlayerStarter");
+        Species rivalStarter = species(102, "RivalStarter");
+        Species friendStarter = species(103, "FriendStarter");
+        Species filler = species(301, "Filler");
+        Trainer runtimeRival = trainer(0x14B, "RIVAL2-0", pokemon(filler, 20));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(playerStarter, rivalStarter, friendStarter, filler),
+                List.of(runtimeRival),
+                List.of(playerStarter, rivalStarter, friendStarter),
+                Collections.emptyList());
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
+        randomizer.makeRivalCarryStarter();
+
+        assertSame(rivalStarter, runtimeRival.getPokemon().get(0).getSpecies());
+        assertTrue(randomizer.isChangesMade());
     }
 
     @Test

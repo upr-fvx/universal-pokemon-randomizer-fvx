@@ -42,8 +42,16 @@ and save tracking, but the trainer model classifies that tag as a regular
 trainer. That makes the rows eligible for Trainer Pokemon randomization and for
 regular-trainer subpaths such as movesets, held items, added Pokemon and type
 diversity when those settings are enabled. Known runtime-source tags, such as
-Rival 2 and Brock, keep their specific `RIVAL*` / `GYM*-LEADER`
-classification.
+Rival and Brock, keep their specific `RIVAL*` / `GYM*-LEADER` classification.
+FRLG Rival runtime-source rows are tagged with the same starter-variant tags as
+normal Rival rows so `Rival Carries Starter Through Game` can protect and
+correct the Rival starter slot.
+
+When `Rival Carries Starter Through Game` is enabled, the Rival starter is also
+reapplied after free Trainer Pokemon randomization. This keeps Foe Pokemon
+randomization available for non-starter party members while restoring the
+correct counter-starter for vanilla starters or for the randomized starter slot
+mapping. Local smoke is still required to confirm the private output ROM path.
 
 Current hypotheses:
 

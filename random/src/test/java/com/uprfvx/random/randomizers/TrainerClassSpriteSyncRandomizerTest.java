@@ -20,6 +20,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TrainerClassSpriteSyncRandomizerTest {
@@ -123,6 +124,41 @@ class TrainerClassSpriteSyncRandomizerTest {
         TrainerClassSpriteSyncRandomizer.Assignment assignment =
                 spriteSyncRandomizer.getAssignmentsByTrainerIndex().get(firstRival.getIndex());
         assertEquals("rival", assignment.getGroup());
+    }
+
+    @Test
+    void spriteSyncGroupsRivalRowsDetectedFromDisplayNameWithoutTags() {
+        Trainer firstRival = trainer(373, 0, 7, "Terry", null);
+        Trainer laterRival = trainer(374, 0, 7, "Terry", null);
+        Trainer regular = trainer(102, 0, 7, "Rick", null);
+        Trainer psychic = trainer(201, 1, 8, "D", null);
+        Trainer elite = trainer(301, 2, 9, "E", "ELITE1");
+        firstRival.setFullDisplayName("Rival Terry");
+        laterRival.setFullDisplayName("Rival Terry");
+        TestHandler handler = new TestHandler(List.of(firstRival, laterRival, regular, psychic, elite), true,
+                List.of("BUG CATCHER", "PSYCHIC", "ELITE 4"));
+        Settings settings = settingsWithNames();
+        settings.setRandomizeTrainerClassSprites(true);
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settings, new CyclingRandom(0, 1));
+
+        nameRandomizer.randomizeTrainerClassNames();
+        TrainerClassSpriteSyncRandomizer spriteSyncRandomizer =
+                new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer);
+        spriteSyncRandomizer.randomizeTrainerClassSprites();
+
+        assertNotEquals(0, firstRival.getTrainerclass());
+        assertEquals(firstRival.getTrainerclass(), laterRival.getTrainerclass());
+        assertEquals(firstRival.getTrainerPic(), laterRival.getTrainerPic());
+        String targetClassName = handler.trainerClassNames.get(firstRival.getTrainerclass());
+        assertEquals(targetClassName + " Terry", firstRival.getFullDisplayName());
+        assertEquals(targetClassName + " Terry", laterRival.getFullDisplayName());
+        assertEquals("rival", spriteSyncRandomizer.getAssignmentsByTrainerIndex()
+                .get(firstRival.getIndex()).getGroup());
+        assertEquals("rival", spriteSyncRandomizer.getAssignmentsByTrainerIndex()
+                .get(laterRival.getIndex()).getGroup());
+        assertNull(spriteSyncRandomizer.getAssignmentsByTrainerIndex()
+                .get(regular.getIndex()).getGroup());
     }
 
     @Test

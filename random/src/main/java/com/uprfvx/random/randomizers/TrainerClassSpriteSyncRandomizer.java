@@ -97,11 +97,12 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
             if (oldTrainerClass == newTrainerClass && oldTrainerPic == newTrainerPic) {
                 continue;
             }
+            String group = assignmentGroup(trainer, originalTrainerClassNames);
             trainer.setTrainerclass(newTrainerClass);
             trainer.setTrainerPic(newTrainerPic);
             refreshFullDisplayName(trainer, originalTrainerClassNames);
             assignmentsByTrainerIndex.put(trainer.getIndex(), new Assignment(
-                    oldTrainerClass, oldTrainerPic, newTrainerClass, newTrainerPic, assignmentGroup(trainer)));
+                    oldTrainerClass, oldTrainerPic, newTrainerClass, newTrainerPic, group));
         }
 
         if (!assignmentsByTrainerIndex.isEmpty()) {
@@ -150,9 +151,8 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
         return trainer != null && trainer.getTrainerclass() >= 0 && trainer.getTrainerPic() >= 0;
     }
 
-    private String assignmentGroup(Trainer trainer) {
-        String tag = trainer.getTag();
-        if (tag != null && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND"))) {
+    private String assignmentGroup(Trainer trainer, List<String> trainerClassNames) {
+        if (TrainerNameRandomizer.isRivalClassSpriteSyncTrainer(trainer, trainerClassNames)) {
             return "rival";
         }
         return null;

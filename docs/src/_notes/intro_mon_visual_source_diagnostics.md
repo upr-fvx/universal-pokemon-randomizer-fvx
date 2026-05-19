@@ -1,6 +1,6 @@
 # Intro Mon Visual Source Diagnostics
 
-Status: diagnostic-only. No P1 promotion.
+Status: diagnostic plus a narrow CFRU/DPE Intro visual pointer-table sync. No P1 promotion.
 
 ## Why this exists
 
@@ -34,6 +34,9 @@ For FRLG, `Gen3RomHandler.setIntroPokemon()` writes:
 - `IntroOtherOffset`: raw internal species byte.
 - `IntroImageOffset`: pointer to `PokemonFrontImages + speciesId * 8`.
 - `IntroImageOffset + 4`: pointer to `PokemonNormalPalettes + speciesId * 8`.
+- For detected CFRU/DPE Gen9 BPRE, the Nidoran female front-image and normal-palette pointer-table entries are also
+  synced to the target species asset pointers. Local evidence showed the visible Oak intro sprite still read those
+  Nidoran female normal asset table entries even after the known FRLG intro sources changed.
 
 `IntroPaletteOffset` is still reported by the diagnostic because ROM entries define it, but the FRLG writer currently
 uses `IntroImageOffset + 4` for the palette pointer. A mismatch between these candidates is useful local evidence, not
@@ -62,6 +65,9 @@ offsets, and membership in the front-image or palette pointer tables.
 An unchanged candidate is not proof by itself. It is a short list for local inspection: if the visible intro sprite
 stays at the base species while the known FRLG sources changed, unchanged front asset, palette asset, table-entry, or
 species-literal candidates near plausible code/data regions are the best follow-up targets.
+
+The current CFRU/DPE writer intentionally uses only the confirmed pointer-table source shape. It does not write raw
+species literals and does not scan arbitrary candidates during saving.
 
 ## Opt-in local report
 
@@ -107,8 +113,8 @@ content.
 If local evidence shows the known locations change but the visible intro sprite does not, likely follow-ups are:
 
 - Update the FRLG/CFRU-DPE ROM-entry offsets if a configured offset is stale.
-- Add a CFRU/DPE-specific Intro Mon visual source writer if the visible sprite uses a separate literal or table.
-- Extend the scanner to detect the newly identified source before changing writer behavior.
+- Extend the CFRU/DPE-specific writer if the visible sprite uses a different separate literal or table.
+- Extend the scanner to detect newly identified sources before changing writer behavior.
 
-No writer change should be promoted from this diagnostic alone; it needs sanitized base/output evidence and an ingame
-smoke result.
+The CFRU/DPE pointer-table sync still needs local ingame smoke after a randomized output ROM is created outside Codex.
+Do not promote it to P1 from diagnostics alone.

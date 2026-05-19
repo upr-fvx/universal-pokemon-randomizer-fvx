@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Gen3IntroMonVisualSourceDiagnosticsTest {
@@ -119,6 +120,43 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
                 && candidate.outputValue().contains("base-front-asset")));
     }
 
+    @Test
+    public void cfruDpeIntroVisualSourcePointerTableEntryIsSyncedToTargetSpeciesAssetPointer() {
+        byte[] rom = new byte[4096];
+        int tableOffset = 128;
+        int visibleSourceSpecies = 29;
+        int targetSpecies = 237;
+        int visibleSourceEntryOffset = tableOffset + visibleSourceSpecies * 8;
+        int targetEntryOffset = tableOffset + targetSpecies * 8;
+        int oldVisibleSourcePointer = 1400;
+        int targetPointer = 1800;
+        writePointer(rom, visibleSourceEntryOffset, oldVisibleSourcePointer);
+        writePointer(rom, targetEntryOffset, targetPointer);
+
+        boolean synced = Gen3RomHandler.syncCfruDpeIntroVisualSourcePointerTableEntry(
+                rom, tableOffset, visibleSourceSpecies, targetSpecies);
+
+        assertTrue(synced);
+        assertEquals(targetPointer, readPointer(rom, visibleSourceEntryOffset));
+    }
+
+    @Test
+    public void cfruDpeIntroVisualSourcePointerTableEntrySkipsInvalidTargets() {
+        byte[] rom = new byte[4096];
+        int tableOffset = 128;
+        int visibleSourceSpecies = 29;
+        int targetSpecies = 237;
+        int visibleSourceEntryOffset = tableOffset + visibleSourceSpecies * 8;
+        int oldVisibleSourcePointer = 1400;
+        writePointer(rom, visibleSourceEntryOffset, oldVisibleSourcePointer);
+
+        boolean synced = Gen3RomHandler.syncCfruDpeIntroVisualSourcePointerTableEntry(
+                rom, tableOffset, visibleSourceSpecies, targetSpecies);
+
+        assertFalse(synced);
+        assertEquals(oldVisibleSourcePointer, readPointer(rom, visibleSourceEntryOffset));
+    }
+
     private static void assertCandidate(List<Gen3RomHandler.Gen3IntroMonVisualSourceCandidate> candidates,
                                         String source, int offset, int rawSpeciesId, int pointer,
                                         int expectedSpeciesId, String decodedSpecies) {
@@ -156,6 +194,14 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
         rom[offset + 1] = (byte) ((pointer >>> 8) & 0xFF);
         rom[offset + 2] = (byte) ((pointer >>> 16) & 0xFF);
         rom[offset + 3] = (byte) ((pointer >>> 24) & 0xFF);
+    }
+
+    private static int readPointer(byte[] rom, int offset) {
+        int rawPointer = (rom[offset] & 0xFF)
+                + ((rom[offset + 1] & 0xFF) << 8)
+                + ((rom[offset + 2] & 0xFF) << 16)
+                + (((rom[offset + 3] & 0xFF)) << 24);
+        return rawPointer - 0x8000000;
     }
 
     private static Species[] speciesTable(int... rawSpeciesIds) {

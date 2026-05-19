@@ -53,6 +53,7 @@ public class RandomizationLogger {
     private final TrainerPokemonRandomizer trainerPokeRandomizer;
     private final TrainerMovesetRandomizer trainerMovesetRandomizer;
     private final TrainerNameRandomizer trainerNameRandomizer;
+    private final TrainerClassSpriteSyncRandomizer trainerClassSpriteSyncRandomizer;
     private final WildEncounterRandomizer wildEncounterRandomizer;
     private final EncounterHeldItemRandomizer encHeldItemRandomizer;
     private final TMTutorMoveRandomizer tmtMoveRandomizer;
@@ -73,6 +74,7 @@ public class RandomizationLogger {
                                TradeRandomizer tradeRandomizer, MoveDataRandomizer moveDataRandomizer, MoveNameRandomizer moveNameRandomizer,
                                SpeciesMovesetRandomizer speciesMovesetRandomizer, TrainerPokemonRandomizer trainerPokeRandomizer,
                                TrainerMovesetRandomizer trainerMovesetRandomizer, TrainerNameRandomizer trainerNameRandomizer,
+                               TrainerClassSpriteSyncRandomizer trainerClassSpriteSyncRandomizer,
                                WildEncounterRandomizer wildEncounterRandomizer, EncounterHeldItemRandomizer encHeldItemRandomizer,
                                TMTutorMoveRandomizer tmtMoveRandomizer, TMHMTutorCompatibilityRandomizer tmhmtCompRandomizer,
                                ItemRandomizer itemRandomizer, TypeEffectivenessRandomizer typeEffRandomizer,
@@ -106,6 +108,7 @@ public class RandomizationLogger {
         this.trainerPokeRandomizer = trainerPokeRandomizer;
         this.trainerMovesetRandomizer = trainerMovesetRandomizer;
         this.trainerNameRandomizer = trainerNameRandomizer;
+        this.trainerClassSpriteSyncRandomizer = trainerClassSpriteSyncRandomizer;
         this.wildEncounterRandomizer = wildEncounterRandomizer;
         this.encHeldItemRandomizer = encHeldItemRandomizer;
         this.tmtMoveRandomizer = tmtMoveRandomizer;
@@ -1055,7 +1058,7 @@ public class RandomizationLogger {
 
     private boolean shouldLogTrainers() {
         return trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
-                || trainerNameRandomizer.isChangesMade();
+                || trainerNameRandomizer.isChangesMade() || trainerClassSpriteSyncRandomizer.isChangesMade();
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
@@ -1079,11 +1082,18 @@ public class RandomizationLogger {
                 currentTrainerName = t.getName();
             }
             if (!currentTrainerName.isEmpty()) {
-                if (trainerNameRandomizer.isChangesMade()) {
+                if (trainerNameRandomizer.isChangesMade() || trainerClassSpriteSyncRandomizer.isChangesMade()) {
                     log.printf("(%s => %s)", originalTrainerName, currentTrainerName);
                 } else {
                     log.printf("(%s)", currentTrainerName);
                 }
+            }
+            TrainerClassSpriteSyncRandomizer.Assignment assignment =
+                    trainerClassSpriteSyncRandomizer.getAssignmentsByTrainerIndex().get(t.getIndex());
+            if (assignment != null) {
+                log.printf(" [class/sprite sync: class %d=>%d, pic %d=>%d]",
+                        assignment.getOldTrainerClass(), assignment.getNewTrainerClass(),
+                        assignment.getOldTrainerPic(), assignment.getNewTrainerPic());
             }
             if (t.getOffset() != 0) {
                 log.printf("@%X", t.getOffset());

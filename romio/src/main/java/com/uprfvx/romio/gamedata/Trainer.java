@@ -108,6 +108,7 @@ public class Trainer implements Comparable<Trainer> {
     private String tag;
     private String name; // TODO: make trainer name randomization use Trainer.name in all gens, really strange it doesn't
     private int trainerclass;
+    private int trainerPic = -1;
     private String fullDisplayName;
     private MultiBattleStatus multiBattleStatus = MultiBattleStatus.NEVER;
     private boolean forcedDoubleBattle; // for doubleBattleMode
@@ -129,6 +130,7 @@ public class Trainer implements Comparable<Trainer> {
         this.tag = original.tag;
         this.name = original.name;
         this.trainerclass = original.trainerclass;
+        this.trainerPic = original.trainerPic;
         this.fullDisplayName = original.fullDisplayName;
         this.multiBattleStatus = original.multiBattleStatus;
         this.forcedDoubleBattle = original.forcedDoubleBattle;
@@ -257,6 +259,14 @@ public class Trainer implements Comparable<Trainer> {
 
     public void setTrainerclass(int trainerclass) {
         this.trainerclass = trainerclass;
+    }
+
+    public int getTrainerPic() {
+        return trainerPic;
+    }
+
+    public void setTrainerPic(int trainerPic) {
+        this.trainerPic = trainerPic;
     }
 
     public String getFullDisplayName() {

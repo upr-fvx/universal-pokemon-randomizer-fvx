@@ -190,6 +190,7 @@ public class Settings {
     private boolean trainersEnforceMainPlaythrough;
     private boolean randomizeTrainerNames;
     private boolean randomizeTrainerClassNames;
+    private boolean randomizeTrainerClassSprites;
     private boolean trainersEvolveTheirPokemon;
     private int trainersEvolutionLevelModifier = 0; // -100 ~ 155
     private boolean trainersLevelModified;
@@ -712,10 +713,10 @@ public class Settings {
         out.write((byte) startersBSTMinimum);
         out.write((byte) startersBSTMaximum);
 
-        // 61 trainer type diversity + better movesets
+        // 61 trainer type diversity + better movesets + class/sprite sync
         out.write(makeByteSelected(diverseTypesForBossTrainers, diverseTypesForImportantTrainers,
                 diverseTypesForRegularTrainers, betterBossTrainerMovesets, betterImportantTrainerMovesets,
-                betterRegularTrainerMovesets, false, false));
+                betterRegularTrainerMovesets, randomizeTrainerClassSprites, false));
 
         // 62 setting battle style: modification (3bits) + style (4bits)
         out.write(makeByteSelected(settingBattleStyle.getModification() == BattleStyle.Modification.UNCHANGED,
@@ -1082,6 +1083,7 @@ public class Settings {
         settings.setBetterBossTrainerMovesets(restoreState(data[61], 3));
         settings.setBetterImportantTrainerMovesets(restoreState(data[61], 4));
         settings.setBetterRegularTrainerMovesets(restoreState(data[61], 5));
+        settings.setRandomizeTrainerClassSprites(restoreState(data[61], 6));
 
         settings.settingBattleStyle.setModification(restoreEnum(BattleStyle.Modification.class, data[62], 0, 1, 2));
         settings.settingBattleStyle.setStyle(restoreEnum(BattleStyle.Style.class, data[62], 3, 4, 5, 6));
@@ -1185,6 +1187,9 @@ public class Settings {
         }
         if (!rh.canAddPokemonToRegularTrainers()) {
             this.setAdditionalRegularTrainerPokemon(0);
+        }
+        if (!rh.supportsTrainerClassSpriteSync()) {
+            this.setRandomizeTrainerClassSprites(false);
         }
         if (!rh.canAddHeldItemsToBossTrainers()) {
             this.setRandomizeHeldItemsForBossTrainerPokemon(false);
@@ -2008,6 +2013,14 @@ public class Settings {
 
     public void setRandomizeTrainerClassNames(boolean randomizeTrainerClassNames) {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
+    }
+
+    public boolean isRandomizeTrainerClassSprites() {
+        return randomizeTrainerClassSprites;
+    }
+
+    public void setRandomizeTrainerClassSprites(boolean randomizeTrainerClassSprites) {
+        this.randomizeTrainerClassSprites = randomizeTrainerClassSprites;
     }
 
     public boolean isTrainersEvolveTheirPokemon() {

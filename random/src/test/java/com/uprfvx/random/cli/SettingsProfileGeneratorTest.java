@@ -109,6 +109,11 @@ public class SettingsProfileGeneratorTest {
     }
 
     @Test
+    public void invoke_withTrainerClassSpriteSyncOverlay_setsOptInFlag() throws Exception {
+        assertTrue(settingsForOverlay("MODE-TRAINER-CLASS-SPRITE-SYNC").isRandomizeTrainerClassSprites());
+    }
+
+    @Test
     public void invoke_withIntroModeOverlays_appliesLastOverlayInSettingsSerializationOrder() throws Exception {
         assertFalse(settingsForOverlays("MODE-INTRO-RANDOM", "MODE-NO-RANDOM-INTRO").isRandomizeIntroMon());
         assertTrue(settingsForOverlays("MODE-NO-RANDOM-INTRO", "MODE-INTRO-RANDOM").isRandomizeIntroMon());

@@ -112,6 +112,7 @@ public class GameRandomizer {
     private final TrainerPokemonRandomizer trainerPokeRandomizer;
     private final TrainerMovesetRandomizer trainerMovesetRandomizer;
     private final TrainerNameRandomizer trainerNameRandomizer;
+    private final TrainerClassSpriteSyncRandomizer trainerClassSpriteSyncRandomizer;
     private final WildEncounterRandomizer wildEncounterRandomizer;
     private final EncounterHeldItemRandomizer encHeldItemRandomizer;
     private final TMTutorMoveRandomizer tmtMoveRandomizer;
@@ -148,6 +149,8 @@ public class GameRandomizer {
         this.trainerPokeRandomizer = new TrainerPokemonRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerMovesetRandomizer = new TrainerMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerNameRandomizer = new TrainerNameRandomizer(romHandler, settings, randomSource.getCosmetic());
+        this.trainerClassSpriteSyncRandomizer = new TrainerClassSpriteSyncRandomizer(
+                romHandler, settings, randomSource.getCosmetic());
         this.wildEncounterRandomizer = new WildEncounterRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.encHeldItemRandomizer = new EncounterHeldItemRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tmtMoveRandomizer = new TMTutorMoveRandomizer(romHandler, settings, randomSource.getNonCosmetic());
@@ -176,6 +179,7 @@ public class GameRandomizer {
                 introPokeRandomizer, speciesBSRandomizer, speciesTypeRandomizer, speciesAbilityRandomizer,
                 evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer, moveNameRandomizer,
                 speciesMovesetRandomizer, trainerPokeRandomizer, trainerMovesetRandomizer, trainerNameRandomizer,
+                trainerClassSpriteSyncRandomizer,
                 wildEncounterRandomizer, encHeldItemRandomizer, tmtMoveRandomizer, tmhmtCompRandomizer, itemRandomizer,
                 typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
     }
@@ -301,6 +305,7 @@ public class GameRandomizer {
 
         maybeRandomizeTrainerHeldItems();
         maybeRandomizeTrainerNames();
+        maybeRandomizeTrainerClassSprites();
 
         // Apply metronome only mode now that trainers have been dealt with
         if (settings.getMovesetsMod() == Settings.MovesetsMod.METRONOME_ONLY) {
@@ -615,6 +620,12 @@ public class GameRandomizer {
             if (settings.isRandomizeTrainerNames()) {
                 trainerNameRandomizer.randomizeTrainerNames();
             }
+        }
+    }
+
+    private void maybeRandomizeTrainerClassSprites() {
+        if (settings.isRandomizeTrainerClassSprites()) {
+            trainerClassSpriteSyncRandomizer.randomizeTrainerClassSprites();
         }
     }
 

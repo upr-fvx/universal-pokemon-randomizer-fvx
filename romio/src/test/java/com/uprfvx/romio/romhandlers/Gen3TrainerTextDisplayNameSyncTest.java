@@ -89,6 +89,30 @@ class Gen3TrainerTextDisplayNameSyncTest {
     }
 
     @Test
+    void trainerClassSpriteSyncWritesClassIdAndPicOnlyWhenEnabled() throws Exception {
+        RomBackedTestableGen3RomHandler romHandler = new RomBackedTestableGen3RomHandler();
+        byte[] rom = new byte[0x200];
+        int trainerOffset = 0x100;
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET] = 1;
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET] = 7;
+        setField(romHandler, "rom", rom);
+
+        Trainer trainer = trainer(2, "Pi", "PKMN RANGER Pi");
+        trainer.setTrainerPic(9);
+
+        romHandler.writeTrainerClassSpriteFields(trainer, trainerOffset);
+
+        assertEquals(1, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET]);
+        assertEquals(7, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET]);
+
+        romHandler.setTrainerClassSpriteSyncEnabled(true);
+        romHandler.writeTrainerClassSpriteFields(trainer, trainerOffset);
+
+        assertEquals(2, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET]);
+        assertEquals(9, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET]);
+    }
+
+    @Test
     void loadTrainersStoresTrainerClassIdNotGenderBitForDisplayRefresh() throws Exception {
         TestableGen3RomHandler romHandler = new TestableGen3RomHandler();
         Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
@@ -101,6 +125,7 @@ class Gen3TrainerTextDisplayNameSyncTest {
         int trainerOffset = 40;
         rom[trainerOffset + 1] = 3;
         rom[trainerOffset + 2] = (byte) 0x80;
+        rom[trainerOffset + 3] = 9;
         rom[trainerOffset + 4] = (byte) 0xFF;
         rom[trainerOffset + 36] = 100;
         rom[trainerOffset + 39] = 8;
@@ -111,6 +136,7 @@ class Gen3TrainerTextDisplayNameSyncTest {
 
         Trainer trainer = romHandler.loadedTrainers().get(0);
         assertEquals(3, trainer.getTrainerclass());
+        assertEquals(9, trainer.getTrainerPic());
         assertEquals("FISHERMAN ", trainer.getFullDisplayName());
 
         romHandler.refreshTrainerFullDisplayNames(List.of("UNUSED", "[PK][MN] BREEDER", "ENGINEER", "BURGLAR"));

@@ -308,6 +308,14 @@ public interface RomHandler {
      */
     void saveTrainers();
 
+    default boolean supportsTrainerClassSpriteSync() {
+        return false;
+    }
+
+    default void setTrainerClassSpriteSyncEnabled(boolean enabled) {
+        // Most games do not expose Gen 3 trainer class/sprite row serialization.
+    }
+
     boolean canGiveCustomMovesetsToBossTrainers();
 
     boolean canGiveCustomMovesetsToImportantTrainers();

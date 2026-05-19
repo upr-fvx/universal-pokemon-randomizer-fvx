@@ -253,6 +253,7 @@ public final class SettingsProfileGenerator {
             s.setRandomizeTrainerNames(true);
             s.setRandomizeTrainerClassNames(true);
         });
+        overlays.put("MODE-TRAINER-CLASS-SPRITE-SYNC", s -> s.setRandomizeTrainerClassSprites(true));
         overlays.put("FVX-FOE-014", s -> {
             s.setTrainersEvolveTheirPokemon(true);
             s.setTrainersEvolutionLevelModifier(0);

@@ -181,6 +181,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     static final int GEN3_TRAINER_ENCOUNTER_MUSIC_GENDER_OFFSET = 2;
     static final int GEN3_TRAINER_PIC_OFFSET = 3;
     static final int GEN3_TRAINER_NAME_OFFSET = 4;
+    private boolean trainerClassSpriteSyncEnabled;
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -3721,6 +3722,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         tr.setIndex(trainerId);
         int trainerclass = rom[trOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
         tr.setTrainerclass(trainerclass);
+        tr.setTrainerPic(rom[trOffset + GEN3_TRAINER_PIC_OFFSET] & 0xFF);
 
         int pokeDataType = rom[trOffset] & 0xFF;
         if (rom[trOffset + (entryLen - 16)] == 0x01) {
@@ -3910,6 +3912,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
 
         writeByte(trOffset, (byte) tr.getPoketype());
+        writeTrainerClassSpriteFields(tr, trOffset);
         writeFixedLengthString(tr.getName(), trOffset + GEN3_TRAINER_NAME_OFFSET, nameLen);
         writeByte(trOffset + (entryLen - 8), (byte) tr.getPokemon().size());
         if (tr.isForcedDoubleBattle()) {
@@ -3918,6 +3921,26 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             else
                 writeByte(trOffset + (entryLen - 16), (byte) 0x00);
         }
+    }
+
+    void writeTrainerClassSpriteFields(Trainer tr, int trOffset) {
+        if (!trainerClassSpriteSyncEnabled) {
+            return;
+        }
+        writeByte(trOffset + GEN3_TRAINER_CLASS_OFFSET, (byte) tr.getTrainerclass());
+        if (tr.getTrainerPic() >= 0) {
+            writeByte(trOffset + GEN3_TRAINER_PIC_OFFSET, (byte) tr.getTrainerPic());
+        }
+    }
+
+    @Override
+    public boolean supportsTrainerClassSpriteSync() {
+        return true;
+    }
+
+    @Override
+    public void setTrainerClassSpriteSyncEnabled(boolean enabled) {
+        trainerClassSpriteSyncEnabled = enabled;
     }
 
     private void saveFrlgRuntimeTrainerSourceRows(int baseOffset, int loadedTrainerCount, int entryLen, int nameLen) {

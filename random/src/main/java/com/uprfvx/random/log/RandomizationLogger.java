@@ -1068,80 +1068,171 @@ public class RandomizationLogger {
 
         boolean prevHadCustomMoves = false;
         for (Trainer t : trainers) {
-            boolean hasCustomMoves = shouldLogCustomMoves(t);
-            if (hasCustomMoves && !prevHadCustomMoves) {
-                log.println();
+            try {
+                prevHadCustomMoves = logTrainer(t, originalTrainerNames, battleStyleNames, prevHadCustomMoves);
+            } catch (RuntimeException ex) {
+                logTrainerFallbackLine(t, ex);
+                prevHadCustomMoves = false;
             }
-            prevHadCustomMoves = hasCustomMoves;
-            log.print("#" + t.getIndex() + " ");
-            String originalTrainerName = originalTrainerNames.get(t.getIndex());
-            String currentTrainerName = "";
-            if (t.getFullDisplayName() != null) {
-                currentTrainerName = t.getFullDisplayName();
-            } else if (t.getName() != null) {
-                currentTrainerName = t.getName();
-            }
-            if (!currentTrainerName.isEmpty()) {
-                if (trainerNameRandomizer.isChangesMade() || trainerClassSpriteSyncRandomizer.isChangesMade()) {
-                    log.printf("(%s => %s)", originalTrainerName, currentTrainerName);
-                } else {
-                    log.printf("(%s)", currentTrainerName);
-                }
-            }
-            TrainerClassSpriteSyncRandomizer.Assignment assignment =
-                    trainerClassSpriteSyncRandomizer.getAssignmentsByTrainerIndex().get(t.getIndex());
-            if (assignment != null) {
-                log.printf(" [class/sprite sync: class %d=>%d, pic %d=>%d",
-                        assignment.getOldTrainerClass(), assignment.getNewTrainerClass(),
-                        assignment.getOldTrainerPic(), assignment.getNewTrainerPic());
-                if (assignment.getGroup() != null) {
-                    log.printf(", group=%s", assignment.getGroup());
-                }
-                log.print("]");
-            }
-            if (t.getOffset() != 0) {
-                log.printf("@%X", t.getOffset());
-            }
-
-            if (hasCustomMoves) {
-                log.println();
-                for (TrainerPokemon tpk : t.getPokemon()) {
-                    List<Move> moves = romHandler.getMoves();
-                    log.print(tpk.toString());
-                    if (romHandler.abilitiesPerSpecies() != 0) {
-                        log.print(", " + getBS("Log.tp.ability") + ": "
-                                + romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(tpk)));
-                    }
-                    log.print(" - ");
-                    boolean first = true;
-                    for (int move : tpk.getMoves()) {
-                        if (move != 0) {
-                            if (!first) {
-                                log.print(", ");
-                            }
-                            log.print(moves.get(move).name);
-                            first = false;
-                        }
-                    }
-                    log.println();
-                }
-            } else {
-                log.print(" - ");
-                boolean first = true;
-                for (TrainerPokemon tpk : t.getPokemon()) {
-                    if (!first) {
-                        log.print(", ");
-                    }
-                    log.print(tpk.toString());
-                    first = false;
-                }
-            }
-            if (settings.getBattleStyle().isBattleStyleChanged()) {
-                log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
-            }
-            log.println();
         }
         printSectionSeparator();
+    }
+
+    private boolean logTrainer(Trainer trainer, List<String> originalTrainerNames, String[] battleStyleNames,
+            boolean prevHadCustomMoves) {
+        boolean hasCustomMoves = shouldLogCustomMoves(trainer);
+        if (hasCustomMoves && !prevHadCustomMoves) {
+            log.println();
+        }
+        log.print("#" + trainer.getIndex() + " ");
+        String originalTrainerName = trainerNameForLog(originalTrainerNames, trainer);
+        String currentTrainerName = currentTrainerNameForLog(trainer);
+        if (!currentTrainerName.isEmpty()) {
+            if (trainerNameRandomizer.isChangesMade() || trainerClassSpriteSyncRandomizer.isChangesMade()) {
+                log.printf("(%s => %s)", originalTrainerName, currentTrainerName);
+            } else {
+                log.printf("(%s)", currentTrainerName);
+            }
+        }
+        TrainerClassSpriteSyncRandomizer.Assignment assignment =
+                trainerClassSpriteSyncRandomizer.getAssignmentsByTrainerIndex().get(trainer.getIndex());
+        if (assignment != null) {
+            log.printf(" [class/sprite sync: class %d=>%d, pic %d=>%d",
+                    assignment.getOldTrainerClass(), assignment.getNewTrainerClass(),
+                    assignment.getOldTrainerPic(), assignment.getNewTrainerPic());
+            if (assignment.getGroup() != null) {
+                log.printf(", group=%s", assignment.getGroup());
+            }
+            log.print("]");
+        }
+        if (trainer.getOffset() != 0) {
+            log.printf("@%X", trainer.getOffset());
+        }
+
+        if (hasCustomMoves) {
+            log.println();
+            for (TrainerPokemon trainerPokemon : trainer.getPokemon()) {
+                List<Move> moves = romHandler.getMoves();
+                log.print(formatTrainerPokemonForLog(trainerPokemon));
+                if (romHandler.abilitiesPerSpecies() != 0) {
+                    log.print(", " + getBS("Log.tp.ability") + ": "
+                            + abilityNameForTrainerPokemon(trainerPokemon));
+                }
+                log.print(" - ");
+                boolean first = true;
+                for (int move : trainerPokemon.getMoves()) {
+                    if (move != 0) {
+                        if (!first) {
+                            log.print(", ");
+                        }
+                        log.print(moveNameForLog(moves, move));
+                        first = false;
+                    }
+                }
+                log.println();
+            }
+        } else {
+            log.print(" - ");
+            boolean first = true;
+            for (TrainerPokemon trainerPokemon : trainer.getPokemon()) {
+                if (!first) {
+                    log.print(", ");
+                }
+                log.print(formatTrainerPokemonForLog(trainerPokemon));
+                first = false;
+            }
+        }
+        if (settings.getBattleStyle().isBattleStyleChanged()) {
+            log.printf(" (Battle Style: %s)", battleStyleNameForLog(battleStyleNames, trainer));
+        }
+        log.println();
+        return hasCustomMoves;
+    }
+
+    private void logTrainerFallbackLine(Trainer trainer, RuntimeException ex) {
+        log.printf("#%s [trainer logging skipped: %s]%n",
+                trainer == null ? "<unknown>" : trainer.getIndex(),
+                ex.getClass().getSimpleName());
+    }
+
+    static String trainerNameForLog(List<String> originalTrainerNames, Trainer trainer) {
+        if (trainer == null) {
+            return "trainer #<unknown>";
+        }
+        int trainerIndex = trainer.getIndex();
+        if (originalTrainerNames != null
+                && trainerIndex >= 0
+                && trainerIndex < originalTrainerNames.size()
+                && originalTrainerNames.get(trainerIndex) != null
+                && !originalTrainerNames.get(trainerIndex).isEmpty()) {
+            return originalTrainerNames.get(trainerIndex);
+        }
+        String currentName = currentTrainerNameForLog(trainer);
+        return currentName.isEmpty() ? "trainer #" + trainerIndex : currentName;
+    }
+
+    static String currentTrainerNameForLog(Trainer trainer) {
+        if (trainer == null) {
+            return "";
+        }
+        if (trainer.getFullDisplayName() != null && !trainer.getFullDisplayName().isEmpty()) {
+            return trainer.getFullDisplayName();
+        }
+        if (trainer.getName() != null && !trainer.getName().isEmpty()) {
+            return trainer.getName();
+        }
+        return "";
+    }
+
+    static String formatTrainerPokemonForLog(TrainerPokemon trainerPokemon) {
+        if (trainerPokemon == null) {
+            return "unknown species Lv?";
+        }
+        StringBuilder sb = new StringBuilder(speciesNameForLog(trainerPokemon.getSpecies()));
+        if (trainerPokemon.getHeldItem() != null) {
+            sb.append("@").append(trainerPokemon.getHeldItem().getName());
+        }
+        sb.append(" Lv").append(trainerPokemon.getLevel());
+        return sb.toString();
+    }
+
+    static String speciesNameForLog(Species species) {
+        if (species == null) {
+            return "unknown species";
+        }
+        String name = species.getFullName();
+        if (name != null && !name.isBlank() && !"null".equals(name)) {
+            return name;
+        }
+        return "unknown species #" + species.getNumber()
+                + " identity=" + species.getSpeciesSetIdentityNumber();
+    }
+
+    static String moveNameForLog(List<Move> moves, int moveId) {
+        if (moves != null && moveId >= 0 && moveId < moves.size() && moves.get(moveId) != null) {
+            return moves.get(moveId).name;
+        }
+        return "unknown move #" + moveId;
+    }
+
+    private String abilityNameForTrainerPokemon(TrainerPokemon trainerPokemon) {
+        try {
+            return romHandler.abilityName(romHandler.getAbilityForTrainerPokemon(trainerPokemon));
+        } catch (RuntimeException ex) {
+            return "unknown ability";
+        }
+    }
+
+    private String battleStyleNameForLog(String[] battleStyleNames, Trainer trainer) {
+        try {
+            int ordinal = trainer.getCurrBattleStyle().getStyle().ordinal();
+            if (ordinal >= 0 && ordinal < battleStyleNames.length) {
+                return battleStyleNames[ordinal];
+            }
+            return "unknown battle style #" + ordinal;
+        } catch (RuntimeException ex) {
+            return "unknown battle style";
+        }
     }
 
     private boolean shouldLogCustomMoves(Trainer t) {

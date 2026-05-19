@@ -61,7 +61,7 @@ class TrainerClassSpriteSyncRandomizerTest {
     }
 
     @Test
-    void classNameRandomizationWithSpriteSyncCanTargetEliteFourClassAndPic() {
+    void classNameRandomizationWithSpriteSyncCanUseChaoticEliteFourTargetClassAndPic() {
         Trainer youngster = trainer(0, 7, "A", null);
         Trainer elite = trainer(1, 9, "B", "ELITE1");
         TestHandler handler = new TestHandler(List.of(youngster, elite), true, List.of("YOUNGSTER", "ELITE 4"));
@@ -73,6 +73,8 @@ class TrainerClassSpriteSyncRandomizerTest {
                 .randomizeTrainerClassSprites();
 
         assertTrue(handler.syncEnabled);
+        // Special-looking targets are valid here: Sprite Sync preserves visual
+        // consistency, not lore plausibility.
         assertEquals(1, youngster.getTrainerclass());
         assertEquals(9, youngster.getTrainerPic());
         assertEquals("ELITE 4 A", youngster.getFullDisplayName());

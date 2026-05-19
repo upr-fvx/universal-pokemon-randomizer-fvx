@@ -1,7 +1,7 @@
 # Trainer Class Sprite Sync Diagnostics
 
-Status: Gen 3 opt-in implementation for class label/class ID/pic consistency. No ROM execution. No
-P1 promotion.
+Status: Gen 3 opt-in chaotic visual consistency implementation for class
+label/class ID/pic consistency. No ROM execution. No P1 promotion.
 
 ## Separation from Trainer Class Names
 
@@ -43,22 +43,32 @@ and uses an observed `trainerPic` from that target class. The class-name text
 table is restored to the original class labels so the displayed class, class ID
 and visible pic describe the same target class.
 
+This is a chaotic opt-in visual consistency mode. It is not a lore/plausibility
+mode, not a regular-only stable mode and not a promise that a trainer remains in
+the same narrative role.
+
 ## Scope
 
-The first implementation is conservative:
+The first implementation is narrow but intentionally chaotic:
 
 - Gen 3 only
 - off by default
 - requires Trainer Class Names randomization to provide a class ID mapping
 - follows that mapping instead of choosing an independent random class/pic pair
-- allows rival, gym, Elite Four, champion and other special target classes when
-  the class-name randomizer selected that class
+- does not add target-class filtering beyond requiring a modeled target class
+  and an observed valid pic
+- allows regular trainers to become Rival, Player, Gym Leader, Elite Four,
+  champion, boss or other special-looking classes when the class-name randomizer
+  maps them there
+- treats those special-looking target classes as expected chaos behavior with
+  Sprite Sync enabled
 - uses only `trainerPic` values observed on trainers with the target class ID
 - skips only target classes that have no observed valid pic ID
 - writes `trainerClass` and `trainerPic` only when the new opt-in feature made
   assignments
 
-The feature does not mutate trainer personal names.
+The feature does not mutate trainer personal names. Its goal is class
+label/class ID/trainerPic consistency, not lore or encounter plausibility.
 
 ## Writer behavior
 
@@ -93,8 +103,8 @@ Useful sanitized local evidence:
 - affected battle label and trainer ID, if known
 - old/new class ID and old/new pic ID from the log marker
 - visible trainer sprite label in words
-- whether the battle is regular, rival, gym, Elite Four, champion, boss or
-  runtime-source
+- whether the battle is regular, rival, player, gym, Elite Four, champion, boss
+  or runtime-source
 - confirmation that the displayed class label and visible trainer sprite match
   the logged target class
 

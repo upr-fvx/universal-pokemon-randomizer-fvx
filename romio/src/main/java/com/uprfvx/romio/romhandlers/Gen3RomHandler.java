@@ -4466,6 +4466,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return resolvedPointer >= 0 && resolvedPointer <= rom.length ? resolvedPointer : -1;
     }
 
+    private static void writePointerToRom(byte[] rom, int offset, int pointer) {
+        int rawPointer = pointer + 0x8000000;
+        rom[offset] = (byte) (rawPointer & 0xFF);
+        rom[offset + 1] = (byte) ((rawPointer >>> 8) & 0xFF);
+        rom[offset + 2] = (byte) ((rawPointer >>> 16) & 0xFF);
+        rom[offset + 3] = (byte) ((rawPointer >>> 24) & 0xFF);
+    }
+
     private static boolean isCfruDpeLevelUpLearnsetsTableInRom(byte[] rom, int tableOffset) {
         return isTableInRom(rom, tableOffset, cfruDpeLevelUpLearnsetsTableLength());
     }
@@ -6444,6 +6452,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
             writePointer(imageOffset, imageTableOffset + introPokemon * 8);
             writePointer(imageOffset + 4, paletteTableOffset + introPokemon * 8);
+            syncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset, paletteTableOffset);
 
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             // any pokemon in the range 0-510 except bulbasaur
@@ -6485,6 +6494,44 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writeWord(cryOffset, introPokemon);
         }
         return true;
+    }
+
+    private void syncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,
+                                                                 int paletteTableOffset) {
+        if (!useCfruDpeGen9SpeciesCount
+                || romEntry.getRomType() != Gen3Constants.RomType_FRLG
+                || !"BPRE".equals(romEntry.getRomCode())) {
+            return;
+        }
+        syncCfruDpeIntroVisualSourcePointerTableEntry(rom, imageTableOffset, SpeciesIDs.nidoranFemale, introPokemon);
+        syncCfruDpeIntroVisualSourcePointerTableEntry(rom, paletteTableOffset, SpeciesIDs.nidoranFemale, introPokemon);
+    }
+
+    static boolean syncCfruDpeIntroVisualSourcePointerTableEntry(byte[] rom, int tableOffset,
+                                                                 int visibleSourceSpeciesId,
+                                                                 int targetSpeciesId) {
+        if (rom == null || tableOffset < 0 || visibleSourceSpeciesId <= 0 || targetSpeciesId <= 0) {
+            return false;
+        }
+        int visibleSourceEntryOffset = tableOffset + visibleSourceSpeciesId * 8;
+        int targetEntryOffset = tableOffset + targetSpeciesId * 8;
+        if (!isIntroVisualPointerTableEntryInRom(rom, tableOffset, visibleSourceEntryOffset)
+                || !isIntroVisualPointerTableEntryInRom(rom, tableOffset, targetEntryOffset)) {
+            return false;
+        }
+        int targetPointer = readPointerFromRom(rom, targetEntryOffset);
+        if (targetPointer < 0) {
+            return false;
+        }
+        writePointerToRom(rom, visibleSourceEntryOffset, targetPointer);
+        return true;
+    }
+
+    private static boolean isIntroVisualPointerTableEntryInRom(byte[] rom, int tableOffset, int entryOffset) {
+        return entryOffset >= tableOffset
+                && entryOffset >= 0
+                && entryOffset + GBConstants.longSize <= rom.length
+                && (entryOffset - tableOffset) % 8 == 0;
     }
 
     private void determineMapBankSizes() {

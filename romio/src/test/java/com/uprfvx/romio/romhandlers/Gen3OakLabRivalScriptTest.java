@@ -175,11 +175,11 @@ public class Gen3OakLabRivalScriptTest {
     public void targetedTrainerRuntimeSourceFilterKeepsOnlyRequestedTrainerIds() {
         List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
                 new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(10, 0, 0x14B, 0,
-                        100, 0, 1, 200, true, true, 200, 25),
+                        100, 1, 7, 0, 1, 200, true, true, 200, 25),
                 new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(20, 0, 0x19E, 0,
-                        300, 0, 1, 400, true, true, 400, 74),
+                        300, 1, 7, 0, 1, 400, true, true, 400, 74),
                 new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(30, 0, 0x120, 0,
-                        500, 0, 1, 600, true, true, 600, 16));
+                        500, 1, 7, 0, 1, 600, true, true, 600, 16));
         Set<Integer> trainerIds = new LinkedHashSet<>(List.of(0x14B, 0x19E));
 
         List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> filtered =
@@ -256,7 +256,7 @@ public class Gen3OakLabRivalScriptTest {
         List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
                 runtimeSource(64, 0, 22, 800, 2200, 1, 25),
                 new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(96, 0, 900, 0,
-                        40000, -1, -1, -1, false, false, -1, -1));
+                        40000, -1, -1, -1, -1, -1, false, false, -1, -1));
         List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawParties = List.of(
                 unreadableRawParty(22, 800, 2200, 1));
 
@@ -299,6 +299,9 @@ public class Gen3OakLabRivalScriptTest {
         Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditRow row = report.rows().get(0);
         assertTrue(row.changedFromBase());
         assertEquals("match", row.loadedRawPartyComparison());
+        assertEquals("match", row.loadedRawClassPicComparison());
+        assertEquals("class=1,pic=7", row.outputRawClassPic());
+        assertEquals("class=1,pic=7", row.loadedOutputClassPic());
         assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MATCH,
                 row.outputClassification());
         assertTrue(row.outputRawParty().contains("raw=26"));
@@ -585,7 +588,7 @@ public class Gen3OakLabRivalScriptTest {
                                                                                int partyPointer, int partySize,
                                                                                int firstRawSpeciesId) {
         return new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(scriptOffset, battleType, trainerId, 0,
-                trainerOffset, 0, partySize, partyPointer, true, true, partyPointer, firstRawSpeciesId);
+                trainerOffset, 1, 7, 0, partySize, partyPointer, true, true, partyPointer, firstRawSpeciesId);
     }
 
     private static Gen3RomHandler.FrlgRawTrainerPartyDiagnostics rawParty(int trainerId, int trainerOffset,
@@ -593,20 +596,22 @@ public class Gen3OakLabRivalScriptTest {
                                                                           int firstRawSpeciesId, int level,
                                                                           Species[] species) {
         String decodedSpecies = species[firstRawSpeciesId].getFullName();
-        return new Gen3RomHandler.FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, 0, partySize, partyPointer,
-                true, List.of(new Gen3RomHandler.FrlgRawTrainerPokemonDiagnostics(0, partyPointer, level,
+        return new Gen3RomHandler.FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, 1, 7, 0, partySize,
+                partyPointer, true, List.of(new Gen3RomHandler.FrlgRawTrainerPokemonDiagnostics(0, partyPointer, level,
                 firstRawSpeciesId, decodedSpecies)));
     }
 
     private static Gen3RomHandler.FrlgRawTrainerPartyDiagnostics unreadableRawParty(int trainerId, int trainerOffset,
                                                                                     int partyPointer, int partySize) {
-        return new Gen3RomHandler.FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, 0, partySize, partyPointer,
-                false, List.of());
+        return new Gen3RomHandler.FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, 1, 7, 0, partySize,
+                partyPointer, false, List.of());
     }
 
     private static Trainer trainer(int trainerId, Species species, int level) {
         Trainer trainer = new Trainer();
         trainer.setIndex(trainerId);
+        trainer.setTrainerclass(1);
+        trainer.setTrainerPic(7);
         TrainerPokemon pokemon = new TrainerPokemon();
         pokemon.setSpecies(species);
         pokemon.setLevel(level);

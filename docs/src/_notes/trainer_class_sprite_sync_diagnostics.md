@@ -80,6 +80,18 @@ Gen 3 saving still preserves old behavior by default. `saveTrainers()` writes th
 the Gen 3 class/sprite sync write flag. With the feature off, existing
 TrainerData class and pic bytes are not rewritten.
 
+For FRLG runtime-source safety, the Sprite Sync save path also revisits
+script-referenced trainer IDs when the sync flag is active. Loaded rows are
+rewritten by trainer ID for class/pic bytes, and strict unloaded runtime-source
+rows continue through the full TrainerData row writer. This is intended to avoid
+a log/model-only sync when the battle script reads a runtime TrainerData row.
+
+The latest local smoke still keeps this feature caveated: the log/model showed a
+regular trainer becoming an Elite Four class with a class/sprite sync marker, but
+the visible ingame sprite remained the old class. That result means class
+label/class ID/pic consistency is not yet ingame-proven for the final output
+path.
+
 ## Logging
 
 Trainer/Foe logging now distinguishes class/sprite assignment from class-name
@@ -102,6 +114,9 @@ Useful sanitized local evidence:
 
 - affected battle label and trainer ID, if known
 - old/new class ID and old/new pic ID from the log marker
+- targeted runtime-source diagnostic row for the same trainer ID, including
+  loaded trainer class/pic, raw TrainerData class/pic, script runtime row
+  class/pic and loaded-vs-raw comparison
 - visible trainer sprite label in words
 - whether the battle is regular, rival, player, gym, Elite Four, champion, boss
   or runtime-source

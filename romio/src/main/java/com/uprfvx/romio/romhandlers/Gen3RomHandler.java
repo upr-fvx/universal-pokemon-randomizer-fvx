@@ -2283,6 +2283,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return findFrlgKantoStarterLiteralCandidates(rom, romEntry.getIntValue("StarterPokemon"));
     }
 
+    Gen3IntroMonVisualSourceDiagnostics getIntroMonVisualSourceDiagnosticsForDiagnostics() {
+        return buildIntroMonVisualSourceDiagnostics(rom,
+                romEntry.getIntValue("IntroCryOffset"),
+                romEntry.getIntValue("IntroImageOffset"),
+                romEntry.getIntValue("IntroPaletteOffset"),
+                romEntry.getIntValue("IntroOtherOffset"),
+                romEntry.getIntValue("PokemonFrontImages"),
+                romEntry.getIntValue("PokemonNormalPalettes"),
+                pokesInternal);
+    }
+
     List<FrlgRawTrainerPartyDiagnostics> getRawTrainerPartyDiagnostics(List<Integer> trainerIds) {
         List<FrlgRawTrainerPartyDiagnostics> diagnostics = new ArrayList<>();
         int baseOffset = romEntry.getIntValue("TrainerData");
@@ -2860,6 +2871,97 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return candidates;
     }
 
+    static Gen3IntroMonVisualSourceDiagnostics buildIntroMonVisualSourceDiagnostics(byte[] rom,
+                                                                                    int cryOffset,
+                                                                                    int imageOffset,
+                                                                                    int paletteOffset,
+                                                                                    int otherOffset,
+                                                                                    int imageTableOffset,
+                                                                                    int paletteTableOffset,
+                                                                                    Species[] speciesByInternalId) {
+        List<Gen3IntroMonVisualSourceCandidate> candidates = new ArrayList<>();
+        candidates.add(rawIntroSpeciesCandidate(rom, "IntroCryOffset", cryOffset, speciesByInternalId));
+        candidates.add(rawIntroSpeciesCandidate(rom, "IntroOtherOffset", otherOffset, speciesByInternalId));
+        candidates.add(pointerIntroSpeciesCandidate(rom, "IntroImageOffset/front-table", imageOffset,
+                imageTableOffset, speciesByInternalId));
+        candidates.add(pointerIntroSpeciesCandidate(rom, "IntroImageOffset+4/palette-table", imageOffset + 4,
+                paletteTableOffset, speciesByInternalId));
+        if (paletteOffset != imageOffset + 4) {
+            candidates.add(pointerIntroSpeciesCandidate(rom, "IntroPaletteOffset/palette-table", paletteOffset,
+                    paletteTableOffset, speciesByInternalId));
+        }
+        return new Gen3IntroMonVisualSourceDiagnostics(cryOffset, imageOffset, paletteOffset, otherOffset,
+                imageTableOffset, paletteTableOffset, candidates);
+    }
+
+    static Gen3IntroMonVisualSourceComparison compareIntroMonVisualSourceDiagnostics(
+            Gen3IntroMonVisualSourceDiagnostics base,
+            Gen3IntroMonVisualSourceDiagnostics output) {
+        Map<String, Gen3IntroMonVisualSourceCandidate> outputByKey = new LinkedHashMap<>();
+        if (output != null) {
+            for (Gen3IntroMonVisualSourceCandidate candidate : output.candidates()) {
+                outputByKey.put(introMonCandidateKey(candidate), candidate);
+            }
+        }
+
+        List<Gen3IntroMonVisualSourceCandidateComparison> candidateComparisons = new ArrayList<>();
+        if (base != null) {
+            for (Gen3IntroMonVisualSourceCandidate baseCandidate : base.candidates()) {
+                Gen3IntroMonVisualSourceCandidate outputCandidate = outputByKey.get(introMonCandidateKey(baseCandidate));
+                int baseSpeciesId = introMonCandidateSpeciesId(baseCandidate);
+                int outputSpeciesId = outputCandidate == null ? -1 : introMonCandidateSpeciesId(outputCandidate);
+                candidateComparisons.add(new Gen3IntroMonVisualSourceCandidateComparison(
+                        baseCandidate.source(), baseCandidate.offset(), baseSpeciesId,
+                        baseCandidate.decodedSpecies(), outputSpeciesId,
+                        outputCandidate == null ? "<missing>" : outputCandidate.decodedSpecies(),
+                        baseSpeciesId != outputSpeciesId));
+            }
+        }
+        return new Gen3IntroMonVisualSourceComparison(base, output, candidateComparisons);
+    }
+
+    private static Gen3IntroMonVisualSourceCandidate rawIntroSpeciesCandidate(byte[] rom, String source, int offset,
+                                                                             Species[] speciesByInternalId) {
+        int rawSpeciesId = readUnsignedByteOrMissing(rom, offset);
+        return new Gen3IntroMonVisualSourceCandidate(offset, source, rawSpeciesId,
+                speciesNameForDiagnostics(rawSpeciesId, speciesByInternalId), -1, -1);
+    }
+
+    private static Gen3IntroMonVisualSourceCandidate pointerIntroSpeciesCandidate(byte[] rom, String source,
+                                                                                 int offset, int tableOffset,
+                                                                                 Species[] speciesByInternalId) {
+        int pointer = readPointerFromRom(rom, offset);
+        int expectedSpeciesId = speciesIdForEightBytePointerTable(pointer, tableOffset);
+        return new Gen3IntroMonVisualSourceCandidate(offset, source, -1,
+                speciesNameForDiagnostics(expectedSpeciesId, speciesByInternalId), pointer, expectedSpeciesId);
+    }
+
+    private static int readUnsignedByteOrMissing(byte[] rom, int offset) {
+        if (rom == null || offset < 0 || offset >= rom.length) {
+            return -1;
+        }
+        return rom[offset] & 0xFF;
+    }
+
+    private static int speciesIdForEightBytePointerTable(int pointer, int tableOffset) {
+        if (pointer < 0 || tableOffset < 0 || pointer < tableOffset) {
+            return -1;
+        }
+        int relativeOffset = pointer - tableOffset;
+        if (relativeOffset % 8 != 0) {
+            return -1;
+        }
+        return relativeOffset / 8;
+    }
+
+    private static String introMonCandidateKey(Gen3IntroMonVisualSourceCandidate candidate) {
+        return candidate.source() + "@" + candidate.offset();
+    }
+
+    private static int introMonCandidateSpeciesId(Gen3IntroMonVisualSourceCandidate candidate) {
+        return candidate.rawSpeciesId() >= 0 ? candidate.rawSpeciesId() : candidate.expectedSpeciesId();
+    }
+
     private static List<Integer> rangeOneTo(int inclusiveEnd) {
         List<Integer> values = new ArrayList<>();
         for (int i = 1; i <= inclusiveEnd; i++) {
@@ -3017,6 +3119,25 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     record FrlgKantoStarterLiteralCandidate(int offset, int rawSpeciesId, String context) {
+    }
+
+    record Gen3IntroMonVisualSourceDiagnostics(int cryOffset, int imageOffset, int paletteOffset, int otherOffset,
+                                               int imageTableOffset, int paletteTableOffset,
+                                               List<Gen3IntroMonVisualSourceCandidate> candidates) {
+    }
+
+    record Gen3IntroMonVisualSourceCandidate(int offset, String source, int rawSpeciesId, String decodedSpecies,
+                                             int pointer, int expectedSpeciesId) {
+    }
+
+    record Gen3IntroMonVisualSourceComparison(Gen3IntroMonVisualSourceDiagnostics base,
+                                              Gen3IntroMonVisualSourceDiagnostics output,
+                                              List<Gen3IntroMonVisualSourceCandidateComparison> candidates) {
+    }
+
+    record Gen3IntroMonVisualSourceCandidateComparison(String source, int offset, int baseSpeciesId,
+                                                       String baseDecodedSpecies, int outputSpeciesId,
+                                                       String outputDecodedSpecies, boolean changedFromBase) {
     }
 
     record FrlgRawTrainerPokemonDiagnostics(int partyIndex, int offset, int level, int rawSpeciesId,

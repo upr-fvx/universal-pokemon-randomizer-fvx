@@ -105,6 +105,13 @@ public class SettingsProfileGeneratorTest {
     public void invoke_withIntroModeOverlays_setsIntroFields() throws Exception {
         assertTrue(settingsForOverlay("MODE-INTRO-RANDOM").isRandomizeIntroMon());
         assertFalse(settingsForOverlay("MODE-NO-RANDOM-INTRO").isRandomizeIntroMon());
+        assertFalse(settingsForOverlay("FVX-GEN-003").isRandomizeIntroMon());
+    }
+
+    @Test
+    public void invoke_withIntroModeOverlays_appliesLastOverlayInSettingsSerializationOrder() throws Exception {
+        assertFalse(settingsForOverlays("MODE-INTRO-RANDOM", "MODE-NO-RANDOM-INTRO").isRandomizeIntroMon());
+        assertTrue(settingsForOverlays("MODE-NO-RANDOM-INTRO", "MODE-INTRO-RANDOM").isRandomizeIntroMon());
     }
 
     @Test
@@ -182,6 +189,24 @@ public class SettingsProfileGeneratorTest {
                 "--output-settings", output.toString(),
                 "--enable", overlayId
         });
+
+        assertEquals(0, exitCode);
+        return readSettings(output);
+    }
+
+    private Settings settingsForOverlays(String... overlayIds) throws Exception {
+        Path output = tempDir.resolve(String.join("-", overlayIds) + ".rnqs");
+        String[] args = new String[4 + overlayIds.length * 2];
+        args[0] = "--base-settings";
+        args[1] = BASE_SETTINGS.toString();
+        args[2] = "--output-settings";
+        args[3] = output.toString();
+        for (int i = 0; i < overlayIds.length; i++) {
+            args[4 + i * 2] = "--enable";
+            args[5 + i * 2] = overlayIds[i];
+        }
+
+        int exitCode = SettingsProfileGenerator.invoke(args);
 
         assertEquals(0, exitCode);
         return readSettings(output);

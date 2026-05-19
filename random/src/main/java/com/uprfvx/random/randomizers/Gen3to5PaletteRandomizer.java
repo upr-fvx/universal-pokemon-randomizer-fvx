@@ -92,6 +92,7 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 				new EvolvedSpeciesPaletteAction());
 		List<PaletteDescription> paletteDescriptions = getPaletteDescriptions("pokePalettes");
 		populatePokemonPalettes(paletteDescriptions);
+		changesMade = !typeBaseColorLists.isEmpty();
 
 	}
 

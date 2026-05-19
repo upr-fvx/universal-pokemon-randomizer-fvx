@@ -10,6 +10,17 @@ import java.util.*;
 
 public class TrainerNameRandomizer extends Randomizer {
 
+    private static final Set<Integer> KNOWN_RIVAL_TRAINER_IDS = Set.of(
+            0x148, 0x146, 0x147,
+            0x14B, 0x149, 0x14A,
+            0x14E, 0x14C, 0x14D,
+            0x1AC, 0x1AA, 0x1AB,
+            0x1AF, 0x1AD, 0x1AE,
+            0x1B2, 0x1B0, 0x1B1,
+            0x1B5, 0x1B3, 0x1B4,
+            0x1B8, 0x1B6, 0x1B7,
+            0x2E5, 0x2E3, 0x2E4,
+            373, 374, 380, 381, 382, 383, 384, 385);
     private final Map<Integer, Integer> trainerClassIdMapping = new HashMap<>();
     private final Map<Integer, Integer> trainerClassIdAssignmentsByTrainerIndex = new HashMap<>();
     private List<String> originalTrainerClassNames = Collections.emptyList();
@@ -202,7 +213,8 @@ public class TrainerNameRandomizer extends Randomizer {
             if (oldClassId < 0 || oldClassId >= currentClassNames.size()) {
                 continue;
             }
-            int targetClassId = rivalTargetClassId != null && isRivalClassSpriteSyncTrainer(trainer)
+            int targetClassId = rivalTargetClassId != null
+                    && isRivalClassSpriteSyncTrainer(trainer, currentClassNames)
                     ? rivalTargetClassId
                     : randomTrainerClassIdForTrainer(oldClassId, currentClassNames, doublesClassIndexes,
                     mustBeSameLength);
@@ -213,7 +225,7 @@ public class TrainerNameRandomizer extends Randomizer {
     private Integer rivalTargetClassId(List<Trainer> trainers, List<String> currentClassNames,
                                        Set<Integer> doublesClassIndexes, boolean mustBeSameLength) {
         List<Integer> rivalClassIds = trainers.stream()
-                .filter(this::isRivalClassSpriteSyncTrainer)
+                .filter(trainer -> isRivalClassSpriteSyncTrainer(trainer, currentClassNames))
                 .map(Trainer::getTrainerclass)
                 .filter(classId -> classId >= 0 && classId < currentClassNames.size())
                 .toList();
@@ -252,9 +264,35 @@ public class TrainerNameRandomizer extends Randomizer {
         return preferredCandidates.get(random.nextInt(preferredCandidates.size()));
     }
 
-    private boolean isRivalClassSpriteSyncTrainer(Trainer trainer) {
-        String tag = trainer.getTag();
-        return tag != null && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND"));
+    static boolean isRivalClassSpriteSyncTrainer(Trainer trainer, List<String> trainerClassNames) {
+        if (trainer == null) {
+            return false;
+        }
+        if (containsRivalOrFriendToken(trainer.getTag())) {
+            return true;
+        }
+        if (KNOWN_RIVAL_TRAINER_IDS.contains(trainer.getIndex())) {
+            return true;
+        }
+        if (containsRivalOrFriendToken(trainer.getFullDisplayName())) {
+            return true;
+        }
+        int trainerClass = trainer.getTrainerclass();
+        return trainerClass >= 0 && trainerClass < trainerClassNames.size()
+                && containsRivalOrFriendToken(trainerClassNames.get(trainerClass));
+    }
+
+    private static boolean containsRivalOrFriendToken(String value) {
+        if (value == null || value.isBlank()) {
+            return false;
+        }
+        String normalized = value.toUpperCase(Locale.ROOT).replaceAll("[^A-Z0-9]+", " ");
+        for (String token : normalized.trim().split(" +")) {
+            if (token.startsWith("RIVAL") || token.startsWith("FRIEND")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private int randomTrainerClassIdForTrainer(

@@ -319,6 +319,30 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
+    void trainerClassNameRandomizerGroupsRivalAssignmentsDetectedFromDisplayName() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerClassNames = List.of("BUG CATCHER", "PSYCHIC", "ELITE 4", "BOARDER");
+        Trainer firstRival = trainer(373, 0);
+        Trainer laterRival = trainer(374, 0);
+        Trainer regular = trainer(102, 0);
+        firstRival.setFullDisplayName("Rival Terry");
+        laterRival.setFullDisplayName("Rival Terry");
+        regular.setFullDisplayName("Bug Catcher Rick");
+        handler.trainers = List.of(firstRival, laterRival, regular);
+        Settings settings = settings();
+        settings.setRandomizeTrainerClassSprites(true);
+
+        TrainerNameRandomizer randomizer = new TrainerNameRandomizer(handler.proxy, settings,
+                new CyclingRandom(0, 1));
+        randomizer.randomizeTrainerClassNames();
+
+        Map<Integer, Integer> assignments = randomizer.getTrainerClassIdAssignmentsByTrainerIndex();
+        assertNotEquals(0, assignments.get(373));
+        assertEquals(assignments.get(373), assignments.get(374));
+        assertTrue(assignments.containsKey(102));
+    }
+
+    @Test
     void trainerClassNameRandomizerKeepsIdentityWhenNoAlternativeExists() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerClassNames = List.of("OLD");

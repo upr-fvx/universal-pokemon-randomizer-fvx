@@ -49,11 +49,14 @@ classes. Per-trainer assignments avoid old class -> same target class when an
 alternative target class exists in the same allowed pool. If a pool has only one
 valid class, identity is allowed because no different target exists.
 
-Rival/Friend-tagged rows are the intentional exception to fully independent
-per-trainer assignment. Because those rows represent a continuing story identity,
-Sprite Sync gives the Rival group one shared target class, and the visible
-`trainerPic` follows that shared class across Rival appearances. Regular trainers
-and non-rival runtime-source trainers remain per-trainer randomized.
+Rival/Friend rows are the intentional exception to fully independent per-trainer
+assignment. Because those rows represent a continuing story identity, Sprite Sync
+gives the Rival group one shared target class, and the visible `trainerPic`
+follows that shared class across Rival appearances. Detection uses explicit
+Rival/Friend tags when present, known FRLG Rival TrainerData IDs, the sanitized
+untagged Rival IDs observed in local smoke, and Rival/Friend class or display
+labels such as `Rival Terry` when tags are missing. Regular trainers and
+non-rival runtime-source trainers remain per-trainer randomized.
 
 This is a chaotic opt-in visual consistency mode. It is not a lore/plausibility
 mode, not a regular-only stable mode and not a promise that a trainer remains in
@@ -69,8 +72,8 @@ The first implementation is narrow but intentionally chaotic:
   assignments
 - follows those assignments instead of choosing an independent random class/pic
   pair
-- keeps Rival/Friend tagged appearances on one shared target class/pic while
-  leaving regular and non-rival runtime-source trainers per-trainer randomized
+- keeps Rival/Friend appearances on one shared target class/pic while leaving
+  regular and non-rival runtime-source trainers per-trainer randomized
 - does not add target-class filtering beyond requiring a modeled target class
   and an observed valid pic
 - allows regular trainers to become Rival, Player, Gym Leader, Elite Four,

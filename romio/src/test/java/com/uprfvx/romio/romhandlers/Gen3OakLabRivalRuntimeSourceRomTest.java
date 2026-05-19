@@ -26,6 +26,8 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
     private static final String STARTERS_ENV = "UPRFVX_OAK_LAB_RIVAL_RUNTIME_SOURCE_STARTERS";
     private static final String TARGET_TRAINER_IDS_PROPERTY = "uprfvx.trainerRuntimeSourceIds";
     private static final String TARGET_TRAINER_IDS_ENV = "UPRFVX_TRAINER_RUNTIME_SOURCE_IDS";
+    private static final String TRAINER_RUNTIME_SOURCE_AUDIT_PROPERTY = "uprfvx.trainerRuntimeSourceAudit";
+    private static final String TRAINER_RUNTIME_SOURCE_AUDIT_ENV = "UPRFVX_TRAINER_RUNTIME_SOURCE_AUDIT";
     private static final String REPORT_FILE_NAME = "oak-lab-rival-runtime-source-report.txt";
 
     private static final List<Integer> FRLG_RIVAL2_TRAINER_IDS = List.of(0x14B, 0x149, 0x14A);
@@ -113,6 +115,11 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
 
         report.add("trainerbattle runtime sources in whole ROM:");
         appendTrainerBattleRuntimeSources(report, romHandler.getFrlgTrainerBattleRuntimeSourcesForDiagnostics(), 240);
+
+        Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode auditMode = configuredAuditMode();
+        if (auditMode != null) {
+            appendTrainerRuntimeSourceAudit(report, romHandler, auditMode);
+        }
 
         Set<Integer> targetedTrainerIds = configuredTargetTrainerIds();
         if (!targetedTrainerIds.isEmpty()) {
@@ -294,6 +301,30 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         report.add("  total=" + sources.size() + " reported=" + Math.min(sources.size(), limit));
     }
 
+    private static void appendTrainerRuntimeSourceAudit(List<String> report, Gen3RomHandler romHandler,
+                                                        Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode auditMode) {
+        List<Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow> rows =
+                romHandler.getFrlgTrainerRuntimeSourceAuditRowsForDiagnostics(auditMode);
+        report.add("trainer runtime source audit mode=" + auditMode.configValue());
+        for (Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow row : rows) {
+            report.add("  trainerId=" + row.trainerId()
+                    + " scriptOffsets=" + hexList(row.scriptOffsets())
+                    + " battleTypes=" + row.battleTypes()
+                    + " trainerOffset=" + hex(row.trainerOffset())
+                    + " trainerEntryValid=" + row.trainerEntryValid()
+                    + " partyFlags=" + row.partyFlags()
+                    + " partySize=" + row.partySize()
+                    + " partyPointer=" + hexOrMissing(row.partyPointer())
+                    + " partyPointerValid=" + row.partyPointerValid()
+                    + " firstRawSpeciesId=" + row.firstRawSpeciesId()
+                    + " firstDecodedSpecies=" + row.firstDecodedSpecies()
+                    + " loadedParty=" + row.loadedParty()
+                    + " rawParty=" + row.rawParty()
+                    + " classification=" + row.classification());
+        }
+        report.add("  total=" + rows.size());
+    }
+
     static List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> filterRuntimeSourcesByTrainerIds(
             List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources, Set<Integer> trainerIds) {
         List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> filtered = new ArrayList<>();
@@ -450,6 +481,15 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         return parseTargetTrainerIds(System.getenv(TARGET_TRAINER_IDS_ENV));
     }
 
+    private static Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode configuredAuditMode() {
+        String property = System.getProperty(TRAINER_RUNTIME_SOURCE_AUDIT_PROPERTY);
+        if (property != null && !property.isBlank()) {
+            return Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode.fromConfigValue(property);
+        }
+        return Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode.fromConfigValue(
+                System.getenv(TRAINER_RUNTIME_SOURCE_AUDIT_ENV));
+    }
+
     static Set<Integer> parseTargetTrainerIds(String configuredTargets) {
         Set<Integer> trainerIds = new LinkedHashSet<>();
         if (configuredTargets == null || configuredTargets.isBlank()) {
@@ -502,6 +542,14 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
 
     private static String hexOrMissing(int value) {
         return value < 0 ? "<missing>" : hex(value);
+    }
+
+    private static String hexList(List<Integer> values) {
+        List<String> formatted = new ArrayList<>();
+        for (int value : values) {
+            formatted.add(hex(value));
+        }
+        return formatted.toString();
     }
 
     private static String signedHex(int value) {

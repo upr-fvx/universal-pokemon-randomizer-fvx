@@ -1,5 +1,9 @@
 package com.uprfvx.romio.romhandlers;
 
+import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.Trainer;
+import com.uprfvx.romio.gamedata.TrainerPokemon;
+
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -187,6 +191,87 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
+    public void trainerRuntimeSourceAuditDedupesValidUnloadedTrainerIds() {
+        Species[] species = speciesTable(321);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 321),
+                runtimeSource(96, 3, 531, 1200, 1800, 1, 321));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 321, 12, species));
+
+        List<Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow> rows =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourceAuditRows(sources, rawParties, List.of(), species,
+                        Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode.UNLOADED_VALID_PARTIES);
+
+        assertEquals(1, rows.size());
+        Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow row = rows.get(0);
+        assertEquals(531, row.trainerId());
+        assertEquals(List.of(64, 96), row.scriptOffsets());
+        assertEquals(List.of(0, 3), row.battleTypes());
+        assertEquals("<not loaded>", row.loadedParty());
+        assertTrue(row.rawParty().contains("raw=321"));
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED,
+                row.classification());
+    }
+
+    @Test
+    public void trainerRuntimeSourceAuditClassifiesLoadedRuntimeMismatch() {
+        Species[] species = speciesTable(25, 26);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
+                runtimeSource(64, 0, 10, 800, 1600, 1, 25));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawParties = List.of(
+                rawParty(10, 800, 1600, 1, 25, 8, species));
+        Trainer loadedTrainer = trainer(10, species[26], 8);
+
+        List<Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow> rows =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourceAuditRows(sources, rawParties, List.of(loadedTrainer),
+                        species, Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode.LOADED_MISMATCH);
+
+        assertEquals(1, rows.size());
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MISMATCH,
+                rows.get(0).classification());
+    }
+
+    @Test
+    public void trainerRuntimeSourceAuditClassifiesLoadedRuntimeMatch() {
+        Species[] species = speciesTable(25);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
+                runtimeSource(64, 0, 10, 800, 1600, 1, 25));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawParties = List.of(
+                rawParty(10, 800, 1600, 1, 25, 8, species));
+        Trainer loadedTrainer = trainer(10, species[25], 8);
+
+        List<Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow> rows =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourceAuditRows(sources, rawParties, List.of(loadedTrainer),
+                        species, Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode.ALL);
+
+        assertEquals(1, rows.size());
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MATCH,
+                rows.get(0).classification());
+    }
+
+    @Test
+    public void trainerRuntimeSourceAuditClassifiesInvalidPointerAndOutOfRange() {
+        Species[] species = speciesTable(25);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
+                runtimeSource(64, 0, 22, 800, 2200, 1, 25),
+                new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(96, 0, 900, 0,
+                        40000, -1, -1, -1, false, false, -1, -1));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawParties = List.of(
+                unreadableRawParty(22, 800, 2200, 1));
+
+        List<Gen3RomHandler.FrlgTrainerRuntimeSourceAuditRow> rows =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourceAuditRows(sources, rawParties, List.of(), species,
+                        Gen3RomHandler.FrlgTrainerRuntimeSourceAuditMode.INVALID);
+
+        assertEquals(2, rows.size());
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.INVALID_POINTER,
+                rows.get(0).classification());
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.OUT_OF_RANGE,
+                rows.get(1).classification());
+    }
+
+    @Test
     public void runtimeTrainerSyncTargetsLoadConfirmedValidRowsOutsideTrainerCount() {
         byte[] rom = new byte[24000];
         int trainerDataOffset = 128;
@@ -319,6 +404,55 @@ public class Gen3OakLabRivalScriptTest {
         rom[offset + 1] = (byte) ((pointer >>> 8) & 0xFF);
         rom[offset + 2] = (byte) ((pointer >>> 16) & 0xFF);
         rom[offset + 3] = (byte) ((pointer >>> 24) & 0xFF);
+    }
+
+    private static Gen3RomHandler.FrlgTrainerBattleRuntimeSource runtimeSource(int scriptOffset, int battleType,
+                                                                               int trainerId, int trainerOffset,
+                                                                               int partyPointer, int partySize,
+                                                                               int firstRawSpeciesId) {
+        return new Gen3RomHandler.FrlgTrainerBattleRuntimeSource(scriptOffset, battleType, trainerId, 0,
+                trainerOffset, 0, partySize, partyPointer, true, true, partyPointer, firstRawSpeciesId);
+    }
+
+    private static Gen3RomHandler.FrlgRawTrainerPartyDiagnostics rawParty(int trainerId, int trainerOffset,
+                                                                          int partyPointer, int partySize,
+                                                                          int firstRawSpeciesId, int level,
+                                                                          Species[] species) {
+        String decodedSpecies = species[firstRawSpeciesId].getFullName();
+        return new Gen3RomHandler.FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, 0, partySize, partyPointer,
+                true, List.of(new Gen3RomHandler.FrlgRawTrainerPokemonDiagnostics(0, partyPointer, level,
+                firstRawSpeciesId, decodedSpecies)));
+    }
+
+    private static Gen3RomHandler.FrlgRawTrainerPartyDiagnostics unreadableRawParty(int trainerId, int trainerOffset,
+                                                                                    int partyPointer, int partySize) {
+        return new Gen3RomHandler.FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, 0, partySize, partyPointer,
+                false, List.of());
+    }
+
+    private static Trainer trainer(int trainerId, Species species, int level) {
+        Trainer trainer = new Trainer();
+        trainer.setIndex(trainerId);
+        TrainerPokemon pokemon = new TrainerPokemon();
+        pokemon.setSpecies(species);
+        pokemon.setLevel(level);
+        trainer.getPokemon().add(pokemon);
+        return trainer;
+    }
+
+    private static Species[] speciesTable(int... rawSpeciesIds) {
+        int maxSpeciesId = 0;
+        for (int rawSpeciesId : rawSpeciesIds) {
+            maxSpeciesId = Math.max(maxSpeciesId, rawSpeciesId);
+        }
+        Species[] species = new Species[maxSpeciesId + 1];
+        for (int rawSpeciesId : rawSpeciesIds) {
+            Species entry = new Species(rawSpeciesId);
+            entry.setName("Species" + rawSpeciesId);
+            entry.setSpeciesSetIdentityNumber(rawSpeciesId);
+            species[rawSpeciesId] = entry;
+        }
+        return species;
     }
 
     private static Path referenceSourcePath(String relativePath) {

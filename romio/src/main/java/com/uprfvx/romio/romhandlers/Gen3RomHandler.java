@@ -2207,6 +2207,20 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 romEntry.getIntValue("TrainerEntrySize"), 0, rom.length);
     }
 
+    List<FrlgTrainerRuntimeSourceAuditRow> getFrlgTrainerRuntimeSourceAuditRowsForDiagnostics(
+            FrlgTrainerRuntimeSourceAuditMode mode) {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return Collections.emptyList();
+        }
+        List<FrlgTrainerBattleRuntimeSource> sources = getFrlgTrainerBattleRuntimeSourcesForDiagnostics();
+        Set<Integer> trainerIds = new LinkedHashSet<>();
+        for (FrlgTrainerBattleRuntimeSource source : sources) {
+            trainerIds.add(source.trainerId());
+        }
+        return buildFrlgTrainerRuntimeSourceAuditRows(sources, getRawTrainerPartyDiagnostics(new ArrayList<>(trainerIds)),
+                trainers, pokesInternal, mode);
+    }
+
     List<FrlgOakLabScriptCommand> getFrlgOakLabScriptCommandsNearStarterFlowForDiagnostics() {
         if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
             return Collections.emptyList();
@@ -2381,7 +2395,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int firstRawSpeciesId = -1;
         int stride = (partyFlags & 1) == 1 ? 16 : 8;
         boolean partyPointerValid = partyPointer != -1 && partySize > 0 && partySize <= 6
-                && partyPointer + stride <= rom.length;
+                && partyPointer >= 0 && partyPointer + partySize * stride <= rom.length;
         if (partyPointerValid) {
             firstPokemonOffset = partyPointer;
             firstRawSpeciesId = readLittleEndianWord(rom, firstPokemonOffset + 4);
@@ -2389,6 +2403,177 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return new FrlgTrainerBattleRuntimeSource(command.offset(), command.battleType(), command.trainerId(),
                 command.argument(), trainerOffset, partyFlags, partySize, partyPointer, true, partyPointerValid,
                 firstPokemonOffset, firstRawSpeciesId);
+    }
+
+    static List<FrlgTrainerRuntimeSourceAuditRow> buildFrlgTrainerRuntimeSourceAuditRows(
+            List<FrlgTrainerBattleRuntimeSource> sources,
+            List<FrlgRawTrainerPartyDiagnostics> rawParties,
+            List<Trainer> loadedTrainers,
+            Species[] speciesByInternalId,
+            FrlgTrainerRuntimeSourceAuditMode mode) {
+        Map<Integer, FrlgTrainerRuntimeSourceAuditAccumulator> byTrainerId = new LinkedHashMap<>();
+        for (FrlgTrainerBattleRuntimeSource source : sources) {
+            byTrainerId.computeIfAbsent(source.trainerId(),
+                    id -> new FrlgTrainerRuntimeSourceAuditAccumulator(source)).add(source);
+        }
+
+        Map<Integer, FrlgRawTrainerPartyDiagnostics> rawByTrainerId = new LinkedHashMap<>();
+        for (FrlgRawTrainerPartyDiagnostics rawParty : rawParties) {
+            rawByTrainerId.put(rawParty.trainerId(), rawParty);
+        }
+
+        List<FrlgTrainerRuntimeSourceAuditRow> rows = new ArrayList<>();
+        for (FrlgTrainerRuntimeSourceAuditAccumulator accumulator : byTrainerId.values()) {
+            FrlgTrainerBattleRuntimeSource source = accumulator.firstSource;
+            FrlgRawTrainerPartyDiagnostics rawParty = rawByTrainerId.get(source.trainerId());
+            Trainer loadedTrainer = findTrainerByIndex(loadedTrainers, source.trainerId());
+            FrlgTrainerRuntimeSourceClassification classification = classifyFrlgTrainerRuntimeSource(
+                    source, rawParty, loadedTrainer, speciesByInternalId);
+            FrlgTrainerRuntimeSourceAuditRow row = new FrlgTrainerRuntimeSourceAuditRow(
+                    source.trainerId(), new ArrayList<>(accumulator.scriptOffsets),
+                    new ArrayList<>(accumulator.battleTypes), source.trainerOffset(), source.trainerEntryValid(),
+                    source.partyFlags(), source.partySize(), source.partyPointer(), isRawPartyPointerValid(rawParty),
+                    firstRawSpeciesId(rawParty), firstDecodedSpecies(rawParty), formatLoadedTrainerParty(loadedTrainer),
+                    formatRawTrainerParty(rawParty), classification);
+            if (mode.includes(row)) {
+                rows.add(row);
+            }
+        }
+        return rows;
+    }
+
+    private static Trainer findTrainerByIndex(List<Trainer> loadedTrainers, int trainerId) {
+        if (loadedTrainers == null) {
+            return null;
+        }
+        for (Trainer trainer : loadedTrainers) {
+            if (trainer.getIndex() == trainerId) {
+                return trainer;
+            }
+        }
+        return null;
+    }
+
+    private static FrlgTrainerRuntimeSourceClassification classifyFrlgTrainerRuntimeSource(
+            FrlgTrainerBattleRuntimeSource source,
+            FrlgRawTrainerPartyDiagnostics rawParty,
+            Trainer loadedTrainer,
+            Species[] speciesByInternalId) {
+        if (!source.trainerEntryValid()) {
+            return FrlgTrainerRuntimeSourceClassification.OUT_OF_RANGE;
+        }
+        if (source.trainerId() <= 0 || source.partyFlags() > 3 || source.partySize() > 6) {
+            return FrlgTrainerRuntimeSourceClassification.FALSE_POSITIVE_LIKELY;
+        }
+        if (source.partySize() <= 0) {
+            return FrlgTrainerRuntimeSourceClassification.EMPTY_PARTY;
+        }
+        if (!isRawPartyPointerValid(rawParty)) {
+            return FrlgTrainerRuntimeSourceClassification.INVALID_POINTER;
+        }
+        if (!isFirstRawSpeciesPlausible(rawParty, speciesByInternalId)) {
+            return FrlgTrainerRuntimeSourceClassification.FALSE_POSITIVE_LIKELY;
+        }
+        if (loadedTrainer == null) {
+            return FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED;
+        }
+        if (loadedTrainerMatchesRawParty(loadedTrainer, rawParty, speciesByInternalId)) {
+            return FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MATCH;
+        }
+        return FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MISMATCH;
+    }
+
+    private static boolean loadedTrainerMatchesRawParty(Trainer loadedTrainer,
+                                                        FrlgRawTrainerPartyDiagnostics rawParty,
+                                                        Species[] speciesByInternalId) {
+        if (rawParty == null || loadedTrainer.getPokemon().size() != rawParty.party().size()) {
+            return false;
+        }
+        for (int i = 0; i < loadedTrainer.getPokemon().size(); i++) {
+            TrainerPokemon loadedPokemon = loadedTrainer.getPokemon().get(i);
+            FrlgRawTrainerPokemonDiagnostics rawPokemon = rawParty.party().get(i);
+            if (loadedPokemon.getLevel() != rawPokemon.level()
+                    || !loadedSpeciesMatchesRawSpeciesId(loadedPokemon.getSpecies(), rawPokemon.rawSpeciesId(),
+                    speciesByInternalId)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean loadedSpeciesMatchesRawSpeciesId(Species loadedSpecies, int rawSpeciesId,
+                                                            Species[] speciesByInternalId) {
+        if (loadedSpecies == null || rawSpeciesId <= 0) {
+            return false;
+        }
+        if (loadedSpecies.getNumber() == rawSpeciesId || loadedSpecies.getSpeciesSetIdentityNumber() == rawSpeciesId) {
+            return true;
+        }
+        return speciesByInternalId != null
+                && rawSpeciesId < speciesByInternalId.length
+                && loadedSpecies == speciesByInternalId[rawSpeciesId];
+    }
+
+    private static boolean isRawPartyPointerValid(FrlgRawTrainerPartyDiagnostics rawParty) {
+        return rawParty != null && rawParty.partyPointerValid()
+                && rawParty.partySize() > 0 && rawParty.partySize() <= 6
+                && rawParty.party().size() == rawParty.partySize();
+    }
+
+    private static boolean isFirstRawSpeciesPlausible(FrlgRawTrainerPartyDiagnostics rawParty,
+                                                      Species[] speciesByInternalId) {
+        int firstRawSpeciesId = firstRawSpeciesId(rawParty);
+        return firstRawSpeciesId > 0
+                && speciesByInternalId != null
+                && firstRawSpeciesId < speciesByInternalId.length
+                && speciesByInternalId[firstRawSpeciesId] != null;
+    }
+
+    private static int firstRawSpeciesId(FrlgRawTrainerPartyDiagnostics rawParty) {
+        return rawParty == null || rawParty.party().isEmpty() ? -1 : rawParty.party().get(0).rawSpeciesId();
+    }
+
+    private static String firstDecodedSpecies(FrlgRawTrainerPartyDiagnostics rawParty) {
+        return rawParty == null || rawParty.party().isEmpty() ? "<none>" : rawParty.party().get(0).decodedSpeciesName();
+    }
+
+    private static String formatLoadedTrainerParty(Trainer trainer) {
+        if (trainer == null) {
+            return "<not loaded>";
+        }
+        List<String> party = new ArrayList<>();
+        for (TrainerPokemon pokemon : trainer.getPokemon()) {
+            Species species = pokemon.getSpecies();
+            party.add((species == null ? "?" : species.getFullName()) + " Lv" + pokemon.getLevel());
+        }
+        return party.toString();
+    }
+
+    private static String formatRawTrainerParty(FrlgRawTrainerPartyDiagnostics rawParty) {
+        if (rawParty == null || rawParty.party().isEmpty()) {
+            return "<not readable>";
+        }
+        List<String> party = new ArrayList<>();
+        for (FrlgRawTrainerPokemonDiagnostics pokemon : rawParty.party()) {
+            party.add(pokemon.decodedSpeciesName() + " Lv" + pokemon.level()
+                    + " raw=" + pokemon.rawSpeciesId());
+        }
+        return party.toString();
+    }
+
+    private static class FrlgTrainerRuntimeSourceAuditAccumulator {
+        private final FrlgTrainerBattleRuntimeSource firstSource;
+        private final Set<Integer> scriptOffsets = new LinkedHashSet<>();
+        private final Set<Integer> battleTypes = new LinkedHashSet<>();
+
+        private FrlgTrainerRuntimeSourceAuditAccumulator(FrlgTrainerBattleRuntimeSource firstSource) {
+            this.firstSource = firstSource;
+        }
+
+        private void add(FrlgTrainerBattleRuntimeSource source) {
+            scriptOffsets.add(source.scriptOffset());
+            battleTypes.add(source.battleType());
+        }
     }
 
     static List<FrlgOakLabScriptCommand> findFrlgScriptCommands(byte[] rom, int searchStart,
@@ -2507,6 +2692,71 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     record FrlgRuntimeTrainerSyncTarget(int trainerId, String tag) {
+    }
+
+    enum FrlgTrainerRuntimeSourceAuditMode {
+        ALL,
+        UNLOADED_VALID_PARTIES,
+        LOADED_MISMATCH,
+        INVALID;
+
+        static FrlgTrainerRuntimeSourceAuditMode fromConfigValue(String value) {
+            if (value == null || value.isBlank()) {
+                return null;
+            }
+            return switch (value.trim().toLowerCase(Locale.ROOT)) {
+                case "all" -> ALL;
+                case "unloaded-valid-parties" -> UNLOADED_VALID_PARTIES;
+                case "loaded-mismatch" -> LOADED_MISMATCH;
+                case "invalid" -> INVALID;
+                default -> throw new IllegalArgumentException("Unknown trainer runtime source audit mode: " + value);
+            };
+        }
+
+        boolean includes(FrlgTrainerRuntimeSourceAuditRow row) {
+            return switch (this) {
+                case ALL -> true;
+                case UNLOADED_VALID_PARTIES ->
+                        row.classification() == FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED;
+                case LOADED_MISMATCH ->
+                        row.classification() == FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MISMATCH;
+                case INVALID -> row.classification().isInvalid();
+            };
+        }
+
+        String configValue() {
+            return switch (this) {
+                case ALL -> "all";
+                case UNLOADED_VALID_PARTIES -> "unloaded-valid-parties";
+                case LOADED_MISMATCH -> "loaded-mismatch";
+                case INVALID -> "invalid";
+            };
+        }
+    }
+
+    enum FrlgTrainerRuntimeSourceClassification {
+        VALID_RUNTIME_NOT_LOADED,
+        LOADED_AND_RUNTIME_MATCH,
+        LOADED_AND_RUNTIME_MISMATCH,
+        INVALID_POINTER,
+        EMPTY_PARTY,
+        OUT_OF_RANGE,
+        FALSE_POSITIVE_LIKELY;
+
+        boolean isInvalid() {
+            return this == INVALID_POINTER
+                    || this == EMPTY_PARTY
+                    || this == OUT_OF_RANGE
+                    || this == FALSE_POSITIVE_LIKELY;
+        }
+    }
+
+    record FrlgTrainerRuntimeSourceAuditRow(int trainerId, List<Integer> scriptOffsets, List<Integer> battleTypes,
+                                            int trainerOffset, boolean trainerEntryValid, int partyFlags,
+                                            int partySize, int partyPointer, boolean partyPointerValid,
+                                            int firstRawSpeciesId, String firstDecodedSpecies, String loadedParty,
+                                            String rawParty,
+                                            FrlgTrainerRuntimeSourceClassification classification) {
     }
 
     record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {

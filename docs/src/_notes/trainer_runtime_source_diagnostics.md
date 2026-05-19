@@ -13,14 +13,29 @@ Clean log output therefore proves only that the loaded trainer model was
 randomized. It does not prove that every in-game `trainerbattle` command reads
 that same row at runtime.
 
-The CFRU/DPE FireRed trainer runtime-party fix keeps the scope deliberately
-small: confirmed valid FRLG trainerbattle runtime sources for Rival 2
-(`0x14B`, `0x149`, `0x14A`) and Brock (`0x19E`) are loaded into the trainer
-model only when their raw `TrainerData` row is outside `TrainerCount`, has a
-valid party pointer, and has a plausible party size. The same rows are then
-serialized back during trainer saving, so a randomized trainer log entry is
-backed by the raw trainerbattle runtime source instead of only by the loaded
-model.
+The CFRU/DPE FireRed trainer runtime-party fix originally kept the scope
+deliberately small: confirmed valid FRLG trainerbattle runtime sources for Rival
+2 (`0x14B`, `0x149`, `0x14A`) and Brock (`0x19E`) were loaded into the trainer
+model only when their raw `TrainerData` row was outside `TrainerCount`, had a
+valid party pointer, and had a plausible party size.
+
+Strict runtime-source sync generalizes that path without trusting arbitrary
+script bytes. During trainer loading, deduped `trainerbattle` runtime-source
+rows are loaded into the normal trainer model only when the audit classification
+is `VALID_RUNTIME_NOT_LOADED`. The required conditions are:
+
+- the script references a valid `TrainerData` row
+- the raw party pointer is valid
+- party size is `1..6`
+- the full raw party is readable
+- all raw party species resolve to loaded species
+- the trainer is not already present in the normal loaded trainer model
+
+Rows that pass strict discovery are randomized by the normal Trainer Pokemon
+pipeline and are serialized back through the normal Gen3 trainer party
+serializer during `saveTrainers()`. Invalid pointers, empty parties, out-of-range
+rows, oversized parties, loaded/runtime mismatches and likely false positives are
+not auto-synced by this path.
 
 Current hypotheses:
 
@@ -38,6 +53,7 @@ The committed no-ROM coverage uses synthetic byte arrays only:
 - party pointer and first raw species extraction from synthetic party bytes
 - global audit classification and trainer-ID dedupe using synthetic runtime
   source rows only
+- strict runtime-source sync candidate selection using synthetic rows only
 
 The ROM-reading report remains opt-in through local test configuration. It must
 not be run by automated CI, and reports must keep private ROM paths redacted.
@@ -92,11 +108,21 @@ The focused `unloaded-valid-parties` mode reports only rows where the
 the raw party can be read, the first raw species resolves to a loaded species,
 and the loaded trainer model reports `loadedParty=<not loaded>`.
 
-This audit is diagnosis only. It does not add any automatic runtime-source sync,
-does not expand `saveTrainers()`, and does not change normal randomizer
-behavior. Any broader auto-sync/write coverage must stay in a separate follow-up
-PR after sanitized local evidence proves the target rows are real runtime
-sources.
+The audit modes remain diagnosis/reporting tools. Strict runtime-source sync is
+the only automatic path, and it consumes only rows equivalent to
+`unloaded-valid-parties` / `VALID_RUNTIME_NOT_LOADED`. It does not sync
+`loaded-mismatch` rows and does not attempt to repair invalid rows.
+
+Local ingame smoke is still required before stronger compatibility claims:
+
+- run the private-ROM audit locally and keep paths/hashes/logs redacted
+- confirm affected battles no longer show vanilla parties after randomization
+- report only sanitized trainer IDs, classification, party summaries and pass/fail
+  observations
+- keep additional special cases or loaded/runtime mismatches as separate follow-up
+  fixes
+
+Strict sync does not promote Trainer Pokemon or any Foe Trainer suboption to P1.
 
 For local sanitized evidence, provide only:
 

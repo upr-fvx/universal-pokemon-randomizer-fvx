@@ -190,6 +190,34 @@ public class TrainerSpecialRulesTest {
         assertTrue(randomizer.isChangesMade());
     }
 
+    @Test
+    public void runtimeSourceTrainerTagIsRegular() {
+        Trainer runtimeSource = trainer(531, Trainer.RUNTIME_SOURCE_TAG, pokemon(species(10, "Seed"), 7));
+
+        assertTrue(runtimeSource.isRuntimeSource());
+        assertTrue(runtimeSource.isRegular());
+    }
+
+    @Test
+    public void runtimeSourceTrainerPokemonAreRandomized() {
+        Species seed = species(10, "Seed");
+        Species replacement = species(11, "Replacement");
+        Trainer runtimeSource = trainer(531, Trainer.RUNTIME_SOURCE_TAG, pokemon(seed, 7), pokemon(seed, 8));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(seed, replacement),
+                List.of(runtimeSource),
+                List.of(seed, replacement),
+                Collections.emptyList());
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, settings, new Random(11));
+        randomizer.randomizeTrainerPokes();
+
+        assertTrue(randomizer.isChangesMade());
+        assertTrue(runtimeSource.getPokemon().stream().allMatch(TrainerPokemon::isResetMoves));
+    }
+
     private static Trainer trainer(int index, String tag, TrainerPokemon... pokemon) {
         Trainer trainer = new Trainer();
         trainer.setIndex(index);

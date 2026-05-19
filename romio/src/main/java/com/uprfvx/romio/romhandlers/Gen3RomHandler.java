@@ -56,7 +56,7 @@ import java.util.stream.IntStream;
 public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private static final String CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX = "[CFRU-DPE-COUNT-DIAG] ";
-    private static final String FRLG_RUNTIME_TRAINER_SOURCE_TAG = "RUNTIME-SOURCE";
+    private static final String FRLG_RUNTIME_TRAINER_SOURCE_TAG = Trainer.RUNTIME_SOURCE_TAG;
     private static final Map<Integer, String> FRLG_RUNTIME_TRAINER_SOURCE_KNOWN_TAGS = Map.of(
             0x14B, "RIVAL2-0",
             0x149, "RIVAL2-1",

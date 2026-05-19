@@ -37,6 +37,14 @@ serializer during `saveTrainers()`. Invalid pointers, empty parties, out-of-rang
 rows, oversized parties, loaded/runtime mismatches and likely false positives are
 not auto-synced by this path.
 
+Generic strict runtime-source rows keep the `RUNTIME-SOURCE` tag for diagnostics
+and save tracking, but the trainer model classifies that tag as a regular
+trainer. That makes the rows eligible for Trainer Pokemon randomization and for
+regular-trainer subpaths such as movesets, held items, added Pokemon and type
+diversity when those settings are enabled. Known runtime-source tags, such as
+Rival 2 and Brock, keep their specific `RIVAL*` / `GYM*-LEADER`
+classification.
+
 Current hypotheses:
 
 - A script uses a different `trainerbattle` trainer ID than the vanilla FRLG

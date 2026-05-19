@@ -113,6 +113,43 @@ class Gen3TrainerTextDisplayNameSyncTest {
     }
 
     @Test
+    void trainerClassSpriteSyncWritesScriptRuntimeRowClassIdAndPicByTrainerId() throws Exception {
+        RomBackedTestableGen3RomHandler romHandler = new RomBackedTestableGen3RomHandler();
+        Gen3RomEntry romEntry = fireRedRomEntry();
+        int trainerDataOffset = 0x100;
+        int trainerEntrySize = 40;
+        int trainerId = 10;
+        int trainerOffset = trainerDataOffset + trainerId * trainerEntrySize;
+        romEntry.putIntValue("TrainerData", trainerDataOffset);
+        romEntry.putIntValue("TrainerEntrySize", trainerEntrySize);
+
+        byte[] rom = new byte[0x500];
+        rom[0x20] = 0x5C;
+        rom[0x21] = 0;
+        writeWord(rom, 0x22, trainerId);
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET] = 1;
+        rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET] = 7;
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "rom", rom);
+
+        Trainer trainer = trainer(2, "Pi", "PKMN RANGER Pi");
+        trainer.setIndex(trainerId);
+        trainer.setTrainerPic(9);
+        romHandler.addTrainer(trainer);
+
+        romHandler.saveFrlgRuntimeTrainerSourceRows(trainerDataOffset, 20, trainerEntrySize, 12);
+
+        assertEquals(1, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET]);
+        assertEquals(7, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET]);
+
+        romHandler.setTrainerClassSpriteSyncEnabled(true);
+        romHandler.saveFrlgRuntimeTrainerSourceRows(trainerDataOffset, 20, trainerEntrySize, 12);
+
+        assertEquals(2, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_CLASS_OFFSET]);
+        assertEquals(9, rom[trainerOffset + Gen3RomHandler.GEN3_TRAINER_PIC_OFFSET]);
+    }
+
+    @Test
     void loadTrainersStoresTrainerClassIdNotGenderBitForDisplayRefresh() throws Exception {
         TestableGen3RomHandler romHandler = new TestableGen3RomHandler();
         Gen3RomEntry romEntry = new Gen3RomEntry(Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini").get(0));
@@ -224,6 +261,20 @@ class Gen3TrainerTextDisplayNameSyncTest {
         rom[offset + 1] = (byte) (pointer >> 8);
         rom[offset + 2] = (byte) (pointer >> 16);
         rom[offset + 3] = (byte) (pointer >> 24);
+    }
+
+    private static void writeWord(byte[] rom, int offset, int value) {
+        rom[offset] = (byte) (value & 0xFF);
+        rom[offset + 1] = (byte) ((value >>> 8) & 0xFF);
+    }
+
+    private static Gen3RomEntry fireRedRomEntry() throws Exception {
+        for (Gen3RomEntry entry : Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini")) {
+            if ("Fire Red (U) 1.0".equals(entry.getName())) {
+                return new Gen3RomEntry(entry);
+            }
+        }
+        throw new IllegalStateException("Fire Red (U) 1.0 ROM entry not found");
     }
 
     private static void setField(Object target, String name, Object value) throws Exception {

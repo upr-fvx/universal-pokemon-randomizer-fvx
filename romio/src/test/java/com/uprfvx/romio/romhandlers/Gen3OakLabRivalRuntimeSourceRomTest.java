@@ -213,6 +213,8 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                                               Gen3RomHandler.FrlgRawTrainerPartyDiagnostics trainer) {
             report.add("  trainerId=" + trainer.trainerId()
                     + " trainerOffset=" + hex(trainer.trainerOffset())
+                    + " rawTrainerClass=" + trainer.trainerClass()
+                    + " rawTrainerPic=" + trainer.trainerPic()
                     + " partyFlags=" + trainer.partyFlags()
                     + " partySize=" + trainer.partySize()
                     + " partyPointer=" + hexOrMissing(trainer.partyPointer())
@@ -240,6 +242,10 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         for (Gen3RomHandler.FrlgRawTrainerPartyDiagnostics rawParty : rawParties) {
             Trainer loadedTrainer = findTrainer(romHandler.getTrainers(), rawParty.trainerId());
             report.add("  targetedTrainerId=" + rawParty.trainerId()
+                    + " loadedTrainerClass=" + loadedTrainerClass(loadedTrainer)
+                    + " loadedTrainerPic=" + loadedTrainerPic(loadedTrainer)
+                    + " rawTrainerClass=" + rawParty.trainerClass()
+                    + " rawTrainerPic=" + rawParty.trainerPic()
                     + " loadedParty=" + formatParty(loadedTrainer)
                     + " rawParty=" + formatRawParty(rawParty)
                     + " trainerOffset=" + hex(rawParty.trainerOffset())
@@ -247,6 +253,7 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                     + " partyPointerValid=" + rawParty.partyPointerValid()
                     + " firstRawSpeciesId=" + firstRawSpeciesId(rawParty)
                     + " firstDecodedSpecies=" + firstDecodedSpecies(rawParty)
+                    + " loadedRawClassPicComparison=" + compareLoadedAndRawClassPic(loadedTrainer, rawParty)
                     + " loadedRawPartyComparison=" + compareLoadedAndRawParty(loadedTrainer, rawParty));
         }
     }
@@ -331,6 +338,8 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                     + " arg=" + source.argument()
                     + " trainerOffset=" + hex(source.trainerOffset())
                     + " trainerEntryValid=" + source.trainerEntryValid()
+                    + " runtimeTrainerClass=" + source.trainerClass()
+                    + " runtimeTrainerPic=" + source.trainerPic()
                     + " partyFlags=" + source.partyFlags()
                     + " partySize=" + source.partySize()
                     + " partyPointer=" + hexOrMissing(source.partyPointer())
@@ -352,6 +361,11 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                     + " battleTypes=" + row.battleTypes()
                     + " trainerOffset=" + hex(row.trainerOffset())
                     + " trainerEntryValid=" + row.trainerEntryValid()
+                    + " runtimeTrainerClass=" + row.runtimeTrainerClass()
+                    + " runtimeTrainerPic=" + row.runtimeTrainerPic()
+                    + " loadedTrainerClass=" + row.loadedTrainerClass()
+                    + " loadedTrainerPic=" + row.loadedTrainerPic()
+                    + " loadedRawClassPicComparison=" + row.loadedRawClassPicComparison()
                     + " partyFlags=" + row.partyFlags()
                     + " partySize=" + row.partySize()
                     + " partyPointer=" + hexOrMissing(row.partyPointer())
@@ -382,9 +396,13 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
                     + " baseRawParty=" + row.baseRawParty()
                     + " outputRawParty=" + row.outputRawParty()
                     + " loadedOutputParty=" + row.loadedOutputParty()
+                    + " baseRawClassPic=" + row.baseRawClassPic()
+                    + " outputRawClassPic=" + row.outputRawClassPic()
+                    + " loadedOutputClassPic=" + row.loadedOutputClassPic()
                     + " outputClassification=" + row.outputClassification()
                     + " changedFromBase=" + yesNo(row.changedFromBase())
-                    + " loadedRawPartyComparison=" + row.loadedRawPartyComparison());
+                    + " loadedRawPartyComparison=" + row.loadedRawPartyComparison()
+                    + " loadedRawClassPicComparison=" + row.loadedRawClassPicComparison());
             for (String warning : row.warnings()) {
                 report.add("  " + warning + " trainerId=" + row.trainerId());
             }
@@ -440,6 +458,14 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         return party.toString();
     }
 
+    private static int loadedTrainerClass(Trainer trainer) {
+        return trainer == null ? -1 : trainer.getTrainerclass();
+    }
+
+    private static int loadedTrainerPic(Trainer trainer) {
+        return trainer == null ? -1 : trainer.getTrainerPic();
+    }
+
     private static String formatRawParty(Gen3RomHandler.FrlgRawTrainerPartyDiagnostics trainer) {
         List<String> party = new ArrayList<>();
         for (Gen3RomHandler.FrlgRawTrainerPokemonDiagnostics pokemon : trainer.party()) {
@@ -476,6 +502,16 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
             }
         }
         return "match";
+    }
+
+    private static String compareLoadedAndRawClassPic(Trainer loadedTrainer,
+                                                      Gen3RomHandler.FrlgRawTrainerPartyDiagnostics rawTrainer) {
+        if (loadedTrainer == null || rawTrainer == null || rawTrainer.trainerClass() < 0
+                || rawTrainer.trainerPic() < 0) {
+            return "unavailable";
+        }
+        return loadedTrainer.getTrainerclass() == rawTrainer.trainerClass()
+                && loadedTrainer.getTrainerPic() == rawTrainer.trainerPic() ? "match" : "differs";
     }
 
     private static boolean containsKantoStarter(Trainer trainer) {

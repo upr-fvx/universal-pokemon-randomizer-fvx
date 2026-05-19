@@ -2324,6 +2324,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 diagnostics.add(FrlgRawTrainerPartyDiagnostics.missing(trainerId, trainerOffset));
                 continue;
             }
+            int trainerClass = rom[trainerOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
+            int trainerPic = rom[trainerOffset + GEN3_TRAINER_PIC_OFFSET] & 0xFF;
             int partyFlags = rom[trainerOffset] & 0xFF;
             int partySize = rom[trainerOffset + (entryLen - 8)] & 0xFF;
             int partyPointer = readPointer(trainerOffset + (entryLen - 4), true);
@@ -2341,8 +2343,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             getFrlgOakLabSpeciesNameForDiagnostics(rawSpecies)));
                 }
             }
-            diagnostics.add(new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, partyFlags, partySize,
-                    partyPointer, partyPointerValid, party));
+            diagnostics.add(new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, trainerClass, trainerPic,
+                    partyFlags, partySize, partyPointer, partyPointerValid, party));
         }
         return diagnostics;
     }
@@ -2471,9 +2473,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             firstPokemonOffset = partyPointer;
             firstRawSpeciesId = readLittleEndianWord(rom, firstPokemonOffset + 4);
         }
+        int trainerClass = rom[trainerOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
+        int trainerPic = rom[trainerOffset + GEN3_TRAINER_PIC_OFFSET] & 0xFF;
         return new FrlgTrainerBattleRuntimeSource(command.offset(), command.battleType(), command.trainerId(),
-                command.argument(), trainerOffset, partyFlags, partySize, partyPointer, true, partyPointerValid,
-                firstPokemonOffset, firstRawSpeciesId);
+                command.argument(), trainerOffset, trainerClass, trainerPic, partyFlags, partySize, partyPointer,
+                true, partyPointerValid, firstPokemonOffset, firstRawSpeciesId);
     }
 
     static List<FrlgTrainerRuntimeSourceAuditRow> buildFrlgTrainerRuntimeSourceAuditRows(
@@ -2503,6 +2507,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             FrlgTrainerRuntimeSourceAuditRow row = new FrlgTrainerRuntimeSourceAuditRow(
                     source.trainerId(), new ArrayList<>(accumulator.scriptOffsets),
                     new ArrayList<>(accumulator.battleTypes), source.trainerOffset(), source.trainerEntryValid(),
+                    source.trainerClass(), source.trainerPic(), loadedTrainerClass(loadedTrainer),
+                    loadedTrainerPic(loadedTrainer), loadedRawClassPicComparison(loadedTrainer, source),
                     source.partyFlags(), source.partySize(), source.partyPointer(), isRawPartyPointerValid(rawParty),
                     firstRawSpeciesId(rawParty), firstDecodedSpecies(rawParty), formatLoadedTrainerParty(loadedTrainer),
                     formatRawTrainerParty(rawParty), classification);
@@ -2567,6 +2573,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             String loadedRawPartyComparison = loadedRawPartyComparison(outputLoadedTrainer, outputRawParty,
                     speciesByInternalId);
+            String loadedRawClassPicComparison = loadedRawClassPicComparison(outputLoadedTrainer, outputAuditRow);
             List<String> warnings = new ArrayList<>();
             if (!changedFromBase) {
                 warnings.add("WARN unchanged valid runtime trainer");
@@ -2574,13 +2581,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if ("differs".equals(loadedRawPartyComparison)) {
                 warnings.add("WARN loaded/raw mismatch");
             }
+            if ("differs".equals(loadedRawClassPicComparison)) {
+                warnings.add("WARN loaded/raw class-pic mismatch");
+            }
             if (outputClassification == FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED) {
                 warnings.add("WARN valid runtime not loaded after strict sync");
             }
             rows.add(new FrlgTrainerRuntimeSourcePostRandomizationAuditRow(
                     trainerId, formatRawTrainerParty(baseRawParty), formatRawTrainerParty(outputRawParty),
-                    formatLoadedTrainerParty(outputLoadedTrainer), outputClassification, changedFromBase,
-                    loadedRawPartyComparison, warnings));
+                    formatLoadedTrainerParty(outputLoadedTrainer), formatClassPic(baseSource.trainerClass(),
+                    baseSource.trainerPic()), formatClassPic(outputAuditRow), formatLoadedClassPic(outputLoadedTrainer),
+                    outputClassification, changedFromBase, loadedRawPartyComparison, loadedRawClassPicComparison,
+                    warnings));
         }
 
         FrlgTrainerRuntimeSourcePostRandomizationAuditSummary summary =
@@ -2646,6 +2658,44 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return loadedTrainerMatchesRawParty(loadedTrainer, rawParty, speciesByInternalId) ? "match" : "differs";
     }
 
+    private static String loadedRawClassPicComparison(Trainer loadedTrainer,
+                                                      FrlgTrainerBattleRuntimeSource source) {
+        if (loadedTrainer == null || source == null || !source.trainerEntryValid()) {
+            return "unavailable";
+        }
+        return loadedTrainer.getTrainerclass() == source.trainerClass()
+                && loadedTrainer.getTrainerPic() == source.trainerPic() ? "match" : "differs";
+    }
+
+    private static String loadedRawClassPicComparison(Trainer loadedTrainer,
+                                                      FrlgTrainerRuntimeSourceAuditRow row) {
+        if (loadedTrainer == null || row == null || !row.trainerEntryValid()) {
+            return "unavailable";
+        }
+        return loadedTrainer.getTrainerclass() == row.runtimeTrainerClass()
+                && loadedTrainer.getTrainerPic() == row.runtimeTrainerPic() ? "match" : "differs";
+    }
+
+    private static int loadedTrainerClass(Trainer trainer) {
+        return trainer == null ? -1 : trainer.getTrainerclass();
+    }
+
+    private static int loadedTrainerPic(Trainer trainer) {
+        return trainer == null ? -1 : trainer.getTrainerPic();
+    }
+
+    private static String formatLoadedClassPic(Trainer trainer) {
+        return trainer == null ? "unavailable" : formatClassPic(trainer.getTrainerclass(), trainer.getTrainerPic());
+    }
+
+    private static String formatClassPic(FrlgTrainerRuntimeSourceAuditRow row) {
+        return row == null ? "unavailable" : formatClassPic(row.runtimeTrainerClass(), row.runtimeTrainerPic());
+    }
+
+    private static String formatClassPic(int trainerClass, int trainerPic) {
+        return "class=" + trainerClass + ",pic=" + trainerPic;
+    }
+
     static List<FrlgRawTrainerPartyDiagnostics> readFrlgRawTrainerPartyDiagnostics(byte[] rom, int baseOffset,
                                                                                    int entryLen,
                                                                                    Collection<Integer> trainerIds,
@@ -2658,6 +2708,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 diagnostics.add(FrlgRawTrainerPartyDiagnostics.missing(trainerId, trainerOffset));
                 continue;
             }
+            int trainerClass = rom[trainerOffset + GEN3_TRAINER_CLASS_OFFSET] & 0xFF;
+            int trainerPic = rom[trainerOffset + GEN3_TRAINER_PIC_OFFSET] & 0xFF;
             int partyFlags = rom[trainerOffset] & 0xFF;
             int partySize = rom[trainerOffset + (entryLen - 8)] & 0xFF;
             int partyPointer = readPointerFromRom(rom, trainerOffset + (entryLen - 4));
@@ -2675,8 +2727,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                             speciesNameForDiagnostics(rawSpecies, speciesByInternalId)));
                 }
             }
-            diagnostics.add(new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, partyFlags, partySize,
-                    partyPointer, partyPointerValid, party));
+            diagnostics.add(new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, trainerClass, trainerPic,
+                    partyFlags, partySize, partyPointer, partyPointerValid, party));
         }
         return diagnostics;
     }
@@ -3269,12 +3321,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     record FrlgTrainerBattleRuntimeSource(int scriptOffset, int battleType, int trainerId, int argument,
-                                          int trainerOffset, int partyFlags, int partySize, int partyPointer,
+                                          int trainerOffset, int trainerClass, int trainerPic,
+                                          int partyFlags, int partySize, int partyPointer,
                                           boolean trainerEntryValid, boolean partyPointerValid,
                                           int firstPokemonOffset, int firstRawSpeciesId) {
         static FrlgTrainerBattleRuntimeSource missing(FrlgOakLabTrainerBattleCommand command, int trainerOffset) {
             return new FrlgTrainerBattleRuntimeSource(command.offset(), command.battleType(), command.trainerId(),
-                    command.argument(), trainerOffset, -1, -1, -1, false, false, -1, -1);
+                    command.argument(), trainerOffset, -1, -1, -1, -1, -1, false, false, -1, -1);
         }
     }
 
@@ -3339,7 +3392,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     record FrlgTrainerRuntimeSourceAuditRow(int trainerId, List<Integer> scriptOffsets, List<Integer> battleTypes,
-                                            int trainerOffset, boolean trainerEntryValid, int partyFlags,
+                                            int trainerOffset, boolean trainerEntryValid,
+                                            int runtimeTrainerClass, int runtimeTrainerPic,
+                                            int loadedTrainerClass, int loadedTrainerPic,
+                                            String loadedRawClassPicComparison,
+                                            int partyFlags,
                                             int partySize, int partyPointer, boolean partyPointerValid,
                                             int firstRawSpeciesId, String firstDecodedSpecies, String loadedParty,
                                             String rawParty,
@@ -3366,9 +3423,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             String baseRawParty,
             String outputRawParty,
             String loadedOutputParty,
+            String baseRawClassPic,
+            String outputRawClassPic,
+            String loadedOutputClassPic,
             FrlgTrainerRuntimeSourceClassification outputClassification,
             boolean changedFromBase,
             String loadedRawPartyComparison,
+            String loadedRawClassPicComparison,
             List<String> warnings) {
     }
 
@@ -3412,11 +3473,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                                             String decodedSpeciesName) {
     }
 
-    record FrlgRawTrainerPartyDiagnostics(int trainerId, int trainerOffset, int partyFlags, int partySize,
+    record FrlgRawTrainerPartyDiagnostics(int trainerId, int trainerOffset, int trainerClass, int trainerPic,
+                                          int partyFlags, int partySize,
                                           int partyPointer, boolean partyPointerValid,
                                           List<FrlgRawTrainerPokemonDiagnostics> party) {
         static FrlgRawTrainerPartyDiagnostics missing(int trainerId, int trainerOffset) {
-            return new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, -1, -1, -1, false,
+            return new FrlgRawTrainerPartyDiagnostics(trainerId, trainerOffset, -1, -1, -1, -1, -1, false,
                     Collections.emptyList());
         }
     }
@@ -3943,20 +4005,36 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         trainerClassSpriteSyncEnabled = enabled;
     }
 
-    private void saveFrlgRuntimeTrainerSourceRows(int baseOffset, int loadedTrainerCount, int entryLen, int nameLen) {
-        for (int trainerId : frlgRuntimeTrainerSourceIds) {
-            if (trainerId < loadedTrainerCount) {
-                continue;
-            }
+    void saveFrlgRuntimeTrainerSourceRows(int baseOffset, int loadedTrainerCount, int entryLen, int nameLen) {
+        for (int trainerId : frlgRuntimeTrainerSourceIdsToSave(loadedTrainerCount)) {
             Trainer tr = findTrainerByIndex(trainerId);
             if (tr == null) {
+                continue;
+            }
+            int trainerOffset = baseOffset + trainerId * entryLen;
+            if (trainerId < loadedTrainerCount) {
+                writeTrainerClassSpriteFields(tr, trainerOffset);
                 continue;
             }
             if (!isStrictFrlgRuntimeTrainerDataRow(rom, baseOffset, entryLen, trainerId, pokesInternal)) {
                 continue;
             }
-            writeTrainerDataRow(tr, baseOffset + trainerId * entryLen, entryLen, nameLen);
+            writeTrainerDataRow(tr, trainerOffset, entryLen, nameLen);
         }
+    }
+
+    Set<Integer> frlgRuntimeTrainerSourceIdsToSave(int loadedTrainerCount) {
+        Set<Integer> trainerIds = new LinkedHashSet<>(frlgRuntimeTrainerSourceIds);
+        if (trainerClassSpriteSyncEnabled && romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+            for (FrlgTrainerBattleRuntimeSource source : getFrlgTrainerBattleRuntimeSourcesForDiagnostics()) {
+                if (source.trainerId() > 0 && source.trainerEntryValid()) {
+                    trainerIds.add(source.trainerId());
+                }
+            }
+        } else {
+            trainerIds.removeIf(trainerId -> trainerId < loadedTrainerCount);
+        }
+        return trainerIds;
     }
 
     private Trainer findTrainerByIndex(int trainerId) {

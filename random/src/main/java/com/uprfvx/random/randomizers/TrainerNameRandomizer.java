@@ -9,6 +9,9 @@ import java.util.*;
 
 public class TrainerNameRandomizer extends Randomizer {
 
+    private final Map<Integer, Integer> trainerClassIdMapping = new HashMap<>();
+    private List<String> originalTrainerClassNames = Collections.emptyList();
+
     public TrainerNameRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
@@ -140,12 +143,15 @@ public class TrainerNameRandomizer extends Randomizer {
     }
 
     public void randomizeTrainerClassNames() {
+        trainerClassIdMapping.clear();
+        originalTrainerClassNames = Collections.emptyList();
         if (!romHandler.canChangeTrainerText()) {
             return;
         }
 
         // Get the current trainer names data
         List<String> currentClassNames = romHandler.getTrainerClassNames();
+        originalTrainerClassNames = new ArrayList<>(currentClassNames);
         boolean mustBeSameLength = romHandler.fixedTrainerClassNamesLength();
 
         // Init the translation maps and new list
@@ -166,10 +172,19 @@ public class TrainerNameRandomizer extends Randomizer {
             int idx = doublesClassIndexes.contains(i) ? 1 : 0;
             newClassNames.add(translations[idx].getOrDefault(trainerClassName, trainerClassName));
         }
+        trainerClassIdMapping.putAll(classIdMappingForNames(currentClassNames, newClassNames, doublesClassIndexes));
 
         // Done choosing, save
         romHandler.setTrainerClassNames(newClassNames);
         changesMade = true;
+    }
+
+    public Map<Integer, Integer> getTrainerClassIdMapping() {
+        return Collections.unmodifiableMap(trainerClassIdMapping);
+    }
+
+    public List<String> getOriginalTrainerClassNames() {
+        return Collections.unmodifiableList(originalTrainerClassNames);
     }
 
     @SuppressWarnings("unchecked")
@@ -248,5 +263,30 @@ public class TrainerNameRandomizer extends Randomizer {
             }
         }
         return false;
+    }
+
+    private Map<Integer, Integer> classIdMappingForNames(
+            List<String> currentClassNames, List<String> newClassNames, Set<Integer> doublesClassIndexes) {
+        Map<Integer, Integer> mapping = new HashMap<>();
+        for (int oldClassId = 0; oldClassId < currentClassNames.size(); oldClassId++) {
+            int idx = doublesClassIndexes.contains(oldClassId) ? 1 : 0;
+            String targetClassName = newClassNames.get(oldClassId);
+            int targetClassId = classIdForName(currentClassNames, doublesClassIndexes, targetClassName, idx);
+            if (targetClassId >= 0) {
+                mapping.put(oldClassId, targetClassId);
+            }
+        }
+        return mapping;
+    }
+
+    private int classIdForName(
+            List<String> classNames, Set<Integer> doublesClassIndexes, String targetClassName, int targetMode) {
+        for (int classId = 0; classId < classNames.size(); classId++) {
+            int idx = doublesClassIndexes.contains(classId) ? 1 : 0;
+            if (idx == targetMode && classNames.get(classId).equals(targetClassName)) {
+                return classId;
+            }
+        }
+        return -1;
     }
 }

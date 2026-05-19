@@ -131,7 +131,7 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 	public PalettePartDescription[] getPalettePartDescriptions(Species pk,
                                                                List<PaletteDescription> paletteDescriptions) {
 		int paletteIndex = pk.getNumber() - 1;
-		boolean validIndex = paletteIndex <= paletteDescriptions.size();
+		boolean validIndex = paletteIndex >= 0 && paletteIndex < paletteDescriptions.size();
 		return PalettePartDescription
 				.allFrom(validIndex ? paletteDescriptions.get(paletteIndex) : PaletteDescription.BLANK);
 	}

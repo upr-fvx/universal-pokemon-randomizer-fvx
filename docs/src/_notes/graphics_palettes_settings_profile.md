@@ -24,3 +24,18 @@ Profile aliases:
 Both aliases enable `FVX-GFX-001` through `FVX-GFX-004`. These profiles prepare an
 isolated Graphics/Palettes smoke input only. They do not prove ingame visual palette
 changes, do not cover Custom Player Graphics, and do not promote P1 status.
+
+## Expanded Species Palette Descriptions
+
+Gen 3-5 Pokemon palette randomization uses bundled `pokePalettes*` part-description
+resources to decide which palette slots can be recolored together. CFRU/DPE expanded
+species or formes can outnumber those bundled description rows.
+
+When a species has no matching part description, the randomizer now falls back to a
+blank description for that species instead of indexing past the description list.
+That preserves vanilla/in-range behavior and prevents expanded-species crashes, but
+the unmatched species/form may be skipped by the recolor pass until a specific
+description row is added.
+
+Local visual smoke is still required for any stronger Graphics/Palettes support
+claim. This remains below P1 promotion.

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -65,6 +66,33 @@ public class Gen3to5PaletteBoundsTest {
         randomizer.randomizePokemonPalettes();
 
         assertTrue(randomizer.isChangesMade());
+    }
+
+    @Test
+    public void Gen3to5PaletteRandomizer_changesInRangePaletteBytesWhenDescriptionsExist() {
+        Settings settings = new Settings();
+        settings.setPokemonPalettesMod(Settings.PokemonPalettesMod.RANDOM);
+        Species charmander = speciesWithPalette(4);
+        byte[] originalPalette = charmander.getNormalPalette().toBytes();
+        Gen3to5PaletteRandomizer randomizer = randomizer(settings, new SpeciesSet(charmander));
+
+        randomizer.randomizePokemonPalettes();
+
+        assertFalse(Arrays.equals(originalPalette, charmander.getNormalPalette().toBytes()));
+    }
+
+    @Test
+    public void Gen3to5PaletteRandomizer_changesMadeImpliesChangedPaletteDigestWhenCandidatesExist() {
+        Settings settings = new Settings();
+        settings.setPokemonPalettesMod(Settings.PokemonPalettesMod.RANDOM);
+        Species squirtle = speciesWithPalette(7);
+        byte[] originalPalette = squirtle.getNormalPalette().toBytes();
+        Gen3to5PaletteRandomizer randomizer = randomizer(settings, new SpeciesSet(squirtle));
+
+        randomizer.randomizePokemonPalettes();
+
+        boolean paletteChanged = !Arrays.equals(originalPalette, squirtle.getNormalPalette().toBytes());
+        assertTrue(!randomizer.isChangesMade() || paletteChanged);
     }
 
     @Test

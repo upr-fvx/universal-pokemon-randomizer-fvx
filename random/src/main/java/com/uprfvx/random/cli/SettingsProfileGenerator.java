@@ -330,10 +330,19 @@ public final class SettingsProfileGenerator {
         overlays.put("FVX-TYPE-002", s -> s.setInverseTypesRandomImmunities(true));
         overlays.put("FVX-TYPE-003", s -> s.setUpdateTypeEffectiveness(true));
 
-        overlays.put("FVX-GFX-001", s -> s.setPokemonPalettesMod(Settings.PokemonPalettesMod.RANDOM));
-        overlays.put("FVX-GFX-002", s -> s.setPokemonPalettesFollowTypes(true));
-        overlays.put("FVX-GFX-003", s -> s.setPokemonPalettesFollowEvolutions(true));
-        overlays.put("FVX-GFX-004", s -> s.setPokemonPalettesShinyFromNormal(true));
+        overlays.put("FVX-GFX-001", SettingsProfileGenerator::enablePokemonPaletteRandomization);
+        overlays.put("FVX-GFX-002", s -> {
+            enablePokemonPaletteRandomization(s);
+            s.setPokemonPalettesFollowTypes(true);
+        });
+        overlays.put("FVX-GFX-003", s -> {
+            enablePokemonPaletteRandomization(s);
+            s.setPokemonPalettesFollowEvolutions(true);
+        });
+        overlays.put("FVX-GFX-004", s -> {
+            enablePokemonPaletteRandomization(s);
+            s.setPokemonPalettesShinyFromNormal(true);
+        });
         overlays.put("FVX-GFX-005", unsupported("FVX-GFX-005",
                 "Custom Player Graphics are supplied through the randomizer CLI, not .rnqs settings."));
         overlays.put("FVX-GFX-006", unsupported("FVX-GFX-006",
@@ -394,6 +403,8 @@ public final class SettingsProfileGenerator {
                 "FVX-ITEM-008", "FVX-ITEM-009", "FVX-ITEM-010"));
         profiles.put("08_TYPES_FULL", Arrays.asList("FVX-TYPE-001", "FVX-TYPE-002", "FVX-TYPE-003"));
         profiles.put("09_GRAPHICS_PALETTES", Arrays.asList("FVX-GFX-001", "FVX-GFX-002", "FVX-GFX-003", "FVX-GFX-004"));
+        profiles.put("RISK_GRAPHICS_PALETTES_VISUAL",
+                Arrays.asList("FVX-GFX-001", "FVX-GFX-002", "FVX-GFX-003", "FVX-GFX-004"));
         profiles.put("10_MISC_TWEAKS", Arrays.asList(
                 "FVX-MISC-001", "FVX-MISC-002", "FVX-MISC-003", "FVX-MISC-004",
                 "FVX-MISC-005", "FVX-MISC-006", "FVX-MISC-007", "FVX-MISC-008",
@@ -416,6 +427,10 @@ public final class SettingsProfileGenerator {
     private static void setWildZoneMode(Settings settings, Settings.WildPokemonZoneMod zoneMod) {
         settings.setRandomizeWildPokemon(true);
         settings.setWildPokemonZoneMod(zoneMod);
+    }
+
+    private static void enablePokemonPaletteRandomization(Settings settings) {
+        settings.setPokemonPalettesMod(Settings.PokemonPalettesMod.RANDOM);
     }
 
     private static void enableMiscTweak(Settings settings, MiscTweak tweak) {

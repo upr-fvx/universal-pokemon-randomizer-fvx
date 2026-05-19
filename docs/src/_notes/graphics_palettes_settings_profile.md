@@ -50,6 +50,19 @@ The Gen 3-5 palette randomizer now marks `changesMade` after successful populati
 of at least one species palette candidate. Without that marker the overview log can
 report `Pokemon Palettes: Unchanged` even though the randomization path ran.
 
+## CFRU/DPE Output Writes
+
+The CFRU/DPE Gen9 BPRE palette writer now persists changed modeled Pokemon palettes
+by writing a fresh compressed palette copy and repointing the affected normal or
+shiny palette table entry. This avoids overwriting shared compressed palette data
+while still allowing in-range species such as Charmander, Squirtle, Caterpie and
+Pikachu to produce changed Base-vs-Output palette digests.
+
+Expanded species or formes without bundled part descriptions may still remain
+unchanged or be skipped/defaulted. Local visual smoke remains required because the
+modeled palette table changing does not by itself prove CFRU/DPE runtime visuals
+use that table for every context.
+
 ## Palette Output Audit
 
 `Gen3PaletteOutputAuditRomTest` is an opt-in local diagnostic for cases where the

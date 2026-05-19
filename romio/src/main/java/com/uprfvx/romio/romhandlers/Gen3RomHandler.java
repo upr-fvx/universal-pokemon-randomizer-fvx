@@ -7982,7 +7982,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return;
         }
         if (useCfruDpeGen9SpeciesCount) {
-            saveCfruDpeNormalSingleOwnerPokemonPalettes();
+            saveCfruDpePokemonPaletteCopies();
             return;
         }
 
@@ -8019,167 +8019,94 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void saveCfruDpeNormalSingleOwnerPokemonPalettes() {
+    private void saveCfruDpePokemonPaletteCopies() {
         int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
         int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
-        Map<Integer, CfruDpePalettePointerUsage> pointerUsage = collectCfruDpePalettePointerUsage(
-                normalPaletteTableOffset, shinyPaletteTableOffset);
 
-        int normalPaletteWriteCandidates = 0;
         int normalPaletteWriteAttempts = 0;
+        int shinyPaletteWriteAttempts = 0;
         int skippedUnchangedNormalPalettes = 0;
-        int skippedUnsafeNormalPalettes = 0;
+        int skippedUnchangedShinyPalettes = 0;
         int skippedMissingPalettePointers = 0;
-        int skippedInvalidPalettePointers = 0;
         int skippedDecodeFailedPalettes = 0;
-        int skippedSharedPalettes = 0;
-        int skippedCrossKindSharedPalettes = 0;
         int skippedUncertainFormePalettes = 0;
 
         for (Species pk : getSpeciesSet()) {
-            int pokeNumber = pokedexToInternal[pk.getNumber()];
+            int pokeNumber = getCfruDpePaletteTableIndexForSave(pk);
+            if (pokeNumber < 0) {
+                skippedMissingPalettePointers += 2;
+                continue;
+            }
             int normalPalPointerOffset = normalPaletteTableOffset + pokeNumber * 8;
+            int shinyPalPointerOffset = shinyPaletteTableOffset + pokeNumber * 8;
             byte[] originalNormalBytes = originalCfruDpeNormalPaletteBytes.get(pk);
             Palette currentNormalPalette = pk.getNormalPalette();
-            int normalPalettePointer = readPointer(normalPalPointerOffset, true);
-            CfruDpeNormalPaletteWriteDecision decision = getCfruDpeNormalPaletteWriteDecision(pk,
-                    currentNormalPalette, originalNormalBytes, normalPalettePointer, pointerUsage);
-
-            if (decision.writeCandidate) {
-                normalPaletteWriteCandidates++;
-            }
+            byte[] originalShinyBytes = originalCfruDpeShinyPaletteBytes.get(pk);
+            Palette currentShinyPalette = pk.getShinyPalette();
 
             if (!hasChangedCfruDpePokemonPalette(currentNormalPalette, originalNormalBytes)) {
                 skippedUnchangedNormalPalettes++;
-                continue;
-            }
-
-            if (decision.canWrite) {
+            } else if (canWriteCfruDpePaletteCopy(pk, currentNormalPalette, originalNormalBytes)) {
+                writeCompressedPaletteCopy(normalPalPointerOffset, currentNormalPalette);
                 normalPaletteWriteAttempts++;
-                rewriteCompressedPalette(normalPalPointerOffset, currentNormalPalette);
-                continue;
+            } else {
+                if (pk.getNumber() == SpeciesIDs.unown) {
+                    skippedUncertainFormePalettes++;
+                } else {
+                    skippedMissingPalettePointers++;
+                    if (originalNormalBytes == null) {
+                        skippedDecodeFailedPalettes++;
+                    }
+                }
             }
 
-            skippedUnsafeNormalPalettes++;
-            switch (decision.skipReason) {
-                case MISSING_POINTER_OR_PALETTE -> skippedMissingPalettePointers++;
-                case INVALID_POINTER -> skippedInvalidPalettePointers++;
-                case DECODE_FAILED -> skippedDecodeFailedPalettes++;
-                case SHARED_POINTER -> skippedSharedPalettes++;
-                case CROSS_KIND_SHARED_POINTER -> skippedCrossKindSharedPalettes++;
-                case UNCERTAIN_FORME_MAPPING -> skippedUncertainFormePalettes++;
-                default -> {
-                    // no additional counter
+            if (!hasChangedCfruDpePokemonPalette(currentShinyPalette, originalShinyBytes)) {
+                skippedUnchangedShinyPalettes++;
+            } else if (canWriteCfruDpePaletteCopy(pk, currentShinyPalette, originalShinyBytes)) {
+                writeCompressedPaletteCopy(shinyPalPointerOffset, currentShinyPalette);
+                shinyPaletteWriteAttempts++;
+            } else {
+                if (pk.getNumber() == SpeciesIDs.unown) {
+                    skippedUncertainFormePalettes++;
+                } else {
+                    skippedMissingPalettePointers++;
+                    if (originalShinyBytes == null) {
+                        skippedDecodeFailedPalettes++;
+                    }
                 }
             }
         }
 
         System.err.println(CFRU_DPE_PALETTE_DIAGNOSTIC_PREFIX
-                + "normal single-owner palette save:"
-                + " normalPaletteWriteCandidates=" + normalPaletteWriteCandidates
+                + "palette copy save:"
                 + " normalPaletteWriteAttempts=" + normalPaletteWriteAttempts
-                + " shinyPaletteWriteAttempts=0"
+                + " shinyPaletteWriteAttempts=" + shinyPaletteWriteAttempts
                 + " skippedUnchangedNormalPalettes=" + skippedUnchangedNormalPalettes
-                + " skippedUnsafeNormalPalettes=" + skippedUnsafeNormalPalettes
+                + " skippedUnchangedShinyPalettes=" + skippedUnchangedShinyPalettes
                 + " skippedMissingPalettePointers=" + skippedMissingPalettePointers
-                + " skippedInvalidPalettePointers=" + skippedInvalidPalettePointers
                 + " skippedDecodeFailedPalettes=" + skippedDecodeFailedPalettes
-                + " skippedSharedPalettes=" + skippedSharedPalettes
-                + " skippedCrossKindSharedPalettes=" + skippedCrossKindSharedPalettes
                 + " skippedUncertainFormePalettes=" + skippedUncertainFormePalettes);
     }
 
-    private Map<Integer, CfruDpePalettePointerUsage> collectCfruDpePalettePointerUsage(
-            int normalPaletteTableOffset, int shinyPaletteTableOffset) {
-        Map<Integer, CfruDpePalettePointerUsage> pointerUsage = new HashMap<>();
-        for (Species pk : getSpeciesSet()) {
-            int pokeNumber = pokedexToInternal[pk.getNumber()];
-            recordCfruDpePalettePointerUsage(pointerUsage, normalPaletteTableOffset + pokeNumber * 8, true);
-            recordCfruDpePalettePointerUsage(pointerUsage, shinyPaletteTableOffset + pokeNumber * 8, false);
+    private int getCfruDpePaletteTableIndexForSave(Species pk) {
+        if (pk == null || pk.getNumber() < 0 || pk.getNumber() >= pokedexToInternal.length) {
+            return -1;
         }
-        return pointerUsage;
+        return pokedexToInternal[pk.getNumber()];
     }
 
-    private void recordCfruDpePalettePointerUsage(Map<Integer, CfruDpePalettePointerUsage> pointerUsage,
-                                                  int pointerOffset, boolean normalPalette) {
-        int pointer = readPointer(pointerOffset, true);
-        if (pointer == -1) {
-            return;
-        }
-        CfruDpePalettePointerUsage usage = pointerUsage.computeIfAbsent(pointer, k -> new CfruDpePalettePointerUsage());
-        if (normalPalette) {
-            usage.normalOwners++;
-        } else {
-            usage.shinyOwners++;
-        }
+    private boolean canWriteCfruDpePaletteCopy(Species pk, Palette currentPalette, byte[] originalBytes) {
+        return pk != null
+                && pk.getNumber() != SpeciesIDs.unown
+                && currentPalette != null
+                && originalBytes != null;
     }
 
-    private CfruDpeNormalPaletteWriteDecision getCfruDpeNormalPaletteWriteDecision(Species pk,
-                                                                                   Palette currentNormalPalette,
-                                                                                   byte[] originalNormalBytes,
-                                                                                   int normalPalettePointer,
-                                                                                   Map<Integer, CfruDpePalettePointerUsage> pointerUsage) {
-        if (pk.getNumber() == SpeciesIDs.unown) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.UNCERTAIN_FORME_MAPPING);
-        }
-        if (currentNormalPalette == null) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.MISSING_POINTER_OR_PALETTE);
-        }
-        if (normalPalettePointer == -1) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.INVALID_POINTER);
-        }
-        if (originalNormalBytes == null) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.DECODE_FAILED);
-        }
-
-        CfruDpePalettePointerUsage usage = pointerUsage.get(normalPalettePointer);
-        if (usage == null || usage.normalOwners == 0) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.MISSING_POINTER_OR_PALETTE);
-        }
-        if (usage.shinyOwners > 0) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.CROSS_KIND_SHARED_POINTER);
-        }
-        if (usage.normalOwners > 1) {
-            return CfruDpeNormalPaletteWriteDecision.skip(CfruDpeNormalPaletteSkipReason.SHARED_POINTER);
-        }
-
-        return CfruDpeNormalPaletteWriteDecision.writeCandidate();
-    }
-
-    private static class CfruDpePalettePointerUsage {
-        private int normalOwners;
-        private int shinyOwners;
-    }
-
-    private enum CfruDpeNormalPaletteSkipReason {
-        NONE,
-        MISSING_POINTER_OR_PALETTE,
-        INVALID_POINTER,
-        DECODE_FAILED,
-        SHARED_POINTER,
-        CROSS_KIND_SHARED_POINTER,
-        UNCERTAIN_FORME_MAPPING
-    }
-
-    private static class CfruDpeNormalPaletteWriteDecision {
-        private final boolean writeCandidate;
-        private final boolean canWrite;
-        private final CfruDpeNormalPaletteSkipReason skipReason;
-
-        private CfruDpeNormalPaletteWriteDecision(boolean writeCandidate, boolean canWrite,
-                                                  CfruDpeNormalPaletteSkipReason skipReason) {
-            this.writeCandidate = writeCandidate;
-            this.canWrite = canWrite;
-            this.skipReason = skipReason;
-        }
-
-        private static CfruDpeNormalPaletteWriteDecision writeCandidate() {
-            return new CfruDpeNormalPaletteWriteDecision(true, true, CfruDpeNormalPaletteSkipReason.NONE);
-        }
-
-        private static CfruDpeNormalPaletteWriteDecision skip(CfruDpeNormalPaletteSkipReason skipReason) {
-            return new CfruDpeNormalPaletteWriteDecision(false, false, skipReason);
-        }
+    private void writeCompressedPaletteCopy(int pointerOffset, Palette palette) {
+        byte[] paletteBytes = DSCmp.compressLZ10(palette.toBytes());
+        int newOffset = findAndUnfreeSpace(paletteBytes.length);
+        writePointer(pointerOffset, newOffset);
+        writeBytes(newOffset, paletteBytes);
     }
 
     private boolean hasChangedCfruDpePokemonPalettes() {

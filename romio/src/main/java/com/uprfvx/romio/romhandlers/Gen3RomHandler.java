@@ -2235,6 +2235,30 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 trainers, pokesInternal, mode);
     }
 
+    FrlgTrainerRuntimeSourcePostRandomizationAuditReport getFrlgTrainerRuntimeSourcePostRandomizationAuditForDiagnostics(
+            Gen3RomHandler randomizedRomHandler) {
+        if (romEntry.getRomType() != Gen3Constants.RomType_FRLG
+                || randomizedRomHandler == null
+                || randomizedRomHandler.romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
+            return new FrlgTrainerRuntimeSourcePostRandomizationAuditReport(
+                    new FrlgTrainerRuntimeSourcePostRandomizationAuditSummary(0, 0, 0, 0, 0, 0, 0),
+                    Collections.emptyList());
+        }
+        List<FrlgTrainerBattleRuntimeSource> baseSources = getFrlgTrainerBattleRuntimeSourcesForDiagnostics();
+        Set<Integer> trainerIds = new LinkedHashSet<>();
+        for (FrlgTrainerBattleRuntimeSource source : baseSources) {
+            trainerIds.add(source.trainerId());
+        }
+        List<Integer> trainerIdList = new ArrayList<>(trainerIds);
+        return buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+                baseSources,
+                getRawTrainerPartyDiagnostics(trainerIdList),
+                randomizedRomHandler.getFrlgTrainerBattleRuntimeSourcesForDiagnostics(),
+                randomizedRomHandler.getRawTrainerPartyDiagnostics(trainerIdList),
+                randomizedRomHandler.trainers,
+                randomizedRomHandler.pokesInternal);
+    }
+
     List<FrlgOakLabScriptCommand> getFrlgOakLabScriptCommandsNearStarterFlowForDiagnostics() {
         if (romEntry.getRomType() != Gen3Constants.RomType_FRLG) {
             return Collections.emptyList();
@@ -2456,6 +2480,139 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
         }
         return rows;
+    }
+
+    static FrlgTrainerRuntimeSourcePostRandomizationAuditReport buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+            List<FrlgTrainerBattleRuntimeSource> baseSources,
+            List<FrlgRawTrainerPartyDiagnostics> baseRawParties,
+            List<FrlgTrainerBattleRuntimeSource> outputSources,
+            List<FrlgRawTrainerPartyDiagnostics> outputRawParties,
+            List<Trainer> outputLoadedTrainers,
+            Species[] speciesByInternalId) {
+        Map<Integer, FrlgTrainerBattleRuntimeSource> baseSourceByTrainerId = firstSourceByTrainerId(baseSources);
+        Map<Integer, FrlgRawTrainerPartyDiagnostics> baseRawByTrainerId = rawPartyByTrainerId(baseRawParties);
+        Map<Integer, FrlgRawTrainerPartyDiagnostics> outputRawByTrainerId = rawPartyByTrainerId(outputRawParties);
+        List<FrlgTrainerRuntimeSourceAuditRow> outputAuditRows = buildFrlgTrainerRuntimeSourceAuditRows(
+                outputSources, outputRawParties, outputLoadedTrainers, speciesByInternalId,
+                FrlgTrainerRuntimeSourceAuditMode.ALL);
+        Map<Integer, FrlgTrainerRuntimeSourceAuditRow> outputAuditByTrainerId = new LinkedHashMap<>();
+        for (FrlgTrainerRuntimeSourceAuditRow row : outputAuditRows) {
+            outputAuditByTrainerId.put(row.trainerId(), row);
+        }
+
+        List<FrlgTrainerRuntimeSourcePostRandomizationAuditRow> rows = new ArrayList<>();
+        int invalidIgnoredCount = 0;
+        int changedFromBaseCount = 0;
+        int unchangedFromBaseCount = 0;
+        int outputValidRuntimeNotLoadedCount = 0;
+        int outputLoadedRuntimeMismatchCount = 0;
+
+        for (Map.Entry<Integer, FrlgTrainerBattleRuntimeSource> entry : baseSourceByTrainerId.entrySet()) {
+            int trainerId = entry.getKey();
+            FrlgTrainerBattleRuntimeSource baseSource = entry.getValue();
+            FrlgRawTrainerPartyDiagnostics baseRawParty = baseRawByTrainerId.get(trainerId);
+            if (!isValidRuntimeTrainerPostRandomizationAuditCandidate(baseSource, baseRawParty, speciesByInternalId)) {
+                invalidIgnoredCount++;
+                continue;
+            }
+
+            FrlgRawTrainerPartyDiagnostics outputRawParty = outputRawByTrainerId.get(trainerId);
+            Trainer outputLoadedTrainer = findTrainerByIndex(outputLoadedTrainers, trainerId);
+            FrlgTrainerRuntimeSourceAuditRow outputAuditRow = outputAuditByTrainerId.get(trainerId);
+            FrlgTrainerRuntimeSourceClassification outputClassification = outputAuditRow == null
+                    ? FrlgTrainerRuntimeSourceClassification.OUT_OF_RANGE
+                    : outputAuditRow.classification();
+            boolean changedFromBase = rawPartiesDiffer(baseRawParty, outputRawParty);
+            if (changedFromBase) {
+                changedFromBaseCount++;
+            } else {
+                unchangedFromBaseCount++;
+            }
+            if (outputClassification == FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED) {
+                outputValidRuntimeNotLoadedCount++;
+            }
+            if (outputClassification == FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MISMATCH) {
+                outputLoadedRuntimeMismatchCount++;
+            }
+            String loadedRawPartyComparison = loadedRawPartyComparison(outputLoadedTrainer, outputRawParty,
+                    speciesByInternalId);
+            List<String> warnings = new ArrayList<>();
+            if (!changedFromBase) {
+                warnings.add("WARN unchanged valid runtime trainer");
+            }
+            if ("differs".equals(loadedRawPartyComparison)) {
+                warnings.add("WARN loaded/raw mismatch");
+            }
+            if (outputClassification == FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED) {
+                warnings.add("WARN valid runtime not loaded after strict sync");
+            }
+            rows.add(new FrlgTrainerRuntimeSourcePostRandomizationAuditRow(
+                    trainerId, formatRawTrainerParty(baseRawParty), formatRawTrainerParty(outputRawParty),
+                    formatLoadedTrainerParty(outputLoadedTrainer), outputClassification, changedFromBase,
+                    loadedRawPartyComparison, warnings));
+        }
+
+        FrlgTrainerRuntimeSourcePostRandomizationAuditSummary summary =
+                new FrlgTrainerRuntimeSourcePostRandomizationAuditSummary(
+                        baseSourceByTrainerId.size(), rows.size(), changedFromBaseCount, unchangedFromBaseCount,
+                        outputValidRuntimeNotLoadedCount, outputLoadedRuntimeMismatchCount, invalidIgnoredCount);
+        return new FrlgTrainerRuntimeSourcePostRandomizationAuditReport(summary, rows);
+    }
+
+    private static boolean isValidRuntimeTrainerPostRandomizationAuditCandidate(
+            FrlgTrainerBattleRuntimeSource source,
+            FrlgRawTrainerPartyDiagnostics rawParty,
+            Species[] speciesByInternalId) {
+        return source != null
+                && source.trainerEntryValid()
+                && source.trainerId() > 0
+                && source.partyFlags() <= 3
+                && isRawPartyPointerValid(rawParty)
+                && isRawPartySpeciesPlausible(rawParty, speciesByInternalId);
+    }
+
+    private static Map<Integer, FrlgTrainerBattleRuntimeSource> firstSourceByTrainerId(
+            List<FrlgTrainerBattleRuntimeSource> sources) {
+        Map<Integer, FrlgTrainerBattleRuntimeSource> byTrainerId = new LinkedHashMap<>();
+        for (FrlgTrainerBattleRuntimeSource source : sources) {
+            byTrainerId.putIfAbsent(source.trainerId(), source);
+        }
+        return byTrainerId;
+    }
+
+    private static Map<Integer, FrlgRawTrainerPartyDiagnostics> rawPartyByTrainerId(
+            List<FrlgRawTrainerPartyDiagnostics> rawParties) {
+        Map<Integer, FrlgRawTrainerPartyDiagnostics> byTrainerId = new LinkedHashMap<>();
+        for (FrlgRawTrainerPartyDiagnostics rawParty : rawParties) {
+            byTrainerId.put(rawParty.trainerId(), rawParty);
+        }
+        return byTrainerId;
+    }
+
+    private static boolean rawPartiesDiffer(FrlgRawTrainerPartyDiagnostics baseRawParty,
+                                            FrlgRawTrainerPartyDiagnostics outputRawParty) {
+        if (!isRawPartyPointerValid(baseRawParty) || !isRawPartyPointerValid(outputRawParty)
+                || baseRawParty.party().size() != outputRawParty.party().size()) {
+            return true;
+        }
+        for (int i = 0; i < baseRawParty.party().size(); i++) {
+            FrlgRawTrainerPokemonDiagnostics basePokemon = baseRawParty.party().get(i);
+            FrlgRawTrainerPokemonDiagnostics outputPokemon = outputRawParty.party().get(i);
+            if (basePokemon.level() != outputPokemon.level()
+                    || basePokemon.rawSpeciesId() != outputPokemon.rawSpeciesId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String loadedRawPartyComparison(Trainer loadedTrainer,
+                                                   FrlgRawTrainerPartyDiagnostics rawParty,
+                                                   Species[] speciesByInternalId) {
+        if (loadedTrainer == null || !isRawPartyPointerValid(rawParty)) {
+            return "unavailable";
+        }
+        return loadedTrainerMatchesRawParty(loadedTrainer, rawParty, speciesByInternalId) ? "match" : "differs";
     }
 
     static List<FrlgRawTrainerPartyDiagnostics> readFrlgRawTrainerPartyDiagnostics(byte[] rom, int baseOffset,
@@ -2828,6 +2985,32 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                                             int firstRawSpeciesId, String firstDecodedSpecies, String loadedParty,
                                             String rawParty,
                                             FrlgTrainerRuntimeSourceClassification classification) {
+    }
+
+    record FrlgTrainerRuntimeSourcePostRandomizationAuditReport(
+            FrlgTrainerRuntimeSourcePostRandomizationAuditSummary summary,
+            List<FrlgTrainerRuntimeSourcePostRandomizationAuditRow> rows) {
+    }
+
+    record FrlgTrainerRuntimeSourcePostRandomizationAuditSummary(
+            int totalRuntimeSources,
+            int validRuntimeTrainerCount,
+            int changedFromBaseCount,
+            int unchangedFromBaseCount,
+            int outputValidRuntimeNotLoadedCount,
+            int outputLoadedRuntimeMismatchCount,
+            int invalidIgnoredCount) {
+    }
+
+    record FrlgTrainerRuntimeSourcePostRandomizationAuditRow(
+            int trainerId,
+            String baseRawParty,
+            String outputRawParty,
+            String loadedOutputParty,
+            FrlgTrainerRuntimeSourceClassification outputClassification,
+            boolean changedFromBase,
+            String loadedRawPartyComparison,
+            List<String> warnings) {
     }
 
     record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {

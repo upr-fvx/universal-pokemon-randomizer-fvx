@@ -272,6 +272,136 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
+    public void runtimeTrainerPostRandomizationAuditDetectsChangedRows() {
+        Species[] species = speciesTable(25, 26);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> baseSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 25),
+                runtimeSource(96, 3, 531, 1200, 1800, 1, 25));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> baseRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 25, 7, species));
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> outputSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 26));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> outputRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 26, 7, species));
+        Trainer outputLoadedTrainer = trainer(531, species[26], 7);
+
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport report =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+                        baseSources, baseRawParties, outputSources, outputRawParties,
+                        List.of(outputLoadedTrainer), species);
+
+        assertEquals(1, report.summary().totalRuntimeSources());
+        assertEquals(1, report.summary().validRuntimeTrainerCount());
+        assertEquals(1, report.summary().changedFromBaseCount());
+        assertEquals(0, report.summary().unchangedFromBaseCount());
+        assertEquals(0, report.summary().outputLoadedRuntimeMismatchCount());
+        assertEquals(0, report.summary().outputValidRuntimeNotLoadedCount());
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditRow row = report.rows().get(0);
+        assertTrue(row.changedFromBase());
+        assertEquals("match", row.loadedRawPartyComparison());
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MATCH,
+                row.outputClassification());
+        assertTrue(row.outputRawParty().contains("raw=26"));
+        assertTrue(row.warnings().isEmpty());
+    }
+
+    @Test
+    public void runtimeTrainerPostRandomizationAuditWarnsUnchangedRows() {
+        Species[] species = speciesTable(25);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 25));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> rawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 25, 7, species));
+        Trainer outputLoadedTrainer = trainer(531, species[25], 7);
+
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport report =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+                        sources, rawParties, sources, rawParties, List.of(outputLoadedTrainer), species);
+
+        assertEquals(0, report.summary().changedFromBaseCount());
+        assertEquals(1, report.summary().unchangedFromBaseCount());
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditRow row = report.rows().get(0);
+        assertFalse(row.changedFromBase());
+        assertTrue(row.warnings().contains("WARN unchanged valid runtime trainer"));
+    }
+
+    @Test
+    public void runtimeTrainerPostRandomizationAuditWarnsLoadedRawMismatch() {
+        Species[] species = speciesTable(25, 26);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> baseSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 25));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> baseRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 25, 7, species));
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> outputSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 26));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> outputRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 26, 7, species));
+        Trainer outputLoadedTrainer = trainer(531, species[25], 7);
+
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport report =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+                        baseSources, baseRawParties, outputSources, outputRawParties,
+                        List.of(outputLoadedTrainer), species);
+
+        assertEquals(1, report.summary().outputLoadedRuntimeMismatchCount());
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditRow row = report.rows().get(0);
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.LOADED_AND_RUNTIME_MISMATCH,
+                row.outputClassification());
+        assertEquals("differs", row.loadedRawPartyComparison());
+        assertTrue(row.warnings().contains("WARN loaded/raw mismatch"));
+    }
+
+    @Test
+    public void runtimeTrainerPostRandomizationAuditWarnsValidNotLoadedAfterStrictSync() {
+        Species[] species = speciesTable(25, 26);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> baseSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 25));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> baseRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 25, 7, species));
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> outputSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 26));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> outputRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 26, 7, species));
+
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport report =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+                        baseSources, baseRawParties, outputSources, outputRawParties, List.of(), species);
+
+        assertEquals(1, report.summary().outputValidRuntimeNotLoadedCount());
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditRow row = report.rows().get(0);
+        assertEquals(Gen3RomHandler.FrlgTrainerRuntimeSourceClassification.VALID_RUNTIME_NOT_LOADED,
+                row.outputClassification());
+        assertEquals("unavailable", row.loadedRawPartyComparison());
+        assertTrue(row.warnings().contains("WARN valid runtime not loaded after strict sync"));
+    }
+
+    @Test
+    public void runtimeTrainerPostRandomizationAuditIgnoresInvalidBaseCandidates() {
+        Species[] species = speciesTable(25, 26);
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> baseSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 25),
+                runtimeSource(96, 0, 532, 1240, 1840, 1, 26));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> baseRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 25, 7, species),
+                unreadableRawParty(532, 1240, 1840, 1));
+        List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> outputSources = List.of(
+                runtimeSource(64, 0, 531, 1200, 1800, 1, 26));
+        List<Gen3RomHandler.FrlgRawTrainerPartyDiagnostics> outputRawParties = List.of(
+                rawParty(531, 1200, 1800, 1, 26, 7, species));
+        Trainer outputLoadedTrainer = trainer(531, species[26], 7);
+
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport report =
+                Gen3RomHandler.buildFrlgTrainerRuntimeSourcePostRandomizationAudit(
+                        baseSources, baseRawParties, outputSources, outputRawParties,
+                        List.of(outputLoadedTrainer), species);
+
+        assertEquals(2, report.summary().totalRuntimeSources());
+        assertEquals(1, report.summary().validRuntimeTrainerCount());
+        assertEquals(1, report.summary().invalidIgnoredCount());
+        assertEquals(531, report.rows().get(0).trainerId());
+    }
+
+    @Test
     public void strictRuntimeTrainerSourceDiscoveryLoadsValidUnloadedRowsAndDedupes() {
         byte[] rom = new byte[26000];
         int trainerDataOffset = 128;

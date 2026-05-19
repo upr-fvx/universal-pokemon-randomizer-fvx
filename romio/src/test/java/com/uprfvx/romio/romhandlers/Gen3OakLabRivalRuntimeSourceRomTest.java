@@ -28,7 +28,15 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
     private static final String TARGET_TRAINER_IDS_ENV = "UPRFVX_TRAINER_RUNTIME_SOURCE_IDS";
     private static final String TRAINER_RUNTIME_SOURCE_AUDIT_PROPERTY = "uprfvx.trainerRuntimeSourceAudit";
     private static final String TRAINER_RUNTIME_SOURCE_AUDIT_ENV = "UPRFVX_TRAINER_RUNTIME_SOURCE_AUDIT";
+    private static final String TRAINER_RUNTIME_SOURCE_BASE_ROM_PROPERTY = "uprfvx.trainerRuntimeSourceBaseRom";
+    private static final String TRAINER_RUNTIME_SOURCE_BASE_ROM_ENV = "UPRFVX_TRAINER_RUNTIME_SOURCE_BASE_ROM";
+    private static final String TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM_PROPERTY =
+            "uprfvx.trainerRuntimeSourceRandomizedRom";
+    private static final String TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM_ENV =
+            "UPRFVX_TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM";
     private static final String REPORT_FILE_NAME = "oak-lab-rival-runtime-source-report.txt";
+    private static final String POST_RANDOMIZATION_REPORT_FILE_NAME =
+            "trainer-runtime-source-post-randomization-audit-report.txt";
 
     private static final List<Integer> FRLG_RIVAL2_TRAINER_IDS = List.of(0x14B, 0x149, 0x14A);
     private static final List<Integer> FRLG_RIVAL_TRAINER_IDS = List.of(
@@ -81,6 +89,38 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         }
 
         Path reportPath = reportPath();
+        Files.createDirectories(reportPath.getParent());
+        Files.write(reportPath, report);
+    }
+
+    @Test
+    public void trainerRuntimeSourcePostRandomizationAuditReportOptIn() throws IOException {
+        String baseRomPath = configuredBaseRomPath();
+        String randomizedRomPath = configuredRandomizedRomPath();
+        assumeTrue(baseRomPath != null && !baseRomPath.isBlank()
+                        && randomizedRomPath != null && !randomizedRomPath.isBlank(),
+                "Set -D" + TRAINER_RUNTIME_SOURCE_BASE_ROM_PROPERTY + "=<private-input-rom> and -D"
+                        + TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM_PROPERTY + "=<private-output-rom> to run the "
+                        + "trainer runtime source post-randomization audit.");
+
+        Gen3RomHandler baseRomHandler = loadGen3Rom(baseRomPath);
+        Gen3RomHandler randomizedRomHandler = loadGen3Rom(randomizedRomPath);
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport audit =
+                baseRomHandler.getFrlgTrainerRuntimeSourcePostRandomizationAuditForDiagnostics(randomizedRomHandler);
+
+        List<String> report = new ArrayList<>();
+        report.add("Trainer runtime source post-randomization audit report");
+        report.add("Base ROM path: <redacted>");
+        report.add("Randomized ROM path: <redacted>");
+        report.add("Base ROM code=" + baseRomHandler.getRomEntry().getRomCode()
+                + " version=" + baseRomHandler.getRomEntry().getVersion()
+                + " romType=" + baseRomHandler.getRomEntry().getRomType());
+        report.add("Randomized ROM code=" + randomizedRomHandler.getRomEntry().getRomCode()
+                + " version=" + randomizedRomHandler.getRomEntry().getVersion()
+                + " romType=" + randomizedRomHandler.getRomEntry().getRomType());
+        appendTrainerRuntimeSourcePostRandomizationAudit(report, audit);
+
+        Path reportPath = reportPath(POST_RANDOMIZATION_REPORT_FILE_NAME);
         Files.createDirectories(reportPath.getParent());
         Files.write(reportPath, report);
     }
@@ -325,6 +365,32 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         report.add("  total=" + rows.size());
     }
 
+    private static void appendTrainerRuntimeSourcePostRandomizationAudit(List<String> report,
+            Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditReport audit) {
+        Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditSummary summary = audit.summary();
+        report.add("summary:");
+        report.add("  totalRuntimeSources=" + summary.totalRuntimeSources());
+        report.add("  validRuntimeTrainerCount=" + summary.validRuntimeTrainerCount());
+        report.add("  changedFromBaseCount=" + summary.changedFromBaseCount());
+        report.add("  unchangedFromBaseCount=" + summary.unchangedFromBaseCount());
+        report.add("  outputValidRuntimeNotLoadedCount=" + summary.outputValidRuntimeNotLoadedCount());
+        report.add("  outputLoadedRuntimeMismatchCount=" + summary.outputLoadedRuntimeMismatchCount());
+        report.add("  invalidIgnoredCount=" + summary.invalidIgnoredCount());
+        report.add("rows:");
+        for (Gen3RomHandler.FrlgTrainerRuntimeSourcePostRandomizationAuditRow row : audit.rows()) {
+            report.add("  trainerId=" + row.trainerId()
+                    + " baseRawParty=" + row.baseRawParty()
+                    + " outputRawParty=" + row.outputRawParty()
+                    + " loadedOutputParty=" + row.loadedOutputParty()
+                    + " outputClassification=" + row.outputClassification()
+                    + " changedFromBase=" + yesNo(row.changedFromBase())
+                    + " loadedRawPartyComparison=" + row.loadedRawPartyComparison());
+            for (String warning : row.warnings()) {
+                report.add("  " + warning + " trainerId=" + row.trainerId());
+            }
+        }
+    }
+
     static List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> filterRuntimeSourcesByTrainerIds(
             List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> sources, Set<Integer> trainerIds) {
         List<Gen3RomHandler.FrlgTrainerBattleRuntimeSource> filtered = new ArrayList<>();
@@ -465,6 +531,22 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
         return System.getenv(ROM_PATH_ENV);
     }
 
+    private static String configuredBaseRomPath() {
+        String property = System.getProperty(TRAINER_RUNTIME_SOURCE_BASE_ROM_PROPERTY);
+        if (property != null && !property.isBlank()) {
+            return property;
+        }
+        return System.getenv(TRAINER_RUNTIME_SOURCE_BASE_ROM_ENV);
+    }
+
+    private static String configuredRandomizedRomPath() {
+        String property = System.getProperty(TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM_PROPERTY);
+        if (property != null && !property.isBlank()) {
+            return property;
+        }
+        return System.getenv(TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM_ENV);
+    }
+
     private static String configuredStarterNames() {
         String property = System.getProperty(STARTERS_PROPERTY);
         if (property != null && !property.isBlank()) {
@@ -529,7 +611,11 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
     }
 
     private static Path reportPath() {
-        return Path.of("build").resolve("reports").resolve("diagnostics").resolve(REPORT_FILE_NAME);
+        return reportPath(REPORT_FILE_NAME);
+    }
+
+    private static Path reportPath(String fileName) {
+        return Path.of("build").resolve("reports").resolve("diagnostics").resolve(fileName);
     }
 
     private static String normalize(String value) {
@@ -550,6 +636,10 @@ public class Gen3OakLabRivalRuntimeSourceRomTest {
             formatted.add(hex(value));
         }
         return formatted.toString();
+    }
+
+    private static String yesNo(boolean value) {
+        return value ? "yes" : "no";
     }
 
     private static String signedHex(int value) {

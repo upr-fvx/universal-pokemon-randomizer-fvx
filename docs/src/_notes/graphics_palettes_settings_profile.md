@@ -39,3 +39,13 @@ description row is added.
 
 Local visual smoke is still required for any stronger Graphics/Palettes support
 claim. This remains below P1 promotion.
+
+## GUI Random Activation
+
+The GUI `Graphics -> Pokemon Palettes -> Random` selection maps to
+`Settings.PokemonPalettesMod.RANDOM`. `GameRandomizer` activates Gen 3-5 palette
+randomization from that setting.
+
+The Gen 3-5 palette randomizer now marks `changesMade` after successful population
+of at least one species palette candidate. Without that marker the overview log can
+report `Pokemon Palettes: Unchanged` even though the randomization path ran.

@@ -6,6 +6,7 @@ import com.uprfvx.romio.gamedata.Evolution;
 import com.uprfvx.romio.gamedata.EvolutionType;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
@@ -300,6 +301,24 @@ class TrainerNameRandomizerDecisions {
     }
 
     @Test
+    void trainerClassNameRandomizerRecordsPerTrainerAssignmentsForSpriteSync() {
+        TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
+        handler.trainerClassNames = List.of("BUG CATCHER", "PSYCHIC", "ELITE 4", "BOARDER");
+        handler.trainers = List.of(trainer(102, 0), trainer(103, 0));
+        Settings settings = settings();
+        settings.setRandomizeTrainerClassSprites(true);
+
+        TrainerNameRandomizer randomizer = new TrainerNameRandomizer(handler.proxy, settings,
+                new CyclingRandom(0, 1));
+        randomizer.randomizeTrainerClassNames();
+
+        Map<Integer, Integer> assignments = randomizer.getTrainerClassIdAssignmentsByTrainerIndex();
+        assertNotEquals(0, assignments.get(102));
+        assertNotEquals(0, assignments.get(103));
+        assertNotEquals(assignments.get(102), assignments.get(103));
+    }
+
+    @Test
     void trainerClassNameRandomizerKeepsIdentityWhenNoAlternativeExists() {
         TrainerNameTestRomHandler handler = TrainerNameTestRomHandler.create();
         handler.trainerClassNames = List.of("OLD");
@@ -430,6 +449,13 @@ class TrainerNameRandomizerDecisions {
         return species;
     }
 
+    private static Trainer trainer(int index, int trainerClass) {
+        Trainer trainer = new Trainer();
+        trainer.setIndex(index);
+        trainer.setTrainerclass(trainerClass);
+        return trainer;
+    }
+
     private static void addEvolution(Species from, Species to, int level) {
         Evolution evolution = new Evolution(from, to, EvolutionType.LEVEL, level);
         from.getEvolutionsFrom().add(evolution);
@@ -459,6 +485,7 @@ class TrainerNameRandomizerDecisions {
         private List<String> trainerClassNames = List.of("LAD");
         private List<String> trainerClassPool = List.of("BOY", "GIRL", "DUO", "TEAM");
         private List<String> doublesTrainerClassPool = List.of("PAIR", "TEAM");
+        private List<Trainer> trainers = Collections.emptyList();
         private List<Integer> doublesTrainerClasses = Collections.emptyList();
         private List<Integer> tcNameLengthsByTrainer = Collections.emptyList();
         private RomHandler.TrainerNameMode trainerNameMode = RomHandler.TrainerNameMode.MAX_LENGTH;
@@ -512,6 +539,7 @@ class TrainerNameRandomizerDecisions {
                 case "fixedTrainerClassNamesLength" -> fixedTrainerClassNamesLength;
                 case "maxTrainerClassNameLength" -> maxTrainerClassNameLength;
                 case "getDoublesTrainerClasses" -> doublesTrainerClasses;
+                case "getTrainers" -> trainers;
                 case "internalStringLength" -> internalLength((String) args[0]);
                 case "toString" -> "TrainerNameRandomizerTestRomHandler";
                 case "hashCode" -> System.identityHashCode(this);
@@ -527,6 +555,20 @@ class TrainerNameRandomizerDecisions {
         @SuppressWarnings("unchecked")
         private static List<String> asStringList(Object value) {
             return (List<String>) value;
+        }
+    }
+
+    private static class CyclingRandom extends Random {
+        private final int[] values;
+        private int index;
+
+        CyclingRandom(int... values) {
+            this.values = values;
+        }
+
+        @Override
+        public int nextInt(int bound) {
+            return values[index++ % values.length] % bound;
         }
     }
 }

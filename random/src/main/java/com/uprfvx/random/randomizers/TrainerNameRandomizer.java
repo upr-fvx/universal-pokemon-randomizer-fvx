@@ -3,6 +3,7 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
@@ -10,6 +11,7 @@ import java.util.*;
 public class TrainerNameRandomizer extends Randomizer {
 
     private final Map<Integer, Integer> trainerClassIdMapping = new HashMap<>();
+    private final Map<Integer, Integer> trainerClassIdAssignmentsByTrainerIndex = new HashMap<>();
     private List<String> originalTrainerClassNames = Collections.emptyList();
 
     public TrainerNameRandomizer(RomHandler romHandler, Settings settings, Random random) {
@@ -144,6 +146,7 @@ public class TrainerNameRandomizer extends Randomizer {
 
     public void randomizeTrainerClassNames() {
         trainerClassIdMapping.clear();
+        trainerClassIdAssignmentsByTrainerIndex.clear();
         originalTrainerClassNames = Collections.emptyList();
         if (!romHandler.canChangeTrainerText()) {
             return;
@@ -168,6 +171,9 @@ public class TrainerNameRandomizer extends Randomizer {
             newClassNames.add(currentClassNames.get(targetClassIds.get(i)));
             trainerClassIdMapping.put(i, targetClassIds.get(i));
         }
+        if (settings.isRandomizeTrainerClassSprites()) {
+            assignTrainerClassIdsPerTrainer(currentClassNames, doublesClassIndexes, mustBeSameLength);
+        }
 
         // Done choosing, save
         romHandler.setTrainerClassNames(newClassNames);
@@ -178,8 +184,65 @@ public class TrainerNameRandomizer extends Randomizer {
         return Collections.unmodifiableMap(trainerClassIdMapping);
     }
 
+    public Map<Integer, Integer> getTrainerClassIdAssignmentsByTrainerIndex() {
+        return Collections.unmodifiableMap(trainerClassIdAssignmentsByTrainerIndex);
+    }
+
     public List<String> getOriginalTrainerClassNames() {
         return Collections.unmodifiableList(originalTrainerClassNames);
+    }
+
+    private void assignTrainerClassIdsPerTrainer(
+            List<String> currentClassNames, Set<Integer> doublesClassIndexes, boolean mustBeSameLength) {
+        for (Trainer trainer : romHandler.getTrainers()) {
+            int oldClassId = trainer.getTrainerclass();
+            if (oldClassId < 0 || oldClassId >= currentClassNames.size()) {
+                continue;
+            }
+            trainerClassIdAssignmentsByTrainerIndex.put(trainer.getIndex(),
+                    randomTrainerClassIdForTrainer(oldClassId, currentClassNames, doublesClassIndexes,
+                            mustBeSameLength));
+        }
+    }
+
+    private int randomTrainerClassIdForTrainer(
+            int oldClassId, List<String> currentClassNames, Set<Integer> doublesClassIndexes,
+            boolean mustBeSameLength) {
+        List<Integer> candidates = trainerClassIdCandidatesForSource(oldClassId, currentClassNames,
+                doublesClassIndexes, mustBeSameLength);
+        if (candidates.size() <= 1) {
+            return oldClassId;
+        }
+
+        List<Integer> preferredCandidates = candidates.stream()
+                .filter(candidate -> candidate != oldClassId)
+                .filter(candidate -> !currentClassNames.get(candidate).equals(currentClassNames.get(oldClassId)))
+                .toList();
+        if (preferredCandidates.isEmpty()) {
+            preferredCandidates = candidates.stream()
+                    .filter(candidate -> candidate != oldClassId)
+                    .toList();
+        }
+        return preferredCandidates.get(random.nextInt(preferredCandidates.size()));
+    }
+
+    private List<Integer> trainerClassIdCandidatesForSource(
+            int oldClassId, List<String> currentClassNames, Set<Integer> doublesClassIndexes,
+            boolean mustBeSameLength) {
+        List<Integer> candidates = new ArrayList<>();
+        int oldMode = doublesClassIndexes.contains(oldClassId) ? 1 : 0;
+        int oldLength = romHandler.internalStringLength(currentClassNames.get(oldClassId));
+        for (int classId = 0; classId < currentClassNames.size(); classId++) {
+            int mode = doublesClassIndexes.contains(classId) ? 1 : 0;
+            if (mode != oldMode) {
+                continue;
+            }
+            if (mustBeSameLength && romHandler.internalStringLength(currentClassNames.get(classId)) != oldLength) {
+                continue;
+            }
+            candidates.add(classId);
+        }
+        return candidates;
     }
 
     private List<Integer> randomizedTrainerClassIdTargets(

@@ -114,6 +114,33 @@ public class SettingsProfileGeneratorTest {
     }
 
     @Test
+    public void invoke_withGraphicsPaletteOverlays_setsEffectivePaletteSettings() throws Exception {
+        Settings random = settingsForOverlay("FVX-GFX-001");
+        assertEquals(Settings.PokemonPalettesMod.RANDOM, random.getPokemonPalettesMod());
+        assertFalse(random.isPokemonPalettesFollowTypes());
+        assertFalse(random.isPokemonPalettesFollowEvolutions());
+        assertFalse(random.isPokemonPalettesShinyFromNormal());
+
+        Settings followTypes = settingsForOverlay("FVX-GFX-002");
+        assertEquals(Settings.PokemonPalettesMod.RANDOM, followTypes.getPokemonPalettesMod());
+        assertTrue(followTypes.isPokemonPalettesFollowTypes());
+
+        Settings followEvolutions = settingsForOverlay("FVX-GFX-003");
+        assertEquals(Settings.PokemonPalettesMod.RANDOM, followEvolutions.getPokemonPalettesMod());
+        assertTrue(followEvolutions.isPokemonPalettesFollowEvolutions());
+
+        Settings shinyFromNormal = settingsForOverlay("FVX-GFX-004");
+        assertEquals(Settings.PokemonPalettesMod.RANDOM, shinyFromNormal.getPokemonPalettesMod());
+        assertTrue(shinyFromNormal.isPokemonPalettesShinyFromNormal());
+    }
+
+    @Test
+    public void invoke_withGraphicsPaletteProfiles_setsEffectivePaletteSettings() throws Exception {
+        assertGraphicsPaletteProfile(settingsForProfile("09_graphics_palettes"));
+        assertGraphicsPaletteProfile(settingsForProfile("risk_graphics_palettes_visual"));
+    }
+
+    @Test
     public void invoke_withIntroModeOverlays_appliesLastOverlayInSettingsSerializationOrder() throws Exception {
         assertFalse(settingsForOverlays("MODE-INTRO-RANDOM", "MODE-NO-RANDOM-INTRO").isRandomizeIntroMon());
         assertTrue(settingsForOverlays("MODE-NO-RANDOM-INTRO", "MODE-INTRO-RANDOM").isRandomizeIntroMon());
@@ -241,6 +268,13 @@ public class SettingsProfileGeneratorTest {
 
         assertEquals(1, exitCode);
         assertFalse(output.toFile().exists());
+    }
+
+    private static void assertGraphicsPaletteProfile(Settings settings) {
+        assertEquals(Settings.PokemonPalettesMod.RANDOM, settings.getPokemonPalettesMod());
+        assertTrue(settings.isPokemonPalettesFollowTypes());
+        assertTrue(settings.isPokemonPalettesFollowEvolutions());
+        assertTrue(settings.isPokemonPalettesShinyFromNormal());
     }
 
     private static Settings readSettings(Path path) throws Exception {

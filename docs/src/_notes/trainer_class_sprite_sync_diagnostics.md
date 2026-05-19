@@ -124,6 +124,16 @@ section includes a marker like:
 This marker is byte-intent/model evidence. It is not a substitute for local
 ingame visual smoke.
 
+Expanded CFRU/DPE trainer and runtime-source rows can have trainer indices
+beyond the original trainer-name snapshot captured for logging. Trainer logging
+therefore bounds-checks the original-name lookup and falls back to the current
+display name, the trainer name or `trainer #id`. Trainer Pokemon logging also
+uses fallback labels for missing expanded species or move metadata, including
+raw species and identity numbers when a species object is present but unnamed.
+If a remaining unexpected trainer-row metadata issue appears during logging, the
+logger emits a skipped-row marker for that trainer instead of aborting the whole
+randomization log. Missing metadata should not abort randomization logging.
+
 ## Local smoke requirement
 
 Do not post ROMs, output ROMs, private paths, hashes, full logs, screenshots,

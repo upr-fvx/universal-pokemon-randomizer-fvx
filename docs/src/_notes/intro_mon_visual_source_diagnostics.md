@@ -39,6 +39,30 @@ For FRLG, `Gen3RomHandler.setIntroPokemon()` writes:
 uses `IntroImageOffset + 4` for the palette pointer. A mismatch between these candidates is useful local evidence, not
 an automatic fix.
 
+## CFRU/DPE visual-source search
+
+Local evidence can show that every known FRLG Intro source changed from the base species to the randomized species while
+the visible intro sprite still remains the base species. In that case the known write targets are not enough visual
+evidence; CFRU/DPE may be using another raw literal or asset pointer for the on-screen sprite.
+
+When both base and output ROM paths are configured, the opt-in report now also searches for base-species visual
+candidates and compares the same offset in the output ROM. Candidate types are:
+
+- `raw-u8-species`: one-byte species literal matching the base known Intro species.
+- `raw-u16-species`: little-endian two-byte species literal matching the base known Intro species.
+- `front-table-entry-pointer`: pointer to the base species entry inside `PokemonFrontImages`.
+- `palette-table-entry-pointer`: pointer to the base species entry inside `PokemonNormalPalettes`.
+- `front-asset-pointer`: direct pointer to the base species front-image asset read from the front-image table.
+- `palette-asset-pointer`: direct pointer to the base species normal-palette asset read from the palette table.
+
+Each line reports candidate type, offset, base value, output value, `changedFromBase=yes/no`, and a plausibility reason.
+Reasons currently include known intro offsets, nearby recognized script opcodes, proximity to known intro code/data
+offsets, and membership in the front-image or palette pointer tables.
+
+An unchanged candidate is not proof by itself. It is a short list for local inspection: if the visible intro sprite
+stays at the base species while the known FRLG sources changed, unchanged front asset, palette asset, table-entry, or
+species-literal candidates near plausible code/data regions are the best follow-up targets.
+
 ## Opt-in local report
 
 The diagnostic harness is skipped unless a local ROM path is explicitly configured:
@@ -72,6 +96,7 @@ Post only concise, sanitized lines such as:
 - Raw species id or decoded species.
 - Pointer-derived expected species id.
 - Base-vs-output `changedFromBase=yes/no`.
+- Candidate-search type, base value, output value, and short plausibility reason.
 - The observed visible intro species in words.
 
 Do not post ROM paths, hashes, full logs, screenshots, saves, emulator states, output ROMs, secrets, tokens, or `.env`

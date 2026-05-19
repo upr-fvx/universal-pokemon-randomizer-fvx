@@ -44,6 +44,8 @@ public class Gen3IntroMonVisualSourceRomTest {
             appendComparison(report, Gen3RomHandler.compareIntroMonVisualSourceDiagnostics(
                     baseRomHandler.getIntroMonVisualSourceDiagnosticsForDiagnostics(),
                     outputRomHandler.getIntroMonVisualSourceDiagnosticsForDiagnostics()));
+            appendCandidateSearch(report,
+                    baseRomHandler.getIntroMonVisualSourceSearchCandidatesForDiagnostics(outputRomHandler));
         }
 
         Path reportPath = Path.of("build").resolve("reports").resolve("diagnostics").resolve(REPORT_FILE_NAME);
@@ -91,6 +93,20 @@ public class Gen3IntroMonVisualSourceRomTest {
                     + " outputSpeciesId=" + missing(candidate.outputSpeciesId())
                     + " outputDecoded=" + candidate.outputDecodedSpecies()
                     + " changedFromBase=" + yesNo(candidate.changedFromBase()));
+        }
+    }
+
+    private static void appendCandidateSearch(List<String> report,
+                                              List<Gen3RomHandler.Gen3IntroMonVisualSourceSearchCandidate> candidates) {
+        report.add("");
+        report.add("[base-vs-output intro visual source candidate search]");
+        for (Gen3RomHandler.Gen3IntroMonVisualSourceSearchCandidate candidate : candidates) {
+            report.add("  candidateType=" + candidate.candidateType()
+                    + " offset=" + hex(candidate.offset())
+                    + " baseValue=" + candidate.baseValue()
+                    + " outputValue=" + candidate.outputValue()
+                    + " changedFromBase=" + yesNo(candidate.changedFromBase())
+                    + " plausibilityReason=" + candidate.plausibilityReason());
         }
     }
 

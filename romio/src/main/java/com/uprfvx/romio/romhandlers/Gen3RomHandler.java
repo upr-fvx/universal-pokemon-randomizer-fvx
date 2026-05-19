@@ -2294,6 +2294,25 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 pokesInternal);
     }
 
+    List<Gen3IntroMonVisualSourceSearchCandidate> getIntroMonVisualSourceSearchCandidatesForDiagnostics(
+            Gen3RomHandler outputRomHandler) {
+        Gen3IntroMonVisualSourceDiagnostics baseDiagnostics = getIntroMonVisualSourceDiagnosticsForDiagnostics();
+        Gen3IntroMonVisualSourceDiagnostics outputDiagnostics = outputRomHandler == null
+                ? null
+                : outputRomHandler.getIntroMonVisualSourceDiagnosticsForDiagnostics();
+        int baseSpeciesId = firstKnownIntroMonSpeciesId(baseDiagnostics);
+        int outputSpeciesId = firstKnownIntroMonSpeciesId(outputDiagnostics);
+        return findIntroMonVisualSourceSearchCandidates(rom, outputRomHandler == null ? null : outputRomHandler.rom,
+                baseSpeciesId, outputSpeciesId,
+                romEntry.getIntValue("IntroCryOffset"),
+                romEntry.getIntValue("IntroImageOffset"),
+                romEntry.getIntValue("IntroPaletteOffset"),
+                romEntry.getIntValue("IntroOtherOffset"),
+                romEntry.getIntValue("PokemonFrontImages"),
+                romEntry.getIntValue("PokemonNormalPalettes"),
+                pokesInternal);
+    }
+
     List<FrlgRawTrainerPartyDiagnostics> getRawTrainerPartyDiagnostics(List<Integer> trainerIds) {
         List<FrlgRawTrainerPartyDiagnostics> diagnostics = new ArrayList<>();
         int baseOffset = romEntry.getIntValue("TrainerData");
@@ -2920,6 +2939,236 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return new Gen3IntroMonVisualSourceComparison(base, output, candidateComparisons);
     }
 
+    static List<Gen3IntroMonVisualSourceSearchCandidate> findIntroMonVisualSourceSearchCandidates(
+            byte[] baseRom,
+            byte[] outputRom,
+            int baseSpeciesId,
+            int outputSpeciesId,
+            int cryOffset,
+            int imageOffset,
+            int paletteOffset,
+            int otherOffset,
+            int imageTableOffset,
+            int paletteTableOffset,
+            Species[] speciesByInternalId) {
+        if (baseRom == null || baseSpeciesId <= 0) {
+            return Collections.emptyList();
+        }
+        int normalizedOutputSpeciesId = outputSpeciesId > 0 ? outputSpeciesId : baseSpeciesId;
+        IntroMonVisualSearchTargets targets = introMonVisualSearchTargets(baseRom, outputRom, baseSpeciesId,
+                normalizedOutputSpeciesId, imageTableOffset, paletteTableOffset);
+        Map<String, Gen3IntroMonVisualSourceSearchCandidate> candidates = new LinkedHashMap<>();
+        for (int offset = 0; offset < baseRom.length; offset++) {
+            if (readUnsignedByteOrMissing(baseRom, offset) == baseSpeciesId) {
+                addIntroMonSearchCandidate(candidates, "raw-u8-species", offset,
+                        formatSpeciesSearchValue(baseSpeciesId, speciesByInternalId),
+                        formatSpeciesSearchValue(readUnsignedByteOrMissing(outputRom, offset), speciesByInternalId),
+                        introMonSearchReason(baseRom, offset, "raw u8 species literal", cryOffset, imageOffset,
+                                paletteOffset, otherOffset, imageTableOffset, paletteTableOffset,
+                                speciesByInternalId));
+            }
+            if (offset <= baseRom.length - 2 && readLittleEndianWord(baseRom, offset) == baseSpeciesId) {
+                addIntroMonSearchCandidate(candidates, "raw-u16-species", offset,
+                        formatSpeciesSearchValue(baseSpeciesId, speciesByInternalId),
+                        formatSpeciesSearchValue(readLittleEndianWordOrMissing(outputRom, offset),
+                                speciesByInternalId),
+                        introMonSearchReason(baseRom, offset, "raw u16 species literal", cryOffset, imageOffset,
+                                paletteOffset, otherOffset, imageTableOffset, paletteTableOffset,
+                                speciesByInternalId));
+            }
+            if (offset <= baseRom.length - GBConstants.longSize) {
+                int basePointer = readPointerFromRom(baseRom, offset);
+                addPointerIntroMonSearchCandidate(candidates, baseRom, outputRom, targets, offset, basePointer,
+                        "front-table-entry-pointer", targets.baseFrontTableEntryPointer(),
+                        targets.outputFrontTableEntryPointer(), cryOffset, imageOffset, paletteOffset, otherOffset,
+                        imageTableOffset, paletteTableOffset, speciesByInternalId);
+                addPointerIntroMonSearchCandidate(candidates, baseRom, outputRom, targets, offset, basePointer,
+                        "palette-table-entry-pointer", targets.basePaletteTableEntryPointer(),
+                        targets.outputPaletteTableEntryPointer(), cryOffset, imageOffset, paletteOffset, otherOffset,
+                        imageTableOffset, paletteTableOffset, speciesByInternalId);
+                addPointerIntroMonSearchCandidate(candidates, baseRom, outputRom, targets, offset, basePointer,
+                        "front-asset-pointer", targets.baseFrontAssetPointer(), targets.outputFrontAssetPointer(),
+                        cryOffset, imageOffset, paletteOffset, otherOffset, imageTableOffset, paletteTableOffset,
+                        speciesByInternalId);
+                addPointerIntroMonSearchCandidate(candidates, baseRom, outputRom, targets, offset, basePointer,
+                        "palette-asset-pointer", targets.basePaletteAssetPointer(), targets.outputPaletteAssetPointer(),
+                        cryOffset, imageOffset, paletteOffset, otherOffset, imageTableOffset, paletteTableOffset,
+                        speciesByInternalId);
+            }
+        }
+        return new ArrayList<>(candidates.values());
+    }
+
+    private static IntroMonVisualSearchTargets introMonVisualSearchTargets(byte[] baseRom, byte[] outputRom,
+                                                                           int baseSpeciesId, int outputSpeciesId,
+                                                                           int imageTableOffset,
+                                                                           int paletteTableOffset) {
+        int baseFrontTableEntryPointer = imageTableOffset + baseSpeciesId * 8;
+        int outputFrontTableEntryPointer = imageTableOffset + outputSpeciesId * 8;
+        int basePaletteTableEntryPointer = paletteTableOffset + baseSpeciesId * 8;
+        int outputPaletteTableEntryPointer = paletteTableOffset + outputSpeciesId * 8;
+        byte[] outputSource = outputRom == null ? baseRom : outputRom;
+        return new IntroMonVisualSearchTargets(
+                baseFrontTableEntryPointer,
+                outputFrontTableEntryPointer,
+                basePaletteTableEntryPointer,
+                outputPaletteTableEntryPointer,
+                readPointerFromRom(baseRom, baseFrontTableEntryPointer),
+                readPointerFromRom(outputSource, outputFrontTableEntryPointer),
+                readPointerFromRom(baseRom, basePaletteTableEntryPointer),
+                readPointerFromRom(outputSource, outputPaletteTableEntryPointer));
+    }
+
+    private static void addPointerIntroMonSearchCandidate(
+            Map<String, Gen3IntroMonVisualSourceSearchCandidate> candidates,
+            byte[] baseRom,
+            byte[] outputRom,
+            IntroMonVisualSearchTargets targets,
+            int offset,
+            int basePointer,
+            String candidateType,
+            int expectedBasePointer,
+            int expectedOutputPointer,
+            int cryOffset,
+            int imageOffset,
+            int paletteOffset,
+            int otherOffset,
+            int imageTableOffset,
+            int paletteTableOffset,
+            Species[] speciesByInternalId) {
+        if (basePointer < 0 || basePointer != expectedBasePointer) {
+            return;
+        }
+        int outputPointer = readPointerFromRom(outputRom, offset);
+        addIntroMonSearchCandidate(candidates, candidateType, offset,
+                formatPointerSearchValue(basePointer, targets),
+                formatPointerSearchValue(outputPointer, targets),
+                introMonSearchReason(baseRom, offset, candidateType, cryOffset, imageOffset, paletteOffset,
+                        otherOffset, imageTableOffset, paletteTableOffset, speciesByInternalId));
+    }
+
+    private static void addIntroMonSearchCandidate(Map<String, Gen3IntroMonVisualSourceSearchCandidate> candidates,
+                                                   String candidateType,
+                                                   int offset,
+                                                   String baseValue,
+                                                   String outputValue,
+                                                   String plausibilityReason) {
+        String key = candidateType + "@" + offset;
+        candidates.putIfAbsent(key, new Gen3IntroMonVisualSourceSearchCandidate(candidateType, offset, baseValue,
+                outputValue, !Objects.equals(baseValue, outputValue), plausibilityReason));
+    }
+
+    private static String introMonSearchReason(byte[] rom, int offset, String defaultReason, int cryOffset,
+                                               int imageOffset, int paletteOffset, int otherOffset,
+                                               int imageTableOffset, int paletteTableOffset,
+                                               Species[] speciesByInternalId) {
+        List<String> reasons = new ArrayList<>();
+        if (offset == cryOffset) {
+            reasons.add("known IntroCryOffset");
+        }
+        if (offset == otherOffset) {
+            reasons.add("known IntroOtherOffset");
+        }
+        if (offset == imageOffset) {
+            reasons.add("known IntroImageOffset");
+        }
+        if (offset == imageOffset + 4) {
+            reasons.add("known IntroImageOffset+4 palette pointer");
+        }
+        if (offset == paletteOffset) {
+            reasons.add("configured IntroPaletteOffset");
+        }
+        String scriptContext = nearbyScriptOpcodeContext(rom, offset);
+        if (scriptContext != null) {
+            reasons.add("near script opcode " + scriptContext);
+        }
+        if (nearAny(offset, 8192, cryOffset, imageOffset, paletteOffset, otherOffset)) {
+            reasons.add("near known intro code/data offsets");
+        }
+        int tableLength = speciesByInternalId == null ? 0 : speciesByInternalId.length * 8;
+        if (isWithin(offset, imageTableOffset, tableLength)) {
+            reasons.add("inside PokemonFrontImages pointer table");
+        }
+        if (isWithin(offset, paletteTableOffset, tableLength)) {
+            reasons.add("inside PokemonNormalPalettes pointer table");
+        }
+        if (reasons.isEmpty()) {
+            reasons.add(defaultReason);
+        }
+        return String.join("; ", reasons);
+    }
+
+    private static boolean nearAny(int offset, int radius, int... anchors) {
+        for (int anchor : anchors) {
+            if (anchor >= 0 && Math.abs(offset - anchor) <= radius) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean isWithin(int offset, int start, int length) {
+        return start >= 0 && length > 0 && offset >= start && offset < start + length;
+    }
+
+    private static int firstKnownIntroMonSpeciesId(Gen3IntroMonVisualSourceDiagnostics diagnostics) {
+        if (diagnostics == null) {
+            return -1;
+        }
+        for (Gen3IntroMonVisualSourceCandidate candidate : diagnostics.candidates()) {
+            int speciesId = introMonCandidateSpeciesId(candidate);
+            if (speciesId > 0) {
+                return speciesId;
+            }
+        }
+        return -1;
+    }
+
+    private static String formatSpeciesSearchValue(int speciesId, Species[] speciesByInternalId) {
+        if (speciesId < 0) {
+            return "<missing>";
+        }
+        return speciesId + " " + speciesNameForDiagnostics(speciesId, speciesByInternalId);
+    }
+
+    private static String formatPointerSearchValue(int pointer, IntroMonVisualSearchTargets targets) {
+        if (pointer < 0) {
+            return "<missing>";
+        }
+        List<String> labels = new ArrayList<>();
+        if (pointer == targets.baseFrontTableEntryPointer()) {
+            labels.add("base-front-table-entry");
+        }
+        if (pointer == targets.outputFrontTableEntryPointer()) {
+            labels.add("output-front-table-entry");
+        }
+        if (pointer == targets.basePaletteTableEntryPointer()) {
+            labels.add("base-palette-table-entry");
+        }
+        if (pointer == targets.outputPaletteTableEntryPointer()) {
+            labels.add("output-palette-table-entry");
+        }
+        if (pointer == targets.baseFrontAssetPointer()) {
+            labels.add("base-front-asset");
+        }
+        if (pointer == targets.outputFrontAssetPointer()) {
+            labels.add("output-front-asset");
+        }
+        if (pointer == targets.basePaletteAssetPointer()) {
+            labels.add("base-palette-asset");
+        }
+        if (pointer == targets.outputPaletteAssetPointer()) {
+            labels.add("output-palette-asset");
+        }
+        return labels.isEmpty()
+                ? hexValueOrMissingForDiagnostics(pointer)
+                : hexValueOrMissingForDiagnostics(pointer) + " " + labels;
+    }
+
+    private static String hexValueOrMissingForDiagnostics(int value) {
+        return value < 0 ? "<missing>" : String.format(Locale.ROOT, "0x%X", value);
+    }
+
     private static Gen3IntroMonVisualSourceCandidate rawIntroSpeciesCandidate(byte[] rom, String source, int offset,
                                                                              Species[] speciesByInternalId) {
         int rawSpeciesId = readUnsignedByteOrMissing(rom, offset);
@@ -2941,6 +3190,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return -1;
         }
         return rom[offset] & 0xFF;
+    }
+
+    private static int readLittleEndianWordOrMissing(byte[] rom, int offset) {
+        if (rom == null || offset < 0 || offset > rom.length - 2) {
+            return -1;
+        }
+        return readLittleEndianWord(rom, offset);
     }
 
     private static int speciesIdForEightBytePointerTable(int pointer, int tableOffset) {
@@ -3138,6 +3394,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     record Gen3IntroMonVisualSourceCandidateComparison(String source, int offset, int baseSpeciesId,
                                                        String baseDecodedSpecies, int outputSpeciesId,
                                                        String outputDecodedSpecies, boolean changedFromBase) {
+    }
+
+    record Gen3IntroMonVisualSourceSearchCandidate(String candidateType, int offset, String baseValue,
+                                                   String outputValue, boolean changedFromBase,
+                                                   String plausibilityReason) {
+    }
+
+    private record IntroMonVisualSearchTargets(int baseFrontTableEntryPointer, int outputFrontTableEntryPointer,
+                                               int basePaletteTableEntryPointer, int outputPaletteTableEntryPointer,
+                                               int baseFrontAssetPointer, int outputFrontAssetPointer,
+                                               int basePaletteAssetPointer, int outputPaletteAssetPointer) {
     }
 
     record FrlgRawTrainerPokemonDiagnostics(int partyIndex, int offset, int level, int rawSpeciesId,

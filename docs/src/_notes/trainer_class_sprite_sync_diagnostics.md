@@ -1,12 +1,14 @@
 # Trainer Class Sprite Sync Diagnostics
 
-Status: Gen 3 opt-in implementation for regular trainers only. No ROM execution. No P1 promotion.
+Status: Gen 3 opt-in implementation for class label/class ID/pic consistency. No ROM execution. No
+P1 promotion.
 
 ## Separation from Trainer Class Names
 
-`Randomize Trainer Class Names` remains textlabel-only. It shuffles/writes the
-trainer-class-name text table and refreshes logger display names. It does not
-prove that the visible battle sprite changed.
+Without `MODE-TRAINER-CLASS-SPRITE-SYNC`, `Randomize Trainer Class Names`
+remains legacy textlabel-only behavior: it shuffles/writes the trainer-class-name
+text table and refreshes logger display names. It does not prove that the visible
+battle sprite changed.
 
 Gen 3 trainer rows keep these fields separate:
 
@@ -21,8 +23,9 @@ table. A class-name log entry alone is therefore not sprite evidence.
 
 ## New opt-in feature
 
-`Trainer Class Assignment / Sprite Sync` is implemented as a separate opt-in
-path, currently exposed through the settings-profile overlay:
+`Trainer Class Assignment / Sprite Sync` is implemented as a separate opt-in path
+that follows the Trainer Class Names randomization, currently exposed through the
+settings-profile overlay:
 
 - `MODE-TRAINER-CLASS-SPRITE-SYNC`
 
@@ -30,24 +33,32 @@ The setting is serialized as `Settings.randomizeTrainerClassSprites`. It is off
 by default and disabled by `Settings.tweakForRom()` when a ROM handler does not
 support Gen 3 trainer class/sprite row serialization.
 
-The implementation intentionally does not change the existing class-name text
-feature. If both options are enabled, class-name text remapping and class/sprite
-assignment remain separate operations.
+`Randomize Trainer Names` remains separate and changes only trainer personal
+names. It does not provide class ID or sprite mappings.
+
+When both `Randomize Trainer Class Names` and `MODE-TRAINER-CLASS-SPRITE-SYNC`
+are enabled, the class-name randomizer records its old class ID -> target class
+ID mapping. Sprite Sync then assigns each trainer to the mapped target class ID
+and uses an observed `trainerPic` from that target class. The class-name text
+table is restored to the original class labels so the displayed class, class ID
+and visible pic describe the same target class.
 
 ## Scope
 
 The first implementation is conservative:
 
 - Gen 3 only
-- regular trainers only
-- excludes runtime-source rows
-- excludes rival/friend, gym leader, Elite Four, champion, strong/boss and other
-  tagged special trainers through the existing `Trainer` classification helpers
-- uses only class/sprite pairs already observed on eligible regular trainers
+- off by default
+- requires Trainer Class Names randomization to provide a class ID mapping
+- follows that mapping instead of choosing an independent random class/pic pair
+- allows rival, gym, Elite Four, champion and other special target classes when
+  the class-name randomizer selected that class
+- uses only `trainerPic` values observed on trainers with the target class ID
+- skips only target classes that have no observed valid pic ID
 - writes `trainerClass` and `trainerPic` only when the new opt-in feature made
   assignments
 
-The feature does not mutate trainer names or trainer-class text strings.
+The feature does not mutate trainer personal names.
 
 ## Writer behavior
 
@@ -84,8 +95,8 @@ Useful sanitized local evidence:
 - visible trainer sprite label in words
 - whether the battle is regular, rival, gym, Elite Four, champion, boss or
   runtime-source
-- confirmation that regular trainers changed while excluded special trainers did
-  not
+- confirmation that the displayed class label and visible trainer sprite match
+  the logged target class
 
 This feature remains below P1 until local ingame smoke confirms visible sprite
 consistency on a private output ROM produced outside Codex.

@@ -150,7 +150,7 @@ public class GameRandomizer {
         this.trainerMovesetRandomizer = new TrainerMovesetRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.trainerNameRandomizer = new TrainerNameRandomizer(romHandler, settings, randomSource.getCosmetic());
         this.trainerClassSpriteSyncRandomizer = new TrainerClassSpriteSyncRandomizer(
-                romHandler, settings, randomSource.getCosmetic());
+                romHandler, settings, randomSource.getCosmetic(), trainerNameRandomizer);
         this.wildEncounterRandomizer = new WildEncounterRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.encHeldItemRandomizer = new EncounterHeldItemRandomizer(romHandler, settings, randomSource.getNonCosmetic());
         this.tmtMoveRandomizer = new TMTutorMoveRandomizer(romHandler, settings, randomSource.getNonCosmetic());

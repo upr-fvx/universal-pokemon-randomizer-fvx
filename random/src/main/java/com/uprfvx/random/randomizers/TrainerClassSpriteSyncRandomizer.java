@@ -4,8 +4,8 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +43,17 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
         }
     }
 
-    private record ClassSpritePair(int trainerClass, int trainerPic) {
-    }
-
     private final Map<Integer, Assignment> assignmentsByTrainerIndex = new LinkedHashMap<>();
+    private final TrainerNameRandomizer trainerNameRandomizer;
 
     public TrainerClassSpriteSyncRandomizer(RomHandler romHandler, Settings settings, Random random) {
+        this(romHandler, settings, random, null);
+    }
+
+    public TrainerClassSpriteSyncRandomizer(
+            RomHandler romHandler, Settings settings, Random random, TrainerNameRandomizer trainerNameRandomizer) {
         super(romHandler, settings, random);
+        this.trainerNameRandomizer = trainerNameRandomizer;
     }
 
     public void randomizeTrainerClassSprites() {
@@ -58,28 +62,41 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
             return;
         }
 
-        List<Trainer> eligibleTrainers = eligibleRegularTrainers(romHandler.getTrainers());
-        List<ClassSpritePair> sourcePairs = safeSourcePairs(eligibleTrainers);
-        if (eligibleTrainers.isEmpty() || sourcePairs.size() < 2) {
+        List<Trainer> trainers = romHandler.getTrainers();
+        Map<Integer, Integer> classIdMapping = trainerClassIdMapping();
+        Map<Integer, Integer> trainerPicByClassId = trainerPicByClassId(trainers);
+        List<String> originalTrainerClassNames = originalTrainerClassNames();
+        if (classIdMapping.isEmpty() || trainerPicByClassId.isEmpty() || originalTrainerClassNames.isEmpty()) {
             return;
         }
 
-        List<String> trainerClassNames = romHandler.getTrainerClassNames();
-        for (Trainer trainer : eligibleTrainers) {
-            ClassSpritePair replacement = pickReplacement(trainer, sourcePairs);
-            if (replacement == null) {
+        for (Trainer trainer : trainers) {
+            if (!hasValidClassPic(trainer)) {
                 continue;
             }
             int oldTrainerClass = trainer.getTrainerclass();
             int oldTrainerPic = trainer.getTrainerPic();
-            trainer.setTrainerclass(replacement.trainerClass());
-            trainer.setTrainerPic(replacement.trainerPic());
-            refreshFullDisplayName(trainer, trainerClassNames);
+            Integer newTrainerClass = classIdMapping.get(oldTrainerClass);
+            if (newTrainerClass == null || newTrainerClass < 0
+                    || newTrainerClass >= originalTrainerClassNames.size()) {
+                continue;
+            }
+            Integer newTrainerPic = trainerPicByClassId.get(newTrainerClass);
+            if (newTrainerPic == null || newTrainerPic < 0) {
+                continue;
+            }
+            if (oldTrainerClass == newTrainerClass && oldTrainerPic == newTrainerPic) {
+                continue;
+            }
+            trainer.setTrainerclass(newTrainerClass);
+            trainer.setTrainerPic(newTrainerPic);
+            refreshFullDisplayName(trainer, originalTrainerClassNames);
             assignmentsByTrainerIndex.put(trainer.getIndex(), new Assignment(
-                    oldTrainerClass, oldTrainerPic, replacement.trainerClass(), replacement.trainerPic()));
+                    oldTrainerClass, oldTrainerPic, newTrainerClass, newTrainerPic));
         }
 
         if (!assignmentsByTrainerIndex.isEmpty()) {
+            romHandler.setTrainerClassNames(originalTrainerClassNames);
             romHandler.setTrainerClassSpriteSyncEnabled(true);
             changesMade = true;
         }
@@ -89,42 +106,32 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
         return Collections.unmodifiableMap(assignmentsByTrainerIndex);
     }
 
-    private List<Trainer> eligibleRegularTrainers(List<Trainer> trainers) {
-        List<Trainer> eligible = new ArrayList<>();
+    private Map<Integer, Integer> trainerClassIdMapping() {
+        if (trainerNameRandomizer == null) {
+            return Collections.emptyMap();
+        }
+        return trainerNameRandomizer.getTrainerClassIdMapping();
+    }
+
+    private List<String> originalTrainerClassNames() {
+        if (trainerNameRandomizer == null) {
+            return Collections.emptyList();
+        }
+        return trainerNameRandomizer.getOriginalTrainerClassNames();
+    }
+
+    private Map<Integer, Integer> trainerPicByClassId(List<Trainer> trainers) {
+        Map<Integer, Integer> trainerPicByClassId = new HashMap<>();
         for (Trainer trainer : trainers) {
-            if (isEligibleRegularTrainer(trainer)) {
-                eligible.add(trainer);
+            if (hasValidClassPic(trainer)) {
+                trainerPicByClassId.putIfAbsent(trainer.getTrainerclass(), trainer.getTrainerPic());
             }
         }
-        return eligible;
+        return trainerPicByClassId;
     }
 
-    static boolean isEligibleRegularTrainer(Trainer trainer) {
-        return trainer != null
-                && trainer.isRegular()
-                && !trainer.isRuntimeSource()
-                && trainer.getTrainerclass() > 0
-                && trainer.getTrainerPic() >= 0;
-    }
-
-    private List<ClassSpritePair> safeSourcePairs(List<Trainer> trainers) {
-        List<ClassSpritePair> pairs = new ArrayList<>();
-        for (Trainer trainer : trainers) {
-            ClassSpritePair pair = new ClassSpritePair(trainer.getTrainerclass(), trainer.getTrainerPic());
-            if (!pairs.contains(pair)) {
-                pairs.add(pair);
-            }
-        }
-        return pairs;
-    }
-
-    private ClassSpritePair pickReplacement(Trainer trainer, List<ClassSpritePair> sourcePairs) {
-        List<ClassSpritePair> candidates = new ArrayList<>(sourcePairs);
-        candidates.remove(new ClassSpritePair(trainer.getTrainerclass(), trainer.getTrainerPic()));
-        if (candidates.isEmpty()) {
-            return null;
-        }
-        return candidates.get(random.nextInt(candidates.size()));
+    private boolean hasValidClassPic(Trainer trainer) {
+        return trainer != null && trainer.getTrainerclass() >= 0 && trainer.getTrainerPic() >= 0;
     }
 
     private void refreshFullDisplayName(Trainer trainer, List<String> trainerClassNames) {

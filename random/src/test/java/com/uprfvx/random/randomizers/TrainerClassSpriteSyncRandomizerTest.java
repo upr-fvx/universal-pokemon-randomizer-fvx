@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -20,67 +23,124 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TrainerClassSpriteSyncRandomizerTest {
 
     @Test
-    void regularTrainersAreRemappedToExistingClassSpritePairs() {
-        Trainer first = trainer(1, 7, "A", null);
-        Trainer second = trainer(2, 8, "B", null);
-        Trainer third = trainer(3, 9, "C", null);
-        TestHandler handler = new TestHandler(List.of(first, second, third), true);
+    void trainerNameRandomizationAloneDoesNotChangeClassIdOrPic() {
+        Trainer trainer = trainer(1, 7, "BOB", null);
+        TestHandler handler = new TestHandler(List.of(trainer), true, List.of("YOUNGSTER", "LASS"));
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settingsWithNames(), new Random(1));
 
-        TrainerClassSpriteSyncRandomizer randomizer = new TrainerClassSpriteSyncRandomizer(
-                handler.proxy, new Settings(), new Random(3));
-        randomizer.randomizeTrainerClassSprites();
+        nameRandomizer.randomizeTrainerNames();
+        new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer)
+                .randomizeTrainerClassSprites();
 
-        assertTrue(randomizer.isChangesMade());
-        assertTrue(handler.syncEnabled);
-        for (Trainer trainer : handler.trainers) {
-            assertTrue(List.of("CLASS1", "CLASS2", "CLASS3").stream()
-                    .anyMatch(className -> trainer.getFullDisplayName().startsWith(className + " ")));
-            assertTrue(isKnownPair(trainer.getTrainerclass(), trainer.getTrainerPic()));
-        }
+        assertEquals(1, trainer.getTrainerclass());
+        assertEquals(7, trainer.getTrainerPic());
+        assertFalse(handler.syncEnabled);
     }
 
     @Test
-    void specialAndRuntimeTrainersAreExcluded() {
-        Trainer regularA = trainer(1, 7, "A", null);
-        Trainer regularB = trainer(2, 8, "B", null);
-        Trainer rival = trainer(3, 9, "R", "RIVAL2-0");
-        Trainer leader = trainer(4, 10, "L", "GYM1-LEADER");
-        Trainer runtime = trainer(5, 11, "X", Trainer.RUNTIME_SOURCE_TAG);
-        TestHandler handler = new TestHandler(List.of(regularA, regularB, rival, leader, runtime), true);
+    void classNameRandomizationWithSpriteSyncChangesClassIdAndPicConsistently() {
+        Trainer youngster = trainer(0, 7, "A", null);
+        Trainer lass = trainer(1, 8, "B", null);
+        TestHandler handler = new TestHandler(List.of(youngster, lass), true, List.of("YOUNGSTER", "LASS"));
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settingsWithNames(), new Random(1));
 
-        new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(4))
+        nameRandomizer.randomizeTrainerClassNames();
+        new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer)
                 .randomizeTrainerClassSprites();
 
-        assertEquals(3, rival.getTrainerclass());
-        assertEquals(9, rival.getTrainerPic());
-        assertEquals(4, leader.getTrainerclass());
-        assertEquals(10, leader.getTrainerPic());
-        assertEquals(5, runtime.getTrainerclass());
-        assertEquals(11, runtime.getTrainerPic());
+        assertTrue(handler.syncEnabled);
+        assertEquals(List.of("YOUNGSTER", "LASS"), handler.writtenTrainerClassNames);
+        assertEquals(1, youngster.getTrainerclass());
+        assertEquals(8, youngster.getTrainerPic());
+        assertEquals("LASS A", youngster.getFullDisplayName());
+        assertEquals(0, lass.getTrainerclass());
+        assertEquals(7, lass.getTrainerPic());
+        assertEquals("YOUNGSTER B", lass.getFullDisplayName());
+    }
+
+    @Test
+    void classNameRandomizationWithSpriteSyncCanTargetEliteFourClassAndPic() {
+        Trainer youngster = trainer(0, 7, "A", null);
+        Trainer elite = trainer(1, 9, "B", "ELITE1");
+        TestHandler handler = new TestHandler(List.of(youngster, elite), true, List.of("YOUNGSTER", "ELITE 4"));
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settingsWithNames(), new Random(1));
+
+        nameRandomizer.randomizeTrainerClassNames();
+        new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer)
+                .randomizeTrainerClassSprites();
+
+        assertTrue(handler.syncEnabled);
+        assertEquals(1, youngster.getTrainerclass());
+        assertEquals(9, youngster.getTrainerPic());
+        assertEquals("ELITE 4 A", youngster.getFullDisplayName());
+    }
+
+    @Test
+    void classNameRandomizationWithoutSpriteSyncRemainsTextLabelOnly() {
+        Trainer youngster = trainer(0, 7, "A", null);
+        Trainer lass = trainer(1, 8, "B", null);
+        TestHandler handler = new TestHandler(List.of(youngster, lass), true, List.of("YOUNGSTER", "LASS"));
+
+        new TrainerNameRandomizer(handler.proxy, settingsWithNames(), new Random(1)).randomizeTrainerClassNames();
+
+        assertTrue(handler.setTrainerClassNamesCalled);
+        assertEquals(List.of("LASS", "YOUNGSTER"), handler.writtenTrainerClassNames);
+        assertEquals(0, youngster.getTrainerclass());
+        assertEquals(7, youngster.getTrainerPic());
+        assertEquals(1, lass.getTrainerclass());
+        assertEquals(8, lass.getTrainerPic());
+        assertFalse(handler.syncEnabled);
+    }
+
+    @Test
+    void spriteSyncSkipsTargetClassWithoutObservedPic() {
+        Trainer youngster = trainer(0, 7, "A", null);
+        TestHandler handler = new TestHandler(List.of(youngster), true, List.of("YOUNGSTER", "ELITE 4"));
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settingsWithNames(), new Random(1));
+
+        nameRandomizer.randomizeTrainerClassNames();
+        new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer)
+                .randomizeTrainerClassSprites();
+
+        assertEquals(0, youngster.getTrainerclass());
+        assertEquals(7, youngster.getTrainerPic());
+        assertFalse(handler.syncEnabled);
     }
 
     @Test
     void unsupportedHandlerDoesNothing() {
-        Trainer first = trainer(1, 7, "A", null);
-        Trainer second = trainer(2, 8, "B", null);
-        TestHandler handler = new TestHandler(List.of(first, second), false);
+        Trainer first = trainer(0, 7, "A", null);
+        Trainer second = trainer(1, 8, "B", null);
+        TestHandler handler = new TestHandler(List.of(first, second), false, List.of("YOUNGSTER", "LASS"));
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settingsWithNames(), new Random(1));
 
+        nameRandomizer.randomizeTrainerClassNames();
         TrainerClassSpriteSyncRandomizer randomizer = new TrainerClassSpriteSyncRandomizer(
-                handler.proxy, new Settings(), new Random(3));
+                handler.proxy, new Settings(), new Random(1), nameRandomizer);
         randomizer.randomizeTrainerClassSprites();
 
         assertFalse(randomizer.isChangesMade());
         assertFalse(handler.syncEnabled);
-        assertEquals(1, first.getTrainerclass());
+        assertEquals(0, first.getTrainerclass());
         assertEquals(7, first.getTrainerPic());
-        assertEquals(2, second.getTrainerclass());
+        assertEquals(1, second.getTrainerclass());
         assertEquals(8, second.getTrainerPic());
     }
 
-    private static boolean isKnownPair(int trainerClass, int trainerPic) {
-        return (trainerClass == 1 && trainerPic == 7)
-                || (trainerClass == 2 && trainerPic == 8)
-                || (trainerClass == 3 && trainerPic == 9);
+    private static Settings settingsWithNames() {
+        Settings settings = new Settings();
+        settings.setCustomNames(new CustomNamesSet(
+                List.of("ANA"),
+                List.of("YOUNGSTER", "LASS", "ELITE 4"),
+                Collections.emptyList(),
+                Collections.emptyList(),
+                Collections.emptyList()));
+        return settings;
     }
 
     private static Trainer trainer(int trainerClass, int trainerPic, String name, String tag) {
@@ -97,13 +157,18 @@ class TrainerClassSpriteSyncRandomizerTest {
     private static class TestHandler implements InvocationHandler {
         private final List<Trainer> trainers;
         private final boolean supportsSync;
+        private final List<String> trainerClassNames;
         private boolean syncEnabled;
+        private boolean setTrainerClassNamesCalled;
+        private List<String> writtenTrainerClassNames = new ArrayList<>();
         private final RomHandler proxy = (RomHandler) Proxy.newProxyInstance(
                 RomHandler.class.getClassLoader(), new Class<?>[]{RomHandler.class}, this);
 
-        TestHandler(List<Trainer> trainers, boolean supportsSync) {
+        TestHandler(List<Trainer> trainers, boolean supportsSync, List<String> trainerClassNames) {
             this.trainers = trainers;
             this.supportsSync = supportsSync;
+            this.trainerClassNames = trainerClassNames;
+            this.writtenTrainerClassNames = new ArrayList<>(trainerClassNames);
         }
 
         @Override
@@ -114,13 +179,36 @@ class TrainerClassSpriteSyncRandomizerTest {
                     syncEnabled = (boolean) args[0];
                     yield null;
                 }
+                case "canChangeTrainerText" -> true;
                 case "getTrainers" -> trainers;
-                case "getTrainerClassNames" -> List.of("UNUSED", "CLASS1", "CLASS2", "CLASS3", "CLASS4", "CLASS5");
+                case "getTrainerNames" -> trainers.stream().map(Trainer::getName).toList();
+                case "setTrainerNames" -> null;
+                case "trainerNameMode" -> RomHandler.TrainerNameMode.MAX_LENGTH;
+                case "maxTrainerNameLength", "maxSumOfTrainerNameLengths", "maxTrainerClassNameLength" -> 10;
+                case "getTCNameLengthsByTrainer" -> Collections.nCopies(trainers.size(), 0);
+                case "getTrainerClassNames" -> trainerClassNames;
+                case "setTrainerClassNames" -> {
+                    setTrainerClassNamesCalled = true;
+                    writtenTrainerClassNames = new ArrayList<>(asStringList(args[0]));
+                    yield null;
+                }
+                case "fixedTrainerClassNamesLength" -> false;
+                case "getDoublesTrainerClasses" -> Collections.emptyList();
+                case "internalStringLength" -> ((String) args[0]).length();
                 case "getRestrictedSpeciesService" -> new RestrictedSpeciesService(this.proxy);
                 case "getTypeService" -> new TypeService(this.proxy);
                 case "getSpeciesSetInclFormes" -> new SpeciesSet();
                 default -> throw new UnsupportedOperationException(method.getName());
             };
+        }
+
+        private static List<String> asStringList(Object value) {
+            List<?> raw = (List<?>) value;
+            List<String> result = new ArrayList<>();
+            for (Object entry : raw) {
+                result.add((String) entry);
+            }
+            return result;
         }
     }
 }

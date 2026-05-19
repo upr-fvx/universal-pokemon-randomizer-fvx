@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -3489,6 +3491,44 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             boolean changedFromBase) {
     }
 
+    record Gen3PaletteOutputAuditReport(
+            Gen3PaletteOutputAuditSummary summary,
+            List<Gen3PaletteOutputAuditRow> rows) {
+    }
+
+    record Gen3PaletteOutputAuditSummary(
+            int sampledCount,
+            int normalChangedCount,
+            int shinyChangedCount,
+            int unchangedCount) {
+    }
+
+    record Gen3PaletteOutputAuditRow(
+            int speciesId,
+            int speciesIdentityNumber,
+            String decodedSpecies,
+            int baseNormalPalettePointer,
+            int outputNormalPalettePointer,
+            int baseShinyPalettePointer,
+            int outputShinyPalettePointer,
+            String baseNormalPaletteDigest,
+            String outputNormalPaletteDigest,
+            String baseShinyPaletteDigest,
+            String outputShinyPaletteDigest,
+            boolean normalChangedFromBase,
+            boolean shinyChangedFromBase) {
+    }
+
+    record Gen3PaletteAuditSnapshot(
+            int speciesId,
+            int speciesIdentityNumber,
+            String decodedSpecies,
+            int normalPalettePointer,
+            int shinyPalettePointer,
+            String normalPaletteDigest,
+            String shinyPaletteDigest) {
+    }
+
     record FrlgOakLabScriptCommand(int offset, String command, int firstArgument, int secondArgument) {
     }
 
@@ -3768,6 +3808,148 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             return "<unknown>";
         }
         return species.getName();
+    }
+
+    Gen3PaletteOutputAuditReport getGen3PaletteOutputAuditForDiagnostics(
+            Gen3RomHandler outputRomHandler,
+            List<Integer> selectedSpeciesIds) {
+        List<Gen3PaletteAuditSnapshot> baseSnapshots = getGen3PaletteAuditSnapshotsForDiagnostics(selectedSpeciesIds);
+        List<Gen3PaletteAuditSnapshot> outputSnapshots = outputRomHandler == null
+                ? List.of()
+                : outputRomHandler.getGen3PaletteAuditSnapshotsForDiagnostics(selectedSpeciesIds);
+        return buildGen3PaletteOutputAudit(baseSnapshots, outputSnapshots);
+    }
+
+    List<Gen3PaletteAuditSnapshot> getGen3PaletteAuditSnapshotsForDiagnostics(List<Integer> selectedSpeciesIds) {
+        int normalPaletteTableOffset = romEntry.getIntValue("PokemonNormalPalettes");
+        int shinyPaletteTableOffset = romEntry.getIntValue("PokemonShinyPalettes");
+        Set<Integer> selectedIds = selectedSpeciesIds == null ? Set.of() : new LinkedHashSet<>(selectedSpeciesIds);
+        List<Gen3PaletteAuditSnapshot> snapshots = new ArrayList<>();
+
+        for (Species species : getSpeciesSet()) {
+            if (!selectedIds.isEmpty()
+                    && !selectedIds.contains(species.getNumber())
+                    && !selectedIds.contains(species.getSpeciesSetIdentityNumber())) {
+                continue;
+            }
+
+            int tableIndex = getPaletteTableIndexForDiagnostics(species);
+            int normalPointer = readPalettePointerForDiagnostics(normalPaletteTableOffset, tableIndex);
+            int shinyPointer = readPalettePointerForDiagnostics(shinyPaletteTableOffset, tableIndex);
+
+            snapshots.add(new Gen3PaletteAuditSnapshot(
+                    species.getNumber(),
+                    species.getSpeciesSetIdentityNumber(),
+                    species.getFullName(),
+                    normalPointer,
+                    shinyPointer,
+                    digestPaletteForDiagnostics(species.getNormalPalette()),
+                    digestPaletteForDiagnostics(species.getShinyPalette())));
+        }
+
+        snapshots.sort(Comparator
+                .comparingInt(Gen3PaletteAuditSnapshot::speciesId)
+                .thenComparingInt(Gen3PaletteAuditSnapshot::speciesIdentityNumber));
+        return snapshots;
+    }
+
+    private int getPaletteTableIndexForDiagnostics(Species species) {
+        if (species == null || species.getNumber() < 0 || species.getNumber() >= pokedexToInternal.length) {
+            return -1;
+        }
+        return pokedexToInternal[species.getNumber()];
+    }
+
+    private int readPalettePointerForDiagnostics(int paletteTableOffset, int tableIndex) {
+        if (paletteTableOffset < 0 || tableIndex < 0) {
+            return -1;
+        }
+        int pointerOffset = paletteTableOffset + tableIndex * 8;
+        if (pointerOffset < 0 || pointerOffset + 3 >= rom.length) {
+            return -1;
+        }
+        return readPointer(pointerOffset, true);
+    }
+
+    static Gen3PaletteOutputAuditReport buildGen3PaletteOutputAudit(
+            List<Gen3PaletteAuditSnapshot> baseSnapshots,
+            List<Gen3PaletteAuditSnapshot> outputSnapshots) {
+        Map<String, Gen3PaletteAuditSnapshot> outputByKey = outputSnapshots.stream()
+                .collect(Collectors.toMap(Gen3RomHandler::paletteAuditSnapshotKey, Function.identity(),
+                        (first, ignored) -> first, LinkedHashMap::new));
+
+        List<Gen3PaletteOutputAuditRow> rows = new ArrayList<>();
+        int normalChanged = 0;
+        int shinyChanged = 0;
+        int unchanged = 0;
+
+        for (Gen3PaletteAuditSnapshot base : baseSnapshots) {
+            Gen3PaletteAuditSnapshot output = outputByKey.get(paletteAuditSnapshotKey(base));
+            if (output == null) {
+                output = missingPaletteAuditSnapshot(base);
+            }
+
+            boolean normalChangedFromBase = !Objects.equals(base.normalPaletteDigest(), output.normalPaletteDigest());
+            boolean shinyChangedFromBase = !Objects.equals(base.shinyPaletteDigest(), output.shinyPaletteDigest());
+            if (normalChangedFromBase) {
+                normalChanged++;
+            }
+            if (shinyChangedFromBase) {
+                shinyChanged++;
+            }
+            if (!normalChangedFromBase && !shinyChangedFromBase) {
+                unchanged++;
+            }
+
+            rows.add(new Gen3PaletteOutputAuditRow(
+                    base.speciesId(),
+                    base.speciesIdentityNumber(),
+                    base.decodedSpecies(),
+                    base.normalPalettePointer(),
+                    output.normalPalettePointer(),
+                    base.shinyPalettePointer(),
+                    output.shinyPalettePointer(),
+                    base.normalPaletteDigest(),
+                    output.normalPaletteDigest(),
+                    base.shinyPaletteDigest(),
+                    output.shinyPaletteDigest(),
+                    normalChangedFromBase,
+                    shinyChangedFromBase));
+        }
+
+        Gen3PaletteOutputAuditSummary summary =
+                new Gen3PaletteOutputAuditSummary(rows.size(), normalChanged, shinyChanged, unchanged);
+        return new Gen3PaletteOutputAuditReport(summary, rows);
+    }
+
+    private static String paletteAuditSnapshotKey(Gen3PaletteAuditSnapshot snapshot) {
+        return snapshot.speciesId() + ":" + snapshot.speciesIdentityNumber();
+    }
+
+    private static Gen3PaletteAuditSnapshot missingPaletteAuditSnapshot(Gen3PaletteAuditSnapshot base) {
+        return new Gen3PaletteAuditSnapshot(base.speciesId(), base.speciesIdentityNumber(), "<missing>",
+                -1, -1, "<missing>", "<missing>");
+    }
+
+    static String digestPaletteBytesForDiagnostics(byte[] paletteBytes) {
+        if (paletteBytes == null) {
+            return "<missing>";
+        }
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(paletteBytes);
+            StringBuilder hex = new StringBuilder(hash.length * 2);
+            for (byte value : hash) {
+                hex.append(String.format(Locale.ROOT, "%02x", value & 0xFF));
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 digest is not available.", e);
+        }
+    }
+
+    private static String digestPaletteForDiagnostics(Palette palette) {
+        return palette == null ? "<missing>" : digestPaletteBytesForDiagnostics(palette.toBytes());
     }
 
     @Override

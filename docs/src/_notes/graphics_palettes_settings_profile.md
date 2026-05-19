@@ -49,3 +49,41 @@ randomization from that setting.
 The Gen 3-5 palette randomizer now marks `changesMade` after successful population
 of at least one species palette candidate. Without that marker the overview log can
 report `Pokemon Palettes: Unchanged` even though the randomization path ran.
+
+## Palette Output Audit
+
+`Gen3PaletteOutputAuditRomTest` is an opt-in local diagnostic for cases where the
+log says Pokemon palettes changed but ingame CFRU/DPE visuals still look vanilla.
+It compares modeled Gen3 Pokemon palette table data between a private Base ROM and
+a private Output ROM without changing writer behavior.
+
+Run locally only with private ROM paths:
+
+```sh
+./gradlew :romio:test --tests '*Gen3PaletteOutputAuditRomTest*' \
+  -Duprfvx.paletteAuditBaseRom=<private-base-rom> \
+  -Duprfvx.paletteAuditOutputRom=<private-output-rom> \
+  -Duprfvx.paletteAuditSpeciesIds=4,7,10,25,242
+```
+
+Environment variable equivalents are also supported:
+
+- `UPRFVX_PALETTE_AUDIT_BASE_ROM`
+- `UPRFVX_PALETTE_AUDIT_OUTPUT_ROM`
+- `UPRFVX_PALETTE_AUDIT_SPECIES_IDS`
+
+If either ROM path is omitted, the test is skipped and no ROM is read. If species
+IDs are omitted, all modeled species are sampled.
+
+The report is written to `build/reports/diagnostics/pokemon-palette-output-audit.txt`
+with redacted ROM paths, ROM code/version/type, sampled counts, normal/shiny changed
+counts, palette table pointers, palette byte digests and `changedFromBase` markers.
+For CFRU/DPE expanded species, the report includes both `speciesId` and
+`speciesIdentityNumber` so local evidence can distinguish base species from expanded
+identity rows.
+
+Use this only as sanitized local evidence. Do not share ROM paths, hashes, full
+reports, screenshots, saves, emulator states, secrets or `.env` content. If modeled
+palette table digests change but ingame visuals stay vanilla, the next likely
+investigation is a CFRU/DPE runtime visual source outside the modeled Gen3 Pokemon
+palette tables.

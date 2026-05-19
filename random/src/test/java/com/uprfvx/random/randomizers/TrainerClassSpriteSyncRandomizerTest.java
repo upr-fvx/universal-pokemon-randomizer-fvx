@@ -95,6 +95,37 @@ class TrainerClassSpriteSyncRandomizerTest {
     }
 
     @Test
+    void spriteSyncKeepsRivalClassAndPicConsistentAcrossAppearances() {
+        Trainer firstRival = trainer(328, 0, 7, "A", "RIVAL1-0");
+        Trainer laterRival = trainer(331, 0, 7, "B", "RIVAL2-0");
+        Trainer regular = trainer(102, 0, 7, "C", null);
+        Trainer psychic = trainer(201, 1, 8, "D", null);
+        Trainer elite = trainer(301, 2, 9, "E", "ELITE1");
+        TestHandler handler = new TestHandler(List.of(firstRival, laterRival, regular, psychic, elite), true,
+                List.of("BUG CATCHER", "PSYCHIC", "ELITE 4"));
+        Settings settings = settingsWithNames();
+        settings.setRandomizeTrainerClassSprites(true);
+        TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
+                handler.proxy, settings, new CyclingRandom(0, 1));
+
+        nameRandomizer.randomizeTrainerClassNames();
+        TrainerClassSpriteSyncRandomizer spriteSyncRandomizer =
+                new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer);
+        spriteSyncRandomizer.randomizeTrainerClassSprites();
+
+        assertNotEquals(0, firstRival.getTrainerclass());
+        assertEquals(firstRival.getTrainerclass(), laterRival.getTrainerclass());
+        assertEquals(firstRival.getTrainerPic(), laterRival.getTrainerPic());
+        String targetClassName = handler.trainerClassNames.get(firstRival.getTrainerclass());
+        assertEquals(targetClassName + " A", firstRival.getFullDisplayName());
+        assertEquals(targetClassName + " B", laterRival.getFullDisplayName());
+        assertTrue(spriteSyncRandomizer.getAssignmentsByTrainerIndex().containsKey(regular.getIndex()));
+        TrainerClassSpriteSyncRandomizer.Assignment assignment =
+                spriteSyncRandomizer.getAssignmentsByTrainerIndex().get(firstRival.getIndex());
+        assertEquals("rival", assignment.getGroup());
+    }
+
+    @Test
     void classNameRandomizationWithSpriteSyncCanUseChaoticEliteFourTargetClassAndPic() {
         Trainer youngster = trainer(0, 7, "A", null);
         Trainer elite = trainer(1, 9, "B", "ELITE1");

@@ -1091,9 +1091,13 @@ public class RandomizationLogger {
             TrainerClassSpriteSyncRandomizer.Assignment assignment =
                     trainerClassSpriteSyncRandomizer.getAssignmentsByTrainerIndex().get(t.getIndex());
             if (assignment != null) {
-                log.printf(" [class/sprite sync: class %d=>%d, pic %d=>%d]",
+                log.printf(" [class/sprite sync: class %d=>%d, pic %d=>%d",
                         assignment.getOldTrainerClass(), assignment.getNewTrainerClass(),
                         assignment.getOldTrainerPic(), assignment.getNewTrainerPic());
+                if (assignment.getGroup() != null) {
+                    log.printf(", group=%s", assignment.getGroup());
+                }
+                log.print("]");
             }
             if (t.getOffset() != 0) {
                 log.printf("@%X", t.getOffset());

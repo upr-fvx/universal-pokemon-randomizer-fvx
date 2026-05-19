@@ -194,15 +194,67 @@ public class TrainerNameRandomizer extends Randomizer {
 
     private void assignTrainerClassIdsPerTrainer(
             List<String> currentClassNames, Set<Integer> doublesClassIndexes, boolean mustBeSameLength) {
-        for (Trainer trainer : romHandler.getTrainers()) {
+        List<Trainer> trainers = romHandler.getTrainers();
+        Integer rivalTargetClassId = rivalTargetClassId(trainers, currentClassNames, doublesClassIndexes,
+                mustBeSameLength);
+        for (Trainer trainer : trainers) {
             int oldClassId = trainer.getTrainerclass();
             if (oldClassId < 0 || oldClassId >= currentClassNames.size()) {
                 continue;
             }
-            trainerClassIdAssignmentsByTrainerIndex.put(trainer.getIndex(),
-                    randomTrainerClassIdForTrainer(oldClassId, currentClassNames, doublesClassIndexes,
-                            mustBeSameLength));
+            int targetClassId = rivalTargetClassId != null && isRivalClassSpriteSyncTrainer(trainer)
+                    ? rivalTargetClassId
+                    : randomTrainerClassIdForTrainer(oldClassId, currentClassNames, doublesClassIndexes,
+                    mustBeSameLength);
+            trainerClassIdAssignmentsByTrainerIndex.put(trainer.getIndex(), targetClassId);
         }
+    }
+
+    private Integer rivalTargetClassId(List<Trainer> trainers, List<String> currentClassNames,
+                                       Set<Integer> doublesClassIndexes, boolean mustBeSameLength) {
+        List<Integer> rivalClassIds = trainers.stream()
+                .filter(this::isRivalClassSpriteSyncTrainer)
+                .map(Trainer::getTrainerclass)
+                .filter(classId -> classId >= 0 && classId < currentClassNames.size())
+                .toList();
+        if (rivalClassIds.isEmpty()) {
+            return null;
+        }
+
+        int sourceClassId = rivalClassIds.get(0);
+        List<Integer> candidates = trainerClassIdCandidatesForSource(sourceClassId, currentClassNames,
+                doublesClassIndexes, mustBeSameLength);
+        if (candidates.size() <= 1) {
+            return sourceClassId;
+        }
+
+        Set<Integer> rivalClassIdSet = new HashSet<>(rivalClassIds);
+        Set<String> rivalClassNames = rivalClassIds.stream()
+                .map(currentClassNames::get)
+                .collect(java.util.stream.Collectors.toSet());
+        List<Integer> preferredCandidates = candidates.stream()
+                .filter(candidate -> !rivalClassIdSet.contains(candidate))
+                .filter(candidate -> !rivalClassNames.contains(currentClassNames.get(candidate)))
+                .toList();
+        if (preferredCandidates.isEmpty()) {
+            preferredCandidates = candidates.stream()
+                    .filter(candidate -> !rivalClassIdSet.contains(candidate))
+                    .toList();
+        }
+        if (preferredCandidates.isEmpty()) {
+            preferredCandidates = candidates.stream()
+                    .filter(candidate -> candidate != sourceClassId)
+                    .toList();
+        }
+        if (preferredCandidates.isEmpty()) {
+            return sourceClassId;
+        }
+        return preferredCandidates.get(random.nextInt(preferredCandidates.size()));
+    }
+
+    private boolean isRivalClassSpriteSyncTrainer(Trainer trainer) {
+        String tag = trainer.getTag();
+        return tag != null && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND"));
     }
 
     private int randomTrainerClassIdForTrainer(

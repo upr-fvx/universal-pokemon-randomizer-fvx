@@ -18,12 +18,14 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
         private final int oldTrainerPic;
         private final int newTrainerClass;
         private final int newTrainerPic;
+        private final String group;
 
-        Assignment(int oldTrainerClass, int oldTrainerPic, int newTrainerClass, int newTrainerPic) {
+        Assignment(int oldTrainerClass, int oldTrainerPic, int newTrainerClass, int newTrainerPic, String group) {
             this.oldTrainerClass = oldTrainerClass;
             this.oldTrainerPic = oldTrainerPic;
             this.newTrainerClass = newTrainerClass;
             this.newTrainerPic = newTrainerPic;
+            this.group = group;
         }
 
         public int getOldTrainerClass() {
@@ -40,6 +42,10 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
 
         public int getNewTrainerPic() {
             return newTrainerPic;
+        }
+
+        public String getGroup() {
+            return group;
         }
     }
 
@@ -95,7 +101,7 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
             trainer.setTrainerPic(newTrainerPic);
             refreshFullDisplayName(trainer, originalTrainerClassNames);
             assignmentsByTrainerIndex.put(trainer.getIndex(), new Assignment(
-                    oldTrainerClass, oldTrainerPic, newTrainerClass, newTrainerPic));
+                    oldTrainerClass, oldTrainerPic, newTrainerClass, newTrainerPic, assignmentGroup(trainer)));
         }
 
         if (!assignmentsByTrainerIndex.isEmpty()) {
@@ -142,6 +148,14 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
 
     private boolean hasValidClassPic(Trainer trainer) {
         return trainer != null && trainer.getTrainerclass() >= 0 && trainer.getTrainerPic() >= 0;
+    }
+
+    private String assignmentGroup(Trainer trainer) {
+        String tag = trainer.getTag();
+        if (tag != null && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND"))) {
+            return "rival";
+        }
+        return null;
     }
 
     private void refreshFullDisplayName(Trainer trainer, List<String> trainerClassNames) {

@@ -100,6 +100,7 @@ public class Trainer implements Comparable<Trainer> {
     //  - BW1 uses UBER for the final N + Ghetsis battles.
     //  - XY does not use THEMED:[s]-STRONG for team admins and non-RIVAL/FRIEND-applicable rivals (Tierno & Trevor).
     //  - Gen 7 uses ELITE[n] for the kahunas.
+    public static final String RUNTIME_SOURCE_TAG = "RUNTIME-SOURCE";
 
     private int offset;
     private int index;
@@ -307,16 +308,21 @@ public class Trainer implements Comparable<Trainer> {
     }
 
     public boolean isBoss() {
-        return tag != null && (tag.startsWith("ELITE") || tag.startsWith("CHAMPION")
+        return !isRuntimeSource() && tag != null && (tag.startsWith("ELITE") || tag.startsWith("CHAMPION")
                 || tag.startsWith("UBER") || tag.endsWith("LEADER"));
     }
 
     public boolean isImportant() {
-        return tag != null && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND") || tag.endsWith("STRONG"));
+        return !isRuntimeSource() && tag != null
+                && (tag.startsWith("RIVAL") || tag.startsWith("FRIEND") || tag.endsWith("STRONG"));
     }
 
     public boolean isRegular() {
-        return !isBoss() && !isImportant();
+        return isRuntimeSource() || (!isBoss() && !isImportant());
+    }
+
+    public boolean isRuntimeSource() {
+        return RUNTIME_SOURCE_TAG.equals(tag);
     }
 
     public boolean isFirstRivalOrFriend() {

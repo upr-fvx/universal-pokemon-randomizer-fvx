@@ -272,47 +272,82 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
-    public void runtimeTrainerSyncTargetsLoadConfirmedValidRowsOutsideTrainerCount() {
-        byte[] rom = new byte[24000];
+    public void strictRuntimeTrainerSourceDiscoveryLoadsValidUnloadedRowsAndDedupes() {
+        byte[] rom = new byte[26000];
         int trainerDataOffset = 128;
         int trainerEntrySize = 40;
         int loadedTrainerCount = 256;
-        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x14B, 18000, 2);
-        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x149, 18100, 2);
-        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x14A, 18200, 2);
-        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x19E, 18300, 2);
+        int trainerId = 531;
+        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, trainerId, 23000, 2);
+        writeTrainerBattle(rom, 64, 0, trainerId, 0);
+        writeTrainerBattle(rom, 96, 3, trainerId, 0);
 
         List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> targets =
                 Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize,
-                        loadedTrainerCount);
+                        loadedTrainers(loadedTrainerCount), speciesTable(100, 101));
 
-        assertEquals(4, targets.size());
-        assertEquals(0x14B, targets.get(0).trainerId());
-        assertEquals("RIVAL2-0", targets.get(0).tag());
-        assertEquals(0x149, targets.get(1).trainerId());
-        assertEquals(0x14A, targets.get(2).trainerId());
-        assertEquals(0x19E, targets.get(3).trainerId());
-        assertEquals("GYM1-LEADER", targets.get(3).tag());
+        assertEquals(1, targets.size());
+        assertEquals(trainerId, targets.get(0).trainerId());
+        assertEquals("RUNTIME-SOURCE", targets.get(0).tag());
     }
 
     @Test
-    public void runtimeTrainerSyncTargetsSkipLoadedOrInvalidRows() {
-        byte[] rom = new byte[24000];
+    public void strictRuntimeTrainerSourceDiscoverySkipsInvalidPointerEmptyPartyAndOversizedParty() {
+        byte[] rom = new byte[26000];
         int trainerDataOffset = 128;
         int trainerEntrySize = 40;
-        int loadedTrainerCount = 0x19F;
-        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x14B, 18000, 2);
-        writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, 0x19E, 18300, 7);
+        int invalidPointerTrainerId = 531;
+        int emptyTrainerId = 532;
+        int oversizedPartyTrainerId = 533;
+        int invalidSpeciesTrainerId = 534;
+        int invalidTrainerOffset = trainerDataOffset + invalidPointerTrainerId * trainerEntrySize;
+        int emptyTrainerOffset = trainerDataOffset + emptyTrainerId * trainerEntrySize;
+        int oversizedTrainerOffset = trainerDataOffset + oversizedPartyTrainerId * trainerEntrySize;
+        rom[invalidTrainerOffset + (trainerEntrySize - 8)] = 1;
+        rom[emptyTrainerOffset + (trainerEntrySize - 8)] = 0;
+        rom[oversizedTrainerOffset + (trainerEntrySize - 8)] = 7;
+        writePointer(rom, oversizedTrainerOffset + (trainerEntrySize - 4), 23000);
+        writeTrainerDataRowWithSpecies(rom, trainerDataOffset, trainerEntrySize, invalidSpeciesTrainerId,
+                23100, 7);
+        writeTrainerBattle(rom, 64, 0, invalidPointerTrainerId, 0);
+        writeTrainerBattle(rom, 96, 0, emptyTrainerId, 0);
+        writeTrainerBattle(rom, 128, 0, oversizedPartyTrainerId, 0);
+        writeTrainerBattle(rom, 160, 0, invalidSpeciesTrainerId, 0);
 
-        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> loadedTargets =
+        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> targets =
                 Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize,
-                        loadedTrainerCount);
-        assertTrue(loadedTargets.isEmpty());
+                        loadedTrainers(256), speciesTable(100, 101));
 
-        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> invalidTargets =
-                Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize, 256);
-        assertEquals(1, invalidTargets.size());
-        assertEquals(0x14B, invalidTargets.get(0).trainerId());
+        assertTrue(targets.isEmpty());
+    }
+
+    @Test
+    public void strictRuntimeTrainerSourceDiscoveryCoversKnownAndNewValidRuntimeIds() {
+        byte[] rom = new byte[36000];
+        int trainerDataOffset = 128;
+        int trainerEntrySize = 40;
+        List<Integer> expectedTrainerIds = List.of(0x14B, 0x149, 0x14A, 0x19E, 531, 532);
+        int scriptOffset = 64;
+        int partyOffset = 26000;
+        for (int trainerId : expectedTrainerIds) {
+            writeTrainerDataRow(rom, trainerDataOffset, trainerEntrySize, trainerId, partyOffset, 2);
+            writeTrainerBattle(rom, scriptOffset, 0, trainerId, 0);
+            scriptOffset += 16;
+            partyOffset += 64;
+        }
+
+        List<Gen3RomHandler.FrlgRuntimeTrainerSyncTarget> targets =
+                Gen3RomHandler.findFrlgRuntimeTrainerDataRowsToLoad(rom, trainerDataOffset, trainerEntrySize,
+                        loadedTrainers(256), speciesTable(100, 101));
+
+        assertEquals(expectedTrainerIds, targets.stream().map(Gen3RomHandler.FrlgRuntimeTrainerSyncTarget::trainerId)
+                .toList());
+        assertEquals("RIVAL2-0", targets.get(0).tag());
+        assertEquals("RIVAL2-1", targets.get(1).tag());
+        assertEquals("RIVAL2-2", targets.get(2).tag());
+        assertEquals("GYM1-LEADER", targets.get(3).tag());
+        assertEquals("RUNTIME-SOURCE", targets.get(4).tag());
+        assertEquals("RUNTIME-SOURCE", targets.get(5).tag());
     }
 
     @Test
@@ -398,6 +433,15 @@ public class Gen3OakLabRivalScriptTest {
         }
     }
 
+    private static void writeTrainerDataRowWithSpecies(byte[] rom, int trainerDataOffset, int trainerEntrySize,
+                                                       int trainerId, int partyOffset, int rawSpeciesId) {
+        int trainerOffset = trainerDataOffset + trainerId * trainerEntrySize;
+        rom[trainerOffset + (trainerEntrySize - 8)] = 1;
+        writePointer(rom, trainerOffset + (trainerEntrySize - 4), partyOffset);
+        writeWord(rom, partyOffset + 2, 10);
+        writeWord(rom, partyOffset + 4, rawSpeciesId);
+    }
+
     private static void writePointer(byte[] rom, int offset, int value) {
         int pointer = value + 0x8000000;
         rom[offset] = (byte) (pointer & 0xFF);
@@ -438,6 +482,16 @@ public class Gen3OakLabRivalScriptTest {
         pokemon.setLevel(level);
         trainer.getPokemon().add(pokemon);
         return trainer;
+    }
+
+    private static List<Trainer> loadedTrainers(int loadedTrainerCount) {
+        java.util.ArrayList<Trainer> trainers = new java.util.ArrayList<>();
+        for (int trainerId = 1; trainerId < loadedTrainerCount; trainerId++) {
+            Trainer trainer = new Trainer();
+            trainer.setIndex(trainerId);
+            trainers.add(trainer);
+        }
+        return trainers;
     }
 
     private static Species[] speciesTable(int... rawSpeciesIds) {

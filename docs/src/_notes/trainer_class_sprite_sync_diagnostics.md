@@ -37,13 +37,15 @@ support Gen 3 trainer class/sprite row serialization.
 names. It does not provide class ID or sprite mappings.
 
 When both `Randomize Trainer Class Names` and `MODE-TRAINER-CLASS-SPRITE-SYNC`
-are enabled, the class-name randomizer records its old class ID -> target class
-ID mapping. Sprite Sync then assigns each trainer to the mapped target class ID
-and uses an observed `trainerPic` from that target class. The class-name text
-table is restored to the original class labels so the displayed class, class ID
-and visible pic describe the same target class.
+are enabled, the class-name randomizer records per-trainer class assignments.
+Sprite Sync then assigns each trainer to its individual target class ID and uses
+an observed `trainerPic` from that target class. The class-name text table is
+restored to the original class labels so the displayed class, class ID and
+visible pic describe the same target class.
 
-The class-name mapping is class-ID based and avoids identity mappings when an
+This is not a global class-table shuffle for the sync path. Trainers that share
+the same old class, such as multiple Bug Catchers, can receive different target
+classes. Per-trainer assignments avoid old class -> same target class when an
 alternative target class exists in the same allowed pool. If a pool has only one
 valid class, identity is allowed because no different target exists.
 
@@ -57,13 +59,15 @@ The first implementation is narrow but intentionally chaotic:
 
 - Gen 3 only
 - off by default
-- requires Trainer Class Names randomization to provide a class ID mapping
-- follows that mapping instead of choosing an independent random class/pic pair
+- requires Trainer Class Names randomization to provide per-trainer class
+  assignments
+- follows those assignments instead of choosing an independent random class/pic
+  pair
 - does not add target-class filtering beyond requiring a modeled target class
   and an observed valid pic
 - allows regular trainers to become Rival, Player, Gym Leader, Elite Four,
   champion, boss or other special-looking classes when the class-name randomizer
-  maps them there
+  assigns them there
 - treats those special-looking target classes as expected chaos behavior with
   Sprite Sync enabled
 - uses only `trainerPic` values observed on trainers with the target class ID

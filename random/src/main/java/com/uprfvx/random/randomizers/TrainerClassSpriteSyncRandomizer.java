@@ -64,9 +64,11 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
 
         List<Trainer> trainers = romHandler.getTrainers();
         Map<Integer, Integer> classIdMapping = trainerClassIdMapping();
+        Map<Integer, Integer> classIdAssignmentsByTrainerIndex = trainerClassIdAssignmentsByTrainerIndex();
         Map<Integer, Integer> trainerPicByClassId = trainerPicByClassId(trainers);
         List<String> originalTrainerClassNames = originalTrainerClassNames();
-        if (classIdMapping.isEmpty() || trainerPicByClassId.isEmpty() || originalTrainerClassNames.isEmpty()) {
+        if ((classIdMapping.isEmpty() && classIdAssignmentsByTrainerIndex.isEmpty())
+                || trainerPicByClassId.isEmpty() || originalTrainerClassNames.isEmpty()) {
             return;
         }
 
@@ -76,7 +78,8 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
             }
             int oldTrainerClass = trainer.getTrainerclass();
             int oldTrainerPic = trainer.getTrainerPic();
-            Integer newTrainerClass = classIdMapping.get(oldTrainerClass);
+            Integer newTrainerClass = classIdAssignmentsByTrainerIndex.getOrDefault(trainer.getIndex(),
+                    classIdMapping.get(oldTrainerClass));
             if (newTrainerClass == null || newTrainerClass < 0
                     || newTrainerClass >= originalTrainerClassNames.size()) {
                 continue;
@@ -111,6 +114,13 @@ public class TrainerClassSpriteSyncRandomizer extends Randomizer {
             return Collections.emptyMap();
         }
         return trainerNameRandomizer.getTrainerClassIdMapping();
+    }
+
+    private Map<Integer, Integer> trainerClassIdAssignmentsByTrainerIndex() {
+        if (trainerNameRandomizer == null) {
+            return Collections.emptyMap();
+        }
+        return trainerNameRandomizer.getTrainerClassIdAssignmentsByTrainerIndex();
     }
 
     private List<String> originalTrainerClassNames() {

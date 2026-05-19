@@ -64,24 +64,34 @@ class TrainerClassSpriteSyncRandomizerTest {
 
     @Test
     void spriteSyncFollowsNonIdentityTrainerClassNameMapping() {
-        Trainer bugCatcher = trainer(0, 7, "A", null);
-        Trainer psychic = trainer(1, 8, "B", null);
-        Trainer elite = trainer(2, 9, "C", "ELITE1");
-        TestHandler handler = new TestHandler(List.of(bugCatcher, psychic, elite), true,
+        Trainer firstBugCatcher = trainer(102, 0, 7, "A", null);
+        Trainer secondBugCatcher = trainer(103, 0, 7, "B", null);
+        Trainer psychic = trainer(201, 1, 8, "C", null);
+        Trainer elite = trainer(301, 2, 9, "D", "ELITE1");
+        TestHandler handler = new TestHandler(List.of(firstBugCatcher, secondBugCatcher, psychic, elite), true,
                 List.of("BUG CATCHER", "PSYCHIC", "ELITE 4"));
+        Settings settings = settingsWithNames();
+        settings.setRandomizeTrainerClassSprites(true);
         TrainerNameRandomizer nameRandomizer = new TrainerNameRandomizer(
-                handler.proxy, settingsWithNames(), new Random(1));
+                handler.proxy, settings, new CyclingRandom(0, 1));
 
         nameRandomizer.randomizeTrainerClassNames();
-        int targetClass = nameRandomizer.getTrainerClassIdMapping().get(0);
+        int firstTargetClass = nameRandomizer.getTrainerClassIdAssignmentsByTrainerIndex().get(102);
+        int secondTargetClass = nameRandomizer.getTrainerClassIdAssignmentsByTrainerIndex().get(103);
         Map<Integer, Integer> picByClass = Map.of(0, 7, 1, 8, 2, 9);
 
         new TrainerClassSpriteSyncRandomizer(handler.proxy, new Settings(), new Random(1), nameRandomizer)
                 .randomizeTrainerClassSprites();
 
-        assertNotEquals(0, targetClass);
-        assertEquals(targetClass, bugCatcher.getTrainerclass());
-        assertEquals(picByClass.get(targetClass), bugCatcher.getTrainerPic());
+        assertNotEquals(0, firstTargetClass);
+        assertNotEquals(0, secondTargetClass);
+        assertNotEquals(firstTargetClass, secondTargetClass);
+        assertEquals(firstTargetClass, firstBugCatcher.getTrainerclass());
+        assertEquals(picByClass.get(firstTargetClass), firstBugCatcher.getTrainerPic());
+        assertEquals("PSYCHIC A", firstBugCatcher.getFullDisplayName());
+        assertEquals(secondTargetClass, secondBugCatcher.getTrainerclass());
+        assertEquals(picByClass.get(secondTargetClass), secondBugCatcher.getTrainerPic());
+        assertEquals("ELITE 4 B", secondBugCatcher.getFullDisplayName());
     }
 
     @Test
@@ -170,8 +180,12 @@ class TrainerClassSpriteSyncRandomizerTest {
     }
 
     private static Trainer trainer(int trainerClass, int trainerPic, String name, String tag) {
+        return trainer(trainerClass, trainerClass, trainerPic, name, tag);
+    }
+
+    private static Trainer trainer(int index, int trainerClass, int trainerPic, String name, String tag) {
         Trainer trainer = new Trainer();
-        trainer.setIndex(trainerClass);
+        trainer.setIndex(index);
         trainer.setTrainerclass(trainerClass);
         trainer.setTrainerPic(trainerPic);
         trainer.setName(name);
@@ -235,6 +249,20 @@ class TrainerClassSpriteSyncRandomizerTest {
                 result.add((String) entry);
             }
             return result;
+        }
+    }
+
+    private static class CyclingRandom extends Random {
+        private final int[] values;
+        private int index;
+
+        CyclingRandom(int... values) {
+            this.values = values;
+        }
+
+        @Override
+        public int nextInt(int bound) {
+            return values[index++ % values.length] % bound;
         }
     }
 }

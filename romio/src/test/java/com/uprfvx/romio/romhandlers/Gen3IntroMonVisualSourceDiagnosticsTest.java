@@ -75,6 +75,27 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
     }
 
     @Test
+    public void introPokemonInternalSpeciesIdUsesIdentityForExtendedBpreHack() {
+        Species species = new Species(0);
+        species.setName("ExtendedSpecies");
+        species.setSpeciesSetIdentityNumber(300);
+
+        int internalSpecies = Gen3RomHandler.getIntroPokemonInternalSpeciesId(species, new int[] {0, 1}, true);
+
+        assertEquals(300, internalSpecies);
+    }
+
+    @Test
+    public void introPokemonInternalSpeciesIdRejectsSpeciesZeroWithoutIdentityMode() {
+        Species species = new Species(0);
+        species.setName("Invalid");
+
+        int internalSpecies = Gen3RomHandler.getIntroPokemonInternalSpeciesId(species, new int[] {0, 1}, false);
+
+        assertEquals(0, internalSpecies);
+    }
+
+    @Test
     public void introMonVisualSourceSearchFindsChangedAndUnchangedCfruDpeCandidates() {
         byte[] baseRom = new byte[4096];
         byte[] outputRom = new byte[4096];

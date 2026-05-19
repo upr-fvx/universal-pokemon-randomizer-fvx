@@ -6567,10 +6567,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // FRLG
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // first 255 only due to size
-            if (pokedexToInternal[pk.getNumber()] > 255) {
+            int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
+                    usesInternalSpeciesIdentityForExtendedBpreHack());
+            if (introPokemon <= 0 || introPokemon > 255) {
                 return false;
             }
-            int introPokemon = pokedexToInternal[pk.getNumber()];
 
             writeByte(cryOffset, (byte) introPokemon);
             writeByte(otherOffset, (byte) introPokemon);
@@ -6581,8 +6582,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             // any pokemon in the range 0-510 except bulbasaur
-            int introPokemon = pokedexToInternal[pk.getNumber()];
-            if (introPokemon == 1 || introPokemon > 510) {
+            int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
+                    usesInternalSpeciesIdentityForExtendedBpreHack());
+            if (introPokemon <= 0 || introPokemon == 1 || introPokemon > 510) {
                 return false;
             }
 
@@ -6614,11 +6616,29 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writePointer(paletteOffset, paletteTableOffset + introPokemon * 8);
         } else {
             // Emerald: any Pokemon.
-            int introPokemon = pokedexToInternal[pk.getNumber()];
+            int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
+                    usesInternalSpeciesIdentityForExtendedBpreHack());
+            if (introPokemon <= 0) {
+                return false;
+            }
             writeWord(imageOffset, introPokemon);
             writeWord(cryOffset, introPokemon);
         }
         return true;
+    }
+
+    static int getIntroPokemonInternalSpeciesId(Species species, int[] pokedexToInternal,
+                                                boolean useSpeciesSetIdentity) {
+        if (species == null) {
+            return 0;
+        }
+        if (useSpeciesSetIdentity) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        if (species.getNumber() <= 0 || species.getNumber() >= pokedexToInternal.length) {
+            return 0;
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     private void syncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,

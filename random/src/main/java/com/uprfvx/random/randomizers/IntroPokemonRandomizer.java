@@ -2,6 +2,7 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.Random;
@@ -15,12 +16,16 @@ public class IntroPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeIntroPokemon() {
-        Species pk = rSpecService.getAll(true).getRandomSpecies(random);
-        while (!romHandler.setIntroPokemon(pk)) {
-            pk = rSpecService.getAll(true).getRandomSpecies(random);
+        SpeciesSet candidates = new SpeciesSet(rSpecService.getAll(true));
+        while (!candidates.isEmpty()) {
+            Species pk = candidates.getRandomSpecies(random, true);
+            if (romHandler.setIntroPokemon(pk)) {
+                introSpecies = pk;
+                changesMade = true;
+                return;
+            }
         }
-        introSpecies = pk;
-        changesMade = true;
+        throw new IllegalStateException("No valid Intro Mon species candidates are available.");
     }
 
     public Species getIntroSpecies() {

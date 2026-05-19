@@ -576,10 +576,16 @@ public class GameRandomizer {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if (settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED || additionalPokemonAdded) {
+        boolean trainerPokemonRandomized = settings.getTrainersMod() != Settings.TrainersMod.UNCHANGED
+                || additionalPokemonAdded;
+        if (trainerPokemonRandomized) {
             trainerPokeRandomizer.randomizeTrainerPokes();
         } else if (settings.isTrainersEvolveTheirPokemon()) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
+        }
+
+        if (rivalCarriesStarterThroughout && trainerPokemonRandomized) {
+            trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
         if (startersChanged && !rivalCarriesStarterThroughout && romHandler.generationOfPokemon() == 3) {

@@ -45,6 +45,13 @@ public class Gen3OakLabRivalScriptTest {
     }
 
     @Test
+    public void frlgRuntimeSourceKnownTagsIncludeRivalRows() {
+        assertEquals("RIVAL1-1", Gen3RomHandler.frlgRuntimeTrainerSourceTag(0x146));
+        assertEquals("RIVAL2-0", Gen3RomHandler.frlgRuntimeTrainerSourceTag(0x14B));
+        assertEquals("RIVAL9-2", Gen3RomHandler.frlgRuntimeTrainerSourceTag(0x2E4));
+    }
+
+    @Test
     public void oakLabStarterScriptContainsSeparatePlayerAndRivalStarterSpecies() {
         byte[] rom = new byte[1024];
         writeWord(rom, 64, 1001);

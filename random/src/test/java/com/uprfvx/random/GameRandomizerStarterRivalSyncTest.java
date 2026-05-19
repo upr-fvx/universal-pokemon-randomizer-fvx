@@ -33,6 +33,12 @@ class GameRandomizerStarterRivalSyncTest {
 
         assertTrue(trainerPokemonFlow.contains("&& rivalCarriesStarterThroughout"));
         assertTrue(trainerPokemonFlow.contains("trainerPokeRandomizer.makeRivalCarryStarter()"));
+        assertTrue(trainerPokemonFlow.indexOf("trainerPokeRandomizer.makeRivalCarryStarter()")
+                < trainerPokemonFlow.indexOf("trainerPokeRandomizer.randomizeTrainerPokes()"),
+                "Rival starter should be installed before Trainer Pokemon randomization can protect it");
+        assertTrue(trainerPokemonFlow.lastIndexOf("trainerPokeRandomizer.makeRivalCarryStarter()")
+                > trainerPokemonFlow.indexOf("trainerPokeRandomizer.randomizeTrainerPokes()"),
+                "Rival starter should be corrected after Trainer Pokemon randomization");
     }
 
     private static Path gameRandomizerSourcePath() {

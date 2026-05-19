@@ -37,6 +37,10 @@ For FRLG, `Gen3RomHandler.setIntroPokemon()` writes:
 - For detected CFRU/DPE Gen9 BPRE, the Nidoran female front-image and normal-palette pointer-table entries are also
   synced to the target species asset pointers. Local evidence showed the visible Oak intro sprite still read those
   Nidoran female normal asset table entries even after the known FRLG intro sources changed.
+- For extended CFRU/DPE BPRE species pools, the writer uses the species-set internal identity for Intro Mon writes.
+  This prevents named extended-pool species whose Pokédex mapping is `0` from writing raw species `0` to the Intro
+  species literals and visual pointer sources. The randomizer also exhausts candidates and throws a diagnostic error
+  if no candidate is accepted, instead of looping or accepting species `0`.
 
 `IntroPaletteOffset` is still reported by the diagnostic because ROM entries define it, but the FRLG writer currently
 uses `IntroImageOffset + 4` for the palette pointer. A mismatch between these candidates is useful local evidence, not

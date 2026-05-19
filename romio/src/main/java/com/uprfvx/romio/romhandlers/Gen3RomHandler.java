@@ -57,11 +57,35 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private static final String CFRU_DPE_COUNT_DIAGNOSTIC_PREFIX = "[CFRU-DPE-COUNT-DIAG] ";
     private static final String FRLG_RUNTIME_TRAINER_SOURCE_TAG = Trainer.RUNTIME_SOURCE_TAG;
-    private static final Map<Integer, String> FRLG_RUNTIME_TRAINER_SOURCE_KNOWN_TAGS = Map.of(
-            0x14B, "RIVAL2-0",
-            0x149, "RIVAL2-1",
-            0x14A, "RIVAL2-2",
-            0x19E, "GYM1-LEADER");
+    private static final Map<Integer, String> FRLG_RUNTIME_TRAINER_SOURCE_KNOWN_TAGS = Map.ofEntries(
+            Map.entry(0x148, "RIVAL1-0"),
+            Map.entry(0x146, "RIVAL1-1"),
+            Map.entry(0x147, "RIVAL1-2"),
+            Map.entry(0x14B, "RIVAL2-0"),
+            Map.entry(0x149, "RIVAL2-1"),
+            Map.entry(0x14A, "RIVAL2-2"),
+            Map.entry(0x14E, "RIVAL3-0"),
+            Map.entry(0x14C, "RIVAL3-1"),
+            Map.entry(0x14D, "RIVAL3-2"),
+            Map.entry(0x1AC, "RIVAL4-0"),
+            Map.entry(0x1AA, "RIVAL4-1"),
+            Map.entry(0x1AB, "RIVAL4-2"),
+            Map.entry(0x1AF, "RIVAL5-0"),
+            Map.entry(0x1AD, "RIVAL5-1"),
+            Map.entry(0x1AE, "RIVAL5-2"),
+            Map.entry(0x1B2, "RIVAL6-0"),
+            Map.entry(0x1B0, "RIVAL6-1"),
+            Map.entry(0x1B1, "RIVAL6-2"),
+            Map.entry(0x1B5, "RIVAL7-0"),
+            Map.entry(0x1B3, "RIVAL7-1"),
+            Map.entry(0x1B4, "RIVAL7-2"),
+            Map.entry(0x1B8, "RIVAL8-0"),
+            Map.entry(0x1B6, "RIVAL8-1"),
+            Map.entry(0x1B7, "RIVAL8-2"),
+            Map.entry(0x2E5, "RIVAL9-0"),
+            Map.entry(0x2E3, "RIVAL9-1"),
+            Map.entry(0x2E4, "RIVAL9-2"),
+            Map.entry(0x19E, "GYM1-LEADER"));
     private final Set<Integer> frlgRuntimeTrainerSourceIds = new LinkedHashSet<>();
 
     public static class Factory extends RomHandler.Factory {
@@ -2741,7 +2765,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         return species == null ? "?" : species.getFullName();
     }
 
-    private static String frlgRuntimeTrainerSourceTag(int trainerId) {
+    static String frlgRuntimeTrainerSourceTag(int trainerId) {
         return FRLG_RUNTIME_TRAINER_SOURCE_KNOWN_TAGS.getOrDefault(trainerId, FRLG_RUNTIME_TRAINER_SOURCE_TAG);
     }
 
@@ -6543,10 +6567,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // FRLG
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             // first 255 only due to size
-            if (pokedexToInternal[pk.getNumber()] > 255) {
+            int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
+                    usesInternalSpeciesIdentityForExtendedBpreHack());
+            if (introPokemon <= 0 || introPokemon > 255) {
                 return false;
             }
-            int introPokemon = pokedexToInternal[pk.getNumber()];
 
             writeByte(cryOffset, (byte) introPokemon);
             writeByte(otherOffset, (byte) introPokemon);
@@ -6557,8 +6582,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             // any pokemon in the range 0-510 except bulbasaur
-            int introPokemon = pokedexToInternal[pk.getNumber()];
-            if (introPokemon == 1 || introPokemon > 510) {
+            int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
+                    usesInternalSpeciesIdentityForExtendedBpreHack());
+            if (introPokemon <= 0 || introPokemon == 1 || introPokemon > 510) {
                 return false;
             }
 
@@ -6590,11 +6616,29 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             writePointer(paletteOffset, paletteTableOffset + introPokemon * 8);
         } else {
             // Emerald: any Pokemon.
-            int introPokemon = pokedexToInternal[pk.getNumber()];
+            int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
+                    usesInternalSpeciesIdentityForExtendedBpreHack());
+            if (introPokemon <= 0) {
+                return false;
+            }
             writeWord(imageOffset, introPokemon);
             writeWord(cryOffset, introPokemon);
         }
         return true;
+    }
+
+    static int getIntroPokemonInternalSpeciesId(Species species, int[] pokedexToInternal,
+                                                boolean useSpeciesSetIdentity) {
+        if (species == null) {
+            return 0;
+        }
+        if (useSpeciesSetIdentity) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        if (species.getNumber() <= 0 || species.getNumber() >= pokedexToInternal.length) {
+            return 0;
+        }
+        return pokedexToInternal[species.getNumber()];
     }
 
     private void syncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,

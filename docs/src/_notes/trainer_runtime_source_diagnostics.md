@@ -121,6 +121,65 @@ the only automatic path, and it consumes only rows equivalent to
 `unloaded-valid-parties` / `VALID_RUNTIME_NOT_LOADED`. It does not sync
 `loaded-mismatch` rows and does not attempt to repair invalid rows.
 
+## Post-randomization runtime source audit
+
+The opt-in post-randomization audit compares a private base ROM with a private
+randomized output ROM. It is intended for local verification after a normal
+randomizer run, so a tester can check script-referenced runtime trainers without
+playing every affected battle.
+
+Enable it with system properties:
+
+- `-Duprfvx.trainerRuntimeSourceBaseRom=<private-input-rom>`
+- `-Duprfvx.trainerRuntimeSourceRandomizedRom=<private-output-rom>`
+
+or the matching environment variables:
+
+- `UPRFVX_TRAINER_RUNTIME_SOURCE_BASE_ROM=<private-input-rom>`
+- `UPRFVX_TRAINER_RUNTIME_SOURCE_RANDOMIZED_ROM=<private-output-rom>`
+
+The report is written to
+`build/reports/diagnostics/trainer-runtime-source-post-randomization-audit-report.txt`.
+Paths are redacted in the report header.
+
+The compare audit starts from base-ROM `trainerbattle` runtime sources, dedupes
+by `trainerId`, and keeps only conservative valid candidates: valid
+`TrainerData` entry, valid party pointer, party size `1..6`, fully readable raw
+party, in-bounds trainer ID, and plausible raw species. It then compares each
+candidate to the randomized output ROM and reports:
+
+- `trainerId`
+- `baseRawParty`
+- `outputRawParty`
+- `loadedOutputParty`
+- `outputClassification`
+- `changedFromBase`
+- `loadedRawPartyComparison`
+
+The summary contains:
+
+- `totalRuntimeSources`
+- `validRuntimeTrainerCount`
+- `changedFromBaseCount`
+- `unchangedFromBaseCount`
+- `outputValidRuntimeNotLoadedCount`
+- `outputLoadedRuntimeMismatchCount`
+- `invalidIgnoredCount`
+
+Rows can emit these warning markers:
+
+- `WARN unchanged valid runtime trainer`
+- `WARN loaded/raw mismatch`
+- `WARN valid runtime not loaded after strict sync`
+
+An unchanged valid runtime trainer is not automatically a bug, because settings
+can preserve some parties or species by chance. It is a focused review cue: the
+tester should compare the randomized settings and nearby trainer-log output
+before filing a follow-up. A loaded/raw mismatch means the loaded trainer model
+and output ROM raw party disagree for that trainer ID. A valid runtime-not-loaded
+warning means strict sync did not load a candidate that still looks eligible in
+the randomized output and needs separate investigation.
+
 Local ingame smoke is still required before stronger compatibility claims:
 
 - run the private-ROM audit locally and keep paths/hashes/logs redacted

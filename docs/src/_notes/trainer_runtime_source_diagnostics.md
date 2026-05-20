@@ -47,11 +47,21 @@ FRLG Rival runtime-source rows are tagged with the same starter-variant tags as
 normal Rival rows so `Rival Carries Starter Through Game` can protect and
 correct the Rival starter slot.
 
+The Oak Lab opening Rival battle is protected separately from the
+`Rival Carries Starter Through Game` option. After Trainer Pokemon mutations,
+Gen 3 applies the first Rival/Friend counter-starter correction whenever
+starters changed or trainer Pokemon were randomized. This keeps the first
+Oak-Lab Rival counter-starter invariant even when the through-game carry option
+is off: Bulbasaur -> Charmander, Charmander -> Squirtle, and Squirtle ->
+Bulbasaur. Non-starter Rival Pokemon remain eligible for Trainer Pokemon
+randomization.
+
 When `Rival Carries Starter Through Game` is enabled, the Rival starter is also
 reapplied after free Trainer Pokemon randomization. This keeps Foe Pokemon
 randomization available for non-starter party members while restoring the
-correct counter-starter for vanilla starters or for the randomized starter slot
-mapping. Local smoke is still required to confirm the private output ROM path.
+correct counter-starter for later Rival/Friend appearances as well as for
+vanilla starters or for the randomized starter slot mapping. Local smoke is
+still required to confirm the private output ROM path.
 
 Current hypotheses:
 

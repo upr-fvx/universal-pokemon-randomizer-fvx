@@ -31,6 +31,9 @@ public final class SpecialFormPredicates {
         if (species.isGigantamaxForm() && !effectiveOptions.isIncludeGigantamaxForms()) {
             return false;
         }
+        if (species.isIrregularSpecialForm() && !effectiveOptions.isIncludeIrregularSpecialForms()) {
+            return false;
+        }
         return true;
     }
 

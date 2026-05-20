@@ -60,6 +60,52 @@ public class SpecialFormPredicatesTest {
     }
 
     @Test
+    public void cfruDpePikachuVariantIdentitiesAreIrregularSpecialForms() {
+        Species pikachu = species(25, "Pikachu", 1);
+        Species surfingPikachu = species(25, "Pikachu", 1);
+        surfingPikachu.setSpeciesSetIdentityNumber(0x43D);
+        Species cosplayPikachu = species(25, "Pikachu", 1);
+        cosplayPikachu.setSpeciesSetIdentityNumber(0x43F);
+        Species librePikachu = species(25, "Pikachu", 1);
+        librePikachu.setSpeciesSetIdentityNumber(0x440);
+        Species originalCapPikachu = species(25, "Pikachu", 1);
+        originalCapPikachu.setSpeciesSetIdentityNumber(0x445);
+        Species partnerCapPikachu = species(25, "Pikachu", 1);
+        partnerCapPikachu.setSpeciesSetIdentityNumber(0x44B);
+        Species spikyEarPichu = species(172, "Pichu", 2);
+        spikyEarPichu.setSpeciesSetIdentityNumber(0x44C);
+
+        assertFalse(pikachu.isIrregularSpecialForm());
+        assertTrue(surfingPikachu.isIrregularSpecialForm());
+        assertTrue(cosplayPikachu.isIrregularSpecialForm());
+        assertTrue(librePikachu.isIrregularSpecialForm());
+        assertTrue(originalCapPikachu.isIrregularSpecialForm());
+        assertTrue(partnerCapPikachu.isIrregularSpecialForm());
+        assertFalse(spikyEarPichu.isIrregularSpecialForm());
+
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(pikachu, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(cosplayPikachu, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(cosplayPikachu, null,
+                SpecialFormExclusionOptions.allowAllSpecialForms()));
+    }
+
+    @Test
+    public void explicitIrregularMetadataIsExcludedByDefault() {
+        Species regular = species(25, "Pikachu", 1);
+        Species irregular = species(7000, "Synthetic Costume Form", 1);
+        irregular.addSpecialFormCategory(SpecialFormCategory.IRREGULAR);
+
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(regular, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(irregular, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(irregular, null,
+                SpecialFormExclusionOptions.allowAllSpecialForms()));
+    }
+
+    @Test
     public void regionalFormsUseOwnGenerationUnlessRegionalOverrideIsEnabled() {
         GenRestrictions gen1Only = allowOnlyGen(1);
         GenRestrictions gen7Only = allowOnlyGen(7);

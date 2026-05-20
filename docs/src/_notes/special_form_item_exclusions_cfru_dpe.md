@@ -1,8 +1,8 @@
 # Special Form and Item Exclusions for CFRU/DPE
 
-Status: settings/serialization preparation is present for the intended Mega, Gigantamax, regional-form, evolutionary
-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE. Pool filtering, GUI controls, and ROM-facing
-behavior remain follow-up work.
+Status: settings/serialization and species-pool filtering are connected for the intended Mega, Gigantamax, regional-form,
+and evolutionary-relative semantics for CFRU/DPE Gen9 BPRE. Item-pool filtering, GUI controls, and ROM-facing metadata
+audits remain follow-up work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -121,7 +121,8 @@ Settings-profile/RNQS currently supports:
 - `MODE-INCLUDE-Z-CRYSTALS`
 - `MODE-INCLUDE-DYNAMAX-GMAX-ITEMS`
 
-These flags are not yet connected to species or item replacement pools.
+The species flags are connected to `RestrictedSpeciesService`. The item flags are still serialization/profile-only and
+are not yet connected to item replacement pools.
 
 ## Current Item Metadata
 
@@ -149,10 +150,10 @@ loader-backed mapping.
 
 ## Species Pool Touch Points
 
-A future shared species eligibility predicate should be applied centrally in `RestrictedSpeciesService`, then preserved
-by path-specific writer and safety checks.
+The shared species eligibility predicate is applied centrally in `RestrictedSpeciesService`, then preserved by
+path-specific writer and safety checks.
 
-Species-picking paths that need the common predicate are:
+Species-picking paths that use `RestrictedSpeciesService` now receive the common predicate:
 
 - Starters: `StarterRandomizer` uses restricted all/non-legendary pools.
 - Wild Pokemon: `WildEncounterRandomizer` uses `getSpecies(...)` and `randomSpecies(...)` in replacement paths.
@@ -212,9 +213,9 @@ A) Metadata and predicate layer:
 
 B) Species pool filtering:
 
-- Move the final species eligibility decision into `RestrictedSpeciesService`.
-- Use the form's own generation by default.
-- Apply evolutionary-relative expansion and regional-form override as explicit exceptions.
+- The final species eligibility decision is connected in `RestrictedSpeciesService`.
+- The form's own generation is used by default.
+- Evolutionary-relative expansion and regional-form override are explicit exceptions.
 - Keep handler-specific writability checks for Intro Mon, trades, statics, and tutorial species.
 
 C) Item pool filtering:

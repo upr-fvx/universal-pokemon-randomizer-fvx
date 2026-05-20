@@ -4,6 +4,7 @@ import com.uprfvx.romio.gamedata.Evolution;
 import com.uprfvx.romio.gamedata.EvolutionType;
 import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.gamedata.MegaEvolution;
+import com.uprfvx.romio.gamedata.SpecialFormCategory;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -83,7 +84,7 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     }
 
     @Test
-    public void formesUseBaseFormeGenerationAndAltFormToggleStillFiltersThem() {
+    public void formesUseOwnGenerationAndAltFormToggleStillFiltersThem() {
         Species base = species(1, "Base", 1);
         Species forme = species(1001, "Base-Forme", 9);
         forme.setBaseForme(base);
@@ -91,6 +92,11 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         RestrictedSpeciesService service = serviceFor(List.of(base, forme), List.of(forme), List.of());
 
         service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withoutEvolutionaryRelatives().build());
+
+        assertFalse(service.getAll(true).contains(forme));
+        assertFalse(service.getAll(false).contains(forme));
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(9).withoutEvolutionaryRelatives().build());
 
         assertTrue(service.getAll(true).contains(forme));
         assertFalse(service.getAll(false).contains(forme));
@@ -124,6 +130,75 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
 
         assertTrue(service.getMegaEvolutions().contains(allowed));
         assertFalse(service.getMegaEvolutions().contains(excluded));
+    }
+
+    @Test
+    public void specialFormOptionsExcludeMegaAndGigantamaxFormsByDefault() {
+        Species base = species(1, "Base", 1);
+        Species mega = species(1001, "Base-Mega", 1);
+        mega.addSpecialFormCategory(SpecialFormCategory.MEGA);
+        Species gmax = species(2001, "Base-Gmax", 1);
+        gmax.addSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
+        MegaEvolution megaEvolution = new MegaEvolution(base, mega, true, null);
+        RestrictedSpeciesService service = serviceFor(List.of(base, mega, gmax), List.of(), List.of(megaEvolution));
+
+        service.setRestrictions(null, SpecialFormExclusionOptions.defaults());
+
+        assertTrue(service.getAll(true).contains(base));
+        assertFalse(service.getAll(true).contains(mega));
+        assertFalse(service.getAll(true).contains(gmax));
+        assertFalse(service.getMegaEvolutions().contains(megaEvolution));
+    }
+
+    @Test
+    public void specialFormOptionsAllowMegaAndGigantamaxFormsWhenEnabled() {
+        Species base = species(1, "Base", 1);
+        Species mega = species(1001, "Base-Mega", 1);
+        mega.addSpecialFormCategory(SpecialFormCategory.MEGA);
+        Species gmax = species(2001, "Base-Gmax", 1);
+        gmax.addSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
+        MegaEvolution megaEvolution = new MegaEvolution(base, mega, true, null);
+        RestrictedSpeciesService service = serviceFor(List.of(base, mega, gmax), List.of(), List.of(megaEvolution));
+
+        service.setRestrictions(null, SpecialFormExclusionOptions.allowAllSpecialForms());
+
+        assertTrue(service.getAll(true).contains(mega));
+        assertTrue(service.getAll(true).contains(gmax));
+        assertTrue(service.getMegaEvolutions().contains(megaEvolution));
+    }
+
+    @Test
+    public void regionalFormsUseOwnGenerationUnlessRegionalOverrideIsEnabled() {
+        Species vulpix = species(37, "Vulpix", 1);
+        Species alolanVulpix = species(10037, "Alolan Vulpix", 7);
+        alolanVulpix.setBaseForme(vulpix);
+        alolanVulpix.addSpecialFormCategory(SpecialFormCategory.REGIONAL);
+        RestrictedSpeciesService service = serviceFor(List.of(vulpix, alolanVulpix), List.of(), List.of());
+        GenRestrictions gen1Only = new GenRestrictionsBuilder().allowOnlyGen(1).withoutEvolutionaryRelatives().build();
+
+        service.setRestrictions(gen1Only, SpecialFormExclusionOptions.defaults());
+
+        assertTrue(service.getAll(true).contains(vulpix));
+        assertFalse(service.getAll(true).contains(alolanVulpix));
+
+        service.setRestrictions(gen1Only, new SpecialFormExclusionOptions(false, false, true));
+
+        assertTrue(service.getAll(true).contains(vulpix));
+        assertTrue(service.getAll(true).contains(alolanVulpix));
+    }
+
+    @Test
+    public void evolutionaryRelativesExpansionStillAllowsCrossGenerationFamilyMembers() {
+        Species gen1 = species(1, "Gen1", 1);
+        Species gen9Evolution = species(901, "Gen9Evolution", 9);
+        connectEvolution(gen1, gen9Evolution);
+        RestrictedSpeciesService service = serviceFor(List.of(gen1, gen9Evolution), List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
+                SpecialFormExclusionOptions.defaults());
+
+        assertTrue(service.getAll(true).contains(gen1));
+        assertTrue(service.getAll(true).contains(gen9Evolution));
     }
 
     private static RestrictedSpeciesService serviceFor(List<Species> species, List<Species> altFormes,

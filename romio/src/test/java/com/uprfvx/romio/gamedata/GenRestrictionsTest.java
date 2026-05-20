@@ -84,6 +84,20 @@ public class GenRestrictionsTest {
     }
 
     @Test
+    public void initWithIntArg_StateHasGen8And9Bits_AllowsGen8And9() {
+        GenRestrictions gr = new GenRestrictions((1 << 8) | (1 << 9));
+        assertTrue(gr.isGenAllowed(8));
+        assertTrue(gr.isGenAllowed(9));
+    }
+
+    @Test
+    public void toInt_Gen9Allowed_ReturnsGen9Bit() {
+        GenRestrictions gr = new GenRestrictions(0);
+        gr.setGenAllowed(9, true);
+        assertEquals(1 << 9, gr.toInt());
+    }
+
+    @Test
     public void setGenAllowed_Gen1True_IsMethodReturnsTrue() {
         GenRestrictions gr = new GenRestrictions(0); // init it as false
         gr.setGenAllowed(1, true);

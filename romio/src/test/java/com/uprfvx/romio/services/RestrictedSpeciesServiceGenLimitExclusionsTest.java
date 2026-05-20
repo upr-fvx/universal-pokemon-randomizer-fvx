@@ -20,11 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RestrictedSpeciesServiceGenLimitExclusionsTest {
 
     @Test
-    public void genRestrictionsUseSpeciesGenerationAndCurrentRangeDoesNotReachGen9() {
+    public void genRestrictionsUseSpeciesGenerationAndCurrentRangeReachesGen9() {
         Species gen1 = species(1, "Gen1", 1);
         Species gen7 = species(7, "Gen7", 7);
+        Species gen8 = species(8, "Gen8", 8);
         Species gen9 = species(9, "Gen9", 9);
-        RestrictedSpeciesService service = serviceFor(List.of(gen1, gen7, gen9), List.of(), List.of());
+        RestrictedSpeciesService service = serviceFor(List.of(gen1, gen7, gen8, gen9), List.of(), List.of());
 
         service.setRestrictions(null);
         assertTrue(service.getAll(true).contains(gen9));
@@ -33,6 +34,21 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
 
         assertTrue(service.getAll(true).contains(gen1));
         assertTrue(service.getAll(true).contains(gen7));
+        assertTrue(service.getAll(true).contains(gen8));
+        assertTrue(service.getAll(true).contains(gen9));
+    }
+
+    @Test
+    public void genRestrictionsExcludeGen8And9WhenOnlyEarlierGenerationsAreAllowed() {
+        Species gen7 = species(7, "Gen7", 7);
+        Species gen8 = species(8, "Gen8", 8);
+        Species gen9 = species(9, "Gen9", 9);
+        RestrictedSpeciesService service = serviceFor(List.of(gen7, gen8, gen9), List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(7).withoutEvolutionaryRelatives().build());
+
+        assertTrue(service.getAll(true).contains(gen7));
+        assertFalse(service.getAll(true).contains(gen8));
         assertFalse(service.getAll(true).contains(gen9));
     }
 

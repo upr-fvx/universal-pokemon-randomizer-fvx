@@ -34,7 +34,7 @@ import java.util.Set;
  */
 public class GenRestrictions {
 
-    public static final int MAX_GENERATION = 7;
+    public static final int MAX_GENERATION = 9;
     private final boolean[] gensAllowed = new boolean[MAX_GENERATION];
 
     private boolean allowEvolutionaryRelatives;
@@ -64,11 +64,12 @@ public class GenRestrictions {
     }
 
     public int toInt() {
-        return makeIntSelected(
-                allowEvolutionaryRelatives,
-                isGenAllowed(1), isGenAllowed(2), isGenAllowed(3), isGenAllowed(4),
-                isGenAllowed(5), isGenAllowed(6), isGenAllowed(7)
-        );
+        boolean[] switches = new boolean[MAX_GENERATION + 1];
+        switches[0] = allowEvolutionaryRelatives;
+        for (int gen = 1; gen <= MAX_GENERATION; gen++) {
+            switches[gen] = isGenAllowed(gen);
+        }
+        return makeIntSelected(switches);
     }
 
     private int makeIntSelected(boolean... switches) {

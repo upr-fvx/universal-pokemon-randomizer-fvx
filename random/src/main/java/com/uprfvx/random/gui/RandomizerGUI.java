@@ -626,7 +626,7 @@ public class RandomizerGUI {
         keepOrUnloadGameAfterRandomizingMenuItem.addActionListener(_ -> keepOrUnloadGameAfterRandomizingMenuItemActionPerformed());
         limitPokemonButton.addActionListener(_ -> {
             GenerationLimitDialog gld = new GenerationLimitDialog(frame, currentRestrictions,
-                    romHandler.generationOfPokemon(), romHandler.forceSwapStaticMegaEvos());
+                    romHandler.highestPokemonGeneration(), romHandler.forceSwapStaticMegaEvos());
             if (gld.pressedOK()) {
                 currentRestrictions = gld.getChoice();
                 boolean isTypeTheme = isTrainerSetting(TRAINER_TYPE_THEMED) || isTrainerSetting(TRAINER_TYPE_THEMED_ELITE4_GYMS)
@@ -1692,7 +1692,7 @@ public class RandomizerGUI {
         limitPokemonCheckBox.setSelected(settings.isLimitPokemon());
         currentRestrictions = settings.getCurrentRestrictions();
         if (currentRestrictions != null) {
-            currentRestrictions.limitToGen(romHandler.generationOfPokemon());
+            currentRestrictions.limitToGen(romHandler.highestPokemonGeneration());
         }
         noIrregularAltFormesCheckBox.setSelected(settings.isBanIrregularAltFormes());
         noPrematureEvosCheckbox.setSelected(settings.isBanPrematureEvos());

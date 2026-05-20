@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -123,6 +124,29 @@ public class SettingsProfileGeneratorTest {
         assertTrue(restrictions.isGenAllowed(8));
         assertTrue(restrictions.isGenAllowed(9));
         assertFalse(restrictions.isAllowEvolutionaryRelatives());
+    }
+
+    @Test
+    public void settingsSerialization_roundTripsGen1OnlyWithoutEvolutionaryRelatives() throws Exception {
+        Path output = tempDir.resolve("gen1-only.rnqs");
+        Settings original = readSettings(BASE_SETTINGS);
+        GenRestrictions restrictions = new GenRestrictions(0);
+        restrictions.setGenAllowed(1, true);
+        restrictions.setAllowEvolutionaryRelatives(false);
+        original.setLimitPokemon(true);
+        original.setCurrentRestrictions(restrictions);
+
+        try (FileOutputStream out = new FileOutputStream(output.toFile())) {
+            original.writeToFileFormat(out);
+        }
+
+        Settings restored = readSettings(output);
+        assertTrue(restored.isLimitPokemon());
+        assertFalse(restored.getCurrentRestrictions().isAllowEvolutionaryRelatives());
+        assertTrue(restored.getCurrentRestrictions().isGenAllowed(1));
+        for (int gen = 2; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            assertFalse(restored.getCurrentRestrictions().isGenAllowed(gen));
+        }
     }
 
     @Test

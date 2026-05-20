@@ -24,7 +24,8 @@ public class EncounterHeldItemRandomizer extends Randomizer {
     public void randomizeWildHeldItems() {
         boolean banBadItems = settings.isBanBadRandomWildPokemonHeldItems();
 
-        List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        List<Item> possible = filterAllowedMechanicItems(
+                banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(this::isUnsafeEncounterHeldItem);
         if (possible.isEmpty()) {
             throw new IllegalStateException("No safe encounter held items are available for randomization.");

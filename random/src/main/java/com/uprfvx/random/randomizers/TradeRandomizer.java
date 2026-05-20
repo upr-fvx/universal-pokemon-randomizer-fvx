@@ -75,7 +75,10 @@ public class TradeRandomizer extends Randomizer {
         List<Species> usedGivens = new ArrayList<>();
         List<String> usedOTs = new ArrayList<>();
         List<String> usedNicknames = new ArrayList<>();
-        List<Item> possibleItems = new ArrayList<>(romHandler.getAllowedItems());
+        List<Item> possibleItems = filterAllowedMechanicItems(romHandler.getAllowedItems());
+        if (randomItem && possibleItems.isEmpty()) {
+            throw new IllegalStateException("No eligible in-game trade held items are available for randomization.");
+        }
 
         int nickCount = nicknames.size();
         int trnameCount = trainerNames.size();

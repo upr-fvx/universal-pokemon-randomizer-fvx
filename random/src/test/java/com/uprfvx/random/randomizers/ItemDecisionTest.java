@@ -2,6 +2,11 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Item;
+import com.uprfvx.romio.gamedata.ItemMechanicCategory;
+import com.uprfvx.romio.gamedata.PickupItem;
+import com.uprfvx.romio.gamedata.Shop;
+import com.uprfvx.romio.gamedata.Trainer;
+import com.uprfvx.romio.gamedata.TrainerPokemon;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import org.junit.jupiter.api.Test;
 
@@ -58,11 +63,89 @@ public class ItemDecisionTest {
         assertFalse(romHandler.writtenFieldItems.contains(keyItem));
     }
 
+    @Test
+    public void mechanicItemsAreExcludedFromFieldShopPickupAndHeldPoolsByDefault() {
+        Item normal = item(10, "Normal", true, false);
+        Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
+        Item zCrystal = mechanicItem(30, "ZCrystal", ItemMechanicCategory.Z_CRYSTAL);
+        Item dynamax = mechanicItem(40, "Dynamax", ItemMechanicCategory.DYNAMAX_GIGANTAMAX);
+        Set<Item> allItems = Set.of(normal, mega, zCrystal, dynamax);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(
+                List.of(mega, zCrystal, dynamax),
+                allItems,
+                allItems);
+        romHandler.shops = List.of(specialShop(List.of(mega, zCrystal, dynamax)));
+        romHandler.pickupItems = List.of(new PickupItem(mega), new PickupItem(zCrystal), new PickupItem(dynamax));
+        romHandler.starterHeldItems = List.of(mega, zCrystal, dynamax);
+        TrainerPokemon trainerPokemon = new TrainerPokemon();
+        Trainer trainer = new Trainer();
+        trainer.getPokemon().add(trainerPokemon);
+        romHandler.trainers = List.of(trainer);
+        romHandler.allHeldItems = allItems;
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+        settings.setRandomizeHeldItemsForRegularTrainerPokemon(true);
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeFieldItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeShopItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
+        new StarterRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeStarterHeldItems();
+        new TrainerPokemonRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeTrainerHeldItems();
+
+        assertEquals(List.of(normal, normal, normal), romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal, normal), romHandler.writtenShops.get(0).getItems());
+        assertEquals(List.of(normal, normal, normal),
+                romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
+        assertEquals(List.of(normal, normal, normal), romHandler.writtenStarterHeldItems);
+        assertEquals(normal, trainerPokemon.getHeldItem());
+    }
+
+    @Test
+    public void mechanicItemsAreIncludedWhenTheirSettingsAreEnabled() {
+        Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
+        Item zCrystal = mechanicItem(30, "ZCrystal", ItemMechanicCategory.Z_CRYSTAL);
+        Item dynamax = mechanicItem(40, "Dynamax", ItemMechanicCategory.DYNAMAX_GIGANTAMAX);
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+        settings.setIncludeMegaItems(true);
+        settings.setIncludeZCrystalItems(true);
+        settings.setIncludeDynamaxGmaxItems(true);
+
+        ItemTestRomHandler fieldHandler = ItemTestRomHandler.create(List.of(mega), Set.of(mega), Set.of(mega));
+        new ItemRandomizer(fieldHandler.proxy, settings, new ZeroRandom()).randomizeFieldItems();
+
+        ItemTestRomHandler pickupHandler = ItemTestRomHandler.create(List.of(), Set.of(zCrystal), Set.of(zCrystal));
+        pickupHandler.pickupItems = List.of(new PickupItem(zCrystal));
+        new ItemRandomizer(pickupHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
+
+        ItemTestRomHandler starterHandler = ItemTestRomHandler.create(List.of(), Set.of(dynamax), Set.of(dynamax));
+        starterHandler.starterHeldItems = List.of(dynamax);
+        new StarterRandomizer(starterHandler.proxy, settings, new ZeroRandom()).randomizeStarterHeldItems();
+
+        assertEquals(List.of(mega), fieldHandler.writtenFieldItems);
+        assertEquals(zCrystal, pickupHandler.writtenPickupItems.get(0).getItem());
+        assertEquals(List.of(dynamax), starterHandler.writtenStarterHeldItems);
+    }
+
     private static Item item(int id, String name, boolean allowed, boolean bad) {
         Item item = new Item(id, name);
         item.setAllowed(allowed);
         item.setBad(bad);
         return item;
+    }
+
+    private static Item mechanicItem(int id, String name, ItemMechanicCategory category) {
+        Item item = item(id, name, true, false);
+        item.addMechanicCategory(category);
+        return item;
+    }
+
+    private static Shop specialShop(List<Item> items) {
+        Shop shop = new Shop();
+        shop.setItems(new ArrayList<>(items));
+        shop.setMainGame(true);
+        shop.setSpecialShop(true);
+        return shop;
     }
 
     private static class FixedIntRandom extends java.util.Random {
@@ -85,12 +168,27 @@ public class ItemDecisionTest {
         }
     }
 
+    private static class ZeroRandom extends java.util.Random {
+        @Override
+        public int nextInt(int bound) {
+            return 0;
+        }
+    }
+
     private static class ItemTestRomHandler implements InvocationHandler {
         private final List<Item> originalFieldItems;
         private final Set<Item> allowedItems;
         private final Set<Item> nonBadItems;
         private RomHandler proxy;
+        private List<Shop> shops = Collections.emptyList();
+        private List<PickupItem> pickupItems = Collections.emptyList();
+        private List<Item> starterHeldItems = Collections.emptyList();
+        private List<Trainer> trainers = Collections.emptyList();
+        private Set<Item> allHeldItems = Collections.emptySet();
         private List<Item> writtenFieldItems;
+        private List<Shop> writtenShops;
+        private List<PickupItem> writtenPickupItems;
+        private List<Item> writtenStarterHeldItems;
         private int setFieldItemsCalls;
 
         private ItemTestRomHandler(List<Item> originalFieldItems, Set<Item> allowedItems, Set<Item> nonBadItems) {
@@ -112,14 +210,35 @@ public class ItemDecisionTest {
             return switch (method.getName()) {
                 case "getRestrictedSpeciesService", "getTypeService" -> null;
                 case "getFieldItems" -> new ArrayList<>(originalFieldItems);
+                case "getShops" -> shops.stream().map(Shop::new).toList();
+                case "getPickupItems" -> pickupItems.stream().map(PickupItem::new).toList();
+                case "getStarterHeldItems" -> new ArrayList<>(starterHeldItems);
+                case "getTrainers" -> trainers;
+                case "getAllHeldItems" -> allHeldItems;
+                case "getAllConsumableHeldItems" -> allHeldItems;
                 case "getItems" -> new ArrayList<>(allowedItems);
                 case "getAllowedItems" -> allowedItems;
                 case "getNonBadItems" -> nonBadItems;
-                case "getMegaStones", "getRequiredFieldTMs" -> Collections.<Item>emptySet();
+                case "getMegaStones", "getRequiredFieldTMs", "getEvolutionItems", "getXItems",
+                     "getRegularShopItems", "getOPShopItems" -> Collections.<Item>emptySet();
                 case "isBalanceShopPrices" -> false;
+                case "canTMsBeHeld" -> true;
+                case "isTMsReusable" -> false;
                 case "setFieldItems" -> {
                     writtenFieldItems = typedItemList(args[0]);
                     setFieldItemsCalls++;
+                    yield null;
+                }
+                case "setShops" -> {
+                    writtenShops = typedShopList(args[0]);
+                    yield null;
+                }
+                case "setPickupItems" -> {
+                    writtenPickupItems = typedPickupList(args[0]);
+                    yield null;
+                }
+                case "setStarterHeldItems" -> {
+                    writtenStarterHeldItems = typedItemList(args[0]);
                     yield null;
                 }
                 case "toString" -> "ItemTestRomHandler";
@@ -132,6 +251,16 @@ public class ItemDecisionTest {
         @SuppressWarnings("unchecked")
         private static List<Item> typedItemList(Object items) {
             return (List<Item>) items;
+        }
+
+        @SuppressWarnings("unchecked")
+        private static List<Shop> typedShopList(Object shops) {
+            return (List<Shop>) shops;
+        }
+
+        @SuppressWarnings("unchecked")
+        private static List<PickupItem> typedPickupList(Object pickupItems) {
+            return (List<PickupItem>) pickupItems;
         }
     }
 }

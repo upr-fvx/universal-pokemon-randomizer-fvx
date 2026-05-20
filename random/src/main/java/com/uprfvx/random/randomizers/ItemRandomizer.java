@@ -135,9 +135,13 @@ public class ItemRandomizer extends Randomizer {
         boolean uniqueItems = !settings.isBalanceShopPrices();
         boolean evenItems = settings.getFieldItemsMod() == Settings.FieldItemsMod.RANDOM_EVEN;
 
-        List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        List<Item> possible = filterAllowedMechanicItems(
+                banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
-        Set<Item> uniqueNoSellItems = uniqueItems ? romHandler.getMegaStones() : new HashSet<>();
+        if (possible.isEmpty()) {
+            throw new RandomizationException("Could not randomize non-TM field items, no eligible items.");
+        }
+        Set<Item> uniqueNoSellItems = uniqueItems ? filterAllowedMechanicItemSet(romHandler.getMegaStones()) : new HashSet<>();
 
         int neededNonTMCount = nonTMs.size();
         nonTMs.clear();
@@ -216,7 +220,7 @@ public class ItemRandomizer extends Randomizer {
     }
 
     private Set<Item> setupPossible() {
-        Set<Item> possible = new HashSet<>(settings.isBanBadRandomShopItems() ?
+        Set<Item> possible = filterAllowedMechanicItemSet(settings.isBanBadRandomShopItems() ?
                 romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
         if (settings.isBanRegularShopItems()) {
@@ -237,7 +241,7 @@ public class ItemRandomizer extends Randomizer {
         if (settings.isGuaranteeXItems()) {
             guaranteed.addAll(romHandler.getXItems());
         }
-        return guaranteed;
+        return filterAllowedMechanicItemSet(guaranteed);
     }
 
     private List<Shop> deepCopy(List<Shop> original) {
@@ -253,6 +257,9 @@ public class ItemRandomizer extends Randomizer {
         shopItemCount -= guaranteed.size();
 
         possible.removeAll(guaranteed);
+        if (possible.isEmpty() && shopItemCount > 0) {
+            throw new RandomizationException("Could not randomize shop items, no eligible filler items.");
+        }
 
         Stack<Item> remaining = new Stack<>();
         Collections.shuffle(remaining, random);
@@ -331,11 +338,15 @@ public class ItemRandomizer extends Randomizer {
     public void randomizePickupItems() {
         boolean banBadItems = settings.isBanBadRandomPickupItems();
 
-        List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        List<Item> possibleItems = filterAllowedMechanicItems(
+                banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         if (!romHandler.canTMsBeHeld() || romHandler.isTMsReusable()) {
             // Normally these conditions overlap, but if TMs are made reusable we can get the latter but not the former,
             // and it's still no fun getting the same reusable TM over and over again.
             possibleItems.removeIf(Item::isTM);
+        }
+        if (possibleItems.isEmpty()) {
+            throw new IllegalStateException("No eligible pickup items are available for randomization.");
         }
         List<PickupItem> currentItems = romHandler.getPickupItems();
         List<PickupItem> newItems = new ArrayList<>();

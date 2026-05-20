@@ -24,14 +24,20 @@ table. A class-name log entry alone is therefore not sprite evidence.
 ## New opt-in feature
 
 `Trainer Class Assignment / Sprite Sync` is implemented as a separate opt-in path
-that follows the Trainer Class Names randomization, currently exposed through the
-settings-profile overlay:
+that follows the Trainer Class Names randomization. It is currently exposed
+through the settings-profile overlay, not through a visible GUI checkbox:
 
 - `MODE-TRAINER-CLASS-SPRITE-SYNC`
 
 The setting is serialized as `Settings.randomizeTrainerClassSprites`. It is off
 by default and disabled by `Settings.tweakForRom()` when a ROM handler does not
 support Gen 3 trainer class/sprite row serialization.
+
+The inspected GUI has visible controls for `Randomize Trainer Names` and
+`Randomize Trainer Class Names`, but it does not bind any checkbox or dialog
+control to `Settings.randomizeTrainerClassSprites`. Loading an RNQS/profile with
+the serialized bit can still activate the setting; selecting only the GUI class
+name/name checkboxes keeps Sprite Sync off.
 
 `Randomize Trainer Names` remains separate and changes only trainer personal
 names. It does not provide class ID or sprite mappings.
@@ -111,6 +117,13 @@ the visible ingame sprite remained the old class. That result means class
 label/class ID/pic consistency is not yet ingame-proven for the final output
 path.
 
+The later GUI-only observation where trainer class/name text changed but the
+visible sprite did not look synchronized is consistent with the current settings
+surface if only the GUI `Randomize Trainer Class Names` and `Randomize Trainer
+Names` controls were selected. Those controls randomize text labels/personal
+names. They do not imply `MODE-TRAINER-CLASS-SPRITE-SYNC` unless that separate
+settings bit was loaded from RNQS/profile or otherwise enabled programmatically.
+
 ## Logging
 
 Trainer/Foe logging now distinguishes class/sprite assignment from class-name
@@ -154,3 +167,8 @@ Useful sanitized local evidence:
 
 This feature remains below P1 until local ingame smoke confirms visible sprite
 consistency on a private output ROM produced outside Codex.
+
+Recommended follow-up: add a GUI control for `Trainer Class Sprite Sync` near
+the trainer class-name option, gated by `RomHandler.supportsTrainerClassSpriteSync()`,
+with wording that makes it clear the feature is an opt-in class ID / visible
+sprite synchronization mode rather than ordinary class-name text randomization.

@@ -94,6 +94,22 @@ public class SpecialFormPredicatesTest {
     }
 
     @Test
+    public void mrRimeIsNotClassifiedAsARegionalFormByCurrentMetadata() {
+        GenRestrictions gen1Only = allowOnlyGen(1);
+        GenRestrictions gen8Only = allowOnlyGen(8);
+        Species mrMime = species(122, "Mr. Mime", 1);
+        Species galarianMrMime = regionalSpecies(10122, "Galarian Mr. Mime", 8, mrMime);
+        Species mrRime = species(866, "Mr. Rime", 8);
+
+        assertTrue(galarianMrMime.isRegionalForm());
+        assertFalse(mrRime.isRegionalForm());
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(mrRime, gen1Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(mrRime, gen8Only,
+                SpecialFormExclusionOptions.defaults()));
+    }
+
+    @Test
     public void invalidSpeciesIdentityIsRejected() {
         Species invalid = species(0, "Invalid", 1);
         invalid.setSpeciesSetIdentityNumber(0);

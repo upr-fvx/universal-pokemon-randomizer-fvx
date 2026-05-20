@@ -2,8 +2,8 @@
 
 Status: Gen 1-9 limit is supported in the shared settings model and restricted-species predicate. CFRU/DPE expanded
 BPRE generation assignment now falls back to `speciesSetIdentityNumber` when the ROM name cannot be mapped to
-`SpeciesIDs`. Mega, GMax, and forme-specific exclusions remain follow-up work. No writer behavior change, ROM
-execution, or P1 promotion.
+`SpeciesIDs`. Mega, GMax, regional-form, and mirrored item exclusions remain follow-up work; the intended semantics are
+documented in `special_form_item_exclusions_cfru_dpe.md`. No writer behavior change, ROM execution, or P1 promotion.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 

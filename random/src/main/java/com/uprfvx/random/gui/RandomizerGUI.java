@@ -319,12 +319,6 @@ public class RandomizerGUI {
     private JCheckBox noPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
-    private JCheckBox includeMegaFormsCheckBox;
-    private JCheckBox includeGigantamaxFormsCheckBox;
-    private JCheckBox allowRegionalFormsAcrossGenLimitCheckBox;
-    private JCheckBox includeMegaItemsCheckBox;
-    private JCheckBox includeZCrystalItemsCheckBox;
-    private JCheckBox includeDynamaxGmaxItemsCheckBox;
     private JComboBox<String> tpComboBox;
     private JCheckBox paEnsureTwoAbilitiesCheckbox;
     private JRadioButton ppalUnchangedRadioButton;
@@ -392,6 +386,12 @@ public class RandomizerGUI {
     public static boolean usedLauncher = false;
 
     private GenRestrictions currentRestrictions;
+    private boolean allowMegaForms;
+    private boolean allowGigantamaxForms;
+    private boolean allowRegionalFormsAcrossGenLimit;
+    private boolean includeMegaItems;
+    private boolean includeZCrystalItems;
+    private boolean includeDynamaxGmaxItems;
     private OperationDialog opDialog;
 
     private final ResourceBundle bundle;
@@ -632,9 +632,17 @@ public class RandomizerGUI {
         keepOrUnloadGameAfterRandomizingMenuItem.addActionListener(_ -> keepOrUnloadGameAfterRandomizingMenuItemActionPerformed());
         limitPokemonButton.addActionListener(_ -> {
             GenerationLimitDialog gld = new GenerationLimitDialog(frame, currentRestrictions,
-                    romHandler.highestPokemonGeneration(), romHandler.forceSwapStaticMegaEvos());
+                    romHandler.highestPokemonGeneration(), romHandler.forceSwapStaticMegaEvos(),
+                    allowMegaForms, allowGigantamaxForms, allowRegionalFormsAcrossGenLimit,
+                    includeMegaItems, includeZCrystalItems, includeDynamaxGmaxItems);
             if (gld.pressedOK()) {
                 currentRestrictions = gld.getChoice();
+                allowMegaForms = gld.isAllowMegaForms();
+                allowGigantamaxForms = gld.isAllowGigantamaxForms();
+                allowRegionalFormsAcrossGenLimit = gld.isAllowRegionalFormsAcrossGenLimit();
+                includeMegaItems = gld.isIncludeMegaItems();
+                includeZCrystalItems = gld.isIncludeZCrystalItems();
+                includeDynamaxGmaxItems = gld.isIncludeDynamaxGmaxItems();
                 boolean isTypeTheme = isTrainerSetting(TRAINER_TYPE_THEMED) || isTrainerSetting(TRAINER_TYPE_THEMED_ELITE4_GYMS)
                         || isTrainerSetting(TRAINER_KEEP_THEMED) || isTrainerSetting(TRAINER_KEEP_THEME_OR_PRIMARY);
                 if (currentRestrictions != null && !currentRestrictions.allowTrainerSwapMegaEvolvables(
@@ -1702,12 +1710,12 @@ public class RandomizerGUI {
         }
         noIrregularAltFormesCheckBox.setSelected(settings.isBanIrregularAltFormes());
         noPrematureEvosCheckbox.setSelected(settings.isBanPrematureEvos());
-        includeMegaFormsCheckBox.setSelected(settings.isAllowMegaForms());
-        includeGigantamaxFormsCheckBox.setSelected(settings.isAllowGigantamaxForms());
-        allowRegionalFormsAcrossGenLimitCheckBox.setSelected(settings.isAllowRegionalFormsAcrossGenLimit());
-        includeMegaItemsCheckBox.setSelected(settings.isIncludeMegaItems());
-        includeZCrystalItemsCheckBox.setSelected(settings.isIncludeZCrystalItems());
-        includeDynamaxGmaxItemsCheckBox.setSelected(settings.isIncludeDynamaxGmaxItems());
+        allowMegaForms = settings.isAllowMegaForms();
+        allowGigantamaxForms = settings.isAllowGigantamaxForms();
+        allowRegionalFormsAcrossGenLimit = settings.isAllowRegionalFormsAcrossGenLimit();
+        includeMegaItems = settings.isIncludeMegaItems();
+        includeZCrystalItems = settings.isIncludeZCrystalItems();
+        includeDynamaxGmaxItems = settings.isIncludeDynamaxGmaxItems();
         raceModeCheckBox.setSelected(settings.isRaceMode());
         noRandomIntroMonCheckBox.setSelected(!settings.isRandomizeIntroMon());
 
@@ -2033,14 +2041,12 @@ public class RandomizerGUI {
         settings.setCurrentRestrictions(currentRestrictions);
         settings.setBanIrregularAltFormes(noIrregularAltFormesCheckBox.isSelected() && noIrregularAltFormesCheckBox.isVisible());
         settings.setBanPrematureEvos(noPrematureEvosCheckbox.isSelected());
-        settings.setAllowMegaForms(includeMegaFormsCheckBox.isSelected() && includeMegaFormsCheckBox.isVisible());
-        settings.setAllowGigantamaxForms(includeGigantamaxFormsCheckBox.isSelected() && includeGigantamaxFormsCheckBox.isVisible());
-        settings.setAllowRegionalFormsAcrossGenLimit(allowRegionalFormsAcrossGenLimitCheckBox.isSelected()
-                && allowRegionalFormsAcrossGenLimitCheckBox.isVisible());
-        settings.setIncludeMegaItems(includeMegaItemsCheckBox.isSelected() && includeMegaItemsCheckBox.isVisible());
-        settings.setIncludeZCrystalItems(includeZCrystalItemsCheckBox.isSelected() && includeZCrystalItemsCheckBox.isVisible());
-        settings.setIncludeDynamaxGmaxItems(includeDynamaxGmaxItemsCheckBox.isSelected()
-                && includeDynamaxGmaxItemsCheckBox.isVisible());
+        settings.setAllowMegaForms(allowMegaForms);
+        settings.setAllowGigantamaxForms(allowGigantamaxForms);
+        settings.setAllowRegionalFormsAcrossGenLimit(allowRegionalFormsAcrossGenLimit);
+        settings.setIncludeMegaItems(includeMegaItems);
+        settings.setIncludeZCrystalItems(includeZCrystalItems);
+        settings.setIncludeDynamaxGmaxItems(includeDynamaxGmaxItems);
         settings.setRandomizeIntroMon(!noRandomIntroMonCheckBox.isSelected() && noRandomIntroMonCheckBox.isVisible());
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
@@ -2403,12 +2409,15 @@ public class RandomizerGUI {
         gameMascotLabel.setIcon(emptyIcon);
 
         setInitialButtonState(limitPokemonCheckBox, limitPokemonButton,
-                noIrregularAltFormesCheckBox, noPrematureEvosCheckbox, includeMegaFormsCheckBox,
-                includeGigantamaxFormsCheckBox, allowRegionalFormsAcrossGenLimitCheckBox,
-                includeMegaItemsCheckBox, includeZCrystalItemsCheckBox, includeDynamaxGmaxItemsCheckBox,
-                raceModeCheckBox, noRandomIntroMonCheckBox);
+                noIrregularAltFormesCheckBox, noPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
 
         currentRestrictions = null;
+        allowMegaForms = false;
+        allowGigantamaxForms = false;
+        allowRegionalFormsAcrossGenLimit = false;
+        includeMegaItems = false;
+        includeZCrystalItems = false;
+        includeDynamaxGmaxItems = false;
 
         setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton,
                 loadSettingsButton, saveSettingsButton);
@@ -2741,16 +2750,6 @@ public class RandomizerGUI {
 
             noIrregularAltFormesCheckBox.setVisible(pokemonGeneration >= 4);
             noIrregularAltFormesCheckBox.setEnabled(pokemonGeneration >= 4);
-
-            includeMegaFormsCheckBox.setVisible(true);
-            includeGigantamaxFormsCheckBox.setVisible(true);
-            allowRegionalFormsAcrossGenLimitCheckBox.setVisible(true);
-            includeMegaItemsCheckBox.setVisible(true);
-            includeZCrystalItemsCheckBox.setVisible(true);
-            includeDynamaxGmaxItemsCheckBox.setVisible(true);
-            enableButtons(includeMegaFormsCheckBox, includeGigantamaxFormsCheckBox,
-                    allowRegionalFormsAcrossGenLimitCheckBox, includeMegaItemsCheckBox,
-                    includeZCrystalItemsCheckBox, includeDynamaxGmaxItemsCheckBox);
 
             noRandomIntroMonCheckBox.setVisible(romHandler.canSetIntroPokemon());
             noRandomIntroMonCheckBox.setEnabled(romHandler.canSetIntroPokemon());

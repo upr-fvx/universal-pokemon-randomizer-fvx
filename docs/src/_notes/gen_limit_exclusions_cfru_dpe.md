@@ -1,6 +1,7 @@
 # Gen Limit / Exclusions CFRU/DPE Notes
 
-Status: diagnosis and design only. No writer behavior change, ROM execution, or P1 promotion.
+Status: Gen 1-9 limit is supported in the shared settings model and restricted-species predicate. Mega, GMax, and
+forme-specific exclusions remain follow-up work. No writer behavior change, ROM execution, or P1 promotion.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -13,18 +14,20 @@ UPR-FVX has one global Pokemon pool limiter:
 - `GenRestrictions.allowEvolutionaryRelatives`
 - generation bits stored by `GenRestrictions.toInt()`
 
-The GUI exposes this through `GenerationLimitDialog`, but the dialog and `GenRestrictions` only model Gen 1 through
-Gen 7. `Gen3RomHandler.generationOfPokemon()` still reports Gen 3 for CFRU/DPE BPRE, so the GUI generation-limit
-dialog is additionally capped to the base ROM generation when restored or opened.
+The GUI exposes this through `GenerationLimitDialog`. `GenRestrictions` now models Gen 1 through Gen 9. The dialog is
+capped by `RomHandler.highestPokemonGeneration()`, which uses loaded Species metadata instead of only
+`generationOfPokemon()`. This keeps normal base-ROM caps intact while allowing CFRU/DPE expanded BPRE pools to expose
+Gen 8 and Gen 9 when the Species metadata carries those generations.
 
 The settings format serializes `currentRestrictions.toInt()` when `limitPokemon` is enabled. The current bitfield has
-no slots for Gen 8 or Gen 9. Settings-profile/RNQS overlays explicitly mark exact Gen 1-9 restrictions unsupported:
+Gen 8 and Gen 9 slots after the existing Gen 1-7 bits, so existing Gen 1-7 settings keep their previous bit meanings.
+Settings-profile/RNQS overlays now support:
 
 - `MODE-GEN-LIMIT-1-9`
 - `MODE-GEN-LIMIT-1-9-NO-RELATIVES`
-- `MODE-GEN-LIMIT-1-9-NO-MEGAS`
 
-`MODE-GEN-LIMIT-1-9-NO-GMAX` is separately unsupported because there is no dedicated Gigantamax exclusion field.
+`MODE-GEN-LIMIT-1-9-NO-MEGAS` remains unsupported because there is no dedicated Mega-specific pool exclusion field.
+`MODE-GEN-LIMIT-1-9-NO-GMAX` remains unsupported because there is no dedicated Gigantamax exclusion field.
 
 Related exclusion controls that exist today:
 
@@ -95,7 +98,6 @@ Modeled metadata locations:
 
 Known gaps:
 
-- `GenRestrictions.MAX_GENERATION` is 7 while CFRU/DPE species generation assignment can return 8 and 9.
 - Gen 3 `getSpeciesInclFormes()` currently returns `speciesList`, `getAltFormes()` returns an empty set, and
   `getMegaEvolutions()` returns an empty list. For CFRU/DPE BPRE this means expanded formes, Megas, and GMax entries
   are not independently classified by the Gen3 handler today.
@@ -107,7 +109,8 @@ Known gaps:
 
 `RestrictedSpeciesServiceGenLimitExclusionsTest` documents current predicate behavior with synthetic Species objects:
 
-- unrestricted service includes a synthetic Gen 9 species, but current `GenRestrictions` cannot select Gen 9 directly.
+- unrestricted service and current `GenRestrictions` include synthetic Gen 8 and Gen 9 species.
+- Gen 8 and Gen 9 species are excluded when only earlier generations are allowed.
 - unknown-generation species are excluded by generation restrictions.
 - forme inclusion uses the base forme generation, while `getAll(false)` still filters handler-reported alt formes.
 - evolutionary-relative expansion can include a Gen 9 relative when only Gen 1 is directly allowed.
@@ -115,19 +118,19 @@ Known gaps:
 
 These tests do not read ROMs and intentionally do not change production behavior.
 
+`SettingsProfileGeneratorTest` also round-trips `MODE-GEN-LIMIT-1-9` and
+`MODE-GEN-LIMIT-1-9-NO-RELATIVES` through RNQS serialization without a ROM.
+
 ## Recommended Fix Strategy
 
-1. Extend the generation restriction model and settings serialization to represent Gen 8 and Gen 9 explicitly. Preserve
-   backward compatibility for older settings bytes.
-2. Decouple the GUI generation limit from `romHandler.generationOfPokemon()` for expanded CFRU/DPE BPRE; use the
-   highest modeled species generation instead.
-3. Add a CFRU/DPE metadata classifier before changing pool behavior. It should report sampled species count,
+1. Add a CFRU/DPE metadata classifier before changing Mega/GMax/Forme behavior. It should report sampled species count,
    allowed/excluded counts by reason, unknown-generation count, mega/form/GMax counts where known, and examples.
-4. Make Gen3 CFRU/DPE generation assignment prefer a valid internal identity/speciesSet identity mapping over
+2. Make Gen3 CFRU/DPE generation assignment prefer a valid internal identity/speciesSet identity mapping over
    `species.getNumber()` fallback when names are unknown.
-5. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. Do not rely on names
+3. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. Do not rely on names
    or suffixes alone for GMax; add a source-backed marker first.
-6. Route all species-picking paths through the same eligibility predicate, then keep writer-specific identity mapping
+4. Route Mega/GMax/Forme exclusions through the same eligibility predicate once their metadata and settings exist, then
+   keep writer-specific identity mapping
    checks at the ROM handler boundary.
 
 ## Later Local Smokes

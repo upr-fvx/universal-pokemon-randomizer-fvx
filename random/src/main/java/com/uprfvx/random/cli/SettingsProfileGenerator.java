@@ -3,6 +3,7 @@ package com.uprfvx.random.cli;
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.BattleStyle;
+import com.uprfvx.romio.gamedata.GenRestrictions;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -135,12 +136,10 @@ public final class SettingsProfileGenerator {
         overlays.put("MODE-TYPE-KEEP-IDENTITIES", s -> s.setTypeEffectivenessMod(Settings.TypeEffectivenessMod.KEEP_IDENTITIES));
         overlays.put("MODE-TYPE-INVERSE", s -> s.setTypeEffectivenessMod(Settings.TypeEffectivenessMod.INVERSE));
 
-        overlays.put("MODE-GEN-LIMIT-1-9", unsupported("MODE-GEN-LIMIT-1-9",
-                "Exact Gen 1-9 restrictions cannot be represented by the current GenRestrictions Settings format."));
-        overlays.put("MODE-GEN-LIMIT-1-9-NO-RELATIVES", unsupported("MODE-GEN-LIMIT-1-9-NO-RELATIVES",
-                "Exact Gen 1-9 restrictions cannot be represented by the current GenRestrictions Settings format."));
+        overlays.put("MODE-GEN-LIMIT-1-9", s -> setGenLimit(s, true));
+        overlays.put("MODE-GEN-LIMIT-1-9-NO-RELATIVES", s -> setGenLimit(s, false));
         overlays.put("MODE-GEN-LIMIT-1-9-NO-MEGAS", unsupported("MODE-GEN-LIMIT-1-9-NO-MEGAS",
-                "Exact Gen 1-9 restrictions cannot be represented by the current GenRestrictions Settings format."));
+                "Mega-specific pool exclusion has no dedicated Settings field."));
         overlays.put("MODE-GEN-LIMIT-1-9-NO-GMAX", unsupported("MODE-GEN-LIMIT-1-9-NO-GMAX",
                 "Gigantamax-specific pool exclusion has no dedicated Settings field."));
 
@@ -427,6 +426,13 @@ public final class SettingsProfileGenerator {
     private static void setWildZoneMode(Settings settings, Settings.WildPokemonZoneMod zoneMod) {
         settings.setRandomizeWildPokemon(true);
         settings.setWildPokemonZoneMod(zoneMod);
+    }
+
+    private static void setGenLimit(Settings settings, boolean allowEvolutionaryRelatives) {
+        GenRestrictions restrictions = new GenRestrictions();
+        restrictions.setAllowEvolutionaryRelatives(allowEvolutionaryRelatives);
+        settings.setLimitPokemon(true);
+        settings.setCurrentRestrictions(restrictions);
     }
 
     private static void enablePokemonPaletteRandomization(Settings settings) {

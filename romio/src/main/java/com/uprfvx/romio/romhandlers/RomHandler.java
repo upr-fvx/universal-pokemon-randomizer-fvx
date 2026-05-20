@@ -23,6 +23,7 @@ package com.uprfvx.romio.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.MiscTweak;
+import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.constants.ItemIDs;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -715,6 +716,16 @@ public interface RomHandler {
     boolean setIntroPokemon(Species pk);
 
     int generationOfPokemon();
+
+    default int highestPokemonGeneration() {
+        int highestGeneration = generationOfPokemon();
+        for (Species species : getSpeciesInclFormes()) {
+            if (species != null) {
+                highestGeneration = Math.max(highestGeneration, species.getGeneration());
+            }
+        }
+        return Math.min(GlobalConstants.HIGHEST_POKEMON_GEN, highestGeneration);
+    }
 
     // ===========
     // code tweaks

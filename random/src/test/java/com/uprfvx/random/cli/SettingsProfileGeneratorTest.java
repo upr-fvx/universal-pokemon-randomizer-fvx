@@ -1,6 +1,7 @@
 package com.uprfvx.random.cli;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.gamedata.GenRestrictions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -102,6 +103,29 @@ public class SettingsProfileGeneratorTest {
     }
 
     @Test
+    public void invoke_withGenLimit19Overlay_roundTripsGen8And9Settings() throws Exception {
+        Settings settings = settingsForOverlay("MODE-GEN-LIMIT-1-9");
+
+        assertTrue(settings.isLimitPokemon());
+        GenRestrictions restrictions = settings.getCurrentRestrictions();
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            assertTrue(restrictions.isGenAllowed(gen));
+        }
+        assertTrue(restrictions.isAllowEvolutionaryRelatives());
+    }
+
+    @Test
+    public void invoke_withGenLimit19NoRelativesOverlay_roundTripsEvolutionaryRelativesSetting() throws Exception {
+        Settings settings = settingsForOverlay("MODE-GEN-LIMIT-1-9-NO-RELATIVES");
+
+        assertTrue(settings.isLimitPokemon());
+        GenRestrictions restrictions = settings.getCurrentRestrictions();
+        assertTrue(restrictions.isGenAllowed(8));
+        assertTrue(restrictions.isGenAllowed(9));
+        assertFalse(restrictions.isAllowEvolutionaryRelatives());
+    }
+
+    @Test
     public void invoke_withIntroModeOverlays_setsIntroFields() throws Exception {
         assertTrue(settingsForOverlay("MODE-INTRO-RANDOM").isRandomizeIntroMon());
         assertFalse(settingsForOverlay("MODE-NO-RANDOM-INTRO").isRandomizeIntroMon());
@@ -194,8 +218,6 @@ public class SettingsProfileGeneratorTest {
 
     @Test
     public void invoke_withUnsupportedGenRestrictionOverlays_failAndDoNotWriteOutput() {
-        assertUnsupportedOverlay("MODE-GEN-LIMIT-1-9");
-        assertUnsupportedOverlay("MODE-GEN-LIMIT-1-9-NO-RELATIVES");
         assertUnsupportedOverlay("MODE-GEN-LIMIT-1-9-NO-MEGAS");
     }
 

@@ -37,6 +37,8 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
     private JCheckBox gen5CheckBox;
     private JCheckBox gen6CheckBox;
     private JCheckBox gen7CheckBox;
+    private JCheckBox gen8CheckBox;
+    private JCheckBox gen9CheckBox;
     private JButton okButton;
     private JButton cancelButton;
     private JPanel mainPanel;
@@ -68,35 +70,18 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
 
     public GenRestrictions getChoice() {
         GenRestrictions gr = new GenRestrictions();
-        gr.setGenAllowed(1, gen1CheckBox.isSelected());
-        gr.setGenAllowed(2, gen2CheckBox.isSelected());
-        gr.setGenAllowed(3, gen3CheckBox.isSelected());
-        gr.setGenAllowed(4, gen4CheckBox.isSelected());
-        gr.setGenAllowed(5, gen5CheckBox.isSelected());
-        gr.setGenAllowed(6, gen6CheckBox.isSelected());
-        gr.setGenAllowed(7, gen7CheckBox.isSelected());
+        JCheckBox[] generationCheckBoxes = generationCheckBoxes();
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            gr.setGenAllowed(gen, generationCheckBoxes[gen - 1].isSelected());
+        }
         gr.setAllowEvolutionaryRelatives(allowEvolutionaryRelativesCheckBox.isSelected());
         return gr;
     }
 
     private void initialState(int generation) {
-        if (generation < 2) {
-            gen2CheckBox.setVisible(false);
-        }
-        if (generation < 3) {
-            gen3CheckBox.setVisible(false);
-        }
-        if (generation < 4) {
-            gen4CheckBox.setVisible(false);
-        }
-        if (generation < 5) {
-            gen5CheckBox.setVisible(false);
-        }
-        if (generation < 6) {
-            gen6CheckBox.setVisible(false);
-        }
-        if (generation < 7) {
-            gen7CheckBox.setVisible(false);
+        JCheckBox[] generationCheckBoxes = generationCheckBoxes();
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            generationCheckBoxes[gen - 1].setVisible(gen <= generation);
         }
 
         allowEvolutionaryRelativesCheckBox.setEnabled(false);
@@ -104,13 +89,10 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
     }
 
     private void restoreFrom(GenRestrictions restrict) {
-        gen1CheckBox.setSelected(restrict.isGenAllowed(1));
-        gen2CheckBox.setSelected(restrict.isGenAllowed(2));
-        gen3CheckBox.setSelected(restrict.isGenAllowed(3));
-        gen4CheckBox.setSelected(restrict.isGenAllowed(4));
-        gen5CheckBox.setSelected(restrict.isGenAllowed(5));
-        gen6CheckBox.setSelected(restrict.isGenAllowed(6));
-        gen7CheckBox.setSelected(restrict.isGenAllowed(7));
+        JCheckBox[] generationCheckBoxes = generationCheckBoxes();
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            generationCheckBoxes[gen - 1].setSelected(restrict.isGenAllowed(gen));
+        }
         allowEvolutionaryRelativesCheckBox.setSelected(restrict.isAllowEvolutionaryRelatives());
     }
 
@@ -125,6 +107,8 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
         gen5CheckBox.addActionListener(ev -> enableAndDisableBoxes());
         gen6CheckBox.addActionListener(ev -> enableAndDisableBoxes());
         gen7CheckBox.addActionListener(ev -> enableAndDisableBoxes());
+        gen8CheckBox.addActionListener(ev -> enableAndDisableBoxes());
+        gen9CheckBox.addActionListener(ev -> enableAndDisableBoxes());
         allowEvolutionaryRelativesCheckBox.addActionListener(ev -> enableAndDisableBoxes());
         okButton.addActionListener(evt -> okButtonActionPerformed());
         cancelButton.addActionListener(evt -> cancelButtonActionPerformed());
@@ -146,9 +130,7 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
             }
         }
 
-        if (gen1CheckBox.isSelected() || gen2CheckBox.isSelected() || gen3CheckBox.isSelected() ||
-                gen4CheckBox.isSelected() || gen5CheckBox.isSelected() || gen6CheckBox.isSelected() ||
-                gen7CheckBox.isSelected()) {
+        if (anyGenerationSelected()) {
             allowEvolutionaryRelativesCheckBox.setEnabled(true);
         } else {
             allowEvolutionaryRelativesCheckBox.setEnabled(false);
@@ -164,5 +146,21 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
     private void cancelButtonActionPerformed() {
         pressedOk = false;
         setVisible(false);
+    }
+
+    private JCheckBox[] generationCheckBoxes() {
+        return new JCheckBox[] {
+                gen1CheckBox, gen2CheckBox, gen3CheckBox, gen4CheckBox, gen5CheckBox,
+                gen6CheckBox, gen7CheckBox, gen8CheckBox, gen9CheckBox
+        };
+    }
+
+    private boolean anyGenerationSelected() {
+        for (JCheckBox checkBox : generationCheckBoxes()) {
+            if (checkBox.isSelected()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -8720,7 +8720,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (!consumableOnly) {
             ids.addAll(Gen3Constants.generalPurposeItems);
         }
+        if (moves == null) {
+            moves = Collections.emptyList();
+        }
+        if (pokeMoves == null) {
+            pokeMoves = new int[0];
+        }
         for (int moveIdx : pokeMoves) {
+            if (moveIdx < 0 || moveIdx >= moves.size()) {
+                continue;
+            }
             Move move = moves.get(moveIdx);
             if (move == null) {
                 continue;
@@ -8728,18 +8737,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
                 ids.add(ItemIDs.liechiBerry);
                 if (!consumableOnly) {
-                    ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
+                    ids.addAll(Gen3Constants.typeBoostingItems.getOrDefault(move.type, Collections.emptyList()));
                     ids.add(ItemIDs.choiceBand);
                 }
             }
             if (!GBConstants.physicalTypes.contains(move.type) && move.power > 0) {
                 ids.add(ItemIDs.petayaBerry);
                 if (!consumableOnly) {
-                    ids.addAll(Gen3Constants.typeBoostingItems.get(move.type));
+                    ids.addAll(Gen3Constants.typeBoostingItems.getOrDefault(move.type, Collections.emptyList()));
                 }
             }
         }
-        if (!consumableOnly) {
+        if (!consumableOnly && tp != null && tp.getSpecies() != null) {
             List<Integer> speciesItems = Gen3Constants.speciesBoostingItems.get(tp.getSpecies().getNumber());
             if (speciesItems != null) {
                 for (int i = 0; i < 6; i++) {  // Increase the likelihood of using species specific items.
@@ -8747,7 +8756,14 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 }
             }
         }
-        return ids.stream().map(items::get).collect(Collectors.toList());
+        return ids.stream().map(this::getItemByIdIfLoaded).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+    private Item getItemByIdIfLoaded(int itemId) {
+        if (items == null || itemId < 0 || itemId >= items.size()) {
+            return null;
+        }
+        return items.get(itemId);
     }
 
     @Override

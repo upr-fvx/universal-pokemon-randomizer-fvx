@@ -37,6 +37,10 @@ public class Species implements Comparable<Species> {
     //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
     //TODO: add a reset method that reverts this to original (for testing)
 
+    // CFRU/DPE Gen9 declares SPECIES_*_GIGA contiguously from Venusaur G-Max through Urshifu Rapid G-Max.
+    private static final int CFRU_DPE_GIGANTAMAX_FIRST_SPECIES_IDENTITY = 0x4EC;
+    private static final int CFRU_DPE_GIGANTAMAX_LAST_SPECIES_IDENTITY = 0x50D;
+
     private String name;
     private final int number;
     private int speciesSetIdentityNumber;
@@ -677,11 +681,16 @@ public class Species implements Comparable<Species> {
     }
 
     public boolean isGigantamaxForm() {
-        return hasSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
+        return hasSpecialFormCategory(SpecialFormCategory.GIGANTAMAX) || isCfruDpeGigantamaxSpeciesIdentity();
     }
 
     public boolean isRegionalForm() {
         return hasSpecialFormCategory(SpecialFormCategory.REGIONAL);
+    }
+
+    private boolean isCfruDpeGigantamaxSpeciesIdentity() {
+        return speciesSetIdentityNumber >= CFRU_DPE_GIGANTAMAX_FIRST_SPECIES_IDENTITY
+                && speciesSetIdentityNumber <= CFRU_DPE_GIGANTAMAX_LAST_SPECIES_IDENTITY;
     }
 
     /**

@@ -150,9 +150,10 @@ Known gaps:
 
 - Gen 3 `getSpeciesInclFormes()` currently returns `speciesList`, `getAltFormes()` returns an empty set, and
   `getMegaEvolutions()` returns an empty list. For CFRU/DPE BPRE this means expanded formes, Megas, and GMax entries
-  are not independently classified by the Gen3 handler today.
+  are not independently classified by the Gen3 handler today. The known CFRU/DPE Gen9 `SPECIES_*_GIGA` identity block
+  `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`.
 - Unknown or placeholder species names with invalid or noncanonical identities still need explicit audit coverage.
-- No dedicated GMax metadata was found, so GMax cannot be reliably excluded as a distinct category.
+- GMax encodings outside the known CFRU/DPE identity block still need explicit audit coverage.
 
 ## Non-ROM Tests Added
 
@@ -181,8 +182,8 @@ without loading a ROM.
 
 1. Add a CFRU/DPE metadata classifier before changing Mega/GMax/Forme behavior. It should report sampled species count,
    allowed/excluded counts by reason, unknown-generation count, mega/form/GMax counts where known, and examples.
-2. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. Do not rely on names
-   or suffixes alone for GMax; add a source-backed marker first.
+2. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. GMax now has a
+   source-backed CFRU/DPE identity marker for the known `SPECIES_*_GIGA` block; do not extend it by name or suffix alone.
 3. Route Mega/GMax/Forme exclusions through the same eligibility predicate once their metadata and settings exist, then
    keep writer-specific identity mapping
    checks at the ROM handler boundary.

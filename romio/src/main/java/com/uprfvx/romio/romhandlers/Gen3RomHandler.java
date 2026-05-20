@@ -747,6 +747,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (speciesId != null) {
                 return generationOfSpeciesId(speciesId);
             }
+            if (pk.getSpeciesSetIdentityNumber() > 0) {
+                return generationOfSpeciesId(pk.getSpeciesSetIdentityNumber());
+            }
             return generationOfSpeciesId(pk.getNumber());
         }
         return generationOfSpeciesId(pk.getNumber());

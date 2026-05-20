@@ -53,6 +53,24 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     }
 
     @Test
+    public void gen1OnlyExcludesLaterGenerationProblemSpeciesFromReplacementPools() {
+        Species gen1 = species(1, "Shellder", 1);
+        Species stonjorner = species(25, "Stonjorner", 8);
+        Species squawkbily = species(26, "Squawkbily", 9);
+        Species flabebe = species(27, "Flabebe", 6);
+        RestrictedSpeciesService service = serviceFor(List.of(gen1, stonjorner, squawkbily, flabebe),
+                List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withoutEvolutionaryRelatives().build());
+
+        SpeciesSet replacementPool = service.getSpecies(false, false, false);
+        assertTrue(replacementPool.contains(gen1));
+        assertFalse(replacementPool.contains(stonjorner));
+        assertFalse(replacementPool.contains(squawkbily));
+        assertFalse(replacementPool.contains(flabebe));
+    }
+
+    @Test
     public void genRestrictionsExcludeUnknownGenerationSpecies() {
         Species known = species(1, "Known", 1);
         Species unknown = species(99, "Unknown", -1);

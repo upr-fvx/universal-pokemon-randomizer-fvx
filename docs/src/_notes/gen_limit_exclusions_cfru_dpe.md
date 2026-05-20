@@ -1,7 +1,9 @@
 # Gen Limit / Exclusions CFRU/DPE Notes
 
-Status: Gen 1-9 limit is supported in the shared settings model and restricted-species predicate. Mega, GMax, and
-forme-specific exclusions remain follow-up work. No writer behavior change, ROM execution, or P1 promotion.
+Status: Gen 1-9 limit is supported in the shared settings model and restricted-species predicate. CFRU/DPE expanded
+BPRE generation assignment now falls back to `speciesSetIdentityNumber` when the ROM name cannot be mapped to
+`SpeciesIDs`. Mega, GMax, and forme-specific exclusions remain follow-up work. No writer behavior change, ROM
+execution, or P1 promotion.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -53,8 +55,9 @@ species.getBaseForme().getGeneration() == allowedGeneration
 
 This means the predicate is Species-object based, not a direct `species.getNumber()` filter. The Gen 3 CFRU/DPE loader
 sets `Species.speciesSetIdentityNumber` to the internal species index for expanded BPRE hacks, but generation assignment
-currently derives from normalized species names mapped to `SpeciesIDs`, falling back to `species.getNumber()`. That is
-identity-aware for modeled names, but unknown names and placeholder entries can still inherit an unreliable fallback.
+derives from normalized species names mapped to `SpeciesIDs`. If that name lookup fails, expanded BPRE generation
+assignment now falls back to `speciesSetIdentityNumber` before `species.getNumber()`. This is important for DPE/CFRU
+names that are shortened, accented, or spelled differently from FVX constants.
 
 When `allowEvolutionaryRelatives` is enabled, the service expands the selected set with `SpeciesSet.addFullFamilies()`.
 That can intentionally pull in species outside the directly allowed generations if they are connected by the evolution
@@ -84,6 +87,44 @@ The inspected randomizer paths use the restricted service for their primary spec
 These paths share the same generation and evolutionary-relative predicate. Their forme behavior depends on whether the
 handler classifies CFRU/DPE expanded forms in `getAltFormes()` / `getIrregularFormes()`.
 
+## Gen1-only Local Failure
+
+A local Gen1-only smoke still produced non-Gen1 trainer and wild replacements, including Stonjorner, Squawkbily,
+Centskorch, Polchgeist, RoarinMoon, Enamorus, Flabebe, Baculegion, and BruteBonet. The inspected Trainer and Wild
+randomizers both start from `RestrictedSpeciesService` pools, so the failure was not a direct global-unrestricted pool
+fallback.
+
+The root cause is generation metadata assignment for expanded Gen3 BPRE species. The loader first tries to map
+normalized ROM species names to `SpeciesIDs`. Several CFRU/DPE display/internal names do not match FVX constant names:
+
+- shortened names, such as `RoarinMoon`
+- misspellings or alternate internal spellings, such as `Stonjorner`, `Squawkbily`, `Centskorch`, `Baculegion`,
+  and `BruteBonet`
+- accented names, such as Flabebe with accented e characters
+- FVX constant spelling mismatches, such as `SpeciesIDs.enamorous`
+
+Before the fix, those misses fell back to `species.getNumber()`. In an expanded BPRE pool, that number is not the most
+reliable identity for CFRU/DPE species and can misclassify later-generation species as Gen1-eligible. The fixed path
+falls back to `speciesSetIdentityNumber`, matching the internal identity used by other CFRU/DPE writer paths.
+
+Non-ROM test coverage uses a low simulated `speciesNumber` to prove the old fallback would be unsafe while the
+identity fallback yields the expected generations:
+
+| Observed local name | Canonical FVX SpeciesIDs field | Expected identity/species number | Expected generation |
+| --- | --- | ---: | ---: |
+| `Stonjorner` | `stonjourner` | 874 | 8 |
+| `Squawkbily` | `squawkabilly` | 931 | 9 |
+| `Centskorch` | `centiskorch` | 851 | 8 |
+| `Polchgeist` | `poltchageist` | 1012 | 9 |
+| `RoarinMoon` | `roaringMoon` | 1005 | 9 |
+| `Enamorus` | `enamorous` | 905 | 8 |
+| `Flabebe` | `flabebe` | 669 | 6 |
+| `Baculegion` | `basculegion` | 902 | 8 |
+| `BruteBonet` | `bruteBonnet` | 986 | 9 |
+
+Codex did not inspect the private ROM, so the actual local runtime `speciesNumber` values are not asserted here. The
+fix removes dependence on those values for the name-miss path by using `speciesSetIdentityNumber`.
+
 ## CFRU/DPE Metadata Findings
 
 Modeled metadata locations:
@@ -101,8 +142,7 @@ Known gaps:
 - Gen 3 `getSpeciesInclFormes()` currently returns `speciesList`, `getAltFormes()` returns an empty set, and
   `getMegaEvolutions()` returns an empty list. For CFRU/DPE BPRE this means expanded formes, Megas, and GMax entries
   are not independently classified by the Gen3 handler today.
-- Unknown or placeholder species names can fall back to `species.getNumber()` for generation assignment. That is not
-  guaranteed to match CFRU/DPE internal species identity.
+- Unknown or placeholder species names with invalid or noncanonical identities still need explicit audit coverage.
 - No dedicated GMax metadata was found, so GMax cannot be reliably excluded as a distinct category.
 
 ## Non-ROM Tests Added
@@ -116,20 +156,23 @@ Known gaps:
 - evolutionary-relative expansion can include a Gen 9 relative when only Gen 1 is directly allowed.
 - mega evolution entries are retained only when their target species remains in the allowed pool.
 
-These tests do not read ROMs and intentionally do not change production behavior.
+These tests do not read ROMs. The production behavior change is limited to CFRU/DPE expanded BPRE generation fallback
+for species names that cannot be mapped directly.
 
 `SettingsProfileGeneratorTest` also round-trips `MODE-GEN-LIMIT-1-9` and
-`MODE-GEN-LIMIT-1-9-NO-RELATIVES` through RNQS serialization without a ROM.
+`MODE-GEN-LIMIT-1-9-NO-RELATIVES` through RNQS serialization without a ROM, plus a Gen1-only/no-relatives settings
+round trip.
+
+`Gen3CfruDpeSpeciesGenerationTest` documents the CFRU/DPE name-miss fallback for the locally reported problem species
+without loading a ROM.
 
 ## Recommended Fix Strategy
 
 1. Add a CFRU/DPE metadata classifier before changing Mega/GMax/Forme behavior. It should report sampled species count,
    allowed/excluded counts by reason, unknown-generation count, mega/form/GMax counts where known, and examples.
-2. Make Gen3 CFRU/DPE generation assignment prefer a valid internal identity/speciesSet identity mapping over
-   `species.getNumber()` fallback when names are unknown.
-3. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. Do not rely on names
+2. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. Do not rely on names
    or suffixes alone for GMax; add a source-backed marker first.
-4. Route Mega/GMax/Forme exclusions through the same eligibility predicate once their metadata and settings exist, then
+3. Route Mega/GMax/Forme exclusions through the same eligibility predicate once their metadata and settings exist, then
    keep writer-specific identity mapping
    checks at the ROM handler boundary.
 

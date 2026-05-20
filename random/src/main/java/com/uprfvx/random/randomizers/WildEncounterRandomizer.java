@@ -589,7 +589,8 @@ public class WildEncounterRandomizer extends Randomizer {
                             picked = itor.next();
                         } else {
                             //prefer primary of first species
-                            Type preferredTheme = zone.get(0).get(0).getSpecies().getPrimaryType(true);
+                            Type preferredTheme = zone.getFirst().getFirst()
+                                    .getSpecies().getPrimaryType(true);
                             if(picked != preferredTheme) {
                                 picked = itor.next();
                             }
@@ -641,7 +642,7 @@ public class WildEncounterRandomizer extends Randomizer {
             Collections.shuffle(types, random);
             Type areaType;
             do {
-                areaType = types.remove(0);
+                areaType = types.removeFirst();
             } while (remainingByType.get(areaType).isEmpty() && !types.isEmpty());
             if(types.isEmpty() && remainingByType.get(areaType).isEmpty()) {
                 throw new IllegalStateException("RemainingByType contained no Species of any valid type!");
@@ -1077,7 +1078,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * A class which stores some information about the areas and encounters a {@link Species} was found in,
          * in order to allow us to use this information later.
          */
-        private class SpeciesAreaInformation {
+        private static class SpeciesAreaInformation {
             private Map<Type, Integer> possibleThemes = new EnumMap<>(Type.class);
             private final SpeciesSet bannedForReplacement = new SpeciesSet();
             private final SpeciesSet family = new SpeciesSet();

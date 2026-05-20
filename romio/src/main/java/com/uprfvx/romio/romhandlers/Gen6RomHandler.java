@@ -1121,6 +1121,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
 
         new Gen6EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
+        encounterAreas.forEach(this::banAltFormesIfNeeded);
 
         return encounterAreas;
     }

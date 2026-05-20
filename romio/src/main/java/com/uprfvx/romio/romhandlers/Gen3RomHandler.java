@@ -1587,11 +1587,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public boolean hasWildAltFormes() {
-        return false;
-    }
-
-    @Override
     public SpeciesSet getBannedForWildEncounters() {
         SpeciesSet banned = new SpeciesSet();
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {

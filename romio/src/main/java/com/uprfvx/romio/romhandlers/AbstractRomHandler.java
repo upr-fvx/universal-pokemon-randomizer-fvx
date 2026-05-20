@@ -571,12 +571,29 @@ public abstract class AbstractRomHandler implements RomHandler {
         getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
     }
 
+    /**
+     * Sets all alt formes to be "banned" for an {@link EncounterArea},
+     * if any of its encounter slots can't hold alt formes.
+     */
+    protected void banAltFormesIfNeeded(EncounterArea area) {
+        if (!area.stream().allMatch(enc -> enc.getSpeciesHolder().isAltFormeAllowed())) {
+            SpeciesSet altFormes = getSpeciesSetInclFormes().filter(pk -> !pk.isBaseForme());
+            area.banAllSpecies(altFormes);
+        }
+    }
+
     /* Default Implementations */
     /* Used when a subclass doesn't override */
     /*
      * The implication here is that these WILL be overridden by at least one
      * subclass.
      */
+
+    @Override
+    public boolean hasWildAltFormes() {
+        // DEFAULT: no
+        return false;
+    }
 
     @Override
     public boolean shouldWriteCheckValue() {

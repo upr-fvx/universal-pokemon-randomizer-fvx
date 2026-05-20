@@ -1128,11 +1128,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public boolean hasWildAltFormes() {
-        return false;
-    }
-
-    @Override
     public List<Species> getSpecies() {
         return speciesList;
     }

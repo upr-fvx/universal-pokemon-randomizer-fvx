@@ -1214,6 +1214,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     " " + area.getEncounterType().name().toLowerCase() + ", Table");
             area.setDisplayName(displayName);
         }
+        encounterAreas.forEach(this::banAltFormesIfNeeded);
+
         return encounterAreas;
     }
 

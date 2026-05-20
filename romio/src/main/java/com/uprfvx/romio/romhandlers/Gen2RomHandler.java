@@ -1887,11 +1887,6 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public boolean hasWildAltFormes() {
-        return false;
-    }
-
-    @Override
     public void loadEvolutions() {
         for (Species pkmn : pokes) {
             if (pkmn != null) {

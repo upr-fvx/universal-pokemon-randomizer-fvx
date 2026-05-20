@@ -4104,11 +4104,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public boolean hasWildAltFormes() {
-		return false;
-	}
-
-	@Override
 	public boolean hasStaticAltFormes() {
 		return false;
 	}

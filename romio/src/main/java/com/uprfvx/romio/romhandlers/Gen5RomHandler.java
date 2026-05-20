@@ -812,6 +812,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             }
 
             new Gen5EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), useTimeOfDay);
+            encounterAreas.forEach(this::banAltFormesIfNeeded);
+
             return encounterAreas;
         } catch (IOException e) {
             throw new RomIOException(e);

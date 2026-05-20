@@ -153,6 +153,7 @@ public class RandomizerGUI {
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
     private JCheckBox tpRandomizeTrainerNamesCheckBox;
     private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
+    private JCheckBox tpRandomizeTrainerClassSpritesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private SpinSlider tpPercentageEvolutionLevelModifierSpinSlider;
     private SpinSlider tpPercentageLevelModifierSpinSlider;
@@ -1725,6 +1726,7 @@ public class RandomizerGUI {
         mdUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateMovesToGeneration() - (romHandler.generationOfPokemon()+1)));
         tpRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
         tpRandomizeTrainerClassNamesCheckBox.setSelected(settings.isRandomizeTrainerClassNames());
+        tpRandomizeTrainerClassSpritesCheckBox.setSelected(settings.isRandomizeTrainerClassSprites());
         ptIsDualTypeCheckBox.setSelected(settings.isDualTypeOnly());
 
         pbsRandomRadioButton.setSelected(settings.getBaseStatisticsMod() == Settings.BaseStatisticsMod.RANDOM);
@@ -2056,6 +2058,8 @@ public class RandomizerGUI {
         settings.setUpdateMovesToGeneration(mdUpdateComboBox.getSelectedIndex() + (romHandler.generationOfPokemon()+1));
         settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());
         settings.setRandomizeTrainerClassNames(tpRandomizeTrainerClassNamesCheckBox.isSelected());
+        settings.setRandomizeTrainerClassSprites(tpRandomizeTrainerClassSpritesCheckBox.isSelected()
+                && tpRandomizeTrainerClassSpritesCheckBox.isVisible());
 
         settings.setBaseStatisticsMod(pbsUnchangedRadioButton.isSelected(), pbsShuffleRadioButton.isSelected(),
                 pbsRandomRadioButton.isSelected());
@@ -2515,7 +2519,7 @@ public class RandomizerGUI {
         setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox,
                 tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
-				tpRandomizeTrainerClassNamesCheckBox,
+				tpRandomizeTrainerClassNamesCheckBox, tpRandomizeTrainerClassSpritesCheckBox,
                 tpTrainersEvolveTheirPokemonCheckbox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
@@ -2984,6 +2988,13 @@ public class RandomizerGUI {
                     tpBossTrainersTypeDiversityCheckBox);
 
             enableButtons(tpRandomizeTrainerNamesCheckBox, tpRandomizeTrainerClassNamesCheckBox);
+            boolean trainerClassSpriteSyncSupported = romHandler.supportsTrainerClassSpriteSync();
+            tpRandomizeTrainerClassSpritesCheckBox.setVisible(trainerClassSpriteSyncSupported);
+            if (trainerClassSpriteSyncSupported) {
+                enableButtons(tpRandomizeTrainerClassSpritesCheckBox);
+            } else {
+                disableAndDeselectButtons(tpRandomizeTrainerClassSpritesCheckBox);
+            }
 
             tpNoEarlyWonderGuardCheckBox.setVisible(romHandler.abilitiesPerSpecies() != 0);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);

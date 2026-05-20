@@ -7686,59 +7686,86 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
-        if (romEntry.getIntValue("CatchingTutorialOpponentMonOffset") > 0) {
+        int oppOffset = romEntry.getIntValue("CatchingTutorialOpponentMonOffset");
+        int playerOffset = romEntry.getIntValue("CatchingTutorialPlayerMonOffset");
+        int oppValue = 0;
+        int playerValue = 0;
+        if (oppOffset > 0) {
+            if (opponent == null) {
+                return false;
+            }
             // only Pokemon that can be males are allowed (not sure why, taken from uncommented older code)
             if (opponent.getGenderRatio() > 0xFD) {
                 return false;
             }
-            int oppOffset = romEntry.getIntValue("CatchingTutorialOpponentMonOffset");
-            if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-                if (opponent.getNumber() > 255) {
-                    return false;
-                }
-
-                int oppValue = pokedexToInternal[opponent.getNumber()];
-                writeBytes(oppOffset, new byte[] {(byte) oppValue,
-                        Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1});
-
-            } else {
-                if (opponent.getNumber() > 510) {
-                    return false;
-                }
-                int oppValue = pokedexToInternal[opponent.getNumber()];
-                if (oppValue > 255) {
-                    writeBytes(oppOffset, new byte[] {(byte) 0xFF,
-                            Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1,
-                            (byte) (oppValue - 0xFF),
-                            Gen3Constants.gbaAddRxOpcode | Gen3Constants.gbaR1});
-                } else {
-                    writeBytes(oppOffset, new byte[] {(byte) oppValue,
-                            Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1});
-
-                    writeWord(oppOffset + 2, Gen3Constants.gbaNopOpcode);
-                }
-            }
-        }
-
-        if (romEntry.getIntValue("CatchingTutorialPlayerMonOffset") > 0) {
-            int playerOffset = romEntry.getIntValue("CatchingTutorialPlayerMonOffset");
-            if (player.getNumber() > 510) {
+            oppValue = getCatchingTutorialInternalSpeciesId(opponent);
+            if (oppValue <= 0) {
                 return false;
             }
+            if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+                if (oppValue > 255) {
+                    return false;
+                }
 
-            int plyValue = pokedexToInternal[player.getNumber()];
-            if (plyValue > 255) {
-                writeBytes(playerOffset, new byte[] {(byte) 0xFF,
-                        Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1,
-                        (byte) (plyValue - 0xFF),
-                        Gen3Constants.gbaAddRxOpcode | Gen3Constants.gbaR1});
             } else {
-                writeBytes(playerOffset, new byte[] {(byte) plyValue,
-                        Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1});
-                writeWord(playerOffset + 2, Gen3Constants.gbaNopOpcode);
+                if (oppValue > 510) {
+                    return false;
+                }
             }
         }
+
+        if (playerOffset > 0) {
+            playerValue = getCatchingTutorialInternalSpeciesId(player);
+            if (playerValue <= 0 || playerValue > 510) {
+                return false;
+            }
+        }
+
+        if (oppOffset > 0) {
+            if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+                writeBytes(oppOffset, new byte[] {(byte) oppValue,
+                        Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1});
+            } else {
+                writeCatchingTutorialSpeciesLiteral(oppOffset, oppValue);
+            }
+        }
+
+        if (playerOffset > 0) {
+            writeCatchingTutorialSpeciesLiteral(playerOffset, playerValue);
+        }
         return true;
+    }
+
+    private int getCatchingTutorialInternalSpeciesId(Species species) {
+        return getCatchingTutorialInternalSpeciesId(species, pokedexToInternal,
+                usesInternalSpeciesIdentityForExtendedBpreHack());
+    }
+
+    static int getCatchingTutorialInternalSpeciesId(Species species, int[] pokedexToInternal,
+                                                   boolean useSpeciesSetIdentity) {
+        if (species == null) {
+            return 0;
+        }
+        if (useSpeciesSetIdentity) {
+            return species.getSpeciesSetIdentityNumber();
+        }
+        if (species.getNumber() <= 0 || species.getNumber() >= pokedexToInternal.length) {
+            return 0;
+        }
+        return pokedexToInternal[species.getNumber()];
+    }
+
+    private void writeCatchingTutorialSpeciesLiteral(int offset, int speciesId) {
+        if (speciesId > 255) {
+            writeBytes(offset, new byte[] {(byte) 0xFF,
+                    Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1,
+                    (byte) (speciesId - 0xFF),
+                    Gen3Constants.gbaAddRxOpcode | Gen3Constants.gbaR1});
+        } else {
+            writeBytes(offset, new byte[] {(byte) speciesId,
+                    Gen3Constants.gbaSetRxOpcode | Gen3Constants.gbaR1});
+            writeWord(offset + 2, Gen3Constants.gbaNopOpcode);
+        }
     }
 
     @Override

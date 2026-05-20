@@ -1,6 +1,9 @@
 package com.uprfvx.romio.gamedata;
 
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Item implements Comparable<Item> {
 
@@ -15,6 +18,7 @@ public class Item implements Comparable<Item> {
     private boolean allowed = true;
     private boolean bad;
     private boolean tm;
+    private final EnumSet<ItemMechanicCategory> mechanicCategories = EnumSet.noneOf(ItemMechanicCategory.class);
 
     public Item(int id, String name) {
         if (id < 1) {
@@ -58,6 +62,26 @@ public class Item implements Comparable<Item> {
 
     public void setTM(boolean tm) {
         this.tm = tm;
+    }
+
+    public Set<ItemMechanicCategory> getMechanicCategories() {
+        return Collections.unmodifiableSet(mechanicCategories);
+    }
+
+    public void addMechanicCategory(ItemMechanicCategory category) {
+        mechanicCategories.add(Objects.requireNonNull(category));
+    }
+
+    public void removeMechanicCategory(ItemMechanicCategory category) {
+        mechanicCategories.remove(category);
+    }
+
+    public void clearMechanicCategories() {
+        mechanicCategories.clear();
+    }
+
+    public boolean hasMechanicCategory(ItemMechanicCategory category) {
+        return mechanicCategories.contains(category);
     }
 
     @Override

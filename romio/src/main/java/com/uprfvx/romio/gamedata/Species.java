@@ -45,6 +45,7 @@ public class Species implements Comparable<Species> {
     private Species baseForme = null;
     private int formeNumber = 0;
     private Species alolanForme = null;
+    private final EnumSet<SpecialFormCategory> specialFormCategories = EnumSet.noneOf(SpecialFormCategory.class);
     private int cosmeticForms = 0;
     private boolean actuallyCosmetic = false;
     private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
@@ -649,6 +650,38 @@ public class Species implements Comparable<Species> {
 
     public void setAlolanForme(Species alolanForme) {
         this.alolanForme = alolanForme;
+    }
+
+    public Set<SpecialFormCategory> getSpecialFormCategories() {
+        return Collections.unmodifiableSet(specialFormCategories);
+    }
+
+    public void addSpecialFormCategory(SpecialFormCategory category) {
+        specialFormCategories.add(Objects.requireNonNull(category));
+    }
+
+    public void removeSpecialFormCategory(SpecialFormCategory category) {
+        specialFormCategories.remove(category);
+    }
+
+    public void clearSpecialFormCategories() {
+        specialFormCategories.clear();
+    }
+
+    public boolean hasSpecialFormCategory(SpecialFormCategory category) {
+        return specialFormCategories.contains(category);
+    }
+
+    public boolean isMegaForm() {
+        return hasSpecialFormCategory(SpecialFormCategory.MEGA);
+    }
+
+    public boolean isGigantamaxForm() {
+        return hasSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
+    }
+
+    public boolean isRegionalForm() {
+        return hasSpecialFormCategory(SpecialFormCategory.REGIONAL);
     }
 
     /**

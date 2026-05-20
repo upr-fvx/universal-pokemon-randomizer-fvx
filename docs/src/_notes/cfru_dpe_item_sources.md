@@ -92,6 +92,13 @@ Mechanic filtering applies to replacement pools that draw new items:
 | Totem/static held item draws | consumable held item draw paths | yes |
 | In-game trade held items | `TradeRandomizer.randomizeIngameTrades` random held item path | yes |
 
+Trainer held sensible item pools handle missing CFRU/DPE metadata defensively. Gen3 type-specific sensible held
+subpools are treated as empty when the move type has no vanilla Gen3 boosting item mapping, which covers expanded
+types such as Fairy. Missing species metadata and invalid move slots are skipped instead of crashing. If sensible
+candidate filtering leaves no eligible item after mechanic exclusions, Trainer Held Item randomization falls back to the
+same mechanic-filtered held-item pool used by the non-sensible path, so disabled Mega/Z/Dynamax-GMax items are not
+reintroduced by the fallback.
+
 ## Not Mechanic-Filtered Or Not Fully Modeled
 
 The following caveats remain:

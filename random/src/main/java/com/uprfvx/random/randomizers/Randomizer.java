@@ -53,6 +53,9 @@ public abstract class Randomizer {
 
     protected List<Item> filterAllowedMechanicItems(Collection<Item> items) {
         List<Item> filtered = new ArrayList<>();
+        if (items == null) {
+            return filtered;
+        }
         ItemMechanicExclusionOptions options = itemMechanicExclusionOptions();
         for (Item item : items) {
             if (ItemMechanicPredicates.isItemAllowed(item, options)) {

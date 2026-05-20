@@ -127,6 +127,50 @@ public class ItemDecisionTest {
     }
 
     @Test
+    public void trainerSensibleHeldItemsFallbackKeepsMechanicExclusions() {
+        Item normal = item(10, "Normal", true, false);
+        Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
+        Item zCrystal = mechanicItem(30, "ZCrystal", ItemMechanicCategory.Z_CRYSTAL);
+        Item dynamax = mechanicItem(40, "Dynamax", ItemMechanicCategory.DYNAMAX_GIGANTAMAX);
+        TrainerPokemon trainerPokemon = new TrainerPokemon();
+        Trainer trainer = new Trainer();
+        trainer.getPokemon().add(trainerPokemon);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(
+                List.of(), Set.of(normal, mega, zCrystal, dynamax), Set.of(normal, mega, zCrystal, dynamax));
+        romHandler.trainers = List.of(trainer);
+        romHandler.sensibleHeldItems = List.of(mega, zCrystal, dynamax);
+        romHandler.allHeldItems = Set.of(normal, mega, zCrystal, dynamax);
+        Settings settings = new Settings();
+        settings.setRandomizeHeldItemsForRegularTrainerPokemon(true);
+        settings.setSensibleItemsOnlyForTrainers(true);
+
+        new TrainerPokemonRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeTrainerHeldItems();
+
+        assertEquals(normal, trainerPokemon.getHeldItem());
+    }
+
+    @Test
+    public void trainerSensibleHeldItemsUseSensibleCandidatesWhenAvailable() {
+        Item normal = item(10, "Normal", true, false);
+        Item sensible = item(11, "Sensible", true, false);
+        TrainerPokemon trainerPokemon = new TrainerPokemon();
+        Trainer trainer = new Trainer();
+        trainer.getPokemon().add(trainerPokemon);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(), Set.of(normal, sensible),
+                Set.of(normal, sensible));
+        romHandler.trainers = List.of(trainer);
+        romHandler.sensibleHeldItems = List.of(sensible);
+        romHandler.allHeldItems = Set.of(normal);
+        Settings settings = new Settings();
+        settings.setRandomizeHeldItemsForRegularTrainerPokemon(true);
+        settings.setSensibleItemsOnlyForTrainers(true);
+
+        new TrainerPokemonRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeTrainerHeldItems();
+
+        assertEquals(sensible, trainerPokemon.getHeldItem());
+    }
+
+    @Test
     public void mechanicItemsAreIncludedWhenTheirSettingsAreEnabled() {
         Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
         Item pidgeotite = item(NONCANONICAL_PIDGEOTITE, "Pidgeotite", true, false);
@@ -216,6 +260,7 @@ public class ItemDecisionTest {
         private List<PickupItem> pickupItems = Collections.emptyList();
         private List<Item> starterHeldItems = Collections.emptyList();
         private List<Trainer> trainers = Collections.emptyList();
+        private List<Item> sensibleHeldItems = Collections.emptyList();
         private Set<Item> allHeldItems = Collections.emptySet();
         private List<Item> writtenFieldItems;
         private List<Shop> writtenShops;
@@ -246,8 +291,10 @@ public class ItemDecisionTest {
                 case "getPickupItems" -> pickupItems.stream().map(PickupItem::new).toList();
                 case "getStarterHeldItems" -> new ArrayList<>(starterHeldItems);
                 case "getTrainers" -> trainers;
+                case "getSensibleHeldItemsFor" -> sensibleHeldItems;
                 case "getAllHeldItems" -> allHeldItems;
                 case "getAllConsumableHeldItems" -> allHeldItems;
+                case "getMoves" -> Collections.emptyList();
                 case "getItems" -> new ArrayList<>(allowedItems);
                 case "getAllowedItems" -> allowedItems;
                 case "getNonBadItems" -> nonBadItems;

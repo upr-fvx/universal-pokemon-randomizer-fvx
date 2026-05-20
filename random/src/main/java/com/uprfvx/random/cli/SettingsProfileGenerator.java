@@ -138,10 +138,14 @@ public final class SettingsProfileGenerator {
 
         overlays.put("MODE-GEN-LIMIT-1-9", s -> setGenLimit(s, true));
         overlays.put("MODE-GEN-LIMIT-1-9-NO-RELATIVES", s -> setGenLimit(s, false));
-        overlays.put("MODE-GEN-LIMIT-1-9-NO-MEGAS", unsupported("MODE-GEN-LIMIT-1-9-NO-MEGAS",
-                "Mega-specific pool exclusion has no dedicated Settings field."));
-        overlays.put("MODE-GEN-LIMIT-1-9-NO-GMAX", unsupported("MODE-GEN-LIMIT-1-9-NO-GMAX",
-                "Gigantamax-specific pool exclusion has no dedicated Settings field."));
+        overlays.put("MODE-GEN-LIMIT-1-9-NO-MEGAS", s -> s.setAllowMegaForms(false));
+        overlays.put("MODE-GEN-LIMIT-1-9-NO-GMAX", s -> s.setAllowGigantamaxForms(false));
+        overlays.put("MODE-INCLUDE-MEGAS", s -> s.setAllowMegaForms(true));
+        overlays.put("MODE-INCLUDE-GMAX", s -> s.setAllowGigantamaxForms(true));
+        overlays.put("MODE-ALLOW-REGIONAL-FORMS", s -> s.setAllowRegionalFormsAcrossGenLimit(true));
+        overlays.put("MODE-INCLUDE-MEGA-ITEMS", s -> s.setIncludeMegaItems(true));
+        overlays.put("MODE-INCLUDE-Z-CRYSTALS", s -> s.setIncludeZCrystalItems(true));
+        overlays.put("MODE-INCLUDE-DYNAMAX-GMAX-ITEMS", s -> s.setIncludeDynamaxGmaxItems(true));
 
         overlays.put("MODE-INTRO-RANDOM", s -> s.setRandomizeIntroMon(true));
         overlays.put("MODE-NO-RANDOM-INTRO", s -> s.setRandomizeIntroMon(false));

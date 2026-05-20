@@ -150,6 +150,58 @@ public class SettingsProfileGeneratorTest {
     }
 
     @Test
+    public void settingsSerialization_defaultsSpecialFormAndMechanicItemFlagsOff() throws Exception {
+        Settings settings = readSettings(BASE_SETTINGS);
+
+        assertFalse(settings.isAllowMegaForms());
+        assertFalse(settings.isAllowGigantamaxForms());
+        assertFalse(settings.isAllowRegionalFormsAcrossGenLimit());
+        assertFalse(settings.isIncludeMegaItems());
+        assertFalse(settings.isIncludeZCrystalItems());
+        assertFalse(settings.isIncludeDynamaxGmaxItems());
+    }
+
+    @Test
+    public void settingsSerialization_roundTripsSpecialFormAndMechanicItemFlags() throws Exception {
+        Path output = tempDir.resolve("special-form-settings.rnqs");
+        Settings original = readSettings(BASE_SETTINGS);
+        original.setAllowMegaForms(true);
+        original.setAllowGigantamaxForms(true);
+        original.setAllowRegionalFormsAcrossGenLimit(true);
+        original.setIncludeMegaItems(true);
+        original.setIncludeZCrystalItems(true);
+        original.setIncludeDynamaxGmaxItems(true);
+
+        try (FileOutputStream out = new FileOutputStream(output.toFile())) {
+            original.writeToFileFormat(out);
+        }
+
+        Settings restored = readSettings(output);
+        assertTrue(restored.isAllowMegaForms());
+        assertTrue(restored.isAllowGigantamaxForms());
+        assertTrue(restored.isAllowRegionalFormsAcrossGenLimit());
+        assertTrue(restored.isIncludeMegaItems());
+        assertTrue(restored.isIncludeZCrystalItems());
+        assertTrue(restored.isIncludeDynamaxGmaxItems());
+    }
+
+    @Test
+    public void invoke_withSpecialFormAndMechanicItemModeOverlays_setsNewFlags() throws Exception {
+        assertTrue(settingsForOverlay("MODE-INCLUDE-MEGAS").isAllowMegaForms());
+        assertTrue(settingsForOverlay("MODE-INCLUDE-GMAX").isAllowGigantamaxForms());
+        assertTrue(settingsForOverlay("MODE-ALLOW-REGIONAL-FORMS").isAllowRegionalFormsAcrossGenLimit());
+        assertTrue(settingsForOverlay("MODE-INCLUDE-MEGA-ITEMS").isIncludeMegaItems());
+        assertTrue(settingsForOverlay("MODE-INCLUDE-Z-CRYSTALS").isIncludeZCrystalItems());
+        assertTrue(settingsForOverlay("MODE-INCLUDE-DYNAMAX-GMAX-ITEMS").isIncludeDynamaxGmaxItems());
+    }
+
+    @Test
+    public void invoke_withNoMegaAndNoGmaxModeOverlays_keepsDefaultExclusionsSerializable() throws Exception {
+        assertFalse(settingsForOverlay("MODE-GEN-LIMIT-1-9-NO-MEGAS").isAllowMegaForms());
+        assertFalse(settingsForOverlay("MODE-GEN-LIMIT-1-9-NO-GMAX").isAllowGigantamaxForms());
+    }
+
+    @Test
     public void invoke_withIntroModeOverlays_setsIntroFields() throws Exception {
         assertTrue(settingsForOverlay("MODE-INTRO-RANDOM").isRandomizeIntroMon());
         assertFalse(settingsForOverlay("MODE-NO-RANDOM-INTRO").isRandomizeIntroMon());
@@ -224,25 +276,6 @@ public class SettingsProfileGeneratorTest {
 
         assertEquals(1, exitCode);
         assertFalse(output.toFile().exists());
-    }
-
-    @Test
-    public void invoke_withUnsupportedModeOverlay_failsAndDoesNotWriteOutput() {
-        Path output = tempDir.resolve("unsupported-mode.rnqs");
-
-        int exitCode = SettingsProfileGenerator.invoke(new String[]{
-                "--base-settings", BASE_SETTINGS.toString(),
-                "--output-settings", output.toString(),
-                "--enable", "MODE-GEN-LIMIT-1-9-NO-GMAX"
-        });
-
-        assertEquals(1, exitCode);
-        assertFalse(output.toFile().exists());
-    }
-
-    @Test
-    public void invoke_withUnsupportedGenRestrictionOverlays_failAndDoNotWriteOutput() {
-        assertUnsupportedOverlay("MODE-GEN-LIMIT-1-9-NO-MEGAS");
     }
 
     @Test

@@ -66,6 +66,12 @@ public class Settings {
     private boolean randomizeIntroMon;
     private boolean limitPokemon;
     private boolean banIrregularAltFormes;
+    private boolean allowMegaForms;
+    private boolean allowGigantamaxForms;
+    private boolean allowRegionalFormsAcrossGenLimit;
+    private boolean includeMegaItems;
+    private boolean includeZCrystalItems;
+    private boolean includeDynamaxGmaxItems;
     private boolean banPrematureEvos;
     private boolean dualTypeOnly;
 
@@ -731,9 +737,10 @@ public class Settings {
         out.write(makeByteSelected(trainersEvolveTheirPokemon, banPrematureEvos, trainersLevelModified,
                 wildLevelsModified, totemLevelsModified, staticLevelModified));
 
-        // 64 shop items 2
+        // 64 shop items 2 + special-form/mechanic-item exclusion settings
         out.write(makeByteSelected(balanceShopPrices, addCheapRareCandiesToShops,
-                false, false, false, false, false, false));
+                allowMegaForms, allowGigantamaxForms, allowRegionalFormsAcrossGenLimit,
+                includeMegaItems, includeZCrystalItems, includeDynamaxGmaxItems));
 
         // 65 general options #2
         out.write(makeByteSelected(randomizeIntroMon, raceMode, false, limitPokemon,
@@ -1097,6 +1104,12 @@ public class Settings {
 
         settings.setBalanceShopPrices(restoreState(data[64],0));
         settings.setAddCheapRareCandiesToShops(restoreState(data[64], 1));
+        settings.setAllowMegaForms(restoreState(data[64], 2));
+        settings.setAllowGigantamaxForms(restoreState(data[64], 3));
+        settings.setAllowRegionalFormsAcrossGenLimit(restoreState(data[64], 4));
+        settings.setIncludeMegaItems(restoreState(data[64], 5));
+        settings.setIncludeZCrystalItems(restoreState(data[64], 6));
+        settings.setIncludeDynamaxGmaxItems(restoreState(data[64], 7));
 
         settings.setRandomizeIntroMon(restoreState(data[65], 0));
         settings.setRaceMode(restoreState(data[65], 1));
@@ -1432,6 +1445,54 @@ public class Settings {
 
     public void setLimitPokemon(boolean limitPokemon) {
         this.limitPokemon = limitPokemon;
+    }
+
+    public boolean isAllowMegaForms() {
+        return allowMegaForms;
+    }
+
+    public void setAllowMegaForms(boolean allowMegaForms) {
+        this.allowMegaForms = allowMegaForms;
+    }
+
+    public boolean isAllowGigantamaxForms() {
+        return allowGigantamaxForms;
+    }
+
+    public void setAllowGigantamaxForms(boolean allowGigantamaxForms) {
+        this.allowGigantamaxForms = allowGigantamaxForms;
+    }
+
+    public boolean isAllowRegionalFormsAcrossGenLimit() {
+        return allowRegionalFormsAcrossGenLimit;
+    }
+
+    public void setAllowRegionalFormsAcrossGenLimit(boolean allowRegionalFormsAcrossGenLimit) {
+        this.allowRegionalFormsAcrossGenLimit = allowRegionalFormsAcrossGenLimit;
+    }
+
+    public boolean isIncludeMegaItems() {
+        return includeMegaItems;
+    }
+
+    public void setIncludeMegaItems(boolean includeMegaItems) {
+        this.includeMegaItems = includeMegaItems;
+    }
+
+    public boolean isIncludeZCrystalItems() {
+        return includeZCrystalItems;
+    }
+
+    public void setIncludeZCrystalItems(boolean includeZCrystalItems) {
+        this.includeZCrystalItems = includeZCrystalItems;
+    }
+
+    public boolean isIncludeDynamaxGmaxItems() {
+        return includeDynamaxGmaxItems;
+    }
+
+    public void setIncludeDynamaxGmaxItems(boolean includeDynamaxGmaxItems) {
+        this.includeDynamaxGmaxItems = includeDynamaxGmaxItems;
     }
 
     public BaseStatisticsMod getBaseStatisticsMod() {

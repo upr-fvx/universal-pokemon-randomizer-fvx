@@ -1,8 +1,8 @@
 # Special Form and Item Exclusions for CFRU/DPE
 
-Status: design and diagnosis only. This note documents the intended Mega, Gigantamax, regional-form, evolutionary
-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE. It does not change randomizer behavior, writer
-behavior, settings serialization, or ROM data.
+Status: settings/serialization preparation is present for the intended Mega, Gigantamax, regional-form, evolutionary
+relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE. Pool filtering, GUI controls, and ROM-facing
+behavior remain follow-up work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -96,16 +96,32 @@ Existing related settings are:
 - `banIrregularAltFormes`
 - Mega follow/swap settings for base stats, types, abilities, trainers, and statics
 
-The missing settings are:
+The prepared settings are:
 
-- include or allow Mega forms, default off
-- include or allow Gigantamax forms, default off
-- allow regional forms across generation limit, default off
-- a shared item-mechanic exclusion policy for Mega, GMax/Dynamax, and Z-Crystal item families
+- `Settings.allowMegaForms`, default off
+- `Settings.allowGigantamaxForms`, default off
+- `Settings.allowRegionalFormsAcrossGenLimit`, default off
+- `Settings.includeMegaItems`, default off
+- `Settings.includeZCrystalItems`, default off
+- `Settings.includeDynamaxGmaxItems`, default off
 
-Settings-profile/RNQS currently supports `MODE-GEN-LIMIT-1-9` and `MODE-GEN-LIMIT-1-9-NO-RELATIVES`.
-`MODE-GEN-LIMIT-1-9-NO-MEGAS` and `MODE-GEN-LIMIT-1-9-NO-GMAX` remain unsupported because no dedicated serialized
-settings fields exist for those exclusions.
+The RNQS representation stores these flags in previously unused bits in the existing settings byte 64. Old settings
+therefore keep reading with safe/off defaults and do not need a data-length migration.
+
+Settings-profile/RNQS currently supports:
+
+- `MODE-GEN-LIMIT-1-9`
+- `MODE-GEN-LIMIT-1-9-NO-RELATIVES`
+- `MODE-GEN-LIMIT-1-9-NO-MEGAS`
+- `MODE-GEN-LIMIT-1-9-NO-GMAX`
+- `MODE-INCLUDE-MEGAS`
+- `MODE-INCLUDE-GMAX`
+- `MODE-ALLOW-REGIONAL-FORMS`
+- `MODE-INCLUDE-MEGA-ITEMS`
+- `MODE-INCLUDE-Z-CRYSTALS`
+- `MODE-INCLUDE-DYNAMAX-GMAX-ITEMS`
+
+These flags are not yet connected to species or item replacement pools.
 
 ## Current Item Metadata
 
@@ -209,10 +225,10 @@ C) Item pool filtering:
 
 D) GUI, RNQS, and settings-profile:
 
-- Add GUI controls near generation/species restrictions.
-- Add backward-compatible settings serialization for the new booleans or options.
-- Enable settings-profile overlays only after fields can round-trip.
-- Keep defaults off for Mega forms, GMax forms, and regional-form cross-generation override.
+- Add GUI controls near generation/species restrictions as a follow-up.
+- Backward-compatible settings serialization for the new booleans is prepared.
+- Settings-profile overlays for the new flags are prepared.
+- Keep defaults off for Mega forms, GMax forms, regional-form cross-generation override, and mechanic item inclusion.
 
 E) Local smoke and audit:
 

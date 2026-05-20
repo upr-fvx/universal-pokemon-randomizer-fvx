@@ -28,8 +28,9 @@ Settings-profile/RNQS overlays now support:
 - `MODE-GEN-LIMIT-1-9`
 - `MODE-GEN-LIMIT-1-9-NO-RELATIVES`
 
-`MODE-GEN-LIMIT-1-9-NO-MEGAS` remains unsupported because there is no dedicated Mega-specific pool exclusion field.
-`MODE-GEN-LIMIT-1-9-NO-GMAX` remains unsupported because there is no dedicated Gigantamax exclusion field.
+`MODE-GEN-LIMIT-1-9-NO-MEGAS` and `MODE-GEN-LIMIT-1-9-NO-GMAX` are settings-serializable, with safe/off defaults for
+the corresponding include flags. They do not yet filter species pools because Mega/GMax metadata classification and pool
+predicate wiring remain follow-up work.
 
 Related exclusion controls that exist today:
 

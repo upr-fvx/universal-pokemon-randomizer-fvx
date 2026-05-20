@@ -88,6 +88,72 @@
               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.raceModeCheckBox.toolTipText"/>
             </properties>
           </component>
+          <component id="sf001" class="javax.swing.JCheckBox" binding="includeMegaFormsCheckBox">
+            <constraints>
+              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaFormsCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaFormsCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="sf002" class="javax.swing.JCheckBox" binding="includeGigantamaxFormsCheckBox">
+            <constraints>
+              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeGigantamaxFormsCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeGigantamaxFormsCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="sf003" class="javax.swing.JCheckBox" binding="allowRegionalFormsAcrossGenLimitCheckBox">
+            <constraints>
+              <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.allowRegionalFormsAcrossGenLimitCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.allowRegionalFormsAcrossGenLimitCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="sf004" class="javax.swing.JCheckBox" binding="includeMegaItemsCheckBox">
+            <constraints>
+              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="6" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaItemsCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaItemsCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="sf005" class="javax.swing.JCheckBox" binding="includeZCrystalItemsCheckBox">
+            <constraints>
+              <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeZCrystalItemsCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeZCrystalItemsCheckBox.toolTipText"/>
+            </properties>
+          </component>
+          <component id="sf006" class="javax.swing.JCheckBox" binding="includeDynamaxGmaxItemsCheckBox">
+            <constraints>
+              <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="false"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeDynamaxGmaxItemsCheckBox.text"/>
+              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeDynamaxGmaxItemsCheckBox.toolTipText"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <vspacer id="7ea6">

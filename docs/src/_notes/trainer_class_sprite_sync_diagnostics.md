@@ -24,8 +24,9 @@ table. A class-name log entry alone is therefore not sprite evidence.
 ## New opt-in feature
 
 `Trainer Class Assignment / Sprite Sync` is implemented as a separate opt-in path
-that follows the Trainer Class Names randomization. It is currently exposed
-through the settings-profile overlay, not through a visible GUI checkbox:
+that follows the Trainer Class Names randomization. It is exposed through the
+GUI checkbox `Sync Trainer Class Sprites` and through the settings-profile
+overlay:
 
 - `MODE-TRAINER-CLASS-SPRITE-SYNC`
 
@@ -33,11 +34,12 @@ The setting is serialized as `Settings.randomizeTrainerClassSprites`. It is off
 by default and disabled by `Settings.tweakForRom()` when a ROM handler does not
 support Gen 3 trainer class/sprite row serialization.
 
-The inspected GUI has visible controls for `Randomize Trainer Names` and
-`Randomize Trainer Class Names`, but it does not bind any checkbox or dialog
-control to `Settings.randomizeTrainerClassSprites`. Loading an RNQS/profile with
-the serialized bit can still activate the setting; selecting only the GUI class
-name/name checkboxes keeps Sprite Sync off.
+The GUI has visible controls for `Randomize Trainer Names`, `Randomize Trainer
+Class Names`, and `Sync Trainer Class Sprites` when the loaded ROM handler
+reports `supportsTrainerClassSpriteSync()`. The sync checkbox binds to
+`Settings.randomizeTrainerClassSprites`; loading old settings keeps it off by
+default. Selecting only the GUI class name/name checkboxes still keeps Sprite
+Sync off.
 
 `Randomize Trainer Names` remains separate and changes only trainer personal
 names. It does not provide class ID or sprite mappings.
@@ -118,11 +120,11 @@ label/class ID/pic consistency is not yet ingame-proven for the final output
 path.
 
 The later GUI-only observation where trainer class/name text changed but the
-visible sprite did not look synchronized is consistent with the current settings
-surface if only the GUI `Randomize Trainer Class Names` and `Randomize Trainer
-Names` controls were selected. Those controls randomize text labels/personal
-names. They do not imply `MODE-TRAINER-CLASS-SPRITE-SYNC` unless that separate
-settings bit was loaded from RNQS/profile or otherwise enabled programmatically.
+visible sprite did not look synchronized is consistent with selecting only the
+GUI `Randomize Trainer Class Names` and `Randomize Trainer Names` controls.
+Those controls randomize text labels/personal names. They do not imply Trainer
+Class Sprite Sync unless the separate `Sync Trainer Class Sprites` checkbox,
+RNQS bit, or settings-profile overlay is enabled.
 
 ## Logging
 
@@ -168,7 +170,6 @@ Useful sanitized local evidence:
 This feature remains below P1 until local ingame smoke confirms visible sprite
 consistency on a private output ROM produced outside Codex.
 
-Recommended follow-up: add a GUI control for `Trainer Class Sprite Sync` near
-the trainer class-name option, gated by `RomHandler.supportsTrainerClassSpriteSync()`,
-with wording that makes it clear the feature is an opt-in class ID / visible
-sprite synchronization mode rather than ordinary class-name text randomization.
+The GUI checkbox is intentionally a settings-surface change only. It does not
+alter `TrainerNameRandomizer`, `TrainerClassSpriteSyncRandomizer`, RNQS layout,
+or writer semantics.

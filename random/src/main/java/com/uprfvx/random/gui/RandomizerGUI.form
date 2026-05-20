@@ -2038,6 +2038,17 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomizeTrainerClassNamesCheckBox.toolTipText"/>
                         </properties>
                       </component>
+                      <component id="f3fd8" class="javax.swing.JCheckBox" binding="tpRandomizeTrainerClassSpritesCheckBox">
+                        <constraints>
+                          <grid row="3" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomizeTrainerClassSpritesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomizeTrainerClassSpritesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
                       <vspacer id="2342b">
                         <constraints>
                           <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>

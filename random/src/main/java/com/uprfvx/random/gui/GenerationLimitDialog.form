@@ -9,7 +9,7 @@
     <children>
       <grid id="16c9a" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="19" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -106,7 +106,7 @@
       </component>
       <component id="53cac" class="javax.swing.JLabel" binding="xyWarningLabel">
         <constraints>
-          <grid row="13" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="21" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -128,7 +128,7 @@
       </hspacer>
       <vspacer id="efbd">
         <constraints>
-          <grid row="12" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <grid row="20" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
       </vspacer>
@@ -167,6 +167,86 @@
         </constraints>
         <properties>
           <text value="Generation 9"/>
+        </properties>
+      </component>
+      <component id="sf101" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="8" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font style="1"/>
+          <text value="Special Forms"/>
+        </properties>
+      </component>
+      <component id="sf102" class="javax.swing.JCheckBox" binding="includeMegaFormsCheckBox">
+        <constraints>
+          <grid row="12" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaFormsCheckBox.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaFormsCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="sf103" class="javax.swing.JCheckBox" binding="includeGigantamaxFormsCheckBox">
+        <constraints>
+          <grid row="13" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeGigantamaxFormsCheckBox.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeGigantamaxFormsCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="sf104" class="javax.swing.JCheckBox" binding="allowRegionalFormsAcrossGenLimitCheckBox">
+        <constraints>
+          <grid row="14" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.allowRegionalFormsAcrossGenLimitCheckBox.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.allowRegionalFormsAcrossGenLimitCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="sf105" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="15" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="8" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font style="1"/>
+          <text value="Mechanic Items"/>
+        </properties>
+      </component>
+      <component id="sf106" class="javax.swing.JCheckBox" binding="includeMegaItemsCheckBox">
+        <constraints>
+          <grid row="16" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaItemsCheckBox.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeMegaItemsCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="sf107" class="javax.swing.JCheckBox" binding="includeZCrystalItemsCheckBox">
+        <constraints>
+          <grid row="17" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeZCrystalItemsCheckBox.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeZCrystalItemsCheckBox.toolTipText"/>
+        </properties>
+      </component>
+      <component id="sf108" class="javax.swing.JCheckBox" binding="includeDynamaxGmaxItemsCheckBox">
+        <constraints>
+          <grid row="18" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeDynamaxGmaxItemsCheckBox.text"/>
+          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.includeDynamaxGmaxItemsCheckBox.toolTipText"/>
         </properties>
       </component>
     </children>

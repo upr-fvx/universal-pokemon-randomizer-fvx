@@ -44,16 +44,29 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
     private JPanel mainPanel;
     private JLabel xyWarningLabel;
     private JCheckBox allowEvolutionaryRelativesCheckBox;
+    private JCheckBox includeMegaFormsCheckBox;
+    private JCheckBox includeGigantamaxFormsCheckBox;
+    private JCheckBox allowRegionalFormsAcrossGenLimitCheckBox;
+    private JCheckBox includeMegaItemsCheckBox;
+    private JCheckBox includeZCrystalItemsCheckBox;
+    private JCheckBox includeDynamaxGmaxItemsCheckBox;
 
     private boolean pressedOk;
     private boolean isXY;
 
-    public GenerationLimitDialog(JFrame parent, GenRestrictions current, int generation, boolean isXY) {
+    public GenerationLimitDialog(JFrame parent, GenRestrictions current, int generation, boolean isXY,
+                                 boolean allowMegaForms, boolean allowGigantamaxForms,
+                                 boolean allowRegionalFormsAcrossGenLimit,
+                                 boolean includeMegaItems, boolean includeZCrystalItems,
+                                 boolean includeDynamaxGmaxItems) {
         super(parent, true);
         add(mainPanel);
         this.isXY = isXY;
         initComponents();
         initialState(generation);
+        restoreSpecialFormAndItemOptions(allowMegaForms, allowGigantamaxForms,
+                allowRegionalFormsAcrossGenLimit, includeMegaItems, includeZCrystalItems,
+                includeDynamaxGmaxItems);
         if (current != null) {
             current.limitToGen(generation);
             restoreFrom(current);
@@ -78,6 +91,30 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
         return gr;
     }
 
+    public boolean isAllowMegaForms() {
+        return includeMegaFormsCheckBox.isSelected();
+    }
+
+    public boolean isAllowGigantamaxForms() {
+        return includeGigantamaxFormsCheckBox.isSelected();
+    }
+
+    public boolean isAllowRegionalFormsAcrossGenLimit() {
+        return allowRegionalFormsAcrossGenLimitCheckBox.isSelected();
+    }
+
+    public boolean isIncludeMegaItems() {
+        return includeMegaItemsCheckBox.isSelected();
+    }
+
+    public boolean isIncludeZCrystalItems() {
+        return includeZCrystalItemsCheckBox.isSelected();
+    }
+
+    public boolean isIncludeDynamaxGmaxItems() {
+        return includeDynamaxGmaxItemsCheckBox.isSelected();
+    }
+
     private void initialState(int generation) {
         JCheckBox[] generationCheckBoxes = generationCheckBoxes();
         for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
@@ -86,6 +123,18 @@ public class GenerationLimitDialog extends javax.swing.JDialog {
 
         allowEvolutionaryRelativesCheckBox.setEnabled(false);
         allowEvolutionaryRelativesCheckBox.setSelected(false);
+    }
+
+    private void restoreSpecialFormAndItemOptions(boolean allowMegaForms, boolean allowGigantamaxForms,
+                                                  boolean allowRegionalFormsAcrossGenLimit,
+                                                  boolean includeMegaItems, boolean includeZCrystalItems,
+                                                  boolean includeDynamaxGmaxItems) {
+        includeMegaFormsCheckBox.setSelected(allowMegaForms);
+        includeGigantamaxFormsCheckBox.setSelected(allowGigantamaxForms);
+        allowRegionalFormsAcrossGenLimitCheckBox.setSelected(allowRegionalFormsAcrossGenLimit);
+        includeMegaItemsCheckBox.setSelected(includeMegaItems);
+        includeZCrystalItemsCheckBox.setSelected(includeZCrystalItems);
+        includeDynamaxGmaxItemsCheckBox.setSelected(includeDynamaxGmaxItems);
     }
 
     private void restoreFrom(GenRestrictions restrict) {

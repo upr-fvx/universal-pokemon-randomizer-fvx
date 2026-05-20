@@ -4538,7 +4538,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
-        if (useCfruDpeGen9SpeciesCount && !movesets.containsKey(pkmn) && pkmn > 0
+        if (movesets != null && useCfruDpeGen9SpeciesCount && !movesets.containsKey(pkmn) && pkmn > 0
                 && pkmn < pokedexToInternal.length) {
             int internalSpecies = pokedexToInternal[pkmn];
             if (movesets.containsKey(internalSpecies)) {

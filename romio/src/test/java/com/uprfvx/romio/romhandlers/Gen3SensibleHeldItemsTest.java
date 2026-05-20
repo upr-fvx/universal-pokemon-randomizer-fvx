@@ -11,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,6 +43,24 @@ public class Gen3SensibleHeldItemsTest {
 
         assertFalse(sensibleItems.isEmpty());
         assertTrue(sensibleItems.stream().anyMatch(item -> item.getId() == ItemIDs.charcoal));
+    }
+
+    @Test
+    public void missingMovepoolReturnsEmptyMoveset() {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+
+        int[] moveset = assertDoesNotThrow(() -> romHandler.getMovesAtLevel(9999, Map.of(), 50));
+
+        assertArrayEquals(new int[] {0, 0, 0, 0}, moveset);
+    }
+
+    @Test
+    public void nullMovesetsReturnEmptyMoveset() {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+
+        int[] moveset = assertDoesNotThrow(() -> romHandler.getMovesAtLevel(9999, null, 50));
+
+        assertArrayEquals(new int[] {0, 0, 0, 0}, moveset);
     }
 
     private static Gen3RomHandler romHandlerWithItems() throws ReflectiveOperationException {

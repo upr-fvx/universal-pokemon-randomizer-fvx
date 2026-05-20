@@ -66,18 +66,16 @@ for DPE/CFRU names that are shortened, accented, or spelled differently from FVX
 When `allowEvolutionaryRelatives` is enabled, the service expands the selected set with `SpeciesSet.addFullFamilies()`.
 That can intentionally pull in species outside the directly allowed generations if they are connected by the evolution
 graph. After that expansion, special-form restrictions are applied again: disabled Mega/GMax forms remain excluded,
-known irregular special forms remain excluded by default, and regional forms are still allowed only by their own
-generation or by `allowRegionalFormsAcrossGenLimit`. In other words, `allowEvolutionaryRelatives` can allow true
-cross-generation family members such as Electivire, Magmortar, or Sylveon, but it does not by itself allow Galarian
-Weezing, Alolan Vulpix, or known CFRU/DPE Pikachu costume/cap identities in a Gen1-only default pool.
+known irregular special forms remain excluded by default, and regional forms or source-backed regional-branch evolutions
+are still allowed only by their own generation or by `allowRegionalFormsAcrossGenLimit`. In other words,
+`allowEvolutionaryRelatives` can allow true cross-generation family members such as Electivire, Magmortar, or Sylveon,
+but it does not by itself allow Galarian Weezing, Alolan Vulpix, Hisuian Arcanine, Mr. Rime, or known CFRU/DPE Pikachu
+costume/cap identities in a Gen1-only default pool.
 
-The Mr. Rime case is a remaining branch-level gap. Mr. Rime is not a regional form itself; it is a Gen8 evolution reached
-through Galarian Mr. Mime. The current post-expansion filter can remove Galarian Mr. Mime when the regional override is
-off, but it cannot prove that Mr. Rime was reached only through that regional branch because `SpeciesSet.addFullFamilies()`
-returns a flattened family set. Target semantics should exclude Mr. Rime for Gen1-only plus
-`allowEvolutionaryRelatives=true` when `allowRegionalFormsAcrossGenLimit=false`, while allowing it when the regional
-override is enabled. Today, seeing Mr. Rime in that no-regional-override profile should be treated as a bug /
-unsupported metadata gap rather than expected evolutionary-relative behavior.
+The Mr. Rime case is covered for the known CFRU/DPE identity `0x486`. Mr. Rime is not a regional form itself; it is a
+Gen8 evolution reached through Galarian Mr. Mime. The predicate marks it as a regional-branch evolution, so Gen1-only
+plus `allowEvolutionaryRelatives=true` excludes it when `allowRegionalFormsAcrossGenLimit=false`, while the regional
+override can allow it through the Gen1 Mr. Mime family.
 
 Alt-forme exclusion is a second-stage filter: `getAll(false)` and `getNonLegendaries(false)` remove species returned by
 `romHandler.getAltFormes()`. If a CFRU/DPE Gen3 handler reports no alt formes, per-path "allow formes" settings cannot
@@ -162,11 +160,13 @@ Known gaps:
   `getMegaEvolutions()` returns an empty list. For CFRU/DPE BPRE this means expanded formes, Megas, and GMax entries
   are not independently classified by the Gen3 handler today. The known CFRU/DPE Gen9 `SPECIES_*_GIGA` identity block
   `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`. The known CFRU/DPE Pikachu Surfing/Flying/
-  Cosplay/Cap identity block `0x43D..0x44B` is handled directly by `Species.isIrregularSpecialForm()`.
+  Cosplay/Cap identity block `0x43D..0x44B` is handled directly by `Species.isIrregularSpecialForm()`. Known CFRU/DPE
+  regional identities are handled directly by `Species.isRegionalForm()` for Alola `0x3FC..0x40F`, Galar
+  `0x4BC..0x4D1`, Hisui `0x4D2..0x4E2`, and Paldea `0x581..0x584`; known regional-branch identities are handled by
+  `Species.isRegionalBranchEvolution()`.
 - Unknown or placeholder species names with invalid or noncanonical identities still need explicit audit coverage.
 - GMax encodings outside the known CFRU/DPE identity block still need explicit audit coverage.
-- Regional-branch evolutions need path-aware metadata or filtering. Node-local `Species.isRegionalForm()` is not enough
-  for Mr. Rime-style cases where the visible species is not regional but its eligibility depends on a regional branch.
+- Regional-branch evolutions outside the known CFRU/DPE branch identity set still need source-backed audit.
 
 ## Non-ROM Tests Added
 
@@ -177,11 +177,12 @@ Known gaps:
 - unknown-generation species are excluded by generation restrictions.
 - forme inclusion uses the form generation by default, while `getAll(false)` still filters handler-reported alt formes.
 - Mega and GMax forms are excluded by default and included only through their settings.
-- regional forms can use base-family generation only when the regional override is enabled.
+- source-backed regional forms and regional-branch evolutions can use base-family generation only when the regional
+  override is enabled.
 - evolutionary-relative expansion can include a Gen 9 relative when only Gen 1 is directly allowed.
 - mega evolution entries are retained only when their target species remains in the allowed pool.
-- Mr. Rime current metadata is non-regional Gen8 in a synthetic predicate test. A disabled service-level expectation test
-  documents the desired regional-branch behavior without changing randomizer behavior in this diagnosis PR.
+- Mr. Rime source identity `0x486` is covered as a regional-branch evolution; service tests assert that evolutionary
+  relatives alone do not allow it and the regional override does.
 
 These tests do not read ROMs. The production behavior change is limited to CFRU/DPE expanded BPRE generation fallback
 for species names that cannot be mapped directly.

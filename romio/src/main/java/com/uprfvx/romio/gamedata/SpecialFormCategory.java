@@ -4,5 +4,6 @@ public enum SpecialFormCategory {
     MEGA,
     GIGANTAMAX,
     REGIONAL,
+    REGIONAL_BRANCH,
     IRREGULAR
 }

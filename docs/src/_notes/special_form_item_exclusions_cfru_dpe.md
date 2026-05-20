@@ -93,21 +93,25 @@ Rock Star, Pop Star, Belle, Ph.D, or Cap identity is excluded by safe/default sp
 identity `0x19` remains allowed. GMax Pikachu identity `0x4F0` remains classified by the GMax predicate, not by the
 irregular Pikachu block.
 
-Alolan Vulpix is partly represented by the existing `alolanForme` concept, but the model is Alola-specific and not a
-general regional-form category. It does not cover Galarian Meowth, Hisuian Growlithe, or Paldean Wooper as a uniform
-feature.
+CFRU/DPE regional forms are now also source-backed through identity ranges rather than relying only on `baseForme` or
+display names:
 
-Galarian Meowth, Hisuian Growlithe, and Paldean Wooper need a generalized regional-form metadata layer that records the
-form species, base family, region/form kind, and own form generation. The eligibility predicate can then decide whether
-to use own generation only or the base-family override.
+- Alolan regional forms: `SPECIES_RATTATA_A` `0x3FC` through `SPECIES_MAROWAK_A` `0x40F`.
+- Galarian regional forms: `SPECIES_MEOWTH_G` `0x4BC` through `SPECIES_STUNFISK_G` `0x4D1`.
+- Hisuian regional forms: `SPECIES_GROWLITHE_H` `0x4D2` through `SPECIES_DECIDUEYE_H` `0x4E2`.
+- Paldean regional forms: `SPECIES_TAUROS_P` `0x581` through `SPECIES_WOOPER_P` `0x584`.
 
-Mr. Rime exposes a separate regional-branch gap. It is not a regional form itself, so `Species.isRegionalForm()` is
-false in the current model. It is a Gen8 evolution reached through Galarian Mr. Mime. The current predicate can reject
-the regional species node after evolutionary-relative expansion, but it does not track that Mr. Rime was reached through
-a regional-only branch. As a result, a Gen1-only pool with `allowEvolutionaryRelatives=true` and
-`allowRegionalFormsAcrossGenLimit=false` can still admit Mr. Rime if the synthetic or loaded evolution graph connects
-Mr. Mime -> Galarian Mr. Mime -> Mr. Rime. That should be treated as a bug / unsupported metadata gap, not expected
-target semantics.
+This covers cases where the loaded Pokemon displays a base name and national number, such as "Arcanine" / `59`, but
+its `speciesSetIdentityNumber` points at `SPECIES_ARCANINE_H` (`0x4D3`). Without the regional override these identities
+use their own regional form generation for Gen-limit checks. With `Allow Regional Forms across Gen Limit`, they use a
+source-backed base-family generation fallback, so Hisuian Arcanine can be allowed by a Gen1 family limit while Paldean
+Wooper still requires a Gen2 family limit.
+
+Regional-branch evolutions are now separately marked when source-backed. This covers Galarian branch evolutions
+`SPECIES_OBSTAGOON` `0x482` through `SPECIES_RUNERIGUS` `0x487`, Hisuian branch/dependent evolutions
+`SPECIES_WYRDEER` `0x4E3` through `SPECIES_OVERQWIL` `0x4E9`, and Paldean `SPECIES_CLODSIRE` `0x560`. Mr. Rime is
+therefore excluded from Gen1-only plus `allowEvolutionaryRelatives=true` when the regional override is off, but can be
+allowed when the override is on because its branch maps back to the Gen1 Mr. Mime family.
 
 ## Current Settings Surface
 
@@ -214,9 +218,9 @@ After `allowEvolutionaryRelatives` expands a generation-limited family, the same
 This preserves true cross-generation evolution support while keeping regional forms separate from evolutionary-relative
 overrides.
 
-This re-application is currently node-local. It catches regional-form species themselves, but not non-regional
-evolutions whose only allowed path passes through a regional form. A follow-up fix needs either path-aware family
-expansion or explicit regional-branch metadata so Mr. Rime-style evolutions cannot bypass the regional override.
+This re-application now uses explicit source-backed regional-branch metadata for known CFRU/DPE branch evolutions, so
+Mr. Rime-style evolutions cannot bypass the regional override through flattened family expansion. Unknown branch forms
+outside those identity ranges still need a source-backed audit before automatic classification.
 
 ## Item Pool Touch Points
 
@@ -247,17 +251,14 @@ those pools, this PR does not blindly patch scripts; that source remains a ROM-b
 ## Blockers
 
 - CFRU/DPE Gen3 does not yet expose expanded alt-forme or Mega metadata through the handler.
-- `Species` has no generalized regional-form kind; `alolanForme` is not enough for Galarian, Hisuian, and Paldean
-  forms.
-- `Species` has no regional-branch evolution marker. Non-regional species such as Mr. Rime cannot currently be
-  distinguished from ordinary cross-generation relatives such as Electivire after `SpeciesSet.addFullFamilies()` has
-  flattened the family.
+- CFRU/DPE regional-form and regional-branch detection is source-backed for the documented Alola, Galar, Hisui, Paldea,
+  Galarian-branch, Hisuian-branch, and Clodsire identities. Other future/custom regional encodings still need audit.
 - GMax classification currently covers the known CFRU/DPE `SPECIES_*_GIGA` identity block `0x4EC..0x50D`; other GMax
   encodings would need a separate audit.
 - Irregular special-form classification currently covers the known CFRU/DPE Pikachu variant identity block
   `0x43D..0x44B`; other costume, totem, battle-only, or event forms need source-backed identity blocks before they
   should be filtered automatically.
-- The current generation predicate uses base-form generation, which conflicts with the desired regional-form default.
+- Regional-form generation handling uses source-backed form/base-family fallbacks when `baseForme` metadata is absent.
 - `Item` has no description field, so description-pattern audit output remains a design recommendation rather than a
   production predicate.
 - Later-generation item constants, normalized known names, and the known CFRU/DPE Z-Crystal identities are still not a
@@ -313,10 +314,11 @@ Current synthetic tests cover:
   Pikachu, Charizard, Venusaur, Blastoise, Meowth, and Eevee.
 - Alolan Vulpix excluded by Gen1-only without regional override.
 - Alolan Vulpix allowed by Gen1-only with regional override when its base family is Gen1.
+- Source-backed regional identities such as Hisuian Arcanine, Alolan Raticate, Galarian Weezing, Alolan Vulpix,
+  Galarian Mr. Mime, and Paldean Wooper are classified without relying on display names.
+- Mr. Rime is covered as a source-backed regional-branch evolution: evolutionary relatives alone do not allow it when
+  the regional override is off, while the regional override allows it through the Gen1 Mr. Mime family.
 - Sylveon, Annihilape, and Magmortar allowed only through the evolutionary-relative override when appropriate.
-- Mr. Rime is documented as a regional-branch evolution gap. An active predicate test confirms it is currently
-  non-regional Gen8 metadata; a disabled service-level expectation test captures the desired behavior until path-aware
-  regional-branch filtering is implemented.
 - Mega Stones, Z-Crystals, and Dynamax/GMax items excluded by the shared item predicate when their mechanics are off.
 - Field, shop, pickup, and starter held item replacement pools exclude mechanic items by default.
 - Mega, Z-Crystal, and Dynamax/GMax items can be selected when their corresponding include setting is enabled.

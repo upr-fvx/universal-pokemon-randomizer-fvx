@@ -43,6 +43,19 @@ public class Species implements Comparable<Species> {
     // CFRU/DPE Gen9 declares Pikachu Surfing/Flying/Cosplay/Cap identities contiguously.
     private static final int CFRU_DPE_IRREGULAR_PIKACHU_FIRST_SPECIES_IDENTITY = 0x43D;
     private static final int CFRU_DPE_IRREGULAR_PIKACHU_LAST_SPECIES_IDENTITY = 0x44B;
+    private static final int CFRU_DPE_ALOLAN_FIRST_SPECIES_IDENTITY = 0x3FC;
+    private static final int CFRU_DPE_ALOLAN_LAST_SPECIES_IDENTITY = 0x40F;
+    private static final int CFRU_DPE_GALARIAN_FIRST_SPECIES_IDENTITY = 0x4BC;
+    private static final int CFRU_DPE_GALARIAN_LAST_SPECIES_IDENTITY = 0x4D1;
+    private static final int CFRU_DPE_HISUIAN_FIRST_SPECIES_IDENTITY = 0x4D2;
+    private static final int CFRU_DPE_HISUIAN_LAST_SPECIES_IDENTITY = 0x4E2;
+    private static final int CFRU_DPE_PALDEAN_FIRST_SPECIES_IDENTITY = 0x581;
+    private static final int CFRU_DPE_PALDEAN_LAST_SPECIES_IDENTITY = 0x584;
+    private static final int CFRU_DPE_GALARIAN_BRANCH_FIRST_SPECIES_IDENTITY = 0x482;
+    private static final int CFRU_DPE_GALARIAN_BRANCH_LAST_SPECIES_IDENTITY = 0x487;
+    private static final int CFRU_DPE_HISUIAN_BRANCH_FIRST_SPECIES_IDENTITY = 0x4E3;
+    private static final int CFRU_DPE_HISUIAN_BRANCH_LAST_SPECIES_IDENTITY = 0x4E9;
+    private static final int CFRU_DPE_CLODSIRE_SPECIES_IDENTITY = 0x560;
 
     private String name;
     private final int number;
@@ -688,7 +701,33 @@ public class Species implements Comparable<Species> {
     }
 
     public boolean isRegionalForm() {
-        return hasSpecialFormCategory(SpecialFormCategory.REGIONAL);
+        return hasSpecialFormCategory(SpecialFormCategory.REGIONAL) || isCfruDpeRegionalFormSpeciesIdentity();
+    }
+
+    public boolean isRegionalBranchEvolution() {
+        return hasSpecialFormCategory(SpecialFormCategory.REGIONAL_BRANCH)
+                || isCfruDpeRegionalBranchEvolutionSpeciesIdentity();
+    }
+
+    public boolean dependsOnRegionalFormForEligibility() {
+        return isRegionalForm() || isRegionalBranchEvolution();
+    }
+
+    public int getRegionalFormGeneration() {
+        int sourceBackedGeneration = cfruDpeRegionalFormGeneration();
+        return sourceBackedGeneration > 0 ? sourceBackedGeneration : generation;
+    }
+
+    public int getRegionalBaseFamilyGeneration() {
+        int sourceBackedGeneration = cfruDpeRegionalBaseFamilyGeneration();
+        if (sourceBackedGeneration > 0) {
+            return sourceBackedGeneration;
+        }
+        Species base = getBaseForme();
+        if (base != this && base.getGeneration() > 0) {
+            return base.getGeneration();
+        }
+        return generation;
     }
 
     public boolean isIrregularSpecialForm() {
@@ -703,6 +742,72 @@ public class Species implements Comparable<Species> {
     private boolean isCfruDpeIrregularPikachuSpeciesIdentity() {
         return speciesSetIdentityNumber >= CFRU_DPE_IRREGULAR_PIKACHU_FIRST_SPECIES_IDENTITY
                 && speciesSetIdentityNumber <= CFRU_DPE_IRREGULAR_PIKACHU_LAST_SPECIES_IDENTITY;
+    }
+
+    private boolean isCfruDpeRegionalFormSpeciesIdentity() {
+        return isInRange(speciesSetIdentityNumber, CFRU_DPE_ALOLAN_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_ALOLAN_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_GALARIAN_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_GALARIAN_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_HISUIAN_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_HISUIAN_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_PALDEAN_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_PALDEAN_LAST_SPECIES_IDENTITY);
+    }
+
+    private boolean isCfruDpeRegionalBranchEvolutionSpeciesIdentity() {
+        return isInRange(speciesSetIdentityNumber, CFRU_DPE_GALARIAN_BRANCH_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_GALARIAN_BRANCH_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_HISUIAN_BRANCH_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_HISUIAN_BRANCH_LAST_SPECIES_IDENTITY)
+                || speciesSetIdentityNumber == CFRU_DPE_CLODSIRE_SPECIES_IDENTITY;
+    }
+
+    private int cfruDpeRegionalFormGeneration() {
+        if (isInRange(speciesSetIdentityNumber, CFRU_DPE_ALOLAN_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_ALOLAN_LAST_SPECIES_IDENTITY)) {
+            return 7;
+        }
+        if (isInRange(speciesSetIdentityNumber, CFRU_DPE_GALARIAN_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_GALARIAN_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_HISUIAN_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_HISUIAN_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_GALARIAN_BRANCH_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_GALARIAN_BRANCH_LAST_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_HISUIAN_BRANCH_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_HISUIAN_BRANCH_LAST_SPECIES_IDENTITY)) {
+            return 8;
+        }
+        if (isInRange(speciesSetIdentityNumber, CFRU_DPE_PALDEAN_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_PALDEAN_LAST_SPECIES_IDENTITY)
+                || speciesSetIdentityNumber == CFRU_DPE_CLODSIRE_SPECIES_IDENTITY) {
+            return 9;
+        }
+        return -1;
+    }
+
+    private int cfruDpeRegionalBaseFamilyGeneration() {
+        if (isInRange(speciesSetIdentityNumber, CFRU_DPE_ALOLAN_FIRST_SPECIES_IDENTITY,
+                CFRU_DPE_ALOLAN_LAST_SPECIES_IDENTITY)) {
+            return 1;
+        }
+        return switch (speciesSetIdentityNumber) {
+            case 0x4BC, 0x4BD, 0x4BE, 0x4BF, 0x4C0, 0x4C1, 0x4C2, 0x4C3, 0x4C4, 0x4C5, 0x4C6,
+                 0x4C7, 0x4D2, 0x4D3, 0x4D4, 0x4D5, 0x483, 0x485, 0x486, 0x4E4, 0x581, 0x582,
+                 0x583 -> 1;
+            case 0x4C8, 0x4C9, 0x4CC, 0x4D6, 0x4D7, 0x4D8, 0x482, 0x484, 0x4E3, 0x4E5,
+                 0x4E8, 0x4E9, 0x584, 0x560 -> 2;
+            case 0x4CA, 0x4CB -> 3;
+            case 0x4CD, 0x4CE, 0x4CF, 0x4D0, 0x4D1, 0x4D9, 0x4DA, 0x4DB, 0x4DC, 0x4DD, 0x4DE,
+                 0x487, 0x4E6, 0x4E7 -> 5;
+            case 0x4DF, 0x4E0, 0x4E1 -> 6;
+            case 0x4E2 -> 7;
+            default -> -1;
+        };
+    }
+
+    private static boolean isInRange(int value, int startInclusive, int endInclusive) {
+        return value >= startInclusive && value <= endInclusive;
     }
 
     /**

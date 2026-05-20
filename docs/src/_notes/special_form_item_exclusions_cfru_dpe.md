@@ -2,9 +2,9 @@
 
 Status: settings/serialization, species-pool filtering, and mechanic item-pool filtering are connected for the intended
 Mega, Gigantamax, regional-form, evolutionary-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE.
-GUI controls are exposed through the Limit Pokemon dialog. This audit adds source-backed coverage for known CFRU/DPE
-Z-Crystal identities/names and known Pikachu irregular-form identities. ROM-facing metadata audits remain follow-up
-work.
+GUI controls are exposed through the Limit Pokemon dialog. Source-backed coverage now includes known CFRU/DPE Mega
+identity ranges, the known GMax identity block, known CFRU/DPE Z-Crystal identities/names, and known Pikachu
+irregular-form identities. ROM-facing metadata audits remain follow-up work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -75,9 +75,13 @@ The target default must use the form's own generation, then apply the regional-f
 
 ## Example Modelability
 
-Mega Venusaur is modelable only if the CFRU/DPE loader identifies it as either a Mega-form species or a
-`MegaEvolution` target linked to Venusaur. Generic Gen6 constants contain Mega suffix and Mega Stone knowledge, but the
-Gen3 CFRU/DPE path does not currently expose Mega metadata.
+CFRU/DPE Gen9 Mega forms are modelable through the DPE/CFRU species identity ranges declared in local source headers:
+`SPECIES_VENUSAUR_MEGA` `0x365` through `SPECIES_LATIOS_MEGA` `0x38C`, then `SPECIES_RAYQUAZA_MEGA` `0x38F` through
+`SPECIES_DIANCIE_MEGA` `0x396`. `Species.isMegaForm()` now treats those `speciesSetIdentityNumber` ranges as Mega
+forms even when the display name and national species number look like the base Pokemon, such as Mega Charizard X/Y
+displaying as "Charizard" / `6`. This is intentionally identity-based rather than display-name-based. The adjacent
+Primal Groudon/Kyogre identities `0x38D..0x38E` are not classified as Mega by this narrow PR and need a separate
+mechanic-design decision if they should be excluded by the Mega-form setting.
 
 CFRU/DPE Gen9 Gigantamax forms are modelable through the DPE/CFRU species identity block declared in local source
 headers: `SPECIES_VENUSAUR_GIGA` `0x4EC` through `SPECIES_URSHIFU_RAPID_GIGA` `0x50D`. `Species.isGigantamaxForm()`
@@ -251,6 +255,8 @@ those pools, this PR does not blindly patch scripts; that source remains a ROM-b
 ## Blockers
 
 - CFRU/DPE Gen3 does not yet expose expanded alt-forme or Mega metadata through the handler.
+- Mega classification currently covers the known CFRU/DPE `SPECIES_*_MEGA` identity ranges `0x365..0x38C` and
+  `0x38F..0x396`; custom Mega encodings outside those ranges still need source-backed audit.
 - CFRU/DPE regional-form and regional-branch detection is source-backed for the documented Alola, Galar, Hisui, Paldea,
   Galarian-branch, Hisuian-branch, and Clodsire identities. Other future/custom regional encodings still need audit.
 - GMax classification currently covers the known CFRU/DPE `SPECIES_*_GIGA` identity block `0x4EC..0x50D`; other GMax
@@ -309,7 +315,8 @@ E) Local smoke and audit:
 
 Current synthetic tests cover:
 
-- Mega forms excluded by default and included only when allowed.
+- Mega forms excluded by default and included only when allowed, including CFRU/DPE identity examples such as Mega
+  Charizard X/Y.
 - GMax forms excluded by default and included only when allowed, including CFRU/DPE identity examples such as GMax
   Pikachu, Charizard, Venusaur, Blastoise, Meowth, and Eevee.
 - Alolan Vulpix excluded by Gen1-only without regional override.

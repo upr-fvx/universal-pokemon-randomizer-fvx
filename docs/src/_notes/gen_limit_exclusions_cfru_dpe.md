@@ -158,13 +158,16 @@ Known gaps:
 
 - Gen 3 `getSpeciesInclFormes()` currently returns `speciesList`, `getAltFormes()` returns an empty set, and
   `getMegaEvolutions()` returns an empty list. For CFRU/DPE BPRE this means expanded formes, Megas, and GMax entries
-  are not independently classified by the Gen3 handler today. The known CFRU/DPE Gen9 `SPECIES_*_GIGA` identity block
-  `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`. The known CFRU/DPE Pikachu Surfing/Flying/
-  Cosplay/Cap identity block `0x43D..0x44B` is handled directly by `Species.isIrregularSpecialForm()`. Known CFRU/DPE
-  regional identities are handled directly by `Species.isRegionalForm()` for Alola `0x3FC..0x40F`, Galar
+  are not independently classified by the Gen3 handler today. The known CFRU/DPE Gen9 `SPECIES_*_MEGA` identity ranges
+  `0x365..0x38C` and `0x38F..0x396` are handled directly by `Species.isMegaForm()`. The known CFRU/DPE Gen9
+  `SPECIES_*_GIGA` identity block `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`. The known
+  CFRU/DPE Pikachu Surfing/Flying/Cosplay/Cap identity block `0x43D..0x44B` is handled directly by
+  `Species.isIrregularSpecialForm()`. Known CFRU/DPE regional identities are handled directly by
+  `Species.isRegionalForm()` for Alola `0x3FC..0x40F`, Galar
   `0x4BC..0x4D1`, Hisui `0x4D2..0x4E2`, and Paldea `0x581..0x584`; known regional-branch identities are handled by
   `Species.isRegionalBranchEvolution()`.
 - Unknown or placeholder species names with invalid or noncanonical identities still need explicit audit coverage.
+- Mega encodings outside the known CFRU/DPE identity ranges still need explicit audit coverage.
 - GMax encodings outside the known CFRU/DPE identity block still need explicit audit coverage.
 - Regional-branch evolutions outside the known CFRU/DPE branch identity set still need source-backed audit.
 
@@ -176,7 +179,8 @@ Known gaps:
 - Gen 8 and Gen 9 species are excluded when only earlier generations are allowed.
 - unknown-generation species are excluded by generation restrictions.
 - forme inclusion uses the form generation by default, while `getAll(false)` still filters handler-reported alt formes.
-- Mega and GMax forms are excluded by default and included only through their settings.
+- Mega and GMax forms are excluded by default and included only through their settings, including known CFRU/DPE
+  identity examples such as Mega Charizard X/Y.
 - source-backed regional forms and regional-branch evolutions can use base-family generation only when the regional
   override is enabled.
 - evolutionary-relative expansion can include a Gen 9 relative when only Gen 1 is directly allowed.
@@ -198,8 +202,9 @@ without loading a ROM.
 
 1. Add a CFRU/DPE metadata classifier before changing Mega/GMax/Forme behavior. It should report sampled species count,
    allowed/excluded counts by reason, unknown-generation count, mega/form/GMax counts where known, and examples.
-2. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. GMax now has a
-   source-backed CFRU/DPE identity marker for the known `SPECIES_*_GIGA` block; do not extend it by name or suffix alone.
+2. Add explicit CFRU/DPE forme and Mega metadata if those entries are present as expanded species. Mega and GMax now
+   have source-backed CFRU/DPE identity markers for the known `SPECIES_*_MEGA` and `SPECIES_*_GIGA` blocks; do not
+   extend them by name or suffix alone.
 3. Route Mega/GMax/Forme exclusions through the same eligibility predicate once their metadata and settings exist, then
    keep writer-specific identity mapping
    checks at the ROM handler boundary.

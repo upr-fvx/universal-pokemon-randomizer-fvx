@@ -30,6 +30,42 @@ public class SpecialFormPredicatesTest {
     }
 
     @Test
+    public void cfruDpeMegaIdentitiesAreRecognizedWithoutDisplayNameDependence() {
+        Species charizard = species(6, "Charizard", 1);
+        Species megaCharizardX = species(6, "Charizard", 1);
+        megaCharizardX.setSpeciesSetIdentityNumber(0x366);
+        Species megaCharizardY = species(6, "Charizard", 1);
+        megaCharizardY.setSpeciesSetIdentityNumber(0x367);
+        Species megaVenusaur = species(3, "Venusaur", 1);
+        megaVenusaur.setSpeciesSetIdentityNumber(0x365);
+        Species megaBlastoise = species(9, "Blastoise", 1);
+        megaBlastoise.setSpeciesSetIdentityNumber(0x368);
+        Species megaDiancie = species(719, "Diancie", 6);
+        megaDiancie.setSpeciesSetIdentityNumber(0x396);
+        Species primalGroudon = species(383, "Groudon", 3);
+        primalGroudon.setSpeciesSetIdentityNumber(0x38D);
+
+        assertFalse(charizard.isMegaForm());
+        assertTrue(megaCharizardX.isMegaForm());
+        assertTrue(megaCharizardY.isMegaForm());
+        assertTrue(megaVenusaur.isMegaForm());
+        assertTrue(megaBlastoise.isMegaForm());
+        assertTrue(megaDiancie.isMegaForm());
+        assertFalse(primalGroudon.isMegaForm());
+
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(charizard, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(megaCharizardX, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(megaCharizardY, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(megaCharizardX, null,
+                new SpecialFormExclusionOptions(true, false, false)));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(megaCharizardY, null,
+                new SpecialFormExclusionOptions(true, false, false)));
+    }
+
+    @Test
     public void cfruDpeGigantamaxIdentitiesAreRecognizedWithoutDisplayNameDependence() {
         Species pikachu = species(25, "Pikachu", 1);
         Species gigantamaxPikachu = species(25, "Pikachu", 1);

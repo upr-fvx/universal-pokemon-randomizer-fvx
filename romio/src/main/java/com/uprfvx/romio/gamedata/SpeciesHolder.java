@@ -24,7 +24,7 @@ public class SpeciesHolder {
      */
     public SpeciesHolder(Species baseSpecies) {
         if (!baseSpecies.isBaseForme()) {
-            throw new IllegalArgumentException(baseSpecies.getNumberAndFullName() + "is not a base forme.");
+            throw  new IllegalArgumentException(baseSpecies.getNumberAndFullName() + "is not a base forme.");
         }
         this.baseSpecies = baseSpecies;
     }

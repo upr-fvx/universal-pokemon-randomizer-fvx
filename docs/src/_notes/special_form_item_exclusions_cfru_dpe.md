@@ -186,6 +186,12 @@ names such as `Snorlium Z`, `Necrozium Z`, `Pikanium Z`, `Pikashunium Z`, `Eeviu
 signature Z-Crystals, source-backed CFRU/DPE Mega Stones, Mega accessories, and modeled Dynamax/GMax items without
 broadly matching move names such as Mega Drain.
 
+Mega Stone detection also uses normalized known Mega Stone names when the item ID is not canonical or not in the
+currently documented CFRU/DPE range. This covers local evidence examples such as `Pidgeotite` and `Cameruptite`, plus
+other known Mega Stones like `Charizardite X`, `Charizardite Y`, `Mewtwonite X`, `Mewtwonite Y`, `Diancite`, and
+`Beedrillite`. The predicate remains explicit-name based rather than a broad `*ite` suffix match, so unrelated held
+items such as `Eviolite` are not treated as Mega Stones.
+
 Known partial item metadata exists outside `Item`:
 
 - Gen6 constants expose Mega Stone ID sets.
@@ -249,8 +255,12 @@ allowed/non-bad/sensible/consumable pool logic.
 
 Necrozium Z / Ultranecrozium Z is covered when it enters one of the shared mechanic-filtered replacement pools above.
 Snorlium Z and the other source-backed CFRU/DPE signature Z-Crystals are covered by the same predicate when they enter
-one of those pools. If a local item comes from a static script, gift, or NPC path that UPR-FVX does not randomize through
-those pools, this PR does not blindly patch scripts; that source remains a ROM-backed local audit item.
+one of those pools. Pidgeotite, Cameruptite, and other known Mega Stone names are also covered when they enter those
+mechanic-filtered replacement pools, even if their modeled IDs do not match the generic `ItemIDs` or known CFRU/DPE
+source block.
+
+If a local item comes from a static script, gift, or NPC path that UPR-FVX does not randomize through those pools, this
+PR does not blindly patch scripts; that source remains a ROM-backed local audit item.
 
 ## Blockers
 
@@ -267,8 +277,8 @@ those pools, this PR does not blindly patch scripts; that source remains a ROM-b
 - Regional-form generation handling uses source-backed form/base-family fallbacks when `baseForme` metadata is absent.
 - `Item` has no description field, so description-pattern audit output remains a design recommendation rather than a
   production predicate.
-- Later-generation item constants, normalized known names, and the known CFRU/DPE Z-Crystal identities are still not a
-  complete CFRU/DPE item compatibility audit, even though they now back the shared predicate.
+- Later-generation item constants, normalized known names, and the known CFRU/DPE Mega/Z identity ranges are still not
+  a complete CFRU/DPE item compatibility audit, even though they now back the shared predicate.
 - Local ROM-backed audits are still needed, but they must be user-run outside Codex.
 
 ## Recommended Implementation Slices
@@ -327,5 +337,6 @@ Current synthetic tests cover:
   the regional override is off, while the regional override allows it through the Gen1 Mr. Mime family.
 - Sylveon, Annihilape, and Magmortar allowed only through the evolutionary-relative override when appropriate.
 - Mega Stones, Z-Crystals, and Dynamax/GMax items excluded by the shared item predicate when their mechanics are off.
-- Field, shop, pickup, and starter held item replacement pools exclude mechanic items by default.
+- Pidgeotite and Cameruptite are recognized as Mega-related by normalized name even when their IDs are not canonical.
+- Field, shop, pickup, trainer held, and starter held item replacement pools exclude mechanic items by default.
 - Mega, Z-Crystal, and Dynamax/GMax items can be selected when their corresponding include setting is enabled.

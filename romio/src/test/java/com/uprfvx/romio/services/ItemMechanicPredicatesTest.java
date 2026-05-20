@@ -27,19 +27,57 @@ public class ItemMechanicPredicatesTest {
     public void megaStonesAndAccessoriesAreMegaMechanicItems() {
         Item venusaurite = item(ItemIDs.venusaurite, "Venusaurite");
         Item cfruDpeVenusaurite = item(CFRU_DPE_VENUSAURITE, "Venusaurite");
+        Item pidgeotite = item(6000, "Pidgeotite");
+        Item cameruptite = item(6001, "Cameruptite");
         Item megaRing = item(ItemIDs.megaRing, "Mega Ring");
 
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(venusaurite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeVenusaurite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(pidgeotite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cameruptite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(megaRing));
         assertFalse(ItemMechanicPredicates.isItemAllowed(venusaurite, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeVenusaurite,
                 ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(pidgeotite, ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cameruptite, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(megaRing, ItemMechanicExclusionOptions.defaults()));
         assertTrue(ItemMechanicPredicates.isItemAllowed(venusaurite,
                 new ItemMechanicExclusionOptions(true, false, false)));
         assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeVenusaurite,
                 new ItemMechanicExclusionOptions(true, false, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(pidgeotite,
+                new ItemMechanicExclusionOptions(true, false, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(cameruptite,
+                new ItemMechanicExclusionOptions(true, false, false)));
+    }
+
+    @Test
+    public void megaStoneNamesAreRecognizedWhenIdsAreNotCanonical() {
+        List<Item> megaStones = List.of(
+                item(6100, "Charizardite X"),
+                item(6101, "Charizardite Y"),
+                item(6102, "Mewtwonite X"),
+                item(6103, "Mewtwonite Y"),
+                item(6104, "Pidgeotite"),
+                item(6105, "Cameruptite"),
+                item(6106, "Diancite"),
+                item(6107, "Beedrillite"),
+                item(6108, "Sceptilite"),
+                item(6109, "Sablenite")
+        );
+        Item eviolite = item(7000, "Eviolite");
+        Item megaDrain = item(7001, "Mega Drain");
+
+        for (Item megaStone : megaStones) {
+            assertTrue(ItemMechanicPredicates.isMegaMechanicItem(megaStone),
+                    megaStone + " should be Mega-related");
+            assertFalse(ItemMechanicPredicates.isItemAllowed(megaStone, ItemMechanicExclusionOptions.defaults()));
+            assertTrue(ItemMechanicPredicates.isItemAllowed(megaStone,
+                    new ItemMechanicExclusionOptions(true, false, false)));
+        }
+        assertFalse(ItemMechanicPredicates.isMegaMechanicItem(eviolite));
+        assertFalse(ItemMechanicPredicates.isMegaMechanicItem(megaDrain));
     }
 
     @Test
@@ -137,6 +175,8 @@ public class ItemMechanicPredicatesTest {
         List<Item> modeledItems = List.of(
                 item(ItemIDs.venusaurite, "Venusaurite"),
                 item(CFRU_DPE_VENUSAURITE, "Venusaurite"),
+                item(7002, "Pidgeotite"),
+                item(7003, "Cameruptite"),
                 item(ItemIDs.megaRing, "Mega Ring"),
                 item(CFRU_DPE_ULTRANECROZIUM_Z, "Necrozium Z"),
                 item(CFRU_DPE_SNORLIUM_Z, "Snorlium Z"),
@@ -150,7 +190,7 @@ public class ItemMechanicPredicatesTest {
         MechanicItemAudit audit = audit(modeledItems);
 
         assertEquals(modeledItems.size(), audit.totalItems());
-        assertEquals(3, audit.count(ItemMechanicCategory.MEGA_STONE)
+        assertEquals(5, audit.count(ItemMechanicCategory.MEGA_STONE)
                 + audit.count(ItemMechanicCategory.MEGA_ACCESSORY));
         assertEquals(3, audit.count(ItemMechanicCategory.Z_CRYSTAL));
         assertEquals(2, audit.count(ItemMechanicCategory.DYNAMAX_GIGANTAMAX));

@@ -2,8 +2,9 @@
 
 Status: Gen 1-9 limit is supported in the shared settings model and restricted-species predicate. CFRU/DPE expanded
 BPRE generation assignment now falls back to `speciesSetIdentityNumber` when the ROM name cannot be mapped to
-`SpeciesIDs`. Mega, GMax, regional-form, and mirrored item exclusions remain follow-up work; the intended semantics are
-documented in `special_form_item_exclusions_cfru_dpe.md`. No writer behavior change, ROM execution, or P1 promotion.
+`SpeciesIDs`. Mega, GMax, regional-form, and mirrored item-exclusion settings/predicates are documented in
+`special_form_item_exclusions_cfru_dpe.md`; regional-branch evolutions such as Mr. Rime remain a follow-up gap. No
+writer behavior change, ROM execution, or P1 promotion.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -68,6 +69,14 @@ graph. After that expansion, special-form restrictions are applied again: disabl
 regional forms are still allowed only by their own generation or by `allowRegionalFormsAcrossGenLimit`. In other words,
 `allowEvolutionaryRelatives` can allow true cross-generation family members such as Electivire, Magmortar, or Sylveon,
 but it does not by itself allow Galarian Weezing or Alolan Vulpix in a Gen1-only pool.
+
+The Mr. Rime case is a remaining branch-level gap. Mr. Rime is not a regional form itself; it is a Gen8 evolution reached
+through Galarian Mr. Mime. The current post-expansion filter can remove Galarian Mr. Mime when the regional override is
+off, but it cannot prove that Mr. Rime was reached only through that regional branch because `SpeciesSet.addFullFamilies()`
+returns a flattened family set. Target semantics should exclude Mr. Rime for Gen1-only plus
+`allowEvolutionaryRelatives=true` when `allowRegionalFormsAcrossGenLimit=false`, while allowing it when the regional
+override is enabled. Today, seeing Mr. Rime in that no-regional-override profile should be treated as a bug /
+unsupported metadata gap rather than expected evolutionary-relative behavior.
 
 Alt-forme exclusion is a second-stage filter: `getAll(false)` and `getNonLegendaries(false)` remove species returned by
 `romHandler.getAltFormes()`. If a CFRU/DPE Gen3 handler reports no alt formes, per-path "allow formes" settings cannot
@@ -154,6 +163,8 @@ Known gaps:
   `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`.
 - Unknown or placeholder species names with invalid or noncanonical identities still need explicit audit coverage.
 - GMax encodings outside the known CFRU/DPE identity block still need explicit audit coverage.
+- Regional-branch evolutions need path-aware metadata or filtering. Node-local `Species.isRegionalForm()` is not enough
+  for Mr. Rime-style cases where the visible species is not regional but its eligibility depends on a regional branch.
 
 ## Non-ROM Tests Added
 
@@ -167,6 +178,8 @@ Known gaps:
 - regional forms can use base-family generation only when the regional override is enabled.
 - evolutionary-relative expansion can include a Gen 9 relative when only Gen 1 is directly allowed.
 - mega evolution entries are retained only when their target species remains in the allowed pool.
+- Mr. Rime current metadata is non-regional Gen8 in a synthetic predicate test. A disabled service-level expectation test
+  documents the desired regional-branch behavior without changing randomizer behavior in this diagnosis PR.
 
 These tests do not read ROMs. The production behavior change is limited to CFRU/DPE expanded BPRE generation fallback
 for species names that cannot be mapped directly.
@@ -195,5 +208,6 @@ Local user-run smokes should cover:
 - Gen 1-only and Gen 9-only pool selections across starters, wild, trainers, statics, trades, intro mon, and catching
   tutorial.
 - evolutionary relatives off and on, including families crossing generation boundaries.
+- regional-branch families such as Mr. Mime / Galarian Mr. Mime / Mr. Rime, with the regional override both off and on.
 - Mega/GMax/Forme exclusions once metadata exists.
 - placeholder and unknown-name entries remain absent from generated pools unless explicitly proven valid.

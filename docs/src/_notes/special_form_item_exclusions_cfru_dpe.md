@@ -2,7 +2,7 @@
 
 Status: settings/serialization, species-pool filtering, and mechanic item-pool filtering are connected for the intended
 Mega, Gigantamax, regional-form, evolutionary-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE.
-GUI controls and ROM-facing metadata audits remain follow-up work.
+GUI controls are exposed through the Limit Pokemon dialog. ROM-facing metadata audits remain follow-up work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -24,7 +24,9 @@ Evolutionary relatives remain a separate override. When enabled, cross-generatio
 allowed even when their own generation is outside the direct generation limit. Examples for Gen1-only plus evolutionary
 relatives include later family members such as Sylveon, Annihilape, and Magmortar when the evolution graph links them to
 an allowed family. This override does not allow regional forms: Galarian Weezing and Alolan Vulpix still require their
-own form generation to be enabled or `Allow Regional Forms across Gen Limit` to be enabled.
+own form generation to be enabled or `Allow Regional Forms across Gen Limit` to be enabled. Regional-branch evolutions
+such as Mr. Rime should follow the same branch rule: Gen1-only plus evolutionary relatives but without the regional
+override should exclude both Galarian Mr. Mime and Mr. Rime; enabling the regional override can allow that branch.
 
 Species exclusions must be mirrored by item exclusions. If Mega forms are off, Mega Stones and other Mega-relevant items
 should be excluded from randomized item pools. If GMax is off, Dynamax and GMax-relevant items should be excluded where
@@ -88,6 +90,14 @@ feature.
 Galarian Meowth, Hisuian Growlithe, and Paldean Wooper need a generalized regional-form metadata layer that records the
 form species, base family, region/form kind, and own form generation. The eligibility predicate can then decide whether
 to use own generation only or the base-family override.
+
+Mr. Rime exposes a separate regional-branch gap. It is not a regional form itself, so `Species.isRegionalForm()` is
+false in the current model. It is a Gen8 evolution reached through Galarian Mr. Mime. The current predicate can reject
+the regional species node after evolutionary-relative expansion, but it does not track that Mr. Rime was reached through
+a regional-only branch. As a result, a Gen1-only pool with `allowEvolutionaryRelatives=true` and
+`allowRegionalFormsAcrossGenLimit=false` can still admit Mr. Rime if the synthetic or loaded evolution graph connects
+Mr. Mime -> Galarian Mr. Mime -> Mr. Rime. That should be treated as a bug / unsupported metadata gap, not expected
+target semantics.
 
 ## Current Settings Surface
 
@@ -180,6 +190,10 @@ After `allowEvolutionaryRelatives` expands a generation-limited family, the same
 This preserves true cross-generation evolution support while keeping regional forms separate from evolutionary-relative
 overrides.
 
+This re-application is currently node-local. It catches regional-form species themselves, but not non-regional
+evolutions whose only allowed path passes through a regional form. A follow-up fix needs either path-aware family
+expansion or explicit regional-branch metadata so Mr. Rime-style evolutions cannot bypass the regional override.
+
 ## Item Pool Touch Points
 
 The shared randomizer helper filters item candidates through `ItemMechanicPredicates` before placement. It is separate
@@ -210,6 +224,9 @@ PR does not blindly patch scripts; that source remains a ROM-backed local audit 
 - CFRU/DPE Gen3 does not yet expose expanded alt-forme or Mega metadata through the handler.
 - `Species` has no generalized regional-form kind; `alolanForme` is not enough for Galarian, Hisuian, and Paldean
   forms.
+- `Species` has no regional-branch evolution marker. Non-regional species such as Mr. Rime cannot currently be
+  distinguished from ordinary cross-generation relatives such as Electivire after `SpeciesSet.addFullFamilies()` has
+  flattened the family.
 - GMax classification currently covers the known CFRU/DPE `SPECIES_*_GIGA` identity block `0x4EC..0x50D`; other GMax
   encodings would need a separate audit.
 - The current generation predicate uses base-form generation, which conflicts with the desired regional-form default.
@@ -244,7 +261,7 @@ C) Item pool filtering:
 
 D) GUI, RNQS, and settings-profile:
 
-- Add GUI controls near generation/species restrictions as a follow-up.
+- GUI controls live in the Limit Pokemon dialog near generation/species restrictions.
 - Backward-compatible settings serialization for the new booleans is prepared.
 - Settings-profile overlays for the new flags are prepared.
 - Keep defaults off for Mega forms, GMax forms, regional-form cross-generation override, and mechanic item inclusion.
@@ -267,6 +284,9 @@ Current synthetic tests cover:
 - Alolan Vulpix excluded by Gen1-only without regional override.
 - Alolan Vulpix allowed by Gen1-only with regional override when its base family is Gen1.
 - Sylveon, Annihilape, and Magmortar allowed only through the evolutionary-relative override when appropriate.
+- Mr. Rime is documented as a regional-branch evolution gap. An active predicate test confirms it is currently
+  non-regional Gen8 metadata; a disabled service-level expectation test captures the desired behavior until path-aware
+  regional-branch filtering is implemented.
 - Mega Stones, Z-Crystals, and Dynamax/GMax items excluded by the shared item predicate when their mechanics are off.
 - Field, shop, pickup, and starter held item replacement pools exclude mechanic items by default.
 - Mega, Z-Crystal, and Dynamax/GMax items can be selected when their corresponding include setting is enabled.

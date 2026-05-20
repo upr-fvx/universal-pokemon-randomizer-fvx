@@ -8,6 +8,7 @@ import com.uprfvx.romio.gamedata.SpecialFormCategory;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
@@ -269,6 +270,38 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         SpeciesSet allowed = service.getAll(true);
         assertTrue(allowed.contains(galarianWeezing));
         assertTrue(allowed.contains(alolanVulpix));
+    }
+
+    @Disabled("Current metadata marks regional species, not evolution branches that pass through regional species.")
+    @Test
+    public void evolutionaryRelativesDoNotAllowRegionalBranchEvolutionsWithoutRegionalOverride() {
+        Species electabuzz = species(125, "Electabuzz", 1);
+        Species electivire = species(466, "Electivire", 4);
+        connectEvolution(electabuzz, electivire);
+
+        Species mrMime = species(122, "Mr. Mime", 1);
+        Species galarianMrMime = regionalSpecies(10122, "Galarian Mr. Mime", 8, mrMime);
+        Species mrRime = species(866, "Mr. Rime", 8);
+        connectEvolution(mrMime, galarianMrMime);
+        connectEvolution(galarianMrMime, mrRime);
+
+        RestrictedSpeciesService service = serviceFor(List.of(electabuzz, electivire, mrMime, galarianMrMime, mrRime),
+                List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
+                SpecialFormExclusionOptions.defaults());
+
+        SpeciesSet allowedWithoutRegionalOverride = service.getAll(true);
+        assertTrue(allowedWithoutRegionalOverride.contains(electivire));
+        assertFalse(allowedWithoutRegionalOverride.contains(galarianMrMime));
+        assertFalse(allowedWithoutRegionalOverride.contains(mrRime));
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
+                new SpecialFormExclusionOptions(false, false, true));
+
+        SpeciesSet allowedWithRegionalOverride = service.getAll(true);
+        assertTrue(allowedWithRegionalOverride.contains(galarianMrMime));
+        assertTrue(allowedWithRegionalOverride.contains(mrRime));
     }
 
     @Test

@@ -208,6 +208,18 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     static final int GEN3_TRAINER_PIC_OFFSET = 3;
     static final int GEN3_TRAINER_NAME_OFFSET = 4;
     private boolean trainerClassSpriteSyncEnabled;
+    private static final int CFRU_DPE_RUNNING_FLAG_BRANCH_OFFSET = 0x0E;
+    private static final int CFRU_DPE_RUNNING_FLAG_BRANCH_BYPASS = 0xE001;
+    private static final int[] CFRU_DPE_RUNNING_DISALLOWED_CAN_RUN_IN_BUILDINGS_PATTERN = new int[] {
+            0x10, 0xB5, 0x0A, 0x4B, 0x04, 0x00, 0x0A, 0x48,
+            -1, -1, -1, -1,
+            0x00, 0x28, 0x01, 0xD1, 0x01, 0x20, 0x10, 0xBD,
+            0x20, 0x00, 0x07, 0x4B,
+            -1, -1, -1, -1,
+            0x00, 0x28, 0xF7, 0xD1,
+            0x06, 0x4B, 0xD8, 0x7D, 0x05, 0x38, 0x43, 0x42,
+            0x58, 0x41, 0xF2, 0xE7
+    };
     // DPE/CFRU internal constants; FVX SpeciesIDs has no entries for these non-Pokedex slots.
     private static final int CFRU_DPE_SPECIES_NONE_INTERNAL_ID = 0;
     private static final int CFRU_DPE_SPECIES_EGG_INTERNAL_ID = 0x19C;
@@ -7489,7 +7501,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (romEntry.getIntValue("NationalDexTweakPossible") != 0) {
             available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
         }
-        if (romEntry.getIntValue("RunIndoorsTweakOffset") > 0) {
+        if (usesCfruDpeBpreRunningLogic()
+                ? cfruDpeRunningLogicAlreadyAllowsIndoorRunningForDiagnostics(rom)
+                : romEntry.getIntValue("RunIndoorsTweakOffset") > 0) {
             available |= MiscTweak.RUNNING_SHOES_INDOORS.getValue();
         }
         if (romEntry.getIntValue("TextSpeedValuesOffset") > 0 || romEntry.hasTweakFile("InstantTextTweak")) {
@@ -7503,7 +7517,9 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             available |= MiscTweak.RANDOMIZE_PC_POTION.getValue();
         }
         available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
+        if (!usesCfruDpeBpreRunningLogic() || findCfruDpeRunningFlagBranchOffsetForDiagnostics(rom) >= 0) {
+            available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
+        }
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
             available |= MiscTweak.BALANCE_STATIC_LEVELS.getValue();
         }
@@ -7546,6 +7562,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void applyRunningShoesIndoorsPatch() {
+        if (usesCfruDpeBpreRunningLogic()) {
+            // CFRU/DPE builds with CAN_RUN_IN_BUILDINGS already omit the indoor map-type gate.
+            return;
+        }
         if (romEntry.getIntValue("RunIndoorsTweakOffset") != 0) {
             writeByte(romEntry.getIntValue("RunIndoorsTweakOffset"), (byte) 0x00);
         }
@@ -7568,9 +7588,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void applyRunWithoutRunningShoesPatch() {
+        if (usesCfruDpeBpreRunningLogic()) {
+            applyCfruDpeRunWithoutRunningShoesPatch();
+            return;
+        }
         String prefix = Gen3Constants.getRunningShoesCheckPrefix(romEntry.getRomType());
         int offset = find(prefix);
-        if (offset != 0) {
+        if (offset > 0) {
             // The prefix starts 0x12 bytes from what we want to patch because what comes
             // between is region and revision dependent. To start running, the game checks:
             // 1. That you're not underwater (RSE only)
@@ -7582,6 +7606,50 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // game stops caring about the FLAG_SYS_B_DASH flag entirely.
             writeWord(offset + 0x12, 0);
         }
+    }
+
+    private boolean usesCfruDpeBpreRunningLogic() {
+        return useCfruDpeGen9SpeciesCount && "BPRE".equals(romEntry.getRomCode());
+    }
+
+    private void applyCfruDpeRunWithoutRunningShoesPatch() {
+        int offset = findCfruDpeRunningFlagBranchOffsetForDiagnostics(rom);
+        if (offset >= 0) {
+            writeWord(offset, CFRU_DPE_RUNNING_FLAG_BRANCH_BYPASS);
+        }
+    }
+
+    static int findCfruDpeRunningFlagBranchOffsetForDiagnostics(byte[] rom) {
+        int functionOffset = findUniqueMasked(rom, CFRU_DPE_RUNNING_DISALLOWED_CAN_RUN_IN_BUILDINGS_PATTERN);
+        if (functionOffset < 0) {
+            return functionOffset;
+        }
+        return functionOffset + CFRU_DPE_RUNNING_FLAG_BRANCH_OFFSET;
+    }
+
+    static boolean cfruDpeRunningLogicAlreadyAllowsIndoorRunningForDiagnostics(byte[] rom) {
+        return findUniqueMasked(rom, CFRU_DPE_RUNNING_DISALLOWED_CAN_RUN_IN_BUILDINGS_PATTERN) >= 0;
+    }
+
+    private static int findUniqueMasked(byte[] haystack, int[] pattern) {
+        int foundOffset = -1;
+        for (int offset = 0; offset <= haystack.length - pattern.length; offset++) {
+            boolean matches = true;
+            for (int i = 0; i < pattern.length; i++) {
+                int expected = pattern[i];
+                if (expected >= 0 && (haystack[offset + i] & 0xFF) != expected) {
+                    matches = false;
+                    break;
+                }
+            }
+            if (matches) {
+                if (foundOffset >= 0) {
+                    return -2;
+                }
+                foundOffset = offset;
+            }
+        }
+        return foundOffset;
     }
 
     private void applyReusableTMsPatch() {

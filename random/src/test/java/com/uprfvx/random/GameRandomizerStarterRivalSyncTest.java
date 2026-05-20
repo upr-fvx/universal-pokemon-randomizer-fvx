@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -14,16 +15,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GameRandomizerStarterRivalSyncTest {
 
     @Test
-    void gen3StarterRandomizationSyncsOpeningRivalWhenThroughGameOptionIsOff() throws IOException {
+    void gen3TrainerPokemonMutationsAlwaysReapplyOpeningRivalCounterStarter() throws IOException {
         String source = Files.readString(gameRandomizerSourcePath());
         String trainerPokemonFlow = methodBody(source, "private void maybeRandomizeTrainerPokemon()");
 
-        assertTrue(trainerPokemonFlow.contains("startersChanged && !rivalCarriesStarterThroughout"));
+        assertTrue(trainerPokemonFlow.contains("boolean openingRivalCounterStarterNeedsReapply"));
         assertTrue(trainerPokemonFlow.contains("romHandler.generationOfPokemon() == 3"));
+        assertTrue(trainerPokemonFlow.contains("&& (startersChanged || trainerPokemonRandomized)"));
         assertTrue(trainerPokemonFlow.contains("trainerPokeRandomizer.makeFirstRivalCarryStarter()"));
         assertTrue(trainerPokemonFlow.indexOf("trainerPokeRandomizer.randomizeTrainerPokes()")
                 < trainerPokemonFlow.indexOf("trainerPokeRandomizer.makeFirstRivalCarryStarter()"),
                 "Opening Rival starter sync must run after Trainer Pokemon randomization");
+        assertFalse(trainerPokemonFlow.contains("startersChanged && !rivalCarriesStarterThroughout"),
+                "Opening Rival counter-starter must not depend on Rival Carries Starter Through Game being off");
     }
 
     @Test

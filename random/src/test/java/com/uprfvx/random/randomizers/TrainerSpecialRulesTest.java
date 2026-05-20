@@ -154,6 +154,65 @@ public class TrainerSpecialRulesTest {
     }
 
     @Test
+    public void foeRandomizationWithCarryOffRestoresOnlyOakLabCounterStarter() {
+        Species bulbasaur = species(1, "Bulbasaur");
+        Species charmander = species(4, "Charmander");
+        Species squirtle = species(7, "Squirtle");
+        Species sceptile = species(254, "Sceptile");
+        Species filler = species(301, "Filler");
+        Species replacement = species(302, "Replacement");
+        Trainer oakLabRivalForCharmander = trainer(326, "RIVAL1-1",
+                pokemon(sceptile, 5), pokemon(filler, 2));
+        Trainer laterRivalForCharmander = trainer(331, "RIVAL2-1", pokemon(filler, 20), pokemon(filler, 18));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(bulbasaur, charmander, squirtle, sceptile, filler, replacement),
+                List.of(oakLabRivalForCharmander, laterRivalForCharmander),
+                List.of(bulbasaur, charmander, squirtle),
+                Collections.emptyList());
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
+        settings.setRivalCarriesStarterThroughout(false);
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, settings, new Random(17));
+        randomizer.randomizeTrainerPokes();
+        randomizer.makeFirstRivalCarryStarter();
+
+        assertSame(squirtle, oakLabRivalForCharmander.getPokemon().get(0).getSpecies());
+        assertTrue(oakLabRivalForCharmander.getPokemon().get(1).isResetMoves());
+        assertTrue(laterRivalForCharmander.getPokemon().stream().allMatch(TrainerPokemon::isResetMoves));
+    }
+
+    @Test
+    public void foeRandomizationWithCarryOnRestoresOakLabAndLaterRivalCounterStarter() {
+        Species bulbasaur = species(1, "Bulbasaur");
+        Species charmander = species(4, "Charmander");
+        Species squirtle = species(7, "Squirtle");
+        Species sceptile = species(254, "Sceptile");
+        Species filler = species(301, "Filler");
+        Species replacement = species(302, "Replacement");
+        Trainer oakLabRivalForCharmander = trainer(326, "RIVAL1-1", pokemon(sceptile, 5));
+        Trainer laterRivalForCharmander = trainer(331, "RIVAL2-1", pokemon(filler, 20), pokemon(filler, 18));
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(bulbasaur, charmander, squirtle, sceptile, filler, replacement),
+                List.of(oakLabRivalForCharmander, laterRivalForCharmander),
+                List.of(bulbasaur, charmander, squirtle),
+                Collections.emptyList());
+        Settings settings = new Settings();
+        settings.setTrainersMod(Settings.TrainersMod.RANDOM);
+        settings.setRivalCarriesStarterThroughout(true);
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, settings, new Random(17));
+        randomizer.makeRivalCarryStarter();
+        randomizer.randomizeTrainerPokes();
+        randomizer.makeRivalCarryStarter();
+        randomizer.makeFirstRivalCarryStarter();
+
+        assertSame(squirtle, oakLabRivalForCharmander.getPokemon().get(0).getSpecies());
+        assertSame(squirtle, laterRivalForCharmander.getPokemon().get(0).getSpecies());
+        assertTrue(laterRivalForCharmander.getPokemon().get(1).isResetMoves());
+    }
+
+    @Test
     public void frlgOpeningRivalTrainerIdsUseRandomizedCounterStarterSlots() {
         Species hattrem = species(857, "Hattrem");
         Species clefairy = species(35, "Clefairy");
@@ -180,6 +239,26 @@ public class TrainerSpecialRulesTest {
         assertNotSame(squirtle, rivalSquirtle.getPokemon().get(0).getSpecies());
         assertNotSame(bulbasaur, rivalBulbasaur.getPokemon().get(0).getSpecies());
         assertNotSame(golisopod, rivalBulbasaur.getPokemon().get(0).getSpecies());
+    }
+
+    @Test
+    public void frlgOpeningRivalTrainerIdsCorrectUntaggedOakLabRows() {
+        Species bulbasaur = species(1, "Bulbasaur");
+        Species charmander = species(4, "Charmander");
+        Species squirtle = species(7, "Squirtle");
+        Species sceptile = species(254, "Sceptile");
+        Trainer rivalForCharmanderChoice = trainer(326, null, pokemon(sceptile, 5));
+        List<Species> starters = List.of(bulbasaur, charmander, squirtle);
+        TrainerTestRomHandler handler = TrainerTestRomHandler.create(
+                List.of(bulbasaur, charmander, squirtle, sceptile),
+                List.of(rivalForCharmanderChoice),
+                starters,
+                Collections.emptyList());
+
+        TrainerPokemonRandomizer randomizer = new TrainerPokemonRandomizer(handler.proxy, new Settings(), new Random(5));
+        randomizer.syncFrlgOpeningRivalTrainerIds(handler.trainers, starters);
+
+        assertSame(squirtle, rivalForCharmanderChoice.getPokemon().get(0).getSpecies());
     }
 
     @Test

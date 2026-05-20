@@ -593,7 +593,9 @@ public class GameRandomizer {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if (startersChanged && !rivalCarriesStarterThroughout && romHandler.generationOfPokemon() == 3) {
+        boolean openingRivalCounterStarterNeedsReapply = romHandler.generationOfPokemon() == 3
+                && (startersChanged || trainerPokemonRandomized);
+        if (openingRivalCounterStarterNeedsReapply) {
             trainerPokeRandomizer.makeFirstRivalCarryStarter();
         }
     }

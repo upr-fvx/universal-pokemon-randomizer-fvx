@@ -64,7 +64,10 @@ for DPE/CFRU names that are shortened, accented, or spelled differently from FVX
 
 When `allowEvolutionaryRelatives` is enabled, the service expands the selected set with `SpeciesSet.addFullFamilies()`.
 That can intentionally pull in species outside the directly allowed generations if they are connected by the evolution
-graph.
+graph. After that expansion, special-form restrictions are applied again: disabled Mega/GMax forms remain excluded, and
+regional forms are still allowed only by their own generation or by `allowRegionalFormsAcrossGenLimit`. In other words,
+`allowEvolutionaryRelatives` can allow true cross-generation family members such as Electivire, Magmortar, or Sylveon,
+but it does not by itself allow Galarian Weezing or Alolan Vulpix in a Gen1-only pool.
 
 Alt-forme exclusion is a second-stage filter: `getAll(false)` and `getNonLegendaries(false)` remove species returned by
 `romHandler.getAltFormes()`. If a CFRU/DPE Gen3 handler reports no alt formes, per-path "allow formes" settings cannot

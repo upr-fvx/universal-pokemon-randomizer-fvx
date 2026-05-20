@@ -80,7 +80,9 @@ The inspected randomizer paths use the restricted service for their primary spec
   `getMegaEvolutions()` for mega-swap handling.
 - In-game trades: `TradeRandomizer` uses `randomSpecies()`, which draws from `getAll(false)`.
 - Intro Mon: `IntroPokemonRandomizer` uses `getAll(true)` and relies on the ROM handler writer to reject species that
-  cannot be encoded.
+  cannot be encoded. CFRU/DPE expanded BPRE can accept identity-valid Gen 7/8/9 candidates through the confirmed visual
+  pointer-table path; if the restricted pool has no writable candidates, Intro Mon is skipped unchanged instead of
+  crashing.
 - Catching Tutorial: `MiscTweakRandomizer` uses `randomSpecies()`, so it draws from `getAll(false)`.
 - Evolution targets: `EvolutionRandomizer` uses `getSpecies(false, altFormesCanHaveDifferentEvolutions(), false)`.
 

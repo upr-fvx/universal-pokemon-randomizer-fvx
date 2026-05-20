@@ -39,8 +39,13 @@ For FRLG, `Gen3RomHandler.setIntroPokemon()` writes:
   Nidoran female normal asset table entries even after the known FRLG intro sources changed.
 - For extended CFRU/DPE BPRE species pools, the writer uses the species-set internal identity for Intro Mon writes.
   This prevents named extended-pool species whose Pokédex mapping is `0` from writing raw species `0` to the Intro
-  species literals and visual pointer sources. The randomizer also exhausts candidates and throws a diagnostic error
-  if no candidate is accepted, instead of looping or accepting species `0`.
+  species literals and visual pointer sources.
+- CFRU/DPE Gen 7/8/9 Intro Mon candidates with identity values above the FRLG raw-byte limit can be accepted through
+  the confirmed visual pointer-table path when both target front-image and normal-palette table entries are in ROM. In
+  that path the raw one-byte cry/other literals are left unchanged because they cannot safely encode extended species
+  IDs.
+- The randomizer exhausts candidates and skips Intro Mon unchanged if no candidate is accepted, instead of crashing,
+  looping, or accepting species `0`.
 
 `IntroPaletteOffset` is still reported by the diagnostic because ROM entries define it, but the FRLG writer currently
 uses `IntroImageOffset + 4` for the palette pointer. A mismatch between these candidates is useful local evidence, not

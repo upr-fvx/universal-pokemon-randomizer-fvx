@@ -6863,11 +6863,23 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
         // FRLG
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-            // first 255 only due to size
+            // Vanilla FRLG stores raw species literals as bytes. CFRU/DPE BPRE can still use extended visual
+            // pointer-table sources for identity-valid expanded species.
             int introPokemon = getIntroPokemonInternalSpeciesId(pk, pokedexToInternal,
                     usesInternalSpeciesIdentityForExtendedBpreHack());
-            if (introPokemon <= 0 || introPokemon > 255) {
+            if (introPokemon <= 0) {
                 return false;
+            }
+
+            if (introPokemon > 255) {
+                if (!canSyncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset,
+                        paletteTableOffset)) {
+                    return false;
+                }
+                writePointer(imageOffset, imageTableOffset + introPokemon * 8);
+                writePointer(imageOffset + 4, paletteTableOffset + introPokemon * 8);
+                syncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset, paletteTableOffset);
+                return true;
             }
 
             writeByte(cryOffset, (byte) introPokemon);
@@ -6940,18 +6952,41 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void syncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,
                                                                  int paletteTableOffset) {
-        if (!useCfruDpeGen9SpeciesCount
-                || romEntry.getRomType() != Gen3Constants.RomType_FRLG
-                || !"BPRE".equals(romEntry.getRomCode())) {
+        if (!canSyncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset, paletteTableOffset)) {
             return;
         }
         syncCfruDpeIntroVisualSourcePointerTableEntry(rom, imageTableOffset, SpeciesIDs.nidoranFemale, introPokemon);
         syncCfruDpeIntroVisualSourcePointerTableEntry(rom, paletteTableOffset, SpeciesIDs.nidoranFemale, introPokemon);
     }
 
+    private boolean canSyncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,
+                                                                      int paletteTableOffset) {
+        return useCfruDpeGen9SpeciesCount
+                && romEntry.getRomType() == Gen3Constants.RomType_FRLG
+                && "BPRE".equals(romEntry.getRomCode())
+                && canSyncCfruDpeIntroVisualSourcePointerTableEntry(rom, imageTableOffset,
+                        SpeciesIDs.nidoranFemale, introPokemon)
+                && canSyncCfruDpeIntroVisualSourcePointerTableEntry(rom, paletteTableOffset,
+                        SpeciesIDs.nidoranFemale, introPokemon);
+    }
+
     static boolean syncCfruDpeIntroVisualSourcePointerTableEntry(byte[] rom, int tableOffset,
                                                                  int visibleSourceSpeciesId,
                                                                  int targetSpeciesId) {
+        if (!canSyncCfruDpeIntroVisualSourcePointerTableEntry(rom, tableOffset, visibleSourceSpeciesId,
+                targetSpeciesId)) {
+            return false;
+        }
+        int visibleSourceEntryOffset = tableOffset + visibleSourceSpeciesId * 8;
+        int targetEntryOffset = tableOffset + targetSpeciesId * 8;
+        int targetPointer = readPointerFromRom(rom, targetEntryOffset);
+        writePointerToRom(rom, visibleSourceEntryOffset, targetPointer);
+        return true;
+    }
+
+    static boolean canSyncCfruDpeIntroVisualSourcePointerTableEntry(byte[] rom, int tableOffset,
+                                                                    int visibleSourceSpeciesId,
+                                                                    int targetSpeciesId) {
         if (rom == null || tableOffset < 0 || visibleSourceSpeciesId <= 0 || targetSpeciesId <= 0) {
             return false;
         }
@@ -6965,7 +7000,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (targetPointer < 0) {
             return false;
         }
-        writePointerToRom(rom, visibleSourceEntryOffset, targetPointer);
         return true;
     }
 

@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
@@ -18,8 +19,9 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class IntroPokemonDecisionTest {
 
@@ -38,19 +40,80 @@ public class IntroPokemonDecisionTest {
     }
 
     @Test
-    public void randomizeIntroPokemonThrowsInsteadOfLoopingWhenNoValidSpeciesExists() {
+    public void randomizeIntroPokemonSkipsInsteadOfLoopingWhenNoValidSpeciesExists() {
         Species invalid = species(0, 0, "Invalid");
         IntroTestRomHandler handler = IntroTestRomHandler.create(List.of(invalid));
         IntroPokemonRandomizer randomizer = new IntroPokemonRandomizer(handler.proxy, new Settings(), new Random(0));
 
-        assertThrows(IllegalStateException.class, randomizer::randomizeIntroPokemon);
+        randomizer.randomizeIntroPokemon();
+
         assertEquals(List.of(invalid), handler.introAttempts);
+        assertNull(handler.acceptedIntroSpecies);
+        assertNull(randomizer.getIntroSpecies());
+        assertFalse(randomizer.isChangesMade());
+    }
+
+    @Test
+    public void randomizeIntroPokemonAcceptsGen789IdentityCandidateWithSpeciesNumberZero() {
+        Species gen6 = species(669, 669, "Flabebe", 6);
+        Species gen7IdentityOnly = species(0, 722, "Rowlet", 7);
+        GenRestrictions restrictions = new GenRestrictions(0);
+        restrictions.setGenAllowed(7, true);
+        restrictions.setGenAllowed(8, true);
+        restrictions.setGenAllowed(9, true);
+        restrictions.setAllowEvolutionaryRelatives(false);
+        IntroTestRomHandler handler = IntroTestRomHandler.create(List.of(gen6, gen7IdentityOnly), restrictions);
+        IntroPokemonRandomizer randomizer = new IntroPokemonRandomizer(handler.proxy, new Settings(), new Random(0));
+
+        randomizer.randomizeIntroPokemon();
+
+        assertEquals(List.of(gen7IdentityOnly), handler.introAttempts);
+        assertSame(gen7IdentityOnly, handler.acceptedIntroSpecies);
+        assertSame(gen7IdentityOnly, randomizer.getIntroSpecies());
+    }
+
+    @Test
+    public void randomizeIntroPokemonRejectsIdentityZeroAndSkipsEmptyRestrictedPool() {
+        Species invalidIdentity = species(0, 0, "InvalidIdentity", 7);
+        GenRestrictions restrictions = new GenRestrictions(0);
+        restrictions.setGenAllowed(7, true);
+        restrictions.setAllowEvolutionaryRelatives(false);
+        IntroTestRomHandler handler = IntroTestRomHandler.create(List.of(invalidIdentity), restrictions);
+        IntroPokemonRandomizer randomizer = new IntroPokemonRandomizer(handler.proxy, new Settings(), new Random(0));
+
+        randomizer.randomizeIntroPokemon();
+
+        assertEquals(List.of(invalidIdentity), handler.introAttempts);
+        assertNull(handler.acceptedIntroSpecies);
+        assertFalse(randomizer.isChangesMade());
+    }
+
+    @Test
+    public void randomizeIntroPokemonSkipsWhenRestrictedPoolIsEmpty() {
+        Species gen6 = species(669, 669, "Flabebe", 6);
+        GenRestrictions restrictions = new GenRestrictions(0);
+        restrictions.setGenAllowed(7, true);
+        restrictions.setAllowEvolutionaryRelatives(false);
+        IntroTestRomHandler handler = IntroTestRomHandler.create(List.of(gen6), restrictions);
+        IntroPokemonRandomizer randomizer = new IntroPokemonRandomizer(handler.proxy, new Settings(), new Random(0));
+
+        randomizer.randomizeIntroPokemon();
+
+        assertEquals(List.of(), handler.introAttempts);
+        assertNull(handler.acceptedIntroSpecies);
+        assertNull(randomizer.getIntroSpecies());
+        assertFalse(randomizer.isChangesMade());
     }
 
     private static Species species(int number, int identityNumber, String name) {
+        return species(number, identityNumber, name, 1);
+    }
+
+    private static Species species(int number, int identityNumber, String name, int generation) {
         Species species = new Species(number);
         species.setSpeciesSetIdentityNumber(identityNumber);
         species.setName(name);
+        species.setGeneration(generation);
         return species;
     }
 
@@ -69,12 +132,16 @@ public class IntroPokemonDecisionTest {
         }
 
         private static IntroTestRomHandler create(List<Species> species) {
+            return create(species, null);
+        }
+
+        private static IntroTestRomHandler create(List<Species> species, GenRestrictions restrictions) {
             IntroTestRomHandler handler = new IntroTestRomHandler(species);
             handler.proxy = (RomHandler) Proxy.newProxyInstance(
                     RomHandler.class.getClassLoader(), new Class<?>[] { RomHandler.class }, handler);
             handler.restrictedSpeciesService = new RestrictedSpeciesService(handler.proxy);
             handler.typeService = new TypeService(handler.proxy);
-            handler.restrictedSpeciesService.setRestrictions(null);
+            handler.restrictedSpeciesService.setRestrictions(restrictions);
             return handler;
         }
 

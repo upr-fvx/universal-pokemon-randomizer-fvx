@@ -121,6 +121,56 @@ public class SpecialFormPredicatesTest {
     }
 
     @Test
+    public void cfruDpeRegionalIdentitiesUseRegionalGenerationWithoutDisplayNameDependence() {
+        GenRestrictions gen1Only = allowOnlyGen(1);
+        GenRestrictions gen2Only = allowOnlyGen(2);
+        GenRestrictions gen7Only = allowOnlyGen(7);
+        GenRestrictions gen8Only = allowOnlyGen(8);
+        SpecialFormExclusionOptions regionalOverride = new SpecialFormExclusionOptions(false, false, true);
+        Species arcanine = species(59, "Arcanine", 1);
+        Species hisuianArcanine = species(59, "Arcanine", 1);
+        hisuianArcanine.setSpeciesSetIdentityNumber(0x4D3);
+        Species alolanRaticate = species(20, "Raticate", 1);
+        alolanRaticate.setSpeciesSetIdentityNumber(0x3FD);
+        Species alolanVulpix = species(37, "Vulpix", 1);
+        alolanVulpix.setSpeciesSetIdentityNumber(0x401);
+        Species galarianWeezing = species(110, "Weezing", 1);
+        galarianWeezing.setSpeciesSetIdentityNumber(0x4C3);
+        Species galarianMrMime = species(122, "Mr. Mime", 1);
+        galarianMrMime.setSpeciesSetIdentityNumber(0x4C4);
+        Species paldeanWooper = species(194, "Wooper", 2);
+        paldeanWooper.setSpeciesSetIdentityNumber(0x584);
+
+        assertFalse(arcanine.isRegionalForm());
+        assertTrue(hisuianArcanine.isRegionalForm());
+        assertTrue(alolanRaticate.isRegionalForm());
+        assertTrue(alolanVulpix.isRegionalForm());
+        assertTrue(galarianWeezing.isRegionalForm());
+        assertTrue(galarianMrMime.isRegionalForm());
+        assertTrue(paldeanWooper.isRegionalForm());
+
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(arcanine, gen1Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(hisuianArcanine, gen1Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(hisuianArcanine, gen8Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(hisuianArcanine, gen1Only, regionalOverride));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(alolanRaticate, gen1Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(alolanRaticate, gen7Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(alolanVulpix, gen1Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(alolanVulpix, gen7Only,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(alolanVulpix, gen1Only, regionalOverride));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(galarianWeezing, gen1Only, regionalOverride));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(paldeanWooper, gen1Only, regionalOverride));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(paldeanWooper, gen2Only, regionalOverride));
+    }
+
+    @Test
     public void regionalOverrideUsesBaseFamilyGenerationForKnownRegionalExamples() {
         GenRestrictions gen1Only = allowOnlyGen(1);
         GenRestrictions gen2Only = allowOnlyGen(2);
@@ -140,19 +190,29 @@ public class SpecialFormPredicatesTest {
     }
 
     @Test
-    public void mrRimeIsNotClassifiedAsARegionalFormByCurrentMetadata() {
+    public void cfruDpeRegionalBranchEvolutionsUseRegionalOverrideSemantics() {
         GenRestrictions gen1Only = allowOnlyGen(1);
         GenRestrictions gen8Only = allowOnlyGen(8);
-        Species mrMime = species(122, "Mr. Mime", 1);
-        Species galarianMrMime = regionalSpecies(10122, "Galarian Mr. Mime", 8, mrMime);
+        SpecialFormExclusionOptions regionalOverride = new SpecialFormExclusionOptions(false, false, true);
         Species mrRime = species(866, "Mr. Rime", 8);
+        mrRime.setSpeciesSetIdentityNumber(0x486);
+        Species perrserker = species(863, "Perrserker", 8);
+        perrserker.setSpeciesSetIdentityNumber(0x483);
+        Species clodsire = species(980, "Clodsire", 9);
+        clodsire.setSpeciesSetIdentityNumber(0x560);
 
-        assertTrue(galarianMrMime.isRegionalForm());
         assertFalse(mrRime.isRegionalForm());
+        assertTrue(mrRime.isRegionalBranchEvolution());
+        assertTrue(perrserker.isRegionalBranchEvolution());
+        assertTrue(clodsire.isRegionalBranchEvolution());
         assertFalse(SpecialFormPredicates.isSpeciesAllowed(mrRime, gen1Only,
                 SpecialFormExclusionOptions.defaults()));
         assertTrue(SpecialFormPredicates.isSpeciesAllowed(mrRime, gen8Only,
                 SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(mrRime, gen1Only, regionalOverride));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(perrserker, gen1Only, regionalOverride));
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(clodsire, gen1Only, regionalOverride));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(clodsire, allowOnlyGen(2), regionalOverride));
     }
 
     @Test

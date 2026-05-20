@@ -8,7 +8,6 @@ import com.uprfvx.romio.gamedata.SpecialFormCategory;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
@@ -230,6 +229,41 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     }
 
     @Test
+    public void cfruDpeRegionalIdentitiesAreFilteredFromDefaultPools() {
+        Species arcanine = species(59, "Arcanine", 1);
+        Species hisuianArcanine = species(59, "Arcanine", 1);
+        hisuianArcanine.setSpeciesSetIdentityNumber(0x4D3);
+        Species alolanRaticate = species(20, "Raticate", 1);
+        alolanRaticate.setSpeciesSetIdentityNumber(0x3FD);
+        Species galarianWeezing = species(110, "Weezing", 1);
+        galarianWeezing.setSpeciesSetIdentityNumber(0x4C3);
+        Species alolanVulpix = species(37, "Vulpix", 1);
+        alolanVulpix.setSpeciesSetIdentityNumber(0x401);
+        RestrictedSpeciesService service = serviceFor(
+                List.of(arcanine, hisuianArcanine, alolanRaticate, galarianWeezing, alolanVulpix),
+                List.of(), List.of());
+        GenRestrictions gen1Only = new GenRestrictionsBuilder().allowOnlyGen(1).withoutEvolutionaryRelatives().build();
+
+        service.setRestrictions(gen1Only, SpecialFormExclusionOptions.defaults());
+
+        SpeciesSet allowedWithoutRegionalOverride = service.getAll(true);
+        assertTrue(allowedWithoutRegionalOverride.contains(arcanine));
+        assertFalse(allowedWithoutRegionalOverride.contains(hisuianArcanine));
+        assertFalse(allowedWithoutRegionalOverride.contains(alolanRaticate));
+        assertFalse(allowedWithoutRegionalOverride.contains(galarianWeezing));
+        assertFalse(allowedWithoutRegionalOverride.contains(alolanVulpix));
+
+        service.setRestrictions(gen1Only, new SpecialFormExclusionOptions(false, false, true));
+
+        SpeciesSet allowedWithRegionalOverride = service.getAll(true);
+        assertTrue(allowedWithRegionalOverride.contains(arcanine));
+        assertTrue(allowedWithRegionalOverride.contains(hisuianArcanine));
+        assertTrue(allowedWithRegionalOverride.contains(alolanRaticate));
+        assertTrue(allowedWithRegionalOverride.contains(galarianWeezing));
+        assertTrue(allowedWithRegionalOverride.contains(alolanVulpix));
+    }
+
+    @Test
     public void evolutionaryRelativesExpansionStillAllowsCrossGenerationFamilyMembers() {
         Species gen1 = species(1, "Gen1", 1);
         Species gen9Evolution = species(901, "Gen9Evolution", 9);
@@ -295,7 +329,6 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         assertTrue(allowed.contains(alolanVulpix));
     }
 
-    @Disabled("Current metadata marks regional species, not evolution branches that pass through regional species.")
     @Test
     public void evolutionaryRelativesDoNotAllowRegionalBranchEvolutionsWithoutRegionalOverride() {
         Species electabuzz = species(125, "Electabuzz", 1);
@@ -305,6 +338,7 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         Species mrMime = species(122, "Mr. Mime", 1);
         Species galarianMrMime = regionalSpecies(10122, "Galarian Mr. Mime", 8, mrMime);
         Species mrRime = species(866, "Mr. Rime", 8);
+        mrRime.setSpeciesSetIdentityNumber(0x486);
         connectEvolution(mrMime, galarianMrMime);
         connectEvolution(galarianMrMime, mrRime);
 

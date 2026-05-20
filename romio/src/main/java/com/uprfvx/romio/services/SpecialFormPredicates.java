@@ -55,7 +55,8 @@ public final class SpecialFormPredicates {
         if (!hasUsableSpeciesIdentity(species) || !isAllowedBySpecialFormOptions(species, effectiveOptions)) {
             return false;
         }
-        return !species.isRegionalForm() || isAllowedByGeneration(species, restrictions, effectiveOptions);
+        return !species.dependsOnRegionalFormForEligibility()
+                || isAllowedByGeneration(species, restrictions, effectiveOptions);
     }
 
     public static int effectiveGenerationForDirectLimit(Species species, SpecialFormExclusionOptions options) {
@@ -63,8 +64,11 @@ public final class SpecialFormPredicates {
             return -1;
         }
         SpecialFormExclusionOptions effectiveOptions = options == null ? SpecialFormExclusionOptions.defaults() : options;
-        if (species.isRegionalForm() && effectiveOptions.isAllowRegionalFormsAcrossGenLimit()) {
-            return species.getBaseForme().getGeneration();
+        if (species.dependsOnRegionalFormForEligibility()) {
+            if (effectiveOptions.isAllowRegionalFormsAcrossGenLimit()) {
+                return species.getRegionalBaseFamilyGeneration();
+            }
+            return species.getRegionalFormGeneration();
         }
         return species.getGeneration();
     }

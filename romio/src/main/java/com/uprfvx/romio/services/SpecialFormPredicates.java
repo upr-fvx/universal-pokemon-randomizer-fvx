@@ -46,6 +46,15 @@ public final class SpecialFormPredicates {
         return generation > 0 && restrictions.isGenAllowed(generation);
     }
 
+    public static boolean isAllowedAfterEvolutionaryRelativeExpansion(Species species, GenRestrictions restrictions,
+                                                                      SpecialFormExclusionOptions options) {
+        SpecialFormExclusionOptions effectiveOptions = options == null ? SpecialFormExclusionOptions.defaults() : options;
+        if (!hasUsableSpeciesIdentity(species) || !isAllowedBySpecialFormOptions(species, effectiveOptions)) {
+            return false;
+        }
+        return !species.isRegionalForm() || isAllowedByGeneration(species, restrictions, effectiveOptions);
+    }
+
     public static int effectiveGenerationForDirectLimit(Species species, SpecialFormExclusionOptions options) {
         if (species == null) {
             return -1;

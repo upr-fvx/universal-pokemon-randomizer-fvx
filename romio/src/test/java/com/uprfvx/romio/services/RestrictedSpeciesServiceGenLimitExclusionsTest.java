@@ -201,6 +201,80 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         assertTrue(service.getAll(true).contains(gen9Evolution));
     }
 
+    @Test
+    public void evolutionaryRelativesDoNotAllowRegionalFormsWithoutRegionalOverride() {
+        Species electabuzz = species(125, "Electabuzz", 1);
+        Species electivire = species(466, "Electivire", 4);
+        connectEvolution(electabuzz, electivire);
+
+        Species koffing = species(109, "Koffing", 1);
+        Species weezing = species(110, "Weezing", 1);
+        Species galarianWeezing = regionalSpecies(10110, "Galarian Weezing", 8, weezing);
+        connectEvolution(koffing, weezing);
+        connectEvolution(koffing, galarianWeezing);
+
+        Species vulpix = species(37, "Vulpix", 1);
+        Species alolanVulpix = regionalSpecies(10037, "Alolan Vulpix", 7, vulpix);
+        connectEvolution(vulpix, alolanVulpix);
+
+        RestrictedSpeciesService service = serviceFor(
+                List.of(electabuzz, electivire, koffing, weezing, galarianWeezing, vulpix, alolanVulpix),
+                List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
+                SpecialFormExclusionOptions.defaults());
+
+        SpeciesSet allowed = service.getAll(true);
+        assertTrue(allowed.contains(electivire));
+        assertFalse(allowed.contains(galarianWeezing));
+        assertFalse(allowed.contains(alolanVulpix));
+    }
+
+    @Test
+    public void regionalOverrideAllowsRegionalFormsAfterEvolutionaryRelativeExpansion() {
+        Species koffing = species(109, "Koffing", 1);
+        Species weezing = species(110, "Weezing", 1);
+        Species galarianWeezing = regionalSpecies(10110, "Galarian Weezing", 8, weezing);
+        connectEvolution(koffing, weezing);
+        connectEvolution(koffing, galarianWeezing);
+
+        Species vulpix = species(37, "Vulpix", 1);
+        Species alolanVulpix = regionalSpecies(10037, "Alolan Vulpix", 7, vulpix);
+        connectEvolution(vulpix, alolanVulpix);
+
+        RestrictedSpeciesService service = serviceFor(List.of(koffing, weezing, galarianWeezing, vulpix, alolanVulpix),
+                List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
+                new SpecialFormExclusionOptions(false, false, true));
+
+        SpeciesSet allowed = service.getAll(true);
+        assertTrue(allowed.contains(galarianWeezing));
+        assertTrue(allowed.contains(alolanVulpix));
+    }
+
+    @Test
+    public void evolutionaryRelativesDoNotBypassDisabledMegaOrGigantamaxFilters() {
+        Species venusaur = species(3, "Venusaur", 1);
+        Species megaVenusaur = species(10003, "Mega Venusaur", 6);
+        megaVenusaur.addSpecialFormCategory(SpecialFormCategory.MEGA);
+        Species gigantamaxVenusaur = species(20003, "Gigantamax Venusaur", 8);
+        gigantamaxVenusaur.addSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
+        connectEvolution(venusaur, megaVenusaur);
+        connectEvolution(venusaur, gigantamaxVenusaur);
+
+        RestrictedSpeciesService service = serviceFor(List.of(venusaur, megaVenusaur, gigantamaxVenusaur),
+                List.of(), List.of());
+
+        service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
+                SpecialFormExclusionOptions.defaults());
+
+        SpeciesSet allowed = service.getAll(true);
+        assertTrue(allowed.contains(venusaur));
+        assertFalse(allowed.contains(megaVenusaur));
+        assertFalse(allowed.contains(gigantamaxVenusaur));
+    }
+
     private static RestrictedSpeciesService serviceFor(List<Species> species, List<Species> altFormes,
                                                        List<MegaEvolution> megaEvolutions) {
         TestRomHandler handler = new TestRomHandler(species, altFormes, megaEvolutions);
@@ -212,6 +286,13 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         species.setName(name);
         species.setGeneration(generation);
         species.setSpeciesSetIdentityNumber(number);
+        return species;
+    }
+
+    private static Species regionalSpecies(int number, String name, int generation, Species baseForme) {
+        Species species = species(number, name, generation);
+        species.setBaseForme(baseForme);
+        species.addSpecialFormCategory(SpecialFormCategory.REGIONAL);
         return species;
     }
 

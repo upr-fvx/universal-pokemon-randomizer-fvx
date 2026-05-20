@@ -205,8 +205,9 @@ public class RestrictedSpeciesService {
         // If the user specified it, add all the evolutionary relatives for everything in the mainPokemonList
         if (restrictions.isAllowEvolutionaryRelatives()) {
             allInclAltFormes.addFullFamilies(false);
-            allInclAltFormes = allInclAltFormes.filter(sp -> SpecialFormPredicates.hasUsableSpeciesIdentity(sp)
-                    && SpecialFormPredicates.isAllowedBySpecialFormOptions(sp, specialFormOptions));
+            allInclAltFormes = allInclAltFormes.filter(sp ->
+                    SpecialFormPredicates.isAllowedAfterEvolutionaryRelativeExpansion(sp, restrictions,
+                            specialFormOptions));
         }
 
         return allInclAltFormes;

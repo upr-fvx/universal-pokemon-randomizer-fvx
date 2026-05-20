@@ -23,7 +23,8 @@ the Vulpix family is Gen1.
 Evolutionary relatives remain a separate override. When enabled, cross-generation evolutions and pre-evolutions can be
 allowed even when their own generation is outside the direct generation limit. Examples for Gen1-only plus evolutionary
 relatives include later family members such as Sylveon, Annihilape, and Magmortar when the evolution graph links them to
-an allowed family.
+an allowed family. This override does not allow regional forms: Galarian Weezing and Alolan Vulpix still require their
+own form generation to be enabled or `Allow Regional Forms across Gen Limit` to be enabled.
 
 Species exclusions must be mirrored by item exclusions. If Mega forms are off, Mega Stones and other Mega-relevant items
 should be excluded from randomized item pools. If GMax is off, Dynamax and GMax-relevant items should be excluded where
@@ -167,6 +168,10 @@ Species-picking paths that use `RestrictedSpeciesService` now receive the common
 The common predicate should reject null species, invalid identity species, disabled Mega forms, disabled GMax forms, and
 disallowed regional forms before the path chooses replacements. Path-specific checks should still reject candidates that
 cannot be safely written by that ROM handler.
+
+After `allowEvolutionaryRelatives` expands a generation-limited family, the same special-form exclusions are re-applied.
+This preserves true cross-generation evolution support while keeping regional forms separate from evolutionary-relative
+overrides.
 
 ## Item Pool Touch Points
 

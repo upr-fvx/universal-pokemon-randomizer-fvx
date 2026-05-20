@@ -2,7 +2,9 @@
 
 Status: settings/serialization, species-pool filtering, and mechanic item-pool filtering are connected for the intended
 Mega, Gigantamax, regional-form, evolutionary-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE.
-GUI controls are exposed through the Limit Pokemon dialog. ROM-facing metadata audits remain follow-up work.
+GUI controls are exposed through the Limit Pokemon dialog. This audit adds source-backed coverage for known CFRU/DPE
+Z-Crystal identities/names and known Pikachu irregular-form identities. ROM-facing metadata audits remain follow-up
+work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -83,6 +85,14 @@ now treats that `speciesSetIdentityNumber` range as GMax even when the display n
 like the base Pokemon, such as GMax Pikachu displaying as "Pikachu" / `25`. This is intentionally identity-based rather
 than display-name-based; GMax entries outside that known CFRU/DPE block remain audit-required.
 
+CFRU/DPE Gen9 also declares known Pikachu nonstandard visual identities in one contiguous source-backed block:
+`SPECIES_PIKACHU_SURFING` `0x43D` through `SPECIES_PIKACHU_CAP_PARTNER` `0x44B`. These are not Mega, GMax, or regional
+forms, but they are not normal default-pool species either. `Species.isIrregularSpecialForm()` now treats that block as
+irregular special forms, so a Pokemon that displays as "Pikachu" / `25` but has a Surfing, Flying, Cosplay, Libre,
+Rock Star, Pop Star, Belle, Ph.D, or Cap identity is excluded by safe/default special-form options. Normal Pikachu
+identity `0x19` remains allowed. GMax Pikachu identity `0x4F0` remains classified by the GMax predicate, not by the
+irregular Pikachu block.
+
 Alolan Vulpix is partly represented by the existing `alolanForme` concept, but the model is Alola-specific and not a
 general regional-form category. It does not cover Galarian Meowth, Hisuian Growlithe, or Paldean Wooper as a uniform
 feature.
@@ -153,8 +163,20 @@ The mechanic category layer and `ItemMechanicPredicates` identify Mega Stones/ac
 Dynamax/GMax-related items. The predicate is intentionally separate from existing `allowed` and `bad` filters.
 
 The Z-Crystal predicate now includes the CFRU/DPE Gen9 item identities for `ITEM_ULTRANECROZIUM_Z` / Necrozium Z
-(`0x214`) and the contiguous CFRU/DPE Z-Crystal block `0x244..0x265`. This covers the local evidence item whose
-description enables Necrozma Ultra Burst; it was not covered by the previous Gen7 bag/held split item ID ranges.
+(`0x214`) and the contiguous CFRU/DPE Z-Crystal block `0x244..0x265`. The source block includes the type crystals and
+signature crystals through `ITEM_SNORLIUM_Z` (`0x263`) and `ITEM_TAPUNIUM_Z` (`0x265`). This covers local evidence items
+whose descriptions mention Necrozma Ultra Burst or Z-Power / Z-Moves when they enter mechanic-filtered replacement
+pools; they were not covered by the previous Gen7 bag/held split item ID ranges.
+
+`Item` stores IDs and display names, but not descriptions. Because the in-ROM text such as "Z-Power", "Z-Move",
+"Ultra Burst", "Mega Evolution", "Dynamax", or "Gigantamax" is not present in the item model, description-pattern
+classification cannot be used safely by the non-ROM predicate today. The predicate therefore combines existing
+constant/range checks with normalized known item names for CFRU/DPE aliases and synthetic audit coverage. The source
+also declares the CFRU/DPE Mega Stone block `ITEM_VENUSAURITE` `0x215` through `ITEM_DIANCITE` `0x243`, which is now
+classified as Mega-related even though those IDs differ from the generic Gen6 `ItemIDs` constants. This catches modeled
+names such as `Snorlium Z`, `Necrozium Z`, `Pikanium Z`, `Pikashunium Z`, `Eevium Z`, `Mewnium Z`, the other known
+signature Z-Crystals, source-backed CFRU/DPE Mega Stones, Mega accessories, and modeled Dynamax/GMax items without
+broadly matching move names such as Mega Drain.
 
 Known partial item metadata exists outside `Item`:
 
@@ -183,8 +205,10 @@ Species-picking paths that use `RestrictedSpeciesService` now receive the common
 - Catching Tutorial and other miscellaneous species picks should continue to draw through the restricted service.
 
 The common predicate should reject null species, invalid identity species, disabled Mega forms, disabled GMax forms, and
-disallowed regional forms before the path chooses replacements. Path-specific checks should still reject candidates that
-cannot be safely written by that ROM handler.
+disallowed regional forms before the path chooses replacements. Safe/default special-form options also reject known
+irregular special forms such as CFRU/DPE Pikachu costume/cap identities unless the caller explicitly uses the internal
+`allowAllSpecialForms()` option. There is no GUI/RNQS irregular-form include setting in this PR. Path-specific checks
+should still reject candidates that cannot be safely written by that ROM handler.
 
 After `allowEvolutionaryRelatives` expands a generation-limited family, the same special-form exclusions are re-applied.
 This preserves true cross-generation evolution support while keeping regional forms separate from evolutionary-relative
@@ -216,8 +240,9 @@ replacement pools. Enabling the matching include setting lets that mechanic's it
 allowed/non-bad/sensible/consumable pool logic.
 
 Necrozium Z / Ultranecrozium Z is covered when it enters one of the shared mechanic-filtered replacement pools above.
-If a local item comes from a static script, gift, or NPC path that UPR-FVX does not randomize through those pools, this
-PR does not blindly patch scripts; that source remains a ROM-backed local audit item.
+Snorlium Z and the other source-backed CFRU/DPE signature Z-Crystals are covered by the same predicate when they enter
+one of those pools. If a local item comes from a static script, gift, or NPC path that UPR-FVX does not randomize through
+those pools, this PR does not blindly patch scripts; that source remains a ROM-backed local audit item.
 
 ## Blockers
 
@@ -229,9 +254,14 @@ PR does not blindly patch scripts; that source remains a ROM-backed local audit 
   flattened the family.
 - GMax classification currently covers the known CFRU/DPE `SPECIES_*_GIGA` identity block `0x4EC..0x50D`; other GMax
   encodings would need a separate audit.
+- Irregular special-form classification currently covers the known CFRU/DPE Pikachu variant identity block
+  `0x43D..0x44B`; other costume, totem, battle-only, or event forms need source-backed identity blocks before they
+  should be filtered automatically.
 - The current generation predicate uses base-form generation, which conflicts with the desired regional-form default.
-- Later-generation item constants and the known CFRU/DPE Z-Crystal identities are not a complete CFRU/DPE item
-  compatibility audit, even though they now back the shared predicate.
+- `Item` has no description field, so description-pattern audit output remains a design recommendation rather than a
+  production predicate.
+- Later-generation item constants, normalized known names, and the known CFRU/DPE Z-Crystal identities are still not a
+  complete CFRU/DPE item compatibility audit, even though they now back the shared predicate.
 - Local ROM-backed audits are still needed, but they must be user-run outside Codex.
 
 ## Recommended Implementation Slices

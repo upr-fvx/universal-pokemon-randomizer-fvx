@@ -40,6 +40,9 @@ public class Species implements Comparable<Species> {
     // CFRU/DPE Gen9 declares SPECIES_*_GIGA contiguously from Venusaur G-Max through Urshifu Rapid G-Max.
     private static final int CFRU_DPE_GIGANTAMAX_FIRST_SPECIES_IDENTITY = 0x4EC;
     private static final int CFRU_DPE_GIGANTAMAX_LAST_SPECIES_IDENTITY = 0x50D;
+    // CFRU/DPE Gen9 declares Pikachu Surfing/Flying/Cosplay/Cap identities contiguously.
+    private static final int CFRU_DPE_IRREGULAR_PIKACHU_FIRST_SPECIES_IDENTITY = 0x43D;
+    private static final int CFRU_DPE_IRREGULAR_PIKACHU_LAST_SPECIES_IDENTITY = 0x44B;
 
     private String name;
     private final int number;
@@ -688,9 +691,18 @@ public class Species implements Comparable<Species> {
         return hasSpecialFormCategory(SpecialFormCategory.REGIONAL);
     }
 
+    public boolean isIrregularSpecialForm() {
+        return hasSpecialFormCategory(SpecialFormCategory.IRREGULAR) || isCfruDpeIrregularPikachuSpeciesIdentity();
+    }
+
     private boolean isCfruDpeGigantamaxSpeciesIdentity() {
         return speciesSetIdentityNumber >= CFRU_DPE_GIGANTAMAX_FIRST_SPECIES_IDENTITY
                 && speciesSetIdentityNumber <= CFRU_DPE_GIGANTAMAX_LAST_SPECIES_IDENTITY;
+    }
+
+    private boolean isCfruDpeIrregularPikachuSpeciesIdentity() {
+        return speciesSetIdentityNumber >= CFRU_DPE_IRREGULAR_PIKACHU_FIRST_SPECIES_IDENTITY
+                && speciesSetIdentityNumber <= CFRU_DPE_IRREGULAR_PIKACHU_LAST_SPECIES_IDENTITY;
     }
 
     /**

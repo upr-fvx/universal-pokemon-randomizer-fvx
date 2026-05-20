@@ -187,6 +187,29 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     }
 
     @Test
+    public void cfruDpePikachuIrregularVariantsAreFilteredFromDefaultPools() {
+        Species pikachu = species(25, "Pikachu", 1);
+        Species capPikachu = species(25, "Pikachu", 1);
+        capPikachu.setSpeciesSetIdentityNumber(0x445);
+        Species cosplayPikachu = species(25, "Pikachu", 1);
+        cosplayPikachu.setSpeciesSetIdentityNumber(0x43F);
+        RestrictedSpeciesService service = serviceFor(List.of(pikachu, capPikachu, cosplayPikachu),
+                List.of(), List.of());
+
+        service.setRestrictions(null, SpecialFormExclusionOptions.defaults());
+
+        assertTrue(service.getAll(true).contains(pikachu));
+        assertFalse(service.getAll(true).contains(capPikachu));
+        assertFalse(service.getAll(true).contains(cosplayPikachu));
+
+        service.setRestrictions(null, SpecialFormExclusionOptions.allowAllSpecialForms());
+
+        assertTrue(service.getAll(true).contains(pikachu));
+        assertTrue(service.getAll(true).contains(capPikachu));
+        assertTrue(service.getAll(true).contains(cosplayPikachu));
+    }
+
+    @Test
     public void regionalFormsUseOwnGenerationUnlessRegionalOverrideIsEnabled() {
         Species vulpix = species(37, "Vulpix", 1);
         Species alolanVulpix = species(10037, "Alolan Vulpix", 7);

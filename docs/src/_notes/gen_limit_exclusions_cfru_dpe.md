@@ -2,9 +2,9 @@
 
 Status: Gen 1-9 limit is supported in the shared settings model and restricted-species predicate. CFRU/DPE expanded
 BPRE generation assignment now falls back to `speciesSetIdentityNumber` when the ROM name cannot be mapped to
-`SpeciesIDs`. Mega, GMax, regional-form, and mirrored item-exclusion settings/predicates are documented in
-`special_form_item_exclusions_cfru_dpe.md`; regional-branch evolutions such as Mr. Rime remain a follow-up gap. No
-writer behavior change, ROM execution, or P1 promotion.
+`SpeciesIDs`. Mega, GMax, regional-form, known irregular Pikachu variant, and mirrored item-exclusion
+settings/predicates are documented in `special_form_item_exclusions_cfru_dpe.md`; regional-branch evolutions such as
+Mr. Rime remain a follow-up gap. No writer behavior change, ROM execution, or P1 promotion.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -65,10 +65,11 @@ for DPE/CFRU names that are shortened, accented, or spelled differently from FVX
 
 When `allowEvolutionaryRelatives` is enabled, the service expands the selected set with `SpeciesSet.addFullFamilies()`.
 That can intentionally pull in species outside the directly allowed generations if they are connected by the evolution
-graph. After that expansion, special-form restrictions are applied again: disabled Mega/GMax forms remain excluded, and
-regional forms are still allowed only by their own generation or by `allowRegionalFormsAcrossGenLimit`. In other words,
-`allowEvolutionaryRelatives` can allow true cross-generation family members such as Electivire, Magmortar, or Sylveon,
-but it does not by itself allow Galarian Weezing or Alolan Vulpix in a Gen1-only pool.
+graph. After that expansion, special-form restrictions are applied again: disabled Mega/GMax forms remain excluded,
+known irregular special forms remain excluded by default, and regional forms are still allowed only by their own
+generation or by `allowRegionalFormsAcrossGenLimit`. In other words, `allowEvolutionaryRelatives` can allow true
+cross-generation family members such as Electivire, Magmortar, or Sylveon, but it does not by itself allow Galarian
+Weezing, Alolan Vulpix, or known CFRU/DPE Pikachu costume/cap identities in a Gen1-only default pool.
 
 The Mr. Rime case is a remaining branch-level gap. Mr. Rime is not a regional form itself; it is a Gen8 evolution reached
 through Galarian Mr. Mime. The current post-expansion filter can remove Galarian Mr. Mime when the regional override is
@@ -101,9 +102,9 @@ The inspected randomizer paths use the restricted service for their primary spec
 - Catching Tutorial: `MiscTweakRandomizer` uses `randomSpecies()`, so it draws from `getAll(false)`.
 - Evolution targets: `EvolutionRandomizer` uses `getSpecies(false, altFormesCanHaveDifferentEvolutions(), false)`.
 
-These paths share the same generation, evolutionary-relative, Mega, GMax, and regional-form predicate. Their generic
-alt-forme toggle behavior still depends on whether the handler classifies CFRU/DPE expanded forms in `getAltFormes()` /
-`getIrregularFormes()`.
+These paths share the same generation, evolutionary-relative, Mega, GMax, regional-form, and known irregular-form
+predicate. Their generic alt-forme toggle behavior still depends on whether the handler classifies CFRU/DPE expanded
+forms in `getAltFormes()` / `getIrregularFormes()`.
 
 ## Gen1-only Local Failure
 
@@ -160,7 +161,8 @@ Known gaps:
 - Gen 3 `getSpeciesInclFormes()` currently returns `speciesList`, `getAltFormes()` returns an empty set, and
   `getMegaEvolutions()` returns an empty list. For CFRU/DPE BPRE this means expanded formes, Megas, and GMax entries
   are not independently classified by the Gen3 handler today. The known CFRU/DPE Gen9 `SPECIES_*_GIGA` identity block
-  `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`.
+  `0x4EC..0x50D` is handled directly by `Species.isGigantamaxForm()`. The known CFRU/DPE Pikachu Surfing/Flying/
+  Cosplay/Cap identity block `0x43D..0x44B` is handled directly by `Species.isIrregularSpecialForm()`.
 - Unknown or placeholder species names with invalid or noncanonical identities still need explicit audit coverage.
 - GMax encodings outside the known CFRU/DPE identity block still need explicit audit coverage.
 - Regional-branch evolutions need path-aware metadata or filtering. Node-local `Species.isRegionalForm()` is not enough

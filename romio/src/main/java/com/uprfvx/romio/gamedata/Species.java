@@ -37,6 +37,11 @@ public class Species implements Comparable<Species> {
     //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
     //TODO: add a reset method that reverts this to original (for testing)
 
+    // CFRU/DPE Gen9 declares SPECIES_*_MEGA identities in two contiguous ranges around Primal Groudon/Kyogre.
+    private static final int CFRU_DPE_MEGA_FIRST_SPECIES_IDENTITY = 0x365;
+    private static final int CFRU_DPE_MEGA_LATIOS_SPECIES_IDENTITY = 0x38C;
+    private static final int CFRU_DPE_MEGA_RAYQUAZA_SPECIES_IDENTITY = 0x38F;
+    private static final int CFRU_DPE_MEGA_LAST_SPECIES_IDENTITY = 0x396;
     // CFRU/DPE Gen9 declares SPECIES_*_GIGA contiguously from Venusaur G-Max through Urshifu Rapid G-Max.
     private static final int CFRU_DPE_GIGANTAMAX_FIRST_SPECIES_IDENTITY = 0x4EC;
     private static final int CFRU_DPE_GIGANTAMAX_LAST_SPECIES_IDENTITY = 0x50D;
@@ -693,7 +698,7 @@ public class Species implements Comparable<Species> {
     }
 
     public boolean isMegaForm() {
-        return hasSpecialFormCategory(SpecialFormCategory.MEGA);
+        return hasSpecialFormCategory(SpecialFormCategory.MEGA) || isCfruDpeMegaSpeciesIdentity();
     }
 
     public boolean isGigantamaxForm() {
@@ -732,6 +737,13 @@ public class Species implements Comparable<Species> {
 
     public boolean isIrregularSpecialForm() {
         return hasSpecialFormCategory(SpecialFormCategory.IRREGULAR) || isCfruDpeIrregularPikachuSpeciesIdentity();
+    }
+
+    private boolean isCfruDpeMegaSpeciesIdentity() {
+        return isInRange(speciesSetIdentityNumber, CFRU_DPE_MEGA_FIRST_SPECIES_IDENTITY,
+                        CFRU_DPE_MEGA_LATIOS_SPECIES_IDENTITY)
+                || isInRange(speciesSetIdentityNumber, CFRU_DPE_MEGA_RAYQUAZA_SPECIES_IDENTITY,
+                        CFRU_DPE_MEGA_LAST_SPECIES_IDENTITY);
     }
 
     private boolean isCfruDpeGigantamaxSpeciesIdentity() {

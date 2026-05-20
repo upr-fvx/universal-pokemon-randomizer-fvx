@@ -105,7 +105,7 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     @Test
     public void evolutionaryRelativesCanExpandPastDirectGenerationRestriction() {
         Species gen1 = species(1, "Gen1", 1);
-        Species gen9Evolution = species(901, "Gen9Evolution", 9);
+        Species gen9Evolution = species(999, "Gen9Evolution", 9);
         connectEvolution(gen1, gen9Evolution);
         RestrictedSpeciesService service = serviceFor(List.of(gen1, gen9Evolution), List.of(), List.of());
 
@@ -183,6 +183,29 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
 
         assertTrue(service.getAll(true).contains(pikachu));
         assertTrue(service.getAll(true).contains(gigantamaxPikachu));
+    }
+
+    @Test
+    public void cfruDpeMegaIdentitiesAreFilteredByMegaOption() {
+        Species charizard = species(6, "Charizard", 1);
+        Species megaCharizardX = species(6, "Charizard", 1);
+        megaCharizardX.setSpeciesSetIdentityNumber(0x366);
+        Species megaCharizardY = species(6, "Charizard", 1);
+        megaCharizardY.setSpeciesSetIdentityNumber(0x367);
+        RestrictedSpeciesService service = serviceFor(List.of(charizard, megaCharizardX, megaCharizardY),
+                List.of(), List.of());
+
+        service.setRestrictions(null, SpecialFormExclusionOptions.defaults());
+
+        assertTrue(service.getAll(true).contains(charizard));
+        assertFalse(service.getAll(true).contains(megaCharizardX));
+        assertFalse(service.getAll(true).contains(megaCharizardY));
+
+        service.setRestrictions(null, new SpecialFormExclusionOptions(true, false, false));
+
+        assertTrue(service.getAll(true).contains(charizard));
+        assertTrue(service.getAll(true).contains(megaCharizardX));
+        assertTrue(service.getAll(true).contains(megaCharizardY));
     }
 
     @Test
@@ -266,7 +289,7 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     @Test
     public void evolutionaryRelativesExpansionStillAllowsCrossGenerationFamilyMembers() {
         Species gen1 = species(1, "Gen1", 1);
-        Species gen9Evolution = species(901, "Gen9Evolution", 9);
+        Species gen9Evolution = species(999, "Gen9Evolution", 9);
         connectEvolution(gen1, gen9Evolution);
         RestrictedSpeciesService service = serviceFor(List.of(gen1, gen9Evolution), List.of(), List.of());
 
@@ -366,16 +389,20 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         Species venusaur = species(3, "Venusaur", 1);
         Species megaVenusaur = species(10003, "Mega Venusaur", 6);
         megaVenusaur.addSpecialFormCategory(SpecialFormCategory.MEGA);
+        Species cfruDpeMegaCharizardX = species(6, "Charizard", 1);
+        cfruDpeMegaCharizardX.setSpeciesSetIdentityNumber(0x366);
         Species gigantamaxVenusaur = species(20003, "Gigantamax Venusaur", 8);
         gigantamaxVenusaur.addSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
         Species cfruDpeGigantamaxPikachu = species(25, "Pikachu", 1);
         cfruDpeGigantamaxPikachu.setSpeciesSetIdentityNumber(0x4F0);
         connectEvolution(venusaur, megaVenusaur);
+        connectEvolution(venusaur, cfruDpeMegaCharizardX);
         connectEvolution(venusaur, gigantamaxVenusaur);
         connectEvolution(venusaur, cfruDpeGigantamaxPikachu);
 
         RestrictedSpeciesService service = serviceFor(
-                List.of(venusaur, megaVenusaur, gigantamaxVenusaur, cfruDpeGigantamaxPikachu),
+                List.of(venusaur, megaVenusaur, cfruDpeMegaCharizardX, gigantamaxVenusaur,
+                        cfruDpeGigantamaxPikachu),
                 List.of(), List.of());
 
         service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
@@ -384,6 +411,7 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         SpeciesSet allowed = service.getAll(true);
         assertTrue(allowed.contains(venusaur));
         assertFalse(allowed.contains(megaVenusaur));
+        assertFalse(allowed.contains(cfruDpeMegaCharizardX));
         assertFalse(allowed.contains(gigantamaxVenusaur));
         assertFalse(allowed.contains(cfruDpeGigantamaxPikachu));
     }

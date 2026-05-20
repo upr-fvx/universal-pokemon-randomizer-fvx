@@ -7557,7 +7557,16 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
             applyForgettableHMsPatch();
         } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSet().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
+            applyFastEggHatchingPatch();
+        }
+    }
+
+    private void applyFastEggHatchingPatch() {
+        for (Species pk : getSpecies()) {
+            if (pk == null || pk.getBreedingInfo() == null) {
+                continue;
+            }
+            pk.getBreedingInfo().setEggCycles(0);
         }
     }
 

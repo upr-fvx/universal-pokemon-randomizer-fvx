@@ -64,3 +64,9 @@ for that opponent slot instead of being truncated into an invalid low byte. The 
 two-instruction shape and accepts identities up to `510`.
 
 Vanilla FRLG/RSE/E behavior remains on the existing Pokédex-to-internal mapping path.
+
+## Fast Egg Hatching
+
+CFRU/DPE expanded species pools can include species, formes, or placeholder entries without modeled breeding data.
+Fast Egg Hatching skips null species and species without `BreedingInfo`, and still sets egg cycles to `0` for species
+that have breeding data. This keeps vanilla behavior for modeled species while avoiding crashes on expanded-pool entries.

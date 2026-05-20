@@ -29,6 +29,9 @@ public final class ItemMechanicPredicates {
 
     private static final Set<Integer> Z_CRYSTAL_IDS = setupZCrystalIds();
     private static final Set<Integer> Z_ACCESSORY_IDS = Set.of(ItemIDs.zRing, ItemIDs.zPowerRing);
+    private static final int CFRU_DPE_ULTRANECROZIUM_Z = 0x214;
+    private static final int CFRU_DPE_Z_CRYSTAL_FIRST = 0x244;
+    private static final int CFRU_DPE_Z_CRYSTAL_LAST = 0x265;
 
     private static final Set<Integer> DYNAMAX_GIGANTAMAX_IDS = Set.of(
             ItemIDs.wishingStar,
@@ -114,6 +117,8 @@ public final class ItemMechanicPredicates {
         addBetween(ids, ItemIDs.mimikiumZHeld, ItemIDs.ultranecroziumZHeld);
         ids.add(ItemIDs.pikashuniumZHeld);
         ids.add(ItemIDs.ilimaNormaliumZ);
+        ids.add(CFRU_DPE_ULTRANECROZIUM_Z);
+        addBetween(ids, CFRU_DPE_Z_CRYSTAL_FIRST, CFRU_DPE_Z_CRYSTAL_LAST);
         return Collections.unmodifiableSet(ids);
     }
 

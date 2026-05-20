@@ -10,6 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ItemMechanicPredicatesTest {
 
+    private static final int CFRU_DPE_ULTRANECROZIUM_Z = 0x214;
+    private static final int CFRU_DPE_NORMALIUM_Z = 0x244;
+
     @Test
     public void megaStonesAndAccessoriesAreMegaMechanicItems() {
         Item venusaurite = item(ItemIDs.venusaurite, "Venusaurite");
@@ -27,13 +30,24 @@ public class ItemMechanicPredicatesTest {
     public void zCrystalsAndAccessoriesAreZMechanicItems() {
         Item normaliumZ = item(ItemIDs.normaliumZHeld, "Normalium Z");
         Item ultranecroziumZ = item(ItemIDs.ultranecroziumZBag, "Ultranecrozium Z");
+        Item cfruDpeNecroziumZ = item(CFRU_DPE_ULTRANECROZIUM_Z, "Necrozium Z");
+        Item cfruDpeNormaliumZ = item(CFRU_DPE_NORMALIUM_Z, "Normalium Z");
         Item zRing = item(ItemIDs.zRing, "Z-Ring");
 
         assertTrue(ItemMechanicPredicates.isZMechanicItem(normaliumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(ultranecroziumZ));
+        assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeNecroziumZ));
+        assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeNormaliumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(zRing));
         assertFalse(ItemMechanicPredicates.isItemAllowed(normaliumZ, ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(ultranecroziumZ, ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeNecroziumZ,
+                ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeNormaliumZ,
+                ItemMechanicExclusionOptions.defaults()));
         assertTrue(ItemMechanicPredicates.isItemAllowed(ultranecroziumZ,
+                new ItemMechanicExclusionOptions(false, true, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeNecroziumZ,
                 new ItemMechanicExclusionOptions(false, true, false)));
     }
 

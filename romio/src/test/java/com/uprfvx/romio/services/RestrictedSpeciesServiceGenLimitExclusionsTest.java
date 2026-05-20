@@ -168,6 +168,24 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
     }
 
     @Test
+    public void cfruDpeGigantamaxIdentitiesAreFilteredByGigantamaxOption() {
+        Species pikachu = species(25, "Pikachu", 1);
+        Species gigantamaxPikachu = species(25, "Pikachu", 1);
+        gigantamaxPikachu.setSpeciesSetIdentityNumber(0x4F0);
+        RestrictedSpeciesService service = serviceFor(List.of(pikachu, gigantamaxPikachu), List.of(), List.of());
+
+        service.setRestrictions(null, SpecialFormExclusionOptions.defaults());
+
+        assertTrue(service.getAll(true).contains(pikachu));
+        assertFalse(service.getAll(true).contains(gigantamaxPikachu));
+
+        service.setRestrictions(null, new SpecialFormExclusionOptions(false, true, false));
+
+        assertTrue(service.getAll(true).contains(pikachu));
+        assertTrue(service.getAll(true).contains(gigantamaxPikachu));
+    }
+
+    @Test
     public void regionalFormsUseOwnGenerationUnlessRegionalOverrideIsEnabled() {
         Species vulpix = species(37, "Vulpix", 1);
         Species alolanVulpix = species(10037, "Alolan Vulpix", 7);
@@ -260,10 +278,14 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         megaVenusaur.addSpecialFormCategory(SpecialFormCategory.MEGA);
         Species gigantamaxVenusaur = species(20003, "Gigantamax Venusaur", 8);
         gigantamaxVenusaur.addSpecialFormCategory(SpecialFormCategory.GIGANTAMAX);
+        Species cfruDpeGigantamaxPikachu = species(25, "Pikachu", 1);
+        cfruDpeGigantamaxPikachu.setSpeciesSetIdentityNumber(0x4F0);
         connectEvolution(venusaur, megaVenusaur);
         connectEvolution(venusaur, gigantamaxVenusaur);
+        connectEvolution(venusaur, cfruDpeGigantamaxPikachu);
 
-        RestrictedSpeciesService service = serviceFor(List.of(venusaur, megaVenusaur, gigantamaxVenusaur),
+        RestrictedSpeciesService service = serviceFor(
+                List.of(venusaur, megaVenusaur, gigantamaxVenusaur, cfruDpeGigantamaxPikachu),
                 List.of(), List.of());
 
         service.setRestrictions(new GenRestrictionsBuilder().allowOnlyGen(1).withEvolutionaryRelatives().build(),
@@ -273,6 +295,7 @@ public class RestrictedSpeciesServiceGenLimitExclusionsTest {
         assertTrue(allowed.contains(venusaur));
         assertFalse(allowed.contains(megaVenusaur));
         assertFalse(allowed.contains(gigantamaxVenusaur));
+        assertFalse(allowed.contains(cfruDpeGigantamaxPikachu));
     }
 
     private static RestrictedSpeciesService serviceFor(List<Species> species, List<Species> altFormes,

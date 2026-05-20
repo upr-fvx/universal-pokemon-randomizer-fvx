@@ -75,8 +75,11 @@ Mega Venusaur is modelable only if the CFRU/DPE loader identifies it as either a
 `MegaEvolution` target linked to Venusaur. Generic Gen6 constants contain Mega suffix and Mega Stone knowledge, but the
 Gen3 CFRU/DPE path does not currently expose Mega metadata.
 
-Gigantamax Venusaur is not safely modelable with the current metadata. There is no dedicated GMax flag, and using names
-or suffixes alone would be too fragile for CFRU/DPE compatibility. It needs a source-backed marker or table.
+CFRU/DPE Gen9 Gigantamax forms are modelable through the DPE/CFRU species identity block declared in local source
+headers: `SPECIES_VENUSAUR_GIGA` `0x4EC` through `SPECIES_URSHIFU_RAPID_GIGA` `0x50D`. `Species.isGigantamaxForm()`
+now treats that `speciesSetIdentityNumber` range as GMax even when the display name and national species number look
+like the base Pokemon, such as GMax Pikachu displaying as "Pikachu" / `25`. This is intentionally identity-based rather
+than display-name-based; GMax entries outside that known CFRU/DPE block remain audit-required.
 
 Alolan Vulpix is partly represented by the existing `alolanForme` concept, but the model is Alola-specific and not a
 general regional-form category. It does not cover Galarian Meowth, Hisuian Growlithe, or Paldean Wooper as a uniform
@@ -196,10 +199,11 @@ allowed/non-bad/sensible/consumable pool logic.
 
 ## Blockers
 
-- CFRU/DPE Gen3 does not yet expose expanded alt-forme, Mega, or GMax metadata through the handler.
+- CFRU/DPE Gen3 does not yet expose expanded alt-forme or Mega metadata through the handler.
 - `Species` has no generalized regional-form kind; `alolanForme` is not enough for Galarian, Hisuian, and Paldean
   forms.
-- GMax has no dedicated metadata marker.
+- GMax classification currently covers the known CFRU/DPE `SPECIES_*_GIGA` identity block `0x4EC..0x50D`; other GMax
+  encodings would need a separate audit.
 - The current generation predicate uses base-form generation, which conflicts with the desired regional-form default.
 - Later-generation item constants are not a CFRU/DPE item compatibility audit, even though they now back the shared
   predicate.
@@ -250,7 +254,8 @@ E) Local smoke and audit:
 Current synthetic tests cover:
 
 - Mega forms excluded by default and included only when allowed.
-- GMax forms excluded by default and included only when allowed.
+- GMax forms excluded by default and included only when allowed, including CFRU/DPE identity examples such as GMax
+  Pikachu, Charizard, Venusaur, Blastoise, Meowth, and Eevee.
 - Alolan Vulpix excluded by Gen1-only without regional override.
 - Alolan Vulpix allowed by Gen1-only with regional override when its base family is Gen1.
 - Sylveon, Annihilape, and Magmortar allowed only through the evolutionary-relative override when appropriate.

@@ -30,6 +30,36 @@ public class SpecialFormPredicatesTest {
     }
 
     @Test
+    public void cfruDpeGigantamaxIdentitiesAreRecognizedWithoutDisplayNameDependence() {
+        Species pikachu = species(25, "Pikachu", 1);
+        Species gigantamaxPikachu = species(25, "Pikachu", 1);
+        gigantamaxPikachu.setSpeciesSetIdentityNumber(0x4F0);
+        Species gigantamaxCharizard = species(6, "Charizard", 1);
+        gigantamaxCharizard.setSpeciesSetIdentityNumber(0x4ED);
+        Species gigantamaxVenusaur = species(3, "Venusaur", 1);
+        gigantamaxVenusaur.setSpeciesSetIdentityNumber(0x4EC);
+        Species gigantamaxBlastoise = species(9, "Blastoise", 1);
+        gigantamaxBlastoise.setSpeciesSetIdentityNumber(0x4EE);
+        Species gigantamaxMeowth = species(52, "Meowth", 1);
+        gigantamaxMeowth.setSpeciesSetIdentityNumber(0x4F1);
+        Species gigantamaxEevee = species(133, "Eevee", 1);
+        gigantamaxEevee.setSpeciesSetIdentityNumber(0x4F6);
+
+        assertFalse(pikachu.isGigantamaxForm());
+        assertTrue(gigantamaxPikachu.isGigantamaxForm());
+        assertTrue(gigantamaxCharizard.isGigantamaxForm());
+        assertTrue(gigantamaxVenusaur.isGigantamaxForm());
+        assertTrue(gigantamaxBlastoise.isGigantamaxForm());
+        assertTrue(gigantamaxMeowth.isGigantamaxForm());
+        assertTrue(gigantamaxEevee.isGigantamaxForm());
+
+        assertFalse(SpecialFormPredicates.isSpeciesAllowed(gigantamaxPikachu, null,
+                SpecialFormExclusionOptions.defaults()));
+        assertTrue(SpecialFormPredicates.isSpeciesAllowed(gigantamaxPikachu, null,
+                new SpecialFormExclusionOptions(false, true, false)));
+    }
+
+    @Test
     public void regionalFormsUseOwnGenerationUnlessRegionalOverrideIsEnabled() {
         GenRestrictions gen1Only = allowOnlyGen(1);
         GenRestrictions gen7Only = allowOnlyGen(7);

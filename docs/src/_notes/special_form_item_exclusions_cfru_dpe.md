@@ -1,8 +1,8 @@
 # Special Form and Item Exclusions for CFRU/DPE
 
-Status: settings/serialization and species-pool filtering are connected for the intended Mega, Gigantamax, regional-form,
-and evolutionary-relative semantics for CFRU/DPE Gen9 BPRE. Item-pool filtering, GUI controls, and ROM-facing metadata
-audits remain follow-up work.
+Status: settings/serialization, species-pool filtering, and mechanic item-pool filtering are connected for the intended
+Mega, Gigantamax, regional-form, evolutionary-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE.
+GUI controls and ROM-facing metadata audits remain follow-up work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -121,21 +121,22 @@ Settings-profile/RNQS currently supports:
 - `MODE-INCLUDE-Z-CRYSTALS`
 - `MODE-INCLUDE-DYNAMAX-GMAX-ITEMS`
 
-The species flags are connected to `RestrictedSpeciesService`. The item flags are still serialization/profile-only and
-are not yet connected to item replacement pools.
+The species flags are connected to `RestrictedSpeciesService`. The item flags are connected to the shared randomizer item
+pool helper and therefore apply to replacement pools that draw through the randomizer classes.
 
 ## Current Item Metadata
 
-`Item` currently has only:
+`Item` currently carries:
 
 - `id`
 - `name`
 - `allowed`
 - `bad`
 - `tm`
+- mechanic categories
 
-The source already notes that an item type enum would be needed for questions such as "is this a Mega Stone?" and "is
-this a Z Crystal?". This is the same missing layer needed for mirrored item exclusions.
+The mechanic category layer and `ItemMechanicPredicates` identify Mega Stones/accessories, Z-Crystals/accessories, and
+Dynamax/GMax-related items. The predicate is intentionally separate from existing `allowed` and `bad` filters.
 
 Known partial item metadata exists outside `Item`:
 
@@ -144,9 +145,8 @@ Known partial item metadata exists outside `Item`:
 - `ItemIDs` contains Mega Stone, Z-Crystal, Dynamax, and GMax-related constants such as Dynamax Band, Dynamax Candy,
   Wishing Piece, Max Honey, Max Mushrooms, and Dynite Ore.
 
-Those constants are not a unified item-category service, and they are not CFRU/DPE-specific compatibility metadata.
-Future filtering should not assume that expanded Gen3 item IDs always match later-generation constants without a
-loader-backed mapping.
+Those constants are used by the shared predicate, but they are still not a CFRU/DPE-specific compatibility audit.
+Future metadata work should verify that expanded Gen3 item IDs match the intended mechanic categories.
 
 ## Species Pool Touch Points
 
@@ -170,10 +170,10 @@ cannot be safely written by that ROM handler.
 
 ## Item Pool Touch Points
 
-A future shared item eligibility predicate should filter item candidates before placement. It should be separate from
-`bad` item filtering because "disabled mechanic" is a different reason from "bad random item".
+The shared randomizer helper filters item candidates through `ItemMechanicPredicates` before placement. It is separate
+from `bad` item filtering because "disabled mechanic" is a different reason from "bad random item".
 
-Item-picking paths that need mirrored exclusions are:
+Item-picking paths connected in this slice are:
 
 - Field items: non-TM field item randomization builds from `getAllowedItems()` or `getNonBadItems()`.
 - Shops: randomized shop pools build from `getAllowedItems()` or `getNonBadItems()`, then apply regular/OP shop bans.
@@ -185,8 +185,9 @@ Item-picking paths that need mirrored exclusions are:
 - Static or totem held items: static Pokemon logic can draw from consumable held item pools.
 - Trade held items: trade randomization builds possible held items from `getAllowedItems()`.
 
-The item predicate should be reusable by all of these paths so Mega Stones, Z-Crystals, and Dynamax/GMax items do not
-leak through one pool after being excluded from another.
+With default settings, Mega-related items, Z-related items, and Dynamax/GMax-related items are excluded from these
+replacement pools. Enabling the matching include setting lets that mechanic's items participate in the same existing
+allowed/non-bad/sensible/consumable pool logic.
 
 ## Blockers
 
@@ -195,9 +196,8 @@ leak through one pool after being excluded from another.
   forms.
 - GMax has no dedicated metadata marker.
 - The current generation predicate uses base-form generation, which conflicts with the desired regional-form default.
-- `Item` has no category/type metadata, and later-generation item constants are not a CFRU/DPE item compatibility map.
-- Settings serialization needs new backward-compatible fields before RNQS/settings-profile overlays can enable these
-  exclusions.
+- Later-generation item constants are not a CFRU/DPE item compatibility audit, even though they now back the shared
+  predicate.
 - Local ROM-backed audits are still needed, but they must be user-run outside Codex.
 
 ## Recommended Implementation Slices
@@ -220,9 +220,10 @@ B) Species pool filtering:
 
 C) Item pool filtering:
 
-- Add a shared item eligibility service or ROM handler helper.
-- Apply it to field, shop, pickup, trainer held, starter held, wild held, static held, and trade held item pools.
-- Keep "bad item" and "disabled mechanic item" exclusion reasons separate for diagnostics.
+- The shared item eligibility helper is connected in the randomizer base class.
+- Field, shop, pickup, trainer held, starter held, wild held, totem held, and trade held item replacement pools use the
+  predicate.
+- "Bad item" and "disabled mechanic item" exclusion reasons remain separate in code paths.
 
 D) GUI, RNQS, and settings-profile:
 
@@ -237,10 +238,11 @@ E) Local smoke and audit:
 - Smoke Gen1-only with and without regional override.
 - Smoke Mega/GMax disabled pools across starters, wild, trainers, statics, trades, intro, and tutorial.
 - Smoke item pools for absence of Mega Stones, Z-Crystals, and Dynamax/GMax items when their mechanics are disabled.
+- Audit expanded CFRU/DPE item IDs against the synthetic mechanic categories.
 
 ## Non-ROM Test Plan
 
-No tests are added in this docs-only PR. Once metadata classes exist, synthetic tests should cover:
+Current synthetic tests cover:
 
 - Mega forms excluded by default and included only when allowed.
 - GMax forms excluded by default and included only when allowed.
@@ -248,3 +250,5 @@ No tests are added in this docs-only PR. Once metadata classes exist, synthetic 
 - Alolan Vulpix allowed by Gen1-only with regional override when its base family is Gen1.
 - Sylveon, Annihilape, and Magmortar allowed only through the evolutionary-relative override when appropriate.
 - Mega Stones, Z-Crystals, and Dynamax/GMax items excluded by the shared item predicate when their mechanics are off.
+- Field, shop, pickup, and starter held item replacement pools exclude mechanic items by default.
+- Mega, Z-Crystal, and Dynamax/GMax items can be selected when their corresponding include setting is enabled.

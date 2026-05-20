@@ -1263,11 +1263,15 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         List<Item> toChooseFrom;
         if (sensibleItemsOnly) {
-            toChooseFrom = romHandler.getSensibleHeldItemsFor(tp, consumableItemsOnly, moves, moveset);
+            toChooseFrom = filterAllowedMechanicItems(
+                    romHandler.getSensibleHeldItemsFor(tp, consumableItemsOnly, moves, moveset));
         } else if (consumableItemsOnly) {
-            toChooseFrom = new ArrayList<>(romHandler.getAllConsumableHeldItems());
+            toChooseFrom = filterAllowedMechanicItems(romHandler.getAllConsumableHeldItems());
         } else {
-            toChooseFrom = new ArrayList<>(romHandler.getAllHeldItems());
+            toChooseFrom = filterAllowedMechanicItems(romHandler.getAllHeldItems());
+        }
+        if (toChooseFrom.isEmpty()) {
+            throw new IllegalStateException("No eligible trainer held items are available for randomization.");
         }
         tp.setHeldItem(toChooseFrom.get(random.nextInt(toChooseFrom.size())));
     }

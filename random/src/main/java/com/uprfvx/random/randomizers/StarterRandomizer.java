@@ -393,7 +393,11 @@ public class StarterRandomizer extends Randomizer {
 
         List<Item> oldHeldItems = romHandler.getStarterHeldItems();
         List<Item> newHeldItems = new ArrayList<>();
-        List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        List<Item> possibleItems = filterAllowedMechanicItems(
+                banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        if (possibleItems.isEmpty()) {
+            throw new IllegalStateException("No eligible starter held items are available for randomization.");
+        }
         for (int i = 0; i < oldHeldItems.size(); i++) {
             newHeldItems.add(possibleItems.get(random.nextInt(possibleItems.size())));
         }

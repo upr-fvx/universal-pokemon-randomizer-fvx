@@ -460,7 +460,10 @@ public class StaticPokemonRandomizer extends Randomizer {
 
             if (randomizeHeldItems) {
                 if (old.getHeldItem() != null) {
-                    List<Item> consumableList = new ArrayList<>(romHandler.getAllConsumableHeldItems());
+                    List<Item> consumableList = filterAllowedMechanicItems(romHandler.getAllConsumableHeldItems());
+                    if (consumableList.isEmpty()) {
+                        throw new IllegalStateException("No eligible totem held items are available for randomization.");
+                    }
                     newTotem.setHeldItem(consumableList.get(random.nextInt(consumableList.size())));
                 }
             }

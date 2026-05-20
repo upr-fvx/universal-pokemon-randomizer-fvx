@@ -99,6 +99,10 @@ candidate filtering leaves no eligible item after mechanic exclusions, Trainer H
 same mechanic-filtered held-item pool used by the non-sensible path, so disabled Mega/Z/Dynamax-GMax items are not
 reintroduced by the fallback.
 
+Missing expanded movepools/learnsets are also tolerated. `getMovesAtLevel` returns an empty moveset when a species has
+no loaded movepool entry, so Trainer Held Item randomization simply has no move-based sensible candidates for that
+Pokemon and reaches the same mechanic-filtered held-item fallback.
+
 ## Not Mechanic-Filtered Or Not Fully Modeled
 
 The following caveats remain:

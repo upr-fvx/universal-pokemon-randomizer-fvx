@@ -6,6 +6,7 @@ import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.ItemMechanicCategory;
 import com.uprfvx.romio.gamedata.PickupItem;
 import com.uprfvx.romio.gamedata.Shop;
+import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.gamedata.TrainerPokemon;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -171,6 +172,28 @@ public class ItemDecisionTest {
     }
 
     @Test
+    public void trainerSensibleHeldItemsFallbackWhenResetMovesetIsMissing() {
+        Item normal = item(10, "Normal", true, false);
+        Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
+        TrainerPokemon trainerPokemon = new TrainerPokemon();
+        trainerPokemon.setSpecies(new Species(9999));
+        trainerPokemon.setResetMoves(true);
+        Trainer trainer = new Trainer();
+        trainer.getPokemon().add(trainerPokemon);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(), Set.of(normal, mega),
+                Set.of(normal, mega));
+        romHandler.trainers = List.of(trainer);
+        romHandler.allHeldItems = Set.of(normal, mega);
+        Settings settings = new Settings();
+        settings.setRandomizeHeldItemsForRegularTrainerPokemon(true);
+        settings.setSensibleItemsOnlyForTrainers(true);
+
+        new TrainerPokemonRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeTrainerHeldItems();
+
+        assertEquals(normal, trainerPokemon.getHeldItem());
+    }
+
+    @Test
     public void mechanicItemsAreIncludedWhenTheirSettingsAreEnabled() {
         Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
         Item pidgeotite = item(NONCANONICAL_PIDGEOTITE, "Pidgeotite", true, false);
@@ -291,6 +314,9 @@ public class ItemDecisionTest {
                 case "getPickupItems" -> pickupItems.stream().map(PickupItem::new).toList();
                 case "getStarterHeldItems" -> new ArrayList<>(starterHeldItems);
                 case "getTrainers" -> trainers;
+                case "getMovesLearnt" -> Collections.emptyMap();
+                case "getAltFormeOfSpecies" -> args[0];
+                case "getMovesAtLevel" -> new int[] {0, 0, 0, 0};
                 case "getSensibleHeldItemsFor" -> sensibleHeldItems;
                 case "getAllHeldItems" -> allHeldItems;
                 case "getAllConsumableHeldItems" -> allHeldItems;

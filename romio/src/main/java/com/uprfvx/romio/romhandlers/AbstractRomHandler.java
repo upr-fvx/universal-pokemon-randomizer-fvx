@@ -411,8 +411,14 @@ public abstract class AbstractRomHandler implements RomHandler {
     public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
         int[] curMoves = new int[4];
 
+        if (movesets == null) {
+            return curMoves;
+        }
         int moveCount = 0;
         List<MoveLearnt> movepool = movesets.get(pkmn);
+        if (movepool == null) {
+            return curMoves;
+        }
         for (MoveLearnt ml : movepool) {
             if (ml.level > level) {
                 // we're done

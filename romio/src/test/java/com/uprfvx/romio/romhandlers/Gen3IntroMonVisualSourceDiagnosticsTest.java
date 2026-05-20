@@ -1,9 +1,13 @@
 package com.uprfvx.romio.romhandlers;
 
+import com.uprfvx.romio.constants.Gen3Constants;
+import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.romhandlers.romentries.Gen3RomEntry;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +15,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Gen3IntroMonVisualSourceDiagnosticsTest {
+
+    private static final int INTRO_CRY_OFFSET = 0x20;
+    private static final int INTRO_IMAGE_OFFSET = 0x30;
+    private static final int INTRO_PALETTE_OFFSET = 0x38;
+    private static final int INTRO_OTHER_OFFSET = 0x40;
+    private static final int IMAGE_TABLE_OFFSET = 0x100;
+    private static final int PALETTE_TABLE_OFFSET = 0x3000;
+    private static final int ROWLET_FRONT_ASSET = 0x5000;
+    private static final int ROWLET_PALETTE_ASSET = 0x5100;
 
     @Test
     public void introMonVisualSourceDiagnosticsReadsKnownFrlgLiteralsAndPointers() {
@@ -93,6 +106,54 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
         int internalSpecies = Gen3RomHandler.getIntroPokemonInternalSpeciesId(species, new int[] {0, 1}, false);
 
         assertEquals(0, internalSpecies);
+    }
+
+    @Test
+    public void cfruDpeSetIntroPokemonAcceptsExtendedIdentityViaVisualPointerTable() throws Exception {
+        Gen3RomHandler romHandler = cfruDpeRomHandler();
+        Species rowlet = species(0, SpeciesIDs.rowlet, "Rowlet");
+
+        assertTrue(romHandler.setIntroPokemon(rowlet));
+
+        byte[] rom = fieldValue(romHandler, "rom", byte[].class);
+        assertEquals(IMAGE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, readPointer(rom, INTRO_IMAGE_OFFSET));
+        assertEquals(PALETTE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, readPointer(rom, INTRO_IMAGE_OFFSET + 4));
+        assertEquals(ROWLET_FRONT_ASSET, readPointer(rom,
+                IMAGE_TABLE_OFFSET + SpeciesIDs.nidoranFemale * 8));
+        assertEquals(ROWLET_PALETTE_ASSET, readPointer(rom,
+                PALETTE_TABLE_OFFSET + SpeciesIDs.nidoranFemale * 8));
+        assertEquals(0x7F, rom[INTRO_CRY_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_OTHER_OFFSET] & 0xFF);
+    }
+
+    @Test
+    public void cfruDpeSetIntroPokemonRejectsMissingExtendedIdentityWithoutWriting() throws Exception {
+        Gen3RomHandler romHandler = cfruDpeRomHandler();
+        Species invalid = species(0, 0, "Invalid");
+
+        assertFalse(romHandler.setIntroPokemon(invalid));
+
+        byte[] rom = fieldValue(romHandler, "rom", byte[].class);
+        assertEquals(0x7F, rom[INTRO_CRY_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_IMAGE_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_IMAGE_OFFSET + 4] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_OTHER_OFFSET] & 0xFF);
+    }
+
+    @Test
+    public void cfruDpeSetIntroPokemonRejectsExtendedIdentityWithInvalidVisualPointers() throws Exception {
+        Gen3RomHandler romHandler = cfruDpeRomHandler(false, true);
+        Species rowlet = species(0, SpeciesIDs.rowlet, "Rowlet");
+
+        assertFalse(romHandler.setIntroPokemon(rowlet));
+
+        byte[] rom = fieldValue(romHandler, "rom", byte[].class);
+        assertEquals(0x7F, rom[INTRO_CRY_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_IMAGE_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_IMAGE_OFFSET + 4] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_OTHER_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[IMAGE_TABLE_OFFSET + SpeciesIDs.nidoranFemale * 8] & 0xFF);
+        assertEquals(0x7F, rom[PALETTE_TABLE_OFFSET + SpeciesIDs.nidoranFemale * 8] & 0xFF);
     }
 
     @Test
@@ -202,6 +263,82 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
     private static boolean changed(Gen3RomHandler.Gen3IntroMonVisualSourceComparison comparison, String source) {
         return comparison.candidates().stream()
                 .anyMatch(candidate -> candidate.source().equals(source) && candidate.changedFromBase());
+    }
+
+    private static Gen3RomHandler cfruDpeRomHandler() throws Exception {
+        return cfruDpeRomHandler(true, true);
+    }
+
+    private static Gen3RomHandler cfruDpeRomHandler(boolean writeFrontPointer,
+                                                    boolean writePalettePointer) throws Exception {
+        Gen3RomHandler romHandler = new Gen3RomHandler();
+        Gen3RomEntry romEntry = fireRedRomEntry();
+        romEntry.setRomCode("BPRE");
+        romEntry.putIntValue("PokemonCount", Gen3Constants.unhackedMaxPokedex + 1);
+        romEntry.putIntValue("PokemonFrontImages", IMAGE_TABLE_OFFSET);
+        romEntry.putIntValue("PokemonNormalPalettes", PALETTE_TABLE_OFFSET);
+        romEntry.putIntValue("IntroCryOffset", INTRO_CRY_OFFSET);
+        romEntry.putIntValue("IntroImageOffset", INTRO_IMAGE_OFFSET);
+        romEntry.putIntValue("IntroPaletteOffset", INTRO_PALETTE_OFFSET);
+        romEntry.putIntValue("IntroOtherOffset", INTRO_OTHER_OFFSET);
+
+        byte[] rom = new byte[0x6000];
+        for (int i = 0; i < rom.length; i++) {
+            rom[i] = (byte) 0x7F;
+        }
+        if (writeFrontPointer) {
+            writePointer(rom, IMAGE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, ROWLET_FRONT_ASSET);
+        }
+        if (writePalettePointer) {
+            writePointer(rom, PALETTE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, ROWLET_PALETTE_ASSET);
+        }
+
+        setField(romHandler, "rom", rom);
+        setField(romHandler, "romEntry", romEntry);
+        setField(romHandler, "pokedexToInternal", new int[] {0, 1});
+        setField(romHandler, "isRomHack", true);
+        setField(romHandler, "useCfruDpeGen9SpeciesCount", true);
+        return romHandler;
+    }
+
+    private static Species species(int number, int speciesSetIdentityNumber, String name) {
+        Species species = new Species(number);
+        species.setSpeciesSetIdentityNumber(speciesSetIdentityNumber);
+        species.setName(name);
+        return species;
+    }
+
+    private static Gen3RomEntry fireRedRomEntry() throws Exception {
+        for (Gen3RomEntry entry : Gen3RomEntry.READER.readEntriesFromFile("gen3_offsets.ini")) {
+            if ("Fire Red (U) 1.0".equals(entry.getName())) {
+                return new Gen3RomEntry(entry);
+            }
+        }
+        throw new IllegalStateException("Fire Red (U) 1.0 ROM entry not found");
+    }
+
+    private static void setField(Object target, String name, Object value) throws Exception {
+        Field field = findField(target.getClass(), name);
+        field.setAccessible(true);
+        field.set(target, value);
+    }
+
+    private static <T> T fieldValue(Object target, String name, Class<T> fieldType) throws Exception {
+        Field field = findField(target.getClass(), name);
+        field.setAccessible(true);
+        return fieldType.cast(field.get(target));
+    }
+
+    private static Field findField(Class<?> type, String name) throws NoSuchFieldException {
+        Class<?> current = type;
+        while (current != null) {
+            try {
+                return current.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+                current = current.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(name);
     }
 
     private static void writeWord(byte[] rom, int offset, int value) {

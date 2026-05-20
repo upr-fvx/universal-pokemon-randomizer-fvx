@@ -25,7 +25,6 @@ public class IntroPokemonRandomizer extends Randomizer {
                 return;
             }
         }
-        throw new IllegalStateException("No valid Intro Mon species candidates are available.");
     }
 
     public Species getIntroSpecies() {

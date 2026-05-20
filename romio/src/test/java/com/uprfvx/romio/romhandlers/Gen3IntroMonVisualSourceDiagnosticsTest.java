@@ -141,6 +141,22 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
     }
 
     @Test
+    public void cfruDpeSetIntroPokemonRejectsExtendedIdentityWithInvalidVisualPointers() throws Exception {
+        Gen3RomHandler romHandler = cfruDpeRomHandler(false, true);
+        Species rowlet = species(0, SpeciesIDs.rowlet, "Rowlet");
+
+        assertFalse(romHandler.setIntroPokemon(rowlet));
+
+        byte[] rom = fieldValue(romHandler, "rom", byte[].class);
+        assertEquals(0x7F, rom[INTRO_CRY_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_IMAGE_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_IMAGE_OFFSET + 4] & 0xFF);
+        assertEquals(0x7F, rom[INTRO_OTHER_OFFSET] & 0xFF);
+        assertEquals(0x7F, rom[IMAGE_TABLE_OFFSET + SpeciesIDs.nidoranFemale * 8] & 0xFF);
+        assertEquals(0x7F, rom[PALETTE_TABLE_OFFSET + SpeciesIDs.nidoranFemale * 8] & 0xFF);
+    }
+
+    @Test
     public void introMonVisualSourceSearchFindsChangedAndUnchangedCfruDpeCandidates() {
         byte[] baseRom = new byte[4096];
         byte[] outputRom = new byte[4096];
@@ -250,6 +266,11 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
     }
 
     private static Gen3RomHandler cfruDpeRomHandler() throws Exception {
+        return cfruDpeRomHandler(true, true);
+    }
+
+    private static Gen3RomHandler cfruDpeRomHandler(boolean writeFrontPointer,
+                                                    boolean writePalettePointer) throws Exception {
         Gen3RomHandler romHandler = new Gen3RomHandler();
         Gen3RomEntry romEntry = fireRedRomEntry();
         romEntry.setRomCode("BPRE");
@@ -265,8 +286,12 @@ public class Gen3IntroMonVisualSourceDiagnosticsTest {
         for (int i = 0; i < rom.length; i++) {
             rom[i] = (byte) 0x7F;
         }
-        writePointer(rom, IMAGE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, ROWLET_FRONT_ASSET);
-        writePointer(rom, PALETTE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, ROWLET_PALETTE_ASSET);
+        if (writeFrontPointer) {
+            writePointer(rom, IMAGE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, ROWLET_FRONT_ASSET);
+        }
+        if (writePalettePointer) {
+            writePointer(rom, PALETTE_TABLE_OFFSET + SpeciesIDs.rowlet * 8, ROWLET_PALETTE_ASSET);
+        }
 
         setField(romHandler, "rom", rom);
         setField(romHandler, "romEntry", romEntry);

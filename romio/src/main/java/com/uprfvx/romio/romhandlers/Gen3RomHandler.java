@@ -6872,13 +6872,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
 
             if (introPokemon > 255) {
-                if (!canSyncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset,
-                        paletteTableOffset)) {
+                if (!canUseAsCfruDpeIntroVisualSpecies(pk, imageOffset, imageTableOffset, paletteTableOffset)) {
                     return false;
                 }
-                writePointer(imageOffset, imageTableOffset + introPokemon * 8);
-                writePointer(imageOffset + 4, paletteTableOffset + introPokemon * 8);
-                syncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset, paletteTableOffset);
+                writeCfruDpeIntroVisualTables(introPokemon, imageOffset, imageTableOffset, paletteTableOffset);
                 return true;
             }
 
@@ -6952,22 +6949,60 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     private void syncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,
                                                                  int paletteTableOffset) {
-        if (!canSyncCfruDpeIntroVisualSourcePointerTableEntries(introPokemon, imageTableOffset, paletteTableOffset)) {
+        if (!canWriteIntroVisualTables(introPokemon, imageTableOffset, paletteTableOffset)) {
             return;
         }
         syncCfruDpeIntroVisualSourcePointerTableEntry(rom, imageTableOffset, SpeciesIDs.nidoranFemale, introPokemon);
         syncCfruDpeIntroVisualSourcePointerTableEntry(rom, paletteTableOffset, SpeciesIDs.nidoranFemale, introPokemon);
     }
 
-    private boolean canSyncCfruDpeIntroVisualSourcePointerTableEntries(int introPokemon, int imageTableOffset,
-                                                                      int paletteTableOffset) {
+    private boolean canUseAsCfruDpeIntroVisualSpecies(Species species, int introVisualPointerOffset,
+                                                      int imageTableOffset, int paletteTableOffset) {
+        if (!usesInternalSpeciesIdentityForExtendedBpreHack() || species == null
+                || species.getSpeciesSetIdentityNumber() <= 0) {
+            return false;
+        }
+        int speciesIdentity = species.getSpeciesSetIdentityNumber();
+        return canWritePointerAt(introVisualPointerOffset)
+                && canWritePointerAt(introVisualPointerOffset + 4)
+                && hasValidFrontImagePointer(speciesIdentity, imageTableOffset)
+                && hasValidNormalPalettePointer(speciesIdentity, paletteTableOffset)
+                && canWriteIntroVisualTables(speciesIdentity, imageTableOffset, paletteTableOffset);
+    }
+
+    private boolean hasValidFrontImagePointer(int speciesIdentity, int imageTableOffset) {
+        return hasValidIntroVisualTablePointer(speciesIdentity, imageTableOffset);
+    }
+
+    private boolean hasValidNormalPalettePointer(int speciesIdentity, int paletteTableOffset) {
+        return hasValidIntroVisualTablePointer(speciesIdentity, paletteTableOffset);
+    }
+
+    private boolean hasValidIntroVisualTablePointer(int speciesIdentity, int tableOffset) {
+        int entryOffset = tableOffset + speciesIdentity * 8;
+        return isIntroVisualPointerTableEntryInRom(rom, tableOffset, entryOffset)
+                && readPointerFromRom(rom, entryOffset) >= 0;
+    }
+
+    private boolean canWriteIntroVisualTables(int speciesIdentity, int imageTableOffset, int paletteTableOffset) {
         return useCfruDpeGen9SpeciesCount
                 && romEntry.getRomType() == Gen3Constants.RomType_FRLG
                 && "BPRE".equals(romEntry.getRomCode())
                 && canSyncCfruDpeIntroVisualSourcePointerTableEntry(rom, imageTableOffset,
-                        SpeciesIDs.nidoranFemale, introPokemon)
+                        SpeciesIDs.nidoranFemale, speciesIdentity)
                 && canSyncCfruDpeIntroVisualSourcePointerTableEntry(rom, paletteTableOffset,
-                        SpeciesIDs.nidoranFemale, introPokemon);
+                        SpeciesIDs.nidoranFemale, speciesIdentity);
+    }
+
+    private void writeCfruDpeIntroVisualTables(int speciesIdentity, int introVisualPointerOffset,
+                                               int imageTableOffset, int paletteTableOffset) {
+        writePointer(introVisualPointerOffset, imageTableOffset + speciesIdentity * 8);
+        writePointer(introVisualPointerOffset + 4, paletteTableOffset + speciesIdentity * 8);
+        syncCfruDpeIntroVisualSourcePointerTableEntries(speciesIdentity, imageTableOffset, paletteTableOffset);
+    }
+
+    private boolean canWritePointerAt(int offset) {
+        return rom != null && offset > 0 && offset <= rom.length - GBConstants.longSize;
     }
 
     static boolean syncCfruDpeIntroVisualSourcePointerTableEntry(byte[] rom, int tableOffset,

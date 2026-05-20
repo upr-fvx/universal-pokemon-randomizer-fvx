@@ -41,11 +41,11 @@ For FRLG, `Gen3RomHandler.setIntroPokemon()` writes:
   This prevents named extended-pool species whose Pokédex mapping is `0` from writing raw species `0` to the Intro
   species literals and visual pointer sources.
 - CFRU/DPE Gen 7/8/9 Intro Mon candidates with identity values above the FRLG raw-byte limit can be accepted through
-  the confirmed visual pointer-table path when both target front-image and normal-palette table entries are in ROM. In
-  that path the raw one-byte cry/other literals are left unchanged because they cannot safely encode extended species
-  IDs.
-- The randomizer exhausts candidates and skips Intro Mon unchanged if no candidate is accepted, instead of crashing,
-  looping, or accepting species `0`.
+  the confirmed visual pointer-table path when both target front-image and normal-palette table entries are in ROM and
+  point to valid assets. In that path the raw one-byte cry/other literals are left unchanged because they cannot safely
+  encode extended species IDs.
+- The randomizer exhausts candidates and skips Intro Mon unchanged only as a safety fallback when no visually writable
+  candidate is accepted, instead of crashing, looping, or accepting species `0`.
 
 `IntroPaletteOffset` is still reported by the diagnostic because ROM entries define it, but the FRLG writer currently
 uses `IntroImageOffset + 4` for the palette pointer. A mismatch between these candidates is useful local evidence, not

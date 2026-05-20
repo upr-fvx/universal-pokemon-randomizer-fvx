@@ -4,7 +4,8 @@ Status: settings/serialization, species-pool filtering, and mechanic item-pool f
 Mega, Gigantamax, regional-form, evolutionary-relative, and mirrored item-exclusion semantics for CFRU/DPE Gen9 BPRE.
 GUI controls are exposed through the Limit Pokemon dialog. Source-backed coverage now includes known CFRU/DPE Mega
 identity ranges, the known GMax identity block, known CFRU/DPE Z-Crystal identities/names, and known Pikachu
-irregular-form identities. ROM-facing metadata audits remain follow-up work.
+irregular-form identities. The item side now uses `CfruDpeItemCategories`; see `cfru_dpe_item_sources.md` for the item
+source/category map. ROM-facing metadata audits remain follow-up work.
 
 Codex did not run, copy, generate, modify, or inspect ROMs for this note.
 
@@ -167,21 +168,25 @@ pool helper and therefore apply to replacement pools that draw through the rando
 - `tm`
 - mechanic categories
 
-The mechanic category layer and `ItemMechanicPredicates` identify Mega Stones/accessories, Z-Crystals/accessories, and
-Dynamax/GMax-related items. The predicate is intentionally separate from existing `allowed` and `bad` filters.
+The mechanic category layer now uses `CfruDpeItemCategories` as the central source/category map before
+`ItemMechanicPredicates` applies settings. It identifies Mega Stones/accessories, Z-Crystals/accessories, and
+Dynamax/GMax-related items for filtering while also passively classifying Plates, Drives, Memories, Nectars, and
+selected form-change items. The predicate is intentionally separate from existing `allowed` and `bad` filters.
 
-The Z-Crystal predicate now includes the CFRU/DPE Gen9 item identities for `ITEM_ULTRANECROZIUM_Z` / Necrozium Z
+The Z-Crystal category includes the CFRU/DPE Gen9 item source identities for `ITEM_ULTRANECROZIUM_Z` / Necrozium Z
 (`0x214`) and the contiguous CFRU/DPE Z-Crystal block `0x244..0x265`. The source block includes the type crystals and
-signature crystals through `ITEM_SNORLIUM_Z` (`0x263`) and `ITEM_TAPUNIUM_Z` (`0x265`). This covers local evidence items
-whose descriptions mention Necrozma Ultra Burst or Z-Power / Z-Moves when they enter mechanic-filtered replacement
-pools; they were not covered by the previous Gen7 bag/held split item ID ranges.
+signature crystals through `ITEM_SNORLIUM_Z` (`0x263`) and `ITEM_TAPUNIUM_Z` (`0x265`). Because Gen3 expanded internal
+IDs are represented as `ItemIDs.UNIQUE_OFFSET + sourceId`, and those standard IDs can collide with generic
+later-generation `ItemIDs`, the source block is paired with decoded item names instead of being treated as globally
+unique. This covers local evidence items whose descriptions mention Necrozma Ultra Burst or Z-Power / Z-Moves when they
+enter mechanic-filtered replacement pools; they were not covered by the previous Gen7 bag/held split item ID ranges.
 
 `Item` stores IDs and display names, but not descriptions. Because the in-ROM text such as "Z-Power", "Z-Move",
 "Ultra Burst", "Mega Evolution", "Dynamax", or "Gigantamax" is not present in the item model, description-pattern
-classification cannot be used safely by the non-ROM predicate today. The predicate therefore combines existing
+classification cannot be used safely by the non-ROM predicate today. The category layer therefore combines existing
 constant/range checks with normalized known item names for CFRU/DPE aliases and synthetic audit coverage. The source
 also declares the CFRU/DPE Mega Stone block `ITEM_VENUSAURITE` `0x215` through `ITEM_DIANCITE` `0x243`, which is now
-classified as Mega-related even though those IDs differ from the generic Gen6 `ItemIDs` constants. This catches modeled
+classified as Mega-related when the decoded item name matches the expected Mega Stone set. This catches modeled
 names such as `Snorlium Z`, `Necrozium Z`, `Pikanium Z`, `Pikashunium Z`, `Eevium Z`, `Mewnium Z`, the other known
 signature Z-Crystals, source-backed CFRU/DPE Mega Stones, Mega accessories, and modeled Dynamax/GMax items without
 broadly matching move names such as Mega Drain.
@@ -192,15 +197,15 @@ other known Mega Stones like `Charizardite X`, `Charizardite Y`, `Mewtwonite X`,
 `Beedrillite`. The predicate remains explicit-name based rather than a broad `*ite` suffix match, so unrelated held
 items such as `Eviolite` are not treated as Mega Stones.
 
-Known partial item metadata exists outside `Item`:
+Additional passive item categories now exist outside the active mechanic filters:
 
-- Gen6 constants expose Mega Stone ID sets.
-- Gen7 constants expose Z-Crystal mappings and banned/bad item ranges that include Z-Crystals and Mega Stones.
-- `ItemIDs` contains Mega Stone, Z-Crystal, Dynamax, and GMax-related constants such as Dynamax Band, Dynamax Candy,
-  Wishing Piece, Max Honey, Max Mushrooms, and Dynite Ore.
+- Arceus Plates.
+- Genesect Drives.
+- Silvally Memories.
+- Nectars and selected form-change items.
 
-Those constants are used by the shared predicate, but they are still not a CFRU/DPE-specific compatibility audit.
-Future metadata work should verify that expanded Gen3 item IDs match the intended mechanic categories.
+Those passive categories do not add new settings and do not change pool eligibility by themselves. Existing
+allowed/bad/non-bad/sensible/consumable and ban-bad-item logic continues to decide whether they can appear.
 
 ## Species Pool Touch Points
 

@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.constants.ItemIDs;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.ItemMechanicCategory;
 import com.uprfvx.romio.gamedata.PickupItem;
@@ -8,6 +9,7 @@ import com.uprfvx.romio.gamedata.Shop;
 import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.gamedata.TrainerPokemon;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import com.uprfvx.romio.services.CfruDpeItemCategories;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
@@ -32,6 +34,8 @@ public class ItemDecisionTest {
 
     private static final int CFRU_DPE_ULTRANECROZIUM_Z = 0x214;
     private static final int CFRU_DPE_SNORLIUM_Z = 0x263;
+    private static final int CFRU_DPE_STANDARD_ULTRANECROZIUM_Z =
+            CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_ULTRANECROZIUM_Z);
     private static final int NONCANONICAL_PIDGEOTITE = 9000;
     private static final int NONCANONICAL_CAMERUPTITE = 9001;
 
@@ -74,21 +78,28 @@ public class ItemDecisionTest {
         Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
         Item zCrystal = mechanicItem(30, "ZCrystal", ItemMechanicCategory.Z_CRYSTAL);
         Item necroziumZ = item(CFRU_DPE_ULTRANECROZIUM_Z, "Necrozium Z", true, false);
+        Item cfruDpeStandardNecroziumZ = item(CFRU_DPE_STANDARD_ULTRANECROZIUM_Z, "Necrozium Z", true, false);
         Item snorliumZ = item(CFRU_DPE_SNORLIUM_Z, "Snorlium Z", true, false);
         Item pidgeotite = item(NONCANONICAL_PIDGEOTITE, "Pidgeotite", true, false);
         Item cameruptite = item(NONCANONICAL_CAMERUPTITE, "Cameruptite", true, false);
+        Item dynamaxBand = item(ItemIDs.dynamaxBand, "Dynamax Band", true, false);
+        Item wishingPiece = item(ItemIDs.wishingPiece, "Wishing Piece", true, false);
         Item dynamax = mechanicItem(40, "Dynamax", ItemMechanicCategory.DYNAMAX_GIGANTAMAX);
-        Set<Item> allItems = Set.of(normal, mega, zCrystal, necroziumZ, snorliumZ, pidgeotite, cameruptite, dynamax);
+        Set<Item> allItems = Set.of(normal, mega, zCrystal, necroziumZ, cfruDpeStandardNecroziumZ, snorliumZ,
+                pidgeotite, cameruptite, dynamaxBand, wishingPiece, dynamax);
         ItemTestRomHandler romHandler = ItemTestRomHandler.create(
-                List.of(mega, zCrystal, necroziumZ, snorliumZ, pidgeotite, cameruptite, dynamax),
+                List.of(mega, zCrystal, necroziumZ, cfruDpeStandardNecroziumZ, snorliumZ, pidgeotite, cameruptite,
+                        dynamaxBand, wishingPiece, dynamax),
                 allItems,
                 allItems);
-        romHandler.shops = List.of(specialShop(List.of(mega, zCrystal, necroziumZ, snorliumZ, pidgeotite,
-                cameruptite, dynamax)));
+        romHandler.shops = List.of(specialShop(List.of(mega, zCrystal, necroziumZ, cfruDpeStandardNecroziumZ,
+                snorliumZ, pidgeotite, cameruptite, dynamaxBand, wishingPiece, dynamax)));
         romHandler.pickupItems = List.of(new PickupItem(mega), new PickupItem(zCrystal), new PickupItem(necroziumZ),
-                new PickupItem(snorliumZ), new PickupItem(pidgeotite), new PickupItem(cameruptite),
+                new PickupItem(cfruDpeStandardNecroziumZ), new PickupItem(snorliumZ), new PickupItem(pidgeotite),
+                new PickupItem(cameruptite), new PickupItem(dynamaxBand), new PickupItem(wishingPiece),
                 new PickupItem(dynamax));
-        romHandler.starterHeldItems = List.of(mega, zCrystal, necroziumZ, snorliumZ, pidgeotite, cameruptite, dynamax);
+        romHandler.starterHeldItems = List.of(mega, zCrystal, necroziumZ, cfruDpeStandardNecroziumZ, snorliumZ,
+                pidgeotite, cameruptite, dynamaxBand, wishingPiece, dynamax);
         TrainerPokemon trainerPokemon = new TrainerPokemon();
         Trainer trainer = new Trainer();
         trainer.getPokemon().add(trainerPokemon);
@@ -104,12 +115,13 @@ public class ItemDecisionTest {
         new StarterRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeStarterHeldItems();
         new TrainerPokemonRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeTrainerHeldItems();
 
-        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal), romHandler.writtenFieldItems);
-        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal),
+        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal, normal, normal, normal),
+                romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal, normal, normal, normal),
                 romHandler.writtenShops.get(0).getItems());
-        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal),
+        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal, normal, normal, normal),
                 romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
-        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal),
+        assertEquals(List.of(normal, normal, normal, normal, normal, normal, normal, normal, normal, normal),
                 romHandler.writtenStarterHeldItems);
         assertEquals(normal, trainerPokemon.getHeldItem());
     }

@@ -22,22 +22,38 @@ public class ItemMechanicPredicatesTest {
     private static final int CFRU_DPE_VENUSAURITE = 0x215;
     private static final int CFRU_DPE_NORMALIUM_Z = 0x244;
     private static final int CFRU_DPE_SNORLIUM_Z = 0x263;
+    private static final int CFRU_DPE_STANDARD_ULTRANECROZIUM_Z =
+            CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_ULTRANECROZIUM_Z);
+    private static final int CFRU_DPE_STANDARD_VENUSAURITE =
+            CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_VENUSAURITE);
+    private static final int CFRU_DPE_STANDARD_NORMALIUM_Z =
+            CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_NORMALIUM_Z);
 
     @Test
     public void megaStonesAndAccessoriesAreMegaMechanicItems() {
         Item venusaurite = item(ItemIDs.venusaurite, "Venusaurite");
         Item cfruDpeVenusaurite = item(CFRU_DPE_VENUSAURITE, "Venusaurite");
+        Item cfruDpeStandardVenusaurite = item(CFRU_DPE_STANDARD_VENUSAURITE, "Venusaurite");
         Item pidgeotite = item(6000, "Pidgeotite");
         Item cameruptite = item(6001, "Cameruptite");
+        Item charizarditeX = item(ItemIDs.charizarditeX, "Charizardite X");
+        Item charizarditeY = item(ItemIDs.charizarditeY, "Charizardite Y");
+        Item diancite = item(ItemIDs.diancite, "Diancite");
         Item megaRing = item(ItemIDs.megaRing, "Mega Ring");
 
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(venusaurite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeVenusaurite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeStandardVenusaurite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(pidgeotite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cameruptite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(charizarditeX));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(charizarditeY));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(diancite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(megaRing));
         assertFalse(ItemMechanicPredicates.isItemAllowed(venusaurite, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeVenusaurite,
+                ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardVenusaurite,
                 ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(pidgeotite, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cameruptite, ItemMechanicExclusionOptions.defaults()));
@@ -45,6 +61,8 @@ public class ItemMechanicPredicatesTest {
         assertTrue(ItemMechanicPredicates.isItemAllowed(venusaurite,
                 new ItemMechanicExclusionOptions(true, false, false)));
         assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeVenusaurite,
+                new ItemMechanicExclusionOptions(true, false, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardVenusaurite,
                 new ItemMechanicExclusionOptions(true, false, false)));
         assertTrue(ItemMechanicPredicates.isItemAllowed(pidgeotite,
                 new ItemMechanicExclusionOptions(true, false, false)));
@@ -68,6 +86,7 @@ public class ItemMechanicPredicatesTest {
         );
         Item eviolite = item(7000, "Eviolite");
         Item megaDrain = item(7001, "Mega Drain");
+        Item lockCapsule = item(CFRU_DPE_STANDARD_VENUSAURITE, "Lock Capsule");
 
         for (Item megaStone : megaStones) {
             assertTrue(ItemMechanicPredicates.isMegaMechanicItem(megaStone),
@@ -78,6 +97,7 @@ public class ItemMechanicPredicatesTest {
         }
         assertFalse(ItemMechanicPredicates.isMegaMechanicItem(eviolite));
         assertFalse(ItemMechanicPredicates.isMegaMechanicItem(megaDrain));
+        assertFalse(ItemMechanicPredicates.isMegaMechanicItem(lockCapsule));
     }
 
     @Test
@@ -85,27 +105,37 @@ public class ItemMechanicPredicatesTest {
         Item normaliumZ = item(ItemIDs.normaliumZHeld, "Normalium Z");
         Item ultranecroziumZ = item(ItemIDs.ultranecroziumZBag, "Ultranecrozium Z");
         Item cfruDpeNecroziumZ = item(CFRU_DPE_ULTRANECROZIUM_Z, "Necrozium Z");
+        Item cfruDpeStandardNecroziumZ = item(CFRU_DPE_STANDARD_ULTRANECROZIUM_Z, "Necrozium Z");
         Item cfruDpeNormaliumZ = item(CFRU_DPE_NORMALIUM_Z, "Normalium Z");
+        Item cfruDpeStandardNormaliumZ = item(CFRU_DPE_STANDARD_NORMALIUM_Z, "Normalium Z");
         Item cfruDpeSnorliumZ = item(CFRU_DPE_SNORLIUM_Z, "Snorlium Z");
         Item zRing = item(ItemIDs.zRing, "Z-Ring");
 
         assertTrue(ItemMechanicPredicates.isZMechanicItem(normaliumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(ultranecroziumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeNecroziumZ));
+        assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeStandardNecroziumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeNormaliumZ));
+        assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeStandardNormaliumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(cfruDpeSnorliumZ));
         assertTrue(ItemMechanicPredicates.isZMechanicItem(zRing));
         assertFalse(ItemMechanicPredicates.isItemAllowed(normaliumZ, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(ultranecroziumZ, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeNecroziumZ,
                 ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardNecroziumZ,
+                ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeNormaliumZ,
+                ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardNormaliumZ,
                 ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeSnorliumZ,
                 ItemMechanicExclusionOptions.defaults()));
         assertTrue(ItemMechanicPredicates.isItemAllowed(ultranecroziumZ,
                 new ItemMechanicExclusionOptions(false, true, false)));
         assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeNecroziumZ,
+                new ItemMechanicExclusionOptions(false, true, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardNecroziumZ,
                 new ItemMechanicExclusionOptions(false, true, false)));
     }
 
@@ -149,13 +179,50 @@ public class ItemMechanicPredicatesTest {
     @Test
     public void dynamaxAndGigantamaxItemsUseTheirOwnMechanicCategory() {
         Item dynamaxCandy = item(ItemIDs.dynamaxCandy, "Dynamax Candy");
+        Item dynamaxBand = item(ItemIDs.dynamaxBand, "Dynamax Band");
+        Item wishingPiece = item(ItemIDs.wishingPiece, "Wishing Piece");
         Item maxMushrooms = item(ItemIDs.maxMushrooms, "Max Mushrooms");
 
         assertTrue(ItemMechanicPredicates.isDynamaxGigantamaxItem(dynamaxCandy));
+        assertTrue(ItemMechanicPredicates.isDynamaxGigantamaxItem(dynamaxBand));
+        assertTrue(ItemMechanicPredicates.isDynamaxGigantamaxItem(wishingPiece));
         assertTrue(ItemMechanicPredicates.isDynamaxGigantamaxItem(maxMushrooms));
         assertFalse(ItemMechanicPredicates.isItemAllowed(dynamaxCandy, ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(dynamaxBand, ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(wishingPiece, ItemMechanicExclusionOptions.defaults()));
         assertTrue(ItemMechanicPredicates.isItemAllowed(maxMushrooms,
                 new ItemMechanicExclusionOptions(false, false, true)));
+    }
+
+    @Test
+    public void passiveSourceBackedCategoriesAreClassifiedWithoutChangingMechanicFilters() {
+        Item flamePlate = item(ItemIDs.flamePlate, "Flame Plate");
+        Item pixiePlate = item(ItemIDs.pixiePlate, "Pixie Plate");
+        Item burnDrive = item(ItemIDs.burnDrive, "Burn Drive");
+        Item shockDrive = item(ItemIDs.shockDrive, "Shock Drive");
+        Item bugMemory = item(ItemIDs.bugMemory, "Bug Memory");
+        Item electricMemory = item(ItemIDs.electricMemory, "Electric Memory");
+        Item redNectar = item(ItemIDs.redNectar, "Red Nectar");
+        Item revealGlass = item(ItemIDs.revealGlass, "Reveal Glass");
+
+        assertTrue(CfruDpeItemCategories.isArceusPlate(flamePlate));
+        assertTrue(CfruDpeItemCategories.isArceusPlate(pixiePlate));
+        assertTrue(CfruDpeItemCategories.isGenesectDrive(burnDrive));
+        assertTrue(CfruDpeItemCategories.isGenesectDrive(shockDrive));
+        assertTrue(CfruDpeItemCategories.isSilvallyMemory(bugMemory));
+        assertTrue(CfruDpeItemCategories.isSilvallyMemory(electricMemory));
+        assertTrue(CfruDpeItemCategories.isNectarOrFormChangeItem(redNectar));
+        assertTrue(CfruDpeItemCategories.isNectarOrFormChangeItem(revealGlass));
+
+        assertTrue(ItemMechanicPredicates.categoriesFor(flamePlate).contains(ItemMechanicCategory.ARCEUS_PLATE));
+        assertTrue(ItemMechanicPredicates.categoriesFor(burnDrive).contains(ItemMechanicCategory.GENESECT_DRIVE));
+        assertTrue(ItemMechanicPredicates.categoriesFor(bugMemory).contains(ItemMechanicCategory.SILVALLY_MEMORY));
+        assertTrue(ItemMechanicPredicates.categoriesFor(redNectar)
+                .contains(ItemMechanicCategory.NECTAR_FORM_CHANGE));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(flamePlate, ItemMechanicExclusionOptions.defaults()));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(burnDrive, ItemMechanicExclusionOptions.defaults()));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(bugMemory, ItemMechanicExclusionOptions.defaults()));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(redNectar, ItemMechanicExclusionOptions.defaults()));
     }
 
     @Test

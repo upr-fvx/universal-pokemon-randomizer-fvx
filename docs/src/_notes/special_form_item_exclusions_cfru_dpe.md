@@ -142,6 +142,10 @@ pool helper and therefore apply to replacement pools that draw through the rando
 The mechanic category layer and `ItemMechanicPredicates` identify Mega Stones/accessories, Z-Crystals/accessories, and
 Dynamax/GMax-related items. The predicate is intentionally separate from existing `allowed` and `bad` filters.
 
+The Z-Crystal predicate now includes the CFRU/DPE Gen9 item identities for `ITEM_ULTRANECROZIUM_Z` / Necrozium Z
+(`0x214`) and the contiguous CFRU/DPE Z-Crystal block `0x244..0x265`. This covers the local evidence item whose
+description enables Necrozma Ultra Burst; it was not covered by the previous Gen7 bag/held split item ID ranges.
+
 Known partial item metadata exists outside `Item`:
 
 - Gen6 constants expose Mega Stone ID sets.
@@ -197,6 +201,10 @@ With default settings, Mega-related items, Z-related items, and Dynamax/GMax-rel
 replacement pools. Enabling the matching include setting lets that mechanic's items participate in the same existing
 allowed/non-bad/sensible/consumable pool logic.
 
+Necrozium Z / Ultranecrozium Z is covered when it enters one of the shared mechanic-filtered replacement pools above.
+If a local item comes from a static script, gift, or NPC path that UPR-FVX does not randomize through those pools, this
+PR does not blindly patch scripts; that source remains a ROM-backed local audit item.
+
 ## Blockers
 
 - CFRU/DPE Gen3 does not yet expose expanded alt-forme or Mega metadata through the handler.
@@ -205,8 +213,8 @@ allowed/non-bad/sensible/consumable pool logic.
 - GMax classification currently covers the known CFRU/DPE `SPECIES_*_GIGA` identity block `0x4EC..0x50D`; other GMax
   encodings would need a separate audit.
 - The current generation predicate uses base-form generation, which conflicts with the desired regional-form default.
-- Later-generation item constants are not a CFRU/DPE item compatibility audit, even though they now back the shared
-  predicate.
+- Later-generation item constants and the known CFRU/DPE Z-Crystal identities are not a complete CFRU/DPE item
+  compatibility audit, even though they now back the shared predicate.
 - Local ROM-backed audits are still needed, but they must be user-run outside Codex.
 
 ## Recommended Implementation Slices

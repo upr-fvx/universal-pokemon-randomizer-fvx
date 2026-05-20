@@ -30,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ItemDecisionTest {
 
+    private static final int CFRU_DPE_ULTRANECROZIUM_Z = 0x214;
+
     @Test
     public void randomizeFieldItemsKeepsSelectionInNonBadAllowedPool() {
         Item lowAllowed = item(10, "LowAllowed", true, false);
@@ -68,15 +70,17 @@ public class ItemDecisionTest {
         Item normal = item(10, "Normal", true, false);
         Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
         Item zCrystal = mechanicItem(30, "ZCrystal", ItemMechanicCategory.Z_CRYSTAL);
+        Item necroziumZ = item(CFRU_DPE_ULTRANECROZIUM_Z, "Necrozium Z", true, false);
         Item dynamax = mechanicItem(40, "Dynamax", ItemMechanicCategory.DYNAMAX_GIGANTAMAX);
-        Set<Item> allItems = Set.of(normal, mega, zCrystal, dynamax);
+        Set<Item> allItems = Set.of(normal, mega, zCrystal, necroziumZ, dynamax);
         ItemTestRomHandler romHandler = ItemTestRomHandler.create(
-                List.of(mega, zCrystal, dynamax),
+                List.of(mega, zCrystal, necroziumZ, dynamax),
                 allItems,
                 allItems);
-        romHandler.shops = List.of(specialShop(List.of(mega, zCrystal, dynamax)));
-        romHandler.pickupItems = List.of(new PickupItem(mega), new PickupItem(zCrystal), new PickupItem(dynamax));
-        romHandler.starterHeldItems = List.of(mega, zCrystal, dynamax);
+        romHandler.shops = List.of(specialShop(List.of(mega, zCrystal, necroziumZ, dynamax)));
+        romHandler.pickupItems = List.of(new PickupItem(mega), new PickupItem(zCrystal), new PickupItem(necroziumZ),
+                new PickupItem(dynamax));
+        romHandler.starterHeldItems = List.of(mega, zCrystal, necroziumZ, dynamax);
         TrainerPokemon trainerPokemon = new TrainerPokemon();
         Trainer trainer = new Trainer();
         trainer.getPokemon().add(trainerPokemon);
@@ -92,18 +96,18 @@ public class ItemDecisionTest {
         new StarterRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeStarterHeldItems();
         new TrainerPokemonRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeTrainerHeldItems();
 
-        assertEquals(List.of(normal, normal, normal), romHandler.writtenFieldItems);
-        assertEquals(List.of(normal, normal, normal), romHandler.writtenShops.get(0).getItems());
-        assertEquals(List.of(normal, normal, normal),
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenShops.get(0).getItems());
+        assertEquals(List.of(normal, normal, normal, normal),
                 romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
-        assertEquals(List.of(normal, normal, normal), romHandler.writtenStarterHeldItems);
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenStarterHeldItems);
         assertEquals(normal, trainerPokemon.getHeldItem());
     }
 
     @Test
     public void mechanicItemsAreIncludedWhenTheirSettingsAreEnabled() {
         Item mega = mechanicItem(20, "Mega", ItemMechanicCategory.MEGA_STONE);
-        Item zCrystal = mechanicItem(30, "ZCrystal", ItemMechanicCategory.Z_CRYSTAL);
+        Item zCrystal = item(CFRU_DPE_ULTRANECROZIUM_Z, "Necrozium Z", true, false);
         Item dynamax = mechanicItem(40, "Dynamax", ItemMechanicCategory.DYNAMAX_GIGANTAMAX);
         Settings settings = new Settings();
         settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);

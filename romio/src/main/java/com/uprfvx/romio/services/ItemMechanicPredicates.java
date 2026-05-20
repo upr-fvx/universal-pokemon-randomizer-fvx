@@ -35,6 +35,55 @@ public final class ItemMechanicPredicates {
     private static final int CFRU_DPE_MEGA_STONE_LAST = 0x243;
     private static final int CFRU_DPE_Z_CRYSTAL_FIRST = 0x244;
     private static final int CFRU_DPE_Z_CRYSTAL_LAST = 0x265;
+    private static final Set<String> MEGA_STONE_NAMES = Set.of(
+            "gengarite",
+            "gardevoirite",
+            "ampharosite",
+            "venusaurite",
+            "charizarditex",
+            "blastoisinite",
+            "mewtwonitex",
+            "mewtwonitey",
+            "blazikenite",
+            "medichamite",
+            "houndoominite",
+            "aggronite",
+            "banettite",
+            "tyranitarite",
+            "scizorite",
+            "pinsirite",
+            "aerodactylite",
+            "lucarionite",
+            "abomasite",
+            "kangaskhanite",
+            "gyaradosite",
+            "absolite",
+            "charizarditey",
+            "alakazite",
+            "heracronite",
+            "mawilite",
+            "manectite",
+            "garchompite",
+            "latiasite",
+            "latiosite",
+            "swampertite",
+            "sceptilite",
+            "sablenite",
+            "altarianite",
+            "galladite",
+            "audinite",
+            "metagrossite",
+            "sharpedonite",
+            "slowbronite",
+            "steelixite",
+            "pidgeotite",
+            "glalitite",
+            "diancite",
+            "cameruptite",
+            "lopunnite",
+            "salamencite",
+            "beedrillite"
+    );
     private static final Set<String> Z_CRYSTAL_NAMES = Set.of(
             "normaliumz",
             "fightiniumz",
@@ -145,7 +194,8 @@ public final class ItemMechanicPredicates {
         int id = item.getId();
         String normalizedName = normalizedName(item);
         if (Gen6Constants.megaStones.contains(id)
-                || (id >= CFRU_DPE_MEGA_STONE_FIRST && id <= CFRU_DPE_MEGA_STONE_LAST)) {
+                || (id >= CFRU_DPE_MEGA_STONE_FIRST && id <= CFRU_DPE_MEGA_STONE_LAST)
+                || MEGA_STONE_NAMES.contains(normalizedName)) {
             categories.add(ItemMechanicCategory.MEGA_STONE);
         }
         if (MEGA_ACCESSORY_IDS.contains(id) || MEGA_ACCESSORY_NAMES.contains(normalizedName)) {

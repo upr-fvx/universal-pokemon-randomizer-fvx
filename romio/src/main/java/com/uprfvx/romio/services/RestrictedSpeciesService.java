@@ -8,7 +8,6 @@ import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -154,17 +153,24 @@ public class RestrictedSpeciesService {
     }
 
     public void setRestrictions(GenRestrictions restrictions) {
+        setRestrictions(restrictions, SpecialFormExclusionOptions.allowAllSpecialForms());
+    }
+
+    public void setRestrictions(GenRestrictions restrictions, SpecialFormExclusionOptions specialFormOptions) {
+        SpecialFormExclusionOptions effectiveOptions = specialFormOptions == null
+                ? SpecialFormExclusionOptions.defaults()
+                : specialFormOptions;
 
         if (restrictions != null) {
-            allInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormesFromRestrictions(restrictions));
-            megaEvolutions = romHandler.getMegaEvolutions().stream()
-                    .filter(mevo -> allInclAltFormes.contains(mevo.getTo()))
-                    .collect(Collectors.toSet());
-            megaEvolutions = Collections.unmodifiableSet(megaEvolutions);
+            allInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormesFromRestrictions(restrictions, effectiveOptions));
         } else {
-            allInclAltFormes = SpeciesSet.unmodifiable(romHandler.getSpeciesSetInclFormes());
-            megaEvolutions = Collections.unmodifiableSet(new HashSet<>(romHandler.getMegaEvolutions()));
+            allInclAltFormes = SpeciesSet.unmodifiable(romHandler.getSpeciesSetInclFormes()
+                    .filter(sp -> SpecialFormPredicates.isSpeciesAllowed(sp, null, effectiveOptions)));
         }
+        megaEvolutions = romHandler.getMegaEvolutions().stream()
+                .filter(mevo -> allInclAltFormes.contains(mevo.getTo()))
+                .collect(Collectors.toSet());
+        megaEvolutions = Collections.unmodifiableSet(megaEvolutions);
 
         nonLegendariesInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormes.filter(pk -> !pk.isLegendary()));
         legendariesInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormes.filter(Species::isLegendary));
@@ -185,25 +191,32 @@ public class RestrictedSpeciesService {
         }
     }
 
-    private SpeciesSet allInclAltFormesFromRestrictions(GenRestrictions restrictions) {
+    private SpeciesSet allInclAltFormesFromRestrictions(GenRestrictions restrictions,
+                                                        SpecialFormExclusionOptions specialFormOptions) {
         SpeciesSet allInclAltFormes = new SpeciesSet();
         SpeciesSet allNonRestricted = romHandler.getSpeciesSetInclFormes();
 
         for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
             if (restrictions.isGenAllowed(gen)) {
-                addFromGen(allInclAltFormes, allNonRestricted, gen);
+                addFromGen(allInclAltFormes, allNonRestricted, gen, specialFormOptions);
             }
         }
 
         // If the user specified it, add all the evolutionary relatives for everything in the mainPokemonList
         if (restrictions.isAllowEvolutionaryRelatives()) {
             allInclAltFormes.addFullFamilies(false);
+            allInclAltFormes = allInclAltFormes.filter(sp -> SpecialFormPredicates.hasUsableSpeciesIdentity(sp)
+                    && SpecialFormPredicates.isAllowedBySpecialFormOptions(sp, specialFormOptions));
         }
 
         return allInclAltFormes;
     }
 
-    private static void addFromGen(SpeciesSet allInclAltFormes, SpeciesSet allNonRestricted, int gen) {
-        allInclAltFormes.addAll(allNonRestricted.filter(sp -> sp.getBaseForme().getGeneration() == gen));
+    private static void addFromGen(SpeciesSet allInclAltFormes, SpeciesSet allNonRestricted, int gen,
+                                   SpecialFormExclusionOptions specialFormOptions) {
+        allInclAltFormes.addAll(allNonRestricted.filter(sp ->
+                SpecialFormPredicates.effectiveGenerationForDirectLimit(sp, specialFormOptions) == gen
+                        && SpecialFormPredicates.hasUsableSpeciesIdentity(sp)
+                        && SpecialFormPredicates.isAllowedBySpecialFormOptions(sp, specialFormOptions)));
     }
 }

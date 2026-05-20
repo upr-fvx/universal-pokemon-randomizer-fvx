@@ -48,17 +48,19 @@ Related exclusion controls that exist today:
 `GameRandomizer.setupSpeciesRestrictions()` calls `RestrictedSpeciesService.setRestrictions()` once. Species-picking
 paths are expected to use the restricted service instead of raw ROM handler species lists.
 
-With restrictions enabled, `RestrictedSpeciesService` builds `allInclAltFormes` by checking:
+With restrictions enabled, `RestrictedSpeciesService` builds `allInclAltFormes` through the shared special-form
+eligibility predicate. The direct generation check now uses:
 
 ```text
-species.getBaseForme().getGeneration() == allowedGeneration
+SpecialFormPredicates.effectiveGenerationForDirectLimit(species, options) == allowedGeneration
 ```
 
-This means the predicate is Species-object based, not a direct `species.getNumber()` filter. The Gen 3 CFRU/DPE loader
-sets `Species.speciesSetIdentityNumber` to the internal species index for expanded BPRE hacks, but generation assignment
-derives from normalized species names mapped to `SpeciesIDs`. If that name lookup fails, expanded BPRE generation
-assignment now falls back to `speciesSetIdentityNumber` before `species.getNumber()`. This is important for DPE/CFRU
-names that are shortened, accented, or spelled differently from FVX constants.
+This means the predicate is Species-object based, not a direct `species.getNumber()` filter. By default, forms use their
+own generation. Regional forms can use the base-family generation only when the regional override is enabled. The Gen 3
+CFRU/DPE loader sets `Species.speciesSetIdentityNumber` to the internal species index for expanded BPRE hacks, but
+generation assignment derives from normalized species names mapped to `SpeciesIDs`. If that name lookup fails, expanded
+BPRE generation assignment now falls back to `speciesSetIdentityNumber` before `species.getNumber()`. This is important
+for DPE/CFRU names that are shortened, accented, or spelled differently from FVX constants.
 
 When `allowEvolutionaryRelatives` is enabled, the service expands the selected set with `SpeciesSet.addFullFamilies()`.
 That can intentionally pull in species outside the directly allowed generations if they are connected by the evolution
@@ -87,8 +89,9 @@ The inspected randomizer paths use the restricted service for their primary spec
 - Catching Tutorial: `MiscTweakRandomizer` uses `randomSpecies()`, so it draws from `getAll(false)`.
 - Evolution targets: `EvolutionRandomizer` uses `getSpecies(false, altFormesCanHaveDifferentEvolutions(), false)`.
 
-These paths share the same generation and evolutionary-relative predicate. Their forme behavior depends on whether the
-handler classifies CFRU/DPE expanded forms in `getAltFormes()` / `getIrregularFormes()`.
+These paths share the same generation, evolutionary-relative, Mega, GMax, and regional-form predicate. Their generic
+alt-forme toggle behavior still depends on whether the handler classifies CFRU/DPE expanded forms in `getAltFormes()` /
+`getIrregularFormes()`.
 
 ## Gen1-only Local Failure
 
@@ -155,7 +158,9 @@ Known gaps:
 - unrestricted service and current `GenRestrictions` include synthetic Gen 8 and Gen 9 species.
 - Gen 8 and Gen 9 species are excluded when only earlier generations are allowed.
 - unknown-generation species are excluded by generation restrictions.
-- forme inclusion uses the base forme generation, while `getAll(false)` still filters handler-reported alt formes.
+- forme inclusion uses the form generation by default, while `getAll(false)` still filters handler-reported alt formes.
+- Mega and GMax forms are excluded by default and included only through their settings.
+- regional forms can use base-family generation only when the regional override is enabled.
 - evolutionary-relative expansion can include a Gen 9 relative when only Gen 1 is directly allowed.
 - mega evolution entries are retained only when their target species remains in the allowed pool.
 

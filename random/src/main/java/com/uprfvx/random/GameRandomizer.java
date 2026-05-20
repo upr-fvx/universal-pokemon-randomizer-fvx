@@ -34,6 +34,7 @@ import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.Gen1RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import com.uprfvx.romio.services.SpecialFormExclusionOptions;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -234,7 +235,11 @@ public class GameRandomizer {
 
     private void setupSpeciesRestrictions() {
         romHandler.getRestrictedSpeciesService().setRestrictions(
-                settings.isLimitPokemon() ? settings.getCurrentRestrictions() : null);
+                settings.isLimitPokemon() ? settings.getCurrentRestrictions() : null,
+                new SpecialFormExclusionOptions(
+                        settings.isAllowMegaForms(),
+                        settings.isAllowGigantamaxForms(),
+                        settings.isAllowRegionalFormsAcrossGenLimit()));
         if (settings.isLimitPokemon()) {
             romHandler.removeEvosForPokemonPool();
         }

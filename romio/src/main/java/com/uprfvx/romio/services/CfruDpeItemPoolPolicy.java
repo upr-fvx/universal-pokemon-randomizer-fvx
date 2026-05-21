@@ -40,7 +40,11 @@ public final class CfruDpeItemPoolPolicy {
             "fossilizedbird",
             "fossilizedfish",
             "fossilizeddrake",
-            "fossilizeddino"
+            "fossilizeddino",
+            "birdfossil",
+            "fishfossil",
+            "drakefossil",
+            "dinofossil"
     );
     private static final Set<String> POKE_BALL_NAMES = Set.of(
             "masterball",
@@ -74,6 +78,40 @@ public final class CfruDpeItemPoolPolicy {
             ItemIDs.yellowShard,
             ItemIDs.greenShard
     );
+    private static final Set<String> SHARD_EXCHANGE_NAMES = Set.of(
+            "redshard",
+            "blueshard",
+            "yellowshard",
+            "greenshard"
+    );
+    private static final Set<Integer> HIGH_VALUE_VALUABLE_IDS = Set.of(
+            ItemIDs.balmMushroom,
+            ItemIDs.rareBone,
+            ItemIDs.pearlString,
+            ItemIDs.cometShard,
+            ItemIDs.bigNugget,
+            ItemIDs.relicCopper,
+            ItemIDs.relicSilver,
+            ItemIDs.relicGold,
+            ItemIDs.relicVase,
+            ItemIDs.relicBand,
+            ItemIDs.relicStatue,
+            ItemIDs.relicCrown
+    );
+    private static final Set<String> HIGH_VALUE_VALUABLE_NAMES = Set.of(
+            "balmmushroom",
+            "rarebone",
+            "pearlstring",
+            "cometshard",
+            "bignugget",
+            "reliccopper",
+            "relicsilver",
+            "relicgold",
+            "relicvase",
+            "relicband",
+            "relicstatue",
+            "reliccrown"
+    );
     private static final Set<Integer> HELD_BATTLE_ITEM_IDS_ALLOWED_BY_POLICY = Set.of(
             ItemIDs.lightBall,
             ItemIDs.soulDew,
@@ -91,7 +129,7 @@ public final class CfruDpeItemPoolPolicy {
     }
 
     public static boolean isBadWhenBanBadItems(Item item) {
-        return isFormChangeItem(item);
+        return isFormChangeItem(item) || isShardExchangeItem(item) || isHighValueValuableItem(item);
     }
 
     public static boolean isAllowedWhenBanBadItems(Item item) {
@@ -100,7 +138,6 @@ public final class CfruDpeItemPoolPolicy {
         }
         return isPokeBallItem(item)
                 || USEFUL_BERRY_IDS.contains(item.getId())
-                || SHARD_EXCHANGE_IDS.contains(item.getId())
                 || HELD_BATTLE_ITEM_IDS_ALLOWED_BY_POLICY.contains(item.getId());
     }
 
@@ -124,6 +161,21 @@ public final class CfruDpeItemPoolPolicy {
         }
         return (item.getId() >= ItemIDs.masterBall && item.getId() <= ItemIDs.premierBall)
                 || POKE_BALL_NAMES.contains(normalizedName(item));
+    }
+
+    public static boolean isShardExchangeItem(Item item) {
+        if (item == null) {
+            return false;
+        }
+        return SHARD_EXCHANGE_IDS.contains(item.getId()) || SHARD_EXCHANGE_NAMES.contains(normalizedName(item));
+    }
+
+    public static boolean isHighValueValuableItem(Item item) {
+        if (item == null) {
+            return false;
+        }
+        return HIGH_VALUE_VALUABLE_IDS.contains(item.getId())
+                || HIGH_VALUE_VALUABLE_NAMES.contains(normalizedName(item));
     }
 
     private static String normalizedName(Item item) {

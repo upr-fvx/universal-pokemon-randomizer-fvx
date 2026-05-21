@@ -328,16 +328,48 @@ public class ItemDecisionTest {
     }
 
     @Test
+    public void banBadPolicyExcludesShardsAndHighValueValuablesFromFieldShopPickupPools() {
+        Item normal = item(10, "Normal", true, false);
+        Item greenShard = item(ItemIDs.greenShard, "Green Shard", true, false);
+        Item relicCrown = item(ItemIDs.relicCrown, "Relic Crown", true, false);
+        Item relicStatue = item(ItemIDs.relicStatue, "Relic Statue", true, false);
+        Item bigNugget = item(ItemIDs.bigNugget, "Big Nugget", true, false);
+        Set<Item> allowedItems = linkedSet(greenShard, relicCrown, relicStatue, bigNugget, normal);
+        Set<Item> nonBadItems = nonBadPolicyItems(allowedItems);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(
+                List.of(greenShard, relicCrown, relicStatue, bigNugget), allowedItems, nonBadItems);
+        romHandler.shops = List.of(specialShop(List.of(greenShard, relicCrown, relicStatue, bigNugget)));
+        romHandler.pickupItems = List.of(new PickupItem(greenShard), new PickupItem(relicCrown),
+                new PickupItem(relicStatue), new PickupItem(bigNugget));
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+        settings.setBanBadRandomFieldItems(true);
+        settings.setBanBadRandomShopItems(true);
+        settings.setBanBadRandomPickupItems(true);
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeFieldItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeShopItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
+
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenShops.get(0).getItems());
+        assertEquals(List.of(normal, normal, normal, normal),
+                romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
+    }
+
+    @Test
     public void fossilPolicyExcludesFossilsFromNormalFieldShopPickupPools() {
         Item normal = item(10, "Normal", true, false);
         Item helixFossil = item(ItemIDs.helixFossil, "Helix Fossil", false, true);
         Item plumeFossil = item(9000, "Plume Fossil", false, true);
+        Item fishFossil = item(9001, "Fish Fossil", false, true);
         Set<Item> allowedItems = linkedSet(normal);
-        Set<Item> allItems = linkedSet(normal, helixFossil, plumeFossil);
-        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(helixFossil, plumeFossil),
+        Set<Item> allItems = linkedSet(normal, helixFossil, plumeFossil, fishFossil);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(helixFossil, plumeFossil, fishFossil),
                 allowedItems, allowedItems);
-        romHandler.shops = List.of(specialShop(List.of(helixFossil, plumeFossil)));
-        romHandler.pickupItems = List.of(new PickupItem(helixFossil), new PickupItem(plumeFossil));
+        romHandler.shops = List.of(specialShop(List.of(helixFossil, plumeFossil, fishFossil)));
+        romHandler.pickupItems = List.of(new PickupItem(helixFossil), new PickupItem(plumeFossil),
+                new PickupItem(fishFossil));
         Settings settings = new Settings();
         settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
 
@@ -346,9 +378,10 @@ public class ItemDecisionTest {
         new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
 
         assertTrue(allItems.stream().anyMatch(CfruDpeItemPoolPolicy::isBannedFromNormalItemPools));
-        assertEquals(List.of(normal, normal), romHandler.writtenFieldItems);
-        assertEquals(List.of(normal, normal), romHandler.writtenShops.get(0).getItems());
-        assertEquals(List.of(normal, normal), romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
+        assertEquals(List.of(normal, normal, normal), romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal, normal), romHandler.writtenShops.get(0).getItems());
+        assertEquals(List.of(normal, normal, normal),
+                romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
     }
 
     private static Item item(int id, String name, boolean allowed, boolean bad) {

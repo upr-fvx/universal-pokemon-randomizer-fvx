@@ -24,29 +24,62 @@ public class CfruDpeItemPoolPolicyTest {
         assertBanned(item(ItemIDs.helixFossil, "Helix Fossil"));
         assertBanned(item(ItemIDs.rootFossil, "Root Fossil"));
         assertBanned(item(ItemIDs.fossilizedBird, "Fossilized Bird"));
+        assertBanned(item(ItemIDs.fossilizedFish, "Fish Fossil"));
         assertBanned(item(9000, "Plume Fossil"));
         assertBanned(item(9001, "Old Amber"));
+        assertBanned(item(9002, "Fish Fossil"));
+    }
+
+    @Test
+    public void shardsAreBadOnlyWhenBanBadItemsIsEnabled() {
+        assertBadOnly(item(ItemIDs.redShard, "Red Shard"));
+        assertBadOnly(item(ItemIDs.blueShard, "Blue Shard"));
+        assertBadOnly(item(ItemIDs.yellowShard, "Yellow Shard"));
+        assertBadOnly(item(ItemIDs.greenShard, "Green Shard"));
+        assertBadOnly(item(9000, "Green Shard"));
+    }
+
+    @Test
+    public void highValueValuablesAreBadOnlyWhenBanBadItemsIsEnabled() {
+        assertBadOnly(item(ItemIDs.relicCrown, "Relic Crown"));
+        assertBadOnly(item(ItemIDs.relicStatue, "Relic Statue"));
+        assertBadOnly(item(ItemIDs.relicBand, "Relic Band"));
+        assertBadOnly(item(ItemIDs.relicGold, "Relic Gold"));
+        assertBadOnly(item(ItemIDs.relicVase, "Relic Vase"));
+        assertBadOnly(item(ItemIDs.relicCopper, "Relic Copper"));
+        assertBadOnly(item(ItemIDs.relicSilver, "Relic Silver"));
+        assertBadOnly(item(ItemIDs.bigNugget, "Big Nugget"));
+        assertBadOnly(item(ItemIDs.balmMushroom, "Balm Mushroom"));
+        assertBadOnly(item(ItemIDs.pearlString, "Pearl String"));
+        assertBadOnly(item(ItemIDs.cometShard, "Comet Shard"));
+        assertBadOnly(item(ItemIDs.rareBone, "Rare Bone"));
+        assertBadOnly(item(9000, "Relic Crown"));
     }
 
     @Test
     public void clearlyAllowedPolicyItemsAreNotNewlyBanned() {
         assertAllowed(item(ItemIDs.potion, "Potion"));
+        assertAllowed(item(ItemIDs.superPotion, "Super Potion"));
+        assertAllowed(item(ItemIDs.fullRestore, "Full Restore"));
         assertAllowed(item(ItemIDs.antidote, "Antidote"));
         assertAllowed(item(ItemIDs.pokeBall, "Poke Ball"));
+        assertAllowed(item(ItemIDs.ultraBall, "Ultra Ball"));
         assertAllowed(item(ItemIDs.masterBall, "Master Ball"));
         assertAllowed(item(ItemIDs.escapeRope, "Escape Rope"));
         assertAllowed(item(ItemIDs.rareCandy, "Rare Candy"));
+        assertAllowed(item(ItemIDs.ppUp, "PP Up"));
         assertAllowed(item(ItemIDs.hpUp, "HP Up"));
+        assertAllowed(item(ItemIDs.xDefense, "X Defend"));
         assertAllowed(item(ItemIDs.nugget, "Nugget"));
-        assertAllowed(item(ItemIDs.blueShard, "Blue Shard"));
         assertAllowed(item(ItemIDs.leftovers, "Leftovers"));
+        assertAllowed(item(ItemIDs.eviolite, "Eviolite"));
+        assertAllowed(item(ItemIDs.fireGem, "Fire Gem"));
     }
 
     @Test
-    public void usefulBerriesShardsAndSpecificHeldItemsOverrideLegacyBadFlags() {
+    public void usefulBerriesAndSpecificHeldItemsOverrideLegacyBadFlags() {
         assertAllowedWhenBanBad(item(ItemIDs.oranBerry, "Oran Berry"));
         assertAllowedWhenBanBad(item(ItemIDs.lumBerry, "Lum Berry"));
-        assertAllowedWhenBanBad(item(ItemIDs.blueShard, "Blue Shard"));
         assertAllowedWhenBanBad(item(ItemIDs.lightBall, "Light Ball"));
         assertAllowedWhenBanBad(item(ItemIDs.thickClub, "Thick Club"));
     }

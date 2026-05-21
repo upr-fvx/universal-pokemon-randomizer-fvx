@@ -4,6 +4,7 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import com.uprfvx.romio.services.CfruDpeItemPoolPolicy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +120,7 @@ public class EncounterHeldItemRandomizer extends Randomizer {
     }
 
     private boolean isUnsafeEncounterHeldItem(Item item) {
-        return item == null || item.getName() == null || item.getName().startsWith("item #");
+        return item == null || item.getName() == null || item.getName().startsWith("item #")
+                || item.isTM() || CfruDpeItemPoolPolicy.isPokeBallItem(item);
     }
 }

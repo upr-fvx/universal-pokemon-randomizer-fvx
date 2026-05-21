@@ -36,6 +36,7 @@ import com.uprfvx.romio.romhandlers.romentries.Gen3EventTextEntry;
 import com.uprfvx.romio.romhandlers.romentries.Gen3RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
 import com.uprfvx.romio.services.CfruDpeItemCategories;
+import com.uprfvx.romio.services.CfruDpeItemPoolPolicy;
 import compressors.DSCmp;
 import compressors.DSDecmp;
 import filefunctions.IOFunctions;
@@ -7241,6 +7242,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         if (useCfruDpeGen9SpeciesCount) {
             Gen3Constants.cfruDpeEncounterHeldItemBannedItems.stream().filter(id -> id < items.size())
                     .map(items::get).filter(Objects::nonNull)
+                    .filter(item -> !CfruDpeItemPoolPolicy.isPokeBallItem(item))
                     .forEach(item -> {
                         item.setAllowed(false);
                         item.setBad(true);
@@ -7258,6 +7260,22 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (id < items.size()) {
                 items.get(id).setBad(true);
             }
+        }
+        if (useCfruDpeGen9SpeciesCount) {
+            items.stream()
+                    .filter(Objects::nonNull)
+                    .forEach(this::applyCfruDpeItemPoolPolicy);
+        }
+    }
+
+    private void applyCfruDpeItemPoolPolicy(Item item) {
+        if (CfruDpeItemPoolPolicy.isBannedFromNormalItemPools(item)) {
+            item.setAllowed(false);
+            item.setBad(true);
+        } else if (CfruDpeItemPoolPolicy.isBadWhenBanBadItems(item)) {
+            item.setBad(true);
+        } else if (CfruDpeItemPoolPolicy.isAllowedWhenBanBadItems(item)) {
+            item.setBad(false);
         }
     }
 

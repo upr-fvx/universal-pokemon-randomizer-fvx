@@ -11,6 +11,7 @@ import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.gamedata.TrainerPokemon;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.services.CfruDpeItemCategories;
+import com.uprfvx.romio.services.CfruDpeItemPoolPolicy;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationHandler;
@@ -104,13 +105,12 @@ public class ItemDecisionTest {
     }
 
     @Test
-    public void pickupPoolExcludesExpandedCfruDpeTechnicalMachinesWhenTmsAreReusable() {
+    public void pickupPoolExcludesExpandedCfruDpeTechnicalMachinesByDefault() {
         Item normal = item(10, "Normal", true, false);
         Item tm51 = cfruDpeExpandedTm(CFRU_DPE_TM51, "TM51");
         Set<Item> allItems = linkedSet(tm51, normal);
         ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(), allItems, allItems);
         romHandler.pickupItems = List.of(new PickupItem(normal));
-        romHandler.tmsReusable = true;
         Settings settings = new Settings();
 
         new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
@@ -288,6 +288,60 @@ public class ItemDecisionTest {
         assertEquals(List.of(dynamax), starterHandler.writtenStarterHeldItems);
     }
 
+    @Test
+    public void banBadPolicyExcludesFormChangeItemsFromFieldShopPickupPools() {
+        Item normal = item(10, "Normal", true, false);
+        Item plate = item(ItemIDs.flamePlate, "Flame Plate", true, false);
+        Item drive = item(ItemIDs.burnDrive, "Burn Drive", true, false);
+        Item memory = item(ItemIDs.bugMemory, "Bug Memory", true, false);
+        Item nectar = item(ItemIDs.redNectar, "Red Nectar", true, false);
+        Set<Item> allowedItems = linkedSet(plate, drive, memory, nectar, normal);
+        Set<Item> nonBadItems = nonBadPolicyItems(allowedItems);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(plate, drive, memory, nectar),
+                allowedItems, nonBadItems);
+        romHandler.shops = List.of(specialShop(List.of(plate, drive, memory, nectar)));
+        romHandler.pickupItems = List.of(new PickupItem(plate), new PickupItem(drive), new PickupItem(memory),
+                new PickupItem(nectar));
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+        settings.setBanBadRandomFieldItems(true);
+        settings.setBanBadRandomShopItems(true);
+        settings.setBanBadRandomPickupItems(true);
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeFieldItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeShopItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
+
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal, normal, normal), romHandler.writtenShops.get(0).getItems());
+        assertEquals(List.of(normal, normal, normal, normal),
+                romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
+    }
+
+    @Test
+    public void fossilPolicyExcludesFossilsFromNormalFieldShopPickupPools() {
+        Item normal = item(10, "Normal", true, false);
+        Item helixFossil = item(ItemIDs.helixFossil, "Helix Fossil", false, true);
+        Item plumeFossil = item(9000, "Plume Fossil", false, true);
+        Set<Item> allowedItems = linkedSet(normal);
+        Set<Item> allItems = linkedSet(normal, helixFossil, plumeFossil);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(helixFossil, plumeFossil),
+                allowedItems, allowedItems);
+        romHandler.shops = List.of(specialShop(List.of(helixFossil, plumeFossil)));
+        romHandler.pickupItems = List.of(new PickupItem(helixFossil), new PickupItem(plumeFossil));
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeFieldItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeShopItems();
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
+
+        assertTrue(allItems.stream().anyMatch(CfruDpeItemPoolPolicy::isBannedFromNormalItemPools));
+        assertEquals(List.of(normal, normal), romHandler.writtenFieldItems);
+        assertEquals(List.of(normal, normal), romHandler.writtenShops.get(0).getItems());
+        assertEquals(List.of(normal, normal), romHandler.writtenPickupItems.stream().map(PickupItem::getItem).toList());
+    }
+
     private static Item item(int id, String name, boolean allowed, boolean bad) {
         Item item = new Item(id, name);
         item.setAllowed(allowed);
@@ -311,6 +365,17 @@ public class ItemDecisionTest {
         Set<Item> set = new LinkedHashSet<>();
         Collections.addAll(set, items);
         return set;
+    }
+
+    private static Set<Item> nonBadPolicyItems(Set<Item> items) {
+        Set<Item> nonBadItems = new LinkedHashSet<>();
+        for (Item item : items) {
+            if (item.isAllowed() && !item.isBad() && !CfruDpeItemPoolPolicy.isBadWhenBanBadItems(item)
+                    && !CfruDpeItemPoolPolicy.isBannedFromNormalItemPools(item)) {
+                nonBadItems.add(item);
+            }
+        }
+        return nonBadItems;
     }
 
     private static Shop specialShop(List<Item> items) {

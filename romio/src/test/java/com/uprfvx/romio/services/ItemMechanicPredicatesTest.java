@@ -20,6 +20,7 @@ public class ItemMechanicPredicatesTest {
 
     private static final int CFRU_DPE_ULTRANECROZIUM_Z = 0x214;
     private static final int CFRU_DPE_VENUSAURITE = 0x215;
+    private static final int CFRU_DPE_BLASTOISINITE = 0x218;
     private static final int CFRU_DPE_NORMALIUM_Z = 0x244;
     private static final int CFRU_DPE_SNORLIUM_Z = 0x263;
     private static final int CFRU_DPE_TM51 = 376;
@@ -28,6 +29,8 @@ public class ItemMechanicPredicatesTest {
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_ULTRANECROZIUM_Z);
     private static final int CFRU_DPE_STANDARD_VENUSAURITE =
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_VENUSAURITE);
+    private static final int CFRU_DPE_STANDARD_BLASTOISINITE =
+            CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_BLASTOISINITE);
     private static final int CFRU_DPE_STANDARD_NORMALIUM_Z =
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_NORMALIUM_Z);
     private static final int CFRU_DPE_STANDARD_TM51 = CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_TM51);
@@ -38,6 +41,9 @@ public class ItemMechanicPredicatesTest {
         Item venusaurite = item(ItemIDs.venusaurite, "Venusaurite");
         Item cfruDpeVenusaurite = item(CFRU_DPE_VENUSAURITE, "Venusaurite");
         Item cfruDpeStandardVenusaurite = item(CFRU_DPE_STANDARD_VENUSAURITE, "Venusaurite");
+        Item cfruDpeBlastoiseite = item(CFRU_DPE_BLASTOISINITE, "Blastoiseite");
+        Item cfruDpeStandardBlastoisnite = item(CFRU_DPE_STANDARD_BLASTOISINITE, "Blastoisnite");
+        Item nonCanonicalBlastoiseite = item(6002, "Blastoiseite");
         Item pidgeotite = item(6000, "Pidgeotite");
         Item cameruptite = item(6001, "Cameruptite");
         Item charizarditeX = item(ItemIDs.charizarditeX, "Charizardite X");
@@ -48,6 +54,9 @@ public class ItemMechanicPredicatesTest {
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(venusaurite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeVenusaurite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeStandardVenusaurite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeBlastoiseite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cfruDpeStandardBlastoisnite));
+        assertTrue(ItemMechanicPredicates.isMegaMechanicItem(nonCanonicalBlastoiseite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(pidgeotite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(cameruptite));
         assertTrue(ItemMechanicPredicates.isMegaMechanicItem(charizarditeX));
@@ -59,6 +68,12 @@ public class ItemMechanicPredicatesTest {
                 ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardVenusaurite,
                 ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeBlastoiseite,
+                ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardBlastoisnite,
+                ItemMechanicExclusionOptions.defaults()));
+        assertFalse(ItemMechanicPredicates.isItemAllowed(nonCanonicalBlastoiseite,
+                ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(pidgeotite, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(cameruptite, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(megaRing, ItemMechanicExclusionOptions.defaults()));
@@ -67,6 +82,12 @@ public class ItemMechanicPredicatesTest {
         assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeVenusaurite,
                 new ItemMechanicExclusionOptions(true, false, false)));
         assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardVenusaurite,
+                new ItemMechanicExclusionOptions(true, false, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeBlastoiseite,
+                new ItemMechanicExclusionOptions(true, false, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(cfruDpeStandardBlastoisnite,
+                new ItemMechanicExclusionOptions(true, false, false)));
+        assertTrue(ItemMechanicPredicates.isItemAllowed(nonCanonicalBlastoiseite,
                 new ItemMechanicExclusionOptions(true, false, false)));
         assertTrue(ItemMechanicPredicates.isItemAllowed(pidgeotite,
                 new ItemMechanicExclusionOptions(true, false, false)));

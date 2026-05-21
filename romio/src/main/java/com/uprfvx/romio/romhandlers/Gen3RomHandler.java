@@ -35,6 +35,7 @@ import com.uprfvx.romio.graphics.palettes.Palette;
 import com.uprfvx.romio.romhandlers.romentries.Gen3EventTextEntry;
 import com.uprfvx.romio.romhandlers.romentries.Gen3RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
+import com.uprfvx.romio.services.CfruDpeItemCategories;
 import compressors.DSCmp;
 import compressors.DSDecmp;
 import filefunctions.IOFunctions;
@@ -7247,6 +7248,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
         for (int i = ItemIDs.tm01; i < ItemIDs.tm01 + Gen3Constants.tmCount; i++) {
             items.get(i).setTM(true);
+        }
+        if (useCfruDpeGen9SpeciesCount) {
+            items.stream()
+                    .filter(CfruDpeItemCategories::isCfruDpeExpandedTechnicalMachineItem)
+                    .forEach(item -> item.setTM(true));
         }
         for (int id : Gen3Constants.getBadItems(getROMType())) {
             if (id < items.size()) {

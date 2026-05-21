@@ -19,6 +19,7 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class ItemDecisionTest {
 
     private static final int CFRU_DPE_ULTRANECROZIUM_Z = 0x214;
     private static final int CFRU_DPE_SNORLIUM_Z = 0x263;
+    private static final int CFRU_DPE_TM51 = 376;
     private static final int CFRU_DPE_STANDARD_ULTRANECROZIUM_Z =
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_ULTRANECROZIUM_Z);
     private static final int NONCANONICAL_PIDGEOTITE = 9000;
@@ -71,6 +73,66 @@ public class ItemDecisionTest {
         }
         assertFalse(romHandler.writtenFieldItems.contains(badItem));
         assertFalse(romHandler.writtenFieldItems.contains(keyItem));
+    }
+
+    @Test
+    public void nonTmFieldItemPoolExcludesExpandedCfruDpeTechnicalMachines() {
+        Item normal = item(10, "Normal", true, false);
+        Item tm51 = cfruDpeExpandedTm(CFRU_DPE_TM51, "TM51");
+        Set<Item> allItems = linkedSet(tm51, normal);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(normal), allItems, allItems);
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeFieldItems();
+
+        assertEquals(List.of(normal), romHandler.writtenFieldItems);
+    }
+
+    @Test
+    public void shopRandomFillerExcludesExpandedCfruDpeTechnicalMachines() {
+        Item normal = item(10, "Normal", true, false);
+        Item tm51 = cfruDpeExpandedTm(CFRU_DPE_TM51, "TM51");
+        Set<Item> allItems = linkedSet(tm51, normal);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(), allItems, allItems);
+        romHandler.shops = List.of(specialShop(List.of(normal)));
+        Settings settings = new Settings();
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizeShopItems();
+
+        assertEquals(List.of(normal), romHandler.writtenShops.get(0).getItems());
+    }
+
+    @Test
+    public void pickupPoolExcludesExpandedCfruDpeTechnicalMachinesWhenTmsAreReusable() {
+        Item normal = item(10, "Normal", true, false);
+        Item tm51 = cfruDpeExpandedTm(CFRU_DPE_TM51, "TM51");
+        Set<Item> allItems = linkedSet(tm51, normal);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(), allItems, allItems);
+        romHandler.pickupItems = List.of(new PickupItem(normal));
+        romHandler.tmsReusable = true;
+        Settings settings = new Settings();
+
+        new ItemRandomizer(romHandler.proxy, settings, new ZeroRandom()).randomizePickupItems();
+
+        assertEquals(normal, romHandler.writtenPickupItems.get(0).getItem());
+    }
+
+    @Test
+    public void tmFieldSlotsCanStillReceiveExpandedCfruDpeTechnicalMachines() {
+        Item tm01 = item(ItemIDs.tm01, "TM01", true, false);
+        tm01.setTM(true);
+        Item normal = item(10, "Normal", true, false);
+        Item tm51 = cfruDpeExpandedTm(CFRU_DPE_TM51, "TM51");
+        Set<Item> allItems = linkedSet(tm51, normal);
+        ItemTestRomHandler romHandler = ItemTestRomHandler.create(List.of(tm01), allItems, allItems);
+        Settings settings = new Settings();
+        settings.setFieldItemsMod(Settings.FieldItemsMod.RANDOM);
+
+        new ItemRandomizer(romHandler.proxy, settings, new FixedIntRandom(1, 0)).randomizeFieldItems();
+
+        assertEquals(List.of(tm51), romHandler.writtenFieldItems);
+        assertTrue(romHandler.writtenFieldItems.get(0).isTM());
     }
 
     @Test
@@ -239,6 +301,18 @@ public class ItemDecisionTest {
         return item;
     }
 
+    private static Item cfruDpeExpandedTm(int sourceId, String name) {
+        Item item = item(CfruDpeItemCategories.standardIdForSourceId(sourceId), name, true, false);
+        item.setTM(CfruDpeItemCategories.isCfruDpeExpandedTechnicalMachineItem(item));
+        return item;
+    }
+
+    private static Set<Item> linkedSet(Item... items) {
+        Set<Item> set = new LinkedHashSet<>();
+        Collections.addAll(set, items);
+        return set;
+    }
+
     private static Shop specialShop(List<Item> items) {
         Shop shop = new Shop();
         shop.setItems(new ArrayList<>(items));
@@ -285,6 +359,8 @@ public class ItemDecisionTest {
         private List<Trainer> trainers = Collections.emptyList();
         private List<Item> sensibleHeldItems = Collections.emptyList();
         private Set<Item> allHeldItems = Collections.emptySet();
+        private boolean canTMsBeHeld = true;
+        private boolean tmsReusable;
         private List<Item> writtenFieldItems;
         private List<Shop> writtenShops;
         private List<PickupItem> writtenPickupItems;
@@ -327,8 +403,8 @@ public class ItemDecisionTest {
                 case "getMegaStones", "getRequiredFieldTMs", "getEvolutionItems", "getXItems",
                      "getRegularShopItems", "getOPShopItems" -> Collections.<Item>emptySet();
                 case "isBalanceShopPrices" -> false;
-                case "canTMsBeHeld" -> true;
-                case "isTMsReusable" -> false;
+                case "canTMsBeHeld" -> canTMsBeHeld;
+                case "isTMsReusable" -> tmsReusable;
                 case "setFieldItems" -> {
                     writtenFieldItems = typedItemList(args[0]);
                     setFieldItemsCalls++;

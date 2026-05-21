@@ -26,6 +26,8 @@ public final class CfruDpeItemCategories {
     public static final int ITEM_DIANCITE = 0x243;
     public static final int ITEM_NORMALIUM_Z = 0x244;
     public static final int ITEM_TAPUNIUM_Z = 0x265;
+    public static final int ITEM_TM51 = 376;
+    public static final int ITEM_TM120 = 0x1BD;
 
     private static final Set<Integer> MEGA_ACCESSORY_IDS = Set.of(
             ItemIDs.megaRing,
@@ -381,6 +383,14 @@ public final class CfruDpeItemCategories {
         return ItemIDs.UNIQUE_OFFSET + cfruDpeSourceItemId;
     }
 
+    public static boolean isCfruDpeExpandedTechnicalMachineItem(Item item) {
+        if (item == null) {
+            return false;
+        }
+        return isSourceBlockStandardId(item.getId(), ITEM_TM51, ITEM_TM120)
+                && isTechnicalMachineName(normalizedName(item));
+    }
+
     private static boolean isMegaStone(Item item) {
         String normalizedName = normalizedName(item);
         return Gen6Constants.megaStones.contains(item.getId())
@@ -434,6 +444,19 @@ public final class CfruDpeItemCategories {
         for (int i = start; i <= end; i++) {
             set.add(i);
         }
+    }
+
+    private static boolean isTechnicalMachineName(String normalizedName) {
+        if (!normalizedName.startsWith("tm") || normalizedName.length() < 3) {
+            return false;
+        }
+        for (int i = 2; i < normalizedName.length(); i++) {
+            char character = normalizedName.charAt(i);
+            if (!Character.isDigit(character)) {
+                return i > 2;
+            }
+        }
+        return true;
     }
 
     private static String normalizedName(Item item) {

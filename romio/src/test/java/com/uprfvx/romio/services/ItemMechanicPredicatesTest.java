@@ -22,12 +22,16 @@ public class ItemMechanicPredicatesTest {
     private static final int CFRU_DPE_VENUSAURITE = 0x215;
     private static final int CFRU_DPE_NORMALIUM_Z = 0x244;
     private static final int CFRU_DPE_SNORLIUM_Z = 0x263;
+    private static final int CFRU_DPE_TM51 = 376;
+    private static final int CFRU_DPE_TM120 = 0x1BD;
     private static final int CFRU_DPE_STANDARD_ULTRANECROZIUM_Z =
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_ULTRANECROZIUM_Z);
     private static final int CFRU_DPE_STANDARD_VENUSAURITE =
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_VENUSAURITE);
     private static final int CFRU_DPE_STANDARD_NORMALIUM_Z =
             CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_NORMALIUM_Z);
+    private static final int CFRU_DPE_STANDARD_TM51 = CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_TM51);
+    private static final int CFRU_DPE_STANDARD_TM120 = CfruDpeItemCategories.standardIdForSourceId(CFRU_DPE_TM120);
 
     @Test
     public void megaStonesAndAccessoriesAreMegaMechanicItems() {
@@ -235,6 +239,19 @@ public class ItemMechanicPredicatesTest {
         assertFalse(ItemMechanicPredicates.isItemAllowed(syntheticMegaStone, ItemMechanicExclusionOptions.defaults()));
         assertTrue(ItemMechanicPredicates.isItemAllowed(neutralItem, ItemMechanicExclusionOptions.defaults()));
         assertFalse(ItemMechanicPredicates.isItemAllowed(null, ItemMechanicExclusionOptions.allowAllMechanicItems()));
+    }
+
+    @Test
+    public void cfruDpeExpandedTechnicalMachinesUseSourceBlockAndName() {
+        Item tm51 = item(CFRU_DPE_STANDARD_TM51, "TM51");
+        Item tm120 = item(CFRU_DPE_STANDARD_TM120, "TM120");
+        Item sourceBlockCollision = item(CFRU_DPE_STANDARD_TM51, "Rare Candy");
+        Item nonSourceBlockNameCollision = item(9000, "TM51");
+
+        assertTrue(CfruDpeItemCategories.isCfruDpeExpandedTechnicalMachineItem(tm51));
+        assertTrue(CfruDpeItemCategories.isCfruDpeExpandedTechnicalMachineItem(tm120));
+        assertFalse(CfruDpeItemCategories.isCfruDpeExpandedTechnicalMachineItem(sourceBlockCollision));
+        assertFalse(CfruDpeItemCategories.isCfruDpeExpandedTechnicalMachineItem(nonSourceBlockNameCollision));
     }
 
     @Test

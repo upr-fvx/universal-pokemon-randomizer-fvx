@@ -308,7 +308,7 @@ public class ItemRandomizerTest extends RandomizerTest{
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void randomizePickupItemsMayGiveTMsIfTMsAreHoldableAndNotReusable(String romName) {
+    public void randomizePickupItemsBansTMsEvenIfTMsAreHoldableAndNotReusable(String romName) {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
         assumeTrue(romHandler.canTMsBeHeld());
@@ -326,7 +326,7 @@ public class ItemRandomizerTest extends RandomizerTest{
             }
         }
 
-        assertTrue(tmUsed);
+        assertFalse(tmUsed);
     }
 
     @ParameterizedTest

@@ -340,11 +340,7 @@ public class ItemRandomizer extends Randomizer {
 
         List<Item> possibleItems = filterAllowedMechanicItems(
                 banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
-        if (!romHandler.canTMsBeHeld() || romHandler.isTMsReusable()) {
-            // Normally these conditions overlap, but if TMs are made reusable we can get the latter but not the former,
-            // and it's still no fun getting the same reusable TM over and over again.
-            possibleItems.removeIf(Item::isTM);
-        }
+        possibleItems.removeIf(Item::isTM);
         if (possibleItems.isEmpty()) {
             throw new IllegalStateException("No eligible pickup items are available for randomization.");
         }

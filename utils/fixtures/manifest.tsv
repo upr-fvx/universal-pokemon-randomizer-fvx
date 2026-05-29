@@ -1,0 +1,54 @@
+function	case	description	in_path	out_path
+BLZCoder	garc_mixed_512	GARC/LZSS decode 512 mixed bytes	fixtures/BLZCoder/garc_mixed_512.in	fixtures/BLZCoder/garc_mixed_512.out
+BLZCoder	garc_random_256	GARC/LZSS decode 256 random bytes	fixtures/BLZCoder/garc_random_256.in	fixtures/BLZCoder/garc_random_256.out
+BLZCoder	garc_repetitive	GARC/LZSS decode 128 repetitive bytes	fixtures/BLZCoder/garc_repetitive.in	fixtures/BLZCoder/garc_repetitive.out
+BLZCoder	garc_single_byte	GARC/LZSS decode single byte	fixtures/BLZCoder/garc_single_byte.in	fixtures/BLZCoder/garc_single_byte.out
+DSCmp_LZ10	empty	compress empty input	fixtures/DSCmp_LZ10/empty.in	fixtures/DSCmp_LZ10/empty.out
+DSCmp_LZ10	mixed_512	compress 512-byte mixed	fixtures/DSCmp_LZ10/mixed_512.in	fixtures/DSCmp_LZ10/mixed_512.out
+DSCmp_LZ10	random_256	compress 256 pseudo-random bytes	fixtures/DSCmp_LZ10/random_256.in	fixtures/DSCmp_LZ10/random_256.out
+DSCmp_LZ10	repetitive_256	compress 256 repetitive bytes	fixtures/DSCmp_LZ10/repetitive_256.in	fixtures/DSCmp_LZ10/repetitive_256.out
+DSCmp_LZ10	sawtooth_256	compress 256-byte sawtooth	fixtures/DSCmp_LZ10/sawtooth_256.in	fixtures/DSCmp_LZ10/sawtooth_256.out
+DSCmp_LZ10	single_byte	compress single byte	fixtures/DSCmp_LZ10/single_byte.in	fixtures/DSCmp_LZ10/single_byte.out
+DSCmp_LZ11	empty	compress empty input	fixtures/DSCmp_LZ11/empty.in	fixtures/DSCmp_LZ11/empty.out
+DSCmp_LZ11	mixed_512	compress 512-byte mixed	fixtures/DSCmp_LZ11/mixed_512.in	fixtures/DSCmp_LZ11/mixed_512.out
+DSCmp_LZ11	random_256	compress 256 pseudo-random bytes	fixtures/DSCmp_LZ11/random_256.in	fixtures/DSCmp_LZ11/random_256.out
+DSCmp_LZ11	repetitive_256	compress 256 repetitive bytes	fixtures/DSCmp_LZ11/repetitive_256.in	fixtures/DSCmp_LZ11/repetitive_256.out
+DSCmp_LZ11	sawtooth_256	compress 256-byte sawtooth	fixtures/DSCmp_LZ11/sawtooth_256.in	fixtures/DSCmp_LZ11/sawtooth_256.out
+DSCmp_LZ11	single_byte	compress single byte	fixtures/DSCmp_LZ11/single_byte.in	fixtures/DSCmp_LZ11/single_byte.out
+DSDecmp_LZ10	alternating_256	256 bytes alternating 0x00/0xFF	fixtures/DSDecmp_LZ10/alternating_256.in	fixtures/DSDecmp_LZ10/alternating_256.out
+DSDecmp_LZ10	eight_bytes	8 distinct bytes	fixtures/DSDecmp_LZ10/eight_bytes.in	fixtures/DSDecmp_LZ10/eight_bytes.out
+DSDecmp_LZ10	mixed_512	512 bytes mixed structured+random (sprite-like)	fixtures/DSDecmp_LZ10/mixed_512.in	fixtures/DSDecmp_LZ10/mixed_512.out
+DSDecmp_LZ10	random_2048	2048 bytes pseudo-random (seed 0xDEADBEF0)	fixtures/DSDecmp_LZ10/random_2048.in	fixtures/DSDecmp_LZ10/random_2048.out
+DSDecmp_LZ10	random_256	256 bytes pseudo-random (seed 0xDEADBEEF)	fixtures/DSDecmp_LZ10/random_256.in	fixtures/DSDecmp_LZ10/random_256.out
+DSDecmp_LZ10	repetitive_256	256 bytes of 0xAA (highly repetitive)	fixtures/DSDecmp_LZ10/repetitive_256.in	fixtures/DSDecmp_LZ10/repetitive_256.out
+DSDecmp_LZ10	repetitive_4096	4096 bytes of 0xAA (long repetitive run)	fixtures/DSDecmp_LZ10/repetitive_4096.in	fixtures/DSDecmp_LZ10/repetitive_4096.out
+DSDecmp_LZ10	sawtooth_256	256 bytes sawtooth (0x00-0xFF repeated)	fixtures/DSDecmp_LZ10/sawtooth_256.in	fixtures/DSDecmp_LZ10/sawtooth_256.out
+DSDecmp_LZ11	alternating_256	256 bytes alternating 0x00/0xFF	fixtures/DSDecmp_LZ11/alternating_256.in	fixtures/DSDecmp_LZ11/alternating_256.out
+DSDecmp_LZ11	eight_bytes	8 distinct bytes	fixtures/DSDecmp_LZ11/eight_bytes.in	fixtures/DSDecmp_LZ11/eight_bytes.out
+DSDecmp_LZ11	mixed_512	512 bytes mixed structured+random	fixtures/DSDecmp_LZ11/mixed_512.in	fixtures/DSDecmp_LZ11/mixed_512.out
+DSDecmp_LZ11	random_2048	2048 bytes pseudo-random (seed+11)	fixtures/DSDecmp_LZ11/random_2048.in	fixtures/DSDecmp_LZ11/random_2048.out
+DSDecmp_LZ11	random_256	256 bytes pseudo-random (seed+10)	fixtures/DSDecmp_LZ11/random_256.in	fixtures/DSDecmp_LZ11/random_256.out
+DSDecmp_LZ11	repetitive_256	256 bytes of 0xAA	fixtures/DSDecmp_LZ11/repetitive_256.in	fixtures/DSDecmp_LZ11/repetitive_256.out
+DSDecmp_LZ11	repetitive_4096	4096 bytes of 0xAA	fixtures/DSDecmp_LZ11/repetitive_4096.in	fixtures/DSDecmp_LZ11/repetitive_4096.out
+DSDecmp_LZ11	repetitive_65536	65536 bytes of 0xBB (exercises LZ11 extended length codes)	fixtures/DSDecmp_LZ11/repetitive_65536.in	fixtures/DSDecmp_LZ11/repetitive_65536.out
+DSDecmp_LZ11	sawtooth_256	256 bytes sawtooth	fixtures/DSDecmp_LZ11/sawtooth_256.in	fixtures/DSDecmp_LZ11/sawtooth_256.out
+Gen1Decmp	1x1_all_white	1x1-tile all-white sprite: compressed stream built by programmatic bit-writer	fixtures/Gen1Decmp/1x1_all_white.in	fixtures/Gen1Decmp/1x1_all_white.out
+Gen2Cmp_flipBits	all_zeros	flip bits of all-zero array (identity)	fixtures/Gen2Cmp_flipBits/all_zeros.in	fixtures/Gen2Cmp_flipBits/all_zeros.out
+Gen2Cmp_flipBits	empty	flip bits of empty array	fixtures/Gen2Cmp_flipBits/empty.in	fixtures/Gen2Cmp_flipBits/empty.out
+Gen2Cmp_flipBits	random_256	flip bits of 256 random bytes	fixtures/Gen2Cmp_flipBits/random_256.in	fixtures/Gen2Cmp_flipBits/random_256.out
+Gen2Cmp_flipBits	sawtooth_256	flip bits of 0x00-0xFF sawtooth	fixtures/Gen2Cmp_flipBits/sawtooth_256.in	fixtures/Gen2Cmp_flipBits/sawtooth_256.out
+Gen2Cmp_flipBits	single_byte	flip bits of 0x58 => 0x1A	fixtures/Gen2Cmp_flipBits/single_byte.in	fixtures/Gen2Cmp_flipBits/single_byte.out
+Gen2Decmp	alternating_32	32-byte alternating 0x00/0xFF	fixtures/Gen2Decmp/alternating_32.in	fixtures/Gen2Decmp/alternating_32.out
+Gen2Decmp	mixed_128	128-byte mixed	fixtures/Gen2Decmp/mixed_128.in	fixtures/Gen2Decmp/mixed_128.out
+Gen2Decmp	random_64	64 pseudo-random bytes	fixtures/Gen2Decmp/random_64.in	fixtures/Gen2Decmp/random_64.out
+Gen2Decmp	repetitive_128	128 x 0xAA	fixtures/Gen2Decmp/repetitive_128.in	fixtures/Gen2Decmp/repetitive_128.out
+Gen2Decmp	repetitive_32	32 repetitive bytes	fixtures/Gen2Decmp/repetitive_32.in	fixtures/Gen2Decmp/repetitive_32.out
+Gen2Decmp	sawtooth_32	32-byte sawtooth	fixtures/Gen2Decmp/sawtooth_32.in	fixtures/Gen2Decmp/sawtooth_32.out
+Gen2Decmp	single_byte	1 byte literal	fixtures/Gen2Decmp/single_byte.in	fixtures/Gen2Decmp/single_byte.out
+IOFunctions	read2ByteInt_LE	read2ByteInt([0x34,0x12],0) => 0x00001234 (LE)	fixtures/IOFunctions/read2ByteInt_LE.in	fixtures/IOFunctions/read2ByteInt_LE.out
+IOFunctions	read2ByteIntBigEndian	read2ByteIntBigEndian([0x12,0x34],0) => 0x00001234 (BE)	fixtures/IOFunctions/read2ByteIntBigEndian.in	fixtures/IOFunctions/read2ByteIntBigEndian.out
+IOFunctions	readFullInt_LE	readFullInt([0x78,0x56,0x34,0x12],0) => 0x12345678 (LE)	fixtures/IOFunctions/readFullInt_LE.in	fixtures/IOFunctions/readFullInt_LE.out
+IOFunctions	readFullIntBigEndian	readFullIntBigEndian([0x12,0x34,0x56,0x78],0) => 0x12345678 (BE)	fixtures/IOFunctions/readFullIntBigEndian.in	fixtures/IOFunctions/readFullIntBigEndian.out
+IOFunctions	write2ByteInt_LE	write2ByteInt(0xABCD) => [0xCD,0xAB] (LE)	fixtures/IOFunctions/write2ByteInt_LE.in	fixtures/IOFunctions/write2ByteInt_LE.out
+IOFunctions	writeFullInt_LE	writeFullInt(0xDEADBEEF) => [0xEF,0xBE,0xAD,0xDE] (LE)	fixtures/IOFunctions/writeFullInt_LE.in	fixtures/IOFunctions/writeFullInt_LE.out
+IOFunctions	writeFullIntBigEndian	writeFullIntBigEndian(0xDEADBEEF) => [0xDE,0xAD,0xBE,0xEF] (BE)	fixtures/IOFunctions/writeFullIntBigEndian.in	fixtures/IOFunctions/writeFullIntBigEndian.out

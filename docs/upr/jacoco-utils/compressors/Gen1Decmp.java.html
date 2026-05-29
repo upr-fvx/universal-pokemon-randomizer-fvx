@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gen1Decmp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">compressors</a> &gt; <span class="el_source">Gen1Decmp.java</span></div><h1>Gen1Decmp.java</h1><pre class="source lang-java linenums">package compressors;
+
+/**
+ * Pokémon Gen 1 image decompressor
+ * (&lt;a href=&quot;https://github.com/pret/pokemon-reverse-engineering-tools/blob/master/pokemontools/pic.py&quot;&gt;source&lt;/a&gt;).
+ * (and gfx.py for flatten())
+ * Ported to Java by Dabomstew
+ *
+ */
+public class Gen1Decmp {
+
+    private static int bitflip(int x, int n) {
+<span class="nc" id="L13">        int r = 0;</span>
+<span class="nc bnc" id="L14" title="All 2 branches missed.">        while (n &gt; 0) {</span>
+<span class="nc" id="L15">            r = (r &lt;&lt; 1) | (x &amp; 1);</span>
+<span class="nc" id="L16">            x &gt;&gt;= 1;</span>
+<span class="nc" id="L17">            n -= 1;</span>
+        }
+<span class="nc" id="L19">        return r;</span>
+    }
+
+    private static final int[] table1, table3;
+<span class="nc" id="L23">    private static final int[][] table2 = {</span>
+            {0x0, 0x1, 0x3, 0x2, 0x7, 0x6, 0x4, 0x5, 0xf, 0xe, 0xc, 0xd, 0x8, 0x9, 0xb, 0xa},
+            {0xf, 0xe, 0xc, 0xd, 0x8, 0x9, 0xb, 0xa, 0x0, 0x1, 0x3, 0x2, 0x7, 0x6, 0x4, 0x5},
+            {0x0, 0x8, 0xc, 0x4, 0xe, 0x6, 0x2, 0xa, 0xf, 0x7, 0x3, 0xb, 0x1, 0x9, 0xd, 0x5},
+            {0xf, 0x7, 0x3, 0xb, 0x1, 0x9, 0xd, 0x5, 0x0, 0x8, 0xc, 0x4, 0xe, 0x6, 0x2, 0xa}};
+
+    static {
+<span class="nc" id="L30">        table1 = new int[16];</span>
+<span class="nc" id="L31">        table3 = new int[16];</span>
+
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        for (int i = 0; i &lt; 16; i++) {</span>
+<span class="nc" id="L34">            table1[i] = (2 &lt;&lt; i) - 1;</span>
+<span class="nc" id="L35">            table3[i] = bitflip(i, 4);</span>
+        }
+<span class="nc" id="L37">    }</span>
+
+    private static final int tilesize = 8;
+
+    private final int baseOffset;
+    private final BitStream bs;
+    private final boolean mirror, planar;
+    private byte[] data;
+    private int sizex, sizey, size;
+
+    public Gen1Decmp(byte[] input, int baseOffset) {
+<span class="nc" id="L48">        this(input, baseOffset, false, true);</span>
+<span class="nc" id="L49">    }</span>
+
+<span class="nc" id="L51">    private Gen1Decmp(byte[] input, int baseOffset, boolean mirror, boolean planar) {</span>
+<span class="nc" id="L52">        this.baseOffset = baseOffset;</span>
+<span class="nc" id="L53">        this.bs = new BitStream(input, baseOffset);</span>
+<span class="nc" id="L54">        this.mirror = mirror;</span>
+<span class="nc" id="L55">        this.planar = planar;</span>
+<span class="nc" id="L56">        this.data = null;</span>
+<span class="nc" id="L57">    }</span>
+
+    public void decompress() {
+<span class="nc" id="L60">        byte[][] rams = new byte[2][];</span>
+
+<span class="nc" id="L62">        sizex = readint(4) * tilesize;</span>
+<span class="nc" id="L63">        sizey = readint(4);</span>
+
+<span class="nc" id="L65">        size = sizex * sizey;</span>
+
+<span class="nc" id="L67">        int r1 = readbit();</span>
+<span class="nc" id="L68">        int r2 = r1 ^ 1;</span>
+
+<span class="nc" id="L70">        fillram(rams, r1);</span>
+<span class="nc" id="L71">        int mode = readbit();</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (mode == 1) {</span>
+<span class="nc" id="L73">            mode += readbit();</span>
+        }
+<span class="nc" id="L75">        fillram(rams, r2);</span>
+
+<span class="nc" id="L77">        rams[0] = bitgroups_to_bytes(rams[0]);</span>
+<span class="nc" id="L78">        rams[1] = bitgroups_to_bytes(rams[1]);</span>
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (mode == 0) {</span>
+<span class="nc" id="L81">            decode(rams[0]);</span>
+<span class="nc" id="L82">            decode(rams[1]);</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        } else if (mode == 1) {</span>
+<span class="nc" id="L84">            decode(rams[r1]);</span>
+<span class="nc" id="L85">            xor(rams[r1], rams[r2]);</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">        } else if (mode == 2) {</span>
+<span class="nc" id="L87">            decode(rams[r2], false);</span>
+<span class="nc" id="L88">            decode(rams[r1]);</span>
+<span class="nc" id="L89">            xor(rams[r1], rams[r2]);</span>
+        }
+
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        if (this.planar) {</span>
+<span class="nc" id="L93">            data = new byte[size * 2];</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">            for (int i = 0; i &lt; rams[0].length; i++) {</span>
+<span class="nc" id="L95">                data[i * 2] = rams[0][i];</span>
+<span class="nc" id="L96">                data[i * 2 + 1] = rams[1][i];</span>
+            }
+        } else {
+<span class="nc" id="L99">            byte[] tmpdata = new byte[size * 8];</span>
+<span class="nc" id="L100">            BitStream r0S = new BitStream(rams[0]);</span>
+<span class="nc" id="L101">            BitStream r1S = new BitStream(rams[1]);</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            for (int i = 0; i &lt; tmpdata.length; i++) {</span>
+<span class="nc" id="L103">                tmpdata[i] = (byte) (r0S.next() | (r1S.next() &lt;&lt; 1));</span>
+            }
+<span class="nc" id="L105">            data = bitgroups_to_bytes(tmpdata);</span>
+        }
+
+<span class="nc" id="L108">    }</span>
+
+    public byte[] getData() {
+<span class="nc" id="L111">        return data;</span>
+    }
+
+    public int getWidth() {
+<span class="nc" id="L115">        return this.sizex;</span>
+    }
+
+    public int getHeight() {
+<span class="nc" id="L119">        return this.sizey * tilesize;</span>
+    }
+
+    public int getCompressedLength() {
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        if (bs == null) {</span>
+<span class="nc" id="L124">            throw new IllegalStateException(&quot;Must decompress before getting compressed length.&quot;);</span>
+        }
+<span class="nc" id="L126">        return bs.offset - baseOffset + 1;</span>
+    }
+
+    private void fillram(byte[][] rams, int rOffset) {
+<span class="nc" id="L130">        int size = this.size * 4;</span>
+<span class="nc" id="L131">        rams[rOffset] = new byte[size];</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        boolean rleMode = readbit() == 0;</span>
+<span class="nc" id="L133">        int written = 0;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        while (written &lt; size) {</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">            if (rleMode) {</span>
+<span class="nc" id="L136">                written += read_rle_chunk(rams[rOffset], written);</span>
+            } else {
+<span class="nc" id="L138">                written += read_data_chunk(rams[rOffset], written, size);</span>
+            }
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            rleMode = !rleMode;</span>
+        }
+<span class="nc" id="L142">        rams[rOffset] = deinterlace_bitgroups(rams[rOffset]);</span>
+<span class="nc" id="L143">    }</span>
+
+    private byte[] deinterlace_bitgroups(byte[] bits) {
+<span class="nc" id="L146">        byte[] l = new byte[bits.length];</span>
+<span class="nc" id="L147">        int offs = 0;</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">        for (int y = 0; y &lt; sizey; y++) {</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">            for (int x = 0; x &lt; sizex; x++) {</span>
+<span class="nc" id="L150">                int i = 4 * y * sizex + x;</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                for (int j = 0; j &lt; 4; j++) {</span>
+<span class="nc" id="L152">                    l[offs++] = bits[i];</span>
+<span class="nc" id="L153">                    i += sizex;</span>
+                }
+            }
+        }
+<span class="nc" id="L157">        return l;</span>
+    }
+
+    private int read_rle_chunk(byte[] ram, int baseOffset) {
+<span class="nc" id="L161">        int i = 0;</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        while (readbit() == 1) {</span>
+<span class="nc" id="L163">            i++;</span>
+        }
+
+<span class="nc" id="L166">        int n = table1[i];</span>
+<span class="nc" id="L167">        int a = readint(i + 1);</span>
+<span class="nc" id="L168">        n += a;</span>
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">        for (i = 0; i &lt; n; i++) {</span>
+<span class="nc" id="L171">            ram[baseOffset + i] = 0;</span>
+        }
+<span class="nc" id="L173">        return n;</span>
+    }
+
+    private int read_data_chunk(byte[] ram, int baseOffset, int size) {
+<span class="nc" id="L177">        int written = 0;</span>
+        while (true) {
+<span class="nc" id="L179">            int bitgroup = readint(2);</span>
+<span class="nc bnc" id="L180" title="All 2 branches missed.">            if (bitgroup == 0) {</span>
+<span class="nc" id="L181">                break;</span>
+            }
+<span class="nc" id="L183">            ram[baseOffset + written] = (byte) bitgroup;</span>
+<span class="nc" id="L184">            written++;</span>
+
+<span class="nc bnc" id="L186" title="All 2 branches missed.">            if (baseOffset + written &gt;= size) {</span>
+<span class="nc" id="L187">                break;</span>
+            }
+<span class="nc" id="L189">        }</span>
+<span class="nc" id="L190">        return written;</span>
+    }
+
+    private int readbit() {
+<span class="nc" id="L194">        return bs.next();</span>
+    }
+
+    private int readint(int count) {
+<span class="nc" id="L198">        return readint(bs, count);</span>
+    }
+
+    private int readint(BitStream strm, int count) {
+<span class="nc" id="L202">        int n = 0;</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">        while (count &gt; 0) {</span>
+<span class="nc" id="L204">            n &lt;&lt;= 1;</span>
+<span class="nc" id="L205">            n |= strm.next();</span>
+<span class="nc" id="L206">            count -= 1;</span>
+        }
+<span class="nc" id="L208">        return n;</span>
+    }
+
+    private byte[] bitgroups_to_bytes(byte[] bits) {
+<span class="nc" id="L212">        int limiter = bits.length - 3;</span>
+<span class="nc" id="L213">        byte[] ret = new byte[bits.length / 4];</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">        for (int i = 0; i &lt; limiter; i += 4) {</span>
+<span class="nc" id="L215">            int n = ((bits[i] &lt;&lt; 6) | (bits[i + 1] &lt;&lt; 4) | (bits[i + 2] &lt;&lt; 2) | (bits[i + 3]));</span>
+<span class="nc" id="L216">            ret[i / 4] = (byte) n;</span>
+        }
+<span class="nc" id="L218">        return ret;</span>
+    }
+
+    private void decode(byte[] ram) {
+<span class="nc" id="L222">        decode(ram, this.mirror);</span>
+<span class="nc" id="L223">    }</span>
+
+    private void decode(byte[] ram, boolean mirror) {
+<span class="nc bnc" id="L226" title="All 2 branches missed.">        for (int x = 0; x &lt; sizex; x++) {</span>
+<span class="nc" id="L227">            int bit = 0;</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">            for (int y = 0; y &lt; sizey; y++) {</span>
+<span class="nc" id="L229">                int i = y * sizex + x;</span>
+<span class="nc" id="L230">                int a = ((ram[i] &amp; 0xFF) &gt;&gt; 4) &amp; 0x0F;</span>
+<span class="nc" id="L231">                int b = ram[i] &amp; 0x0F;</span>
+
+<span class="nc" id="L233">                a = table2[bit][a];</span>
+<span class="nc" id="L234">                bit = a &amp; 1;</span>
+<span class="nc bnc" id="L235" title="All 2 branches missed.">                if (mirror) {</span>
+<span class="nc" id="L236">                    a = table3[a];</span>
+                }
+
+<span class="nc" id="L239">                b = table2[bit][b];</span>
+<span class="nc" id="L240">                bit = b &amp; 1;</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                if (mirror) {</span>
+<span class="nc" id="L242">                    b = table3[b];</span>
+                }
+
+<span class="nc" id="L245">                ram[i] = (byte) ((a &lt;&lt; 4) | b);</span>
+            }
+        }
+<span class="nc" id="L248">    }</span>
+
+    private void xor(byte[] ram1, byte[] ram2) {
+<span class="nc" id="L251">        xor(ram1, ram2, this.mirror);</span>
+<span class="nc" id="L252">    }</span>
+
+    private void xor(byte[] ram1, byte[] ram2, boolean mirror) {
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        for (int i = 0; i &lt; ram2.length; i++) {</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">            if (mirror) {</span>
+<span class="nc" id="L257">                int a = ((ram2[i] &amp; 0xFF) &gt;&gt; 4) &amp; 0x0F;</span>
+<span class="nc" id="L258">                int b = ram2[i] &amp; 0x0F;</span>
+<span class="nc" id="L259">                a = table3[a];</span>
+<span class="nc" id="L260">                b = table3[b];</span>
+<span class="nc" id="L261">                ram2[i] = (byte) ((a &lt;&lt; 4) | b);</span>
+            }
+
+<span class="nc" id="L264">            ram2[i] = (byte) ((ram2[i] &amp; 0xFF) ^ (ram1[i] &amp; 0xFF));</span>
+        }
+<span class="nc" id="L266">    }</span>
+
+    private static class BitStream {
+        private final byte[] data;
+        private int offset;
+        private int bitsLeft;
+        private int bufVal;
+
+<span class="nc" id="L274">        private static final int[] bmask = { 0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff, 0x1ff, 0x3ff, 0x7ff,</span>
+                0xfff, 0x1fff, 0x3fff, 0x7fff, 0xffff, 0x1ffff, 0x3ffff, 0x7ffff, 0xfffff, 0x1fffff, 0x3fffff,
+                0x7fffff, 0xffffff, 0x1ffffff, 0x3ffffff, 0x7ffffff, 0xfffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
+                0xffffffff };
+
+        public BitStream(byte[] data) {
+<span class="nc" id="L280">            this(data, 0);</span>
+<span class="nc" id="L281">        }</span>
+
+<span class="nc" id="L283">        public BitStream(byte[] data, int baseOffset) {</span>
+<span class="nc" id="L284">            this.data = data;</span>
+<span class="nc" id="L285">            this.offset = baseOffset - 1;</span>
+<span class="nc" id="L286">            this.bitsLeft = 0;</span>
+<span class="nc" id="L287">            this.bufVal = -1;</span>
+<span class="nc" id="L288">        }</span>
+
+        public int next() {
+<span class="nc bnc" id="L291" title="All 2 branches missed.">            if (bitsLeft == 0) {</span>
+<span class="nc" id="L292">                offset++;</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                if (offset &gt;= data.length) {</span>
+<span class="nc" id="L294">                    return -1;</span>
+                }
+<span class="nc" id="L296">                bufVal = data[offset] &amp; 0xFF;</span>
+<span class="nc" id="L297">                bitsLeft = 8;</span>
+            }
+
+<span class="nc" id="L300">            int retval = bufVal &gt;&gt; (bitsLeft - 1);</span>
+<span class="nc" id="L301">            bufVal &amp;= bmask[bitsLeft - 1];</span>
+<span class="nc" id="L302">            bitsLeft--;</span>
+
+<span class="nc" id="L304">            return retval;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

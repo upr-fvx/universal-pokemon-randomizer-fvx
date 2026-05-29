@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gen2Decmp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">compressors</a> &gt; <span class="el_source">Gen2Decmp.java</span></div><h1>Gen2Decmp.java</h1><pre class="source lang-java linenums">package compressors;
+
+/**
+ * Pokemon Gen 2 image decompressor
+ * (&lt;a href=&quot;https://github.com/pret/pokemon-reverse-engineering-tools/blob/master/pokemontools/lz.py&quot;&gt;Source&lt;/a&gt;)
+ * (and gfx.py for flatten())&lt;br&gt;
+ * Ported to Java by Dabomstew
+ *
+ */
+public class Gen2Decmp {
+
+    private static final int LZ_END = 0xFF;
+    private static final int INITIAL_BUF_SIZE = 0x1000;
+
+    public static byte[] decompress(byte[] data, int offset) {
+<span class="nc" id="L16">        Gen2Decmp gen2Decmp = new Gen2Decmp(data, offset);</span>
+<span class="nc" id="L17">        return gen2Decmp.getData();</span>
+    }
+
+    public static int lengthOfCompressed(byte[] data, int offset) {
+<span class="nc" id="L21">        Gen2Decmp gen2Decmp = new Gen2Decmp(data, offset);</span>
+<span class="nc" id="L22">        return gen2Decmp.getCompressedLength();</span>
+    }
+
+    public byte[] data;
+    private final int startAddress;
+    private int address;
+    private byte[] output;
+    private int out_idx;
+    private int len;
+    private int offset;
+
+    private static final int[] bit_flipped;
+
+    static {
+<span class="nc" id="L36">        bit_flipped = new int[0x100];</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        for (int b = 0; b &lt; 0x100; b++) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            for (int i = 0; i &lt; 8; i++) {</span>
+<span class="nc" id="L39">                bit_flipped[b] += ((b &gt;&gt; i) &amp; 1) &lt;&lt; (7 - i);</span>
+            }
+        }
+<span class="nc" id="L42">    }</span>
+
+
+<span class="nc" id="L45">    private Gen2Decmp(byte[] data, int offset) {</span>
+<span class="nc" id="L46">        this.data = data;</span>
+<span class="nc" id="L47">        this.startAddress = offset;</span>
+<span class="nc" id="L48">        this.address = offset;</span>
+<span class="nc" id="L49">        decompress();</span>
+<span class="nc" id="L50">    }</span>
+
+    private byte[] getData() {
+<span class="nc" id="L53">        return output;</span>
+    }
+
+    private int getCompressedLength() {
+<span class="nc" id="L57">        return address - startAddress;</span>
+    }
+
+    private void decompress() {
+<span class="nc" id="L61">        output = new byte[INITIAL_BUF_SIZE];</span>
+        while (true) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">            if (this.peek() == LZ_END) {</span>
+<span class="nc" id="L64">                this.next();</span>
+<span class="nc" id="L65">                break;</span>
+            }
+
+<span class="nc" id="L68">            int cmd = (this.peek() &amp; 0xE0) &gt;&gt; 5;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (cmd == 7) {</span>
+                // LONG command
+<span class="nc" id="L71">                cmd = (this.peek() &amp; 0x1C) &gt;&gt; 2;</span>
+<span class="nc" id="L72">                len = (this.next() &amp; 0x03) * 0x100 + this.next() + 1;</span>
+            } else {
+                // Normal length
+<span class="nc" id="L75">                len = (this.next() &amp; 0x1F) + 1;</span>
+            }
+
+<span class="nc bnc" id="L78" title="All 2 branches missed.">            while (out_idx + len &gt; output.length) {</span>
+<span class="nc" id="L79">                resizeOutput();</span>
+            }
+
+<span class="nc bnc" id="L82" title="All 8 branches missed.">            switch (cmd) {</span>
+                case 0:
+                    // Literal
+<span class="nc" id="L85">                    System.arraycopy(data, address, output, out_idx, len);</span>
+<span class="nc" id="L86">                    out_idx += len;</span>
+<span class="nc" id="L87">                    address += len;</span>
+<span class="nc" id="L88">                    break;</span>
+                case 1:
+                    // Iterate
+<span class="nc" id="L91">                    byte repe = (byte) next();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">                    for (int i = 0; i &lt; len; i++) {</span>
+<span class="nc" id="L93">                        output[out_idx++] = repe;</span>
+                    }
+<span class="nc" id="L95">                    break;</span>
+                case 2:
+                    // Alternate
+<span class="nc" id="L98">                    byte[] alts = {(byte) next(), (byte) next()};</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">                    for (int i = 0; i &lt; len; i++) {</span>
+<span class="nc" id="L100">                        output[out_idx++] = alts[i &amp; 1];</span>
+                    }
+<span class="nc" id="L102">                    break;</span>
+                case 3:
+                    // Zero-fill
+                    // Easy, since Java arrays are initialized to 0.
+<span class="nc" id="L106">                    out_idx += len;</span>
+<span class="nc" id="L107">                    break;</span>
+                case 4:
+                    // Default repeat
+<span class="nc" id="L110">                    repeat();</span>
+<span class="nc" id="L111">                    break;</span>
+                case 5:
+<span class="nc" id="L113">                    repeat(1, bit_flipped);</span>
+<span class="nc" id="L114">                    break;</span>
+                case 6:
+<span class="nc" id="L116">                    repeat(-1, null);</span>
+            }
+<span class="nc" id="L118">        }</span>
+
+<span class="nc" id="L120">        byte[] finalOutput = new byte[out_idx];</span>
+<span class="nc" id="L121">        System.arraycopy(output, 0, finalOutput, 0, out_idx);</span>
+<span class="nc" id="L122">        output = finalOutput;</span>
+
+<span class="nc" id="L124">    }</span>
+
+    private void repeat() {
+<span class="nc" id="L127">        repeat(1, null);</span>
+<span class="nc" id="L128">    }</span>
+
+    private void repeat(int direction, int[] table) {
+<span class="nc" id="L131">        get_offset();</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">        for (int i = 0; i &lt; len; i++) {</span>
+<span class="nc" id="L133">            int value = output[offset + i * direction] &amp; 0xFF;</span>
+<span class="nc bnc" id="L134" title="All 2 branches missed.">            output[out_idx++] = (byte) ((table == null) ? value : table[value]);</span>
+        }
+<span class="nc" id="L136">    }</span>
+
+    private void get_offset() {
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        if (this.peek() &gt;= 0x80) {</span>
+            // Negative
+<span class="nc" id="L141">            offset = this.next() &amp; 0x7F;</span>
+<span class="nc" id="L142">            offset = out_idx - offset - 1;</span>
+        } else {
+            // Positive, extended
+<span class="nc" id="L145">            offset = this.next() * 0x100 + this.next();</span>
+        }
+<span class="nc" id="L147">    }</span>
+
+    private void resizeOutput() {
+<span class="nc" id="L150">        byte[] newOut = new byte[output.length * 2];</span>
+<span class="nc" id="L151">        System.arraycopy(output, 0, newOut, 0, out_idx);</span>
+<span class="nc" id="L152">        output = newOut;</span>
+<span class="nc" id="L153">    }</span>
+
+    private int peek() {
+<span class="nc" id="L156">        return data[address] &amp; 0xFF;</span>
+    }
+
+    private int next() {
+<span class="nc" id="L160">        return data[address++] &amp; 0xFF;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

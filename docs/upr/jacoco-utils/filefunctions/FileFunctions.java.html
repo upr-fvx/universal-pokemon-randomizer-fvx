@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FileFunctions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">filefunctions</a> &gt; <span class="el_source">FileFunctions.java</span></div><h1>FileFunctions.java</h1><pre class="source lang-java linenums">package filefunctions;
+
+import java.io.*;
+
+/**
+ * Functions for reading to/from files and streams.
+ */
+<span class="nc" id="L8">public class FileFunctions {</span>
+
+    public static byte[] readFileFullyIntoBuffer(String filename) throws IOException {
+<span class="nc" id="L11">        File fh = new File(filename);</span>
+<span class="nc bnc" id="L12" title="All 6 branches missed.">        if (!fh.exists() || !fh.isFile() || !fh.canRead()) {</span>
+<span class="nc" id="L13">            throw new FileNotFoundException(filename);</span>
+        }
+<span class="nc" id="L15">        long fileSize = fh.length();</span>
+<span class="nc bnc" id="L16" title="All 2 branches missed.">        if (fileSize &gt; Integer.MAX_VALUE) {</span>
+<span class="nc" id="L17">            throw new IOException(filename + &quot; is too long to read in as a byte-array.&quot;);</span>
+        }
+<span class="nc" id="L19">        FileInputStream fis = new FileInputStream(filename);</span>
+<span class="nc" id="L20">        byte[] buf = readFullyIntoBuffer(fis, (int) fileSize);</span>
+<span class="nc" id="L21">        fis.close();</span>
+<span class="nc" id="L22">        return buf;</span>
+    }
+
+    public static byte[] readFullyIntoBuffer(InputStream in, int bytes) throws IOException {
+<span class="nc" id="L26">        byte[] buf = new byte[bytes];</span>
+<span class="nc" id="L27">        readFully(in, buf, 0, bytes);</span>
+<span class="nc" id="L28">        return buf;</span>
+    }
+
+    private static void readFully(InputStream in, byte[] buf, int offset, int length) throws IOException {
+<span class="nc" id="L32">        int offs = 0, read;</span>
+<span class="nc bnc" id="L33" title="All 4 branches missed.">        while (offs &lt; length &amp;&amp; (read = in.read(buf, offs + offset, length - offs)) != -1) {</span>
+<span class="nc" id="L34">            offs += read;</span>
+        }
+<span class="nc" id="L36">    }</span>
+
+    public static int read2ByteBigEndianIntFromFile(RandomAccessFile file, long offset) throws IOException {
+<span class="nc" id="L39">        byte[] buf = new byte[2];</span>
+<span class="nc" id="L40">        file.seek(offset);</span>
+<span class="nc" id="L41">        file.readFully(buf);</span>
+<span class="nc" id="L42">        return IOFunctions.read2ByteIntBigEndian(buf, 0);</span>
+    }
+
+    public static int readBigEndianIntFromFile(RandomAccessFile file, long offset) throws IOException {
+<span class="nc" id="L46">        byte[] buf = new byte[4];</span>
+<span class="nc" id="L47">        file.seek(offset);</span>
+<span class="nc" id="L48">        file.readFully(buf);</span>
+<span class="nc" id="L49">        return IOFunctions.readFullIntBigEndian(buf, 0);</span>
+    }
+
+    public static int readIntFromFile(RandomAccessFile file, long offset) throws IOException {
+<span class="nc" id="L53">        byte[] buf = new byte[4];</span>
+<span class="nc" id="L54">        file.seek(offset);</span>
+<span class="nc" id="L55">        file.readFully(buf);</span>
+<span class="nc" id="L56">        return IOFunctions.readFullInt(buf, 0);</span>
+    }
+
+    public static void writeBytesToFile(String filename, byte[] data) throws IOException {
+<span class="nc" id="L60">        FileOutputStream fos = new FileOutputStream(filename);</span>
+<span class="nc" id="L61">        fos.write(data);</span>
+<span class="nc" id="L62">        fos.close();</span>
+<span class="nc" id="L63">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

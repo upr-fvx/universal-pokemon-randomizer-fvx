@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UnicodeParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">text</a> &gt; <span class="el_source">UnicodeParser.java</span></div><h1>UnicodeParser.java</h1><pre class="source lang-java linenums">package text;
+
+/*----------------------------------------------------------------------------*/
+/*--  UnicodeParser.java - maintains the poke&lt;-&gt;unicode text table          --*/
+/*--  Code loosely derived from &quot;thenewpoketext&quot;, copyright (C) loadingNOW  --*/
+/*--  Ported to Java and customized by Dabomstew                            --*/
+/*----------------------------------------------------------------------------*/
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+<span class="nc" id="L15">public class UnicodeParser {</span>
+
+    private static final String TABLE_PATH = &quot;/text/Generation4.tbl&quot;;
+
+<span class="fc" id="L19">    public static String[] tb = new String[65536];</span>
+<span class="fc" id="L20">    public static Map&lt;String, Integer&gt; d = new HashMap&lt;&gt;();</span>
+
+    static {
+<span class="fc" id="L23">        InputStream is = UnicodeParser.class.getResourceAsStream(TABLE_PATH);</span>
+<span class="pc bpc" id="L24" title="1 of 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L25">            throw new RuntimeException(&quot;Couldn't find &quot; + TABLE_PATH);</span>
+        }
+<span class="fc" id="L27">        Scanner sc = new Scanner(is, StandardCharsets.UTF_8);</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">        while (sc.hasNextLine()) {</span>
+<span class="fc" id="L29">            String q = sc.nextLine();</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">            if (!q.trim().isEmpty()) {</span>
+<span class="fc" id="L31">                String[] r = q.split(&quot;=&quot;, 2);</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">                if (r[1].endsWith(&quot;\r\n&quot;)) {</span>
+<span class="nc" id="L33">                    r[1] = r[1].substring(0, r[1].length() - 2);</span>
+                }
+<span class="fc" id="L35">                tb[Integer.parseInt(r[0], 16)] = r[1];</span>
+<span class="fc" id="L36">                d.put(r[1], Integer.parseInt(r[0], 16));</span>
+            }
+<span class="fc" id="L38">        }</span>
+<span class="fc" id="L39">        sc.close();</span>
+<span class="fc" id="L40">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

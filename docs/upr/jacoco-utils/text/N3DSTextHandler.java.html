@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>N3DSTextHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">text</a> &gt; <span class="el_source">N3DSTextHandler.java</span></div><h1>N3DSTextHandler.java</h1><pre class="source lang-java linenums">package text;
+
+/*----------------------------------------------------------------------------*/
+/*--  N3DSTxtHandler.java - text processing for the 3DS Pokemon games       --*/
+/*--                                                                        --*/
+/*--  Contains code based on &quot;pk3DS&quot;, copyright (C) Kaphotics               --*/
+/*--  Ported to Java by the UPR-ZX team under the terms of the GPL:         --*/
+/*--                                                                        --*/
+/*--  This program is free software: you can redistribute it and/or modify  --*/
+/*--  it under the terms of the GNU General Public License as published by  --*/
+/*--  the Free Software Foundation, either version 3 of the License, or     --*/
+/*--  (at your option) any later version.                                   --*/
+/*--                                                                        --*/
+/*--  This program is distributed in the hope that it will be useful,       --*/
+/*--  but WITHOUT ANY WARRANTY; without even the implied warranty of        --*/
+/*--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          --*/
+/*--  GNU General Public License for more details.                          --*/
+/*--                                                                        --*/
+/*--  You should have received a copy of the GNU General Public License     --*/
+/*--  along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.  --*/
+/*----------------------------------------------------------------------------*/
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.*;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L30">public class N3DSTextHandler {</span>
+
+    private static final int KEY_BASE = 0x7C89;
+    private static final int KEY_ADVANCE = 0x2983;
+    private static final int KEY_TERMINATOR = 0x0000;
+    private static final int KEY_VARIABLE = 0x0010;
+    private static final int KEY_TEXTRETURN = 0xBE00;
+    private static final int KEY_TEXTCLEAR = 0xBE01;
+    private static final int KEY_TEXTWAIT = 0xBE02;
+    private static final int KEY_TEXTNULL = 0xBDFF;
+<span class="nc" id="L40">    private static boolean remapChars = false;</span>
+<span class="nc" id="L41">    private static boolean setEmptyText = false;</span>
+    private static int romType;
+
+    public static List&lt;String&gt; readTexts(byte[] ds, boolean remapChars, int romType) {
+<span class="nc" id="L45">        N3DSTextHandler.remapChars = remapChars;</span>
+<span class="nc" id="L46">        N3DSTextHandler.romType = romType;</span>
+<span class="nc" id="L47">        List&lt;String&gt; strings = new ArrayList&lt;&gt;();</span>
+        int numSections, numEntries, totalLength, initialKey, sectionDataOffset, sectionLength;
+
+<span class="nc" id="L50">        numSections = readShort(ds, 0);</span>
+<span class="nc" id="L51">        numEntries = readShort(ds, 2);</span>
+<span class="nc" id="L52">        totalLength = readLong(ds, 4);</span>
+<span class="nc" id="L53">        initialKey = readLong(ds,8);</span>
+<span class="nc" id="L54">        sectionDataOffset = readLong(ds, 0xC);</span>
+<span class="nc" id="L55">        sectionLength = readLong(ds, sectionDataOffset);</span>
+
+<span class="nc bnc" id="L57" title="All 6 branches missed.">        if (numSections != 1 || initialKey != 0 || sectionLength != totalLength) {</span>
+<span class="nc" id="L58">            System.err.println(&quot;Invalid text file&quot;);</span>
+<span class="nc" id="L59">            return new ArrayList&lt;&gt;();</span>
+        }
+
+<span class="nc" id="L62">        int[] entryOffsets = new int[numEntries];</span>
+<span class="nc" id="L63">        int[] entryLengths = new int[numEntries];</span>
+
+<span class="nc bnc" id="L65" title="All 2 branches missed.">        for (int i = 0; i &lt; numEntries; i++) {</span>
+<span class="nc" id="L66">            entryOffsets[i] = readLong(ds, (i * 8) + sectionDataOffset + 4) + sectionDataOffset;</span>
+<span class="nc" id="L67">            entryLengths[i] = readShort(ds, (i * 8) + sectionDataOffset + 8);</span>
+<span class="nc" id="L68">            byte[] encEntryData = Arrays.copyOfRange(ds, entryOffsets[i], entryOffsets[i] + entryLengths[i]*2);</span>
+<span class="nc" id="L69">            strings.add(getEntryString(cryptEntryData(encEntryData,getEntryKey(i))));</span>
+        }
+
+<span class="nc" id="L72">        return strings;</span>
+    }
+
+    public static byte[] saveEntry(byte[] originalData, List&lt;String&gt; values, int romType) throws IOException {
+<span class="nc" id="L76">        int key = KEY_BASE;</span>
+
+<span class="nc" id="L78">        ByteArrayOutputStream dataStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L79">        ByteBuffer offsetsBuf = ByteBuffer.allocate(values.size() * 8);</span>
+<span class="nc" id="L80">        offsetsBuf.order(ByteOrder.LITTLE_ENDIAN);</span>
+<span class="nc" id="L81">        int dataOffset = 4 + values.size() * 8;</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">        for (int i = 0; i &lt; values.size(); i++) {</span>
+<span class="nc" id="L83">            String text = values.get(i).trim();</span>
+<span class="nc bnc" id="L84" title="All 4 branches missed.">            if (text.length() == 0 &amp;&amp; setEmptyText) {</span>
+<span class="nc" id="L85">                text = String.format(&quot;[~ %d]&quot;,i);</span>
+            }
+<span class="nc" id="L87">            byte[] decEntryData = getEntryData(text,romType);</span>
+<span class="nc" id="L88">            byte[] encEntryData = cryptEntryData(decEntryData,key);</span>
+<span class="nc" id="L89">            offsetsBuf.putInt(dataOffset + dataStream.size());</span>
+<span class="nc" id="L90">            offsetsBuf.putShort((short)(encEntryData.length / 2));</span>
+<span class="nc" id="L91">            offsetsBuf.position(offsetsBuf.position()+2);</span>
+<span class="nc" id="L92">            dataStream.write(encEntryData);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (encEntryData.length % 4 == 2) {</span>
+<span class="nc" id="L94">                dataStream.write(0);</span>
+<span class="nc" id="L95">                dataStream.write(0);</span>
+            }
+<span class="nc" id="L97">            key = (key + KEY_ADVANCE) &amp; 0xFFFF;</span>
+        }
+
+<span class="nc" id="L100">        int sectionDataOffset = 0x10;</span>
+<span class="nc" id="L101">        ByteBuffer headerBuf = ByteBuffer.allocate(0x14);</span>
+<span class="nc" id="L102">        headerBuf.order(ByteOrder.LITTLE_ENDIAN);</span>
+<span class="nc" id="L103">        headerBuf.putShort((short)1);</span>
+<span class="nc" id="L104">        headerBuf.putShort((short)values.size());</span>
+<span class="nc" id="L105">        headerBuf.putInt(4 + values.size()*8 + dataStream.size());</span>
+<span class="nc" id="L106">        headerBuf.putInt(0);</span>
+<span class="nc" id="L107">        headerBuf.putInt(sectionDataOffset);</span>
+<span class="nc" id="L108">        headerBuf.putInt(4 + values.size()*8 + dataStream.size());</span>
+
+<span class="nc" id="L110">        headerBuf.flip();</span>
+<span class="nc" id="L111">        offsetsBuf.flip();</span>
+
+<span class="nc" id="L113">        byte[] fullArray = new byte[headerBuf.limit() + offsetsBuf.limit() + dataStream.size()];</span>
+<span class="nc" id="L114">        System.arraycopy(headerBuf.array(),</span>
+                0,
+                fullArray,
+                0,
+<span class="nc" id="L118">                headerBuf.limit());</span>
+<span class="nc" id="L119">        System.arraycopy(offsetsBuf.array(),</span>
+                0,
+                fullArray,
+<span class="nc" id="L122">                headerBuf.limit(),</span>
+<span class="nc" id="L123">                offsetsBuf.limit());</span>
+<span class="nc" id="L124">        System.arraycopy(dataStream.toByteArray(),</span>
+                0,
+                fullArray,
+<span class="nc" id="L127">                headerBuf.limit()+offsetsBuf.limit(),</span>
+<span class="nc" id="L128">                dataStream.size());</span>
+
+<span class="nc" id="L130">        return fullArray;</span>
+    }
+
+    private static byte[] getEntryData(String entry, int romType) throws IOException {
+<span class="nc bnc" id="L134" title="All 2 branches missed.">        if (entry == null) {</span>
+<span class="nc" id="L135">            return new byte[2];</span>
+        }
+
+<span class="nc" id="L138">        ByteArrayOutputStream dataStream = new ByteArrayOutputStream();</span>
+<span class="nc" id="L139">        int i = 0;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        while (i &lt; entry.length()) {</span>
+<span class="nc" id="L141">            int val = entry.charAt(i++);</span>
+<span class="nc" id="L142">            val = tryRemapChar(val);</span>
+
+<span class="nc bnc" id="L144" title="All 2 branches missed.">            if (val == '[') {</span>
+<span class="nc" id="L145">                int bracket = entry.indexOf(&quot;]&quot;,i);</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (bracket &lt; 0) {</span>
+<span class="nc" id="L147">                    throw new IOException(&quot;Variable text is not capped properly: &quot; + entry);</span>
+                }
+<span class="nc" id="L149">                String varText = entry.substring(i,bracket);</span>
+<span class="nc" id="L150">                List&lt;Integer&gt; varValues = getVariableValues(varText,romType);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">                for (int v: varValues) {</span>
+<span class="nc" id="L152">                    dataStream.write(v &amp; 0xFF);</span>
+<span class="nc" id="L153">                    dataStream.write((v &gt;&gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L154">                }</span>
+<span class="nc" id="L155">                i += 1 + varText.length();</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            } else if (val == '\\') {</span>
+<span class="nc" id="L157">                List&lt;Integer&gt; escapeValues = getEscapeValues(entry.charAt(i++));</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">                for (int escVal: escapeValues) {</span>
+<span class="nc" id="L159">                    dataStream.write(escVal &amp; 0xFF);</span>
+<span class="nc" id="L160">                    dataStream.write((escVal &gt;&gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L161">                }</span>
+<span class="nc" id="L162">            } else {</span>
+<span class="nc" id="L163">                dataStream.write(val &amp; 0xFF);</span>
+<span class="nc" id="L164">                dataStream.write((val &gt;&gt;&gt; 8) &amp; 0xFF);</span>
+            }
+<span class="nc" id="L166">        }</span>
+<span class="nc" id="L167">        dataStream.write(KEY_TERMINATOR &amp; 0xFF);</span>
+<span class="nc" id="L168">        dataStream.write((KEY_TERMINATOR &gt;&gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L169">        return dataStream.toByteArray();</span>
+    }
+
+    private static byte[] cryptEntryData(byte[] data, int key) {
+<span class="nc" id="L173">        byte[] result = new byte[data.length];</span>
+<span class="nc bnc" id="L174" title="All 2 branches missed.">        for (int i = 0; i &lt; result.length; i+= 2) {</span>
+<span class="nc" id="L175">            int sh = (readShort(data, i) &amp; 0xFFFF) ^ (key &amp; 0xFFFF);</span>
+<span class="nc" id="L176">            result[i] = (byte)(sh &amp; 0xFF);</span>
+<span class="nc" id="L177">            result[i+1] = (byte)((sh &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L178">            key = (key &lt;&lt; 3 | key &gt;&gt;&gt; 13) &amp; 0xFFFF;</span>
+        }
+<span class="nc" id="L180">        return result;</span>
+    }
+
+    private static int getEntryKey(int index) {
+<span class="nc" id="L184">        int key = KEY_BASE;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">        for (int i = 0; i &lt; index; i++) {</span>
+<span class="nc" id="L186">            key = (key + KEY_ADVANCE) &amp; 0xFFFF;</span>
+        }
+<span class="nc" id="L188">        return key;</span>
+    }
+
+    private static String getEntryString(byte[] data) {
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        if (data == null) {</span>
+<span class="nc" id="L193">            return &quot;&quot;;</span>
+        }
+
+<span class="nc" id="L196">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L197">        int i = 0;</span>
+
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        while (i &lt; data.length) {</span>
+<span class="nc" id="L200">            int val = readShort(data, i);</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (val == KEY_TERMINATOR) break;</span>
+<span class="nc" id="L202">            i += 2;</span>
+
+<span class="nc bnc" id="L204" title="All 5 branches missed.">            switch (val) {</span>
+                case KEY_VARIABLE:
+<span class="nc" id="L206">                    RefInt refI = new RefInt(i);</span>
+<span class="nc" id="L207">                    sb.append(getVariableString(data,refI));</span>
+<span class="nc" id="L208">                    i = refI.val;</span>
+<span class="nc" id="L209">                    break;</span>
+                case '\n':
+<span class="nc" id="L211">                    sb.append(&quot;\\n&quot;);</span>
+<span class="nc" id="L212">                    break;</span>
+                case '\\':
+<span class="nc" id="L214">                    sb.append(&quot;\\\\&quot;);</span>
+<span class="nc" id="L215">                    break;</span>
+                case '[':
+<span class="nc" id="L217">                    sb.append(&quot;\\[&quot;);</span>
+<span class="nc" id="L218">                    break;</span>
+                default:
+<span class="nc" id="L220">                    sb.append((char)tryUnmapChar(val));</span>
+            }
+<span class="nc" id="L222">        }</span>
+<span class="nc" id="L223">        return sb.toString();</span>
+    }
+
+    private static List&lt;Integer&gt; getEscapeValues(char esc) throws IOException {
+<span class="nc" id="L227">        List&lt;Integer&gt; vals = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L228" title="All 6 branches missed.">        switch (esc) {</span>
+            case 'n':
+<span class="nc" id="L230">                vals.add((int) '\n');</span>
+<span class="nc" id="L231">                return vals;</span>
+            case '\\':
+<span class="nc" id="L233">                vals.add((int) '\\');</span>
+<span class="nc" id="L234">                return vals;</span>
+            case '[':
+<span class="nc" id="L236">                vals.add((int) '[');</span>
+<span class="nc" id="L237">                return vals;</span>
+            case 'r':
+<span class="nc" id="L239">                vals.add(KEY_VARIABLE);</span>
+<span class="nc" id="L240">                vals.add(1);</span>
+<span class="nc" id="L241">                vals.add(KEY_TEXTRETURN);</span>
+<span class="nc" id="L242">                return vals;</span>
+            case 'c':
+<span class="nc" id="L244">                vals.add(KEY_VARIABLE);</span>
+<span class="nc" id="L245">                vals.add(1);</span>
+<span class="nc" id="L246">                vals.add(KEY_TEXTCLEAR);</span>
+<span class="nc" id="L247">                return vals;</span>
+            default:
+<span class="nc" id="L249">                throw new IOException(&quot;Invalid terminated line: \\&quot; + esc);</span>
+        }
+    }
+
+    private static List&lt;Integer&gt; getVariableValues(String variable, int romType) throws IOException {
+<span class="nc" id="L254">        String[] splitString = variable.split(&quot; &quot;);</span>
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        if (splitString.length &lt; 2) {</span>
+<span class="nc" id="L256">            throw new IOException(&quot;Incorrectly formatted variable text: &quot; + variable);</span>
+        }
+
+<span class="nc" id="L259">        List&lt;Integer&gt; vals = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L260">        vals.add(KEY_VARIABLE);</span>
+<span class="nc bnc" id="L261" title="All 4 branches missed.">        switch (splitString[0]) {</span>
+            case &quot;~&quot;:
+<span class="nc" id="L263">                vals.add(1);</span>
+<span class="nc" id="L264">                vals.add(KEY_TEXTNULL);</span>
+<span class="nc" id="L265">                vals.add(Integer.parseInt(splitString[1]));</span>
+<span class="nc" id="L266">                break;</span>
+            case &quot;WAIT&quot;:
+<span class="nc" id="L268">                vals.add(1);</span>
+<span class="nc" id="L269">                vals.add(KEY_TEXTWAIT);</span>
+<span class="nc" id="L270">                vals.add(Integer.parseInt(splitString[1]));</span>
+<span class="nc" id="L271">                break;</span>
+            case &quot;VAR&quot;:
+<span class="nc" id="L273">                vals.addAll(getVariableParameters(splitString[1],romType));</span>
+<span class="nc" id="L274">                break;</span>
+            default:
+<span class="nc" id="L276">                throw new IOException(&quot;Unknown variable method type: &quot; + variable);</span>
+        }
+<span class="nc" id="L278">        return vals;</span>
+    }
+
+    private static List&lt;Integer&gt; getVariableParameters(String text, int romType) throws IOException {
+<span class="nc" id="L282">        List&lt;Integer&gt; vals = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L283">        int bracket = text.indexOf(&quot;(&quot;);</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">        boolean noArgs = bracket &lt; 0;</span>
+<span class="nc bnc" id="L285" title="All 2 branches missed.">        String variable = noArgs ? text : text.substring(0,bracket);</span>
+<span class="nc" id="L286">        int varVal = getVariableNumber(variable,romType);</span>
+<span class="nc bnc" id="L287" title="All 2 branches missed.">        if (!noArgs) {</span>
+<span class="nc" id="L288">            String[] args = text.substring(bracket + 1, text.length() - 1).split(&quot;,&quot;);</span>
+<span class="nc" id="L289">            vals.add(1 + args.length);</span>
+<span class="nc" id="L290">            vals.add(varVal);</span>
+<span class="nc" id="L291">            vals.addAll(Arrays.stream(args)</span>
+<span class="nc" id="L292">                    .mapToInt(s -&gt; Integer.parseInt(s,16))</span>
+<span class="nc" id="L293">                    .boxed()</span>
+<span class="nc" id="L294">                    .collect(Collectors.toList()));</span>
+
+<span class="nc" id="L296">        } else {</span>
+<span class="nc" id="L297">            vals.add(1);</span>
+<span class="nc" id="L298">            vals.add(varVal);</span>
+        }
+<span class="nc" id="L300">        return vals;</span>
+    }
+
+    private static int getVariableNumber(String variable, int romType) throws IOException {
+<span class="nc" id="L304">        int v = N3DSTextCodes.getVariableCode(variable,romType);</span>
+<span class="nc bnc" id="L305" title="All 2 branches missed.">        if (v != 0) {</span>
+<span class="nc" id="L306">            return v;</span>
+        }
+        try {
+<span class="nc" id="L309">            return Integer.parseInt(variable);</span>
+<span class="nc" id="L310">        } catch (NumberFormatException e) {</span>
+<span class="nc" id="L311">            throw new IOException(&quot;Variable parse error: &quot; + variable);</span>
+        }
+    }
+
+    private static String getVariableString(byte[] data, RefInt refI) {
+<span class="nc" id="L316">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L317">        int count = readShort(data,refI.val);</span>
+<span class="nc" id="L318">        refI.val += 2;</span>
+<span class="nc" id="L319">        int variable = readShort(data,refI.val);</span>
+<span class="nc" id="L320">        refI.val += 2;</span>
+
+<span class="nc bnc" id="L322" title="All 5 branches missed.">        switch (variable) {</span>
+            case KEY_TEXTRETURN:
+<span class="nc" id="L324">                return &quot;\\r&quot;;</span>
+            case KEY_TEXTCLEAR:
+<span class="nc" id="L326">                return &quot;\\c&quot;;</span>
+            case KEY_TEXTWAIT:
+<span class="nc" id="L328">                int time = readShort(data, refI.val);</span>
+<span class="nc" id="L329">                refI.val += 2;</span>
+<span class="nc" id="L330">                return String.format(&quot;[WAIT %d]&quot;, time);</span>
+            case KEY_TEXTNULL:
+<span class="nc" id="L332">                int line = readShort(data,refI.val);</span>
+<span class="nc" id="L333">                refI.val += 2;</span>
+<span class="nc" id="L334">                return String.format(&quot;[~ %d]&quot;,line);</span>
+        }
+
+<span class="nc" id="L337">        String varName = N3DSTextCodes.getTextVariableCodes(romType).getOrDefault(variable,String.format(&quot;%04X&quot;,variable));</span>
+<span class="nc" id="L338">        sb.append(&quot;[VAR &quot;).append(varName);</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">        if (count &gt; 1) {</span>
+<span class="nc" id="L340">            sb.append(&quot;(&quot;);</span>
+<span class="nc bnc" id="L341" title="All 4 branches missed.">            while (count &gt; 1 &amp;&amp; refI.val &lt; data.length) {</span>
+<span class="nc" id="L342">                int arg = readShort(data,refI.val);</span>
+<span class="nc" id="L343">                refI.val += 2;</span>
+<span class="nc" id="L344">                sb.append(String.format(&quot;%04X&quot;,arg));</span>
+<span class="nc bnc" id="L345" title="All 4 branches missed.">                if (--count == 1 || refI.val &gt;= data.length) break;</span>
+<span class="nc" id="L346">                sb.append(&quot;,&quot;);</span>
+<span class="nc" id="L347">            }</span>
+<span class="nc" id="L348">            sb.append(&quot;)&quot;);</span>
+        }
+<span class="nc" id="L350">        sb.append(&quot;]&quot;);</span>
+<span class="nc" id="L351">        return sb.toString();</span>
+    }
+
+    private static int tryRemapChar(int val) {
+<span class="nc bnc" id="L355" title="All 2 branches missed.">        if (!remapChars) {</span>
+<span class="nc" id="L356">            return val;</span>
+        }
+<span class="nc bnc" id="L358" title="All 5 branches missed.">        switch (val) {</span>
+            case 0x202F:
+<span class="nc" id="L360">                return 0xE07F;</span>
+            case 0x2026:
+<span class="nc" id="L362">                return 0xE08D;</span>
+            case 0x2642:
+<span class="nc" id="L364">                return 0xE08E;</span>
+            case 0x2640:
+<span class="nc" id="L366">                return 0xE08F;</span>
+            default:
+<span class="nc" id="L368">                return val;</span>
+        }
+    }
+
+    private static int tryUnmapChar(int val) {
+<span class="nc bnc" id="L373" title="All 2 branches missed.">        if (!remapChars) {</span>
+<span class="nc" id="L374">            return val;</span>
+        }
+<span class="nc bnc" id="L376" title="All 5 branches missed.">        switch (val &amp; 0xFFFF) {</span>
+            case 0xE07F:
+<span class="nc" id="L378">                return 0x202F;</span>
+            case 0xE08D:
+<span class="nc" id="L380">                return 0x2026;</span>
+            case 0xE08E:
+<span class="nc" id="L382">                return 0x2642;</span>
+            case 0xE08F:
+<span class="nc" id="L384">                return 0x2640;</span>
+            default:
+<span class="nc" id="L386">                return val;</span>
+        }
+    }
+
+    private static int readShort(byte[] data, int offset) {
+<span class="nc" id="L391">        return (data[offset] &amp; 0xFF) + ((data[offset + 1] &amp; 0xFF) &lt;&lt; 8);</span>
+    }
+
+    private static int readLong(byte[] data, int offset) {
+<span class="nc" id="L395">        return (data[offset] &amp; 0xFF) + ((data[offset + 1] &amp; 0xFF) &lt;&lt; 8) + ((data[offset + 2] &amp; 0xFF) &lt;&lt; 16)</span>
+                + ((data[offset + 3] &amp; 0xFF) &lt;&lt; 24);
+    }
+
+    private static class RefInt {
+        int val;
+
+<span class="nc" id="L402">        RefInt(int val) {</span>
+<span class="nc" id="L403">            this.val = val;</span>
+<span class="nc" id="L404">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

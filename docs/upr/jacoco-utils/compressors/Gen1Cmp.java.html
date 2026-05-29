@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gen1Cmp.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">compressors</a> &gt; <span class="el_source">Gen1Cmp.java</span></div><h1>Gen1Cmp.java</h1><pre class="source lang-java linenums">package compressors;
+
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Pokémon Gen 1 compressor. Since it is only used for image compression in the games,
+ * it takes two {@link BufferedImage}s representing an image's bitplanes.
+ * &lt;br&gt;&lt;br&gt;
+ * This implementation was largely ported by
+ * &lt;a href=https://rgmechex.com/tech/gen1decompress.html&gt;Frieze/RGME's JavaScript implementation&lt;/a&gt;.
+ * The algorithm is explained in &lt;a href=https://youtu.be/aF1Yw_wu2cM&gt;this video&lt;/a&gt;,
+ * though from a decompression perspective.
+ */
+public class Gen1Cmp {
+
+    private static final int TILE_DIM = 8;
+    private static final int MAX_DIMENSION = 15;
+    private static final int BLACK = 0xFF000000;
+
+    private final BufferedImage bitplane1Image;
+    private final BufferedImage bitplane2Image;
+
+    private final int width;
+    private final int height;
+    private int[][] bp1;
+    private int[][] bp2;
+
+    public static byte[] compress(BufferedImage bitplane1Image, BufferedImage bitplane2Image) {
+<span class="nc" id="L31">        return new Gen1Cmp(bitplane1Image, bitplane2Image).compressInner();</span>
+    }
+
+<span class="nc" id="L34">    public Gen1Cmp(BufferedImage bitplane1Image, BufferedImage bitplane2Image) {</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">        if (bitplane1Image.getWidth() != bitplane2Image.getWidth()</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">                || bitplane1Image.getHeight() != bitplane2Image.getHeight()) {</span>
+<span class="nc" id="L37">            throw new IllegalArgumentException(String.format(</span>
+                    &quot;bitplane images are not the same size (%dx%d, %dx%d)&quot;,
+<span class="nc" id="L39">                    bitplane1Image.getWidth(), bitplane1Image.getHeight(),</span>
+<span class="nc" id="L40">                    bitplane2Image.getWidth(), bitplane2Image.getHeight()));</span>
+        }
+<span class="nc" id="L42">        this.bitplane1Image = bitplane1Image;</span>
+<span class="nc" id="L43">        this.bitplane2Image = bitplane2Image;</span>
+<span class="nc" id="L44">        this.width = bitplane1Image.getWidth();</span>
+<span class="nc" id="L45">        this.height = bitplane1Image.getHeight();</span>
+
+<span class="nc bnc" id="L47" title="All 4 branches missed.">        if (width / TILE_DIM &gt; MAX_DIMENSION || height / TILE_DIM &gt; MAX_DIMENSION) {</span>
+<span class="nc" id="L48">            throw new IllegalArgumentException(String.format(</span>
+                    &quot;Image dimensions (in tiles) of %dx%d exceeds %dx%d.&quot;,
+<span class="nc" id="L50">                    width, height, MAX_DIMENSION, MAX_DIMENSION));</span>
+        }
+<span class="nc" id="L52">    }</span>
+
+    private byte[] compressInner() {
+<span class="nc" id="L55">        byte[] shortest = null;</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        for (int mode = 0; mode &lt;= 2; mode++) {</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">            for (int order = 0; order &lt;= 1; order++) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                byte[] compressed = compressUsingModeAndOrder(mode, order == 1);</span>
+<span class="nc bnc" id="L59" title="All 4 branches missed.">                if (shortest == null || compressed.length &lt; shortest.length) {</span>
+<span class="nc" id="L60">                    shortest = compressed;</span>
+                }
+            }
+        }
+<span class="nc" id="L64">        return shortest;</span>
+    }
+
+    public byte[] compressUsingModeAndOrder(int mode, boolean order) {
+<span class="nc bnc" id="L68" title="All 4 branches missed.">        if (mode &lt; 0 || mode &gt; 2) {</span>
+<span class="nc" id="L69">            throw new IllegalArgumentException(&quot;Invalid mode: &quot; + mode + &quot;. Must be 0, 1, or 2.&quot;);</span>
+        }
+
+<span class="nc" id="L72">        prepareBitplanes(mode, order);</span>
+
+<span class="nc" id="L74">        BitWriteStream bws = new BitWriteStream();</span>
+
+<span class="nc" id="L76">        writeImageDimensions(bws);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        bws.writeBit(order ? 1 : 0);</span>
+<span class="nc" id="L78">        compressAndWriteBitplane(bp1, bws);</span>
+<span class="nc" id="L79">        writeMode(mode, bws);</span>
+<span class="nc" id="L80">        compressAndWriteBitplane(bp2, bws);</span>
+
+<span class="nc" id="L82">        byte[] compressed = bws.toByteArray();</span>
+<span class="nc" id="L83">        BitReadStream brs = new BitReadStream(compressed);</span>
+<span class="nc" id="L84">        BitWriteStream bws2 = new BitWriteStream();</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        while (brs.hasNext()) {</span>
+<span class="nc" id="L86">            bws2.writeBit(brs.readBit());</span>
+        }
+<span class="nc" id="L88">        return bws.toByteArray();</span>
+    }
+
+    private void prepareBitplanes(int mode, boolean order) {
+<span class="nc" id="L92">        initBitplanes(order);</span>
+<span class="nc" id="L93">        xorAndDeltaEncodeBitplanes(mode);</span>
+<span class="nc" id="L94">    }</span>
+
+    private void initBitplanes(boolean order) {
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        bp1 = bitplaneFromImage(order ? bitplane2Image : bitplane1Image);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">        bp2 = bitplaneFromImage(order ? bitplane1Image : bitplane2Image);</span>
+<span class="nc" id="L99">    }</span>
+
+    private int[][] bitplaneFromImage(BufferedImage image) {
+<span class="nc" id="L102">        int[][] bitplane = new int[image.getWidth()][image.getWidth()];</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (int x = 0; x &lt; image.getWidth(); x++) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            for (int y = 0; y &lt; image.getHeight(); y++) {</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                bitplane[x][y] = image.getRGB(x, y) == BLACK ? 1 : 0;</span>
+            }
+        }
+<span class="nc" id="L108">        return bitplane;</span>
+    }
+
+    private void xorAndDeltaEncodeBitplanes(int mode) {
+
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (mode != 0) {</span>
+<span class="nc" id="L114">            bp2 = xor(bp1, bp2);</span>
+        }
+
+<span class="nc" id="L117">        bp1 = deltaEncode(bp1);</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        if (mode != 1) {</span>
+<span class="nc" id="L119">            bp2 = deltaEncode(bp2);</span>
+        }
+<span class="nc" id="L121">    }</span>
+
+    private int[][] xor(int[][] a, int[][] b) {
+<span class="nc" id="L124">        int[][] xored = new int[width][height];</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">        for (int x = 0; x &lt; width; x++) {</span>
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            for (int y = 0; y &lt; height; y++) {</span>
+<span class="nc" id="L127">                xored[x][y] = a[x][y] ^ b[x][y];</span>
+            }
+        }
+<span class="nc" id="L130">        return xored;</span>
+    }
+
+    // &quot;[Bitplanes] are delta [en]coded in horizontal lines spanning from the right side to the left
+    // side of the [bitplane], going from top to bottom. Each row is [en]coded separately - the state of the
+    // system is reset to 0 at the start of each row.&quot; -- https://youtu.be/aF1Yw_wu2cM?t=1519
+    private int[][] deltaEncode(int[][] bitplane) {
+<span class="nc" id="L137">        int[][] encoded = new int[width][height];</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        for (int y = 0; y &lt; height; y++) {</span>
+<span class="nc" id="L139">            int prev = 0;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            for (int x = 0; x &lt; width; x++) {</span>
+<span class="nc" id="L141">                int current = bitplane[x][y];</span>
+<span class="nc" id="L142">                encoded[x][y] = current ^ prev;</span>
+<span class="nc" id="L143">                prev = current;</span>
+            }
+        }
+
+<span class="nc" id="L147">        return encoded;</span>
+    }
+
+    private void compressAndWriteBitplane(int[][] bitplane, BitWriteStream bws) {
+<span class="nc" id="L151">        int[] bitPairs = bitPlaneToPairs(bitplane);</span>
+
+<span class="nc bnc" id="L153" title="All 2 branches missed.">        int packetType = bitPairs[0] == 0 ? 0 : 1;</span>
+<span class="nc" id="L154">        bws.writeBit(packetType); // 0 for RLE, 1 for data</span>
+
+<span class="nc" id="L156">        int i = 0;</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">        while (i &lt; bitPairs.length) {</span>
+<span class="nc bnc" id="L158" title="All 2 branches missed.">            if (packetType == 0) {</span>
+<span class="nc" id="L159">                i = writeRLEPacket(bitPairs, i, bws);</span>
+            } else {
+<span class="nc" id="L161">                i = writeDataPacket(bitPairs, i, bws);</span>
+            }
+<span class="nc" id="L163">            packetType ^= 1;</span>
+        }
+<span class="nc" id="L165">    }</span>
+
+    private int writeRLEPacket(int[] bitPairs, int i, BitWriteStream bws) {
+<span class="nc" id="L168">        int length = 0;</span>
+<span class="nc bnc" id="L169" title="All 4 branches missed.">        while (i &lt; bitPairs.length &amp;&amp; bitPairs[i] == 0b00) {</span>
+<span class="nc" id="L170">            length++;</span>
+<span class="nc" id="L171">            i++;</span>
+        }
+
+<span class="nc" id="L174">        int bitCount = getBitCount(length);</span>
+
+<span class="nc" id="L176">        writeBitCount(bws, bitCount);</span>
+<span class="nc" id="L177">        writeValue(bws, length, bitCount);</span>
+
+<span class="nc" id="L179">        return i;</span>
+    }
+
+    private int getBitCount(int length) {
+<span class="nc" id="L183">        int bitCount = 1;</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        while (length &gt; ((1 &lt;&lt; bitCount) - 2)) {</span>
+<span class="nc" id="L185">            bitCount++;</span>
+        }
+<span class="nc" id="L187">        bitCount--; // ignore leading '1'</span>
+<span class="nc" id="L188">        return bitCount;</span>
+    }
+
+    private void writeBitCount(BitWriteStream bws, int bitCount) {
+<span class="nc bnc" id="L192" title="All 2 branches missed.">        for (int j = 0; j &lt; bitCount - 1; j++) {</span>
+<span class="nc" id="L193">            bws.writeBit(1);</span>
+        }
+<span class="nc" id="L195">        bws.writeBit(0);</span>
+<span class="nc" id="L196">    }</span>
+
+    private void writeValue(BitWriteStream bws, int length, int bitCount) {
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        for (int j = bitCount; j &gt; 0; j--) {</span>
+<span class="nc" id="L200">            bws.writeBit(((length + 1) &gt;&gt; (j - 1)) &amp; 1);</span>
+        }
+<span class="nc" id="L202">    }</span>
+
+    private int writeDataPacket(int[] bitPairs, int i, BitWriteStream bws) {
+        do {
+<span class="nc" id="L206">            bws.writeBitPair(bitPairs[i]);</span>
+<span class="nc" id="L207">            i++;</span>
+<span class="nc bnc" id="L208" title="All 4 branches missed.">        } while (i &lt; bitPairs.length &amp;&amp; bitPairs[i] != 0b00);</span>
+<span class="nc bnc" id="L209" title="All 2 branches missed.">        if (i != bitPairs.length) {</span>
+<span class="nc" id="L210">            bws.writeBitPair(0);</span>
+        }
+<span class="nc" id="L212">        return i;</span>
+    }
+
+    private int[] bitPlaneToPairs(int[][] bitplane) {
+<span class="nc" id="L216">        int[] pairs = new int[width * height / 2];</span>
+<span class="nc" id="L217">        int i = 0;</span>
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        for (int x = 0; x &lt; width; x += 2) {</span>
+<span class="nc bnc" id="L219" title="All 2 branches missed.">            for (int y = 0; y &lt; height; y++) {</span>
+<span class="nc" id="L220">                pairs[i] = (bitplane[x][y] &lt;&lt; 1) + bitplane[x + 1][y];</span>
+<span class="nc" id="L221">                i++;</span>
+            }
+        }
+<span class="nc" id="L224">        return pairs;</span>
+    }
+
+    private void writeImageDimensions(BitWriteStream bws) {
+<span class="nc" id="L228">        int high = (width / 8) &lt;&lt; 4;</span>
+<span class="nc" id="L229">        int low = height / 8;</span>
+<span class="nc" id="L230">        bws.writeByte((byte) (high + low));</span>
+<span class="nc" id="L231">    }</span>
+
+    private void writeMode(int mode, BitWriteStream bws) {
+<span class="nc bnc" id="L234" title="All 2 branches missed.">        if (mode == 0) {</span>
+<span class="nc" id="L235">            bws.writeBit(0);</span>
+        } else {
+<span class="nc" id="L237">            bws.writeBit(1);</span>
+<span class="nc" id="L238">            bws.writeBit(~mode &amp; 1);</span>
+        }
+<span class="nc" id="L240">    }</span>
+
+<span class="nc" id="L242">    private static class BitWriteStream {</span>
+
+<span class="nc" id="L244">        List&lt;Byte&gt; bytes = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L245">        int currentBit = 0;</span>
+<span class="nc" id="L246">        byte currentByte = 0;</span>
+
+        public void writeBit(int bit) {
+<span class="nc bnc" id="L249" title="All 4 branches missed.">            if (currentBit == 8 || bytes.isEmpty()) {</span>
+<span class="nc" id="L250">                currentBit = 0;</span>
+<span class="nc" id="L251">                currentByte = 0;</span>
+<span class="nc" id="L252">                bytes.add(currentByte);</span>
+            }
+<span class="nc" id="L254">            currentByte += (bit &lt;&lt; (7 - currentBit));</span>
+<span class="nc" id="L255">            bytes.set(bytes.size() - 1, currentByte);</span>
+<span class="nc" id="L256">            currentBit++;</span>
+<span class="nc" id="L257">        }</span>
+
+        public void writeBitPair(int bitPair) {
+<span class="nc" id="L260">            writeBit((bitPair &gt;&gt; 1) &amp; 1);</span>
+<span class="nc" id="L261">            writeBit(bitPair &amp; 1);</span>
+<span class="nc" id="L262">        }</span>
+
+        public void writeByte(byte b) {
+<span class="nc bnc" id="L265" title="All 2 branches missed.">            for (int i = 7; i &gt;= 0; i--) {</span>
+<span class="nc" id="L266">                writeBit((b &gt;&gt; i) &amp; 1);</span>
+            }
+<span class="nc" id="L268">        }</span>
+
+        public byte[] toByteArray() {
+<span class="nc" id="L271">            byte[] byteArray = new byte[bytes.size()];</span>
+<span class="nc bnc" id="L272" title="All 2 branches missed.">            for (int i = 0; i &lt; bytes.size(); i++) {</span>
+<span class="nc" id="L273">                byteArray[i] = bytes.get(i);</span>
+            }
+<span class="nc" id="L275">            return byteArray;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L280">            StringBuilder sb = new StringBuilder();</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">            for (int i = 0; i &lt; bytes.size() - 1; i++) {</span>
+<span class="nc bnc" id="L282" title="All 2 branches missed.">                for (int j = 7; j &gt;= 0; j--) {</span>
+<span class="nc" id="L283">                    byte b = bytes.get(i);</span>
+<span class="nc" id="L284">                    sb.append((b &gt;&gt; j) &amp; 1);</span>
+                }
+            }
+<span class="nc bnc" id="L287" title="All 2 branches missed.">            for (int j = 7; j &gt; 7 - currentBit; j--) {</span>
+<span class="nc" id="L288">                sb.append((currentByte &gt;&gt; j) &amp; 1);</span>
+            }
+
+<span class="nc" id="L291">            return sb.toString();</span>
+        }
+
+    }
+
+    private static class BitReadStream {
+
+        final byte[] bytes;
+<span class="nc" id="L299">        int currentBit = 0;</span>
+<span class="nc" id="L300">        int currentByte = 0;</span>
+
+<span class="nc" id="L302">        public BitReadStream(byte[] bytes) {</span>
+<span class="nc" id="L303">            this.bytes = bytes;</span>
+<span class="nc" id="L304">        }</span>
+
+        public int readBit() {
+<span class="nc" id="L307">            byte b = bytes[currentByte];</span>
+<span class="nc" id="L308">            int bit = b &gt;&gt; (7 - currentBit) &amp; 1;</span>
+<span class="nc" id="L309">            currentBit++;</span>
+<span class="nc bnc" id="L310" title="All 2 branches missed.">            if (currentBit == 8) {</span>
+<span class="nc" id="L311">                currentBit = 0;</span>
+<span class="nc" id="L312">                currentByte++;</span>
+            }
+<span class="nc" id="L314">            return bit;</span>
+        }
+
+        public boolean hasNext() {
+<span class="nc bnc" id="L318" title="All 2 branches missed.">            return currentByte &lt; bytes.length;</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

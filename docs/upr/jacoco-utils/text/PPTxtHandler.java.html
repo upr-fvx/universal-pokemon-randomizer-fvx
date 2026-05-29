@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PPTxtHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">text</a> &gt; <span class="el_source">PPTxtHandler.java</span></div><h1>PPTxtHandler.java</h1><pre class="source lang-java linenums">package text;
+
+/*----------------------------------------------------------------------------*/
+/*--  PPTxtHandler.java - handles generation 5 games text encoding          --*/
+/*--  Code derived from &quot;PPTXT&quot;, copyright (C) SCV?                         --*/
+/*--  Ported to Java and bugfixed/customized by Dabomstew                   --*/
+/*----------------------------------------------------------------------------*/
+
+import java.io.InputStream;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+<span class="nc" id="L14">public class PPTxtHandler {</span>
+
+    private static final String TABLE_PATH = &quot;/text/Generation5.tbl&quot;;
+
+<span class="nc" id="L18">    private static final Map&lt;String, String&gt; pokeToText = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L19">    private static final Map&lt;String, String&gt; textToPoke = new HashMap&lt;&gt;();</span>
+
+    private static final Pattern pokeToTextPattern;
+    private static final Pattern textToPokePattern;
+
+    static {
+<span class="nc" id="L25">        InputStream is = UnicodeParser.class.getResourceAsStream(TABLE_PATH);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (is == null) {</span>
+<span class="nc" id="L27">            throw new RuntimeException(&quot;Couldn't find &quot; + TABLE_PATH);</span>
+        }
+<span class="nc" id="L29">        Scanner sc = new Scanner(is, &quot;UTF-8&quot;);</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        while (sc.hasNextLine()) {</span>
+<span class="nc" id="L31">            String q = sc.nextLine();</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">            if (!q.trim().isEmpty()) {</span>
+<span class="nc" id="L33">                String[] r = q.split(&quot;=&quot;, 2);</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">                if (r[1].endsWith(&quot;\r\n&quot;)) {</span>
+<span class="nc" id="L35">                    r[1] = r[1].substring(0, r[1].length() - 2);</span>
+                }
+<span class="nc" id="L37">                pokeToText.put(Character.toString((char) Integer.parseInt(r[0], 16)), r[1].replace(&quot;\\&quot;, &quot;\\\\&quot;)</span>
+<span class="nc" id="L38">                        .replace(&quot;$&quot;, &quot;\\$&quot;));</span>
+<span class="nc" id="L39">                textToPoke.put(r[1], &quot;\\\\x&quot; + r[0]);</span>
+            }
+<span class="nc" id="L41">        }</span>
+<span class="nc" id="L42">        sc.close();</span>
+<span class="nc" id="L43">        pokeToTextPattern = makePattern(pokeToText.keySet());</span>
+<span class="nc" id="L44">        textToPokePattern = makePattern(textToPoke.keySet());</span>
+<span class="nc" id="L45">    }</span>
+
+    private static Pattern makePattern(Iterable&lt;String&gt; tokens) {
+<span class="nc" id="L48">        String patternStr = &quot;(&quot;</span>
+<span class="nc" id="L49">                + implode(tokens, &quot;|&quot;).replace(&quot;\\&quot;, &quot;\\\\&quot;).replace(&quot;[&quot;, &quot;\\[&quot;).replace(&quot;]&quot;, &quot;\\]&quot;)</span>
+<span class="nc" id="L50">                        .replace(&quot;(&quot;, &quot;\\(&quot;).replace(&quot;)&quot;, &quot;\\)&quot;) + &quot;)&quot;;</span>
+<span class="nc" id="L51">        return Pattern.compile(patternStr);</span>
+    }
+
+    private static String implode(Iterable&lt;String&gt; tokens, String sep) {
+<span class="nc" id="L55">        StringBuilder sb = new StringBuilder();</span>
+<span class="nc" id="L56">        boolean first = true;</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        for (String token : tokens) {</span>
+<span class="nc bnc" id="L58" title="All 2 branches missed.">            if (!first) {</span>
+<span class="nc" id="L59">                sb.append(sep);</span>
+            }
+<span class="nc" id="L61">            sb.append(token);</span>
+<span class="nc" id="L62">            first = false;</span>
+<span class="nc" id="L63">        }</span>
+<span class="nc" id="L64">        return sb.toString();</span>
+    }
+
+    /**
+     * Decompress the words given into chars according to 9bits per char format
+     * Based off poketext's implementation of the same in gen4, but uses all 16
+     * bits per word as opposed to 15
+     * 
+     * @param chars
+     *            List of words, beginning with [F100] which is skipped.
+     * @return Decompressed list of integers corresponding to characters
+     */
+    private static List&lt;Integer&gt; decompress(List&lt;Integer&gt; chars) {
+<span class="nc" id="L77">        List&lt;Integer&gt; uncomp = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L78">        int j = 1;</span>
+<span class="nc" id="L79">        int shift1 = 0;</span>
+<span class="nc" id="L80">        int trans = 0;</span>
+        while (true) {
+<span class="nc" id="L82">            int tmp = chars.get(j);</span>
+<span class="nc" id="L83">            tmp = tmp &gt;&gt; shift1;</span>
+<span class="nc" id="L84">            int tmp1 = tmp;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">            if (shift1 &gt;= 0x10) {</span>
+<span class="nc" id="L86">                shift1 -= 0x10;</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">                if (shift1 &gt; 0) {</span>
+<span class="nc" id="L88">                    tmp1 = (trans | ((chars.get(j) &lt;&lt; (9 - shift1)) &amp; 0x1FF));</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                    if ((tmp1 &amp; 0xFF) == 0xFF) {</span>
+<span class="nc" id="L90">                        break;</span>
+                    }
+<span class="nc bnc" id="L92" title="All 4 branches missed.">                    if (tmp1 != 0x0 &amp;&amp; tmp1 != 0x1) {</span>
+<span class="nc" id="L93">                        uncomp.add(tmp1);</span>
+                    }
+                }
+            } else {
+<span class="nc" id="L97">                tmp1 = ((chars.get(j) &gt;&gt; shift1) &amp; 0x1FF);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">                if ((tmp1 &amp; 0xFF) == 0xFF) {</span>
+<span class="nc" id="L99">                    break;</span>
+                }
+<span class="nc bnc" id="L101" title="All 4 branches missed.">                if (tmp1 != 0x0 &amp;&amp; tmp1 != 0x1) {</span>
+<span class="nc" id="L102">                    uncomp.add(tmp1);</span>
+                }
+<span class="nc" id="L104">                shift1 += 9;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">                if (shift1 &lt; 0x10) {</span>
+<span class="nc" id="L106">                    trans = ((chars.get(j) &gt;&gt; shift1) &amp; 0x1FF);</span>
+<span class="nc" id="L107">                    shift1 += 9;</span>
+                }
+<span class="nc" id="L109">                j += 1;</span>
+            }
+<span class="nc" id="L111">        }</span>
+<span class="nc" id="L112">        return uncomp;</span>
+    }
+
+    private static List&lt;Integer&gt; lastKeys;
+    private static List&lt;Integer&gt; lastUnknowns;
+
+    /**
+     * Take a byte-array corresponding to a NARC entry and build a list of
+     * strings against the gen5 text encryption. Decompresses as appropriate.
+     * 
+     * @param ds
+     *            The data from this msg.narc entry
+     * @return The list of strings
+     */
+
+    public static List&lt;String&gt; readTexts(byte[] ds) {
+<span class="nc" id="L128">        int pos = 0;</span>
+<span class="nc" id="L129">        int i = 0;</span>
+<span class="nc" id="L130">        lastKeys = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L131">        lastUnknowns = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L132">        List&lt;String&gt; strings = new ArrayList&lt;&gt;();</span>
+        int numSections, numEntries, tmpCharCount, tmpUnknown, tmpChar;
+        int tmpOffset;
+<span class="nc" id="L135">        int[] sizeSections = new int[] { 0, 0, 0 };</span>
+<span class="nc" id="L136">        int[] sectionOffset = new int[] { 0, 0, 0 };</span>
+<span class="nc" id="L137">        Map&lt;Integer, List&lt;Integer&gt;&gt; tableOffsets = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L138">        Map&lt;Integer, List&lt;Integer&gt;&gt; characterCount = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L139">        Map&lt;Integer, List&lt;Integer&gt;&gt; unknown = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L140">        Map&lt;Integer, List&lt;List&lt;Integer&gt;&gt;&gt; encText = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L141">        Map&lt;Integer, List&lt;List&lt;String&gt;&gt;&gt; decText = new HashMap&lt;&gt;();</span>
+        StringBuilder sb;
+        int key;
+
+<span class="nc" id="L145">        numSections = readWord(ds, 0);</span>
+<span class="nc" id="L146">        numEntries = readWord(ds, 2);</span>
+<span class="nc" id="L147">        sizeSections[0] = readLong(ds, 4);</span>
+        // unk1 = readLong(ds, 8);
+<span class="nc" id="L149">        pos += 12;</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (numSections &gt; i) {</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            for (int z = 0; z &lt; numSections; z++) {</span>
+<span class="nc" id="L152">                sectionOffset[z] = readLong(ds, pos);</span>
+<span class="nc" id="L153">                pos += 4;</span>
+            }
+<span class="nc" id="L155">            pos = sectionOffset[i];</span>
+<span class="nc" id="L156">            sizeSections[i] = readLong(ds, pos);</span>
+<span class="nc" id="L157">            pos += 4;</span>
+<span class="nc" id="L158">            tableOffsets.put(i, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L159">            characterCount.put(i, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L160">            unknown.put(i, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L161">            encText.put(i, new ArrayList&lt;&gt;());</span>
+<span class="nc" id="L162">            decText.put(i, new ArrayList&lt;&gt;());</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">            for (int j = 0; j &lt; numEntries; j++) {</span>
+<span class="nc" id="L164">                tmpOffset = readLong(ds, pos);</span>
+<span class="nc" id="L165">                pos += 4;</span>
+<span class="nc" id="L166">                tmpCharCount = readWord(ds, pos);</span>
+<span class="nc" id="L167">                pos += 2;</span>
+<span class="nc" id="L168">                tmpUnknown = readWord(ds, pos);</span>
+<span class="nc" id="L169">                pos += 2;</span>
+<span class="nc" id="L170">                tableOffsets.get(i).add(tmpOffset);</span>
+<span class="nc" id="L171">                characterCount.get(i).add(tmpCharCount);</span>
+<span class="nc" id="L172">                unknown.get(i).add(tmpUnknown);</span>
+<span class="nc" id="L173">                lastUnknowns.add(tmpUnknown);</span>
+            }
+<span class="nc bnc" id="L175" title="All 2 branches missed.">            for (int j = 0; j &lt; numEntries; j++) {</span>
+<span class="nc" id="L176">                List&lt;Integer&gt; tmpEncChars = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L177">                pos = sectionOffset[i] + tableOffsets.get(i).get(j);</span>
+<span class="nc bnc" id="L178" title="All 2 branches missed.">                for (int k = 0; k &lt; characterCount.get(i).get(j); k++) {</span>
+<span class="nc" id="L179">                    tmpChar = readWord(ds, pos);</span>
+<span class="nc" id="L180">                    pos += 2;</span>
+<span class="nc" id="L181">                    tmpEncChars.add(tmpChar);</span>
+                }
+<span class="nc" id="L183">                encText.get(i).add(tmpEncChars);</span>
+<span class="nc" id="L184">                key = encText.get(i).get(j).get(characterCount.get(i).get(j) - 1) ^ 0xFFFF;</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                for (int k = characterCount.get(i).get(j) - 1; k &gt;= 0; k--) {</span>
+<span class="nc" id="L186">                    encText.get(i).get(j).set(k, (encText.get(i).get(j).get(k)) ^ key);</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">                    if (k == 0) {</span>
+<span class="nc" id="L188">                        lastKeys.add(key);</span>
+                    }
+<span class="nc" id="L190">                    key = ((key &gt;&gt;&gt; 3) | (key &lt;&lt; 13)) &amp; 0xffff;</span>
+                }
+<span class="nc bnc" id="L192" title="All 2 branches missed.">                if (encText.get(i).get(j).get(0) == 0xF100) {</span>
+<span class="nc" id="L193">                    encText.get(i).set(j, decompress(encText.get(i).get(j)));</span>
+<span class="nc" id="L194">                    characterCount.get(i).set(j, encText.get(i).get(j).size());</span>
+                }
+<span class="nc" id="L196">                List&lt;String&gt; chars = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L197">                sb = new StringBuilder();</span>
+<span class="nc bnc" id="L198" title="All 2 branches missed.">                for (int k = 0; k &lt; characterCount.get(i).get(j); k++) {</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">                    if (encText.get(i).get(j).get(k) == 0xFFFF) {</span>
+<span class="nc" id="L200">                        chars.add(&quot;\\xFFFF&quot;);</span>
+                    } else {
+<span class="nc bnc" id="L202" title="All 4 branches missed.">                        if (encText.get(i).get(j).get(k) &gt; 20 &amp;&amp; encText.get(i).get(j).get(k) &lt;= 0xFFF0</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                                &amp;&amp; Character.UnicodeBlock.of(encText.get(i).get(j).get(k)) != null) {</span>
+<span class="nc" id="L204">                            chars.add(&quot;&quot; + ((char) encText.get(i).get(j).get(k).intValue()));</span>
+                        } else {
+<span class="nc" id="L206">                            String num = String.format(&quot;%04X&quot;, encText.get(i).get(j).get(k));</span>
+<span class="nc" id="L207">                            chars.add(&quot;\\x&quot; + num);</span>
+                        }
+<span class="nc" id="L209">                        sb.append(chars.get(k));</span>
+                    }
+                }
+<span class="nc" id="L212">                strings.add(sb.toString());</span>
+<span class="nc" id="L213">                decText.get(i).add(chars);</span>
+            }
+        }
+
+        // Parse strings against the table
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        for (int sn = 0; sn &lt; strings.size(); sn++) {</span>
+<span class="nc" id="L219">            strings.set(sn, bulkReplace(strings.get(sn), pokeToTextPattern, pokeToText));</span>
+        }
+<span class="nc" id="L221">        return strings;</span>
+    }
+
+    private static String bulkReplace(String string, Pattern pattern, Map&lt;String, String&gt; replacements) {
+<span class="nc" id="L225">        Matcher matcher = pattern.matcher(string);</span>
+
+<span class="nc" id="L227">        StringBuffer sb = new StringBuffer();</span>
+<span class="nc bnc" id="L228" title="All 2 branches missed.">        while (matcher.find()) {</span>
+<span class="nc" id="L229">            matcher.appendReplacement(sb, replacements.get(matcher.group(1)));</span>
+        }
+<span class="nc" id="L231">        matcher.appendTail(sb);</span>
+
+<span class="nc" id="L233">        return sb.toString();</span>
+    }
+
+    /**
+     * Write newStrings to the text datafile originalData, as language 0 (the
+     * only one in most releases BUT japanese). Return the resulting binary as a
+     * byte-array. Will never use the [F100] compression, even if the original
+     * file used it.
+     * 
+     * @param originalData
+     *            The original file, to copy stuff like unknowns.
+     * @param text
+     *            The new data.
+     * @return The file to write back to the NARC.
+     */
+    public static byte[] saveEntry(byte[] originalData, List&lt;String&gt; text) {
+
+        // Parse strings against the reverse table
+<span class="nc bnc" id="L251" title="All 2 branches missed.">        for (int sn = 0; sn &lt; text.size(); sn++) {</span>
+<span class="nc" id="L252">            text.set(sn, bulkReplace(text.get(sn), textToPokePattern, textToPoke));</span>
+        }
+
+        // Make sure we have the original unknowns etc
+<span class="nc" id="L256">        readTexts(originalData);</span>
+
+        // Start getting stuff
+        int numSections, numEntries;
+<span class="nc" id="L260">        int[] sizeSections = new int[] { 0, 0, 0 };</span>
+<span class="nc" id="L261">        int[] sectionOffset = new int[] { 0, 0, 0 };</span>
+<span class="nc" id="L262">        int[] newsizeSections = new int[] { 0, 0, 0 };</span>
+<span class="nc" id="L263">        int[] newsectionOffset = new int[] { 0, 0, 0 };</span>
+
+        // Data-Stream
+<span class="nc" id="L266">        int pos = 0;</span>
+
+<span class="nc" id="L268">        numSections = readWord(originalData, 0);</span>
+<span class="nc" id="L269">        numEntries = readWord(originalData, 2);</span>
+<span class="nc" id="L270">        sizeSections[0] = readLong(originalData, 4);</span>
+        // unk1 readLong(ds, 8);
+<span class="nc" id="L272">        pos += 12;</span>
+
+<span class="nc bnc" id="L274" title="All 2 branches missed.">        if (text.size() &lt; numEntries) {</span>
+<span class="nc" id="L275">            System.err.println(&quot;Can't do anything due to too few lines&quot;);</span>
+<span class="nc" id="L276">            return originalData;</span>
+        } else {
+<span class="nc" id="L278">            byte[] newEntry = makeSection(text, numEntries);</span>
+<span class="nc bnc" id="L279" title="All 2 branches missed.">            for (int z = 0; z &lt; numSections; z++) {</span>
+<span class="nc" id="L280">                sectionOffset[z] = readLong(originalData, pos);</span>
+<span class="nc" id="L281">                pos += 4;</span>
+            }
+<span class="nc bnc" id="L283" title="All 2 branches missed.">            for (int z = 0; z &lt; numSections; z++) {</span>
+<span class="nc" id="L284">                pos = sectionOffset[z];</span>
+<span class="nc" id="L285">                sizeSections[z] = readLong(originalData, pos);</span>
+            }
+<span class="nc" id="L287">            newsizeSections[0] = newEntry.length;</span>
+
+<span class="nc" id="L289">            byte[] newData = new byte[originalData.length - sizeSections[0] + newsizeSections[0]];</span>
+<span class="nc" id="L290">            System.arraycopy(originalData, 0, newData, 0, Math.min(originalData.length, newData.length));</span>
+<span class="nc" id="L291">            writeLong(newData, 4, newsizeSections[0]);</span>
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (numSections == 2) {</span>
+<span class="nc" id="L293">                newsectionOffset[1] = newsizeSections[0] + sectionOffset[0];</span>
+<span class="nc" id="L294">                writeLong(newData, 0x10, newsectionOffset[1]);</span>
+            }
+<span class="nc" id="L296">            System.arraycopy(newEntry, 0, newData, sectionOffset[0], newEntry.length);</span>
+<span class="nc bnc" id="L297" title="All 2 branches missed.">            if (numSections == 2) {</span>
+<span class="nc" id="L298">                System.arraycopy(originalData, sectionOffset[1], newData, newsectionOffset[1], sizeSections[1]);</span>
+            }
+<span class="nc" id="L300">            return newData;</span>
+        }
+    }
+
+    private static byte[] makeSection(List&lt;String&gt; strings, int numEntries) {
+<span class="nc" id="L305">        List&lt;List&lt;Integer&gt;&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L306">        int size = 0;</span>
+<span class="nc" id="L307">        int offset = 4 + 8 * numEntries;</span>
+        int charCount;
+<span class="nc bnc" id="L309" title="All 2 branches missed.">        for (int i = 0; i &lt; numEntries; i++) {</span>
+<span class="nc" id="L310">            data.add(parseString(strings.get(i), i));</span>
+<span class="nc" id="L311">            size += (data.get(i).size() * 2);</span>
+        }
+<span class="nc bnc" id="L313" title="All 2 branches missed.">        if (size % 4 == 2) {</span>
+<span class="nc" id="L314">            size += 2;</span>
+<span class="nc" id="L315">            int tmpKey = lastKeys.get(numEntries - 1);</span>
+<span class="nc bnc" id="L316" title="All 2 branches missed.">            for (int i = 0; i &lt; data.get(numEntries - 1).size(); i++) {</span>
+<span class="nc" id="L317">                tmpKey = ((tmpKey &lt;&lt; 3) | (tmpKey &gt;&gt; 13)) &amp; 0xFFFF;</span>
+            }
+<span class="nc" id="L319">            data.get(numEntries - 1).add(0xFFFF ^ tmpKey);</span>
+        }
+<span class="nc" id="L321">        size += offset;</span>
+<span class="nc" id="L322">        byte[] section = new byte[size];</span>
+<span class="nc" id="L323">        int pos = 0;</span>
+<span class="nc" id="L324">        writeLong(section, pos, size);</span>
+<span class="nc" id="L325">        pos += 4;</span>
+<span class="nc bnc" id="L326" title="All 2 branches missed.">        for (int i = 0; i &lt; numEntries; i++) {</span>
+<span class="nc" id="L327">            charCount = data.get(i).size();</span>
+<span class="nc" id="L328">            writeLong(section, pos, offset);</span>
+<span class="nc" id="L329">            pos += 4;</span>
+<span class="nc" id="L330">            writeWord(section, pos, charCount);</span>
+<span class="nc" id="L331">            pos += 2;</span>
+<span class="nc" id="L332">            writeWord(section, pos, lastUnknowns.get(i));</span>
+<span class="nc" id="L333">            pos += 2;</span>
+<span class="nc" id="L334">            offset += (charCount * 2);</span>
+        }
+<span class="nc bnc" id="L336" title="All 2 branches missed.">        for (int i = 0; i &lt; numEntries; i++) {</span>
+<span class="nc bnc" id="L337" title="All 2 branches missed.">            for (int word : data.get(i)) {</span>
+<span class="nc" id="L338">                writeWord(section, pos, word);</span>
+<span class="nc" id="L339">                pos += 2;</span>
+<span class="nc" id="L340">            }</span>
+        }
+<span class="nc" id="L342">        return section;</span>
+    }
+
+    private static List&lt;Integer&gt; parseString(String string, int entry_id) {
+<span class="nc" id="L346">        List&lt;Integer&gt; chars = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">        for (int i = 0; i &lt; string.length(); i++) {</span>
+<span class="nc bnc" id="L348" title="All 2 branches missed.">            if (string.charAt(i) != '\\') {</span>
+<span class="nc" id="L349">                chars.add((int) string.charAt(i));</span>
+            } else {
+<span class="nc bnc" id="L351" title="All 4 branches missed.">                if (((i + 2) &lt; string.length()) &amp;&amp; string.charAt(i + 2) == '{') {</span>
+<span class="nc" id="L352">                    chars.add((int) string.charAt(i));</span>
+                } else {
+<span class="nc" id="L354">                    chars.add(Integer.parseInt(string.substring(i + 2, i + 6), 16));</span>
+<span class="nc" id="L355">                    i += 5;</span>
+                }
+            }
+        }
+<span class="nc" id="L359">        chars.add(0xFFFF);</span>
+<span class="nc" id="L360">        int key = lastKeys.get(entry_id);</span>
+<span class="nc bnc" id="L361" title="All 2 branches missed.">        for (int i = 0; i &lt; chars.size(); i++) {</span>
+<span class="nc" id="L362">            chars.set(i, (chars.get(i) ^ key) &amp; 0xFFFF);</span>
+<span class="nc" id="L363">            key = ((key &lt;&lt; 3) | (key &gt;&gt;&gt; 13)) &amp; 0xFFFF;</span>
+        }
+<span class="nc" id="L365">        return chars;</span>
+    }
+
+    private static int readWord(byte[] data, int offset) {
+<span class="nc" id="L369">        return (data[offset] &amp; 0xFF) + ((data[offset + 1] &amp; 0xFF) &lt;&lt; 8);</span>
+    }
+
+    private static int readLong(byte[] data, int offset) {
+<span class="nc" id="L373">        return (data[offset] &amp; 0xFF) + ((data[offset + 1] &amp; 0xFF) &lt;&lt; 8) + ((data[offset + 2] &amp; 0xFF) &lt;&lt; 16)</span>
+                + ((data[offset + 3] &amp; 0xFF) &lt;&lt; 24);
+    }
+
+    protected static void writeWord(byte[] data, int offset, int value) {
+<span class="nc" id="L378">        data[offset] = (byte) (value &amp; 0xFF);</span>
+<span class="nc" id="L379">        data[offset + 1] = (byte) ((value &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L380">    }</span>
+
+    private static void writeLong(byte[] data, int offset, int value) {
+<span class="nc" id="L383">        data[offset] = (byte) (value &amp; 0xFF);</span>
+<span class="nc" id="L384">        data[offset + 1] = (byte) ((value &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L385">        data[offset + 2] = (byte) ((value &gt;&gt; 16) &amp; 0xFF);</span>
+<span class="nc" id="L386">        data[offset + 3] = (byte) ((value &gt;&gt; 24) &amp; 0xFF);</span>
+<span class="nc" id="L387">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

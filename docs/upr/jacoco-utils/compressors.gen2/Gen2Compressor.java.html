@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gen2Compressor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">compressors.gen2</a> &gt; <span class="el_source">Gen2Compressor.java</span></div><h1>Gen2Compressor.java</h1><pre class="source lang-java linenums">package compressors.gen2;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * A compressor for the compression format used by the Generation 2 Pokémon games.
+ * This compression format is commonly known as LC_LZ3 or LZ3, and is documented
+ * &lt;a href=https://sneslab.net/wiki/LZ3&gt;here on SNESlab&lt;/a&gt;.
+ */
+<span class="nc" id="L12">public abstract class Gen2Compressor {</span>
+
+    protected static final int SHORT_COMMAND_COUNT = 32;
+    protected static final int MAX_COMMAND_COUNT = 1024;
+    protected static final int LOOKBACK_LIMIT = 128;
+    private static final int MAX_FILE_SIZE = 32768;
+
+<span class="nc" id="L19">    protected int MAX_CHUNK_LENGTH = 0b11111;</span>
+<span class="nc" id="L20">    protected byte TERMINATOR = (byte) 0xFF;</span>
+
+<span class="nc" id="L22">    protected enum Command {</span>
+        // &quot;Long Length&quot; functionality baked into the logic, instead of being an option here
+<span class="nc" id="L24">        DIRECT_COPY(0), BYTE_FILL(1), WORD_FILL(2), ZERO_FILL(3),</span>
+<span class="nc" id="L25">        REPEAT(4), BIT_REVERSE_REPEAT(5), BACKWARDS_REPEAT(6);</span>
+
+        private final int bits;
+
+<span class="nc" id="L29">        Command(int bits) {</span>
+<span class="nc" id="L30">            this.bits = bits;</span>
+<span class="nc" id="L31">        }</span>
+    }
+
+    protected static class Chunk {
+        protected final Command command;
+        protected int count;
+        protected final int value;
+
+<span class="nc" id="L39">        public Chunk(Command command, int count, int value) {</span>
+<span class="nc" id="L40">            this.command = command;</span>
+<span class="nc" id="L41">            this.count = count;</span>
+<span class="nc" id="L42">            this.value = value;</span>
+<span class="nc" id="L43">        }</span>
+
+        public int size() {
+<span class="nc bnc" id="L46" title="All 2 branches missed.">            int headerSize = count &gt; SHORT_COMMAND_COUNT ? 2 : 1;</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            if (command.bits &gt;= 4) { // the Repeat commands</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">                return headerSize + 1 + (value &gt;= 0 ? 1 : 0);</span>
+            }
+<span class="nc" id="L50">            int[] commandSizes = new int[]{count, 1, 2, 0};</span>
+<span class="nc" id="L51">            return headerSize + commandSizes[command.bits];</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L56">            return &quot;[&quot; + command + &quot;, count=&quot; + count + &quot;, value=&quot; + value + &quot;]&quot;;</span>
+        }
+    }
+
+    public abstract byte[] compress(byte[] uncompressed, byte[] bitFlipped);
+
+    protected Chunk pickBestChunk(Chunk... chunks) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (Arrays.equals(Arrays.stream(chunks).distinct().toArray(), new Chunk[]{null})) {</span>
+<span class="nc" id="L64">            return null;</span>
+        }
+<span class="nc" id="L66">        return Arrays.stream(chunks).max((a, b) -&gt;</span>
+                {
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                    if (a == null) return -1;</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                    if (b == null) return 1;</span>
+<span class="nc" id="L70">                    int aSavings = a.count - a.size();</span>
+<span class="nc" id="L71">                    int bSavings = b.count - b.size();</span>
+<span class="nc" id="L72">                    return Integer.compare(aSavings, bSavings);</span>
+                }
+<span class="nc" id="L74">        ).orElseThrow(RuntimeException::new);</span>
+    }
+
+    protected List&lt;Chunk&gt; mergeDirectCopy(List&lt;Chunk&gt; chunks) {
+<span class="nc" id="L78">        List&lt;Chunk&gt; merged = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L79">        int sum = 0;</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        for (Chunk chunk : chunks) {</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (chunk.command == Command.DIRECT_COPY) {</span>
+<span class="nc" id="L82">                sum += chunk.count;</span>
+            } else {
+<span class="nc bnc" id="L84" title="All 2 branches missed.">                if (sum != 0) {</span>
+<span class="nc" id="L85">                    merged.add(new Chunk(Command.DIRECT_COPY, sum, 0));</span>
+<span class="nc" id="L86">                    sum = 0;</span>
+                }
+<span class="nc" id="L88">                merged.add(chunk);</span>
+            }
+<span class="nc" id="L90">        }</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">        if (sum != 0) {</span>
+<span class="nc" id="L92">            merged.add(new Chunk(Command.DIRECT_COPY, sum, 0));</span>
+        }
+<span class="nc" id="L94">        return merged;</span>
+    }
+
+    protected byte[] chunksToBytes(List&lt;Chunk&gt; chunks, byte[] uncompressed) {
+<span class="nc" id="L98">        byte[] board = new byte[uncompressed.length * 2];</span>
+<span class="nc" id="L99">        int size = 0;</span>
+<span class="nc" id="L100">        int pos = 0;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        for (Chunk chunk : chunks) {</span>
+<span class="nc bnc" id="L102" title="All 2 branches missed.">            if (chunk.count &lt; SHORT_COMMAND_COUNT) { // short header</span>
+<span class="nc" id="L103">                board[size++] = (byte) ((chunk.command.bits &lt;&lt; 5) + ((chunk.count - 1) &amp; 0b11111));</span>
+            } else { // long header (i.e. command 111 / &quot;Long length&quot;)
+<span class="nc" id="L105">                board[size++] = (byte) (0b11100000 + (chunk.command.bits &lt;&lt; 2) + (chunk.count &gt;&gt;&gt; 8));</span>
+<span class="nc" id="L106">                board[size++] = (byte) ((chunk.count - 1) &amp; 0xFF);</span>
+            }
+<span class="nc bnc" id="L108" title="All 5 branches missed.">            switch (chunk.command) {</span>
+                case DIRECT_COPY:
+<span class="nc bnc" id="L110" title="All 2 branches missed.">                    for (int i = 0; i &lt; chunk.count; i++) {</span>
+<span class="nc" id="L111">                        board[size++] = uncompressed[pos + i];</span>
+                    }
+<span class="nc" id="L113">                    break;</span>
+                case BYTE_FILL:
+<span class="nc" id="L115">                    board[size++] = (byte) chunk.value;</span>
+<span class="nc" id="L116">                    break;</span>
+                case WORD_FILL:
+<span class="nc" id="L118">                    board[size++] = (byte) (chunk.value &gt;&gt;&gt; 8);</span>
+<span class="nc" id="L119">                    board[size++] = (byte) (chunk.value);</span>
+<span class="nc" id="L120">                    break;</span>
+                case ZERO_FILL:
+<span class="nc" id="L122">                    break;</span>
+                default:
+<span class="nc bnc" id="L124" title="All 4 branches missed.">                    if ((chunk.value &lt; -LOOKBACK_LIMIT) || (chunk.value &gt;= MAX_FILE_SIZE)) {</span>
+<span class="nc" id="L125">                        throw new IllegalStateException(&quot;invalid command&quot;);</span>
+                    }
+<span class="nc bnc" id="L127" title="All 2 branches missed.">                    if (chunk.value &lt; 0) {</span>
+<span class="nc" id="L128">                        board[size++] = (byte) (chunk.value ^ 127);</span>
+                    } else {
+<span class="nc" id="L130">                        board[size++] = (byte) (chunk.value &gt;&gt;&gt; 8);</span>
+<span class="nc" id="L131">                        board[size++] = (byte) (chunk.value);</span>
+                    }
+            }
+<span class="nc" id="L134">            pos += chunk.count;</span>
+<span class="nc" id="L135">        }</span>
+<span class="nc" id="L136">        board[size++] = TERMINATOR;</span>
+
+<span class="nc" id="L138">        return Arrays.copyOf(board, size);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

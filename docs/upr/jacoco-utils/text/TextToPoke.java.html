@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TextToPoke.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">text</a> &gt; <span class="el_source">TextToPoke.java</span></div><h1>TextToPoke.java</h1><pre class="source lang-java linenums">package text;
+
+/*----------------------------------------------------------------------------*/
+/*--  TextToPoke.java - encodes gen4 games text from Unicode                --*/
+/*--  Code derived from &quot;thenewpoketext&quot;, copyright (C) loadingNOW          --*/
+/*--  Ported to Java and bugfixed/customized by Dabomstew                   --*/
+/*----------------------------------------------------------------------------*/
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+<span class="nc" id="L13">public class TextToPoke {</span>
+
+<span class="nc" id="L15">    private record PointerEntry(int ptr, int chars) {}</span>
+
+    public static byte[] MakeFile(List&lt;String&gt; textarr, boolean compressed) {
+<span class="nc" id="L18">        int base = textarr.size() * 8 + 4;</span>
+<span class="nc" id="L19">        List&lt;PointerEntry&gt; ptrtable = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L20">        List&lt;List&lt;Integer&gt;&gt; rawdata = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L21" title="All 2 branches missed.">        for (String aTextarr : textarr) {</span>
+<span class="nc" id="L22">            List&lt;Integer&gt; data = ToCode(aTextarr, compressed);</span>
+<span class="nc" id="L23">            int l = data.size();</span>
+<span class="nc" id="L24">            ptrtable.add(new PointerEntry(base, l));</span>
+<span class="nc" id="L25">            rawdata.add(data);</span>
+<span class="nc" id="L26">            base += l * 2;</span>
+<span class="nc" id="L27">        }</span>
+
+<span class="nc" id="L29">        List&lt;Integer&gt; hdr = Arrays.asList(textarr.size(), 0);</span>
+
+<span class="nc" id="L31">        return join(wordListToBarr(hdr), pointerListToBarr(ptrtable), listOfWordListToBarr(rawdata));</span>
+    }
+
+    private static List&lt;Integer&gt; ToCode(String text, boolean compressed) {
+<span class="nc" id="L35">        List&lt;Integer&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">        while (!text.isEmpty()) {</span>
+<span class="nc" id="L37">            int i = Math.max(0, 6 - text.length());</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (text.charAt(0) == '\\') {</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">                if (text.charAt(1) == 'x') {</span>
+<span class="nc" id="L40">                    data.add(Integer.parseInt(text.substring(2, 6), 16));</span>
+<span class="nc" id="L41">                    text = text.substring(6);</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">                } else if (text.charAt(1) == 'v') {</span>
+<span class="nc" id="L43">                    data.add(0xFFFE);</span>
+<span class="nc" id="L44">                    data.add(Integer.parseInt(text.substring(2, 6), 16));</span>
+<span class="nc" id="L45">                    text = text.substring(6);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">                } else if (text.charAt(1) == 'z') {</span>
+<span class="nc" id="L47">                    List&lt;Integer&gt; var = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L48">                    int w = 0;</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">                    while (!text.isEmpty()) {</span>
+<span class="nc bnc" id="L50" title="All 4 branches missed.">                        if (text.charAt(0) == '\\' &amp;&amp; text.charAt(1) == 'z') {</span>
+<span class="nc" id="L51">                            w++;</span>
+<span class="nc" id="L52">                            var.add(Integer.parseInt(text.substring(2, 6), 16));</span>
+<span class="nc" id="L53">                            text = text.substring(6);</span>
+                        } else {
+                            break;
+                        }
+                    }
+<span class="nc" id="L58">                    data.add(w);</span>
+<span class="nc" id="L59">                    data.addAll(var);</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">                } else if (text.charAt(1) == 'n') {</span>
+<span class="nc" id="L61">                    data.add(0xE000);</span>
+<span class="nc" id="L62">                    text = text.substring(2);</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">                } else if (text.charAt(1) == 'p') {</span>
+<span class="nc" id="L64">                    data.add(0x25BC);</span>
+<span class="nc" id="L65">                    text = text.substring(2);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">                } else if (text.charAt(1) == 'l') {</span>
+<span class="nc" id="L67">                    data.add(0x25BD);</span>
+<span class="nc" id="L68">                    text = text.substring(2);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                } else if (text.startsWith(&quot;and&quot;, 1)) {</span>
+<span class="nc" id="L70">                    data.add(0x1C2);</span>
+<span class="nc" id="L71">                    text = text.substring(4);</span>
+                } else {
+<span class="nc" id="L73">                    System.out.printf(&quot;unknown escape: %s\n&quot;, text.charAt(1));</span>
+<span class="nc" id="L74">                    text = text.substring(2);</span>
+                }
+            } else {
+<span class="nc bnc" id="L77" title="All 4 branches missed.">                while (!(UnicodeParser.d.containsKey(text.substring(0, 6 - i)) || (i == 6))) {</span>
+<span class="nc" id="L78">                    i++;</span>
+                }
+<span class="nc bnc" id="L80" title="All 2 branches missed.">                if (i == 6) {</span>
+<span class="nc" id="L81">                    System.out.printf(&quot;Char not found %s(%x)&quot;, text.charAt(0), (byte) text.charAt(0));</span>
+<span class="nc" id="L82">                    text = text.substring(1);</span>
+                } else {
+<span class="nc" id="L84">                    data.add(UnicodeParser.d.get(text.substring(0, 6 - i)));</span>
+<span class="nc" id="L85">                    text = text.substring(6 - i);</span>
+                }
+            }
+<span class="nc" id="L88">        }</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (compressed) {</span>
+<span class="nc bnc" id="L90" title="All 4 branches missed.">            if (data.size() % 5 != 0 || data.isEmpty()) {</span>
+<span class="nc" id="L91">                data.add(0x1FF);</span>
+            }
+<span class="nc" id="L93">            byte[] bits = new byte[data.size() * 9];</span>
+<span class="nc" id="L94">            int bc = 0;</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            for (Integer aData : data) {</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">                for (int j = 0; j &lt; 9; j++) {</span>
+<span class="nc" id="L97">                    bits[bc++] = (byte) ((aData &gt;&gt; j) &amp; 1);</span>
+                }
+<span class="nc" id="L99">            }</span>
+<span class="nc" id="L100">            int tmp_uint16 = 0;</span>
+<span class="nc" id="L101">            data.clear();</span>
+<span class="nc" id="L102">            data.add(0xF100);</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">            for (int i = 0; i &lt; bits.length; i++) {</span>
+<span class="nc bnc" id="L104" title="All 4 branches missed.">                if (i % 15 == 0 &amp;&amp; i != 0) {</span>
+<span class="nc" id="L105">                    data.add(tmp_uint16);</span>
+<span class="nc" id="L106">                    tmp_uint16 = 0;</span>
+                }
+<span class="nc" id="L108">                tmp_uint16 |= (bits[i] &lt;&lt; (i % 15));</span>
+            }
+<span class="nc" id="L110">            data.add(tmp_uint16);</span>
+        }
+<span class="nc" id="L112">        data.add(0xFFFF);</span>
+<span class="nc" id="L113">        return data;</span>
+    }
+
+    private static byte[] join(byte[]... args) {
+<span class="nc" id="L117">        int tlen = 0;</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">        for (byte[] arr : args) {</span>
+<span class="nc" id="L119">            tlen += arr.length;</span>
+        }
+<span class="nc" id="L121">        byte[] barr = new byte[tlen];</span>
+<span class="nc" id="L122">        int offs = 0;</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">        for (byte[] arr : args) {</span>
+<span class="nc" id="L124">            System.arraycopy(arr, 0, barr, offs, arr.length);</span>
+<span class="nc" id="L125">            offs += arr.length;</span>
+        }
+<span class="nc" id="L127">        return barr;</span>
+    }
+
+    private static byte[] wordListToBarr(List&lt;Integer&gt; list) {
+<span class="nc" id="L131">        byte[] barr = new byte[list.size() * 2];</span>
+<span class="nc" id="L132">        int l = list.size();</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">        for (int i = 0; i &lt; l; i++) {</span>
+<span class="nc" id="L134">            barr[i * 2] = (byte) (list.get(i) &amp; 0xFF);</span>
+<span class="nc" id="L135">            barr[i * 2 + 1] = (byte) ((list.get(i) &gt;&gt; 8) &amp; 0xFF);</span>
+        }
+<span class="nc" id="L137">        return barr;</span>
+    }
+
+    private static byte[] pointerListToBarr(List&lt;PointerEntry&gt; ptrList) {
+<span class="nc" id="L141">        byte[] data = new byte[ptrList.size() * 8];</span>
+<span class="nc" id="L142">        int l = ptrList.size();</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        for (int i = 0; i &lt; l; i++) {</span>
+<span class="nc" id="L144">            int ofs = i * 8;</span>
+<span class="nc" id="L145">            PointerEntry ent = ptrList.get(i);</span>
+<span class="nc" id="L146">            data[ofs] = (byte) (ent.ptr &amp; 0xFF);</span>
+<span class="nc" id="L147">            data[ofs + 1] = (byte) ((ent.ptr &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L148">            data[ofs + 2] = (byte) ((ent.ptr &gt;&gt; 16) &amp; 0xFF);</span>
+<span class="nc" id="L149">            data[ofs + 3] = (byte) ((ent.ptr &gt;&gt; 24) &amp; 0xFF);</span>
+<span class="nc" id="L150">            data[ofs + 4] = (byte) (ent.chars &amp; 0xFF);</span>
+<span class="nc" id="L151">            data[ofs + 5] = (byte) ((ent.chars &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L152">            data[ofs + 6] = (byte) ((ent.chars &gt;&gt; 16) &amp; 0xFF);</span>
+<span class="nc" id="L153">            data[ofs + 7] = (byte) ((ent.chars &gt;&gt; 24) &amp; 0xFF);</span>
+        }
+<span class="nc" id="L155">        return data;</span>
+    }
+
+    private static byte[] listOfWordListToBarr(List&lt;List&lt;Integer&gt;&gt; list) {
+<span class="nc" id="L159">        int tlen = 0;</span>
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        for (List&lt;Integer&gt; subList : list) {</span>
+<span class="nc" id="L161">            tlen += subList.size() * 2;</span>
+<span class="nc" id="L162">        }</span>
+<span class="nc" id="L163">        byte[] barr = new byte[tlen];</span>
+<span class="nc" id="L164">        int offs = 0;</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        for (List&lt;Integer&gt; slist : list) {</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">            for (Integer aSlist : slist) {</span>
+<span class="nc" id="L167">                barr[offs] = (byte) (aSlist &amp; 0xFF);</span>
+<span class="nc" id="L168">                barr[offs + 1] = (byte) ((aSlist &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L169">                offs += 2;</span>
+<span class="nc" id="L170">            }</span>
+<span class="nc" id="L171">        }</span>
+<span class="nc" id="L172">        return barr;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

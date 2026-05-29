@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Gen2SinglePassCompressor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">compressors.gen2</a> &gt; <span class="el_source">Gen2SinglePassCompressor.java</span></div><h1>Gen2SinglePassCompressor.java</h1><pre class="source lang-java linenums">package compressors.gen2;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Attempts to compress the data in a single pass, selecting the best command at each
+ * position within some constraints.&lt;br&gt;
+ * (&lt;a href=https://sneslab.net/wiki/LZ3&gt;Documentation for the compression format&lt;/a&gt;).
+ * &lt;br&gt;&lt;br&gt;
+ * Essentially a Java translation of pokecrystal's
+ * &lt;a href=https://github.com/pret/pokecrystal/blob/master/tools/lz/spcomp.c&gt;spcomp.c&lt;/a&gt;.
+ */
+public class Gen2SinglePassCompressor extends Gen2Compressor {
+
+<span class="nc" id="L18">    public enum CopyCommandPref {</span>
+<span class="nc" id="L19">        NRF, // Normal (100), Reversed (110), Flipped (101)</span>
+<span class="nc" id="L20">        RFN, // Reversed (110), Flipped (101), Normal (100)</span>
+<span class="nc" id="L21">        FRN  // Flipped (101), Reversed (110), Normal (100)</span>
+    }
+
+<span class="nc" id="L24">    public static List&lt;Gen2SinglePassCompressor&gt; ALL_OPTIONS = initAllOptions();</span>
+
+    private static List&lt;Gen2SinglePassCompressor&gt; initAllOptions() {
+<span class="nc" id="L27">        List&lt;Gen2SinglePassCompressor&gt; l = new ArrayList&lt;&gt;(2 * 2 * 2 * 3 * 3);</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        for (int pfor = 0; pfor &lt; 2; pfor++) {</span>
+<span class="nc bnc" id="L29" title="All 2 branches missed.">            for (int afor = 0; afor &lt; 2; afor++) {</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">                for (int alr = 0; alr &lt; 2; alr++) {</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">                    for (int maxScanDelay = 0; maxScanDelay &lt; 3; maxScanDelay++) {</span>
+<span class="nc bnc" id="L32" title="All 2 branches missed.">                        for (CopyCommandPref pref : CopyCommandPref.values()) {</span>
+<span class="nc bnc" id="L33" title="All 6 branches missed.">                            l.add(new Gen2SinglePassCompressor(</span>
+                                    pfor == 1,
+                                    afor == 1,
+                                    alr == 1,
+                                    maxScanDelay, pref
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+<span class="nc" id="L44">        return Collections.unmodifiableList(l);</span>
+    }
+
+    private final boolean preferFillOverRepeat;
+    private final boolean avoidFillOrRepeat;
+    private final boolean avoidLongRepeat;
+    private final int maxScanDelay;
+    private final CopyCommandPref copyCommandPref;
+
+    /**
+     * @param preferFillOverRepeat If true: prefer fill chunks over repeat chunks of equal count.
+     * @param avoidFillOrRepeat If true: don't emit a fill or repeat with a count equal to its size when the previous
+     *                          chunks is a Direct Copy (000) that is not at maximum size (32 or 1024).
+     * @param avoidLongRepeat If true: don't emit long copy chunks.
+     * @param maxScanDelay Number of bytes that are forced into Direct Copy (000) chunks after each
+     *                     non-Direct Copy chunk.
+     * @param copyCommandPref Copy command preference (when the command counts are tied), in order from most to least.
+     */
+    public Gen2SinglePassCompressor(boolean preferFillOverRepeat, boolean avoidFillOrRepeat, boolean avoidLongRepeat,
+<span class="nc" id="L63">                                    int maxScanDelay, CopyCommandPref copyCommandPref) {</span>
+<span class="nc bnc" id="L64" title="All 4 branches missed.">        if (maxScanDelay &lt; 0 || maxScanDelay &gt; 2) {</span>
+<span class="nc" id="L65">            throw new IllegalArgumentException(&quot;Max scan delay must be between 0-2&quot;);</span>
+        }
+<span class="nc" id="L67">        this.preferFillOverRepeat = preferFillOverRepeat;</span>
+<span class="nc" id="L68">        this.avoidFillOrRepeat = avoidFillOrRepeat;</span>
+<span class="nc" id="L69">        this.avoidLongRepeat = avoidLongRepeat;</span>
+<span class="nc" id="L70">        this.maxScanDelay = maxScanDelay;</span>
+<span class="nc" id="L71">        this.copyCommandPref = copyCommandPref;</span>
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public String toString() {
+<span class="nc" id="L76">        return &quot;SPC{&quot; + preferFillOverRepeat +</span>
+                &quot;, &quot; + avoidFillOrRepeat +
+                &quot;, &quot; + avoidLongRepeat +
+                &quot;, &quot; + maxScanDelay +
+                &quot;, &quot; + copyCommandPref +
+                '}';
+    }
+
+    @Override
+    public byte[] compress(byte[] uncompressed, byte[] bitFlipped) {
+
+<span class="nc" id="L87">        Chunk[] chunks = new Chunk[uncompressed.length];</span>
+<span class="nc" id="L88">        int curr = 0;</span>
+
+<span class="nc" id="L90">        int pos = 0;</span>
+<span class="nc" id="L91">        int previousData = 0;</span>
+<span class="nc" id="L92">        int scanDelay = 0;</span>
+
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        while (pos &lt; uncompressed.length) {</span>
+<span class="nc" id="L95">            Chunk fill = findBestFill(uncompressed, pos);</span>
+<span class="nc" id="L96">            Chunk repeat = findBestRepeat(uncompressed, bitFlipped, pos);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">            if (preferFillOverRepeat) {</span>
+<span class="nc" id="L98">                chunks[curr] = pickBestChunk(fill, repeat);</span>
+            } else {
+<span class="nc" id="L100">                chunks[curr] = pickBestChunk(repeat, fill);</span>
+            }
+
+<span class="nc" id="L103">            Chunk direct = new Chunk(Command.DIRECT_COPY, 1, pos);</span>
+<span class="nc" id="L104">            chunks[curr] = pickBestChunk(direct, chunks[curr]);</span>
+<span class="nc bnc" id="L105" title="All 10 branches missed.">            if (avoidFillOrRepeat &amp;&amp; (chunks[curr].size() == chunks[curr].count)</span>
+                    &amp;&amp; (previousData != 0) &amp;&amp; (previousData != SHORT_COMMAND_COUNT)
+                    &amp;&amp; (previousData != MAX_COMMAND_COUNT)) {
+<span class="nc" id="L108">                chunks[curr] = new Chunk(Command.DIRECT_COPY, 1, pos);</span>
+            }
+
+<span class="nc bnc" id="L111" title="All 2 branches missed.">            if (maxScanDelay != 0) {</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">                if (scanDelay &gt;= maxScanDelay) {</span>
+<span class="nc" id="L113">                    scanDelay = 0;</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">                } else if (chunks[curr].command != Command.DIRECT_COPY) {</span>
+<span class="nc" id="L115">                    scanDelay++;</span>
+<span class="nc" id="L116">                    chunks[curr] = new Chunk(Command.DIRECT_COPY, 1, pos);</span>
+                }
+            }
+
+<span class="nc bnc" id="L120" title="All 2 branches missed.">            if (chunks[curr].command != Command.DIRECT_COPY) {</span>
+<span class="nc" id="L121">                previousData = 0;</span>
+            } else {
+<span class="nc" id="L123">                previousData += chunks[curr].count;</span>
+            }
+<span class="nc" id="L125">            pos += chunks[curr].count;</span>
+
+<span class="nc" id="L127">            curr++;</span>
+<span class="nc" id="L128">        }</span>
+//        optimize(commands, current_command - commands);
+//        repack(&amp;commands, length);
+//        return commands;
+<span class="nc" id="L132">        List&lt;Chunk&gt; chunksList = Arrays.asList(Arrays.copyOf(chunks, curr)); // cut off the nulls</span>
+<span class="nc" id="L133">        chunksList = mergeDirectCopy(chunksList);</span>
+<span class="nc" id="L134">        return chunksToBytes(chunksList, uncompressed);</span>
+    }
+
+    private Chunk findBestRepeat(byte[] data, byte[] bitFlipped, int pos) {
+<span class="nc" id="L138">        Chunk simple = scanForwards(data, data, pos, Command.REPEAT);</span>
+<span class="nc" id="L139">        Chunk flipped = scanForwards(data, bitFlipped, pos, Command.BIT_REVERSE_REPEAT);</span>
+<span class="nc" id="L140">        Chunk backwards = scanBackwards(data, pos);</span>
+        Chunk chunk;
+<span class="nc bnc" id="L142" title="All 4 branches missed.">        switch (copyCommandPref) {</span>
+            case NRF:
+<span class="nc" id="L144">                chunk = pickBestChunk(simple, backwards, flipped);</span>
+<span class="nc" id="L145">                break;</span>
+            case RFN:
+<span class="nc" id="L147">                chunk = pickBestChunk(backwards, flipped, simple);</span>
+<span class="nc" id="L148">                break;</span>
+            case FRN:
+<span class="nc" id="L150">                chunk = pickBestChunk(flipped, backwards, simple);</span>
+<span class="nc" id="L151">                break;</span>
+            default:
+<span class="nc" id="L153">                throw new RuntimeException(&quot;Should be unreachable...&quot;);</span>
+        }
+<span class="nc bnc" id="L155" title="All 6 branches missed.">        if (avoidLongRepeat &amp;&amp; chunk != null &amp;&amp; (chunk.count &gt; SHORT_COMMAND_COUNT)) {</span>
+<span class="nc" id="L156">            chunk.count = SHORT_COMMAND_COUNT;</span>
+        }
+<span class="nc" id="L158">        return chunk;</span>
+    }
+
+    private Chunk scanForwards(byte[] target, byte[] source, int realPos, Command command) {
+<span class="nc" id="L162">        int limit = source.length - realPos;</span>
+<span class="nc" id="L163">        int bestMatch = 0;</span>
+<span class="nc" id="L164">        int bestLength = 0;</span>
+<span class="nc bnc" id="L165" title="All 2 branches missed.">        for (int pos = 0; pos &lt; realPos; pos++) {</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">            if (source[pos] != target[realPos]) continue;</span>
+
+<span class="nc" id="L168">            int currentLength = 0;</span>
+<span class="nc bnc" id="L169" title="All 4 branches missed.">            while ((currentLength &lt; limit) &amp;&amp; (source[pos + currentLength] == target[realPos + currentLength])) {</span>
+<span class="nc" id="L170">                currentLength++;</span>
+            }
+<span class="nc" id="L172">            currentLength = Math.min(currentLength, MAX_COMMAND_COUNT);</span>
+<span class="nc bnc" id="L173" title="All 2 branches missed.">            if (currentLength &gt; bestLength) {</span>
+<span class="nc" id="L174">                bestMatch = pos;</span>
+<span class="nc" id="L175">                bestLength = currentLength;</span>
+            }
+        }
+<span class="nc bnc" id="L178" title="All 2 branches missed.">        if (bestLength == 0) {</span>
+<span class="nc" id="L179">            return null;</span>
+        }
+<span class="nc" id="L181">        int offset = bestMatch;</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (offset + LOOKBACK_LIMIT &gt;= realPos) {</span>
+<span class="nc" id="L183">            offset -= realPos;</span>
+        }
+<span class="nc" id="L185">        return new Chunk(command, bestLength, offset);</span>
+    }
+
+    private Chunk scanBackwards (byte[] data, int realPos) {
+<span class="nc" id="L189">        int limit = data.length - realPos;</span>
+<span class="nc" id="L190">        limit = Math.min(realPos, limit);</span>
+
+<span class="nc" id="L192">        int bestMatch = 0;</span>
+<span class="nc" id="L193">        int bestLength = 0;</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">        for (int pos = 0; pos &lt; realPos; pos++) {</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">            if (data[pos] != data[realPos]) continue;</span>
+
+<span class="nc" id="L197">            int currentLength = 0;</span>
+<span class="nc bnc" id="L198" title="All 6 branches missed.">            while ((currentLength &lt;= pos) &amp;&amp; (currentLength &lt; limit) &amp;&amp;</span>
+                    (data[pos - currentLength] == data[realPos + currentLength])) {
+<span class="nc" id="L200">                currentLength++;</span>
+            }
+<span class="nc" id="L202">            currentLength = Math.min(currentLength, MAX_COMMAND_COUNT);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">            if (currentLength &gt; bestLength) {</span>
+<span class="nc" id="L204">                bestMatch = pos;</span>
+<span class="nc" id="L205">                bestLength = currentLength;</span>
+            }
+        }
+<span class="nc bnc" id="L208" title="All 2 branches missed.">        if (bestLength == 0) {</span>
+<span class="nc" id="L209">            return null;</span>
+        }
+<span class="nc" id="L211">        int offset = bestMatch;</span>
+<span class="nc bnc" id="L212" title="All 2 branches missed.">        if (offset + LOOKBACK_LIMIT &gt;= realPos) {</span>
+<span class="nc" id="L213">            offset -= realPos;</span>
+        }
+<span class="nc" id="L215">        return new Chunk(Command.BACKWARDS_REPEAT, bestLength, offset);</span>
+    }
+
+    private Chunk findBestFill(byte[] data, int pos) {
+
+<span class="nc bnc" id="L220" title="All 2 branches missed.">        if (pos + 1 &gt;= data.length) {</span>
+<span class="nc bnc" id="L221" title="All 2 branches missed.">            if (data[pos] != 0) {</span>
+<span class="nc" id="L222">                return new Chunk(Command.BYTE_FILL, 1, data[pos]);</span>
+            } else {
+<span class="nc" id="L224">                return new Chunk(Command.ZERO_FILL, 1, 0);</span>
+            }
+        }
+
+<span class="nc" id="L228">        byte[] value = {data[pos], data[pos + 1]};</span>
+<span class="nc" id="L229">        int limit = data.length - pos;</span>
+<span class="nc" id="L230">        limit = Math.min(limit, MAX_COMMAND_COUNT);</span>
+<span class="nc" id="L231">        int repCount = 2;</span>
+<span class="nc bnc" id="L232" title="All 4 branches missed.">        while ((repCount &lt; limit) &amp;&amp; (data[pos + repCount] == value[repCount &amp; 1])) {</span>
+<span class="nc" id="L233">            repCount++;</span>
+        }
+
+<span class="nc bnc" id="L236" title="All 2 branches missed.">        if (value[0] != value[1]) {</span>
+<span class="nc bnc" id="L237" title="All 4 branches missed.">            if (value[0] == 0 &amp;&amp; repCount &lt; 3) {</span>
+<span class="nc" id="L238">                return new Chunk(Command.ZERO_FILL, 1, 0);</span>
+            } else {
+<span class="nc" id="L240">                return new Chunk(Command.WORD_FILL, repCount, ((value[0] &amp; 0xFF) &lt;&lt; 8) + (value[1] &amp; 0xFF));</span>
+            }
+<span class="nc bnc" id="L242" title="All 2 branches missed.">        } else if (value[0] != 0) {</span>
+<span class="nc" id="L243">            return new Chunk(Command.BYTE_FILL, repCount, value[0]);</span>
+        } else {
+<span class="nc" id="L245">            return new Chunk(Command.ZERO_FILL, repCount, 0);</span>
+        }
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

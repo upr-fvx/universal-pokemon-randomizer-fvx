@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LunarCompressLibrary.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">compressors</a> &gt; <span class="el_source">LunarCompressLibrary.java</span></div><h1>LunarCompressLibrary.java</h1><pre class="source lang-java linenums">package compressors;
+
+import com.sun.jna.Library;
+import com.sun.jna.Native;
+
+/**
+ * Wraps the Lunar Compress .dll, by FuSoYa.
+ * &lt;a href=&quot;https://fusoya.eludevisibility.org/lc/index.html&quot;&gt;Source for Lunar Compress here&lt;/a&gt;.
+ * &lt;br&gt;
+ * Documentation for these methods is taken from the documentation of the .dll (version 1.90),
+ * with modifications to make them read &quot;in Java&quot;.
+ * The source documentation has not been included, but can be found in downloads of Lunar Compress (see link above).
+ */
+public interface LunarCompressLibrary extends Library {
+    String LUNAR_COMPRESS_PATH = &quot;Lunar_Compress_1.90_x64&quot;;
+
+    int LC_LZ3_FORMAT = 2;
+    int LC_LZ3_FORMAT2 = 0;
+
+<span class="nc" id="L20">    LunarCompressLibrary INSTANCE = Native.load(LUNAR_COMPRESS_PATH, LunarCompressLibrary.class);</span>
+
+    /**
+    Returns the current version of the DLL as an integer.
+    For example, version 1.30 of the DLL would return &quot;130&quot; (decimal).
+     **/
+    int LunarVersion();
+
+    int LunarDecompress(byte[] destination, int addressToStart, int maxDataSize, int format, int format2,
+                        int[] lastROMPosition);
+
+    /**
+     * Compress data from a byte array and place it into another array.
+     * &lt;br&gt;
+     * Returns the size of the compressed data.  A value of zero indicates
+     * failure.
+     * &lt;br&gt;
+     * The Source and Destination variables can point to the same array.
+     * &lt;br&gt;
+     * If the size of the compressed data is greater than MaxDataSize, the data
+     * will be truncated to fit into the array.  Note however that the size value
+     * returned by the function will not be the truncated size.
+     * &lt;br&gt;
+     * In general, a max limit of 0x10000 bytes is supported for the uncompressed
+     * data, which is the size of a HiROM SNES bank.  A few formats may have lower
+     * limits depending on their design.
+     * &lt;br&gt;
+     * If Destination=NULL and/or MaxDataSize=0, no data will be copied to the
+     * array but the function will still compress the data so it can return the
+     * size of it.
+     * @param source        source byte array of data to compress.
+     * @param destination   destination byte array for compressed data.
+     * @param dataSize      size of the data to compress in bytes.
+     * @param maxDataSize   maximum number of bytes to copy into dest.
+     * @param format        compression format (see LunarDecompress() table)
+     * @param format2       must be zero unless otherwise stated.
+     **/
+    int LunarRecompress(byte[] source, byte[] destination, int dataSize, int maxDataSize, int format, int format2);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

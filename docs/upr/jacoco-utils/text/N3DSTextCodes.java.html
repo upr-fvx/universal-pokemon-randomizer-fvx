@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>N3DSTextCodes.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">text</a> &gt; <span class="el_source">N3DSTextCodes.java</span></div><h1>N3DSTextCodes.java</h1><pre class="source lang-java linenums">package text;
+
+import java.util.HashMap;
+import java.util.Map;
+
+<span class="nc" id="L6">public class N3DSTextCodes {</span>
+
+    private static final int Type_XY = 0, Type_ORAS = 1, Type_SM = 2, Type_USUM = 3;
+
+<span class="nc" id="L10">    private static final Map&lt;Integer,String&gt; textVariableCodesXY = setupTextVariableCodes(Type_XY);</span>
+<span class="nc" id="L11">    private static final Map&lt;Integer,String&gt; textVariableCodesORAS = setupTextVariableCodes(Type_ORAS);</span>
+<span class="nc" id="L12">    private static final Map&lt;Integer,String&gt; textVariableCodesSM = setupTextVariableCodes(Type_SM);</span>
+
+    private static Map&lt;Integer,String&gt; setupTextVariableCodes(int romType) {
+<span class="nc" id="L15">        Map&lt;Integer,String&gt; map = new HashMap&lt;&gt;();</span>
+
+<span class="nc bnc" id="L17" title="All 2 branches missed.">        if (romType == Type_XY) {</span>
+<span class="nc" id="L18">            map.put(0xFF00, &quot;COLOR&quot;);</span>
+<span class="nc" id="L19">            map.put(0x0100, &quot;TRNAME&quot;);</span>
+<span class="nc" id="L20">            map.put(0x0101, &quot;PKNAME&quot;);</span>
+<span class="nc" id="L21">            map.put(0x0102, &quot;PKNICK&quot;);</span>
+<span class="nc" id="L22">            map.put(0x0103, &quot;TYPE&quot;);</span>
+<span class="nc" id="L23">            map.put(0x0105, &quot;LOCATION&quot;);</span>
+<span class="nc" id="L24">            map.put(0x0106, &quot;ABILITY&quot;);</span>
+<span class="nc" id="L25">            map.put(0x0107, &quot;MOVE&quot;);</span>
+<span class="nc" id="L26">            map.put(0x0108, &quot;ITEM1&quot;);</span>
+<span class="nc" id="L27">            map.put(0x0109, &quot;ITEM2&quot;);</span>
+<span class="nc" id="L28">            map.put(0x010A, &quot;sTRBAG&quot;);</span>
+<span class="nc" id="L29">            map.put(0x010B, &quot;BOX&quot;);</span>
+<span class="nc" id="L30">            map.put(0x010D, &quot;EVSTAT&quot;);</span>
+<span class="nc" id="L31">            map.put(0x0110, &quot;OPOWER&quot;);</span>
+<span class="nc" id="L32">            map.put(0x0127, &quot;RIBBON&quot;);</span>
+<span class="nc" id="L33">            map.put(0x0134, &quot;MIINAME&quot;);</span>
+<span class="nc" id="L34">            map.put(0x013E, &quot;WEATHER&quot;);</span>
+<span class="nc" id="L35">            map.put(0x0189, &quot;TRNICK&quot;);</span>
+<span class="nc" id="L36">            map.put(0x018A, &quot;1stchrTR&quot;);</span>
+<span class="nc" id="L37">            map.put(0x018B, &quot;SHOUTOUT&quot;);</span>
+<span class="nc" id="L38">            map.put(0x018E, &quot;BERRY&quot;);</span>
+<span class="nc" id="L39">            map.put(0x018F, &quot;REMFEEL&quot;);</span>
+<span class="nc" id="L40">            map.put(0x0190, &quot;REMQUAL&quot;);</span>
+<span class="nc" id="L41">            map.put(0x0191, &quot;WEBSITE&quot;);</span>
+<span class="nc" id="L42">            map.put(0x019C, &quot;CHOICECOS&quot;);</span>
+<span class="nc" id="L43">            map.put(0x01A1, &quot;GSYNCID&quot;);</span>
+<span class="nc" id="L44">            map.put(0x0192, &quot;PRVIDSAY&quot;);</span>
+<span class="nc" id="L45">            map.put(0x0193, &quot;BTLTEST&quot;);</span>
+<span class="nc" id="L46">            map.put(0x0195, &quot;GENLOC&quot;);</span>
+<span class="nc" id="L47">            map.put(0x0199, &quot;CHOICEFOOD&quot;);</span>
+<span class="nc" id="L48">            map.put(0x019A, &quot;HOTELITEM&quot;);</span>
+<span class="nc" id="L49">            map.put(0x019B, &quot;TAXISTOP&quot;);</span>
+<span class="nc" id="L50">            map.put(0x019F, &quot;MAISTITLE&quot;);</span>
+<span class="nc" id="L51">            map.put(0x1000, &quot;ITEMPLUR0&quot;);</span>
+<span class="nc" id="L52">            map.put(0x1001, &quot;ITEMPLUR1&quot;);</span>
+<span class="nc" id="L53">            map.put(0x1100, &quot;GENDBR&quot;);</span>
+<span class="nc" id="L54">            map.put(0x1101, &quot;NUMBRNCH&quot;);</span>
+<span class="nc" id="L55">            map.put(0x1302, &quot;iCOLOR2&quot;);</span>
+<span class="nc" id="L56">            map.put(0x1303, &quot;iCOLOR3&quot;);</span>
+<span class="nc" id="L57">            map.put(0x0200, &quot;NUM1&quot;);</span>
+<span class="nc" id="L58">            map.put(0x0201, &quot;NUM2&quot;);</span>
+<span class="nc" id="L59">            map.put(0x0202, &quot;NUM3&quot;);</span>
+<span class="nc" id="L60">            map.put(0x0203, &quot;NUM4&quot;);</span>
+<span class="nc" id="L61">            map.put(0x0204, &quot;NUM5&quot;);</span>
+<span class="nc" id="L62">            map.put(0x0205, &quot;NUM6&quot;);</span>
+<span class="nc" id="L63">            map.put(0x0206, &quot;NUM7&quot;);</span>
+<span class="nc" id="L64">            map.put(0x0207, &quot;NUM8&quot;);</span>
+<span class="nc" id="L65">            map.put(0x0208, &quot;NUM9&quot;);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        } else if (romType == Type_ORAS) {</span>
+<span class="nc" id="L67">            map.put(0xFF00, &quot;COLOR&quot;);</span>
+<span class="nc" id="L68">            map.put(0x0100, &quot;TRNAME&quot;);</span>
+<span class="nc" id="L69">            map.put(0x0101, &quot;PKNAME&quot;);</span>
+<span class="nc" id="L70">            map.put(0x0102, &quot;PKNICK&quot;);</span>
+<span class="nc" id="L71">            map.put(0x0103, &quot;TYPE&quot;);</span>
+<span class="nc" id="L72">            map.put(0x0105, &quot;LOCATION&quot;);</span>
+<span class="nc" id="L73">            map.put(0x0106, &quot;ABILITY&quot;);</span>
+<span class="nc" id="L74">            map.put(0x0107, &quot;MOVE&quot;);</span>
+<span class="nc" id="L75">            map.put(0x0108, &quot;ITEM1&quot;);</span>
+<span class="nc" id="L76">            map.put(0x0109, &quot;ITEM2&quot;);</span>
+<span class="nc" id="L77">            map.put(0x010A, &quot;sTRBAG&quot;);</span>
+<span class="nc" id="L78">            map.put(0x010B, &quot;BOX&quot;);</span>
+<span class="nc" id="L79">            map.put(0x010D, &quot;EVSTAT&quot;);</span>
+<span class="nc" id="L80">            map.put(0x0110, &quot;OPOWER&quot;);</span>
+<span class="nc" id="L81">            map.put(0x0127, &quot;RIBBON&quot;);</span>
+<span class="nc" id="L82">            map.put(0x0134, &quot;MIINAME&quot;);</span>
+<span class="nc" id="L83">            map.put(0x013E, &quot;WEATHER&quot;);</span>
+<span class="nc" id="L84">            map.put(0x0189, &quot;TRNICK&quot;);</span>
+<span class="nc" id="L85">            map.put(0x018A, &quot;1stchrTR&quot;);</span>
+<span class="nc" id="L86">            map.put(0x018B, &quot;SHOUTOUT&quot;);</span>
+<span class="nc" id="L87">            map.put(0x018E, &quot;BERRY&quot;);</span>
+<span class="nc" id="L88">            map.put(0x018F, &quot;REMFEEL&quot;);</span>
+<span class="nc" id="L89">            map.put(0x0190, &quot;REMQUAL&quot;);</span>
+<span class="nc" id="L90">            map.put(0x0191, &quot;WEBSITE&quot;);</span>
+<span class="nc" id="L91">            map.put(0x019C, &quot;CHOICECOS&quot;);</span>
+<span class="nc" id="L92">            map.put(0x01A1, &quot;GSYNCID&quot;);</span>
+<span class="nc" id="L93">            map.put(0x0192, &quot;PRVIDSAY&quot;);</span>
+<span class="nc" id="L94">            map.put(0x0193, &quot;BTLTEST&quot;);</span>
+<span class="nc" id="L95">            map.put(0x0195, &quot;GENLOC&quot;);</span>
+<span class="nc" id="L96">            map.put(0x0199, &quot;CHOICEFOOD&quot;);</span>
+<span class="nc" id="L97">            map.put(0x019A, &quot;HOTELITEM&quot;);</span>
+<span class="nc" id="L98">            map.put(0x019B, &quot;TAXISTOP&quot;);</span>
+<span class="nc" id="L99">            map.put(0x019F, &quot;MAISTITLE&quot;);</span>
+<span class="nc" id="L100">            map.put(0x1000, &quot;ITEMPLUR0&quot;);</span>
+<span class="nc" id="L101">            map.put(0x1001, &quot;ITEMPLUR1&quot;);</span>
+<span class="nc" id="L102">            map.put(0x1100, &quot;GENDBR&quot;);</span>
+<span class="nc" id="L103">            map.put(0x1101, &quot;NUMBRNCH&quot;);</span>
+<span class="nc" id="L104">            map.put(0x1302, &quot;iCOLOR2&quot;);</span>
+<span class="nc" id="L105">            map.put(0x1303, &quot;iCOLOR3&quot;);</span>
+<span class="nc" id="L106">            map.put(0x0200, &quot;NUM1&quot;);</span>
+<span class="nc" id="L107">            map.put(0x0201, &quot;NUM2&quot;);</span>
+<span class="nc" id="L108">            map.put(0x0202, &quot;NUM3&quot;);</span>
+<span class="nc" id="L109">            map.put(0x0203, &quot;NUM4&quot;);</span>
+<span class="nc" id="L110">            map.put(0x0204, &quot;NUM5&quot;);</span>
+<span class="nc" id="L111">            map.put(0x0205, &quot;NUM6&quot;);</span>
+<span class="nc" id="L112">            map.put(0x0206, &quot;NUM7&quot;);</span>
+<span class="nc" id="L113">            map.put(0x0207, &quot;NUM8&quot;);</span>
+<span class="nc" id="L114">            map.put(0x0208, &quot;NUM9&quot;);</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">        } else if (romType == Type_SM) {</span>
+<span class="nc" id="L116">            map.put(0xFF00, &quot;COLOR&quot;);</span>
+<span class="nc" id="L117">            map.put(0x0100, &quot;TRNAME&quot;);</span>
+<span class="nc" id="L118">            map.put(0x0101, &quot;PKNAME&quot;);</span>
+<span class="nc" id="L119">            map.put(0x0102, &quot;PKNICK&quot;);</span>
+<span class="nc" id="L120">            map.put(0x0103, &quot;TYPE&quot;);</span>
+<span class="nc" id="L121">            map.put(0x0105, &quot;LOCATION&quot;);</span>
+<span class="nc" id="L122">            map.put(0x0106, &quot;ABILITY&quot;);</span>
+<span class="nc" id="L123">            map.put(0x0107, &quot;MOVE&quot;);</span>
+<span class="nc" id="L124">            map.put(0x0108, &quot;ITEM1&quot;);</span>
+<span class="nc" id="L125">            map.put(0x0109, &quot;ITEM2&quot;);</span>
+<span class="nc" id="L126">            map.put(0x010A, &quot;sTRBAG&quot;);</span>
+<span class="nc" id="L127">            map.put(0x010B, &quot;BOX&quot;);</span>
+<span class="nc" id="L128">            map.put(0x010D, &quot;EVSTAT&quot;);</span>
+<span class="nc" id="L129">            map.put(0x0110, &quot;OPOWER&quot;);</span>
+<span class="nc" id="L130">            map.put(0x0127, &quot;RIBBON&quot;);</span>
+<span class="nc" id="L131">            map.put(0x0134, &quot;MIINAME&quot;);</span>
+<span class="nc" id="L132">            map.put(0x013E, &quot;WEATHER&quot;);</span>
+<span class="nc" id="L133">            map.put(0x0189, &quot;TRNICK&quot;);</span>
+<span class="nc" id="L134">            map.put(0x018A, &quot;1stchrTR&quot;);</span>
+<span class="nc" id="L135">            map.put(0x018B, &quot;SHOUTOUT&quot;);</span>
+<span class="nc" id="L136">            map.put(0x018E, &quot;BERRY&quot;);</span>
+<span class="nc" id="L137">            map.put(0x018F, &quot;REMFEEL&quot;);</span>
+<span class="nc" id="L138">            map.put(0x0190, &quot;REMQUAL&quot;);</span>
+<span class="nc" id="L139">            map.put(0x0191, &quot;WEBSITE&quot;);</span>
+<span class="nc" id="L140">            map.put(0x019C, &quot;CHOICECOS&quot;);</span>
+<span class="nc" id="L141">            map.put(0x01A1, &quot;GSYNCID&quot;);</span>
+<span class="nc" id="L142">            map.put(0x0192, &quot;PRVIDSAY&quot;);</span>
+<span class="nc" id="L143">            map.put(0x0193, &quot;BTLTEST&quot;);</span>
+<span class="nc" id="L144">            map.put(0x0195, &quot;GENLOC&quot;);</span>
+<span class="nc" id="L145">            map.put(0x0199, &quot;CHOICEFOOD&quot;);</span>
+<span class="nc" id="L146">            map.put(0x019A, &quot;HOTELITEM&quot;);</span>
+<span class="nc" id="L147">            map.put(0x019B, &quot;TAXISTOP&quot;);</span>
+<span class="nc" id="L148">            map.put(0x019F, &quot;MAISTITLE&quot;);</span>
+<span class="nc" id="L149">            map.put(0x1000, &quot;ITEMPLUR0&quot;);</span>
+<span class="nc" id="L150">            map.put(0x1001, &quot;ITEMPLUR1&quot;);</span>
+<span class="nc" id="L151">            map.put(0x1100, &quot;GENDBR&quot;);</span>
+<span class="nc" id="L152">            map.put(0x1101, &quot;NUMBRNCH&quot;);</span>
+<span class="nc" id="L153">            map.put(0x1302, &quot;iCOLOR2&quot;);</span>
+<span class="nc" id="L154">            map.put(0x1303, &quot;iCOLOR3&quot;);</span>
+<span class="nc" id="L155">            map.put(0x0200, &quot;NUM1&quot;);</span>
+<span class="nc" id="L156">            map.put(0x0201, &quot;NUM2&quot;);</span>
+<span class="nc" id="L157">            map.put(0x0202, &quot;NUM3&quot;);</span>
+<span class="nc" id="L158">            map.put(0x0203, &quot;NUM4&quot;);</span>
+<span class="nc" id="L159">            map.put(0x0204, &quot;NUM5&quot;);</span>
+<span class="nc" id="L160">            map.put(0x0205, &quot;NUM6&quot;);</span>
+<span class="nc" id="L161">            map.put(0x0206, &quot;NUM7&quot;);</span>
+<span class="nc" id="L162">            map.put(0x0207, &quot;NUM8&quot;);</span>
+<span class="nc" id="L163">            map.put(0x0208, &quot;NUM9&quot;);</span>
+        }
+<span class="nc" id="L165">        return map;</span>
+    }
+
+    public static Map&lt;Integer,String&gt; getTextVariableCodes(int romType) {
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        if (romType == Type_XY) {</span>
+<span class="nc" id="L170">            return textVariableCodesXY;</span>
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        } else if (romType == Type_ORAS) {</span>
+<span class="nc" id="L172">            return textVariableCodesORAS;</span>
+<span class="nc bnc" id="L173" title="All 4 branches missed.">        } else if (romType == Type_SM || romType == Type_USUM) {</span>
+<span class="nc" id="L174">            return textVariableCodesSM;</span>
+        }
+<span class="nc" id="L176">        return new HashMap&lt;&gt;();</span>
+    }
+
+    public static int getVariableCode(String name, int romType) {
+<span class="nc" id="L180">        Map&lt;Integer,String&gt; map = getTextVariableCodes(romType);</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        for (int k: map.keySet()) {</span>
+<span class="nc bnc" id="L182" title="All 2 branches missed.">            if (map.get(k).equals(name)) {</span>
+<span class="nc" id="L183">                return k;</span>
+            }
+<span class="nc" id="L185">        }</span>
+<span class="nc" id="L186">        return 0;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

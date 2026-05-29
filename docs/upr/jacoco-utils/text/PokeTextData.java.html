@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PokeTextData.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">text</a> &gt; <span class="el_source">PokeTextData.java</span></div><h1>PokeTextData.java</h1><pre class="source lang-java linenums">package text;
+
+/*----------------------------------------------------------------------------*/
+/*--  PokeTextData.java - decodes gen4 games text into Unicode              --*/
+/*--  Code derived from &quot;thenewpoketext&quot;, copyright (C) loadingNOW          --*/
+/*--  Ported to Java and bugfixed/customized by Dabomstew                   --*/
+/*----------------------------------------------------------------------------*/
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class PokeTextData {
+
+<span class="nc" id="L15">    private record PointerEntry(int ptr, int chars) {}</span>
+
+    private final byte[] data;
+    private List&lt;PointerEntry&gt; ptrlist;
+    public List&lt;String&gt; strlist;
+    public boolean compressFlag;
+
+<span class="nc" id="L22">    public PokeTextData(byte[] data) {</span>
+<span class="nc" id="L23">        this.data = Arrays.copyOf(data, data.length);</span>
+<span class="nc" id="L24">    }</span>
+
+    public byte[] get() {
+<span class="nc" id="L27">        return data;</span>
+    }
+
+    private int read16(int ofs) {
+<span class="nc" id="L31">        return (data[ofs] &amp; 0xFF) | ((data[ofs + 1] &amp; 0xFF) &lt;&lt; 8);</span>
+    }
+
+    private void write16(int d, int ofs) {
+<span class="nc" id="L35">        data[ofs] = (byte) (d &amp; 0xFF);</span>
+<span class="nc" id="L36">        data[ofs + 1] = (byte) ((d &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L37">    }</span>
+
+    private int read32(int ofs) {
+<span class="nc" id="L40">        return (data[ofs] &amp; 0xFF) | ((data[ofs + 1] &amp; 0xFF) &lt;&lt; 8) | ((data[ofs + 2] &amp; 0xFF) &lt;&lt; 16)</span>
+                | ((data[ofs + 3] &amp; 0xFF) &lt;&lt; 24);
+    }
+
+    private void write32(int d, int ofs) {
+<span class="nc" id="L45">        data[ofs] = (byte) (d &amp; 0xFF);</span>
+<span class="nc" id="L46">        data[ofs + 1] = (byte) ((d &gt;&gt; 8) &amp; 0xFF);</span>
+<span class="nc" id="L47">        data[ofs + 2] = (byte) ((d &gt;&gt; 16) &amp; 0xFF);</span>
+<span class="nc" id="L48">        data[ofs + 3] = (byte) ((d &gt;&gt; 24) &amp; 0xFF);</span>
+<span class="nc" id="L49">    }</span>
+
+    public void decrypt() {
+<span class="nc" id="L52">        DecyptPtrs(read16(0), read16(2), 4);</span>
+<span class="nc" id="L53">        this.ptrlist = CreatePtrList(read16(0), 4);</span>
+
+<span class="nc" id="L55">        this.strlist = new ArrayList&lt;&gt;();</span>
+
+<span class="nc" id="L57">        int num = read16(0);</span>
+
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        for (int i = 0; i &lt; num; i++) {</span>
+<span class="nc" id="L60">            PointerEntry entry = this.ptrlist.get(i);</span>
+<span class="nc" id="L61">            DecyptTxt(entry.chars(), i + 1, entry.ptr());</span>
+<span class="nc" id="L62">            this.strlist.add(MakeString(entry.chars(), entry.ptr()));</span>
+        }
+<span class="nc" id="L64">    }</span>
+
+    public void encrypt() {
+<span class="nc" id="L67">        this.ptrlist = CreatePtrList(read16(0), 4);</span>
+<span class="nc" id="L68">        int num = read16(0);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">        for (int i = 0; i &lt; num; i++) {</span>
+<span class="nc" id="L70">            PointerEntry entry = this.ptrlist.get(i);</span>
+<span class="nc" id="L71">            DecyptTxt(entry.chars(), i + 1, entry.ptr());</span>
+        }
+
+<span class="nc" id="L74">        DecyptPtrs(read16(0), read16(2), 4);</span>
+<span class="nc" id="L75">    }</span>
+
+    private void DecyptPtrs(int count, int key, int sdidx) {
+<span class="nc" id="L78">        key = (key * 0x2FD) &amp; 0xFFFF;</span>
+
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="nc" id="L81">            int key2 = (key * (i + 1) &amp; 0xFFFF);</span>
+<span class="nc" id="L82">            int realkey = key2 | (key2 &lt;&lt; 16);</span>
+<span class="nc" id="L83">            write32(read32(sdidx) ^ realkey, sdidx);</span>
+<span class="nc" id="L84">            write32(read32(sdidx + 4) ^ realkey, sdidx + 4);</span>
+<span class="nc" id="L85">            sdidx += 8;</span>
+        }
+
+<span class="nc" id="L88">    }</span>
+
+    private List&lt;PointerEntry&gt; CreatePtrList(int count, int sdidx) {
+<span class="nc" id="L91">        List&lt;PointerEntry&gt; ptrlist = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="nc" id="L93">            ptrlist.add(new PointerEntry(read32(sdidx), read32(sdidx + 4)));</span>
+<span class="nc" id="L94">            sdidx += 8;</span>
+        }
+<span class="nc" id="L96">        return ptrlist;</span>
+    }
+
+    private void DecyptTxt(int count, int id, int idx) {
+<span class="nc" id="L100">        int key = (0x91BD3 * id) &amp; 0xFFFF;</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="nc" id="L102">            write16(read16(idx) ^ key, idx);</span>
+<span class="nc" id="L103">            key += 0x493D;</span>
+<span class="nc" id="L104">            key = key &amp; 0xFFFF;</span>
+<span class="nc" id="L105">            idx += 2;</span>
+        }
+
+<span class="nc" id="L108">    }</span>
+
+    private String MakeString(int count, int idx) {
+<span class="nc" id="L111">        StringBuilder string = new StringBuilder();</span>
+<span class="nc" id="L112">        List&lt;Integer&gt; chars = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L113">        List&lt;Integer&gt; uncomp = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">        for (int i = 0; i &lt; count; i++) {</span>
+<span class="nc" id="L115">            chars.add(read16(idx));</span>
+<span class="nc" id="L116">            idx += 2;</span>
+        }
+
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (chars.get(0) == 0xF100) {</span>
+<span class="nc" id="L120">            compressFlag = true;</span>
+<span class="nc" id="L121">            int j = 1;</span>
+<span class="nc" id="L122">            int shift1 = 0;</span>
+<span class="nc" id="L123">            int trans = 0;</span>
+            while (true) {
+<span class="nc" id="L125">                int tmp = chars.get(j);</span>
+<span class="nc" id="L126">                tmp = tmp &gt;&gt; shift1;</span>
+<span class="nc" id="L127">                int tmp1 = tmp;</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                if (shift1 &gt;= 0xF) {</span>
+<span class="nc" id="L129">                    shift1 -= 0xF;</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">                    if (shift1 &gt; 0) {</span>
+<span class="nc" id="L131">                        tmp1 = (trans | ((chars.get(j) &lt;&lt; (9 - shift1)) &amp; 0x1FF));</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">                        if (tmp1 == 0x1FF) {</span>
+<span class="nc" id="L133">                            break;</span>
+                        }
+<span class="nc" id="L135">                        uncomp.add(tmp1);</span>
+                    }
+                } else {
+<span class="nc" id="L138">                    tmp1 = ((chars.get(j) &gt;&gt; shift1) &amp; 0x1FF);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">                    if (tmp1 == 0x1FF) {</span>
+<span class="nc" id="L140">                        break;</span>
+                    }
+<span class="nc" id="L142">                    uncomp.add(tmp1);</span>
+<span class="nc" id="L143">                    shift1 += 9;</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">                    if (shift1 &lt; 0xF) {</span>
+<span class="nc" id="L145">                        trans = ((chars.get(j) &gt;&gt; shift1) &amp; 0x1FF);</span>
+<span class="nc" id="L146">                        shift1 += 9;</span>
+                    }
+<span class="nc" id="L148">                    j += 1;</span>
+                }
+<span class="nc" id="L150">            }</span>
+<span class="nc" id="L151">            chars = uncomp;</span>
+        }
+<span class="nc" id="L153">        int i = 0;</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">        for (int c = 0; c &lt; chars.size(); c++) {</span>
+<span class="nc" id="L155">            int currChar = chars.get(i);</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">            if (UnicodeParser.tb[currChar] != null) {</span>
+<span class="nc" id="L157">                string.append(UnicodeParser.tb[currChar]);</span>
+            } else {
+<span class="nc bnc" id="L159" title="All 2 branches missed.">                if (currChar == 0xFFFE) {</span>
+<span class="nc" id="L160">                    i++;</span>
+<span class="nc" id="L161">                    string.append(&quot;\\v&quot;).append(String.format(&quot;%04X&quot;, chars.get(i)));</span>
+<span class="nc" id="L162">                    i++;</span>
+<span class="nc" id="L163">                    int total = chars.get(i);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">                    if (total == 0) {</span>
+<span class="nc" id="L165">                        string.append(&quot;\\x&quot;).append(String.format(&quot;%04X&quot;, 0));</span>
+                    }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                    for (int z = 0; z &lt; total; z++) {</span>
+<span class="nc" id="L168">                        i++;</span>
+<span class="nc" id="L169">                        string.append(&quot;\\z&quot;).append(String.format(&quot;%04X&quot;, chars.get(i)));</span>
+                    }
+<span class="nc bnc" id="L171" title="All 2 branches missed.">                } else if (currChar == 0xFFFF) {</span>
+<span class="nc" id="L172">                    break;</span>
+                } else {
+<span class="nc" id="L174">                    string.append(&quot;\\x&quot;).append(String.format(&quot;%04X&quot;, chars.get(i)));</span>
+                }
+            }
+<span class="nc" id="L177">            i++;</span>
+        }
+<span class="nc" id="L179">        return string.toString();</span>
+    }
+
+    public void SetKey(int key) {
+<span class="nc" id="L183">        write16(key, 2);</span>
+<span class="nc" id="L184">    }</span>
+
+    public int GetKey() {
+<span class="nc" id="L187">        return read16(2);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

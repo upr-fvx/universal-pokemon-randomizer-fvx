@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BLZCoder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">utils</a> &gt; <a href="index.source.html" class="el_package">cuecompressors</a> &gt; <span class="el_source">BLZCoder.java</span></div><h1>BLZCoder.java</h1><pre class="source lang-java linenums">package cuecompressors;
+
+import filefunctions.FileFunctions;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
+
+/*----------------------------------------------------------------------------*/
+/*--  BLZCoder.java - Bottom LZ coding for Nintendo GBA/DS/3DS              --*/
+/*--                                                                        --*/
+/*--  Contains code based on &quot;pk3DS&quot;, copyright (C) Kaphotics               --*/
+/*--  Contains code based on &quot;pokemon-x-y-icons&quot;, copyright (C) CatTrinket  --*/
+/*--  Contains code based on &quot;blz.c&quot;, copyright (C) 2011 CUE                --*/
+/*--  Above-listed code ported to Java by Dabomstew and UPR-ZX team under   --*/
+/*--  the terms of the GPL:                                                 --*/
+/*--                                                                        --*/
+/*--  This program is free software: you can redistribute it and/or modify  --*/
+/*--  it under the terms of the GNU General Public License as published by  --*/
+/*--  the Free Software Foundation, either version 3 of the License, or     --*/
+/*--  (at your option) any later version.                                   --*/
+/*--                                                                        --*/
+/*--  This program is distributed in the hope that it will be useful,       --*/
+/*--  but WITHOUT ANY WARRANTY; without even the implied warranty of        --*/
+/*--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          --*/
+/*--  GNU General Public License for more details.                          --*/
+/*--                                                                        --*/
+/*--  You should have received a copy of the GNU General Public License     --*/
+/*--  along with this program. If not, see &lt;http://www.gnu.org/licenses/&gt;.  --*/
+/*----------------------------------------------------------------------------*/
+
+public class BLZCoder {
+
+    public static void main(String[] args) {
+<span class="nc" id="L37">        new BLZCoder(args);</span>
+<span class="nc" id="L38">    }</span>
+
+    private static final int CMD_DECODE = 0;
+    private static final int CMD_ENCODE = 1;
+
+    private static final int BLZ_NORMAL = 0;
+    private static final int BLZ_BEST = 1;
+
+    private static final int BLZ_SHIFT = 1;
+    private static final int BLZ_MASK = 0x80;
+
+    private static final int BLZ_THRESHOLD = 2;
+    private static final int BLZ_N = 0x1002;
+    private static final int BLZ_F = 0x12;
+
+    private static final int RAW_MAXIM = 0x00FFFFFF;
+
+    private static final int BLZ_MAXIM = 0x01400000;
+
+    private boolean arm9;
+
+<span class="nc" id="L59">    public BLZCoder(String[] args) {</span>
+
+<span class="nc" id="L61">        int cmd, mode = 0, arg;</span>
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (args == null) {</span>
+            // going to be used internally
+<span class="nc" id="L65">            return;</span>
+        }
+
+<span class="nc" id="L68">        Title();</span>
+
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        if (args.length &lt; 1) {</span>
+<span class="nc" id="L71">            Usage();</span>
+        }
+
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (args[0].equalsIgnoreCase(&quot;-d&quot;)) {</span>
+<span class="nc" id="L75">            cmd = CMD_DECODE;</span>
+<span class="nc bnc" id="L76" title="All 4 branches missed.">        } else if (args[0].equalsIgnoreCase(&quot;-en&quot;) || args[0].equalsIgnoreCase(&quot;-en9&quot;)) {</span>
+<span class="nc" id="L77">            cmd = CMD_ENCODE;</span>
+<span class="nc" id="L78">            mode = BLZ_NORMAL;</span>
+<span class="nc bnc" id="L79" title="All 4 branches missed.">        } else if (args[0].equalsIgnoreCase(&quot;-eo&quot;) || args[0].equalsIgnoreCase(&quot;-eo9&quot;)) {</span>
+<span class="nc" id="L80">            cmd = CMD_ENCODE;</span>
+<span class="nc" id="L81">            mode = BLZ_BEST;</span>
+        } else {
+<span class="nc" id="L83">            EXIT(&quot;Command not supported\n&quot;);</span>
+<span class="nc" id="L84">            return;</span>
+        }
+
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (args.length &lt; 2) {</span>
+<span class="nc" id="L88">            EXIT(&quot;Filename not specified\n&quot;);</span>
+        }
+
+<span class="nc bnc" id="L91" title="All 3 branches missed.">        switch (cmd) {</span>
+        case CMD_DECODE:
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            for (arg = 1; arg &lt; args.length; arg++)</span>
+<span class="nc" id="L94">                BLZ_Decode(args[arg]);</span>
+            break;
+        case CMD_ENCODE:
+<span class="nc bnc" id="L97" title="All 4 branches missed.">            arm9 = (args[0].length() &gt; 3 &amp;&amp; args[0].charAt(3) == '9');</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            for (arg = 1; arg &lt; args.length; arg++)</span>
+<span class="nc" id="L99">                BLZ_Encode(args[arg], mode);</span>
+            break;
+        }
+
+<span class="nc" id="L103">        System.out.print(&quot;\nDone\n&quot;);</span>
+<span class="nc" id="L104">    }</span>
+
+    private void Usage() {
+<span class="nc" id="L107">        EXIT(&quot;Usage: BLZ command filename [filename [...]]\n&quot; + &quot;\n&quot; + &quot;command:\n&quot;</span>
+                + &quot;  -d ....... decode 'filename'\n&quot; + &quot;  -en[9] ... encode 'filename', normal mode\n&quot;
+                + &quot;  -eo[9] ... encode 'filename', optimal mode (LZ-CUE)\n&quot; + &quot;\n&quot;
+                + &quot;* '9' compress an ARM9 file with 0x4000 bytes decoded\n&quot;
+                + &quot;* multiple filenames and wildcards are permitted\n&quot;
+                + &quot;* the original file is overwritten with the new file\n&quot;
+                + &quot;* this codification is used in the DS overlay files\n&quot;);
+
+<span class="nc" id="L115">    }</span>
+
+    private void Title() {
+<span class="nc" id="L118">        System.out.print(&quot;\n&quot;);</span>
+<span class="nc" id="L119">        System.out.print(&quot;BLZ - (c) CUE 2011\n&quot;);</span>
+<span class="nc" id="L120">        System.out.print(&quot;Bottom LZ coding for Nintendo GBA/DS\n&quot;);</span>
+<span class="nc" id="L121">        System.out.print(&quot;\n&quot;);</span>
+<span class="nc" id="L122">    }</span>
+
+    private void EXIT(String text) {
+<span class="nc" id="L125">        System.out.print(text);</span>
+<span class="nc" id="L126">        System.exit(0);</span>
+<span class="nc" id="L127">    }</span>
+
+    private void Save(String filename, int[] buffer, int length) {
+        try {
+<span class="nc" id="L131">            FileOutputStream fos = new FileOutputStream(filename);</span>
+<span class="nc" id="L132">            byte[] write = new byte[length];</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            for (int i = 0; i &lt; length; i++) {</span>
+<span class="nc" id="L134">                write[i] = (byte) buffer[i];</span>
+            }
+<span class="nc" id="L136">            fos.write(write);</span>
+<span class="nc" id="L137">            fos.close();</span>
+<span class="nc" id="L138">        } catch (IOException e) {</span>
+<span class="nc" id="L139">            EXIT(&quot;\nFile write error\n&quot;);</span>
+<span class="nc" id="L140">        }</span>
+
+<span class="nc" id="L142">    }</span>
+
+    private void BLZ_Decode(String filename) {
+        try {
+<span class="nc" id="L146">            System.out.printf(&quot;- decoding '%s'&quot;, filename);</span>
+<span class="nc" id="L147">            long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L148">            byte[] buf = FileFunctions.readFileFullyIntoBuffer(filename);</span>
+<span class="nc" id="L149">            BLZResult result = BLZ_Decode(buf);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">            if (result != null)</span>
+<span class="nc" id="L151">                Save(filename, result.buffer, result.length);</span>
+<span class="nc" id="L152">            System.out.print(&quot; - done, time=&quot; + (System.currentTimeMillis() - startTime) + &quot;ms&quot;);</span>
+<span class="nc" id="L153">            System.out.print(&quot;\n&quot;);</span>
+<span class="nc" id="L154">        } catch (IOException e) {</span>
+<span class="nc" id="L155">            EXIT(&quot;\nFile read error\n&quot;);</span>
+<span class="nc" id="L156">        }</span>
+<span class="nc" id="L157">    }</span>
+
+    public byte[] BLZ_DecodePub(byte[] data, String reference) {
+<span class="nc bnc" id="L160" title="All 2 branches missed.">        if (reference.equals(&quot;GARC&quot;)) {</span>
+<span class="nc" id="L161">            return LZSS_Decode(data);</span>
+        } else {
+<span class="nc" id="L163">            BLZResult result = BLZ_Decode(data);</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">            if (result != null) {</span>
+<span class="nc" id="L165">                byte[] retbuf = new byte[result.length];</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">                for (int i = 0; i &lt; result.length; i++) {</span>
+<span class="nc" id="L167">                    retbuf[i] = (byte) result.buffer[i];</span>
+                }
+<span class="nc" id="L169">                return retbuf;</span>
+            } else {
+<span class="nc" id="L171">                return null;</span>
+            }
+        }
+    }
+
+    private BLZResult BLZ_Decode(byte[] data) {
+        int[] pak_buffer, raw_buffer;
+        int pak, raw, pak_end, raw_end;
+        int pak_len, raw_len, len, pos, inc_len, hdr_len, enc_len, dec_len;
+<span class="nc" id="L180">        int flags = 0, mask;</span>
+
+<span class="nc" id="L182">        pak_buffer = prepareData(data);</span>
+<span class="nc" id="L183">        pak_len = pak_buffer.length - 3;</span>
+
+<span class="nc" id="L185">        inc_len = readUnsigned(pak_buffer, pak_len - 4);</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">        if (inc_len &lt; 1) {</span>
+<span class="nc" id="L187">            System.out.print(&quot;, WARNING: not coded file!&quot;);</span>
+<span class="nc" id="L188">            enc_len = 0;</span>
+<span class="nc" id="L189">            dec_len = pak_len;</span>
+<span class="nc" id="L190">            pak_len = 0;</span>
+<span class="nc" id="L191">            raw_len = dec_len;</span>
+        } else {
+<span class="nc bnc" id="L193" title="All 2 branches missed.">            if (pak_len &lt; 8) {</span>
+<span class="nc" id="L194">                EXIT(&quot;\nFile has a bad header\n&quot;);</span>
+<span class="nc" id="L195">                return null;</span>
+            }
+<span class="nc" id="L197">            hdr_len = pak_buffer[pak_len - 5];</span>
+<span class="nc bnc" id="L198" title="All 4 branches missed.">            if (hdr_len &lt; 8 || hdr_len &gt; 0xB) {</span>
+<span class="nc" id="L199">                EXIT(&quot;\nBad header length\n&quot;);</span>
+<span class="nc" id="L200">                return null;</span>
+            }
+<span class="nc bnc" id="L202" title="All 2 branches missed.">            if (pak_len &lt;= hdr_len) {</span>
+<span class="nc" id="L203">                EXIT(&quot;\nBad length\n&quot;);</span>
+<span class="nc" id="L204">                return null;</span>
+            }
+<span class="nc" id="L206">            enc_len = readUnsigned(pak_buffer, pak_len - 8) &amp; 0x00FFFFFF;</span>
+<span class="nc" id="L207">            dec_len = pak_len - enc_len;</span>
+<span class="nc" id="L208">            pak_len = enc_len - hdr_len;</span>
+<span class="nc" id="L209">            raw_len = dec_len + enc_len + inc_len;</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">            if (raw_len &gt; RAW_MAXIM) {</span>
+<span class="nc" id="L211">                EXIT(&quot;\nBad decoded length\n&quot;);</span>
+<span class="nc" id="L212">                return null;</span>
+            }
+        }
+
+<span class="nc" id="L216">        raw_buffer = new int[raw_len];</span>
+
+<span class="nc" id="L218">        pak = 0;</span>
+<span class="nc" id="L219">        raw = 0;</span>
+<span class="nc" id="L220">        pak_end = dec_len + pak_len;</span>
+<span class="nc" id="L221">        raw_end = raw_len;</span>
+
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        for (len = 0; len &lt; dec_len; len++) {</span>
+<span class="nc" id="L224">            raw_buffer[raw++] = pak_buffer[pak++];</span>
+        }
+
+<span class="nc" id="L227">        BLZ_Invert(pak_buffer, dec_len, pak_len);</span>
+
+<span class="nc" id="L229">        mask = 0;</span>
+
+<span class="nc bnc" id="L231" title="All 2 branches missed.">        while (raw &lt; raw_end) {</span>
+<span class="nc bnc" id="L232" title="All 2 branches missed.">            if ((mask = (mask &gt;&gt;&gt; BLZ_SHIFT)) == 0) {</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">                if (pak == pak_end) {</span>
+<span class="nc" id="L234">                    break;</span>
+                }
+<span class="nc" id="L236">                flags = pak_buffer[pak++];</span>
+<span class="nc" id="L237">                mask = BLZ_MASK;</span>
+            }
+
+<span class="nc bnc" id="L240" title="All 2 branches missed.">            if ((flags &amp; mask) == 0) {</span>
+<span class="nc bnc" id="L241" title="All 2 branches missed.">                if (pak == pak_end) {</span>
+<span class="nc" id="L242">                    break;</span>
+                }
+<span class="nc" id="L244">                raw_buffer[raw++] = pak_buffer[pak++];</span>
+            } else {
+<span class="nc bnc" id="L246" title="All 2 branches missed.">                if ((pak + 1) &gt;= pak_end) {</span>
+<span class="nc" id="L247">                    break;</span>
+                }
+<span class="nc" id="L249">                pos = pak_buffer[pak++] &lt;&lt; 8;</span>
+<span class="nc" id="L250">                pos |= pak_buffer[pak++];</span>
+<span class="nc" id="L251">                len = (pos &gt;&gt;&gt; 12) + BLZ_THRESHOLD + 1;</span>
+<span class="nc bnc" id="L252" title="All 2 branches missed.">                if (raw + len &gt; raw_end) {</span>
+<span class="nc" id="L253">                    System.out.print(&quot;, WARNING: wrong decoded length!&quot;);</span>
+<span class="nc" id="L254">                    len = raw_end - raw;</span>
+                }
+<span class="nc" id="L256">                pos = (pos &amp; 0xFFF) + 3;</span>
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                while ((len--) &gt; 0) {</span>
+<span class="nc" id="L258">                    int charHere = raw_buffer[raw - pos];</span>
+<span class="nc" id="L259">                    raw_buffer[raw++] = charHere;</span>
+<span class="nc" id="L260">                }</span>
+            }
+        }
+
+<span class="nc" id="L264">        BLZ_Invert(raw_buffer, dec_len, raw_len - dec_len);</span>
+
+<span class="nc" id="L266">        raw_len = raw;</span>
+
+<span class="nc bnc" id="L268" title="All 2 branches missed.">        if (raw != raw_end) {</span>
+<span class="nc" id="L269">            System.out.print(&quot;, WARNING: unexpected end of encoded file!&quot;);</span>
+        }
+
+<span class="nc" id="L272">        return new BLZResult(raw_buffer, raw_len);</span>
+
+    }
+
+    // LZSS Decoding ported to Java (based on pk3DS by Kaphotics and pokemon-x-y-icons by CatTrinket)
+
+    private byte[] LZSS_Decode(byte[] data) {
+<span class="nc" id="L279">        ByteBuffer buf = ByteBuffer.wrap(data);</span>
+<span class="nc" id="L280">        buf.order(ByteOrder.LITTLE_ENDIAN);</span>
+<span class="nc bnc" id="L281" title="All 2 branches missed.">        if (buf.get(0) != 0x11) {</span>
+<span class="nc" id="L282">            System.err.println(&quot;Not a valid LZSS compressed file&quot;);</span>
+<span class="nc" id="L283">            return null;</span>
+        }
+<span class="nc" id="L285">        int decSize = buf.getInt() &gt;&gt;&gt; 8;</span>
+<span class="nc bnc" id="L286" title="All 2 branches missed.">        if (decSize == 0) {</span>
+<span class="nc" id="L287">            decSize = buf.getInt();</span>
+        }
+
+<span class="nc" id="L290">        ByteBuffer outBuf = ByteBuffer.allocate(decSize);</span>
+<span class="nc" id="L291">        byte flags = 0;</span>
+<span class="nc" id="L292">        int mask = 1;</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">        while (outBuf.position() &lt; decSize) {</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">            if (mask == 1) {</span>
+<span class="nc bnc" id="L295" title="All 2 branches missed.">                if (buf.position() &gt;= data.length) {</span>
+<span class="nc" id="L296">                    System.err.println(&quot;Not enough data&quot;);</span>
+<span class="nc" id="L297">                    return null;</span>
+                }
+<span class="nc" id="L299">                flags = buf.get();</span>
+<span class="nc" id="L300">                mask = 0x80;</span>
+            } else {
+<span class="nc" id="L302">                mask &gt;&gt;&gt;= 1;</span>
+            }
+
+<span class="nc bnc" id="L305" title="All 2 branches missed.">            if ((flags &amp; mask) &gt; 0) {</span>
+<span class="nc bnc" id="L306" title="All 2 branches missed.">                if (buf.position() &gt;= data.length) {</span>
+<span class="nc" id="L307">                    System.err.println(&quot;Not enough data&quot;);</span>
+<span class="nc" id="L308">                    return null;</span>
+                }
+<span class="nc" id="L310">                byte byte1 = buf.get();</span>
+<span class="nc" id="L311">                int length = byte1 &gt;&gt; 4;</span>
+                int disp;
+<span class="nc bnc" id="L313" title="All 2 branches missed.">                if (length == 0) {</span>
+<span class="nc bnc" id="L314" title="All 2 branches missed.">                    if (buf.position() + 1 &gt;= data.length) {</span>
+<span class="nc" id="L315">                        System.err.println(&quot;Not enough data&quot;);</span>
+<span class="nc" id="L316">                        return null;</span>
+                    }
+<span class="nc" id="L318">                    byte byte2 = buf.get();</span>
+<span class="nc" id="L319">                    byte byte3 = buf.get();</span>
+<span class="nc" id="L320">                    length = (((byte1 &amp; 0x0F) &lt;&lt; 4) | ((byte2 &amp; 0xFF) &gt;&gt;&gt; 4)) + 0x11;</span>
+<span class="nc" id="L321">                    disp = (((byte2 &amp; 0x0F) &lt;&lt; 8) | (byte3 &amp; 0xFF)) + 0x1;</span>
+<span class="nc bnc" id="L322" title="All 2 branches missed.">                } else if (length == 1) {</span>
+<span class="nc bnc" id="L323" title="All 2 branches missed.">                    if (buf.position() + 2 &gt;= data.length) {</span>
+<span class="nc" id="L324">                        System.err.println(&quot;Not enough data&quot;);</span>
+<span class="nc" id="L325">                        return null;</span>
+                    }
+
+<span class="nc" id="L328">                    byte byte2 = buf.get();</span>
+<span class="nc" id="L329">                    byte byte3 = buf.get();</span>
+<span class="nc" id="L330">                    byte byte4 = buf.get();</span>
+
+<span class="nc" id="L332">                    length = (((byte1 &amp; 0x0F) &lt;&lt; 12) | ((byte2 &amp; 0xFF) &lt;&lt; 4) | ((byte3 &amp; 0xFF) &gt;&gt;&gt; 4)) + 0x111;</span>
+<span class="nc" id="L333">                    disp = (((byte3 &amp; 0x0F) &lt;&lt; 8) | (byte4 &amp; 0xFF)) + 0x1;</span>
+<span class="nc" id="L334">                } else {</span>
+<span class="nc bnc" id="L335" title="All 2 branches missed.">                    if (buf.position() &gt; data.length) {</span>
+<span class="nc" id="L336">                        System.err.println(&quot;Not enough data&quot;);</span>
+<span class="nc" id="L337">                        return null;</span>
+                    }
+<span class="nc" id="L339">                    byte byte2 = buf.get();</span>
+
+<span class="nc" id="L341">                    length = ((byte1 &amp; 0xF0) &gt;&gt;&gt; 4) + 0x1;</span>
+<span class="nc" id="L342">                    disp = (((byte1 &amp; 0x0F) &lt;&lt; 8) | (byte2 &amp; 0xFF)) + 0x1;</span>
+                }
+
+<span class="nc bnc" id="L345" title="All 2 branches missed.">                if (disp &gt; outBuf.position()) {</span>
+<span class="nc" id="L346">                    System.err.println(&quot;oops&quot;);</span>
+<span class="nc" id="L347">                    return null;</span>
+                }
+<span class="nc" id="L349">                int bufIndex = outBuf.position() - disp;</span>
+<span class="nc bnc" id="L350" title="All 2 branches missed.">                for (int i = 0; i &lt; length; i++) {</span>
+<span class="nc" id="L351">                    byte next = outBuf.get(bufIndex);</span>
+<span class="nc" id="L352">                    bufIndex++;</span>
+<span class="nc" id="L353">                    outBuf.put(next);</span>
+                }
+<span class="nc" id="L355">            } else {</span>
+<span class="nc bnc" id="L356" title="All 2 branches missed.">                if (buf.position() &gt; data.length) {</span>
+<span class="nc" id="L357">                    System.err.println(&quot;Not enough data&quot;);</span>
+<span class="nc" id="L358">                    return null;</span>
+                }
+<span class="nc" id="L360">                byte next = buf.get();</span>
+<span class="nc" id="L361">                outBuf.put(next);</span>
+
+<span class="nc" id="L363">            }</span>
+        }
+<span class="nc bnc" id="L365" title="All 2 branches missed.">        if ((buf.position() ^ (buf.position() &amp; 0x3)) + 4 &lt; data.length) {</span>
+<span class="nc" id="L366">            System.err.println(&quot;Too much input&quot;);</span>
+<span class="nc" id="L367">            return null;</span>
+        }
+<span class="nc" id="L369">        outBuf.flip();</span>
+<span class="nc" id="L370">        return outBuf.array();</span>
+    }
+
+    private int[] prepareData(byte[] data) {
+<span class="nc" id="L374">        int fs = data.length;</span>
+<span class="nc" id="L375">        int[] fb = new int[fs + 3];</span>
+<span class="nc bnc" id="L376" title="All 2 branches missed.">        for (int i = 0; i &lt; fs; i++) {</span>
+<span class="nc" id="L377">            fb[i] = data[i] &amp; 0xFF;</span>
+        }
+<span class="nc" id="L379">        return fb;</span>
+    }
+
+    private int readUnsigned(int[] buffer, int offset) {
+<span class="nc" id="L383">        return buffer[offset] | (buffer[offset + 1] &lt;&lt; 8) | (buffer[offset + 2] &lt;&lt; 16)</span>
+                | ((buffer[offset + 3] &amp; 0x7F) &lt;&lt; 24);
+    }
+
+    private void writeUnsigned(int[] buffer, int offset, int value) {
+<span class="nc" id="L388">        buffer[offset] = value &amp; 0xFF;</span>
+<span class="nc" id="L389">        buffer[offset + 1] = (value &gt;&gt; 8) &amp; 0xFF;</span>
+<span class="nc" id="L390">        buffer[offset + 2] = (value &gt;&gt; 16) &amp; 0xFF;</span>
+<span class="nc" id="L391">        buffer[offset + 3] = (value &gt;&gt; 24) &amp; 0x7F;</span>
+<span class="nc" id="L392">    }</span>
+
+    private int new_len;
+
+    private void BLZ_Encode(String filename, int mode) {
+        try {
+<span class="nc" id="L398">            System.out.printf(&quot;- encoding '%s'&quot;, filename);</span>
+<span class="nc" id="L399">            long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L400">            byte[] buf = FileFunctions.readFileFullyIntoBuffer(filename);</span>
+<span class="nc" id="L401">            BLZResult result = BLZ_Encode(buf, mode);</span>
+<span class="nc bnc" id="L402" title="All 2 branches missed.">            if (result != null)</span>
+<span class="nc" id="L403">                Save(filename, result.buffer, result.length);</span>
+<span class="nc" id="L404">            System.out.print(&quot; - done, time=&quot; + (System.currentTimeMillis() - startTime) + &quot;ms&quot;);</span>
+<span class="nc" id="L405">            System.out.print(&quot;\n&quot;);</span>
+<span class="nc" id="L406">        } catch (IOException e) {</span>
+<span class="nc" id="L407">            EXIT(&quot;\nFile read error\n&quot;);</span>
+<span class="nc" id="L408">        }</span>
+<span class="nc" id="L409">    }</span>
+
+    public byte[] BLZ_EncodePub(byte[] data, boolean arm9, boolean best, String reference) {
+<span class="nc bnc" id="L412" title="All 2 branches missed.">        int mode = best ? BLZ_BEST : BLZ_NORMAL;</span>
+<span class="nc" id="L413">        this.arm9 = arm9;</span>
+<span class="nc bnc" id="L414" title="All 2 branches missed.">        if (reference.equals(&quot;GARC&quot;)) {</span>
+<span class="nc" id="L415">            return LZSS_Encode(data);</span>
+        } else {
+<span class="nc" id="L417">            System.out.printf(&quot;- encoding '%s' (memory)&quot;, reference);</span>
+<span class="nc" id="L418">            long startTime = System.currentTimeMillis();</span>
+<span class="nc" id="L419">            BLZResult result = BLZ_Encode(data, mode);</span>
+<span class="nc" id="L420">            System.out.print(&quot; - done, time=&quot; + (System.currentTimeMillis() - startTime) + &quot;ms&quot;);</span>
+<span class="nc" id="L421">            System.out.print(&quot;\n&quot;);</span>
+<span class="nc bnc" id="L422" title="All 2 branches missed.">            if (result != null) {</span>
+<span class="nc" id="L423">                byte[] retbuf = new byte[result.length];</span>
+<span class="nc bnc" id="L424" title="All 2 branches missed.">                for (int i = 0; i &lt; result.length; i++) {</span>
+<span class="nc" id="L425">                    retbuf[i] = (byte) result.buffer[i];</span>
+                }
+<span class="nc" id="L427">                return retbuf;</span>
+            } else {
+<span class="nc" id="L429">                return null;</span>
+            }
+        }
+    }
+
+    private BLZResult BLZ_Encode(byte[] data, int mode) {
+        int[] raw_buffer, pak_buffer, new_buffer;
+        int raw_len, pak_len;
+
+<span class="nc" id="L438">        new_len = 0;</span>
+
+<span class="nc" id="L440">        raw_buffer = prepareData(data);</span>
+<span class="nc" id="L441">        raw_len = raw_buffer.length - 3;</span>
+
+<span class="nc" id="L443">        pak_buffer = null;</span>
+<span class="nc" id="L444">        pak_len = BLZ_MAXIM + 1;</span>
+
+<span class="nc" id="L446">        new_buffer = BLZ_Code(raw_buffer, raw_len, mode);</span>
+
+<span class="nc bnc" id="L448" title="All 2 branches missed.">        if (new_len &lt; pak_len) {</span>
+<span class="nc" id="L449">            pak_buffer = new_buffer;</span>
+<span class="nc" id="L450">            pak_len = new_len;</span>
+        }
+<span class="nc" id="L452">        return new BLZResult(pak_buffer, pak_len);</span>
+    }
+
+    private int[] BLZ_Code(int[] raw_buffer, int raw_len, int best) {
+        int[] pak_buffer, tmp;
+<span class="nc" id="L457">        int pak, raw, raw_end, flg = 0;</span>
+        int pak_len, inc_len, hdr_len, enc_len, len;
+<span class="nc" id="L459">        int len_best, pos_best = 0, len_next, pos_next = 0, len_post, pos_post = 0;</span>
+        int pak_tmp, raw_tmp, raw_new;
+        int mask;
+
+<span class="nc" id="L463">        pak_tmp = 0;</span>
+<span class="nc" id="L464">        raw_tmp = raw_len;</span>
+
+<span class="nc" id="L466">        pak_len = raw_len + ((raw_len + 7) / 8) + 11;</span>
+<span class="nc" id="L467">        pak_buffer = new int[pak_len];</span>
+
+<span class="nc" id="L469">        raw_new = raw_len;</span>
+
+<span class="nc bnc" id="L471" title="All 2 branches missed.">        if (arm9) {</span>
+            // We don't do any of the checks here
+            // Presume that we actually are using an arm9
+<span class="nc" id="L474">            raw_new -= 0x4000;</span>
+        }
+
+<span class="nc" id="L477">        BLZ_Invert(raw_buffer, 0, raw_len);</span>
+
+<span class="nc" id="L479">        pak = 0;</span>
+<span class="nc" id="L480">        raw = 0;</span>
+<span class="nc" id="L481">        raw_end = raw_new;</span>
+
+<span class="nc" id="L483">        mask = 0;</span>
+<span class="nc bnc" id="L484" title="All 2 branches missed.">        while (raw &lt; raw_end) {</span>
+<span class="nc bnc" id="L485" title="All 2 branches missed.">            if ((mask = (mask &gt;&gt;&gt; BLZ_SHIFT)) == 0) {</span>
+<span class="nc" id="L486">                pak_buffer[(flg = pak++)] = 0;</span>
+<span class="nc" id="L487">                mask = BLZ_MASK;</span>
+            }
+
+<span class="nc" id="L490">            SearchPair sl1 = SEARCH(pos_best, raw_buffer, raw, raw_end);</span>
+<span class="nc" id="L491">            len_best = sl1.l;</span>
+<span class="nc" id="L492">            pos_best = sl1.p;</span>
+
+            // LZ-CUE optimization start
+<span class="nc bnc" id="L495" title="All 2 branches missed.">            if (best == BLZ_BEST) {</span>
+<span class="nc bnc" id="L496" title="All 2 branches missed.">                if (len_best &gt; BLZ_THRESHOLD) {</span>
+<span class="nc bnc" id="L497" title="All 2 branches missed.">                    if (raw + len_best &lt; raw_end) {</span>
+<span class="nc" id="L498">                        raw += len_best;</span>
+<span class="nc" id="L499">                        SearchPair sl2 = SEARCH(pos_next, raw_buffer, raw, raw_end);</span>
+<span class="nc" id="L500">                        len_next = sl2.l;</span>
+<span class="nc" id="L501">                        pos_next = sl2.p;</span>
+<span class="nc" id="L502">                        raw -= (len_best - 1);</span>
+<span class="nc" id="L503">                        SearchPair sl3 = SEARCH(pos_post, raw_buffer, raw, raw_end);</span>
+<span class="nc" id="L504">                        len_post = sl3.l;</span>
+<span class="nc" id="L505">                        pos_post = sl3.p;</span>
+<span class="nc" id="L506">                        raw--;</span>
+
+<span class="nc bnc" id="L508" title="All 2 branches missed.">                        if (len_next &lt;= BLZ_THRESHOLD) {</span>
+<span class="nc" id="L509">                            len_next = 1;</span>
+                        }
+<span class="nc bnc" id="L511" title="All 2 branches missed.">                        if (len_post &lt;= BLZ_THRESHOLD) {</span>
+<span class="nc" id="L512">                            len_post = 1;</span>
+                        }
+<span class="nc bnc" id="L514" title="All 2 branches missed.">                        if ((len_best + len_next) &lt;= (1 + len_post)) {</span>
+<span class="nc" id="L515">                            len_best = 1;</span>
+                        }
+                    }
+                }
+            }
+            // LZ-CUE optimization end
+<span class="nc" id="L521">            pak_buffer[flg] = (pak_buffer[flg] &lt;&lt; 1);</span>
+<span class="nc bnc" id="L522" title="All 2 branches missed.">            if (len_best &gt; BLZ_THRESHOLD) {</span>
+<span class="nc" id="L523">                raw += len_best;</span>
+<span class="nc" id="L524">                pak_buffer[flg] |= 1;</span>
+<span class="nc" id="L525">                pak_buffer[pak++] = ((len_best - (BLZ_THRESHOLD + 1)) &lt;&lt; 4) | ((pos_best - 3) &gt;&gt;&gt; 8);</span>
+<span class="nc" id="L526">                pak_buffer[pak++] = (pos_best - 3) &amp; 0xFF;</span>
+            } else {
+<span class="nc" id="L528">                pak_buffer[pak++] = raw_buffer[raw++];</span>
+            }
+
+<span class="nc bnc" id="L531" title="All 2 branches missed.">            if (pak + raw_len - raw &lt; pak_tmp + raw_tmp) {</span>
+<span class="nc" id="L532">                pak_tmp = pak;</span>
+<span class="nc" id="L533">                raw_tmp = raw_len - raw;</span>
+            }
+<span class="nc" id="L535">        }</span>
+
+<span class="nc bnc" id="L537" title="All 4 branches missed.">        while ((mask &gt; 0) &amp;&amp; (mask != 1)) {</span>
+<span class="nc" id="L538">            mask = (mask &gt;&gt;&gt; BLZ_SHIFT);</span>
+<span class="nc" id="L539">            pak_buffer[flg] = pak_buffer[flg] &lt;&lt; 1;</span>
+        }
+
+<span class="nc" id="L542">        pak_len = pak;</span>
+
+<span class="nc" id="L544">        BLZ_Invert(raw_buffer, 0, raw_len);</span>
+<span class="nc" id="L545">        BLZ_Invert(pak_buffer, 0, pak_len);</span>
+
+<span class="nc bnc" id="L547" title="All 4 branches missed.">        if (pak_tmp == 0 || (raw_len + 4 &lt; ((pak_tmp + raw_tmp + 3) &amp; 0xFFFFFFFC) + 8)) {</span>
+<span class="nc" id="L548">            pak = 0;</span>
+<span class="nc" id="L549">            raw = 0;</span>
+<span class="nc" id="L550">            raw_end = raw_len;</span>
+
+<span class="nc bnc" id="L552" title="All 2 branches missed.">            while (raw &lt; raw_end) {</span>
+<span class="nc" id="L553">                pak_buffer[pak] = raw_buffer[raw];</span>
+            }
+
+<span class="nc bnc" id="L556" title="All 2 branches missed.">            while ((pak &amp; 3) &gt; 0) {</span>
+<span class="nc" id="L557">                pak_buffer[pak++] = 0;</span>
+            }
+
+<span class="nc" id="L560">            pak_buffer[pak++] = 0;</span>
+<span class="nc" id="L561">            pak_buffer[pak++] = 0;</span>
+<span class="nc" id="L562">            pak_buffer[pak++] = 0;</span>
+<span class="nc" id="L563">            pak_buffer[pak++] = 0;</span>
+        } else {
+<span class="nc" id="L565">            tmp = new int[raw_tmp + pak_tmp + 11];</span>
+<span class="nc bnc" id="L566" title="All 2 branches missed.">            for (len = 0; len &lt; raw_tmp; len++) {</span>
+<span class="nc" id="L567">                tmp[len] = raw_buffer[len];</span>
+            }
+<span class="nc bnc" id="L569" title="All 2 branches missed.">            for (len = 0; len &lt; pak_tmp; len++) {</span>
+<span class="nc" id="L570">                tmp[raw_tmp + len] = pak_buffer[len + pak_len - pak_tmp];</span>
+            }
+
+<span class="nc" id="L573">            pak_buffer = tmp;</span>
+
+<span class="nc" id="L575">            pak = raw_tmp + pak_tmp;</span>
+
+<span class="nc" id="L577">            enc_len = pak_tmp;</span>
+<span class="nc" id="L578">            hdr_len = 8;</span>
+<span class="nc" id="L579">            inc_len = raw_len - pak_tmp - raw_tmp;</span>
+
+<span class="nc bnc" id="L581" title="All 2 branches missed.">            while ((pak &amp; 3) &gt; 0) {</span>
+<span class="nc" id="L582">                pak_buffer[pak++] = 0xFF;</span>
+<span class="nc" id="L583">                hdr_len++;</span>
+            }
+
+<span class="nc" id="L586">            writeUnsigned(pak_buffer, pak, enc_len + hdr_len);</span>
+<span class="nc" id="L587">            pak += 3;</span>
+<span class="nc" id="L588">            pak_buffer[pak++] = hdr_len;</span>
+<span class="nc" id="L589">            writeUnsigned(pak_buffer, pak, inc_len - hdr_len);</span>
+<span class="nc" id="L590">            pak += 4;</span>
+
+        }
+<span class="nc" id="L593">        new_len = pak;</span>
+<span class="nc" id="L594">        return pak_buffer;</span>
+    }
+
+    // LZSS Encoding ported to Java (based on pk3DS by Kaphotics)
+
+    private byte[] LZSS_Encode(byte[] data) {
+<span class="nc bnc" id="L600" title="All 2 branches missed.">        if (data.length &gt; 0xFFFFFF) {</span>
+<span class="nc" id="L601">            System.err.println(&quot;Encoding: Too much data&quot;);</span>
+<span class="nc" id="L602">            return null;</span>
+        }
+
+<span class="nc" id="L605">        ByteBuffer inBuf = ByteBuffer.wrap(data);</span>
+<span class="nc" id="L606">        ByteBuffer outBuf = ByteBuffer.allocate(data.length + 8);</span>
+<span class="nc" id="L607">        outBuf.order(ByteOrder.LITTLE_ENDIAN);</span>
+<span class="nc" id="L608">        outBuf.put((byte)0x11);</span>
+<span class="nc" id="L609">        outBuf.putInt(data.length);</span>
+<span class="nc" id="L610">        outBuf.position(outBuf.position()-1); // Go back one byte since length should only be 3 bytes</span>
+<span class="nc bnc" id="L611" title="All 2 branches missed.">        if (data.length == 0) {</span>
+<span class="nc" id="L612">            outBuf.putInt(0);</span>
+<span class="nc" id="L613">            return Arrays.copyOfRange(outBuf.array(),0,outBuf.position());</span>
+        }
+
+<span class="nc" id="L616">        ByteBuffer blockBuf = ByteBuffer.allocate((8 * 4) + 1);</span>
+<span class="nc" id="L617">        blockBuf.put((byte)0);</span>
+<span class="nc" id="L618">        int bufferedBlocks = 0;</span>
+<span class="nc bnc" id="L619" title="All 2 branches missed.">        while (inBuf.position() &lt; data.length) {</span>
+<span class="nc bnc" id="L620" title="All 2 branches missed.">            if (bufferedBlocks == 8) {</span>
+<span class="nc" id="L621">                outBuf.put(Arrays.copyOfRange(blockBuf.array(),0,blockBuf.position()));</span>
+<span class="nc" id="L622">                blockBuf.rewind();</span>
+<span class="nc" id="L623">                blockBuf.put((byte)0);</span>
+<span class="nc" id="L624">                bufferedBlocks = 0;</span>
+            }
+
+<span class="nc" id="L627">            int oldLength = Math.min(inBuf.position(),0x1000);</span>
+<span class="nc" id="L628">            LengthDispPair pair =</span>
+<span class="nc" id="L629">                    getOccurrenceLength(</span>
+                            inBuf,
+<span class="nc" id="L631">                            inBuf.position(),</span>
+<span class="nc" id="L632">                            Math.min(data.length - inBuf.position(), 0x10110),</span>
+<span class="nc" id="L633">                            inBuf.position() - oldLength,</span>
+                            oldLength);
+<span class="nc" id="L635">            int length = pair.length;</span>
+<span class="nc" id="L636">            int disp = pair.disp;</span>
+
+<span class="nc bnc" id="L638" title="All 2 branches missed.">            if (length &lt; 3) {</span>
+<span class="nc" id="L639">                blockBuf.put(inBuf.get());</span>
+            } else {
+<span class="nc" id="L641">                inBuf.position(inBuf.position() + length);</span>
+
+<span class="nc" id="L643">                byte compFlag = (byte)(blockBuf.get(0) | (1 &lt;&lt; (7 - bufferedBlocks)));</span>
+<span class="nc" id="L644">                blockBuf.put(0,compFlag);</span>
+
+<span class="nc bnc" id="L646" title="All 2 branches missed.">                if (length &gt; 0x110) {</span>
+<span class="nc" id="L647">                    blockBuf.put((byte)(0x10 | (((length - 0x111) &gt;&gt;&gt; 12) &amp; 0x0F))); // Dangerous</span>
+<span class="nc" id="L648">                    blockBuf.put((byte)(((length - 0x111) &gt;&gt;&gt; 4) &amp; 0xFF));</span>
+<span class="nc" id="L649">                    blockBuf.put((byte)(((length - 0x111) &lt;&lt; 4) &amp; 0xF0));</span>
+<span class="nc" id="L650">                    blockBuf.position(blockBuf.position()-1);</span>
+<span class="nc bnc" id="L651" title="All 2 branches missed.">                } else if (length &gt; 0x10) {</span>
+<span class="nc" id="L652">                    blockBuf.put((byte)(((length - 0x111) &gt;&gt;&gt; 4) &amp; 0x0F));</span>
+<span class="nc" id="L653">                    blockBuf.put((byte)(((length - 0x111) &lt;&lt; 4) &amp; 0xF0));</span>
+<span class="nc" id="L654">                    blockBuf.position(blockBuf.position()-1);</span>
+                } else {
+<span class="nc" id="L656">                    blockBuf.put((byte)(((length - 1) &lt;&lt; 4) &amp; 0xF0));</span>
+<span class="nc" id="L657">                    blockBuf.position(blockBuf.position()-1);</span>
+                }
+<span class="nc" id="L659">                byte dispPart1 = (byte)(blockBuf.get(blockBuf.position()) | (byte)(((disp - 1) &gt;&gt;&gt; 8) &amp; 0x0F));</span>
+<span class="nc" id="L660">                blockBuf.put(dispPart1);</span>
+<span class="nc" id="L661">                blockBuf.put((byte)((disp - 1) &amp; 0xFF));</span>
+            }
+<span class="nc" id="L663">            bufferedBlocks++;</span>
+<span class="nc" id="L664">        }</span>
+<span class="nc bnc" id="L665" title="All 2 branches missed.">        if (bufferedBlocks &gt; 0) {</span>
+<span class="nc" id="L666">            outBuf.put(Arrays.copyOfRange(blockBuf.array(),0,blockBuf.position()));</span>
+        }
+<span class="nc" id="L668">        return Arrays.copyOfRange(outBuf.array(),0,outBuf.position());</span>
+    }
+
+    private LengthDispPair getOccurrenceLength(ByteBuffer buf, int newIndex, int newLength, int oldIndex, int oldLength) {
+<span class="nc" id="L672">        int disp = 0;</span>
+<span class="nc bnc" id="L673" title="All 2 branches missed.">        if (newLength == 0) {</span>
+<span class="nc" id="L674">            return new LengthDispPair(0,0);</span>
+        }
+<span class="nc" id="L676">        int maxLength = 0;</span>
+
+<span class="nc bnc" id="L678" title="All 2 branches missed.">        for (int i = 0; i &lt; oldLength - 1; i++) {</span>
+<span class="nc" id="L679">            int currentOldStart = oldIndex + i;</span>
+<span class="nc" id="L680">            int currentLength = 0;</span>
+
+<span class="nc bnc" id="L682" title="All 2 branches missed.">            for (int j = 0; j &lt; newLength; j++) {</span>
+<span class="nc bnc" id="L683" title="All 2 branches missed.">                if (buf.get(currentOldStart + j) != buf.get(newIndex + j)) break;</span>
+<span class="nc" id="L684">                currentLength++;</span>
+            }
+
+<span class="nc bnc" id="L687" title="All 2 branches missed.">            if (currentLength &gt; maxLength) {</span>
+<span class="nc" id="L688">                maxLength = currentLength;</span>
+<span class="nc" id="L689">                disp = oldLength - i;</span>
+
+<span class="nc bnc" id="L691" title="All 2 branches missed.">                if (maxLength == newLength) {</span>
+<span class="nc" id="L692">                    break;</span>
+                }
+            }
+        }
+<span class="nc" id="L696">        return new LengthDispPair(maxLength,disp);</span>
+    }
+
+    private class LengthDispPair {
+        int length;
+        int disp;
+
+<span class="nc" id="L703">        LengthDispPair(int length, int disp) {</span>
+<span class="nc" id="L704">            this.length = length;</span>
+<span class="nc" id="L705">            this.disp = disp;</span>
+<span class="nc" id="L706">        }</span>
+    }
+
+    private static class SearchPair {
+        public int l;
+        public int p;
+
+<span class="nc" id="L713">        public SearchPair(int l, int p) {</span>
+<span class="nc" id="L714">            this.l = l;</span>
+<span class="nc" id="L715">            this.p = p;</span>
+<span class="nc" id="L716">        }</span>
+    }
+
+    private SearchPair SEARCH(int p, int[] raw_buffer, int raw, int raw_end) {
+<span class="nc" id="L720">        int l = BLZ_THRESHOLD;</span>
+<span class="nc bnc" id="L721" title="All 2 branches missed.">        int max = (raw &gt;= BLZ_N) ? BLZ_N : raw;</span>
+<span class="nc bnc" id="L722" title="All 2 branches missed.">        for (int pos = 3; pos &lt;= max; pos++) {</span>
+            int len;
+<span class="nc bnc" id="L724" title="All 2 branches missed.">            for (len = 0; len &lt; BLZ_F; len++) {</span>
+<span class="nc bnc" id="L725" title="All 2 branches missed.">                if (raw + len == raw_end) {</span>
+<span class="nc" id="L726">                    break;</span>
+                }
+<span class="nc bnc" id="L728" title="All 2 branches missed.">                if (len &gt;= pos) {</span>
+<span class="nc" id="L729">                    break;</span>
+                }
+<span class="nc bnc" id="L731" title="All 2 branches missed.">                if (raw_buffer[raw + len] != raw_buffer[raw + len - pos]) {</span>
+<span class="nc" id="L732">                    break;</span>
+                }
+            }
+
+<span class="nc bnc" id="L736" title="All 2 branches missed.">            if (len &gt; l) {</span>
+<span class="nc" id="L737">                p = pos;</span>
+<span class="nc bnc" id="L738" title="All 2 branches missed.">                if ((l = len) == BLZ_F) {</span>
+<span class="nc" id="L739">                    break;</span>
+                }
+            }
+        }
+<span class="nc" id="L743">        return new SearchPair(l, p);</span>
+    }
+
+    private class BLZResult {
+<span class="nc" id="L747">        public BLZResult(int[] raw_buffer, int raw_len) {</span>
+<span class="nc" id="L748">            this.buffer = raw_buffer;</span>
+<span class="nc" id="L749">            this.length = raw_len;</span>
+<span class="nc" id="L750">        }</span>
+
+        int[] buffer;
+        int length;
+    }
+
+    private void BLZ_Invert(int[] buffer, int offset, int length) {
+        int bottom, ch;
+
+<span class="nc" id="L759">        bottom = offset + length - 1;</span>
+
+<span class="nc bnc" id="L761" title="All 2 branches missed.">        while (offset &lt; bottom) {</span>
+<span class="nc" id="L762">            ch = buffer[offset];</span>
+<span class="nc" id="L763">            buffer[offset++] = buffer[bottom];</span>
+<span class="nc" id="L764">            buffer[bottom--] = ch;</span>
+        }
+<span class="nc" id="L766">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.13.202504020838</span></div></body></html>

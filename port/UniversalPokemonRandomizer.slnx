@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/UniversalPokemonRandomizer.Core/UniversalPokemonRandomizer.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/UniversalPokemonRandomizer.Tests/UniversalPokemonRandomizer.Tests.csproj" />
+  </Folder>
+</Solution>

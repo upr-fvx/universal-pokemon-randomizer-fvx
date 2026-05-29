@@ -1,0 +1,9 @@
+# .NET build artefacts
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+*.nupkg
+*.snupkg

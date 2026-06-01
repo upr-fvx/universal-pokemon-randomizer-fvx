@@ -1183,6 +1183,7 @@ public class RandomizerGUI {
      * (Having a resource open for a long time is indeed risky, but allows for worthwhile RAM optimizations)
      */
     private void unloadRomHandler() {
+        if (romHandler == null) return;
         if (romHandler.getResourceLifetime() == RomHandler.ResourceLifetime.SAME_AS_ROMHANDLER) {
             try {
                 romHandler.closeResources();

@@ -42,7 +42,13 @@ public class Gen6Constants {
     private static final int xyFormeCount = 77, orasFormeCount = 104;
     private static final int orasformeMovesetOffset = 35;
 
-    public static final List<Integer> actuallyCosmeticForms = Arrays.asList(
+    public static final List<Integer> ignoreTrueCosmeticForms = List.of(
+            // Arceus/Genesect: to avoid confusion
+            // Xerneas: Should be handled automatically?
+            SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.xerneas
+    );
+
+    public static final List<Integer> essentiallyCosmeticForms = Arrays.asList(
             SpeciesIDs.Gen6Formes.cherrimCosmetic1,
             SpeciesIDs.Gen6Formes.keldeoCosmetic1,
             SpeciesIDs.Gen6Formes.furfrouCosmetic1, SpeciesIDs.Gen6Formes.furfrouCosmetic2,
@@ -56,6 +62,13 @@ public class Gen6Constants {
             SpeciesIDs.Gen6Formes.gourgeistCosmetic3,
             SpeciesIDs.Gen6Formes.floetteCosmetic1, SpeciesIDs.Gen6Formes.floetteCosmetic2,
             SpeciesIDs.Gen6Formes.floetteCosmetic3, SpeciesIDs.Gen6Formes.floetteCosmetic4,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic1, SpeciesIDs.Gen6Formes.pikachuCosmetic2,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic3, SpeciesIDs.Gen6Formes.pikachuCosmetic4,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic5, SpeciesIDs.Gen6Formes.pikachuCosmetic6 // Cosplay Pikachu
+    );
+
+    public static final List<Integer> ignoreCosmeticForms = Arrays.asList(
+            SpeciesIDs.Gen6Formes.cherrimCosmetic1,
             SpeciesIDs.Gen6Formes.pikachuCosmetic1, SpeciesIDs.Gen6Formes.pikachuCosmetic2,
             SpeciesIDs.Gen6Formes.pikachuCosmetic3, SpeciesIDs.Gen6Formes.pikachuCosmetic4,
             SpeciesIDs.Gen6Formes.pikachuCosmetic5, SpeciesIDs.Gen6Formes.pikachuCosmetic6 // Cosplay Pikachu

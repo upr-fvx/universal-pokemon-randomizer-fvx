@@ -394,8 +394,8 @@ public class WildEncounterRandomizer extends Randomizer {
                     }
                 }
 
-                enc.setSpecies(replacement);
-                setFormeForEncounter(enc, replacement);
+                enc.getSpeciesHolder().setSpecies(replacement);
+                randomizeCosmeticForme(enc);
             }
 
             if (area.isForceMultipleSpecies()) {
@@ -552,8 +552,8 @@ public class WildEncounterRandomizer extends Randomizer {
                     replacement = awd.areaMap.get(enc.getSpecies());
                 }
 
-                enc.setSpecies(replacement);
-                setFormeForEncounter(enc, replacement);
+                enc.getSpeciesHolder().setSpecies(replacement);
+                randomizeCosmeticForme(enc);
             }
 
         }
@@ -589,7 +589,8 @@ public class WildEncounterRandomizer extends Randomizer {
                             picked = itor.next();
                         } else {
                             //prefer primary of first species
-                            Type preferredTheme = zone.get(0).get(0).getSpecies().getPrimaryType(true);
+                            Type preferredTheme = zone.getFirst().getFirst()
+                                    .getSpecies().getPrimaryType(true);
                             if(picked != preferredTheme) {
                                 picked = itor.next();
                             }
@@ -641,7 +642,7 @@ public class WildEncounterRandomizer extends Randomizer {
             Collections.shuffle(types, random);
             Type areaType;
             do {
-                areaType = types.remove(0);
+                areaType = types.removeFirst();
             } while (remainingByType.get(areaType).isEmpty() && !types.isEmpty());
             if(types.isEmpty() && remainingByType.get(areaType).isEmpty()) {
                 throw new IllegalStateException("RemainingByType contained no Species of any valid type!");
@@ -890,7 +891,7 @@ public class WildEncounterRandomizer extends Randomizer {
             // This is very unlikely to happen in practice, even with very
             // restrictive settings, so it should be okay to break logic here.
             while (area.stream().distinct().count() == 1) {
-                area.get(0).setSpecies(rSpecService.randomSpecies(random));
+                area.getFirst().getSpeciesHolder().setSpecies(rSpecService.randomSpecies(random));
             }
         }
 
@@ -1077,7 +1078,7 @@ public class WildEncounterRandomizer extends Randomizer {
          * A class which stores some information about the areas and encounters a {@link Species} was found in,
          * in order to allow us to use this information later.
          */
-        private class SpeciesAreaInformation {
+        private static class SpeciesAreaInformation {
             private Map<Type, Integer> possibleThemes = new EnumMap<>(Type.class);
             private final SpeciesSet bannedForReplacement = new SpeciesSet();
             private final SpeciesSet family = new SpeciesSet();
@@ -1243,15 +1244,32 @@ public class WildEncounterRandomizer extends Randomizer {
         //don't randomize unused areas
         //mostly important for catch 'em all
 
+	// Turn essentially cosmetic formes into the corresponding base forme,
+        // so they are considered the same species for replacements.
+        for (EncounterArea area : prepped) {
+            for (Encounter enc : area) {
+                Species pk = enc.getSpecies();
+                if (pk.isEssentiallyCosmetic()) {
+                    enc.getSpeciesHolder().setSpecies(pk.getBaseForme());
+                }
+            }
+        }
+
+
         // Shuffling the EncounterAreas leads to less predictable results for various modifiers.
         Collections.shuffle(prepped, random);
         return prepped;
     }
 
-    private void setFormeForEncounter(Encounter enc, Species sp) {
-        enc.setFormeNumber(enc.getSpecies().getRandomCosmeticFormeNumber(random));
-        while(!enc.getSpecies().isBaseForme()) {
-            enc.setSpecies(enc.getSpecies().getBaseForme());
+    /**
+     * If possible, sets the Species of the given Encounter to a random cosmetic forme.<br>
+     * Does nothing if Encounter doesn't allow alt formes, or if the Species doesn't have any cosmetic alt formes.
+     */
+    private void randomizeCosmeticForme(Encounter enc) {
+        SpeciesHolder sh = enc.getSpeciesHolder();
+        if (sh.isAltFormeAllowed() && sh.getSpecies().isBaseForme()) {
+            Species base = sh.getSpecies().getBaseForme();
+            sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
         }
     }
 

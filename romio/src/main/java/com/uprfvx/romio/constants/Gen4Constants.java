@@ -640,6 +640,8 @@ public class Gen4Constants {
         }
     }
 
+    public static final int dpptWaterAreaSize = 44;
+
     // The original slot each of the 20 "alternate" slots is mapped to
     // swarmx2, dayx2, nightx2, pokeradarx4, GBAx10
     // NOTE: in the game data there are 6 fillers between pokeradar and GBA

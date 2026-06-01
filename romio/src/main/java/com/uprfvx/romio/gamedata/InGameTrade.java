@@ -30,9 +30,8 @@ import java.util.Objects;
  */
 public class InGameTrade {
 
-    // requestedSpecies can be null, in which case it represents "any Pokémon"
     private Species requestedSpecies;
-    private Species givenSpecies;
+    private final SpeciesHolder givenSpeciesHolder;
 
     private String nickname;
     private String otName;
@@ -43,27 +42,63 @@ public class InGameTrade {
 
     private Item heldItem;
 
+    /**
+     * Creates an InGameTrade.
+     * @param requestedSpecies The {@link Species} which is requested by the trader.
+     *                         It must be either a base forme, or null (which represents "any Pokémon").
+     *                         Note that the null behavior might not be supported by all RomHandlers.
+     * @param givenSpecies The {@link Species} which is received through the trade.
+     *                     It must be a non-null base forme.
+     * @throws IllegalArgumentException if requestedSpecies is not a base forme.
+     * @throws IllegalArgumentException if givenSpecies is not a base forme.
+     * @throws NullPointerException if givenSpecies is null.
+     */
+    public InGameTrade(Species requestedSpecies, Species givenSpecies) {
+        setRequestedSpecies(requestedSpecies);
+        this.givenSpeciesHolder = new SpeciesHolder(givenSpecies);
+    }
+
     public Species getRequestedSpecies() {
         return requestedSpecies;
     }
 
+    /**
+     * Sets the {@link Species} which is requested by the trader.
+     * It must be either a base forme, or null (which represents "any Pokémon").
+     * Note that the null behavior might not be supported by all RomHandlers.
+     * @throws IllegalArgumentException if requestedSpecies is an alt forme.
+     */
     public void setRequestedSpecies(Species requestedSpecies) {
+        if (requestedSpecies != null && !requestedSpecies.isBaseForme()) {
+            throw new IllegalArgumentException("requestedSpecies (" + requestedSpecies.getNumberAndFullName()
+                    + ") is not a base forme.");
+        }
         this.requestedSpecies = requestedSpecies;
     }
 
-    public Species getGivenSpecies() {
-        return givenSpecies;
+    public SpeciesHolder getGivenSpeciesHolder() {
+        return givenSpeciesHolder;
     }
 
-    public void setGivenSpecies(Species givenSpecies) {
-        this.givenSpecies = givenSpecies;
+    /**
+     * Short for {@link #getGivenSpeciesHolder()}.{@link SpeciesHolder#getSpecies()}
+     */
+    public Species getGivenSpecies() {
+        return getGivenSpeciesHolder().getSpecies();
     }
 
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * Sets the nickname of the Pokémon received through trade.
+     * @throws NullPointerException if nickname is null.
+     */
     public void setNickname(String nickname) {
+        if (nickname == null) {
+            throw new NullPointerException();
+        }
         this.nickname = nickname;
     }
 
@@ -71,7 +106,14 @@ public class InGameTrade {
         return otName;
     }
 
+    /**
+     * Sets the name of the Original Trainer of the Pokémon received through trade.
+     * @throws NullPointerException if otName is null.
+     */
     public void setOtName(String otName) {
+        if (otName == null) {
+            throw new NullPointerException();
+        }
         this.otName = otName;
     }
 
@@ -101,15 +143,15 @@ public class InGameTrade {
 
     @Override
     public int hashCode() {
-        return Objects.hash(requestedSpecies, givenSpecies, otId);
+        return Objects.hash(requestedSpecies, getGivenSpecies(), otId);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof InGameTrade) {
-            InGameTrade other = (InGameTrade) o;
+        if (o instanceof InGameTrade other) {
             return otId == other.otId
-                    && Objects.equals(requestedSpecies, other.requestedSpecies) && givenSpecies.equals(other.givenSpecies)
+                    && Objects.equals(requestedSpecies, other.requestedSpecies)
+                    && givenSpeciesHolder.equals(other.givenSpeciesHolder)
                     && nickname.equals(other.nickname) && Objects.equals(otName, other.otName)
                     && Arrays.equals(ivs, other.ivs) && Objects.equals(heldItem, other.heldItem);
         }
@@ -118,7 +160,7 @@ public class InGameTrade {
 
     @Override
     public String toString() {
-        return "IngameTrade(requested=" + requestedSpecies + ", given=" + givenSpecies +
+        return "IngameTrade(requested=" + requestedSpecies + ", given=" + getGivenSpecies() +
                 ", nickname=" + nickname + ", otName=" + otName + ", otId=" + otId + ", ivs=" + Arrays.toString(ivs) +
                 ", heldItem=" + heldItem + ")";
     }

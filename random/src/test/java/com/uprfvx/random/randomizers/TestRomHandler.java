@@ -1,7 +1,6 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.romio.MiscTweak;
-import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.AbstractRomHandler;
@@ -12,6 +11,7 @@ import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -249,6 +249,14 @@ public class TestRomHandler extends AbstractRomHandler {
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
         highestEvoLvl = mockupOf.getHighestEvoLvl();
+
+        if (mockupOf.getResourceLifetime() != ResourceLifetime.NONE) {
+            try {
+                mockupOf.closeResources();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**
@@ -271,7 +279,6 @@ public class TestRomHandler extends AbstractRomHandler {
         testMegaEvolutions = null;
         testAltFormes = null;
         testIrregularFormes = null;
-        testAltFormesMap = null;
         testRSS = null;
         testSpeciesInOrder = null;
         testSpeciesInclFormesInOrder = null;
@@ -321,132 +328,25 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet deepCopySpeciesSet(SpeciesSet originalSet) {
         SpeciesSet newSet = new SpeciesSet();
         originalToTest = new HashMap<>();
-        for(Species orig : originalSet) {
-            Species copy = copySpeciesStaticTraits(orig);
+        // We need to create empty copies of all Species before transferring/copying traits,
+        // otherwise species relations can't be copied.
+        for (Species orig : originalSet) {
+            Species copy = orig instanceof Gen1Species ?
+                    new Gen1Species(orig.getNumber()) : new Species(orig.getNumber());
             newSet.add(copy);
             originalToTest.put(orig, copy);
         }
-
-        testMegaEvolutions = new ArrayList<>();
-        testAltFormes = new SpeciesSet();
-        testIrregularFormes = new SpeciesSet();
-        testAltFormesMap = new HashMap<>();
-        //now that they're all here, iterate again to copy relations
-        for(Species orig : originalSet) {
-            copySpeciesRelations(orig, originalToTest);
+        for (Species orig : originalSet) {
+            Species.transferAttributesToCopy(orig, originalToTest);
         }
+
+        // And these can be populated once the copy process is done
+        testAltFormes = new SpeciesSet(newSet).filter(pk -> !pk.isBaseForme());
+        testIrregularFormes = new SpeciesSet(originalIrregularFormes.stream().map(originalToTest::get).toList());
+        testMegaEvolutions = new ArrayList<>();
+        newSet.forEach(pk -> testMegaEvolutions.addAll(pk.getMegaEvolutionsFrom()));
 
         return newSet;
-    }
-
-    /**
-     * Copies all data from one species to another, excepting data which contains references to other Species.
-     * @param original The Species to copy.
-     * @return A new Species with none of its fields having reference to the original Species.
-     */
-    private static Species copySpeciesStaticTraits(Species original) {
-        boolean isGen1 = original instanceof Gen1Species;
-        Species copy;
-        if(isGen1) {
-            copy = new Gen1Species(original.getNumber());
-        } else {
-            copy = new Species(original.getNumber());
-        }
-        copy.setName(original.getName());
-
-        //formes
-        copy.setFormeSuffix(original.getFormeSuffix());
-        copy.setFormeNumber(original.getFormeNumber());
-        copy.setCosmeticForms(original.getCosmeticForms());
-        copy.setActuallyCosmetic(original.isActuallyCosmetic());
-
-        copy.setRealCosmeticFormNumbers(new ArrayList<>(copy.getRealCosmeticFormNumbers()));
-        //I don't know if that copy is necessary, but it shouldn't hurt?
-
-        copy.setGeneration(original.getGeneration());
-
-        //Types
-        copy.setPrimaryType(original.getPrimaryType(true));
-        copy.setSecondaryType(original.getSecondaryType(true));
-        //using original or not shouldn't matter
-
-        //base stats
-        copy.setHp(original.getHp());
-        copy.setAttack(original.getAttack());
-        copy.setDefense(original.getDefense());
-        copy.setSpeed(original.getSpeed());
-        if(isGen1) {
-            copy.setSpecial(original.getSpecial());
-        } else {
-            copy.setSpatk(original.getSpatk());
-            copy.setSpdef(original.getSpdef());
-        }
-
-        //abilities
-        copy.setAbility1(original.getAbility1());
-        copy.setAbility2(original.getAbility2());
-        copy.setAbility3(original.getAbility3());
-
-        copy.setExpYield(original.getExpYield());
-
-        //wild encounter related
-        copy.setCatchRate(original.getCatchRate());
-        copy.setCommonHeldItem(original.getCommonHeldItem());
-        copy.setRareHeldItem(original.getRareHeldItem());
-        copy.setDarkGrassHeldItem(original.getDarkGrassHeldItem());
-        copy.setGenderRatio(original.getGenderRatio());
-
-        //misc
-        copy.setFrontImageDimensions(original.getFrontImageDimensions());
-        copy.setCallRate(original.getCallRate());
-        copy.setGrowthCurve(original.getGrowthCurve());
-
-        return copy;
-    }
-
-    /**
-     * Given an original species and a copy of that species, as well as a map of all original species to copies of them,
-     * copies all data which contains references to other Species, updating those references to the copies. <br>
-     * For evolutions and mega evolutions, it only assigns those from this Species,
-     * but also assigns it to the Species evolved to.
-     * This should result in all evolutions being properly assigned if this function is called on all Species.
-     * @param original The Species to copy relations from. They will be copied to its mapped value.
-     * @param originalToCopies A Map of the original Species to their copies.
-     */
-    private void copySpeciesRelations(Species original, Map<Species, Species> originalToCopies) {
-        Species copy = originalToCopies.get(original);
-        if(!original.isBaseForme()) {
-            Species copyBaseForme = originalToCopies.get(original.getBaseForme());
-            copy.setBaseForme(copyBaseForme);
-            copyBaseForme.setAlolanForme(copy);
-            testAltFormes.add(copy);
-
-            if(originalIrregularFormes.contains(original)) {
-                testIrregularFormes.add(copy);
-            }
-            if(!testAltFormesMap.containsKey(copyBaseForme)) {
-                testAltFormesMap.put(copyBaseForme, new HashMap<>());
-                testAltFormesMap.get(copyBaseForme).put(copyBaseForme.getFormeNumber(), copyBaseForme);
-            }
-            testAltFormesMap.get(copyBaseForme).put(copy.getFormeNumber(), copy);
-        }
-
-        for(Evolution evolution : original.getEvolutionsFrom()) {
-            Evolution evoCopy = new Evolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.getType(), evolution.getExtraInfo(), evolution.getEstimatedEvoLvl());
-            evoCopy.setForme(evolution.getForme());
-            copy.getEvolutionsFrom().add(evoCopy);
-            evoCopy.getTo().getEvolutionsTo().add(evoCopy);
-        }
-
-        for(MegaEvolution evolution : original.getMegaEvolutionsFrom()) {
-            MegaEvolution evoCopy = new MegaEvolution(copy, originalToCopies.get(evolution.getTo()),
-                    evolution.isNeedsItem(), evolution.getItem());
-            copy.getMegaEvolutionsFrom().add(evoCopy);
-            evoCopy.getTo().getMegaEvolutionsTo().add(evoCopy);
-
-            testMegaEvolutions.add(evoCopy);
-        }
     }
 
     /**
@@ -481,11 +381,12 @@ public class TestRomHandler extends AbstractRomHandler {
             copiedArea.setForceMultipleSpecies(originalArea.isForceMultipleSpecies());
 
             for(Encounter origEnc : originalArea) {
-                Encounter copyEnc = new Encounter();
-                copyEnc.setLevel(origEnc.getLevel());
+                Encounter copyEnc = new Encounter(originalToTest.get(origEnc.getSpecies().getBaseForme()), origEnc.getLevel());
                 copyEnc.setMaxLevel(origEnc.getMaxLevel());
-                copyEnc.setSpecies(originalToTest.get(origEnc.getSpecies()));
-                copyEnc.setFormeNumber(origEnc.getFormeNumber());
+                if (origEnc.getSpeciesHolder().isAltFormeAllowed()) {
+                    copyEnc.getSpeciesHolder().setAltFormeAllowed();
+                    copyEnc.getSpeciesHolder().setFormeNumber(origEnc.getSpeciesHolder().getFormeNumber());
+                }
                 copyEnc.setSOS(origEnc.isSOS());
                 copyEnc.setSosType(origEnc.getSosType());
 
@@ -509,9 +410,9 @@ public class TestRomHandler extends AbstractRomHandler {
         for(StaticEncounter orig : originalStatics) {
             StaticEncounter copy = new StaticEncounter(orig);
             Species spec = originalToTest.get(orig.getSpecies());
-            copy.setSpecies(spec);
+            copy.getSpeciesHolder().setSpecies(spec);
             for(StaticEncounter linked : copy.getLinkedEncounters()) {
-                linked.setSpecies(spec);
+                linked.getSpeciesHolder().setSpecies(spec);
             }
             copiedStatics.add(copy);
         }
@@ -529,7 +430,7 @@ public class TestRomHandler extends AbstractRomHandler {
         for(Trainer original : originalTrainers) {
             Trainer copy = new Trainer(original);
             for(TrainerPokemon tp : copy.getPokemon()) {
-                tp.setSpecies(originalToTest.get(tp.getSpecies()));
+                tp.getSpeciesHolder().setSpecies(originalToTest.get(tp.getSpecies()));
             }
             copiedTrainers.add(copy);
         }
@@ -690,28 +591,6 @@ public class TestRomHandler extends AbstractRomHandler {
     public List<MegaEvolution> getMegaEvolutions() {
         return testMegaEvolutions;
         //why does this even exist????
-    }
-
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        if (base == null) {
-            throw new IllegalArgumentException("base can't be null");
-        }
-
-        // Minior causes trouble when testing, because testAltFormesMap doesn't properly
-        // represent forms-with-forms. This is a quick workaround, instead of fixing that.
-        // All will need to be reworked come the form rewrite, anyways...
-        if (base.getBaseNumber() == SpeciesIDs.minior) {
-            return base;
-        }
-
-        Species altForme = testAltFormesMap.get(base) == null ? base
-                : testAltFormesMap.get(base).get(forme);
-        if (altForme == null) {
-            throw new RuntimeException("species " + base.getFullName() + " has no alt forme " + forme);
-        }
-        return altForme;
-        //why is this even in RomHandler??
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.graphics.packs.*;
 import com.uprfvx.romio.graphics.palettes.Palette;
 import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -121,7 +122,8 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
             assertEquals(replaceID, ((Gen1Species) pk).getPaletteID());
         }
     }
-    
+
+    @Disabled
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void dumpAllPokemonImages(String romName) {

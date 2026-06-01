@@ -431,7 +431,7 @@ public class RandomizationLogger {
 
         // Table body
         for (Species pk : allSpecies) {
-            if (pk == null || pk.isActuallyCosmetic() || pk.getEvolutionsFrom().isEmpty()) {
+            if (pk == null || pk.isEssentiallyCosmetic() || pk.getEvolutionsFrom().isEmpty()) {
                 continue;
             }
 
@@ -561,9 +561,13 @@ public class RandomizationLogger {
         // Log base stats, types, abilities, and wild held items
         printSectionTitle("psta");
 
-        List<Species> allSpecies = romHandler.getSpeciesInclFormes();
-
-        // TODO: This puts the alt forms at the end. It would be nice to have them near their base forms.
+        List<Species> allSpecies = new LinkedList<>();
+        List<Species> allBaseFormes = romHandler.getSpecies();
+        for (Species baseForme : allBaseFormes) {
+            if (baseForme == null) continue;
+            allSpecies.add(baseForme);
+            baseForme.getAltFormes().stream().sorted().forEach(allSpecies::add);
+        }
 
         int numLen = Integer.toString(allSpecies.size()).length();
         int nameLen = getMaxSpeciesNameLength(allSpecies);
@@ -595,11 +599,15 @@ public class RandomizationLogger {
 
         // Rows for each species
         for (Species pk : allSpecies) {
-            if (pk == null || pk.isActuallyCosmetic()) {
+            if (pk == null || pk.isEssentiallyCosmetic()) {
                 continue;
             }
 
-            log.printf("%" + numLen + "d", pk.getBaseNumber());
+            if (pk.isBaseForme()) {
+                log.printf("%" + numLen + "d", pk.getBaseNumber());
+            } else {
+                log.printf("%" + numLen + "s", "");
+            }
             log.printf("|%-" + nameLen + "s", pk.getFullName());
             log.printf("|%-" + typeLen + "s",
                     pk.getPrimaryType(false)
@@ -769,7 +777,7 @@ public class RandomizationLogger {
         Map<Integer, List<Integer>> eggMoves = romHandler.getEggMoves();
         List<Move> moves = romHandler.getMoves();
         for (Species pk : romHandler.getSpeciesInclFormes()) {
-            if (pk == null || pk.isActuallyCosmetic()) {
+            if (pk == null || pk.isEssentiallyCosmetic()) {
                 continue;
             }
 

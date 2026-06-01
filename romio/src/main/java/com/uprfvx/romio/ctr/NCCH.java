@@ -217,7 +217,7 @@ public class NCCH {
     private void visitDirectory(int offset, String rootPath, byte[] directoryMetadataBlock, byte[] fileMetadataBlock) {
         DirectoryMetadata metadata = new DirectoryMetadata(directoryMetadataBlock, offset);
         String currentPath = rootPath;
-        if (!metadata.name.equals("")) {
+        if (!metadata.name.isEmpty()) {
             currentPath = rootPath + metadata.name + "/";
         }
 
@@ -236,10 +236,11 @@ public class NCCH {
         FileMetadata metadata = new FileMetadata(fileMetadataBlock, offset);
         String currentPath = rootPath + metadata.name;
         //System.out.println("NCCH: Visiting file " + currentPath);
-        RomfsFile file = new RomfsFile(this);
-        file.offset = fileDataOffset + metadata.fileDataOffset;
-        file.size = (int) metadata.fileDataLength;  // no Pokemon game has a file larger than unsigned int max
-        file.fullPath = currentPath;
+        RomfsFile file = new RomfsFile(
+                this, fileDataOffset + metadata.fileDataOffset,
+                (int) metadata.fileDataLength, // no Pokemon game has a file larger than unsigned int max
+                currentPath
+        );
         metadata.file = file;
         fileMetadataList.add(metadata);
         romfsFiles.put(currentPath, file);
@@ -272,8 +273,8 @@ public class NCCH {
 
         // The logo is small enough (8KB) to just read the whole thing into memory. Write it to the new ROM directly
         // after the header, then update the new ROM's logo offset
-        long logoOffset = ncchStartingOffset + FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x198) * media_unit_size;
-        long logoLength = FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x19C) * media_unit_size;
+        long logoOffset = ncchStartingOffset + (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x198) * media_unit_size;
+        long logoLength = (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x19C) * media_unit_size;
         if (logoLength > 0) {
             byte[] logo = new byte[(int) logoLength];
             baseRom.seek(logoOffset);
@@ -286,8 +287,8 @@ public class NCCH {
         }
 
         // The plain region is even smaller (1KB) so repeat the same process
-        long plainOffset = ncchStartingOffset + FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x190) * media_unit_size;
-        long plainLength = FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x194) * media_unit_size;
+        long plainOffset = ncchStartingOffset + (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x190) * media_unit_size;
+        long plainLength = (long) FileFunctions.readIntFromFile(baseRom, ncchStartingOffset + 0x194) * media_unit_size;
         if (plainLength > 0) {
             byte[] plain = new byte[(int) plainLength];
             baseRom.seek(plainOffset);
@@ -470,16 +471,16 @@ public class NCCH {
         int fileDataOffset = IOFunctions.readFullInt(level3HeaderData, 0x24);
         long endOfFileDataOffset = 0;
         for (FileMetadata metadata : fileMetadataList) {
-            System.out.println("NCCH: Writing file " + metadata.file.fullPath + " to romfs");
+            System.out.println("NCCH: Writing file " + metadata.file.getFullPath() + " to romfs");
             // Users have sent us bug reports with really bizarre errors here that seem to indicate
             // broken metadata; do this in a try-catch solely so we can log the metadata if we fail
             try {
                 byte[] fileData;
-                if (metadata.file.fileChanged) {
+                if (metadata.file.isChanged()) {
                     fileData = metadata.file.getOverrideContents();
                 } else {
-                    fileData = new byte[metadata.file.size];
-                    baseRom.seek(metadata.file.offset);
+                    fileData = new byte[metadata.file.getSize()];
+                    baseRom.seek(metadata.file.getOffset());
                     baseRom.readFully(fileData);
                 }
                 long currentDataOffset = newLevel3Offset + fileDataOffset + metadata.fileDataOffset;
@@ -488,7 +489,7 @@ public class NCCH {
                 endOfFileDataOffset = currentDataOffset + fileData.length;
             } catch (Exception e) {
                 String message = String.format("Error when building romfs: File: %s, offset: %s, size: %s",
-                        metadata.file.fullPath, metadata.offset, metadata.file.size);
+                        metadata.file.getFullPath(), metadata.offset, metadata.file.getSize());
                 throw new RomIOException(message, e);
             }
         }
@@ -571,8 +572,8 @@ public class NCCH {
         long currentFileDataOffset = 0;
         for (FileMetadata metadata : fileMetadataList) {
             metadata.fileDataOffset = currentFileDataOffset;
-            if (metadata.file.fileChanged) {
-                metadata.fileDataLength = metadata.file.size;
+            if (metadata.file.isChanged()) {
+                metadata.fileDataLength = metadata.file.getSize();
             }
             byte[] metadataBytes = metadata.asBytes();
             System.arraycopy(metadataBytes, 0, fileMetadataTable, currentTableOffset, metadataBytes.length);
@@ -598,14 +599,14 @@ public class NCCH {
 
         if (codeChanged) {
             byte[] code = getCode();
-            FileOutputStream fos = new FileOutputStream(new File(layeredFSRootPath + "code.bin"));
+            FileOutputStream fos = new FileOutputStream(layeredFSRootPath + "code.bin");
             fos.write(code);
             fos.close();
         }
 
         for (Map.Entry<String, RomfsFile> entry : romfsFiles.entrySet()) {
             RomfsFile file = entry.getValue();
-            if (file.fileChanged) {
+            if (file.isChanged()) {
                 writeRomfsFileToLayeredFS(file, romfsRootPath);
             }
         }
@@ -621,7 +622,7 @@ public class NCCH {
     }
 
     private void writeRomfsFileToLayeredFS(RomfsFile file, String layeredFSRootPath) throws IOException {
-        String[] romfsPathComponents = file.fullPath.split("/");
+        String[] romfsPathComponents = file.getFullPath().split("/");
         StringBuffer buffer = new StringBuffer(layeredFSRootPath);
         for (int i = 0; i < romfsPathComponents.length - 1; i++) {
             buffer.append(romfsPathComponents[i]);
@@ -633,7 +634,7 @@ public class NCCH {
         }
         buffer.append(romfsPathComponents[romfsPathComponents.length - 1]);
         String romfsFilePath = buffer.toString();
-        FileOutputStream fos = new FileOutputStream(new File(romfsFilePath));
+        FileOutputStream fos = new FileOutputStream(romfsFilePath);
         fos.write(file.getOverrideContents());
         fos.close();
     }
@@ -733,7 +734,7 @@ public class NCCH {
     }
 
     // returns null if file doesn't exist
-    public byte[] getFile(String filename) throws IOException {
+    public RomfsFileInput getFile(String filename) throws IOException {
         if (romfsFiles.containsKey(filename)) {
             return romfsFiles.get(filename).getContents();
         } else {
@@ -781,8 +782,8 @@ public class NCCH {
     public Map<String, String> getRomfsFilesDiagnostics() {
         Map<String, String> fileDiagnostics = new HashMap<>();
         for (Map.Entry<String, RomfsFile> entry : romfsFiles.entrySet()) {
-            if (entry.getValue().originalCRC != 0) {
-                fileDiagnostics.put(entry.getKey(), entry.getKey() + ": " + String.format("%08X", entry.getValue().originalCRC));
+            if (entry.getValue().getOriginalCRC() != 0) {
+                fileDiagnostics.put(entry.getKey(), entry.getKey() + ": " + String.format("%08X", entry.getValue().getOriginalCRC()));
             }
         }
         return fileDiagnostics;
@@ -926,7 +927,7 @@ public class NCCH {
         }
     }
 
-    private class ExefsFileHeader {
+    private static class ExefsFileHeader {
         public String filename;
         public int offset;
         public int size;
@@ -942,7 +943,7 @@ public class NCCH {
         }
 
         public boolean isValid() {
-            return this.filename != "" && this.size != 0;
+            return !this.filename.isEmpty() && this.size != 0;
         }
 
         public byte[] asBytes() {
@@ -955,7 +956,7 @@ public class NCCH {
         }
     }
 
-    private class DirectoryMetadata {
+    private static class DirectoryMetadata {
         public int parentDirectoryOffset;
         public int siblingDirectoryOffset;
         public int firstChildDirectoryOffset;
@@ -980,7 +981,7 @@ public class NCCH {
         }
     }
 
-    private class FileMetadata {
+    private static class FileMetadata {
         public int offset;
         public int parentDirectoryOffset;
         public int siblingFileOffset;
@@ -1019,7 +1020,7 @@ public class NCCH {
             IOFunctions.writeFullLong(output, 0x10, this.fileDataLength);
             IOFunctions.writeFullInt(output, 0x18, this.nextFileInHashBucketOffset);
             IOFunctions.writeFullInt(output, 0x1C, this.nameLength);
-            if (!name.equals("")) {
+            if (!name.isEmpty()) {
                 byte[] nameBytes = name.getBytes(StandardCharsets.UTF_16LE);
                 System.arraycopy(nameBytes, 0, output, 0x20, nameBytes.length);
             }

@@ -33,9 +33,6 @@ public class Evolution implements Comparable<Evolution> {
     private int extraInfo;
     private int estimatedEvoLvl;
 
-    // only relevant for Gen 7
-    private int forme;
-
     public Evolution(Species from, Species to, EvolutionType type, int extra) {
         this.from = from;
         this.to = to;
@@ -52,7 +49,6 @@ public class Evolution implements Comparable<Evolution> {
         this.type = original.type;
         this.extraInfo = original.extraInfo;
         this.estimatedEvoLvl = original.estimatedEvoLvl;
-        this.forme = original.forme;
     }
 
     public Evolution(Species from, Species to, EvolutionType type, int extra, int estimatedEvoLvl) {
@@ -110,10 +106,6 @@ public class Evolution implements Comparable<Evolution> {
         this.estimatedEvoLvl = estimatedEvoLvl;
     }
 
-    public int getForme() {
-        return forme;
-    }
-
     /**
      * Sets the {@link EvolutionType} and the extraInfo of this {@link Evolution}.
      * Furthermore, updates the estimatedEvoLvl of this evolution if necessary.
@@ -153,10 +145,6 @@ public class Evolution implements Comparable<Evolution> {
                 (useEstimatedLevels && type.usesLevelThreshold()) ? estimatedEvoLvl : extraInfo);
     }
 
-    public void setForme(int forme) {
-        this.forme = forme;
-    }
-
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -194,10 +182,7 @@ public class Evolution implements Comparable<Evolution> {
 
     @Override
     public String toString() {
-        return forme == 0 ?
-                String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo, estimatedEvoLvl) :
-                String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d, forme:%d)", from.getFullName(), to.getFullName(),
-                        type, extraInfo, estimatedEvoLvl, forme);
+        return String.format("(%s->%s, %s, extraInfo:%d, estimatedEvoLvl:%d)",
+                from.getFullName(), to.getFullName(), type, extraInfo, estimatedEvoLvl);
     }
 }

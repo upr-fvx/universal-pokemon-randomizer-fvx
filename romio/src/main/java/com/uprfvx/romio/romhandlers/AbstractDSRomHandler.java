@@ -134,7 +134,13 @@ public abstract class AbstractDSRomHandler extends AbstractRomHandler {
         baseRom.printRomDiagnostics(logStream);
     }
 
-    public void closeInnerRom() throws IOException {
+    @Override
+    public ResourceLifetime getResourceLifetime() {
+        return ResourceLifetime.LOAD_ONLY;
+    }
+
+    @Override
+    public void closeResources() throws IOException {
         baseRom.closeROM();
     }
 

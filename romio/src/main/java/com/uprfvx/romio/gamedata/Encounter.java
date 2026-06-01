@@ -1,8 +1,6 @@
 package com.uprfvx.romio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  Encounter.java - contains one wild Pokemon slot                       --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,16 +22,47 @@ package com.uprfvx.romio.gamedata;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+/**
+ * Contains one wild Pokemon slot. The {@link Species} and forme info is largely held by a {@link SpeciesHolder},
+ * but can also be gotten through {@link #getSpecies()}.
+ */
 public class Encounter {
+
+    private final SpeciesHolder speciesHolder;
 
     private int level;
     private int maxLevel;
-    private Species species;
-    private int formeNumber;
 
     // Used only for Gen 7's SOS mechanic
     private boolean isSOS;
     private SOSType sosType;
+
+    /**
+     * Creates an Encounter with the given {@link Species} and level.
+     * @param species The Species used for the Encounter. Must be a base forme.
+     * @param level The level for the Encounter, or min level if a max level is given later. Must be non-negative.
+     * @throws NullPointerException if species is null.
+     * @throws IllegalArgumentException if species is not a base forme.
+     * @throws IllegalArgumentException if level is negative.
+     */
+    public Encounter(Species species, int level) {
+        if (level < 0) {
+            throw new IllegalArgumentException("level must be non-negative");
+        }
+        this.speciesHolder = new SpeciesHolder(species);
+        this.level = level;
+    }
+
+    public SpeciesHolder getSpeciesHolder() {
+        return speciesHolder;
+    }
+
+    /**
+     * Short for {@link #getSpeciesHolder()}.{@link SpeciesHolder#getSpecies() getSpecies()}
+     */
+    public Species getSpecies() {
+        return speciesHolder.getSpecies();
+    }
 
     public int getLevel() {
         return level;
@@ -49,25 +78,6 @@ public class Encounter {
 
     public void setMaxLevel(int maxLevel) {
         this.maxLevel = maxLevel;
-    }
-
-    public Species getSpecies() {
-        return species;
-    }
-    //TODO: determine which uses of this need base forme, have those call Species.baseForme
-    //(Thus allowing us to store the actually-used forme here,
-    //solving some problems)
-
-    public void setSpecies(Species species) {
-        this.species = species;
-    }
-
-    public int getFormeNumber() {
-        return formeNumber;
-    }
-
-    public void setFormeNumber(int formeNumber) {
-        this.formeNumber = formeNumber;
     }
 
     public boolean isSOS() {
@@ -88,22 +98,18 @@ public class Encounter {
 
     @Override
     public String toString() {
-        if (species == null) {
-            return "ERROR";
-        }
         if (maxLevel == 0) {
-            return species.getName() + " Lv" + level;
+            return getSpecies().getFullName() + " Lv" + level;
         } else {
-            return species.getName() + " Lvs " + level + "-" + maxLevel;
+            return getSpecies().getFullName() + " Lvs " + level + "-" + maxLevel;
         }
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Encounter) {
-            Encounter other = (Encounter) o;
-            return level == other.level && maxLevel == other.maxLevel && species.equals(other.species)
-                    && formeNumber == other.formeNumber && isSOS == other.isSOS && sosType == other.sosType;
+        if (o instanceof Encounter other) {
+            return level == other.level && maxLevel == other.maxLevel && speciesHolder.equals(other.speciesHolder)
+                    && isSOS == other.isSOS && sosType == other.sosType;
         }
         return false;
     }

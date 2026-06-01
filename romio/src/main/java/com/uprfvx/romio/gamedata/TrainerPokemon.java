@@ -27,11 +27,13 @@ package com.uprfvx.romio.gamedata;
 import java.util.Arrays;
 
 /**
- * Represents a Pokemon owned by a {@link Trainer}.
+ * Represents a Pokemon owned by a {@link Trainer}. The {@link Species} and forme info is largely
+ * held by a {@link SpeciesHolder}, but can also be gotten through {@link #getSpecies()}.
  */
 public class TrainerPokemon {
 
-    private Species species;
+    private final SpeciesHolder speciesHolder;
+
     private int level;
 
     private int[] moves = {0, 0, 0, 0};
@@ -43,8 +45,6 @@ public class TrainerPokemon {
     //TODO: change these to methods which determine at runtime
 
     private int abilitySlot;
-    private int forme;
-    private String formeSuffix = "";
 
     private int forcedGenderFlag;
     private byte nature;
@@ -67,10 +67,25 @@ public class TrainerPokemon {
 
     private boolean isAddedTeamMember = false;
 
-    public TrainerPokemon() { }
+    /**
+     * Creates a TrainerPokemon with the given {@link Species} and level.
+     * @param species The Species used for the Encounter. Must be a base forme.
+     * @param level The level for the Encounter, or min level if a max level is given later. Must be non-negative.
+     * @throws NullPointerException if species is null.
+     * @throws IllegalArgumentException if species is not a base forme.
+     * @throws IllegalArgumentException if level is negative.
+     */
+    public TrainerPokemon(Species species, int level) {
+        if (level < 0) {
+            throw new IllegalArgumentException("level must be non-negative");
+        }
+        this.speciesHolder = new SpeciesHolder(species);
+        this.level = level;
+    }
 
     public TrainerPokemon(TrainerPokemon original) {
-        species = original.species;
+        speciesHolder = new SpeciesHolder(original.speciesHolder);
+
         level = original.level;
 
         moves = Arrays.copyOf(original.moves, 4);
@@ -87,25 +102,24 @@ public class TrainerPokemon {
         strength = original.strength;
         heldItem = original.heldItem;
         abilitySlot = original.abilitySlot;
-        forme = original.forme;
-        formeSuffix = original.formeSuffix;
 
         hasZCrystal = original.hasZCrystal;
         hasMegaStone = original.hasMegaStone;
 
         resetMoves = original.resetMoves;
+
+        isAddedTeamMember = original.isAddedTeamMember;
     }
 
-    public TrainerPokemon copy() {
-        return new TrainerPokemon(this);
+    public SpeciesHolder getSpeciesHolder() {
+        return speciesHolder;
     }
 
+    /**
+     * Short for {@link #getSpeciesHolder()}.{@link SpeciesHolder#getSpecies() getSpecies()}
+     */
     public Species getSpecies() {
-        return species;
-    }
-
-    public void setSpecies(Species species) {
-        this.species = species;
+        return speciesHolder.getSpecies();
     }
 
     public int getLevel() {
@@ -141,7 +155,7 @@ public class TrainerPokemon {
     }
 
     public boolean canMegaEvolve() {
-        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+        for (MegaEvolution mega: getSpecies().getMegaEvolutionsFrom()) {
             if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
                 return true;
             }
@@ -171,22 +185,6 @@ public class TrainerPokemon {
 
     public void setAbilitySlot(int abilitySlot) {
         this.abilitySlot = abilitySlot;
-    }
-
-    public int getForme() {
-        return forme;
-    }
-
-    public void setForme(int forme) {
-        this.forme = forme;
-    }
-
-    public String getFormeSuffix() {
-        return formeSuffix;
-    }
-
-    public void setFormeSuffix(String formeSuffix) {
-        this.formeSuffix = formeSuffix;
     }
 
     public int getForcedGenderFlag() {
@@ -279,7 +277,7 @@ public class TrainerPokemon {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder(species.getFullName());
+        StringBuilder sb = new StringBuilder(getSpecies().getFullName());
         if (heldItem != null) {
             sb.append("@").append(heldItem.getName());
         }

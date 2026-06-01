@@ -30,6 +30,7 @@ import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,9 @@ import java.util.Set;
  * Finally, the RomHandler is responsible for giving general info about the Rom (e.g. {@link #getROMName()},
  * {@link #getROMType()}, {@link #printRomDiagnostics(PrintStream)}), and the loading process (e.g.
  * {@link #loadedFilename()}, {@link #hasGameUpdateLoaded()}).
+ * <br><br>
+ * <b>NOTE</b>: the RomHandler may use resources, which need to be manually closed. See {@link #getResourceLifetime()}
+ * and {@link #closeResources()}.
  */
 public interface RomHandler {
 
@@ -95,6 +99,37 @@ public interface RomHandler {
 
     void writeCheckValue(int checkValue);
 
+    // ====================================
+    // Methods related to resource handling
+    // ====================================
+
+    /**
+     * Represents how long the resources of this need to be open for/when to close them.
+     * <dl>
+     *     <dt><code>NONE</code></dt><dd>The resources do not need to be manually closed.</dd>
+     *     <dt><code>LOAD_ONLY</code></dt><dd>The resources are only needed during loading, but need to be manually closed after.</dd>
+     *     <dt><code>SAME_AS_ROMHANDLER</code></dt><dd>The resources need to be open as long as this RomHandler is used.</dd>
+     * </dl>
+     */
+    // TODO: is there a reason to have LOAD_ONLY? And thus this as an enum instead of a boolean? Couldn't it just auto-close?
+    enum ResourceLifetime {
+        NONE, LOAD_ONLY, SAME_AS_ROMHANDLER
+    }
+
+    /**
+     * Returns the {@link ResourceLifetime} which applies to this RomHandler.
+     * This value should never change for a given RomHandler.<br>
+     * Should be used with {@link #closeResources()}.
+     */
+    ResourceLifetime getResourceLifetime();
+
+    /**
+     * Closes all resources. Should be used with {@link #getResourceLifetime()};
+     * @throws UnsupportedOperationException if resource lifetime is {@link ResourceLifetime#NONE}.
+     * @throws IOException if closing the resources goes badly.
+     */
+    void closeResources() throws IOException;
+
     // ===========
     // Log methods
     // ===========
@@ -129,9 +164,6 @@ public interface RomHandler {
     SpeciesSet getSpeciesSetInclFormes();
 
     List<MegaEvolution> getMegaEvolutions();
-
-    Species getAltFormeOfSpecies(Species base, int forme);
-    //TODO: move this to Species
 
     SpeciesSet getIrregularFormes();
 
@@ -385,12 +417,12 @@ public interface RomHandler {
     /**
      * Get the 4 moves known by a Species at a particular level.
      *
-     * @param pkmn Species index to get moves for.
+     * @param pkmn Species to get moves for.
      * @param movesets Map of Species indices mapped to movesets.
      * @param level Level to get at.
      * @return Array with move indices.
      */
-    int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level);
+    int[] getMovesAtLevel(Species pkmn, Map<Integer, List<MoveLearnt>> movesets, int level);
 
 
         // ==============

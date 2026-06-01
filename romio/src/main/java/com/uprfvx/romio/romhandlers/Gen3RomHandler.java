@@ -1503,10 +1503,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         // Read the entries
         for (int i = 0; i < numOfEntries; i++) {
             // min, max, species, species
-            Encounter enc = new Encounter();
-            enc.setLevel(rom[dataOffset + i * 4]);
+            Species pk = pokesInternal[readWord(dataOffset + i * 4 + 2)];
+            int level = rom[dataOffset + i * 4] & 0xFF;
+            Encounter enc = new Encounter(pk, level);
             enc.setMaxLevel(rom[dataOffset + i * 4 + 1]);
-            enc.setSpecies(pokesInternal[readWord(dataOffset + i * 4 + 2)]);
             area.add(enc);
         }
         return area;
@@ -1587,11 +1587,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public boolean hasWildAltFormes() {
-        return false;
-    }
-
-    @Override
     public SpeciesSet getBannedForWildEncounters() {
         SpeciesSet banned = new SpeciesSet();
         if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
@@ -1651,10 +1646,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (pokeDataType == 0) {
                 // blocks of 8 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
+                    Species pk = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
+                    int level = readWord(pointerToPokes + poke * 8 + 2);
+                    TrainerPokemon thisPoke = new TrainerPokemon(pk, level);
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
                     // In Gen 3, Trainer Pokemon *always* use the first Ability, no matter what
                     thisPoke.setAbilitySlot(1);
                     tr.getPokemon().add(thisPoke);
@@ -1662,10 +1657,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             } else if (pokeDataType == 2) {
                 // blocks of 8 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
+                    Species pk = pokesInternal[readWord(pointerToPokes + poke * 8 + 4)];
+                    int level = readWord(pointerToPokes + poke * 8 + 2);
+                    TrainerPokemon thisPoke = new TrainerPokemon(pk, level);
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 8) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 8 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 8 + 4)]);
                     int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 8 + 6));
                     thisPoke.setHeldItem(items.get(itemID));
                     thisPoke.setAbilitySlot(1);
@@ -1674,10 +1669,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             } else if (pokeDataType == 1) {
                 // blocks of 16 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
+                    Species pk = pokesInternal[readWord(pointerToPokes + poke * 16 + 4)];
+                    int level = readWord(pointerToPokes + poke * 16 + 2);
+                    TrainerPokemon thisPoke = new TrainerPokemon(pk, level);
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
                     for (int move = 0; move < 4; move++) {
                         thisPoke.getMoves()[move] = readWord(pointerToPokes + poke * 16 + 6 + (move*2));
                     }
@@ -1687,10 +1682,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             } else if (pokeDataType == 3) {
                 // blocks of 16 bytes
                 for (int poke = 0; poke < numPokes; poke++) {
-                    TrainerPokemon thisPoke = new TrainerPokemon();
+                    Species pk = pokesInternal[readWord(pointerToPokes + poke * 16 + 4)];
+                    int level = readWord(pointerToPokes + poke * 16 + 2);
+                    TrainerPokemon thisPoke = new TrainerPokemon(pk, level);
                     thisPoke.setIVs(((readWord(pointerToPokes + poke * 16) & 0xFF) * 31) / 255);
-                    thisPoke.setLevel(readWord(pointerToPokes + poke * 16 + 2));
-                    thisPoke.setSpecies(pokesInternal[readWord(pointerToPokes + poke * 16 + 4)]);
                     int itemID = Gen3Constants.itemIDToStandard(readWord(pointerToPokes + poke * 16 + 6));
                     thisPoke.setHeldItem(items.get(itemID));
                     for (int move = 0; move < 4; move++) {
@@ -1735,10 +1730,10 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
-			TrainerPokemon tp = new TrainerPokemon();
-			tp.setSpecies(pokesInternal[readWord(currentOffset)]);
+            Species pk = pokesInternal[readWord(currentOffset)];
+            int level = rom[currentOffset + 3];
+			TrainerPokemon tp = new TrainerPokemon(pk, level);
 			tp.setIVs(rom[currentOffset + 2]);
-			tp.setLevel(rom[currentOffset + 3]);
 			for (int move = 0; move < 4; move++) {
 				tp.getMoves()[move] = readWord(currentOffset + 12 + (move * 2));
 			}
@@ -1841,7 +1836,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 					writeWord(pokemonData, tpIndex * 16 + 14, 0);
 				}
 				if (tp.isResetMoves()) {
-					int[] pokeMoves = getMovesAtLevel(tp.getSpecies().getNumber(), movesets, tp.getLevel());
+					int[] pokeMoves = getMovesAtLevel(tp.getSpecies(), movesets, tp.getLevel());
 					for (int m = 0; m < 4; m++) {
 						writeWord(pokemonData, tpIndex * 16 + movesStart + m * 2, pokeMoves[m]);
 					}
@@ -1920,11 +1915,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        return base;
     }
 
     @Override
@@ -2112,8 +2102,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         for (int i = 0; i < staticsHere.size(); i++) {
             int currentOffset = i;
             StaticPokemon staticPK = staticsHere.get(i);
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(staticPK.getPokemon(this));
+            StaticEncounter se = new StaticEncounter(staticPK.getPokemon(this));
             se.setLevel(staticPK.getLevel(rom, 0));
             se.setEgg(Arrays.stream(staticEggOffsets).anyMatch(x-> x == currentOffset));
             statics.add(se);
@@ -2135,8 +2124,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Species pkmn = pokesInternal[species];
             int startingLevelOffset = romEntry.getIntValue("StaticFirstBattleLevelOffset");
             int level = rom[startingLevelOffset];
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(pkmn);
+            StaticEncounter se = new StaticEncounter(pkmn);
             se.setLevel(level);
             statics.add(se);
         } else if (romEntry.hasTweakFile("GhostMarowakTweak")) {
@@ -2155,8 +2143,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Species pkmn = pokesInternal[species];
             int[] startingLevelOffsets = romEntry.getArrayValue("GhostMarowakLevelOffsets");
             int level = rom[startingLevelOffsets[0]];
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(pkmn);
+            StaticEncounter se = new StaticEncounter(pkmn);
             se.setLevel(level);
             statics.add(se);
         }
@@ -2237,14 +2224,12 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 applyRubyRoamerPatch();
             }
             StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(roamer.getPokemon(this));
+            StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
             se.setLevel(roamer.getLevel(rom, 0));
             statics.add(se);
         } else if (romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             StaticPokemon roamer = romEntry.getRoamingPokemon().getFirst();
-            StaticEncounter se = new StaticEncounter();
-            se.setSpecies(roamer.getPokemon(this));
+            StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
             se.setLevel(roamer.getLevel(rom, 0));
             statics.add(se);
         } else if (romEntry.getRomType() == Gen3Constants.RomType_FRLG && romEntry.hasTweakFile("RoamingPokemonTweak")) {
@@ -2256,8 +2241,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             }
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(roamer.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
                 se.setLevel(roamer.getLevel(rom, 0));
                 statics.add(se);
             }
@@ -2271,8 +2255,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int[] southernIslandOffsets = romEntry.getArrayValue("StaticSouthernIslandOffsets");
             for (int i = 0; i < romEntry.getRoamingPokemon().size(); i++) {
                 StaticPokemon roamer = romEntry.getRoamingPokemon().get(i);
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(roamer.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(roamer.getPokemon(this));
                 se.setLevel(roamer.getLevel(rom, 0));
 
                 // Link each roamer to their respective Southern Island static encounter so that
@@ -2462,7 +2445,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		return RomFunctions.search(rom, minOffset, maxOffset, searchNeedle).stream().mapToInt(i -> i).toArray();
 	}
 
-    private RomFunctions.StringSizeDeterminer ssd = encodedText -> translateString(encodedText).length;
+    private final RomFunctions.StringSizeDeterminer ssd = encodedText -> translateString(encodedText).length;
 
     @Override
     public int getTMCount() {
@@ -3724,10 +3707,11 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 unusedOffset++;
                 continue;
             }
-            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
+            Species requested = pokesInternal[readWord(entryOffset + 56)];
+            Species given = pokesInternal[readWord(entryOffset + 12)];
+            InGameTrade trade = new InGameTrade(requested, given);
             trade.setNickname(readVariableLengthString(entryOffset));
-            trade.setGivenSpecies(pokesInternal[readWord(entryOffset + 12)]);
             trade.setIVs(new int[6]);
             for (int i = 0; i < 6; i++) {
                 trade.getIVs()[i] = rom[entryOffset + 14 + i] & 0xFF;
@@ -3736,7 +3720,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int heldItemID = Gen3Constants.itemIDToStandard(readWord(entryOffset + 40));
             trade.setHeldItem(items.get(heldItemID));
             trade.setOtName(readVariableLengthString(entryOffset + 43));
-            trade.setRequestedSpecies(pokesInternal[readWord(entryOffset + 56)]);
             trades.add(trade);
         }
 
@@ -4650,7 +4633,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     @Override
     public int getMaxMoveNameLength() {
         return 12;
-    };
+    }
 
     @Override
     public boolean isEnglish() {

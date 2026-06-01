@@ -1183,9 +1183,9 @@ public class RandomizerGUI {
      * (Having a resource open for a long time is indeed risky, but allows for worthwhile RAM optimizations)
      */
     private void unloadRomHandler() {
-        if (romHandler instanceof Abstract3DSRomHandler rh) {
+        if (romHandler.getResourceLifetime() == RomHandler.ResourceLifetime.SAME_AS_ROMHANDLER) {
             try {
-                rh.closeInnerRom();
+                romHandler.closeResources();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -3185,10 +3185,8 @@ public class RandomizerGUI {
 
             gameMascotLabel.setIcon(makeMascotIcon());
 
-            // AbstractDSRomHandler reads the ROM all at once and/or caches files in a temp folder.
-            // Thus, it is fine/good to close here. Compare with Abstract3DSRomHandler.
-            if (romHandler instanceof AbstractDSRomHandler) {
-                ((AbstractDSRomHandler) romHandler).closeInnerRom();
+            if (romHandler.getResourceLifetime() == RomHandler.ResourceLifetime.LOAD_ONLY) {
+                romHandler.closeResources();
             }
         } catch (Exception e) {
             attemptToLogException(e, "GUI.processFailed","GUI.processFailedNoLog", null, null);

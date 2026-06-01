@@ -590,6 +590,16 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public ResourceLifetime getResourceLifetime() {
+        return ResourceLifetime.NONE;
+    }
+
+    @Override
+    public void closeResources() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public boolean hasWildAltFormes() {
         // DEFAULT: no
         return false;

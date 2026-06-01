@@ -11,6 +11,7 @@ import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -248,6 +249,14 @@ public class TestRomHandler extends AbstractRomHandler {
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
         highestEvoLvl = mockupOf.getHighestEvoLvl();
+
+        if (mockupOf.getResourceLifetime() != ResourceLifetime.NONE) {
+            try {
+                mockupOf.closeResources();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**

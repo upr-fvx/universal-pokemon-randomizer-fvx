@@ -151,7 +151,13 @@ public abstract class Abstract3DSRomHandler extends AbstractRomHandler {
 		baseRom.printRomDiagnostics(logStream, gameUpdate);
 	}
 
-	public void closeInnerRom() throws IOException {
+    @Override
+    public ResourceLifetime getResourceLifetime() {
+        return ResourceLifetime.SAME_AS_ROMHANDLER;
+    }
+
+    @Override
+	public void closeResources() throws IOException {
 		baseRom.closeROM();
 	}
 

@@ -53,3 +53,4 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ## Bugfixes
 - (Gen 7) Fixed non-Ultra Beasts static encounters occasionally being randomized into Ultra Beasts when "Swap Legendaries & Swap Standards" is used.
+- (Gen 6+7) Fixed wild Pumpkaboo formes being randomized into different mons, when using 1-to-1 randomization options.

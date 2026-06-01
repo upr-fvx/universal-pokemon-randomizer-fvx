@@ -1244,6 +1244,18 @@ public class WildEncounterRandomizer extends Randomizer {
         //don't randomize unused areas
         //mostly important for catch 'em all
 
+	// Turn essentially cosmetic formes into the corresponding base forme,
+        // so they are considered the same species for replacements.
+        for (EncounterArea area : prepped) {
+            for (Encounter enc : area) {
+                Species pk = enc.getSpecies();
+                if (pk.isEssentiallyCosmetic()) {
+                    enc.getSpeciesHolder().setSpecies(pk.getBaseForme());
+                }
+            }
+        }
+
+
         // Shuffling the EncounterAreas leads to less predictable results for various modifiers.
         Collections.shuffle(prepped, random);
         return prepped;

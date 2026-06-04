@@ -1,8 +1,6 @@
 package com.uprfvx.random.customnames;
 
 /*----------------------------------------------------------------------------*/
-/*--  CustomNamesSet.java - handles functionality related to custom names.  --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -44,11 +42,11 @@ public record CustomNamesSet(List<String> trainerNames, List<String> trainerClas
 
     // TODO: standardize CustomNamesSet to work like the /data resources
 
-    private static final String FOLDER_PATH = "data/trainer_and_mon_names";
+    public static final String FOLDER_PATH = "data/trainer_and_mon_names";
     private static final String TRAINER_NAMES_PATH = FOLDER_PATH + "/TrainerNames.txt";
     private static final String TRAINER_CLASSES_PATH = FOLDER_PATH + "/TrainerClasses.txt";
     private static final String DOUBLES_TRAINER_NAMES_PATH = FOLDER_PATH + "/DoublesTrainerNames.txt";
-    private static final String DOUBLES_TRAINER_CLASSES_PATH = FOLDER_PATH + "/DoublesTrainerNames.txt";
+    private static final String DOUBLES_TRAINER_CLASSES_PATH = FOLDER_PATH + "/DoublesTrainerClasses.txt";
     private static final String POKEMON_NICKNAMES_PATH = FOLDER_PATH + "/PokemonNicknames.txt";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {

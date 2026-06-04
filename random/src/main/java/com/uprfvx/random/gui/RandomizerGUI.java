@@ -420,7 +420,8 @@ public class RandomizerGUI {
     private JMenuItem batchRandomizationMenuItem;
 
     private final ImageIcon emptyIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/com/uprfvx/random/gui/emptyIcon.png")));
-    private boolean haveCheckedCustomNames, unloadGameOnSuccess;
+    private boolean haveCheckedCustomNames, hasVisitedCustomNamesEditor;
+    private boolean unloadGameOnSuccess;
     private final Map<String, String> gameUpdates = new TreeMap<>();
 
     private final List<String> trainerSettings = new ArrayList<>();
@@ -617,7 +618,7 @@ public class RandomizerGUI {
         saveSettingsButton.addActionListener(_ -> saveQS());
         settingsButton.addActionListener(_ -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
         themeSelectionMenuItem.addActionListener(_ -> new ThemeSelectionDialog(this, frame));
-        customNamesEditorMenuItem.addActionListener(_ -> new CustomNamesEditorDialog(frame));
+        customNamesEditorMenuItem.addActionListener(_ -> customNamesEditorMenuItemActionPerformed());
         applyGameUpdateMenuItem.addActionListener(_ -> applyGameUpdateMenuItemActionPerformed());
         removeGameUpdateMenuItem.addActionListener(_ -> removeGameUpdateMenuItemActionPerformed());
         loadGetSettingsMenuItem.addActionListener(_ -> loadGetSettingsMenuItemActionPerformed());
@@ -1531,6 +1532,12 @@ public class RandomizerGUI {
             }
         }
         return saveType;
+    }
+
+    private void customNamesEditorMenuItemActionPerformed() {
+        new CustomNamesEditorDialog(frame, hasVisitedCustomNamesEditor);
+        hasVisitedCustomNamesEditor = true;
+        attemptWriteConfig();
     }
 
     private void applyGameUpdateMenuItemActionPerformed() {
@@ -3969,8 +3976,14 @@ public class RandomizerGUI {
                             }
                             setTheme(theme);
 
-                        } else if (key.equals("checkedcustomnames172")) {
+                        } else if (key.equals("checkedcustomnamesfvx")) {
+                            // it is named like this to not overlap with ancient config vars;
+                            // do NOT rename it to "checkedcustomnames", just in case someone comes
+                            // along with a similarly ancient config it could cause troubles
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());
+
+                        } else if (key.equals("hasvisitedcustomnameseditor")) {
+                            hasVisitedCustomNamesEditor = Boolean.parseBoolean(tokens[1].trim());
 
                         } else if (key.equals("firststart")) {
                             String val = tokens[1];
@@ -4035,8 +4048,8 @@ public class RandomizerGUI {
         try {
             PrintStream ps = new PrintStream(Files.newOutputStream(fh.toPath()), true, StandardCharsets.UTF_8);
             ps.println("theme=" + theme);
-            ps.println("checkedcustomnames=true");
-            ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
+            ps.println("checkedcustomnamesfvx=" + haveCheckedCustomNames);
+            ps.println("hasvisitedcustomnameseditor=" + hasVisitedCustomNamesEditor);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
             ps.println("showinvalidrompopup=" + showInvalidRomPopup);
             ps.println("inputdirectory=" + openDirectory);

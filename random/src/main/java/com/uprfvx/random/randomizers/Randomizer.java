@@ -43,7 +43,7 @@ public abstract class Randomizer {
 
     protected int applyPercentageLevelModifier(int level, int percentageLevelModifier) {
         int modifiedLevel = (int) Math.round(level * (1 + percentageLevelModifier / 100.0));
-        return Math.max(1, Math.min(100, modifiedLevel));
+        return Math.clamp(modifiedLevel, 1, 100);
     }
 
     protected CustomNamesSet getCustomNames() {

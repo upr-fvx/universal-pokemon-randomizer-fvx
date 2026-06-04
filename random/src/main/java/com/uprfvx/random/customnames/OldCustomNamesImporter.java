@@ -25,7 +25,6 @@ import java.util.stream.Stream;
  */
 public class OldCustomNamesImporter {
 
-    // TODO: testing
     private static final String RNCN_FILENAME = "customnames.rncn";
     private static final int RNCN_VERSION = 1;
 
@@ -92,7 +91,7 @@ public class OldCustomNamesImporter {
             throws IOException {
         SinglesAndDoublesNames trainerNames = readPreRNCNTrainerNames(trainerPath);
         SinglesAndDoublesNames trainerClasses = readPreRNCNTrainerClasses(classesPath);
-        List<String> pokemonNicknames = readPreRNCNOldNicknames(nicknamesPath);
+        List<String> pokemonNicknames = readPreRNCNNicknames(nicknamesPath);
 
         return new CustomNamesSet(trainerNames.singles, trainerClasses.singles,
                 trainerNames.doubles, trainerClasses.doubles,
@@ -151,7 +150,7 @@ public class OldCustomNamesImporter {
         return trainerClasses;
     }
 
-    private static List<String> readPreRNCNOldNicknames(String path) throws IOException {
+    private static List<String> readPreRNCNNicknames(String path) throws IOException {
         List<String> pokemonNicknames = new ArrayList<>();
         if (fileExists(path)) {
             Scanner sc = new Scanner(openFile(path), StandardCharsets.UTF_8);

@@ -40,8 +40,6 @@ import java.util.List;
 public record CustomNamesSet(List<String> trainerNames, List<String> trainerClasses, List<String> doublesTrainerNames,
                              List<String> doublesTrainerClasses, List<String> pokemonNicknames) {
 
-    // TODO: standardize CustomNamesSet to work like the /data resources
-
     public static final String FOLDER_PATH = "data/trainer_and_mon_names";
     private static final String TRAINER_NAMES_PATH = FOLDER_PATH + "/TrainerNames.txt";
     private static final String TRAINER_CLASSES_PATH = FOLDER_PATH + "/TrainerClasses.txt";
@@ -50,15 +48,19 @@ public record CustomNamesSet(List<String> trainerNames, List<String> trainerClas
     private static final String POKEMON_NICKNAMES_PATH = FOLDER_PATH + "/PokemonNicknames.txt";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
-        // TODO: do some input checking, don't just read lines
-        List<String> trainerNames = Files.readAllLines(Path.of(TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
-        List<String> trainerClasses = Files.readAllLines(Path.of(TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
-        List<String> doublesTrainerNames = Files.readAllLines(Path.of(DOUBLES_TRAINER_NAMES_PATH), StandardCharsets.UTF_8);
-        List<String> doublesTrainerClasses = Files.readAllLines(Path.of(DOUBLES_TRAINER_CLASSES_PATH), StandardCharsets.UTF_8);
-        List<String> pokemonNicknames = Files.readAllLines(Path.of(POKEMON_NICKNAMES_PATH), StandardCharsets.UTF_8);
+        List<String> trainerNames = readLines(TRAINER_NAMES_PATH);
+        List<String> trainerClasses = readLines(TRAINER_CLASSES_PATH);
+        List<String> doublesTrainerNames = readLines(DOUBLES_TRAINER_NAMES_PATH);
+        List<String> doublesTrainerClasses = readLines(DOUBLES_TRAINER_CLASSES_PATH);
+        List<String> pokemonNicknames = readLines(POKEMON_NICKNAMES_PATH);
         return new CustomNamesSet(trainerNames, trainerClasses,
                 doublesTrainerNames, doublesTrainerClasses,
                 pokemonNicknames);
+    }
+
+    private static List<String> readLines(String path) throws IOException {
+        return Files.readAllLines(Path.of(path), StandardCharsets.UTF_8).stream()
+                .map(String::trim).map(String::strip).toList();
     }
 
     public static void writeNamesToFile(CustomNamesSet customNamesSet) throws IOException {

@@ -47,8 +47,9 @@ public abstract class Randomizer {
     }
 
     protected CustomNamesSet getCustomNames() {
-        // just works for now as a quick refactor to remove custom names from Settings
-        // TODO: maybe not the best way of doing this; reconsider
+        // This is not in line with how most /data resources are loaded for randomization.
+        // Am not certain whether this or the other ways are more elegant, might be up
+        // for future unification. This works for now though.
         try {
             return CustomNamesSet.readNamesFromFile();
         } catch (IOException e) {

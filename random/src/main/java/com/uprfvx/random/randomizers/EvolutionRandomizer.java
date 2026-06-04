@@ -11,7 +11,6 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class EvolutionRandomizer extends Randomizer {
 
@@ -176,7 +175,6 @@ public class EvolutionRandomizer extends Randomizer {
             if (newEvo.getType() == EvolutionType.LEVEL_FEMALE_ESPURR) {
                 newEvo.updateEvolutionMethod(EvolutionType.LEVEL_FEMALE_ONLY, newEvo.getExtraInfo());
             }
-            newEvo.setForme(picked.getRandomCosmeticFormeNumber(random));
             return newEvo;
         }
 
@@ -218,7 +216,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private boolean isAlreadyChosenAsOtherSplitEvo(Species from, Species to) {
-            return from.getEvolutionsFrom().stream().map(Evolution::getTo).collect(Collectors.toList()).contains(to);
+            return from.getEvolutionsFrom().stream().map(Evolution::getTo).toList().contains(to);
         }
 
         /**
@@ -300,7 +298,7 @@ public class EvolutionRandomizer extends Randomizer {
         }
 
         private boolean isAnOriginalEvo(Species from, Species to) {
-            return allOriginalEvos.get(from).stream().map(Evolution::getTo).collect(Collectors.toList()).contains(to);
+            return allOriginalEvos.get(from).stream().map(Evolution::getTo).toList().contains(to);
         }
     }
 

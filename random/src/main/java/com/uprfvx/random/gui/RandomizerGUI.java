@@ -1000,6 +1000,7 @@ public class RandomizerGUI {
                         initialState();
                     }
                     if (results.wasOpeningSuccessful()) {
+                        unloadRomHandler();
                         romHandler = results.getRomHandler();
                         if (!reinitialize) {
                             romLoaded();
@@ -1161,7 +1162,7 @@ public class RandomizerGUI {
                     SwingUtilities.invokeLater(() -> batchProgressDialog.setVisible(false));
                     JOptionPane.showMessageDialog(frame, bundle.getString("GUI.randomizationDone"));
                     if (unloadGameOnSuccess) {
-                        romHandler = null;
+                        unloadRomHandler();
                         initialState();
                     } else {
                         reinitializeRomHandler(false);
@@ -1171,6 +1172,25 @@ public class RandomizerGUI {
             };
             swingWorker.execute();
         }
+    }
+
+    /**
+     * Closes any resources {@link #romHandler} might still have been using, and sets it to null.
+     * The idea here is that the romHandler is allowed to have a resource open for its whole lifetime,
+     * but for no longer. Thus, this method <b>must</b> be called anytime before romHandler is set or discarded.
+     * <br><br>
+     * (Having a resource open for a long time is indeed risky, but allows for worthwhile RAM optimizations)
+     */
+    private void unloadRomHandler() {
+        if (romHandler == null) return;
+        if (romHandler.getResourceLifetime() == RomHandler.ResourceLifetime.SAME_AS_ROMHANDLER) {
+            try {
+                romHandler.closeResources();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        romHandler = null;
     }
 
     private void saveRandomizedRom(SaveType outputType, File fh) {
@@ -1313,7 +1333,7 @@ public class RandomizerGUI {
 
             SwingUtilities.invokeLater(() -> {
                 opDialog.setVisible(false);
-                romHandler = null;
+                unloadRomHandler();
                 initialState();
             });
         }
@@ -1373,7 +1393,7 @@ public class RandomizerGUI {
 
         // Done
         if (this.unloadGameOnSuccess) {
-            romHandler = null;
+            unloadRomHandler();
             initialState();
         } else {
             reinitializeRomHandler(false);
@@ -1402,6 +1422,7 @@ public class RandomizerGUI {
             // Apply it
             long seed = pld.getSeed();
             String config = pld.getSettingsString();
+            unloadRomHandler();
             this.romHandler = pld.getROM();
             if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
                 this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
@@ -1417,7 +1438,7 @@ public class RandomizerGUI {
             } catch (IllegalArgumentException e) {
                 // settings load failed
                 e.printStackTrace();
-                this.romHandler = null;
+                unloadRomHandler();
                 initialState();
             }
             SaveType outputType = askForSaveType();
@@ -1442,7 +1463,7 @@ public class RandomizerGUI {
                         }
                     }
                 } else {
-                    this.romHandler = null;
+                    unloadRomHandler();
                     initialState();
                 }
             } else if (outputType == SaveType.DIRECTORY) {
@@ -1452,7 +1473,7 @@ public class RandomizerGUI {
                     fh = romSaveChooser.getSelectedFile();
                     allowed = true;
                 } else {
-                    this.romHandler = null;
+                    unloadRomHandler();
                     initialState();
                 }
             }
@@ -1660,6 +1681,7 @@ public class RandomizerGUI {
     // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
     // you're doing.
     private void reinitializeRomHandler(boolean batchRandomization) {
+        unloadRomHandler();
         Thread t = openRom(new File(romHandler.loadedFilename()), true);
         if (batchRandomization) {
             try {
@@ -3097,14 +3119,12 @@ public class RandomizerGUI {
 
             gameMascotLabel.setIcon(makeMascotIcon());
 
-            if (romHandler instanceof AbstractDSRomHandler) {
-                ((AbstractDSRomHandler) romHandler).closeInnerRom();
-            } else if (romHandler instanceof Abstract3DSRomHandler) {
-                ((Abstract3DSRomHandler) romHandler).closeInnerRom();
+            if (romHandler.getResourceLifetime() == RomHandler.ResourceLifetime.LOAD_ONLY) {
+                romHandler.closeResources();
             }
         } catch (Exception e) {
             attemptToLogException(e, "GUI.processFailed","GUI.processFailedNoLog", null, null);
-            romHandler = null;
+            unloadRomHandler();
             initialState();
         }
     }
@@ -3801,7 +3821,7 @@ public class RandomizerGUI {
                 romHandler.generationOfPokemon() >= 6 ?
                         romHandler.getSpeciesInclFormes()
                                 .stream()
-                                .filter(pk -> pk == null || !pk.isCosmeticReplacement())
+                                .filter(pk -> pk == null || !pk.isEssentiallyCosmetic())
                                 .toList() :
                         romHandler.getSpecies();
         String[] pokeNames = new String[allPokes.size()];

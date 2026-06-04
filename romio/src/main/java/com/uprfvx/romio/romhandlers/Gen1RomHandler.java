@@ -887,9 +887,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                             thisArea.banSpecies(ghostMarowak);
                         }
                         for (int slot = 0; slot < Gen1Constants.encounterTableSize; slot++) {
-                            Encounter enc = new Encounter();
-                            enc.setLevel(rom[offset] & 0xFF);
-                            enc.setSpecies(pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]]);
+                            Species pk = pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]];
+                            int level = rom[offset] & 0xFF;
+                            Encounter enc = new Encounter(pk, level);
                             thisArea.add(enc);
                             offset += 2;
                         }
@@ -926,9 +926,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         int oldRodOffset = romEntry.getIntValue("OldRodOffset");
         EncounterArea area = new EncounterArea();
         area.setIdentifiers("Old Rod Fishing", -1, EncounterType.FISHING);
-        Encounter oldRodEnc = new Encounter();
-        oldRodEnc.setLevel(rom[oldRodOffset + 2] & 0xFF);
-        oldRodEnc.setSpecies(pokes[pokeRBYToNumTable[rom[oldRodOffset + 1] & 0xFF]]);
+        Species pk = pokes[pokeRBYToNumTable[rom[oldRodOffset + 1] & 0xFF]];
+        int level = rom[oldRodOffset + 2] & 0xFF;
+        Encounter oldRodEnc = new Encounter(pk, level);
         area.add(oldRodEnc);
         area.banSpecies(getGhostMarowakPoke());
 
@@ -940,9 +940,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         EncounterArea area = new EncounterArea();
         area.setIdentifiers("Good Rod Fishing", -1, EncounterType.FISHING);
         for (int slot = 0; slot < 2; slot++) {
-            Encounter enc = new Encounter();
-            enc.setLevel(rom[goodRodOffset + slot * 2] & 0xFF);
-            enc.setSpecies(pokes[pokeRBYToNumTable[rom[goodRodOffset + slot * 2 + 1] & 0xFF]]);
+            Species pk = pokes[pokeRBYToNumTable[rom[goodRodOffset + slot * 2 + 1] & 0xFF]];
+            int level = rom[goodRodOffset + slot * 2] & 0xFF;
+            Encounter enc = new Encounter(pk, level);
             area.add(enc);
         }
         area.banSpecies(getGhostMarowakPoke());
@@ -962,9 +962,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 area.setEncounterType(EncounterType.FISHING);
                 area.setMapIndex(map);
                 for (int encN = 0; encN < Gen1Constants.yellowSuperRodTableSize; encN++) {
-                    Encounter enc = new Encounter();
-                    enc.setLevel(rom[superRodOffset + 1] & 0xFF);
-                    enc.setSpecies(pokes[pokeRBYToNumTable[rom[superRodOffset] & 0xFF]]);
+                    Species pk = pokes[pokeRBYToNumTable[rom[superRodOffset] & 0xFF]];
+                    int level = rom[superRodOffset + 1] & 0xFF;
+                    Encounter enc = new Encounter(pk, level);
                     area.add(enc);
                     superRodOffset += 2;
                 }
@@ -987,9 +987,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                     area.setMapIndex(map);
                     int pokesInArea = rom[areaOffset++] & 0xFF;
                     for (int encN = 0; encN < pokesInArea; encN++) {
-                        Encounter enc = new Encounter();
-                        enc.setLevel(rom[areaOffset] & 0xFF);
-                        enc.setSpecies(pokes[pokeRBYToNumTable[rom[areaOffset + 1] & 0xFF]]);
+                        Species pk = pokes[pokeRBYToNumTable[rom[areaOffset + 1] & 0xFF]];
+                        int level = rom[areaOffset] & 0xFF;
+                        Encounter enc = new Encounter(pk, level);
                         area.add(enc);
                         areaOffset += 2;
                     }
@@ -1128,11 +1128,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public boolean hasWildAltFormes() {
-        return false;
-    }
-
-    @Override
     public List<Species> getSpecies() {
         return speciesList;
     }
@@ -1150,11 +1145,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     @Override
     public List<MegaEvolution> getMegaEvolutions() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        return base;
     }
 
     @Override
@@ -1206,22 +1196,20 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         Trainer tr = new Trainer();
         tr.setOffset(offset);
         int dataType = rom[offset] & 0xFF;
+        offset++;
         if (dataType == 0xFF) {
             // "Special" trainer
-            offset++;
             while (rom[offset] != 0x0) {
-                TrainerPokemon tp = new TrainerPokemon();
-                tp.setLevel(rom[offset] & 0xFF);
-                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]]);
+                Species pk = pokes[pokeRBYToNumTable[rom[offset + 1] & 0xFF]];
+                int level = rom[offset] & 0xFF;
+                TrainerPokemon tp = new TrainerPokemon(pk, level);
                 tr.getPokemon().add(tp);
                 offset += 2;
             }
         } else {
-            offset++;
             while (rom[offset] != 0x0) {
-                TrainerPokemon tp = new TrainerPokemon();
-                tp.setLevel(dataType);
-                tp.setSpecies(pokes[pokeRBYToNumTable[rom[offset] & 0xFF]]);
+                Species pk = pokes[pokeRBYToNumTable[rom[offset] & 0xFF]];
+                TrainerPokemon tp = new TrainerPokemon(pk, dataType);
                 tr.getPokemon().add(tp);
                 offset++;
             }
@@ -1578,8 +1566,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         List<StaticEncounter> statics = new ArrayList<>();
         if (romEntry.getIntValue("StaticPokemonSupport") > 0) {
             for (StaticPokemon sp : romEntry.getStaticPokemon()) {
-                StaticEncounter se = new StaticEncounter();
-                se.setSpecies(sp.getPokemon(this));
+                StaticEncounter se = new StaticEncounter(sp.getPokemon(this));
                 se.setLevel(sp.getLevel(rom, 0));
                 statics.add(se);
             }
@@ -2736,10 +2723,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 unusedOffset++;
                 continue;
             }
-            InGameTrade trade = new InGameTrade();
             int entryOffset = tableOffset + entry * entryLength;
-            trade.setRequestedSpecies(pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]]);
-            trade.setGivenSpecies(pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]]);
+            Species requested = pokes[pokeRBYToNumTable[rom[entryOffset] & 0xFF]];
+            Species given = pokes[pokeRBYToNumTable[rom[entryOffset + 1] & 0xFF]];
+            InGameTrade trade = new InGameTrade(requested, given);
             trade.setNickname(readString(entryOffset + 3, nicknameLength, false));
             trades.add(trade);
         }

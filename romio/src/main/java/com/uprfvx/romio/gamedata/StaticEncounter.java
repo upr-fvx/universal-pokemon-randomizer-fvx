@@ -1,8 +1,6 @@
 package com.uprfvx.romio.gamedata;
 
 /*----------------------------------------------------------------------------*/
-/*--  StaticEncounter.java - stores a static encounter in Gen 6+            --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Pokemon and any associated names and the like are                     --*/
 /*--  trademark and (C) Nintendo 1996-2020.                                 --*/
@@ -27,14 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents a static encounter or a gift Pokémon. The {@link Species} and forme info is largely
+ * held by a {@link SpeciesHolder}, but can also be gotten through {@link #getSpecies()}.
+ */
 public class StaticEncounter {
-    private Species species;
-    private int forme = 0;
+    // TODO: test cases
+
+    private final SpeciesHolder speciesHolder;
+
     private int level;
     private int maxLevel = 0;
+
     private Item heldItem;
     private boolean isEgg = false;
     private boolean resetMoves = false;
+
     private boolean restrictedPool = false;
     private List<Species> restrictedList = new ArrayList<>();
 
@@ -47,12 +53,13 @@ public class StaticEncounter {
     // differences in other properties like level.
     private final List<StaticEncounter> linkedEncounters;
 
-    public StaticEncounter() {
-        this.linkedEncounters = new ArrayList<>();
-    }
-
+    /**
+     * Creates a StaticEncounter with the given {@link Species}.
+     * @throws IllegalArgumentException if species is not a base forme.
+     * @throws NullPointerException if species is null.
+     */
     public StaticEncounter(Species species) {
-        this.species = species;
+        this.speciesHolder = new SpeciesHolder(species);
         this.linkedEncounters = new ArrayList<>();
     }
 
@@ -62,8 +69,7 @@ public class StaticEncounter {
      * @param original The StaticEncounter to copy.
      */
     public StaticEncounter(StaticEncounter original) {
-        this.species = original.species;
-        this.forme = original.forme;
+        this.speciesHolder = new SpeciesHolder(original.speciesHolder);
         this.level = original.level;
         this.maxLevel = original.maxLevel;
         this.heldItem = original.heldItem;
@@ -73,35 +79,21 @@ public class StaticEncounter {
         this.restrictedList = new ArrayList<>(original.restrictedList);
         this.linkedEncounters = new ArrayList<>(original.linkedEncounters.size());
         for (StaticEncounter oldLinked : original.linkedEncounters) {
-            StaticEncounter newLinked = new StaticEncounter(); //is there a reason to not use the copy constructor here?
-            newLinked.species = oldLinked.species;
-            newLinked.forme = oldLinked.forme;
-            newLinked.level = oldLinked.level;
-            newLinked.maxLevel = oldLinked.maxLevel;
-            newLinked.heldItem = oldLinked.heldItem;
-            newLinked.isEgg = oldLinked.isEgg;
-            newLinked.resetMoves = oldLinked.resetMoves;
-            newLinked.restrictedPool = oldLinked.restrictedPool;
-            newLinked.restrictedList = new ArrayList<>(oldLinked.restrictedList);
+            // linked encounters don't have their own linked encounters, so this shouldn't deadlock
+            StaticEncounter newLinked = new StaticEncounter(oldLinked);
             this.linkedEncounters.add(newLinked);
         }
     }
 
+    public SpeciesHolder getSpeciesHolder() {
+        return speciesHolder;
+    }
 
+    /**
+     * Short for {@link #getSpeciesHolder()}.{@link SpeciesHolder#getSpecies() getSpecies()}
+     */
     public Species getSpecies() {
-        return species;
-    }
-
-    public void setSpecies(Species species) {
-        this.species = species;
-    }
-
-    public int getForme() {
-        return forme;
-    }
-
-    public void setForme(int forme) {
-        this.forme = forme;
+        return speciesHolder.getSpecies();
     }
 
     public int getLevel() {
@@ -129,7 +121,15 @@ public class StaticEncounter {
     }
 
     public boolean canMegaEvolve() {
-        for (MegaEvolution mega: species.getMegaEvolutionsFrom()) {
+        // A bit unclear whether this should use getSpecies() or baseSpecies
+        // though it does not matter in the Vanilla Gen 6-7 games since no mon
+        // that can mega evolve has alt formes beyond the mega.
+        // If you give base forme (Plant) Wormadam a mega, can its alt formes automatically
+        // access the same mega, and mega evolve?
+        // If you force the encounter to be Venusaur-Mega from the start and give it Venusaurite,
+        // can it mega evolve? Into Venusaur-Mega again??
+        // TODO: figure out
+        for (MegaEvolution mega: getSpecies().getMegaEvolutionsFrom()) {
             if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
                 return true;
             }
@@ -169,6 +169,9 @@ public class StaticEncounter {
         this.restrictedList = restrictedList;
     }
 
+    // TODO: encapsulate linked encounters better
+    //  Getting should retrieve an unmodifiable list, adding done via a separate method.
+    //  Also, linked encounters should not have modifiable baseSpecies/formeNumber
     public List<StaticEncounter> getLinkedEncounters() {
         return linkedEncounters;
     }
@@ -180,7 +183,7 @@ public class StaticEncounter {
 
     public String toString(boolean printLevel) {
         StringBuilder sb = new StringBuilder();
-        sb.append(species == null ? null : species.getFullName());
+        sb.append(getSpecies().getFullName());
         if (isEgg) {
             sb.append(" (egg)");
         } else if (printLevel) {
@@ -209,14 +212,13 @@ public class StaticEncounter {
 
     @Override
     public int hashCode() {
-        return Objects.hash(species, level);
+        return Objects.hash(getSpecies(), level);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof StaticEncounter) {
-            StaticEncounter other = (StaticEncounter) o;
-            return Objects.equals(other.species, species) && other.forme == forme && other.level == level
+        if (o instanceof StaticEncounter other) {
+            return other.level == level && other.speciesHolder.equals(speciesHolder)
                     && other.maxLevel == maxLevel && other.isEgg == isEgg && other.resetMoves == resetMoves
                     && other.restrictedPool == restrictedPool && Objects.equals(other.restrictedList, restrictedList)
                     && Objects.equals(other.linkedEncounters, linkedEncounters);

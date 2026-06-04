@@ -203,9 +203,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 for (TrainerPokemon tp : trainerPokemonList) {
                     if (!tp.isAddedTeamMember()) {
                         Species sp = tp.getSpecies();
-                        if (tp.getForme() > 0) {
-                            sp = romHandler.getAltFormeOfSpecies(sp, tp.getForme());
-                        }
                         if (avoidDuplicates) {
                             alreadyPlaced.add(sp);
                         }
@@ -221,9 +218,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 boolean swapThisMegaEvo = swapMegaEvos && tp.canMegaEvolve();
 
                 Species oldSp = tp.getSpecies();
-                if (tp.getForme() > 0) {
-                    oldSp = romHandler.getAltFormeOfSpecies(oldSp, tp.getForme());
-                }
 
                 Species newSp;
                 int tpLevel = tp.getLevel();
@@ -235,8 +229,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     // We do not want to randomize Pkmn that were not added to the team
                     if (evolveAsFarAsLegal) {
                         newSp = evolveAsFarAsLegal(oldSp, tpLevel, evoLvlModifier);
-                        tp.setSpecies(newSp);
-                        setFormeForTrainerPokemon(tp, newSp);
+                        tp.getSpeciesHolder().setSpecies(newSp);
+                        randomizeCosmeticForme(tp);
                         tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSp, tp.getAbilitySlot()));
                     } else {
                         newSp = oldSp;
@@ -269,8 +263,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             bannedForReplacement);
 
                     //We've chosen! Now to set it.
-                    tp.setSpecies(newSp);
-                    setFormeForTrainerPokemon(tp, newSp);
+                    tp.getSpeciesHolder().setSpecies(newSp);
+                    randomizeCosmeticForme(tp);
                     tp.setAbilitySlot(getRandomAbilitySlot(newSp));
                     tp.setResetMoves(true);
                 }
@@ -712,8 +706,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 }
                 Species starter = startersByLevel.floorEntry(bestPoke.getLevel()).getValue();
 
-                bestPoke.setSpecies(starter);
-                setFormeForTrainerPokemon(bestPoke, starter);
+                bestPoke.getSpeciesHolder().setSpecies(starter);
+                randomizeCosmeticForme(bestPoke);
                 bestPoke.setResetMoves(true);
                 bestPoke.setAbilitySlot(abilitySlot);
             }
@@ -755,13 +749,16 @@ public class TrainerPokemonRandomizer extends Randomizer {
         return species;
     }
 
-    private void setFormeForTrainerPokemon(TrainerPokemon tp, Species sp) {
-        tp.setForme(sp.getRandomCosmeticFormeNumber(random));
-        tp.setSpecies(sp);
-        while (!tp.getSpecies().isBaseForme()) {
-            tp.setSpecies(tp.getSpecies().getBaseForme());
+    /**
+     * If possible, sets the Species of the given TrainerPokemon to a random cosmetic forme.<br>
+     * Does nothing if TrainerPokemon doesn't allow alt formes, or if the Species doesn't have any cosmetic alt formes.
+     */
+    private void randomizeCosmeticForme(TrainerPokemon tp) {
+        SpeciesHolder sh = tp.getSpeciesHolder();
+        if (sh.isAltFormeAllowed() && sh.getSpecies().isBaseForme()) {
+            Species base = sh.getSpecies().getBaseForme();
+            sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
         }
-        tp.setFormeSuffix(romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getFormeSuffix());
     }
 
     private void applyLevelModifierToTrainerPokemon(Trainer trainer, int levelModifier) {
@@ -922,8 +919,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             for (TrainerPokemon tp : t.getPokemon()) {
                 Species newSpecies = evolveAsFarAsLegal(tp.getSpecies(), tp.getLevel(), evoLvlModifier);
                 if (newSpecies != tp.getSpecies()) {
-                    tp.setSpecies(newSpecies);
-                    setFormeForTrainerPokemon(tp, newSpecies);
+                    tp.getSpeciesHolder().setSpecies(newSpecies);
+                    randomizeCosmeticForme(tp);
                     tp.setAbilitySlot(getValidAbilitySlotFromOriginal(newSpecies, tp.getAbilitySlot()));
                 }
             }
@@ -1008,7 +1005,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 int secondToLastIndex = t.getPokemon().size() - 1;
                 // Insert a random original Pokemon as placeholder and give it a random level
                 // between the lowest and upperLevelBound
-                TrainerPokemon newPokemon = originalPokes.get(random.nextInt(originalSize)).copy();
+                TrainerPokemon newPokemon = new TrainerPokemon(originalPokes.get(random.nextInt(originalSize)));
                 newPokemon.setLevel(random.nextInt(Math.max(upperLevelBound, lowest) - lowest + 1) + lowest);
 
                 // Clear out the held item because we only want one Pokemon with a mega stone if we're
@@ -1048,7 +1045,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (!(tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
                 tr.setCurrBattleStyle(createTrainerStyle(settings.getBattleStyle()));
                 while (tr.getPokemon().size() < tr.getCurrBattleStyle().getRequiredPokemonCount()) {
-                    tr.getPokemon().add(tr.getPokemon().get(0).copy());
+                    tr.getPokemon().add(new TrainerPokemon(tr.getPokemon().getFirst()));
                 }
                 tr.setForcedDoubleBattle(true);
             }
@@ -1092,8 +1089,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     continue; // should never happen - trainer had zero pokes
                 }
                 int[] moveset = highestLevelPoke.isResetMoves() ?
-                        romHandler.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
-                                        highestLevelPoke.getSpecies(), highestLevelPoke.getForme()).getNumber(),
+                        romHandler.getMovesAtLevel(
+                                highestLevelPoke.getSpecies(),
                                 movesets,
                                 highestLevelPoke.getLevel()) :
                         highestLevelPoke.getMoves();
@@ -1101,8 +1098,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             } else {
                 for (TrainerPokemon tp : t.getPokemon()) {
                     int[] moveset = tp.isResetMoves() ?
-                            romHandler.getMovesAtLevel(romHandler.getAltFormeOfSpecies(
-                                            tp.getSpecies(), tp.getForme()).getNumber(),
+                            romHandler.getMovesAtLevel(
+                                    tp.getSpecies(),
                                     movesets,
                                     tp.getLevel()) :
                             tp.getMoves();
@@ -1153,8 +1150,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     if (Gen7Constants.heldZCrystalsByType.containsValue(tp.getHeldItem().getId())) { // TODO: better check for z crystals
                         int[] pokeMoves = tp.isResetMoves() ?
                                 romHandler.getMovesAtLevel(
-                                        romHandler.getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(),
-                                        romHandler.getMovesLearnt(), tp.getLevel()) :
+                                        tp.getSpecies(), romHandler.getMovesLearnt(), tp.getLevel()) :
                                 tp.getMoves();
                         pokeMoves = Arrays.stream(pokeMoves).filter(mv -> mv != 0).toArray();
                         int chosenMove = pokeMoves[random.nextInt(pokeMoves.length)];

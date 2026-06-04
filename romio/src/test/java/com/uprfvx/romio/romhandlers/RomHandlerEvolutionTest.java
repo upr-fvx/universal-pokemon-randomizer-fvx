@@ -358,6 +358,7 @@ public class RomHandlerEvolutionTest extends RomHandlerTest {
         }
     }
 
+    @Disabled
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void printAllEvoTypesByUsage(String romName) {

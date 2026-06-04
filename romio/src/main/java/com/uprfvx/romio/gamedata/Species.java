@@ -32,6 +32,56 @@ import java.util.function.Function;
 
 /**
  * Represents a Pokémon species or forme.
+ * <br><br>
+ * There are a few different kinds of formes:
+ * <dl>
+ *     <dt>Base Formes:</dt>
+ *     <dd>The default formes. Obvious for some mons, e.g., Deoxys or Venusaur.
+ *     For others, it is less obvious, but one always exists.<br>
+ *     <b>E.g.</b>, Wormadam-Plant is the base forme of Wormadam. Being the base forme,
+ *     it will be referred to as just "Wormadam" in most places by the Randomizer.
+ *     <br><b>Note:</b> All Pokémon species without alt formes, still count as base formes.</dd>
+ *
+ *     <dt>Alt Formes:</dt>
+ *     <dd>All other formes. An alt forme can get its
+ *     base forme using {@link #getBaseForme()}. A base forme can get its alt formes
+ *     using {@link #getForme(int)} or {@link #getAltFormes()}.<br>
+ *     <b>E.g.</b>, Deoxys-Attack, Venusaur-Mega, Wormadam-Sandy.</dd>
+ *
+ *     <dt>Alolan Formes:</dt>
+ *     <dd>Alt formes that are Alolan twists on the base forme.<br>
+ *     <b>E.g</b>, Alolan Raichu.</dd>
+ *
+ *     <dt>Cosmetic Formes:</dt>
+ *     <dd>Alt formes that only differ from their base forme, in non-essential ways.</dd>
+ *
+ *     <dt>True Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes that do not have stat blocks within their game's data,
+ *     which are thus not loaded in as Species objects.<br>
+ *     <b>E.g.</b>, the formes of Burmy, Shellos.</dd>
+ *
+ *     <dt>Essentially Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes with stat blocks that are thus loaded as Species objects,
+ *     but which should be treated as "cosmetic". When modifying the attributes of a
+ *     base forme, they should be carried to the cosmetic forme as well, and when
+ *     picking a random cosmetic forme they should be included.<br>
+ *     <b>E.g.</b>, the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+ *     </dd>
+ *
+ *     <dt>Ignore Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes that are identical or confusing somehow,
+ *     that should thus be ignored when picking random cosmetic formes.<br>
+ *     These can be either true or essential.<br>
+ *     <b>E.g.</b>, the formes of Arceus, Genesect, Xerneas, the different Minior-Core formes.</dd>
+ *
+ *     <dt>Conceptual Base Formes:</dt>
+ *     <dd>The formes an alt forme is conceptually based on. For most alt formes, this is
+ *     the same as the base forme. For some, it is another alt forme. Relevant when copying
+ *     attributes to alt formes.<br>
+ *     <b>E.g.,</b> Raticate-Alolan is the conceptual base forme of Raticate-Alolan-Totem.
+ *     When copying attributes, this must be used instead of the base forme, so Raticate-Alolan-Totem
+ *     gets the attributes of Raticate-Alolan.</dd>
+ * </dl>
  */
 public class Species implements Comparable<Species> {
     //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
@@ -40,14 +90,17 @@ public class Species implements Comparable<Species> {
     private String name;
     private final int number;
 
+    private Map<Integer, Species> formes = new HashMap<>(Map.of(0, this));
+    private List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
+    private List<Integer> ignoreCosmeticFormeNumbers = new ArrayList<>();
+
     private String formeSuffix = "";
-    private Species baseForme = null;
     private int formeNumber = 0;
-    private Species alolanForme = null;
-    private int cosmeticForms = 0;
-    private boolean actuallyCosmetic = false;
-    private List<Integer> realCosmeticFormNumbers = new ArrayList<>();
-    //TODO: condense this cosmetic bs into a single denotation
+    private Species baseForme = null;
+    private Species conceptualBaseForme = null; // for "formes-of-formes"
+
+    private boolean alolan = false;
+    private boolean essentiallyCosmetic = false;
 
     private int generation = -1;
 
@@ -125,17 +178,11 @@ public class Species implements Comparable<Species> {
         return (double)attack / ((double)attack + (double)spatk);
     }
 
+    /**
+     * Short for {@link #getBaseForme()}.{@link #getNumber()}
+     */
     public int getBaseNumber() {
-        // One might think this could just be turned into
-        // return getBaseForme().getNumber()
-        // but note the "while"; this works with formes-of-formes.
-        // Formes-of-formes admittedly only exist in Gen 7,
-        // but until something is done about them, don't touch this code.
-        Species base = this;
-        while (base.baseForme != null) {
-            base = base.baseForme;
-        }
-        return base.number;
+        return getBaseForme().getNumber();
     }
 
     //Evolutionary Relatives functions
@@ -183,16 +230,21 @@ public class Species implements Comparable<Species> {
     private List<Evolution> getEvolutionsOfForme(Function<Species, List<Evolution>> evolutionsAccessor) {
         Species species = this;
         if (evolutionsAccessor.apply(species).isEmpty()) {
-            if (species.getAlolanForme() != null && !evolutionsAccessor.apply(species.getAlolanForme()).isEmpty()) {
-                // species might be base forme with Alolan forme that carries evolution info, e.g., Alolan Raichu
-                species = species.getAlolanForme();
+            if (isBaseForme()) {
+                // some alt forme might carry evolution info that the base forme doesn't have, e.g. Alolan Raichu
+                for (Species altFormes : getAltFormes()) {
+                    if (!evolutionsAccessor.apply(altFormes).isEmpty()) {
+                        species = altFormes;
+                        break;
+                    }
+                }
             } else {
                 // If species does not have the relevant evolutions but a base forme, try to determine if the base forme
                 // has the relevant evolutions, e.g., Eternal Flower Floette for evolutionsFrom or Megas for evolutionsTo
-                while (!species.isBaseForme() && evolutionsAccessor.apply(species.getBaseForme()).isEmpty()) {
-                    species = species.getBaseForme();
+                while (!species.isBaseForme() && evolutionsAccessor.apply(species.getConceptualBaseForme()).isEmpty()) {
+                    species = species.getConceptualBaseForme();
                 }
-                species = species.getBaseForme(); // = species if species.isBaseForme(), else species.getBaseForme()
+                species = species.getConceptualBaseForme();
             }
         }
 
@@ -501,6 +553,14 @@ public class Species implements Comparable<Species> {
         //Doesn't copy evolutions to as that would result in poorly-defined behavior
     }
 
+    /**
+     * For debugging. Number is enough to identify a mon, but isn't immediately recognizable.
+     * Full name is immediately recognizable but some formes share the same full name.
+     */
+    public String getNumberAndFullName() {
+        return "#" + number + " - " + getFullName();
+    }
+
     public String getFullName() {
         return name + formeSuffix;
     }
@@ -577,28 +637,31 @@ public class Species implements Comparable<Species> {
     }
 
     /**
+     * Returns an unmodifiable {@link List} of the forme numbers of this Species and its cosmetic formes.
+     */
+    public List<Integer> getCosmeticFormeNumbers() {
+        return Collections.unmodifiableList(cosmeticFormeNumbers);
+    }
+
+    /**
+     * Returns an unmodifiable {@link List} of this Species' ignore cosmetic forme numbers.
+     */
+    public List<Integer> getIgnoreCosmeticFormeNumbers() {
+        return Collections.unmodifiableList(ignoreCosmeticFormeNumbers);
+    }
+
+    /**
      * Gets a random cosmetic forme of this Species, including itself.
+     * Ignore cosmetic formes are not picked.
      * @param random A seeded random number generator.
      * @return A forme number for a random cosmetic forme of this Species, including itself.
      */
     public int getRandomCosmeticFormeNumber(Random random) {
-        if(cosmeticForms == 0) {
-            return formeNumber;
+        int formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
+        while (ignoreCosmeticFormeNumbers.contains(formeNum)) {
+            formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
         }
-
-        int num = random.nextInt(cosmeticForms);
-        if (num == cosmeticForms) {
-            return formeNumber;
-        }
-
-        if(!realCosmeticFormNumbers.isEmpty()) {
-            if(num > realCosmeticFormNumbers.size()) {
-                throw new IllegalStateException("Not all cosmetic formes listed in cosmeticFormeNumbers!");
-            }
-            return realCosmeticFormNumbers.get(num);
-        } else {
-            return formeNumber + num;
-        }
+        return formeNum;
     }
 
     public String getName() {
@@ -629,18 +692,6 @@ public class Species implements Comparable<Species> {
         return isBaseForme() ? this : baseForme;
     }
 
-    public void setBaseForme(Species baseForme) {
-        this.baseForme = baseForme;
-    }
-
-    public Species getAlolanForme() {
-        return alolanForme;
-    }
-
-    public void setAlolanForme(Species alolanForme) {
-        this.alolanForme = alolanForme;
-    }
-
     /**
      * Returns whether this {@link Species} is a base forme.
      * @return False if the {@link Species} has a different base forme, true otherwise.
@@ -649,61 +700,183 @@ public class Species implements Comparable<Species> {
         return baseForme == null;
     }
 
+    /**
+     * Returns the conceptual base forme. If no conceptual base forme has been set
+     * (via {@link #setConceptualBaseForme(Species)}), returns {@link #getBaseForme()}.
+     */
+    public Species getConceptualBaseForme() {
+        return conceptualBaseForme == null ? getBaseForme() : conceptualBaseForme;
+    }
+
+    /**
+     * Sets the conceptual base forme. This is only possible if this Species and
+     * {@code conceptualBaseForme} are alt formes of the same base forme.
+     */
+    public void setConceptualBaseForme(Species conceptualBaseForme) {
+        if (this.conceptualBaseForme != null) {
+            throw new IllegalStateException(String.format(
+                    "This Species (%s) already has a conceptual base forme (%s)",
+                    getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
+        }
+        if (isBaseForme()) {
+            throw new IllegalStateException("This Species (" + getNumberAndFullName() + ") must be an alt forme");
+        }
+        if (conceptualBaseForme.isBaseForme()) {
+            throw new IllegalArgumentException("conceptualBaseForme (" + getNumberAndFullName() + ") must be an alt forme");
+        }
+        if (conceptualBaseForme.baseForme != baseForme) {
+            throw new IllegalStateException(String.format(
+                    "This Species (%s) and conceptualBaseForme (%s) must share the same base forme",
+                    getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
+        }
+        this.conceptualBaseForme = conceptualBaseForme;
+        this.formeSuffix = conceptualBaseForme.formeSuffix + this.formeSuffix;
+    }
+
+    /**
+     * Registers an altForme Species with a given formeNumber.
+     */
+    public void addAltForme(int formeNumber, Species altForme) {
+//        System.out.printf("New forme to %s, formeNumber=%d, %s%n",
+//                getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
+        if (altForme.equals(this)) {
+            throw new IllegalArgumentException(String.format(
+                    "Can't add Species %s as its own alt forme.", getNumberAndFullName()));
+        }
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        if (formes.containsKey(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
+        if (!altForme.isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "altForme (Species %s) is already the alt forme of another Species (%s)",
+                    altForme.getNumberAndFullName(), altForme.baseForme.getNumberAndFullName()
+            ));
+        }
+        formes.put(formeNumber, altForme);
+        altForme.baseForme = this;
+        altForme.formeNumber = formeNumber;
+    }
+
+    /**
+     * Registers a formeNumber as a cosmetic forme. This is useful since cosmetic formes are largely not loaded as
+     * Species objects (e.g. those of Burmy), but still need to be known of.
+     */
+    public void addCosmeticAltForme(int formeNumber) {
+//        System.out.printf("New cosmetic forme to %s, formeNumber=%d%n", getNumberAndFullName(), formeNumber);
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        if (formes.containsKey(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
+        formes.put(formeNumber, this);
+        cosmeticFormeNumbers.add(formeNumber);
+    }
+
+    /**
+     * Returns the forme of this Species with the given formeNumber.<br>
+     * Returns this Species, if formeNumber==0, or that of a true cosmetic forme.<br>
+     * @throws IllegalStateException if this is an alt forme
+     * @throws NoSuchElementException if no forme with the formeNumber exists
+     */
+    public Species getForme(int formeNumber) {
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        Species forme = formes.get(formeNumber);
+        if (forme == null) {
+            throw new NoSuchElementException(String.format(
+                    "Species %s does not have a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
+        return forme;
+    }
+
+    /**
+     * Returns whether the given formeNumber represents a valid forme, for use with {@link #getForme(int)};
+     */
+    public boolean isValidFormeNumber(int formeNumber) {
+        return formes.containsKey(formeNumber);
+    }
+
+    /**
+     * Returns a {@link SpeciesSet} containing all alt formes of this Species, but <b>not</b> itself.
+     */
+    public SpeciesSet getAltFormes() {
+        return new SpeciesSet(formes.values()).filter(pk -> !pk.equals(this));
+    }
+
     public int getFormeNumber() {
         return formeNumber;
     }
 
-    public void setFormeNumber(int formeNumber) {
-        this.formeNumber = formeNumber;
+    /**
+     * Returns whether this is an Alolan forme.
+     */
+    public boolean isAlolan() {
+        return alolan;
     }
 
-    public int getCosmeticForms() {
-        return cosmeticForms;
-    }
-
-    public void setCosmeticForms(int cosmeticForms) {
-        this.cosmeticForms = cosmeticForms;
+    public void setAlolan() {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.alolan = true;
     }
 
     /**
-     * Checks whether the form is a purely cosmetic variant on its base form.
-     * Has some false positives and negatives at the current time.<br>
-     * See also {@link #isCosmeticReplacement()}
-     * @return Whether the form is cosmetic.
+     * Returns true if this is an "essentially cosmetic" alt forme. "Essentially",
+     * because "true" cosmetic alt formes don't get loaded as Species objects.<br>
+     * <b>E.g.</b>, the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+     * <br><br>
+     * Despite the name, not all "cosmetic" replacements are purely cosmetic
+     * (e.g. Pumpkaboo's sizing), but we view them as interchangeable nonetheless.
      */
-    public boolean isActuallyCosmetic() {
-        return actuallyCosmetic;
+    public boolean isEssentiallyCosmetic() {
+        return essentiallyCosmetic;
+    }
+
+    public void setEssentiallyCosmetic() {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.essentiallyCosmetic = true;
+        this.cosmeticFormeNumbers.add(formeNumber);
+    }
+
+    public void setIgnoreCosmetic() {
+        if (!essentiallyCosmetic) {
+            throw new IllegalStateException(getNumberAndFullName() + " is not an essentially cosmetic forme.");
+        }
+        baseForme.ignoreCosmeticFormeNumbers.add(formeNumber);
     }
 
     /**
-     * Checks if this forme can be chosen as a "cosmetic" replacement.<br>
-     * To check if the forme is a cosmetic forme, use {@link #isActuallyCosmetic()}. <br>
-     * Despite the name, not all "cosmetic" replacements are purely cosmetic (e.g. Pumpkaboo's sizing).
-     * @return True if the forme is a cosmetic variant, false otherwise.
+     * Sets the true cosmetic forme as being "ignore cosmetic".
+     * For essentially cosmetic formes, use {@link #setIgnoreCosmetic()}.
+     * @param formeNumber the forme number of the to-be ignore cosmetic forme
+     * @throws IllegalStateException if formeNumber is not a cosmetic forme of this species,
+     *                               or if it is the forme number of an essentially cosmetic forme.
      */
-    public boolean isCosmeticReplacement() {
-        if(baseForme == null) {
-            return false;
+    public void setIgnoreCosmeticAltForme(int formeNumber) {
+        if (!cosmeticFormeNumbers.contains(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s does not have a cosmetic forme with formeNumber=%d.",
+                    getNumberAndFullName(), formeNumber));
         }
-
-        Species base = baseForme;
-        if(base.getRealCosmeticFormNumbers().isEmpty()) {
-            return formeNumber <= base.formeNumber + base.getCosmeticForms();
-        } else {
-            return base.getRealCosmeticFormNumbers().contains(formeNumber);
+        if (!getForme(formeNumber).isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "The forme of %s with formeNumber=%d is essentially cosmetic. " +
+                            "This method is only for true cosmetic formes.", getNumberAndFullName(), formeNumber));
         }
-    }
-
-    public void setActuallyCosmetic(boolean actuallyCosmetic) {
-        this.actuallyCosmetic = actuallyCosmetic;
-    }
-
-    public List<Integer> getRealCosmeticFormNumbers() {
-        return realCosmeticFormNumbers;
-    }
-
-    public void setRealCosmeticFormNumbers(List<Integer> realCosmeticFormNumbers) {
-        this.realCosmeticFormNumbers = realCosmeticFormNumbers;
+        ignoreCosmeticFormeNumbers.add(formeNumber);
     }
 
     /**
@@ -947,6 +1120,7 @@ public class Species implements Comparable<Species> {
         this.genderRatio = genderRatio;
     }
 
+    // TODO: move this to be a RomHandler internal field; it is not interesting to other classes
     public int getFrontImageDimensions() {
         return frontImageDimensions;
     }
@@ -1037,5 +1211,147 @@ public class Species implements Comparable<Species> {
         this.megaEvolutionsTo = megaEvolutionsTo;
     }
 
+    /**
+     * Transfers (copies) all attributes from one species to another. This method is expected to be called
+     * as part of a process of copying all Species. For this reason, it takes a {@link Map} of all
+     * the original Species to their copies. The copy Species is then inferred, from the original Species
+     * and the map.
+     * <br><br>
+     * This transfers simple attributes like types and base stats, but also all attributes that reference other
+     * Species (formes, evolutions, mega evolutions). Transferred references are turned into references
+     * to the copies, using {@code originalToCopies}.
+     * <br><br>
+     * For evolutions and mega evolutions, it only assigns those from this Species,
+     * but also assigns it to the Species evolved to.
+     * This should result in all evolutions being properly assigned if this function is called on all Species.
+     *
+     * @param original The Species to copy attributes from.
+     * @param originalToCopies A Map of all the original Species to their copies.
+     * @throws NullPointerException if original or originalToCopies is null.
+     * @throws IllegalArgumentException if originalToCopies does not contain original as a key,
+     *                                  if the copy of original does not have the same number as original,
+     *                                  or if the copy of original does not have the same class as original.
+     */
+    // TODO: it would be nice to generalize the mass copying this expects to be part of (in SpeciesSet?),
+    //  so this can be partially hidden. Currently the mass copying is only done in/by TestRomHandler,
+    //  but it could be usable for making backed-up originals of each Species.
+    public static void transferAttributesToCopy(Species original, Map<Species, Species> originalToCopies) {
+        if (original == null) {
+            throw new NullPointerException("original is null");
+        }
+        if (originalToCopies == null) {
+            throw new NullPointerException("originalToCopies is null");
+        }
+        Species copy = originalToCopies.get(original);
+        if (copy == null) {
+            throw new IllegalArgumentException("originalToCopies does not contain original (" +
+                    original.getNumberAndFullName() + ") as a key.");
+        }
+        if (copy.number != original.number) {
+            throw new IllegalArgumentException("copy must have same number as original. Expected: " +
+                    original.number + ", was:" + copy.number);
+        }
+        if (copy.getClass() != original.getClass()) {
+            throw new IllegalArgumentException("copy must have same class as original. Expected: " +
+                    original.getClass() + ", was:" + copy.getClass());
+        }
 
+        transferSimpleAttributesToCopy(copy, original);
+        transferReferentialAttributesToCopy(copy, original, originalToCopies);
+    }
+
+    private static void transferSimpleAttributesToCopy(Species copy, Species original) {
+        copy.name = original.getName();
+
+        copy.generation = original.generation;
+
+        //Types
+        copy.primaryType = original.primaryType;
+        copy.secondaryType = original.secondaryType;
+        copy.originalPrimaryType = original.originalPrimaryType;
+        copy.originalSecondaryType = original.originalSecondaryType;
+        copy.hasSetPrimaryType = original.hasSetPrimaryType;
+        copy.hasSetSecondaryType = original.hasSetSecondaryType;
+
+        //base stats
+        copy.hp = original.hp;
+        copy.attack = original.attack;
+        copy.defense = original.defense;
+        copy.spatk = original.spatk;
+        copy.spdef = original.spdef;
+        copy.speed = original.speed;
+        copy.special = original.special;
+
+        //abilities
+        copy.ability1 = original.ability1;
+        copy.ability2 = original.ability2;
+        copy.ability3 = original.ability3;
+
+        copy.expYield = original.expYield;
+
+        //wild encounter related
+        copy.catchRate = original.catchRate;
+        copy.guaranteedHeldItem = original.guaranteedHeldItem;
+        copy.commonHeldItem = original.commonHeldItem;
+        copy.rareHeldItem = original.rareHeldItem;
+        copy.darkGrassHeldItem = original.darkGrassHeldItem;
+        copy.genderRatio = original.genderRatio;
+        copy.callRate = original.callRate;
+
+        //misc
+        copy.frontImageDimensions = original.frontImageDimensions;
+        copy.growthCurve = original.growthCurve;
+        copy.breedingInfo = original.breedingInfo == null ?
+                null : new BreedingInfo(original.breedingInfo);
+    }
+
+    private static void transferReferentialAttributesToCopy(Species copy, Species original,
+                                                        Map<Species, Species> originalToCopies) {
+        transferFormesToCopy(copy, original, originalToCopies);
+        transferEvolutionsToCopy(copy, original, originalToCopies);
+        transferMegaEvolutionsToCopy(copy, original, originalToCopies);
+    }
+
+    private static void transferFormesToCopy(Species copy, Species original,
+                                             Map<Species, Species> originalToCopies) {
+        // Simple forme Attributes are grouped with the referential
+        // Attributes so they're less likely to be missed.
+        copy.cosmeticFormeNumbers = new ArrayList<>(original.cosmeticFormeNumbers);
+        copy.ignoreCosmeticFormeNumbers = new ArrayList<>(original.ignoreCosmeticFormeNumbers);
+
+        copy.formeSuffix = original.formeSuffix;
+        copy.formeNumber = original.formeNumber;
+
+        copy.alolan = original.alolan;
+        copy.essentiallyCosmetic = original.essentiallyCosmetic;
+
+        copy.formes = new HashMap<>();
+        for (Map.Entry<Integer, Species> entry : original.formes.entrySet()) {
+            copy.formes.put(entry.getKey(), originalToCopies.get(entry.getValue()));
+        }
+
+        copy.baseForme = original.baseForme == null ? null : originalToCopies.get(original.baseForme);
+        copy.conceptualBaseForme = original.conceptualBaseForme == null ?
+                null : originalToCopies.get(original.conceptualBaseForme);
+    }
+
+    private static void transferEvolutionsToCopy(Species copy, Species original,
+                                                 Map<Species, Species> originalToCopies) {
+        for (Evolution evo : original.getEvolutionsFrom()) {
+            Evolution evoCopy = new Evolution(copy, originalToCopies.get(evo.getTo()),
+                    evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+            copy.getEvolutionsFrom().add(evoCopy);
+            evoCopy.getTo().getEvolutionsTo().add(evoCopy);
+        }
+    }
+
+    private static void transferMegaEvolutionsToCopy(Species copy, Species original,
+                                                     Map<Species, Species> originalToCopies) {
+        for (MegaEvolution mevo : original.getMegaEvolutionsFrom()) {
+            MegaEvolution mevoCopy = new MegaEvolution(copy, originalToCopies.get(mevo.getTo()),
+                    mevo.isNeedsItem(), mevo.getItem());
+            copy.getMegaEvolutionsFrom().add(mevoCopy);
+            mevoCopy.getTo().getMegaEvolutionsTo().add(mevoCopy);
+        }
+    }
 }

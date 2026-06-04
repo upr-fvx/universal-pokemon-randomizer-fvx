@@ -210,7 +210,8 @@ public class RomHandlerMiscTest extends RomHandlerTest {
 
         RestrictedSpeciesService rPokeService = romHandler.getRestrictedSpeciesService();
         rPokeService.setRestrictions(genRestrictionsFromBools(true, new int[]{1}));
-        // except for the above line's "relativesAllowed: true", identical to the "WithNoRelatives" method...
+
+        SpeciesSet unrelatedFromWrongGen = new SpeciesSet();
         for (Species pk : rPokeService.getAll(false)) {
             SpeciesSet related = pk.getFamily(false);
             boolean anyFromRightGen = false;
@@ -220,9 +221,18 @@ public class RomHandlerMiscTest extends RomHandlerTest {
                     break;
                 }
             }
-            assertTrue(anyFromRightGen, pk.getName() + " is from the wrong Gen, and is unrelated to " +
-                    "Pokémon from the right (Gen I).");
+            if (!anyFromRightGen) {
+                unrelatedFromWrongGen.add(pk);
+            }
         }
+
+        if (!unrelatedFromWrongGen.isEmpty()) {
+            System.out.println("Unrelated species from wrong generation:");
+            for (Species pk : unrelatedFromWrongGen) {
+                System.out.println(pk.getNumberAndFullName() + " (Gen " + pk.getGeneration() + ")");
+            }
+        }
+        assertTrue(unrelatedFromWrongGen.isEmpty());
     }
 
     @ParameterizedTest
@@ -254,12 +264,15 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     }
 
     private GenRestrictions genRestrictionsFromBools(boolean relativesAllowed, int[] gensAllowed) {
-        int state = 0;
-        for (int gen : gensAllowed) {
-            state += 1 << (gen - 1);
+        GenRestrictions gr = new GenRestrictions();
+        for (int gen = 1; gen <= GenRestrictions.MAX_GENERATION; gen++) {
+            gr.setGenAllowed(gen, false);
         }
-        state += relativesAllowed ? 1 << HIGHEST_GENERATION : 0;
-        return new GenRestrictions(state);
+        gr.setAllowEvolutionaryRelatives(relativesAllowed);
+        for (int gen : gensAllowed) {
+            gr.setGenAllowed(gen, true);
+        }
+        return gr;
     }
 
     @ParameterizedTest
@@ -321,41 +334,6 @@ public class RomHandlerMiscTest extends RomHandlerTest {
                 String itemName = mev.getItem().getName();
                 assertTrue(itemName.startsWith(prefix));
             }
-        }
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void actuallyCosmeticAndIsCosmeticFormeMatch(String romName) {
-        loadROM(romName);
-
-        SpeciesSet mismatched = new SpeciesSet();
-
-        System.out.println("Cosmetic replacements which are cosmetic formes: ");
-
-        for (Species forme : romHandler.getSpeciesSetInclFormes()) {
-            if (forme.isCosmeticReplacement() != forme.isActuallyCosmetic()) {
-                mismatched.add(forme);
-            }
-            if (forme.isCosmeticReplacement() && forme.isActuallyCosmetic()) {
-                System.out.print(forme.getFullName());
-                if (forme.getName().equals(forme.getFullName())) {
-                    System.out.print(" " + forme.getFormeNumber());
-                }
-                System.out.println();
-            }
-        }
-        System.out.println();
-
-        if (!mismatched.isEmpty()) {
-            for (Species forme : mismatched) {
-                System.out.println(forme.getFullName() +
-                        (forme.getFormeSuffix().isEmpty() ? " " + forme.getFormeNumber() : "")
-                        + ": isCosmeticReplacement = " + forme.isCosmeticReplacement()
-                        + "; isActuallyCosmetic = " + forme.isActuallyCosmetic());
-            }
-            //Assumptions.abort();
-            //This test isn't really meant to be passed, so much as it's meant to be informative.
         }
     }
 

@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -24,8 +23,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println(area);
             for (Encounter enc : area) {
                 if(enc.getSpecies().isLegendary()) {
-                    Species forme = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
-                    fail(forme.getFullName() + " is legendary!");
+                    fail(enc.getSpecies().getNumberAndFullName() + " is legendary!");
                 }
             }
         }
@@ -49,11 +47,12 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             copiedArea.setForceMultipleSpecies(originalArea.isForceMultipleSpecies());
 
             for(Encounter origEnc : originalArea) {
-                Encounter copyEnc = new Encounter();
-                copyEnc.setLevel(origEnc.getLevel());
+                Encounter copyEnc = new Encounter(origEnc.getSpecies().getBaseForme(), origEnc.getLevel());
                 copyEnc.setMaxLevel(origEnc.getMaxLevel());
-                copyEnc.setSpecies(origEnc.getSpecies());
-                copyEnc.setFormeNumber(origEnc.getFormeNumber());
+                if (origEnc.getSpeciesHolder().isAltFormeAllowed()) {
+                    copyEnc.getSpeciesHolder().setAltFormeAllowed();
+                    copyEnc.getSpeciesHolder().setFormeNumber(origEnc.getSpeciesHolder().getFormeNumber());
+                }
                 copyEnc.setSOS(origEnc.isSOS());
                 copyEnc.setSosType(origEnc.getSosType());
 
@@ -90,8 +89,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             System.out.println(area.getDisplayName() + ":");
             System.out.println(area);
             for (Encounter enc : area) {
-                if (enc.getSpecies().getBaseForme() != null ||
-                        enc.getFormeNumber() != enc.getSpecies().getFormeNumber()) {
+                if (!enc.getSpecies().isBaseForme()) {
                     System.out.println(enc.getSpecies());
                     hasAltFormes = true;
                     break;
@@ -222,16 +220,16 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void randomEncountersKeepTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         Settings settings = getStandardSettings(romName);
         settings.setKeepWildTypeThemes(true);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     @ParameterizedTest
@@ -239,9 +237,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void randomEncountersKeepTypeThemesANDRandomTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         Settings settings = getStandardSettings(romName);
         settings.setKeepWildTypeThemes(true);
@@ -249,7 +247,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
         randomTypeThemesAreasCheck();
     }
 
@@ -258,16 +256,16 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void randomEncountersKeepPrimaryTypeWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreasStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         List<List<Type>> beforePrimaryTypes = new ArrayList<>();
-        recordPrimaryTypesBefore(beforeAreasStrings, beforePrimaryTypes);
+        recordPrimaryTypesBefore(beforeAreas, beforePrimaryTypes);
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonTypeMod(Settings.WildPokemonTypeMod.KEEP_PRIMARY);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepPrimaryTypeCheck(beforeAreasStrings, beforePrimaryTypes);
+        keepPrimaryTypeCheck(beforeAreas, beforePrimaryTypes);
     }
 
     @ParameterizedTest
@@ -309,9 +307,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void randomEncountersCatchEmAllANDKeepTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
 
@@ -323,7 +321,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
         catchEmAllCheck(allPokes);
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     @ParameterizedTest
@@ -331,9 +329,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void randomEncountersCatchEmAllANDRandomTypeThemesANDKeepTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
 
@@ -346,7 +344,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         catchEmAllCheck(allPokes);
         randomTypeThemesAreasCheck();
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     private double calcPowerLevelDiff(Species a, Species b) {
@@ -665,7 +663,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         }
         SpeciesSet notCatchable = new SpeciesSet(allPokes);
         notCatchable.removeAll(catchable);
-        System.out.println("Not catchable: " + notCatchable.stream().map(Species::getName).collect(Collectors.toList()));
+        System.out.println("Not catchable: " + notCatchable.stream().map(Species::getName).toList());
         assertTrue(notCatchable.isEmpty());
     }
 
@@ -687,9 +685,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void area1to1EncountersKeepTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -697,7 +695,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     @ParameterizedTest
@@ -705,9 +703,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void area1to1EncountersKeepPrimaryTypeWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreasStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         List<List<Type>> beforePrimaryTypes = new ArrayList<>();
-        recordPrimaryTypesBefore(beforeAreasStrings, beforePrimaryTypes);
+        recordPrimaryTypesBefore(beforeAreas, beforePrimaryTypes);
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.ENCOUNTER_SET);
@@ -715,7 +713,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepPrimaryTypeCheck(beforeAreasStrings, beforePrimaryTypes);
+        keepPrimaryTypeCheck(beforeAreas, beforePrimaryTypes);
     }
 
     private void randomTypeThemesAreasCheck() {
@@ -731,14 +729,13 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             }
 
             System.out.println("\n" + area.getDisplayName() + ":\n" + area);
-            Encounter firstEnc = area.get(0);
-            Species firstSpec = romHandler.getAltFormeOfSpecies(firstEnc.getSpecies(), firstEnc.getFormeNumber());
-            SpeciesSet allInArea = area.getSpeciesInArea();
+            Encounter firstEnc = area.getFirst();
+            Species firstSpec = firstEnc.getSpecies();
 
             Type primaryType = firstSpec.getPrimaryType(false);
             boolean primaryTypeMatched = true;
             for(Encounter enc : area) {
-                Species spec = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                Species spec = enc.getSpecies();
                 if(!spec.hasType(primaryType, false)) {
                     System.out.println(spec);
                     primaryTypeMatched = false;
@@ -755,7 +752,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
                 boolean secondaryTypeMatched = true;
                 for(Encounter enc : area) {
-                    Species spec = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    Species spec = enc.getSpecies();
                     if(!spec.hasType(secondaryType, false)) {
                         System.out.println(spec);
                         secondaryTypeMatched = false;
@@ -780,17 +777,28 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
                 + (sp.getSecondaryType(false) == null ? "" : " / " + sp.getSecondaryType(false));
     }
 
-    private void recordTypeThemeBefore(List<List<String>> beforeAreaStrings, Map<Integer, Type> typeThemedAreas) {
+    private record AreaWithTypesRecord(String name, List<EncWithTypesRecord> encs) {}
+
+    private record EncWithTypesRecord(String name, Type primary, Type secondary) {
+        public EncWithTypesRecord(Encounter enc) {
+            Species pk = enc.getSpecies();
+            this(pk.getFullName(), pk.getPrimaryType(false), pk.getSecondaryType(false));
+        }
+
+        @Override
+        public String toString() {
+            return name + ", " + primary + (secondary == null ? "" : " / " + secondary);
+        }
+    }
+
+    private void recordTypeThemeBefore(List<AreaWithTypesRecord> beforeAreas, Map<Integer, Type> typeThemedAreas) {
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
         for (int i = 0; i < encounterAreas.size(); i++) {
             EncounterArea area = encounterAreas.get(i);
-            List<String> beforeStrings = new ArrayList<>();
-            beforeAreaStrings.add(beforeStrings);
-            beforeStrings.add(area.toString());
-            for (Encounter enc : area) {
-                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
-                beforeStrings.add(toNameAndTypesString(pk));
-            }
+
+            AreaWithTypesRecord beforeArea = new AreaWithTypesRecord(area.getDisplayName(),
+                    area.stream().map(EncWithTypesRecord::new).toList());
+            beforeAreas.add(beforeArea);
 
             Type theme = getThemedAreaType(area);
             if (theme != null) {
@@ -800,7 +808,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     }
 
     private Type getThemedAreaType(EncounterArea area) {
-        Species first = area.get(0).getSpecies();
+        Species first = area.getFirst().getSpecies();
         Type primary = first.getPrimaryType(true);
         Type secondary = first.getSecondaryType(true);
         for (int i = 1; i < area.size(); i++) {
@@ -830,13 +838,14 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
     }
 
-    private void keepTypeThemedAreasCheck(List<List<String>> beforeAreaStrings, Map<Integer, Type> typeThemedAreas) {
+    private void keepTypeThemedAreasCheck(List<AreaWithTypesRecord> beforeAreas, Map<Integer, Type> typeThemedAreas) {
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
         for (int i = 0; i < encounterAreas.size(); i++) {
-            List<String> beforeStrings = beforeAreaStrings.get(i);
-            System.out.println("Before: " + beforeStrings.get(0));
-            for (int j = 1; j < beforeStrings.size(); j++) {
-                System.out.println("\t" + beforeStrings.get(j));
+
+            AreaWithTypesRecord beforeArea = beforeAreas.get(i);
+            System.out.println("Before: " + beforeArea.name());
+            for (EncWithTypesRecord encRecord : beforeArea.encs()) {
+                System.out.println("\t" + encRecord);
             }
 
             EncounterArea area = encounterAreas.get(i);
@@ -845,7 +854,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
                 System.out.println("Type Theme: " + theme);
                 System.out.println("After: " + area);
                 for (Encounter enc : area) {
-                    Species sp = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                    Species sp = enc.getSpecies();
                     System.out.println("\t" + toNameAndTypesString(sp));
                     assertTrue(sp.getPrimaryType(false) == theme || sp.getSecondaryType(false) == theme);
                 }
@@ -856,39 +865,41 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         }
     }
 
-    private void recordPrimaryTypesBefore(List<List<String>> beforeAreaStrings, List<List<Type>> beforePrimaryTypes) {
+    private void recordPrimaryTypesBefore(List<AreaWithTypesRecord> beforeAreas, List<List<Type>> beforePrimaryTypes) {
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
-        for (int i = 0; i < encounterAreas.size(); i++) {
-            EncounterArea area = encounterAreas.get(i);
-            List<String> beforeStrings = new ArrayList<>();
-            beforeAreaStrings.add(beforeStrings);
-            beforeStrings.add(area.toString());
+        for (EncounterArea area : encounterAreas) {
+
+            AreaWithTypesRecord beforeArea = new AreaWithTypesRecord(area.getDisplayName(),
+                    area.stream().map(EncWithTypesRecord::new).toList());
+            beforeAreas.add(beforeArea);
+
             List<Type> beforeTypes = new ArrayList<>();
             beforePrimaryTypes.add(beforeTypes);
             for (Encounter enc : area) {
-                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
-                beforeStrings.add(toNameAndTypesString(pk));
+                Species pk = enc.getSpecies();
                 beforeTypes.add(pk.getPrimaryType(false));
             }
         }
+
     }
 
-    private void keepPrimaryTypeCheck(List<List<String>> beforeAreaStrings, List<List<Type>> beforePrimaryTypes) {
+    private void keepPrimaryTypeCheck(List<AreaWithTypesRecord> beforeAreas, List<List<Type>> beforePrimaryTypes) {
         List<EncounterArea> encounterAreas = romHandler.getEncounters(true);
         for (int i = 0; i < encounterAreas.size(); i++) {
-            List<String> beforeStrings = beforeAreaStrings.get(i);
-            System.out.println("Before: " + beforeStrings.get(0));
-            for (int j = 1; j < beforeStrings.size(); j++) {
-                System.out.println("\t" + beforeStrings.get(j));
+
+            AreaWithTypesRecord beforeArea = beforeAreas.get(i);
+            System.out.println("Before: " + beforeArea.name());
+            for (EncWithTypesRecord encRecord : beforeArea.encs()) {
+                System.out.println("\t" + encRecord);
             }
 
             EncounterArea area = encounterAreas.get(i);
             System.out.println("After: " + area);
             for (int j = 0; j < area.size(); j++) {
                 Encounter enc = area.get(j);
-                Species pk = romHandler.getAltFormeOfSpecies(enc.getSpecies(), enc.getFormeNumber());
+                Species pk = enc.getSpecies();
                 Type primary = beforePrimaryTypes.get(i).get(j);
-                System.out.println("\t" + toNameAndTypesString(pk));
+                System.out.println("\t" + new EncWithTypesRecord(enc));
                 assertTrue(pk.getPrimaryType(false) == primary || pk.getSecondaryType(false) == primary);
             }
             System.out.println();
@@ -968,9 +979,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             assumeTrue(romHandler.getROMType() == Gen3Constants.RomType_FRLG);
         }
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
 
@@ -982,7 +993,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
         catchEmAllCheck(allPokes);
 
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     @ParameterizedTest
@@ -996,9 +1007,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
             assumeTrue(romHandler.getROMType() == Gen3Constants.RomType_FRLG);
         }
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         SpeciesSet allPokes = romHandler.getSpeciesSet();
 
@@ -1012,7 +1023,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         catchEmAllCheck(allPokes);
 
         randomTypeThemesAreasCheck();
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     @ParameterizedTest
@@ -1274,9 +1285,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void location1to1EncountersKeepPrimaryTypeWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreasStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         List<List<Type>> beforePrimaryTypes = new ArrayList<>();
-        recordPrimaryTypesBefore(beforeAreasStrings, beforePrimaryTypes);
+        recordPrimaryTypesBefore(beforeAreas, beforePrimaryTypes);
 
         Settings settings = getStandardSettings(romName);
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.NAMED_LOCATION);
@@ -1284,7 +1295,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepPrimaryTypeCheck(beforeAreasStrings, beforePrimaryTypes);
+        keepPrimaryTypeCheck(beforeAreas, beforePrimaryTypes);
     }
 
     private void randomTypeThemesLocationsCheck() {
@@ -1484,12 +1495,8 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     }
 
     private Species getNonCosmeticForme(Encounter enc) {
-        Species base = enc.getSpecies();
-        int formeNumber = enc.getFormeNumber();
-        Species forme = romHandler.getAltFormeOfSpecies(base, formeNumber);
-
-
-        return forme.isCosmeticReplacement() ? base : forme;
+        Species pk = enc.getSpecies();
+        return pk.isEssentiallyCosmetic() ? pk.getBaseForme() : pk;
     }
 
     private static String pokemapToString(Map<Species, Species> map) {
@@ -1612,9 +1619,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void game1To1KeepTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
         Settings settings = new Settings();
         settings.setWildPokemonZoneMod(Settings.WildPokemonZoneMod.GAME);
@@ -1624,7 +1631,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     @ParameterizedTest
@@ -1632,9 +1639,9 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void globalFamilyToFamilyKeepTypeThemesWorks(String romName) {
         activateRomHandler(romName);
 
-        List<List<String>> beforeAreaStrings = new ArrayList<>();
+        List<AreaWithTypesRecord> beforeAreas = new ArrayList<>();
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
-        recordTypeThemeBefore(beforeAreaStrings, typeThemedAreas);
+        recordTypeThemeBefore(beforeAreas, typeThemedAreas);
         List<EncounterArea> before = deepCopyEncounters(romHandler.getEncounters(true));
 
         Settings settings = getStandardSettings(romName);
@@ -1648,7 +1655,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         //TODO: check family integrity
         checkIsReplaced1To1(before, after, true);
-        keepTypeThemedAreasCheck(beforeAreaStrings, typeThemedAreas);
+        keepTypeThemedAreasCheck(beforeAreas, typeThemedAreas);
     }
 
     /**

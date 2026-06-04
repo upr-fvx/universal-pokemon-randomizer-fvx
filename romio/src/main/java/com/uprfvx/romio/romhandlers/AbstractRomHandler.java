@@ -390,11 +390,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public int[] getMovesAtLevel(int pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
+    public int[] getMovesAtLevel(Species pkmn, Map<Integer, List<MoveLearnt>> movesets, int level) {
         int[] curMoves = new int[4];
 
         int moveCount = 0;
-        List<MoveLearnt> movepool = movesets.get(pkmn);
+        List<MoveLearnt> movepool = movesets.get(pkmn.getNumber());
         for (MoveLearnt ml : movepool) {
             if (ml.level > level) {
                 // we're done
@@ -571,12 +571,39 @@ public abstract class AbstractRomHandler implements RomHandler {
         getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
     }
 
+    /**
+     * Sets all alt formes to be "banned" for an {@link EncounterArea},
+     * if any of its encounter slots can't hold alt formes.
+     */
+    protected void banAltFormesIfNeeded(EncounterArea area) {
+        if (!area.stream().allMatch(enc -> enc.getSpeciesHolder().isAltFormeAllowed())) {
+            SpeciesSet altFormes = getSpeciesSetInclFormes().filter(pk -> !pk.isBaseForme());
+            area.banAllSpecies(altFormes);
+        }
+    }
+
     /* Default Implementations */
     /* Used when a subclass doesn't override */
     /*
      * The implication here is that these WILL be overridden by at least one
      * subclass.
      */
+
+    @Override
+    public ResourceLifetime getResourceLifetime() {
+        return ResourceLifetime.NONE;
+    }
+
+    @Override
+    public void closeResources() throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasWildAltFormes() {
+        // DEFAULT: no
+        return false;
+    }
 
     @Override
     public boolean shouldWriteCheckValue() {

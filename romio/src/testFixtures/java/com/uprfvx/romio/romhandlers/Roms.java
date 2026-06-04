@@ -75,6 +75,10 @@ public class Roms {
         return getRoms(new int[]{1, 2, 3, 4, 5, 6, 7}, Region.values(), true, true, true);
     }
 
+    public static String[] getRoms(int[] generations, Region region, boolean includeHacks, boolean includeVanilla, boolean includeUntestable) {
+        return getRoms(generations, new Region[] {region}, includeHacks, includeVanilla, includeUntestable);
+    }
+
     public static String[] getRoms(int[] generations, Region[] regions, boolean includeHacks, boolean includeVanilla, boolean includeUntestable) {
         List<String> roms = new ArrayList<>();
         for (int gen : generations) {

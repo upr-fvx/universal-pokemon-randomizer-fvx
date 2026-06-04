@@ -15,7 +15,7 @@ public class TrainerNameRandomizer extends Randomizer {
 
     @SuppressWarnings("unchecked")
     public void randomizeTrainerNames() {
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         if (!romHandler.canChangeTrainerText()) {
             return;
@@ -29,7 +29,7 @@ public class TrainerNameRandomizer extends Randomizer {
         List<String> repeatedTrainerNames = Arrays.asList("GRUNT", "EXECUTIVE", "SHADOW", "ADMIN", "GOON", "EMPLOYEE");
 
         // Read name lists
-        for (String trainername : customNames.getTrainerNames()) {
+        for (String trainername : customNames.trainerNames()) {
             int len = romHandler.internalStringLength(trainername);
             if (len <= 10) {
                 allTrainerNames[0].add(trainername);
@@ -43,7 +43,7 @@ public class TrainerNameRandomizer extends Randomizer {
             }
         }
 
-        for (String trainername : customNames.getDoublesTrainerNames()) {
+        for (String trainername : customNames.doublesTrainerNames()) {
             int len = romHandler.internalStringLength(trainername);
             if (len <= 10) {
                 allTrainerNames[1].add(trainername);
@@ -141,7 +141,7 @@ public class TrainerNameRandomizer extends Randomizer {
 
     @SuppressWarnings("unchecked")
     public void randomizeTrainerClassNames() {
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         if (!romHandler.canChangeTrainerText()) {
             return;
@@ -153,7 +153,7 @@ public class TrainerNameRandomizer extends Randomizer {
                 new HashMap<Integer, List<String>>()};
 
         // Read names data
-        for (String trainerClassName : customNames.getTrainerClasses()) {
+        for (String trainerClassName : customNames.trainerClasses()) {
             allTrainerClasses[0].add(trainerClassName);
             int len = romHandler.internalStringLength(trainerClassName);
             if (trainerClassesByLength[0].containsKey(len)) {
@@ -165,7 +165,7 @@ public class TrainerNameRandomizer extends Randomizer {
             }
         }
 
-        for (String trainerClassName : customNames.getDoublesTrainerClasses()) {
+        for (String trainerClassName : customNames.doublesTrainerClasses()) {
             allTrainerClasses[1].add(trainerClassName);
             int len = romHandler.internalStringLength(trainerClassName);
             if (trainerClassesByLength[1].containsKey(len)) {

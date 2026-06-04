@@ -192,8 +192,6 @@ public class PresetMakeDialog extends javax.swing.JDialog {
                 DataOutputStream dos = new DataOutputStream(Files.newOutputStream(fh.toPath()));
                 dos.writeLong(seed);
                 dos.writeUTF(configString);
-                byte[] customNameData = CustomNamesSet.readNamesFromFile().getBytes();
-                dos.write(customNameData);
                 dos.close();
                 JOptionPane.showMessageDialog(this, "Preset file saved to\n" + fh.getAbsolutePath());
             } catch (IOException ex) {

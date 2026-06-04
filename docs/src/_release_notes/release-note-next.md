@@ -11,7 +11,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] @Gobl943 and @marshjoran for reporting Issues,
+[Every person who submitted a solved issue] @Gobl943, @marshjoran and @SchinkTasia for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -52,6 +52,8 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ### Misc.
 - (Log) Made the "Pokemon Base Statistics / Types / Abilities" list include alt forms immediately after their base forms, instead of at the very end.
 - (Log+GUI) Gave form suffixes to the base forms of Pokemon with non-obvious base forms. **E.g.** "Wormadam" -> "Wormadam-Plant". This applies to: Wormadam, Basculin, Pumpkaboo, Gourgeist, Oricorio, and Lycanroc. 
+- Made the "Custom Names" feature work like the existing `/data` folder customization features. Custom names for Trainers, Trainer classes, and Pokemon nicknames now reside in `/data/trainer_and_mon_names`. The GUI editor can still be used. Old RNCN files can still be read, but new ones will not be created. Preset files will no longer include custom names. 
+- The above change allows the CLI to use Custom Names, taking them from the `/data/trainer_and_mon_names` folder. (Issue #185) 
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes

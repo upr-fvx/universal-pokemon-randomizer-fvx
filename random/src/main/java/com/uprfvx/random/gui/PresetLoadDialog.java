@@ -1,8 +1,8 @@
 package com.uprfvx.random.gui;
 
+import com.uprfvx.random.Settings;
 import com.uprfvx.random.Version;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.random.exceptions.InvalidSupplementFilesException;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -15,13 +15,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
@@ -85,18 +82,18 @@ public class PresetLoadDialog extends JDialog {
     }
 
     private void initListeners() {
-        presetFileButton.addActionListener(e -> onPresetFileButton());
-        romButton.addActionListener(e -> onRomButton());
+        presetFileButton.addActionListener(_ -> onPresetFileButton());
+        romButton.addActionListener(_ -> onRomButton());
 
         DocumentListener checkListener = new CheckDocumentListener();
         seedField.getDocument().addDocumentListener(checkListener);
         settingsStringField.getDocument().addDocumentListener(checkListener);
 
-        cpgUseCheckButton.addActionListener(e -> onCPGUseCheckButton());
-        cpgSelectLastButton.addActionListener(e -> onCPGSelectLastButton());
+        cpgUseCheckButton.addActionListener(_ -> onCPGUseCheckButton());
+        cpgSelectLastButton.addActionListener(_ -> onCPGSelectLastButton());
 
-        applyButton.addActionListener(e -> onApply());
-        cancelButton.addActionListener(e -> dispose());
+        applyButton.addActionListener(_ -> onApply());
+        cancelButton.addActionListener(_ -> dispose());
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -149,13 +146,9 @@ public class PresetLoadDialog extends JDialog {
         }
 
         try {
-            name = parentGUI.getValidRequiredROMName(configString.substring(3), customNames);
-        } catch (InvalidSupplementFilesException ex) {
-            safelyClearFields();
-            invalidValues();
-            return false;
+            name = getValidRequiredROMName(configString.substring(3));
         } catch (Exception ex) {
-            // other exception, just call it invalid for now
+            safelyClearFields();
             invalidValues();
             return false;
         }
@@ -175,6 +168,29 @@ public class PresetLoadDialog extends JDialog {
             disableCPGSelection();
         }
         return true;
+    }
+
+    private String getValidRequiredROMName(String config) {
+        validateConfigString(config);
+        byte[] data = Base64.getDecoder().decode(config);
+
+        int nameLength = data[Settings.LENGTH_OF_SETTINGS_DATA] & 0xFF;
+        if (data.length != Settings.TOTAL_LENGTH_EXCEPT_NAME + nameLength) {
+            return null; // not valid length
+        }
+        return new String(data, Settings.LENGTH_OF_SETTINGS_DATA + Settings.LENGTH_OF_NAME_LENGTH, nameLength,
+                StandardCharsets.US_ASCII);
+    }
+
+    private void validateConfigString(String config) {
+        byte[] data = Base64.getDecoder().decode(config);
+
+        if (data.length < Settings.TOTAL_LENGTH_EXCEPT_NAME) {
+            throw new IllegalArgumentException("The preset config is too short to be valid");
+        }
+        if (Settings.hasInvalidChecksum(data)) {
+            throw new IllegalArgumentException("Checksum failure.");
+        }
     }
 
     private void promptForDifferentRandomizerVersion(int presetVN) {
@@ -233,10 +249,9 @@ public class PresetLoadDialog extends JDialog {
                 }
                 long seed = dis.readLong();
                 String preset = dis.readUTF();
-                customNames = new CustomNamesSet(dis);
                 enforceFieldCheck = false;
                 seedField.setText(Long.toString(seed));
-                settingsStringField.setText(checkInt + "" + preset);
+                settingsStringField.setText(checkInt + preset);
                 enforceFieldCheck = true;
                 if (checkValues()) {
                     seedField.setEnabled(false);
@@ -248,7 +263,6 @@ public class PresetLoadDialog extends JDialog {
                     seedField.setEnabled(true);
                     settingsStringField.setEnabled(true);
                     presetFileField.setText("");
-                    customNames = null;
                     JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
                 }
                 dis.close();
@@ -327,7 +341,7 @@ public class PresetLoadDialog extends JDialog {
         PlayerCharacterType typeToReplace = null;
         File config = new File(RootPath.path + "config.ini");
         try {
-            Scanner scanner = new Scanner(config, "UTF-8");
+            Scanner scanner = new Scanner(config, StandardCharsets.UTF_8);
             while (scanner.hasNext()) {
                 String q = scanner.nextLine().trim();
                 if (q.contains("//")) {
@@ -342,7 +356,7 @@ public class PresetLoadDialog extends JDialog {
                     }
                 }
             }
-        } catch (FileNotFoundException ignored) {
+        } catch (IOException ignored) {
             return null;
         }
         if (cpgName == null || typeToReplace == null) {
@@ -374,13 +388,6 @@ public class PresetLoadDialog extends JDialog {
     }
 
     private void onApply() {
-        if (customNames == null) {
-            try {
-                customNames = CustomNamesSet.readNamesFromFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         if (cpgUseCheckButton.isSelected()) {
             customPlayerGraphics = cpgSelection.getCustomPlayerGraphics();
         }
@@ -402,10 +409,6 @@ public class PresetLoadDialog extends JDialog {
 
     public String getSettingsString() {
         return settingsStringField.getText();
-    }
-
-    public CustomNamesSet getCustomNames() {
-        return customNames;
     }
 
     public CustomPlayerGraphics getCustomPlayerGraphics() {

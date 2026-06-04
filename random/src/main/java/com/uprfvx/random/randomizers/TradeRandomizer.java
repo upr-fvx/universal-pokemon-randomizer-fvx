@@ -21,14 +21,14 @@ public class TradeRandomizer extends Randomizer {
         boolean randomOT = settings.isRandomizeInGameTradesOTs();
         boolean randomStats = settings.isRandomizeInGameTradesIVs();
         boolean randomItem = settings.isRandomizeInGameTradesItems();
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         // Process trainer names
         List<String> trainerNames = new ArrayList<>();
         // Check for the file
         if (randomOT) {
             int maxOT = romHandler.maxTradeOTNameLength();
-            for (String trainername : customNames.getTrainerNames()) {
+            for (String trainername : customNames.trainerNames()) {
                 int len = romHandler.internalStringLength(trainername);
                 if (len <= maxOT && !trainerNames.contains(trainername)) {
                     trainerNames.add(trainername);
@@ -41,7 +41,7 @@ public class TradeRandomizer extends Randomizer {
         // Check for the file
         if (randomNickname) {
             int maxNN = romHandler.maxTradeNicknameLength();
-            for (String nickname : customNames.getPokemonNicknames()) {
+            for (String nickname : customNames.pokemonNicknames()) {
                 int len = romHandler.internalStringLength(nickname);
                 if (len <= maxNN && !nicknames.contains(nickname)) {
                     nicknames.add(nickname);

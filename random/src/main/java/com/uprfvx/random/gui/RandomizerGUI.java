@@ -25,7 +25,7 @@ package com.uprfvx.random.gui;
 import com.uprfvx.random.*;
 import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.random.exceptions.InvalidSupplementFilesException;
+import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
@@ -39,7 +39,6 @@ import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
 import com.uprfvx.romio.romio.ROMFilter;
 import com.uprfvx.romio.romio.RomOpener;
-import filefunctions.FileFunctions;
 import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
@@ -421,7 +420,8 @@ public class RandomizerGUI {
     private JMenuItem batchRandomizationMenuItem;
 
     private final ImageIcon emptyIcon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/com/uprfvx/random/gui/emptyIcon.png")));
-    private boolean haveCheckedCustomNames, unloadGameOnSuccess;
+    private boolean haveCheckedCustomNames, hasVisitedCustomNamesEditor;
+    private boolean unloadGameOnSuccess;
     private final Map<String, String> gameUpdates = new TreeMap<>();
 
     private final List<String> trainerSettings = new ArrayList<>();
@@ -618,7 +618,7 @@ public class RandomizerGUI {
         saveSettingsButton.addActionListener(_ -> saveQS());
         settingsButton.addActionListener(_ -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
         themeSelectionMenuItem.addActionListener(_ -> new ThemeSelectionDialog(this, frame));
-        customNamesEditorMenuItem.addActionListener(_ -> new CustomNamesEditorDialog(frame));
+        customNamesEditorMenuItem.addActionListener(_ -> customNamesEditorMenuItemActionPerformed());
         applyGameUpdateMenuItem.addActionListener(_ -> applyGameUpdateMenuItemActionPerformed());
         removeGameUpdateMenuItem.addActionListener(_ -> removeGameUpdateMenuItemActionPerformed());
         loadGetSettingsMenuItem.addActionListener(_ -> loadGetSettingsMenuItemActionPerformed());
@@ -1198,14 +1198,8 @@ public class RandomizerGUI {
         long seed = SeedPicker.pickSeed();
         presetMode = false;
 
-        try {
-            CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
-            CustomPlayerGraphics cpg = getCPGFromGUI();
-            performRandomization(fh.getAbsolutePath(), seed, cns, cpg, outputType == SaveType.DIRECTORY);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantLoadCustomNames"));
-        }
+        CustomPlayerGraphics cpg = getCPGFromGUI();
+        performRandomization(fh.getAbsolutePath(), seed, cpg, outputType == SaveType.DIRECTORY);
     }
 
     private CustomPlayerGraphics getCPGFromGUI() {
@@ -1278,9 +1272,9 @@ public class RandomizerGUI {
     }
 
     private void performRandomization(final String filename, final long seed,
-                                      CustomNamesSet customNames, CustomPlayerGraphics cpg,
+                                      CustomPlayerGraphics cpg,
                                       boolean saveAsDirectory) {
-        final Settings settings = createSettingsFromState(customNames);
+        final Settings settings = createSettingsFromState();
         final boolean raceMode = settings.isRaceMode();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
         // Setup log
@@ -1393,14 +1387,9 @@ public class RandomizerGUI {
 
         } else if (!batchRandomization) {
             // Compile a config string
-            try {
-                String configString = getCurrentSettings().toString();
-                // Show the preset maker
-                new PresetMakeDialog(frame, seed, configString);
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.cantLoadCustomNames"));
-            }
+            String configString = getCurrentSettings().toString();
+            // Show the preset maker
+            new PresetMakeDialog(frame, seed, configString);
         }
 
         // Done
@@ -1493,7 +1482,7 @@ public class RandomizerGUI {
             if (allowed && fh != null) {
                 // Apply the seed we were given
                 presetMode = true;
-                performRandomization(fh.getAbsolutePath(), seed, pld.getCustomNames(), customPlayerGraphics, outputType == SaveType.DIRECTORY);
+                performRandomization(fh.getAbsolutePath(), seed, customPlayerGraphics, outputType == SaveType.DIRECTORY);
             }
         }
 
@@ -1543,6 +1532,12 @@ public class RandomizerGUI {
             }
         }
         return saveType;
+    }
+
+    private void customNamesEditorMenuItemActionPerformed() {
+        new CustomNamesEditorDialog(frame, hasVisitedCustomNamesEditor);
+        hasVisitedCustomNamesEditor = true;
+        attemptWriteConfig();
     }
 
     private void applyGameUpdateMenuItemActionPerformed() {
@@ -1608,13 +1603,9 @@ public class RandomizerGUI {
         String currentSettingsString = "Current Settings String:";
         JTextField currentSettingsStringField = new JTextField();
         currentSettingsStringField.setEditable(false);
-        try {
-            String theSettingsString = getCurrentSettings().toString();
-            currentSettingsStringField.setColumns(Settings.LENGTH_OF_SETTINGS_DATA * 2);
-            currentSettingsStringField.setText(theSettingsString);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String theSettingsString = getCurrentSettings().toString();
+        currentSettingsStringField.setColumns(Settings.LENGTH_OF_SETTINGS_DATA * 2);
+        currentSettingsStringField.setText(theSettingsString);
         String loadSettingsString = "Load Settings String:";
         JTextField loadSettingsStringField = new JTextField();
         Object[] messages = {currentSettingsString,currentSettingsStringField,loadSettingsString,loadSettingsStringField};
@@ -2034,7 +2025,7 @@ public class RandomizerGUI {
         this.enableOrDisableSubControls();
     }
 
-    private Settings createSettingsFromState(CustomNamesSet customNames) {
+    private Settings createSettingsFromState() {
         Settings settings = new Settings();
         settings.setRomName(this.romHandler.getROMName());
 
@@ -2276,13 +2267,11 @@ public class RandomizerGUI {
 
         settings.setCurrentMiscTweaks(currentMiscTweaks);
 
-        settings.setCustomNames(customNames);
-
         return settings;
     }
 
-    private Settings getCurrentSettings() throws IOException {
-        return createSettingsFromState(CustomNamesSet.readNamesFromFile());
+    private Settings getCurrentSettings() {
+        return createSettingsFromState();
     }
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,
@@ -2343,55 +2332,6 @@ public class RandomizerGUI {
             } else {
                 JOptionPane.showMessageDialog(mainPanel, bundle.getString(noLogMessageKey));
             }
-        }
-    }
-
-    public String getValidRequiredROMName(String config, CustomNamesSet customNames)
-            throws InvalidSupplementFilesException {
-        try {
-            validatePresetSupplementFiles(config, customNames);
-        } catch (InvalidSupplementFilesException e) {
-            switch (e.getType()) {
-                case CUSTOM_NAMES:
-                    JOptionPane.showMessageDialog(null, bundle.getString("GUI.presetDifferentCustomNames"));
-                    break;
-                default:
-                    throw e;
-            }
-        }
-        byte[] data = Base64.getDecoder().decode(config);
-
-        int nameLength = data[Settings.LENGTH_OF_SETTINGS_DATA] & 0xFF;
-        if (data.length != Settings.LENGTH_OF_SETTINGS_DATA + 9 + nameLength) {
-            return null; // not valid length
-        }
-        return new String(data, Settings.LENGTH_OF_SETTINGS_DATA + 1, nameLength, StandardCharsets.US_ASCII);
-    }
-
-    public void validatePresetSupplementFiles(String config, CustomNamesSet customNames)
-            throws InvalidSupplementFilesException {
-        byte[] data = Base64.getDecoder().decode(config);
-
-        if (data.length < Settings.LENGTH_OF_SETTINGS_DATA + 9) {
-            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.UNKNOWN,
-                    "The preset config is too short to be valid");
-        }
-
-        // Check the checksum
-        ByteBuffer buf = ByteBuffer.allocate(4).put(data, data.length - 8, 4);
-        buf.rewind();
-        int crc = buf.getInt();
-
-        CRC32 checksum = new CRC32();
-        checksum.update(data, 0, data.length - 8);
-        if ((int) checksum.getValue() != crc) {
-            throw new IllegalArgumentException("Checksum failure.");
-        }
-
-        // Check the trainerclass & trainernames & nicknames crc
-        if (customNames == null && !CustomNamesSet.checkOtherCRC(data, 16, 4, data.length - 4)) {
-            throw new InvalidSupplementFilesException(InvalidSupplementFilesException.Type.CUSTOM_NAMES,
-                    "Can't use this preset because you have a different set of custom names to the creator.");
         }
     }
 
@@ -3980,27 +3920,14 @@ public class RandomizerGUI {
     }
 
     private void checkCustomNames() {
-        String[] cnamefiles = new String[] { SysConstants.tnamesFile, SysConstants.tclassesFile,
-                SysConstants.nnamesFile };
-
-        boolean foundFile = false;
-        for (int file = 0; file < 3; file++) {
-            File currentFile = new File(RootPath.path + cnamefiles[file]);
-            if (currentFile.exists()) {
-                foundFile = true;
-                break;
-            }
-        }
-
-        if (foundFile) {
+        if (OldCustomNamesImporter.hasOldNamesToImport()) {
             int response = JOptionPane.showConfirmDialog(frame,
                     bundle.getString("GUI.convertNameFilesDialog.text"),
                     bundle.getString("GUI.convertNameFilesDialog.title"), JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 try {
-                    CustomNamesSet newNamesData = CustomNamesSet.importOldNames();
-                    byte[] data = newNamesData.getBytes();
-                    FileFunctions.writeBytesToFile(SysConstants.customNamesFile, data);
+                    CustomNamesSet newNamesData = OldCustomNamesImporter.importOldNames();
+                    CustomNamesSet.writeNamesToFile(newNamesData);
                 } catch (IOException ex) {
                     JOptionPane.showMessageDialog(frame, bundle.getString("GUI.convertNameFilesFailed"));
                 }
@@ -4009,7 +3936,6 @@ public class RandomizerGUI {
             haveCheckedCustomNames = true;
             attemptWriteConfig();
         }
-
     }
 
     private void attemptReadConfig() {
@@ -4050,8 +3976,14 @@ public class RandomizerGUI {
                             }
                             setTheme(theme);
 
-                        } else if (key.equals("checkedcustomnames172")) {
+                        } else if (key.equals("checkedcustomnamesfvx")) {
+                            // it is named like this to not overlap with ancient config vars;
+                            // do NOT rename it to "checkedcustomnames", just in case someone comes
+                            // along with a similarly ancient config it could cause troubles
                             haveCheckedCustomNames = Boolean.parseBoolean(tokens[1].trim());
+
+                        } else if (key.equals("hasvisitedcustomnameseditor")) {
+                            hasVisitedCustomNamesEditor = Boolean.parseBoolean(tokens[1].trim());
 
                         } else if (key.equals("firststart")) {
                             String val = tokens[1];
@@ -4116,8 +4048,8 @@ public class RandomizerGUI {
         try {
             PrintStream ps = new PrintStream(Files.newOutputStream(fh.toPath()), true, StandardCharsets.UTF_8);
             ps.println("theme=" + theme);
-            ps.println("checkedcustomnames=true");
-            ps.println("checkedcustomnames172=" + haveCheckedCustomNames);
+            ps.println("checkedcustomnamesfvx=" + haveCheckedCustomNames);
+            ps.println("hasvisitedcustomnameseditor=" + hasVisitedCustomNamesEditor);
             ps.println("unloadgameonsuccess=" + unloadGameOnSuccess);
             ps.println("showinvalidrompopup=" + showInvalidRomPopup);
             ps.println("inputdirectory=" + openDirectory);

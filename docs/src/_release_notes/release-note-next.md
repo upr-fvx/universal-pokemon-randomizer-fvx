@@ -13,7 +13,7 @@ Thanks to
 [Every person who submitted a merged pull request] for your code contributions,
 [Every person who submitted a solved issue] @Gobl943, @marshjoran and @SchinkTasia for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] for the CPG sprites, and
+[Every person who made a new CPG] bepis from Spriter's Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -44,6 +44,9 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ### Items
 - (Gen 5-7) Made Pretty Wing count as a bad item. (Issue #198)
+
+### Graphics
+- (Gen 2) New Custom Player Graphics: Curly Brace (from Cave Story) by bepis.
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

@@ -40,6 +40,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - (Gen 3) [The description of a changed feature here.]
 
 ### Misc. Tweaks
+- (Gen 3-7) New Misc. Tweak: **No EVs From Pokemon**. This tweak makes all Pokemon give 0 EVs when defeated in battle. It does not affect EVs gained using other methods (Vitamins, Power items, Super Training, etc.). 
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->

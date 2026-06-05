@@ -2193,6 +2193,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             available |= MiscTweak.FORGETTABLE_HMS.getValue();
         }
         available |= MiscTweak.FAST_EGG_HATCHING.getValue();
+        available |= MiscTweak.NO_EV_YIELDS.getValue();
         return available;
     }
 
@@ -2230,6 +2231,9 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             applyForgettableHMsPatch();
         } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
             getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
+            EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
+            getSpeciesInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
         }
     }
 

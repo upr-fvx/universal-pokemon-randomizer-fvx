@@ -47,7 +47,7 @@ public class MiscTweak implements Comparable<MiscTweak> {
     public static final MiscTweak RANDOMIZE_PC_POTION = new MiscTweak(1 << 5, "pcPotion", 0);
     public static final MiscTweak ALLOW_PIKACHU_EVOLUTION = new MiscTweak(1 << 6, "pikachuEvo", 0);
     public static final MiscTweak NATIONAL_DEX_AT_START = new MiscTweak(1 << 7, "nationalDex", 0);
-    public static final MiscTweak FAST_EGG_HATCHING = new MiscTweak(1 << 8, "fastEggHatching", 0); // as the name suggests, unused. A new misc tweak can be fit in this slot to replace it.
+    public static final MiscTweak FAST_EGG_HATCHING = new MiscTweak(1 << 8, "fastEggHatching", 0);
     public static final MiscTweak FORCE_CHALLENGE_MODE = new MiscTweak(1 << 9, "forceChallengeMode", 0);
     public static final MiscTweak LOWER_CASE_POKEMON_NAMES = new MiscTweak(1 << 10, "lowerCaseNames", 0);
     public static final MiscTweak RANDOMIZE_CATCHING_TUTORIAL = new MiscTweak(1 << 11, "catchingTutorial", 0);
@@ -64,6 +64,7 @@ public class MiscTweak implements Comparable<MiscTweak> {
     public static final MiscTweak DISABLE_LOW_HP_MUSIC = new MiscTweak(1 << 22, "disableLowHpMusic", 0);
     public static final MiscTweak REUSABLE_TMS = new MiscTweak(1 << 23, "reusableTMs", 0);
     public static final MiscTweak FORGETTABLE_HMS = new MiscTweak(1 << 24, "forgettableHMs", 0);
+    public static final MiscTweak NO_EV_YIELDS = new MiscTweak(1 << 25, "noEVYields", 0);
 
     // alias to make SettingsUpdater code clearer
     public static final MiscTweak OLD_UPDATE_TYPE_EFFECTIVENESS = FAST_EGG_HATCHING;

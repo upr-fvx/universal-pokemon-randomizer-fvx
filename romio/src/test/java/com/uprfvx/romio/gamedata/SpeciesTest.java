@@ -352,7 +352,7 @@ public class SpeciesTest {
     @Test
     public void transferAttributesToCopy_WithSimplestAttributes_TransfersAllAttributes() {
         // Simplest -> primitives and enums.
-        // Items and BreedingInfo get their own tests since they rely on full Objects,
+        // Items, BreedingInfo, EVYield get their own tests since they rely on full Objects,
         // even if these are simple ones.
         use(a, aCopy);
         a.setName("original");
@@ -444,6 +444,18 @@ public class SpeciesTest {
         assertEquals(EggGroup.FIELD, aCopy.getBreedingInfo().getPrimaryEggGroup());
         assertNull(aCopy.getBreedingInfo().getSecondaryEggGroup());
         assertEquals(1, aCopy.getBreedingInfo().getEggCycles());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithEVYield_TransfersEVYield() {
+        use(a, aCopy);
+        EVYield evYield = new EVYield(0, 1, 2, 0, 1, 2);
+        a.setEVYield(evYield);
+
+        transferAttributesToCopies();
+
+        assertNotNull(aCopy.getEVYield());
+        assertEquals(a.getEVYield(), aCopy.getEVYield());
     }
 
     @Test

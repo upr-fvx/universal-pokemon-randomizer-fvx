@@ -749,6 +749,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			pkmn.setSecondaryType(null);
 		}
 		pkmn.setCatchRate(stats[Gen4Constants.bsCatchRateOffset] & 0xFF);
+		pkmn.setEVYield(EVYield.fromWord(readWord(stats, Gen4Constants.bsEVYieldOffset)));
 		pkmn.setGrowthCurve(ExpCurve.fromByte(stats[Gen4Constants.bsGrowthCurveOffset]));
 
 		// Abilities
@@ -913,6 +914,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			stats[Gen4Constants.bsSecondaryTypeOffset] = Gen4Constants.typeToByte(pkmn.getSecondaryType(false));
 		}
 		stats[Gen4Constants.bsCatchRateOffset] = (byte) pkmn.getCatchRate();
+		writeWord(stats, Gen4Constants.bsEVYieldOffset, pkmn.getEVYield().toWord());
 		stats[Gen4Constants.bsGrowthCurveOffset] = pkmn.getGrowthCurve().toByte();
 
 		stats[Gen4Constants.bsAbility1Offset] = (byte) pkmn.getAbility1();

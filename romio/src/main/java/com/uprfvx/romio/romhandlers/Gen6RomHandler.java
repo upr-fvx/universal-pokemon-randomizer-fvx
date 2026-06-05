@@ -294,6 +294,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             pkmn.setSecondaryType(null);
         }
         pkmn.setCatchRate(stats[Gen6Constants.bsCatchRateOffset] & 0xFF);
+        pkmn.setEVYield(EVYield.fromWord(IOFunctions.read2ByteInt(stats, Gen6Constants.bsEVYieldOffset)));
         pkmn.setGrowthCurve(ExpCurve.fromByte(stats[Gen6Constants.bsGrowthCurveOffset]));
 
         pkmn.setAbility1(stats[Gen6Constants.bsAbility1Offset] & 0xFF);
@@ -657,6 +658,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             stats[Gen6Constants.bsSecondaryTypeOffset] = Gen6Constants.typeToByte(pkmn.getSecondaryType(false));
         }
         stats[Gen6Constants.bsCatchRateOffset] = (byte) pkmn.getCatchRate();
+        IOFunctions.write2ByteInt(stats, Gen6Constants.bsEVYieldOffset, pkmn.getEVYield().toWord());
         stats[Gen6Constants.bsGrowthCurveOffset] = pkmn.getGrowthCurve().toByte();
 
         stats[Gen6Constants.bsAbility1Offset] = (byte) pkmn.getAbility1();

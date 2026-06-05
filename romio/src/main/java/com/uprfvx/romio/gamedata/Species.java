@@ -128,6 +128,7 @@ public class Species implements Comparable<Species> {
 
     private int catchRate;
     private int expYield;
+    private EVYield evYield;
 
     private Item guaranteedHeldItem;
     private Item commonHeldItem;
@@ -1080,6 +1081,14 @@ public class Species implements Comparable<Species> {
         this.expYield = expYield;
     }
 
+    public EVYield getEVYield() {
+        return evYield;
+    }
+
+    public void setEVYield(EVYield evYield) {
+        this.evYield = evYield;
+    }
+
     public Item getGuaranteedHeldItem() {
         return guaranteedHeldItem;
     }
@@ -1288,6 +1297,8 @@ public class Species implements Comparable<Species> {
         copy.ability3 = original.ability3;
 
         copy.expYield = original.expYield;
+        copy.evYield = original.evYield == null ?
+                null : new EVYield(original.evYield);
 
         //wild encounter related
         copy.catchRate = original.catchRate;

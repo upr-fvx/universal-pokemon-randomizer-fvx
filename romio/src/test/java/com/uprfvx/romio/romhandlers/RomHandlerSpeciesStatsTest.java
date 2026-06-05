@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
@@ -160,6 +161,46 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk.getFullName());
             assertEquals(records.get(pk), new BreedingInfoRecord(pk));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void evYieldsDoNotChangeWithLoadAndSave(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        loadROM(romName);
+        // it always loads the base stats once
+
+        Map<Species, EVYield> before = new HashMap<>();
+        romHandler.getSpeciesSetInclFormes()
+                .forEach(pk -> before.put(pk, new EVYield(pk.getEVYield())));
+
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            System.out.println(pk.getFullName());
+            System.out.println(pk.getEVYield());
+            assertEquals(before.get(pk), pk.getEVYield());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void evYieldsCanBeChangedWithLoadAndSave(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        loadROM(romName);
+        // maxed out EV Yield that no mon will have in vanilla
+        EVYield maxEVYield = new EVYield(3, 3, 3, 3, 3, 3);
+        romHandler.getSpeciesSetInclFormes()
+                .forEach(pk -> pk.setEVYield(maxEVYield));
+
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            System.out.println(pk.getFullName());
+            assertEquals(maxEVYield, pk.getEVYield());
         }
     }
 

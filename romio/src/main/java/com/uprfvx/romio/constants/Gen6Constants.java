@@ -228,7 +228,8 @@ public class Gen6Constants {
     // Copied from pk3DS. "Dark Grass Held Item" should probably be renamed
     public static final int bsHPOffset = 0, bsAttackOffset = 1, bsDefenseOffset = 2, bsSpeedOffset = 3,
             bsSpAtkOffset = 4, bsSpDefOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7,
-            bsCatchRateOffset = 8, bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsDarkGrassHeldItemOffset = 16,
+            bsCatchRateOffset = 8, bsEVYieldOffset = 10,
+            bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsDarkGrassHeldItemOffset = 16,
             bsGenderOffset = 18, bsEggCyclesOffset = 19, bsGrowthCurveOffset = 21,
             bsPrimaryEggGroupOffset = 22, bsSecondaryEggGroupOffset = 23, bsAbility1Offset = 24, bsAbility2Offset = 25,
             bsAbility3Offset = 26, bsFormeOffset = 28, bsFormeSpriteOffset = 30, bsFormeCountOffset = 32,

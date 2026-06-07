@@ -1688,8 +1688,9 @@ public class RandomizerGUI {
     // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
     // you're doing.
     private void reinitializeRomHandler(boolean batchRandomization) {
+        File romFile = new File(romHandler.loadedFilename());
         unloadRomHandler();
-        Thread t = openRom(new File(romHandler.loadedFilename()), true);
+        Thread t = openRom(romFile, true);
         if (batchRandomization) {
             try {
                 t.join();

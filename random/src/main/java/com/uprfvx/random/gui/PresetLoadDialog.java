@@ -241,6 +241,8 @@ public class PresetLoadDialog extends JDialog {
             File fh = presetFileChooser.getSelectedFile();
             try {
                 DataInputStream dis = new DataInputStream(Files.newInputStream(fh.toPath()));
+                // VERY old preset files might not have version in configString,
+                // so we check it at the start of the file too, to be able to prompt for the right version.
                 int checkInt = dis.readInt();
                 if (checkInt != Version.LATEST.id) {
                     dis.close();
@@ -251,7 +253,7 @@ public class PresetLoadDialog extends JDialog {
                 String preset = dis.readUTF();
                 enforceFieldCheck = false;
                 seedField.setText(Long.toString(seed));
-                settingsStringField.setText(checkInt + preset);
+                settingsStringField.setText(preset);
                 enforceFieldCheck = true;
                 if (checkValues()) {
                     seedField.setEnabled(false);

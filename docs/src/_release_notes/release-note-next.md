@@ -48,7 +48,8 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- Fix preset files not working. (#209)
-- Fix batch randomization and "Keep Game Loaded After Randomizing" not working. (#210)
+- Fixed preset files not working. (Issue #209)
+- Fixed batch randomization and "Keep Game Loaded After Randomizing" not working. (Issue #210)
+- (Gen 7) Fixed randomization failure when Totem Pokemon or their allies were randomized to alt formes. (Issues #211, #213)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

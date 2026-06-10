@@ -42,7 +42,6 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet testAltFormes = null;
     private final SpeciesSet originalIrregularFormes;
     private SpeciesSet testIrregularFormes = null;
-    Map<Species, Map<Integer, Species>> testAltFormesMap = null;
     private RestrictedSpeciesService testRSS = null;
     private List<Species> testSpeciesInOrder = null;
     private List<Species> testSpeciesInclFormesInOrder = null;
@@ -89,6 +88,11 @@ public class TestRomHandler extends AbstractRomHandler {
     private final SpeciesSet originalBannedForStatics;
     private final boolean forceSwapStaticMegaEvos;
     private final List<Integer> mainGameLegendaries;
+
+    //Totems
+    private final boolean hasTotemPokemon;
+    private final List<TotemPokemon> originalTotems;
+    private List<TotemPokemon> testTotems = null;
 
     //TMs/HMs
     private final boolean originalIsTMsReusable;
@@ -156,6 +160,10 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean canAddPokemonToRegularTrainers;
     private int highestEvoLvl = 0;
 
+    //Palettes
+    private final boolean hasPokemonPaletteSupport;
+    private final String paletteFilesID;
+
     /**
      * Given a loaded RomHandler, creates a mockup TestRomHandler by extracting the data from it.
      * @param mockupOf A loaded RomHandler to create a mockup of.
@@ -200,6 +208,9 @@ public class TestRomHandler extends AbstractRomHandler {
         } else {
             mainGameLegendaries = Collections.unmodifiableList(new ArrayList<>());
         }
+
+        hasTotemPokemon = mockupOf.hasTotemPokemon();
+        originalTotems = Collections.unmodifiableList(mockupOf.getTotemPokemon());
 
         originalIsTMsReusable = mockupOf.isTMsReusable();
         canTMsBeHeld = mockupOf.canTMsBeHeld();
@@ -246,6 +257,13 @@ public class TestRomHandler extends AbstractRomHandler {
         canAddPokemonToBossTrainers = mockupOf.canAddPokemonToBossTrainers();
         canAddPokemonToImportantTrainers = mockupOf.canAddPokemonToImportantTrainers();
         canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
+
+        hasPokemonPaletteSupport = mockupOf.hasPokemonPaletteSupport();
+        if (generation >= 3 && generation <= 5) {
+            paletteFilesID = mockupOf.getPaletteFilesID();
+        } else {
+            paletteFilesID = null;
+        }
 
         perfectAccuracy = mockupOf.getPerfectAccuracy();
         highestEvoLvl = mockupOf.getHighestEvoLvl();
@@ -295,6 +313,7 @@ public class TestRomHandler extends AbstractRomHandler {
         testEncounters = null;
 
         testStatics = null;
+        testTotems = null;
 
         testIsTMsReusable = originalIsTMsReusable;
 
@@ -418,6 +437,31 @@ public class TestRomHandler extends AbstractRomHandler {
         }
         return copiedStatics;
     }
+
+    /**
+     * Given a List of {@link TotemPokemon}s, copies them such that each Species in the original
+     * is replaced by its copied test version.
+     * @param originalTotems The List of TotemPokemon to copy.
+     * @return A new List of new TotemPokemon which are copies of the given ones.
+     */
+    private List<TotemPokemon> deepCopyTotems(List<TotemPokemon> originalTotems) {
+        List<TotemPokemon> copiedTotems = new ArrayList<>();
+        for(TotemPokemon orig : originalTotems) {
+            TotemPokemon copy = new TotemPokemon(orig);
+            Species spec = originalToTest.get(orig.getSpecies());
+            copy.getSpeciesHolder().setSpecies(spec);
+            for (StaticEncounter linked : copy.getLinkedEncounters()) {
+                linked.getSpeciesHolder().setSpecies(spec);
+            }
+            for (StaticEncounter ally : copy.getAllies().values()) {
+                Species allySpec = originalToTest.get(ally.getSpecies());
+                ally.getSpeciesHolder().setSpecies(allySpec);
+            }
+            copiedTotems.add(copy);
+        }
+        return copiedTotems;
+    }
+
 
     /**
      * Given a List of {@link Trainer}s, copies them such that each Species in the original
@@ -990,17 +1034,28 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasTotemPokemon() {
-        throw new NotImplementedException();
+        return hasTotemPokemon;
     }
 
     @Override
     public List<TotemPokemon> getTotemPokemon() {
-        throw new NotImplementedException();
+        if(!hasTotemPokemon) {
+            throw new UnsupportedOperationException("Base romHandler does not support Totem Pokemon!");
+        }
+
+        if(testTotems == null) {
+            testTotems = deepCopyTotems(originalTotems);
+        }
+        return testTotems;
     }
 
     @Override
     public void setTotemPokemon(List<TotemPokemon> totemPokemon) {
-        throw new NotImplementedException();
+        if(!hasTotemPokemon) {
+            throw new UnsupportedOperationException("Base romHandler does not support Totem Pokemon!");
+        }
+
+        testTotems = totemPokemon;
     }
 
     @Override
@@ -1440,7 +1495,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasPokemonPaletteSupport() {
-        throw new NotImplementedException();
+        return hasPokemonPaletteSupport;
     }
 
     @Override
@@ -1470,7 +1525,10 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public String getPaletteFilesID() {
-        throw new NotImplementedException();
+        if (paletteFilesID == null) {
+            throw new UnsupportedOperationException();
+        }
+        return paletteFilesID;
     }
 
     @Override

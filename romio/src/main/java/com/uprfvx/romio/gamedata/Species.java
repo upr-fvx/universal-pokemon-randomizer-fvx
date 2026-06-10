@@ -1314,6 +1314,12 @@ public class Species implements Comparable<Species> {
         copy.growthCurve = original.growthCurve;
         copy.breedingInfo = original.breedingInfo == null ?
                 null : new BreedingInfo(original.breedingInfo);
+
+        //palettes
+        copy.normalPalette = original.normalPalette == null ?
+                null : new Palette(original.normalPalette);
+        copy.shinyPalette = original.shinyPalette == null ?
+                null : new Palette(original.shinyPalette);
     }
 
     private static void transferReferentialAttributesToCopy(Species copy, Species original,

@@ -1,5 +1,7 @@
 package com.uprfvx.romio.gamedata;
 
+import com.uprfvx.romio.graphics.palettes.Color;
+import com.uprfvx.romio.graphics.palettes.Palette;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -456,6 +458,20 @@ public class SpeciesTest {
 
         assertNotNull(aCopy.getEVYield());
         assertEquals(a.getEVYield(), aCopy.getEVYield());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithPalettes_TransfersPalettes() {
+        use(a, aCopy);
+        a.setNormalPalette(new Palette(1, Color.BLACK));
+        a.setShinyPalette(new Palette(1, Color.WHITE));
+
+        transferAttributesToCopies();
+
+        assertNotNull(aCopy.getNormalPalette());
+        assertEquals(new Palette(1, Color.BLACK), aCopy.getNormalPalette());
+        assertNotNull(aCopy.getShinyPalette());
+        assertEquals(new Palette(1, Color.WHITE), aCopy.getShinyPalette());
     }
 
     @Test

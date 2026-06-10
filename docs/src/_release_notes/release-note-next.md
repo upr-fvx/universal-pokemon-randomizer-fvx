@@ -11,7 +11,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] @Nyb-G-Byte and @Europia79 for reporting Issues,
+[Every person who submitted a solved issue] @Nyb-G-Byte, @Europia79, @Rakki-Kyoryu, @Oreolasagna1775 and @765Craven for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -51,5 +51,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - Fixed preset files not working. (Issue #209)
 - Fixed batch randomization and "Keep Game Loaded After Randomizing" not working. (Issue #210)
 - (Gen 7) Fixed randomization failure when Totem Pokemon or their allies were randomized to alt formes. (Issues #211, #213)
+- (Gen 2) Fixed Pokemon palette randomization failure, caused by invalid data file addresses. (Issue #212)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

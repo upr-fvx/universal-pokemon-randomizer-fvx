@@ -11,7 +11,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] @Nyb-G-Byte, @Europia79, @Rakki-Kyoryu, @Oreolasagna1775 and @765Craven for reporting Issues,
+[Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -40,7 +40,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - (Gen 3) [The description of a changed feature here.]
 
 ### Misc. Tweaks
-- (Gen 3-7) New Misc. Tweak: **No EVs From Pokemon**. This tweak makes all Pokemon give 0 EVs when defeated in battle. It does not affect EVs gained using other methods (Vitamins, Power items, Super Training, etc.). 
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
@@ -48,9 +47,5 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- Fixed preset files not working. (Issue #209)
-- Fixed batch randomization and "Keep Game Loaded After Randomizing" not working. (Issue #210)
-- (Gen 7) Fixed randomization failure when Totem Pokemon or their allies were randomized to alt formes. (Issues #211, #213)
-- (Gen 2) Fixed Pokemon palette randomization failure, caused by invalid data file addresses. (Issue #212)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

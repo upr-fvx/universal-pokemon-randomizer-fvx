@@ -157,11 +157,6 @@ public class RandomizationLogger {
         log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
         log.printf(getBS("Log.settings"), settings.toString());
-        // TODO BORRAR
-        log.println("Rom Code: " + romHandler.getROMCode());
-        log.println("Rom Type: " + romHandler.getROMType());
-        log.println("Rom Name: " + romHandler.getROMName());
-        // TODO END BORRAR
         log.println();
         log.printf(getBS("Log.problems"));
         log.println();
@@ -1109,10 +1104,6 @@ public class RandomizationLogger {
             if (settings.getBattleStyle().isBattleStyleChanged()) {
                 log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
             }
-            // TODO BORRAR
-            log.print(" [DEBUG TAG: " + t.getTag() + "]");
-            log.print(" [TRAINER CLASS: " + t.getTrainerclass() + "]");
-            // TODO END BORRAR
             log.println();
         }
         printSectionSeparator();

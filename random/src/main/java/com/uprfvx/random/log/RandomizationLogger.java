@@ -216,8 +216,10 @@ public class RandomizationLogger {
             printContentsRow("pms");
         if (shouldLogMoveUpdates() || shouldLogMoveData() || shouldLogMovesets())
             log.println();
-        if (shouldLogTrainers())
+        if (shouldLogTrainers()){
+            printContentsRow("lvlc");
             printContentsRow("tp");
+        }
         if (shouldLogTotemPokemon())
             printContentsRow("totp");
         if (shouldLogTrainers() || shouldLogTotemPokemon())
@@ -366,9 +368,10 @@ public class RandomizationLogger {
             logMoveData(originalMoveNames);
         if (shouldLogMovesets())
             logMovesets();
-
-        if (shouldLogTrainers())
+        if (shouldLogTrainers()) {
+            logTrainersLevelCaps();
             logTrainers(originalTrainerNames);
+        }
         if (shouldLogTotemPokemon())
             logTotemPokemon(originalTotems);
 
@@ -715,9 +718,9 @@ public class RandomizationLogger {
 
     private void logMoveData(List<String> originalMoveNames) {
         printSectionTitle("md");
-    
+
         boolean namesChanged = moveNameRandomizer.isChangesMade();
-    
+
         List<String> head = new ArrayList<>(Arrays.asList(
                 getBS("Log.md.num"), getBS("Log.md.name")
         ));
@@ -736,7 +739,7 @@ public class RandomizationLogger {
         }
         TextTable table = new TextTable(columns);
         table.addRow(head);
-    
+
         for (int i = 0; i < romHandler.getMoves().size(); i++) {
             Move mv = romHandler.getMoves().get(i);
             if (mv == null) continue;
@@ -756,7 +759,7 @@ public class RandomizationLogger {
             }
             table.addRow(row);
         }
-    
+
         log.print(table);
         printSectionSeparator();
     }
@@ -996,6 +999,70 @@ public class RandomizationLogger {
     private boolean shouldLogTrainers() {
         return trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
                 || trainerNameRandomizer.isChangesMade();
+    }
+
+    private void logTrainersLevelCaps(){
+        printSectionTitle("lvlc");
+        List<Trainer> trainers = romHandler.getTrainers();
+        Map<String, Trainer> gymLeaders = romHandler.getTrainers().stream()
+                // Trainer Tag Filter
+                .filter(t -> t.getTag() != null && (
+                        (t.getTag().startsWith("GYM") && t.getTag().endsWith("-LEADER")) || t.getTag().startsWith("ELITE"))
+                )
+                // Pokémon Gen Filter
+                .filter(t -> {
+                    int generation = romHandler.generationOfPokemon();
+                    int trainerClass = t.getTrainerclass();
+
+                    switch (generation) {
+                        case 5:
+                            int romType = romHandler.getROMType();
+
+                            if (romType == 0 && (trainerClass == 10 || trainerClass == 11 || trainerClass == 56)) { // If it's a BW ROM, remove Cilan, Chili, Cress and Drayden
+                                return false;
+                            } else if (romType == 1 && (trainerClass == 10 || trainerClass == 11 || trainerClass == 12)) { // If it's a BW2 ROM, remove Cilan, Chili, and Cress
+                                return false;
+                            }
+                            break;
+                        case 6:
+                            if (trainerClass == 268) // Bye Sootopolitan Wallace
+                                return false;
+                            break;
+                        case 7:
+                            if (t.getFullDisplayName() != null && !t.getFullDisplayName().startsWith("Island")) { // Filter Kahunas
+                                return false;
+                            }
+                            break;
+                    }
+                    return true;
+                })
+
+                // Collect trainers with the lowest levels
+                .collect(Collectors.toMap(
+                        Trainer::getFullDisplayName,
+                        t-> t,
+                        (exist, replace) -> {
+                            if (getMaxGymLeaderLevel(exist) <= getMaxGymLeaderLevel(replace)) {
+                                return exist;
+                            } else {
+                                return replace;
+                            }
+                        }
+                ));
+
+        // Sort trainers by level so they appear in the log in the game's original order
+        List<Trainer> orderedLeaders = gymLeaders.values().stream()
+                .sorted((l1, l2) -> Integer.compare(getMaxGymLeaderLevel(l1), getMaxGymLeaderLevel(l2)))
+                .toList();
+
+        // Print trainers
+        for (Trainer t : orderedLeaders) {
+            int capLevel = getMaxGymLeaderLevel(t);
+            log.print(t.getFullDisplayName());
+            log.print(" - Level Cap: " + capLevel+ "\n");
+        }
+
+        printSectionSeparator();
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
@@ -1368,6 +1435,19 @@ public class RandomizationLogger {
             names.add(mv != null ? mv.name : null);
         }
         return names;
+    }
+
+    private int getMaxGymLeaderLevel(Trainer trainer){
+        List<TrainerPokemon> trainersPokemon = trainer.getPokemon();
+        int maxLevel = 0;
+
+        for (TrainerPokemon trpkm: trainersPokemon){
+            if (trpkm.getLevel() > maxLevel) {
+                maxLevel = trpkm.getLevel();
+            }
+        }
+
+        return maxLevel;
     }
 }
 

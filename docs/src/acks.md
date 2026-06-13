@@ -93,6 +93,7 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - NachoPeñalva (Various)
 - Ploxel (King Dedede, Meta Knight)
 - Happy Time Boredom (Duck, Dennis the Menace)
+- 2torial_ (Sonic)
 
 ## Direct code contributors
 

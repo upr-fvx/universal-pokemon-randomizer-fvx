@@ -2233,7 +2233,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
         } else if (tweak == MiscTweak.NO_EV_YIELDS) {
             EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
-            getSpeciesInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
+            getSpeciesSetInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
         }
     }
 

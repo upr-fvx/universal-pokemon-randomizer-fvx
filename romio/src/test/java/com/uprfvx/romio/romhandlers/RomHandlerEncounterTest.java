@@ -1,7 +1,9 @@
 package com.uprfvx.romio.romhandlers;
 
 import com.uprfvx.romio.constants.*;
+import com.uprfvx.romio.gamedata.Encounter;
 import com.uprfvx.romio.gamedata.EncounterArea;
+import com.uprfvx.romio.gamedata.Species;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -100,8 +102,8 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         printAllEncounters(sw);
 
         String orig = readFile(EARLIER_OUTPUTS_PATH + romHandler.getROMName() + ".txt");
-        assertEquals(orig.replaceAll("\r\n", "\n"),
-                sw.toString().replaceAll("\r\n", "\n"));
+        assertEquals(orig.replace("\r\n", "\n"),
+                sw.toString().replace("\r\n", "\n"));
     }
 
     /**
@@ -119,7 +121,7 @@ public class RomHandlerEncounterTest extends RomHandlerTest {
         printAllEncounters(sw);
 
         String path = EARLIER_OUTPUTS_PATH + romHandler.getROMName() + ".txt";
-        Files.writeString(Paths.get(path), sw.toString().replaceAll("\r\n", "\n"));
+        Files.writeString(Paths.get(path), sw.toString().replace("\r\n", "\n"));
     }
 
     private void printAllEncounters(StringWriter sw) {

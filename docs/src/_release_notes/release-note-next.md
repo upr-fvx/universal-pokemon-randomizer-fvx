@@ -48,7 +48,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - [The description of some miscellaneous feature (new or changed) here.]
-- Generated log files do no longer introduce a period in the file name. (Issue #219)
 - The file extension for the generated log files during batch randomization can
   now be freely chosen in the Batch Randomization Settings. (Issue #219)
 

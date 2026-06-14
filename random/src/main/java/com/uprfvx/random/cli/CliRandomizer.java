@@ -88,9 +88,7 @@ public class CliRandomizer {
                 byte[] out = baos.toByteArray();
                 if (saveLog) {
                     try {
-                        FileOutputStream fos = new FileOutputStream(
-                                // regex matches the last . in the filename: Is replaced with _.
-                                filename.replaceFirst("\\.(?!.*\\.)", "_") + ".log");
+                        FileOutputStream fos = new FileOutputStream(filename + ".log");
                         fos.write(0xEF);
                         fos.write(0xBB);
                         fos.write(0xBF);

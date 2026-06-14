@@ -1409,8 +1409,7 @@ public class RandomizerGUI {
     }
 
     private void saveLogFile(String filename, String fileEnding, byte[] out) throws IOException {
-        FileOutputStream fos = new FileOutputStream( // regex matches the last . in the filename: Is replaced with _.
-                filename.replaceFirst("\\.(?!.*\\.)", "_") + "." + fileEnding);
+        FileOutputStream fos = new FileOutputStream(filename + "." + fileEnding);
         fos.write(0xEF);
         fos.write(0xBB);
         fos.write(0xBF);

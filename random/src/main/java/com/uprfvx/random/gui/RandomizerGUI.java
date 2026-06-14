@@ -1343,7 +1343,7 @@ public class RandomizerGUI {
                     String.format(bundle.getString("GUI.raceModeCheckValuePopup"), checkValue));
         } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
             try {
-                saveLogFile(filename, out);
+                saveLogFile(filename, batchRandomizationSettings.getLogFileEnding(), out);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame,
                         bundle.getString("GUI.logSaveFailed"));
@@ -1356,7 +1356,7 @@ public class RandomizerGUI {
                     JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 try {
-                    saveLogFile(filename, out);
+                    saveLogFile(filename, "log", out);
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(frame,
                             bundle.getString("GUI.logSaveFailed"));
@@ -1399,8 +1399,9 @@ public class RandomizerGUI {
         attemptWriteConfig();
     }
 
-    private void saveLogFile(String filename, byte[] out) throws IOException {
-        FileOutputStream fos = new FileOutputStream(filename + ".log");
+    private void saveLogFile(String filename, String fileEnding, byte[] out) throws IOException {
+        FileOutputStream fos = new FileOutputStream( // regex matches the last . in the filename: Is replaced with _.
+                filename.replaceFirst("\\.(?!.*\\.)", "_") + "." + fileEnding);
         fos.write(0xEF);
         fos.write(0xBB);
         fos.write(0xBF);

@@ -11,7 +11,7 @@ Because this setting is cosmetic, it uses a separate random number generator so 
 
 Each move name is composed of two parts: a **type word** and an **action word**.
 
-The **type word** is chosen based on the move's elemental type. For example, a Fire-type move might get a word like "Blaze", "Ember", or "Inferno", while a Water-type move might get "Torrent", "Splash", or "Cascade". These words are defined in the `data/TypeMoveNames.txt` file.
+The **type word** is chosen based on the move's elemental type. For example, a Fire-type move might get a word like "Blaze", "Ember", or "Inferno", while a Water-type move might get "Torrent", "Splash", or "Cascade". These words are defined in the `data/move_names/TypeMoveNames.txt` file.
 
 The **action word** is chosen based on the move's mechanical properties, in the following priority order:
 
@@ -27,7 +27,7 @@ The **action word** is chosen based on the move's mechanical properties, in the 
 5. **Trap moves** (non-status) get trapping-themed words
 6. **All other moves** fall back to their category's generic word list (Physical, Special, or Status)
 
-These action words are defined in the `data/CatMoveNames.txt` and `data/SubCatMoveNames.txt` files.
+These action words are defined in the `data/move_names/CatMoveNames.txt` and `data/move_names/SubCatMoveNames.txt` files.
 
 ### Additional details
 
@@ -38,7 +38,7 @@ These action words are defined in the `data/CatMoveNames.txt` and `data/SubCatMo
 
 ### Customizing the word lists
 
-The word list files in the `data/` folder can be edited by the user. The format uses square brackets for keys and parentheses for words:
+The word list files in the `data/move_names/` folder can be edited by the user. The format uses square brackets for keys and parentheses for words:
 
 ```
 [FIRE] (Flame) (Ember) (Blaze) (Scorch)

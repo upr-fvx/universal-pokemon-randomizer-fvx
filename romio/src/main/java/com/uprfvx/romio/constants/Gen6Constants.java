@@ -42,7 +42,13 @@ public class Gen6Constants {
     private static final int xyFormeCount = 77, orasFormeCount = 104;
     private static final int orasformeMovesetOffset = 35;
 
-    public static final List<Integer> actuallyCosmeticForms = Arrays.asList(
+    public static final List<Integer> ignoreTrueCosmeticForms = List.of(
+            // Arceus/Genesect: to avoid confusion
+            // Xerneas: Should be handled automatically?
+            SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.xerneas
+    );
+
+    public static final List<Integer> essentiallyCosmeticForms = Arrays.asList(
             SpeciesIDs.Gen6Formes.cherrimCosmetic1,
             SpeciesIDs.Gen6Formes.keldeoCosmetic1,
             SpeciesIDs.Gen6Formes.furfrouCosmetic1, SpeciesIDs.Gen6Formes.furfrouCosmetic2,
@@ -56,6 +62,13 @@ public class Gen6Constants {
             SpeciesIDs.Gen6Formes.gourgeistCosmetic3,
             SpeciesIDs.Gen6Formes.floetteCosmetic1, SpeciesIDs.Gen6Formes.floetteCosmetic2,
             SpeciesIDs.Gen6Formes.floetteCosmetic3, SpeciesIDs.Gen6Formes.floetteCosmetic4,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic1, SpeciesIDs.Gen6Formes.pikachuCosmetic2,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic3, SpeciesIDs.Gen6Formes.pikachuCosmetic4,
+            SpeciesIDs.Gen6Formes.pikachuCosmetic5, SpeciesIDs.Gen6Formes.pikachuCosmetic6 // Cosplay Pikachu
+    );
+
+    public static final List<Integer> ignoreCosmeticForms = Arrays.asList(
+            SpeciesIDs.Gen6Formes.cherrimCosmetic1,
             SpeciesIDs.Gen6Formes.pikachuCosmetic1, SpeciesIDs.Gen6Formes.pikachuCosmetic2,
             SpeciesIDs.Gen6Formes.pikachuCosmetic3, SpeciesIDs.Gen6Formes.pikachuCosmetic4,
             SpeciesIDs.Gen6Formes.pikachuCosmetic5, SpeciesIDs.Gen6Formes.pikachuCosmetic6 // Cosplay Pikachu
@@ -215,7 +228,8 @@ public class Gen6Constants {
     // Copied from pk3DS. "Dark Grass Held Item" should probably be renamed
     public static final int bsHPOffset = 0, bsAttackOffset = 1, bsDefenseOffset = 2, bsSpeedOffset = 3,
             bsSpAtkOffset = 4, bsSpDefOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7,
-            bsCatchRateOffset = 8, bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsDarkGrassHeldItemOffset = 16,
+            bsCatchRateOffset = 8, bsEVYieldOffset = 10,
+            bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsDarkGrassHeldItemOffset = 16,
             bsGenderOffset = 18, bsEggCyclesOffset = 19, bsGrowthCurveOffset = 21,
             bsPrimaryEggGroupOffset = 22, bsSecondaryEggGroupOffset = 23, bsAbility1Offset = 24, bsAbility2Offset = 25,
             bsAbility3Offset = 26, bsFormeOffset = 28, bsFormeSpriteOffset = 30, bsFormeCountOffset = 32,

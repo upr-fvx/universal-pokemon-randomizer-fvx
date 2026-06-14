@@ -2,9 +2,7 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.romio.gamedata.InGameTrade;
-import com.uprfvx.romio.gamedata.Item;
-import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -23,14 +21,14 @@ public class TradeRandomizer extends Randomizer {
         boolean randomOT = settings.isRandomizeInGameTradesOTs();
         boolean randomStats = settings.isRandomizeInGameTradesIVs();
         boolean randomItem = settings.isRandomizeInGameTradesItems();
-        CustomNamesSet customNames = settings.getCustomNames();
+        CustomNamesSet customNames = getCustomNames();
 
         // Process trainer names
         List<String> trainerNames = new ArrayList<>();
         // Check for the file
         if (randomOT) {
             int maxOT = romHandler.maxTradeOTNameLength();
-            for (String trainername : customNames.getTrainerNames()) {
+            for (String trainername : customNames.trainerNames()) {
                 int len = romHandler.internalStringLength(trainername);
                 if (len <= maxOT && !trainerNames.contains(trainername)) {
                     trainerNames.add(trainername);
@@ -43,7 +41,7 @@ public class TradeRandomizer extends Randomizer {
         // Check for the file
         if (randomNickname) {
             int maxNN = romHandler.maxTradeNicknameLength();
-            for (String nickname : customNames.getPokemonNicknames()) {
+            for (String nickname : customNames.pokemonNicknames()) {
                 int len = romHandler.internalStringLength(nickname);
                 if (len <= maxNN && !nicknames.contains(nickname)) {
                     nicknames.add(nickname);
@@ -70,7 +68,8 @@ public class TradeRandomizer extends Randomizer {
                 given = rSpecService.randomSpecies(random);
             }
             usedGivens.add(given);
-            trade.setGivenSpecies(given);
+            trade.getGivenSpeciesHolder().setSpecies(given);
+            randomizeGivenCosmeticForme(trade);
 
             // requested pokemon?
             if (oldgiven == trade.getRequestedSpecies()) {
@@ -125,6 +124,18 @@ public class TradeRandomizer extends Randomizer {
         // things that the game doesn't support should just be ignored
         romHandler.setInGameTrades(trades);
         changesMade = true;
+    }
+
+    /**
+     * If possible, sets the "given" Species of the given InGameTrade to a random cosmetic forme.<br>
+     * Does nothing if InGameTrade doesn't allow alt formes, or if the Species doesn't have any cosmetic alt formes.
+     */
+    private void randomizeGivenCosmeticForme(InGameTrade trade) {
+        SpeciesHolder sh = trade.getGivenSpeciesHolder();
+        if (sh.isAltFormeAllowed() && sh.getSpecies().isBaseForme()) {
+            Species base = sh.getSpecies().getBaseForme();
+            sh.setFormeNumber(base.getRandomCosmeticFormeNumber(random));
+        }
     }
 
 }

@@ -33,8 +33,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         copyUpEvolutionsHelper.apply(evolutionSanity, false,
                 this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder);
 
-        romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
-                .forEach(pk -> copyUpShuffledStatsOrder(pk.getBaseForme(), pk));
+        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
+                .forEach(pk -> copyUpShuffledStatsOrder(pk.getConceptualBaseForme(), pk));
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
@@ -93,8 +93,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
                 assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
 
-        romHandler.getSpeciesSetInclFormes().filter(Species::isActuallyCosmetic)
-                .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getBaseForme()));
+        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
+                .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getConceptualBaseForme()));
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {

@@ -1,9 +1,6 @@
 package com.uprfvx.random.gui;
 
 /*----------------------------------------------------------------------------*/
-/*--  CustomNamesEditorDialog.java - a GUI interface to allow users to edit --*/
-/*--                                 their custom names for trainers etc.   --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -25,28 +22,31 @@ package com.uprfvx.random.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.SysConstants;
 import com.uprfvx.random.customnames.CustomNamesSet;
-import com.uprfvx.romio.RootPath;
-import filefunctions.FileFunctions;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
+/**
+ * A GUI interface to allow users to edit their custom names for trainers etc.
+ */
 public class CustomNamesEditorDialog extends javax.swing.JDialog {
 
+    @Serial
     private static final long serialVersionUID = -1421503126547242929L;
     private boolean pendingChanges;
+    private ResourceBundle bundle;
 
     /**
      * Creates new form CustomNamesEditorDialog
      */
-    public CustomNamesEditorDialog(java.awt.Frame parent) {
+    public CustomNamesEditorDialog(java.awt.Frame parent, boolean visited) {
         super(parent, true);
         initComponents();
         setLocationRelativeTo(parent);
@@ -56,23 +56,21 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         // load trainer names etc
         try {
             CustomNamesSet cns = CustomNamesSet.readNamesFromFile();
-            populateNames(trainerNamesText, cns.getTrainerNames());
-            populateNames(trainerClassesText, cns.getTrainerClasses());
-            populateNames(doublesTrainerNamesText, cns.getDoublesTrainerNames());
-            populateNames(doublesTrainerClassesText, cns.getDoublesTrainerClasses());
-            populateNames(nicknamesText, cns.getPokemonNicknames());
+            populateNames(trainerNamesText, cns.trainerNames());
+            populateNames(trainerClassesText, cns.trainerClasses());
+            populateNames(doublesTrainerNamesText, cns.doublesTrainerNames());
+            populateNames(doublesTrainerClassesText, cns.doublesTrainerClasses());
+            populateNames(nicknamesText, cns.pokemonNicknames());
         } catch (IOException ex) {
             java.awt.EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(CustomNamesEditorDialog.this,
-                    "Your custom names file is for a different randomizer version or otherwise corrupt."));
+                    bundle.getString("CustomNamesEditorDialog.corruptMessage")));
         }
 
-        // dialog if there's no custom names file yet
-        if (!new File(RootPath.path + SysConstants.customNamesFile).exists()) {
+        if (!visited) {
             java.awt.EventQueue.invokeLater(() -> JOptionPane.showMessageDialog(
                     CustomNamesEditorDialog.this,
-                    String.format(
-                            "Welcome to the custom names editor!\nThis is where you can edit the names used for options like \"Randomize Trainer Names\".\nThe names are initially populated with a few default names included with the randomizer.\nYou can share your customized name sets with others, too!\nJust send them the %s file created in the randomizer directory.",
-                            SysConstants.customNamesFile)));
+                    String.format(bundle.getString("CustomNamesEditorDialog.welcomeMessage"),
+                            CustomNamesSet.FOLDER_PATH)));
         }
 
         pendingChanges = false;
@@ -124,13 +122,12 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
                 getNameList(nicknamesText)
         );
         try {
-            byte[] data = cns.getBytes();
-            FileFunctions.writeBytesToFile(RootPath.path + SysConstants.customNamesFile, data);
+            CustomNamesSet.writeNamesToFile(cns);
             pendingChanges = false;
-            JOptionPane.showMessageDialog(this, "Custom names saved.");
+            JOptionPane.showMessageDialog(this, bundle.getString("CustomNamesEditorDialog.saveMessage"));
             return true;
         } catch (IOException ex) {
-            JOptionPane.showMessageDialog(this, "Could not save changes.");
+            JOptionPane.showMessageDialog(this, bundle.getString("CustomNamesEditorDialog.saveFailedMessage"));
             return false;
         }
     }
@@ -138,8 +135,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
     private void attemptClose() {
         if (pendingChanges) {
             int result = JOptionPane
-                    .showConfirmDialog(this,
-                            "You've made some unsaved changes to your custom names.\nDo you want to save them before closing the editor?");
+                    .showConfirmDialog(this, bundle.getString("CustomNamesEditorDialog.unsavedMessage"));
             if (result == JOptionPane.YES_OPTION) {
                 if (save()) {
                     dispose();
@@ -188,7 +184,6 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
      * WARNING: Do NOT modify this code. The content of this method is always
      * regenerated by the Form Editor.
      */
-    @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -207,7 +202,7 @@ public class CustomNamesEditorDialog extends javax.swing.JDialog {
         closeBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        java.util.ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
+        this.bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
         setTitle(bundle.getString("CustomNamesEditorDialog.title"));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         addWindowListener(new java.awt.event.WindowAdapter() {

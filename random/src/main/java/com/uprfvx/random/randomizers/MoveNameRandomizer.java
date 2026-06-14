@@ -1,7 +1,6 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
-import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.constants.MoveIDs;
 import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveCategory;
@@ -34,11 +33,11 @@ public class MoveNameRandomizer extends Randomizer {
     private static final Pattern WORD_PATTERN = Pattern.compile("\\(([^)]+)\\)");
 
     private static final Map<Type, String[]> TYPE_MOVE_NAMES =
-        MoveNameRandomizer.readTypeNameMapFromFile("data/TypeMoveNames.txt");
+        MoveNameRandomizer.readTypeNameMapFromFile("data/move_names/TypeMoveNames.txt");
     private static final Map<MoveCategory, String[]> CAT_MOVE_NAMES =
-        MoveNameRandomizer.readCatNameMapFromFile("data/CatMoveNames.txt");
+        MoveNameRandomizer.readCatNameMapFromFile("data/move_names/CatMoveNames.txt");
     private static final Map<String, String[]> EXTRA_NAME_LISTS =
-        MoveNameRandomizer.readNameListFile("data/SubCatMoveNames.txt");
+        MoveNameRandomizer.readNameListFile("data/move_names/SubCatMoveNames.txt");
 
     private final Set<String> usedMoveNames = new HashSet<>();
 

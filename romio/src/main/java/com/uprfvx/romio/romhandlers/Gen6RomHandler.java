@@ -200,9 +200,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             pokes = new Species[Gen6Constants.pokemonCount + formeCount + 1];
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 pokes[i] = new Species(i);
-                loadBasicPokeStats(pokes[i],pokeGarc.files.get(i).get(0),formeMappings);
+                loadBasicPokeStats(pokes[i], pokeGarc.getFile(i),formeMappings);
                 pokes[i].setName(pokeNames[i]);
                 pokes[i].setGeneration(generationOf(pokes[i]));
+
+                if (GlobalConstants.baseFormesWithFormeSuffixes.containsKey(i)) {
+                    pokes[i].setFormeSuffix(GlobalConstants.baseFormesWithFormeSuffixes.get(i));
+                }
             }
 
             absolutePokeNumByBaseForme = new HashMap<>();
@@ -215,12 +219,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             Map<Integer,Integer> currentMap = new HashMap<>();
             for (int k: formeMappings.keySet()) {
                 pokes[i] = new Species(i);
-                loadBasicPokeStats(pokes[i], pokeGarc.files.get(k).get(0),formeMappings);
+                loadBasicPokeStats(pokes[i], pokeGarc.getFile(k), formeMappings);
                 FormeInfo fi = formeMappings.get(k);
                 pokes[i].setName(pokeNames[fi.baseForme]);
-                pokes[i].setBaseForme(pokes[fi.baseForme]);
-                pokes[i].setFormeNumber(fi.formeNumber);
                 pokes[i].setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
+                pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
                 if (fi.baseForme == prevSpecies) {
                     formNum++;
                     currentMap.put(formNum,i);
@@ -232,6 +235,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     formNum = 1;
                     currentMap = new HashMap<>();
                     currentMap.put(formNum,i);
+                }
+                if (Gen6Constants.essentiallyCosmeticForms.contains(i)) {
+                    pokes[i].setEssentiallyCosmetic();
+                }
+                if (Gen6Constants.ignoreCosmeticForms.contains(i)) {
+                    pokes[i].setIgnoreCosmetic();
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 i++;
@@ -285,6 +294,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             pkmn.setSecondaryType(null);
         }
         pkmn.setCatchRate(stats[Gen6Constants.bsCatchRateOffset] & 0xFF);
+        pkmn.setEVYield(EVYield.fromWord(IOFunctions.read2ByteInt(stats, Gen6Constants.bsEVYieldOffset)));
         pkmn.setGrowthCurve(ExpCurve.fromByte(stats[Gen6Constants.bsGrowthCurveOffset]));
 
         pkmn.setAbility1(stats[Gen6Constants.bsAbility1Offset] & 0xFF);
@@ -320,23 +330,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (firstFormeOffset != 0) {
                     for (int i = 1; i < formeCount; i++) {
                         altFormes.put(firstFormeOffset + i - 1,new FormeInfo(pkmn.getNumber(),i)); // Assumes that formes are in memory in the same order as their numbers
-                        if (Gen6Constants.actuallyCosmeticForms.contains(firstFormeOffset+i-1)) {
-                            if (pkmn.getNumber() != SpeciesIDs.pikachu && pkmn.getNumber() != SpeciesIDs.cherrim) { // No Pikachu/Cherrim
-                                pkmn.setCosmeticForms(pkmn.getCosmeticForms() + 1);
-                            }
-                        }
                     }
                 } else {
-                    if (pkmn.getNumber() != SpeciesIDs.arceus && pkmn.getNumber() != SpeciesIDs.genesect && pkmn.getNumber() != SpeciesIDs.xerneas) {
-                        // Reason for exclusions:
-                        // Arceus/Genesect: to avoid confusion
-                        // Xerneas: Should be handled automatically?
-                        pkmn.setCosmeticForms(formeCount);
+                    boolean ignore = Gen6Constants.ignoreTrueCosmeticForms.contains(pkmn.getNumber());
+                    for (int i = 0; i < formeCount; i++) {
+                        pkmn.addCosmeticAltForme(i + 1);
+                        if (ignore) {
+                            pkmn.setIgnoreCosmeticAltForme(i + 1);
+                        }
                     }
-                }
-            } else {
-                if (Gen6Constants.actuallyCosmeticForms.contains(pkmn.getNumber())) {
-                    pkmn.setActuallyCosmetic(true);
                 }
             }
         }
@@ -364,7 +366,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
                 Species pk = pokes[i];
-                byte[] evoEntry = evoGARC.files.get(i).get(0);
+                byte[] evoEntry = evoGARC.getFile(i);
                 for (int evo = 0; evo < 8; evo++) {
                     int method = readWord(evoEntry, evo * 6);
                     int species = readWord(evoEntry, evo * 6 + 4);
@@ -375,7 +377,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
                             pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isCosmeticReplacement()) pokes[species].getEvolutionsTo().add(evol);
+                            if (!pk.isEssentiallyCosmetic()) {
+                                pokes[species].getEvolutionsTo().add(evol);
+                            }
                         }
                     }
                 }
@@ -407,7 +411,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             GARCArchive megaEvoGARC = readGARC(romEntry.getFile("MegaEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 Species pk = pokes[i];
-                byte[] megaEvoEntry = megaEvoGARC.files.get(i).get(0);
+                byte[] megaEvoEntry = megaEvoGARC.getFile(i);
                 for (int evo = 0; evo < 3; evo++) {
                     int formNum = readWord(megaEvoEntry, evo * 8);
                     int method = readWord(megaEvoEntry, evo * 8 + 2);
@@ -437,8 +441,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private List<String> getStrings(GARCArchive textGARC, int index) {
-        byte[] rawFile = textGARC.files.get(index).get(0);
-        return new ArrayList<>(N3DSTextHandler.readTexts(rawFile,true,romEntry.getRomType()));
+        try {
+            byte[] rawFile = textGARC.getFile(index);
+            return new ArrayList<>(N3DSTextHandler.readTexts(rawFile, true, romEntry.getRomType()));
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
     }
 
     private void setStrings(boolean isStoryText, int index, List<String> strings) {
@@ -447,12 +455,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void setStrings(GARCArchive textGARC, int index, List<String> strings) {
-        byte[] oldRawFile = textGARC.files.get(index).get(0);
         try {
+            byte[] oldRawFile = textGARC.getFile(index);
             byte[] newRawFile = N3DSTextHandler.saveEntry(oldRawFile, strings, romEntry.getRomType());
             textGARC.setFile(index, newRawFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RomIOException(e);
         }
     }
 
@@ -466,9 +474,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= moveCount; i++) {
                 byte[] moveData;
                 if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
-                    moveData = Mini.UnpackMini(moveGarc.files.getFirst().get(0), "WD")[i];
+                    moveData = Mini.UnpackMini(moveGarc.getFile(0), "WD")[i];
                 } else {
-                    moveData = moveGarc.files.get(i).get(0);
+                    moveData = moveGarc.getFile(i);
                 }
                 moves[i] = new Move();
                 moves[i].name = moveNames.get(i);
@@ -616,17 +624,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public void saveSpeciesStats() {
         int k = Gen6Constants.getBsSize(romEntry.getRomType());
-        byte[] duplicateData = pokeGarc.files.get(Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()) + 1).get(0);
-        for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
-            byte[] pokeData = pokeGarc.files.get(i).get(0);
-            saveBasicPokeStats(pokes[i], pokeData);
-            for (byte pokeDataByte : pokeData) {
-                duplicateData[k] = pokeDataByte;
-                k++;
-            }
-        }
+        int fileIndex = Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()) + 1;
 
         try {
+            byte[] duplicateData = pokeGarc.getFile(fileIndex);
+            for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
+                byte[] pokeData = pokeGarc.getFile(i);
+                saveBasicPokeStats(pokes[i], pokeData);
+                for (byte pokeDataByte : pokeData) {
+                    duplicateData[k] = pokeDataByte;
+                    k++;
+                }
+            }
             this.writeGARC(romEntry.getFile("PokemonStats"),pokeGarc);
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -649,6 +658,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             stats[Gen6Constants.bsSecondaryTypeOffset] = Gen6Constants.typeToByte(pkmn.getSecondaryType(false));
         }
         stats[Gen6Constants.bsCatchRateOffset] = (byte) pkmn.getCatchRate();
+        IOFunctions.write2ByteInt(stats, Gen6Constants.bsEVYieldOffset, pkmn.getEVYield().toWord());
         stats[Gen6Constants.bsGrowthCurveOffset] = pkmn.getGrowthCurve().toByte();
 
         stats[Gen6Constants.bsAbility1Offset] = (byte) pkmn.getAbility1();
@@ -686,7 +696,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         try {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
-                byte[] evoEntry = evoGARC.files.get(i).get(0);
+                byte[] evoEntry = evoGARC.getFile(i);
                 Species pk = pokes[i];
                 if (pk.getNumber() == SpeciesIDs.nincada) {
                     writeShedinjaEvolution();
@@ -811,42 +821,43 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public void saveMoves() {
-        List<String> moveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
-        int moveCount = Gen6Constants.getMoveCount(romEntry.getRomType());
-        byte[][] miniArchive = new byte[0][0];
-        if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
-            miniArchive = Mini.UnpackMini(moveGarc.files.getFirst().get(0), "WD");
-        }
-        for (int i = 1; i <= moveCount; i++) {
-            byte[] data;
-            if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
-                data = miniArchive[i];
-            } else {
-                data = moveGarc.files.get(i).get(0);
-            }
-            String newMoveName = moves[i].name;
-			moveNames.set(i, newMoveName);
-            data[2] = Gen6Constants.moveCategoryToByte(moves[i].category);
-            data[3] = (byte) moves[i].power;
-            data[0] = Gen6Constants.typeToByte(moves[i].type);
-            int hitratio = (int) Math.round(moves[i].hitratio);
-            if (hitratio < 0) {
-                hitratio = 0;
-            }
-            if (hitratio > 101) {
-                hitratio = 100;
-            }
-            data[4] = (byte) hitratio;
-            data[5] = (byte) moves[i].pp;
-        }
-        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
-        setStrings(false, romEntry.getIntValue("MoveNamesTextOffset") + 1, moveNames);
-
         try {
+            List<String> moveNames = getStrings(false, romEntry.getIntValue("MoveNamesTextOffset"));
+            int moveCount = Gen6Constants.getMoveCount(romEntry.getRomType());
+            byte[][] miniArchive = new byte[0][0];
+            if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
+                miniArchive = Mini.UnpackMini(moveGarc.getFile(0), "WD");
+            }
+            for (int i = 1; i <= moveCount; i++) {
+                byte[] data;
+                if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
+                    data = miniArchive[i];
+                } else {
+                    data = moveGarc.getFile(i);
+                }
+                String newMoveName = moves[i].name;
+                moveNames.set(i, newMoveName);
+                data[2] = Gen6Constants.moveCategoryToByte(moves[i].category);
+                data[3] = (byte) moves[i].power;
+                data[0] = Gen6Constants.typeToByte(moves[i].type);
+                int hitratio = (int) Math.round(moves[i].hitratio);
+                if (hitratio < 0) {
+                    hitratio = 0;
+                }
+                if (hitratio > 101) {
+                    hitratio = 100;
+                }
+                data[4] = (byte) hitratio;
+                data[5] = (byte) moves[i].pp;
+            }
+            setStrings(false, romEntry.getIntValue("MoveNamesTextOffset"), moveNames);
+            setStrings(false, romEntry.getIntValue("MoveNamesTextOffset") + 1, moveNames);
+
             if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
                 moveGarc.setFile(0, Mini.PackMini(miniArchive, "WD"));
             }
             this.writeGARC(romEntry.getFile("MoveData"), moveGarc);
+
         } catch (IOException e) {
             throw new RomIOException(e);
         }
@@ -917,12 +928,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         return megaEvolutions;
     }
 
-    @Override
-    public Species getAltFormeOfSpecies(Species base, int forme) {
-        int pokeNum = absolutePokeNumByBaseForme.getOrDefault(base.getNumber(),dummyAbsolutePokeNums).getOrDefault(forme,0);
-        return pokeNum != 0 ? pokes[pokeNum] : base;
-    }
-
 	@Override
 	public SpeciesSet getIrregularFormes() {
 		return Gen6Constants.getIrregularFormes(romEntry.getRomType())
@@ -949,18 +954,18 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int offset = romEntry.getIntValue("GiftPokemonOffset");
             for (int i = 0; i < count; i++) {
                 if (!starterIndices.contains(i)) continue;
-                StaticEncounter se = new StaticEncounter();
                 int species = IOFunctions.read2ByteInt(staticCRO,offset+i*size);
-                Species pokemon = pokes[species];
+                Species pk = pokes[species];
                 int forme = staticCRO[offset+i*size + 4];
-                if (forme > pokemon.getCosmeticForms() && forme != 30 && forme != 31) {
-                    int speciesWithForme = absolutePokeNumByBaseForme
-                            .getOrDefault(species, dummyAbsolutePokeNums)
-                            .getOrDefault(forme, 0);
-                    pokemon = pokes[speciesWithForme];
+                // TODO: figure out how to best deal with the special forme ids like 30 and 31
+                //  Is there a way of keeping them instead of just flattening?
+                if (forme == 30 || forme == 31) {
+                    forme = 0;
                 }
-                se.setSpecies(pokemon);
-                se.setForme(forme);
+                StaticEncounter se = new StaticEncounter(pk);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 5]);
                 starters.add(se);
             }
@@ -998,18 +1003,17 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < count; i++) {
                 if (!starterIndices.contains(i)) continue;
 
-                StaticEncounter newStatic = new StaticEncounter();
                 Species starter = starterIter.next();
-                if (!starter.isBaseForme()) {
-                    newStatic.setForme(starter.getFormeNumber());
-                    starter = starter.getBaseForme();
-                }
-                newStatic.setSpecies(starter);
-                writeWord(staticCRO,offset+i*size, newStatic.getSpecies().getNumber());
-                staticCRO[offset+i*size + 4] = (byte) newStatic.getForme();
+                StaticEncounter newStatic = new StaticEncounter(starter.getBaseForme());
+                SpeciesHolder sh = newStatic.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(starter.getFormeNumber());
+
+                writeWord(staticCRO,offset+i*size, newStatic.getSpecies().getBaseNumber());
+                staticCRO[offset+i*size + 4] = (byte) newStatic.getSpeciesHolder().getFormeNumber();
 //                staticCRO[offset+i*size + 5] = (byte)newStatic.level;
-                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.getSpecies().getNumber());
-                displayCRO[displayOffset+displayIndex*0x54+2] = (byte) newStatic.getForme();
+                writeWord(displayCRO,displayOffset+displayIndex*0x54, newStatic.getSpecies().getBaseNumber());
+                displayCRO[displayOffset+displayIndex*0x54+2] = (byte) newStatic.getSpeciesHolder().getFormeNumber();
                 if (displayIndex < 3) {
                     starterText.set(starterTextIndices[displayIndex],
                             "[VAR PKNAME(0000)]");
@@ -1119,6 +1123,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
 
         new Gen6EncounterAreaTagger().tag(encounterAreas, romEntry.getRomType(), false);
+        encounterAreas.forEach(this::banAltFormesIfNeeded);
 
         return encounterAreas;
     }
@@ -1126,8 +1131,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private List<EncounterArea> getEncountersXY() throws IOException {
         GARCArchive encounterGarc = readGARC(romEntry.getFile("WildPokemon"), false);
         List<EncounterArea> encounterAreas = new ArrayList<>();
-        for (int i = 0; i < encounterGarc.files.size() - 1; i++) {
-            byte[] b = encounterGarc.files.get(i).get(0);
+        for (int i = 0; i < encounterGarc.size() - 1; i++) {
+            byte[] b = encounterGarc.getFile(i);
             if (!wildMapNames.containsKey(i)) {
                 wildMapNames.put(i, "? Unknown ?");
             }
@@ -1281,8 +1286,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private List<EncounterArea> getEncountersORAS() throws IOException {
         GARCArchive encounterGarc = readGARC(romEntry.getFile("WildPokemon"), false);
         List<EncounterArea> encounterAreas = new ArrayList<>();
-        for (int i = 0; i < encounterGarc.files.size() - 2; i++) {
-            byte[] b = encounterGarc.files.get(i).get(0);
+        for (int i = 0; i < encounterGarc.size() - 2; i++) {
+            byte[] b = encounterGarc.getFile(i);
             if (!wildMapNames.containsKey(i)) {
                 wildMapNames.put(i, "? Unknown ?");
             }
@@ -1392,27 +1397,22 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (int i = 0; i < amount; i++) {
             int species = readWord(data, offset + i * 4) & 0x7FF;
             int forme = readWord(data, offset + i * 4) >> 11;
+            int level = data[offset + 2 + i * 4];
+            int maxLevel = data[offset + 3 + i * 4];
             if (species != 0) {
-                Encounter e = new Encounter();
-                Species baseForme = pokes[species];
-
-                // If the forme is purely cosmetic, just use the base forme as the Pokemon
-                // for this encounter (the cosmetic forme will be stored in the encounter).
-                // Do the same for formes 30 and 31, because they actually aren't formes, but
+                Species pk = pokes[species];
+                // Formes 30 and 31, aren't actually formes, but
                 // rather act as indicators for what forme should appear when encountered:
                 // 30 = Spawn the cosmetic forme specific to the user's region (Scatterbug line)
                 // 31 = Spawn *any* cosmetic forme with equal probability (Unown Mirage Cave)
-                if (forme <= baseForme.getCosmeticForms() || forme == 30 || forme == 31) {
-                    e.setSpecies(pokes[species]);
-                } else {
-                    int speciesWithForme = absolutePokeNumByBaseForme
-                            .getOrDefault(species, dummyAbsolutePokeNums)
-                            .getOrDefault(forme, 0);
-                    e.setSpecies(pokes[speciesWithForme]);
+                if (forme == 30 || forme == 31) {
+                    forme = 0;
                 }
-                e.setFormeNumber(forme);
-                e.setLevel(data[offset + 2 + i * 4]);
-                e.setMaxLevel(data[offset + 3 + i * 4]);
+                Encounter e = new Encounter(pk, level);
+                SpeciesHolder sh = e.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
+                e.setMaxLevel(maxLevel);
                 area.add(e);
             }
         }
@@ -1425,10 +1425,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int species = readWord(data, offset + 4 + i * 8);
             int level = data[offset + 8 + i * 8];
             if (species != 0) {
-                Encounter e = new Encounter();
-                e.setSpecies(pokes[species]);
-                e.setFormeNumber(0);
-                e.setLevel(level);
+                Encounter e = new Encounter(pokes[species], level);
                 e.setMaxLevel(level);
                 area.add(e);
             }
@@ -1472,8 +1469,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         String encountersFile = romEntry.getFile("WildPokemon");
         GARCArchive encounterGarc = readGARC(encountersFile, false);
         Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
-        for (int i = 0; i < encounterGarc.files.size() - 1; i++) {
-            byte[] b = encounterGarc.files.get(i).get(0);
+        for (int i = 0; i < encounterGarc.size() - 1; i++) {
+            byte[] b = encounterGarc.getFile(i);
             int offset = IOFunctions.readFullInt(b, 0x10) + 0x10;
             int length = b.length - offset;
             if (length < 0x178) { // No encounters in this map
@@ -1572,9 +1569,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         String encountersFile = romEntry.getFile("WildPokemon");
         GARCArchive encounterGarc = readGARC(encountersFile, false);
         Iterator<EncounterArea> areaIterator = encounterAreas.iterator();
-        byte[] decStorage = encounterGarc.files.getLast().get(0);
-        for (int i = 0; i < encounterGarc.files.size() - 2; i++) {
-            byte[] b = encounterGarc.files.get(i).get(0);
+        byte[] decStorage = encounterGarc.getFile(encounterGarc.size() - 1);
+        for (int i = 0; i < encounterGarc.size() - 2; i++) {
+            byte[] b = encounterGarc.getFile(i);
             int offset = IOFunctions.readFullInt(b, 0x10) + 0xE;
             int offset2 = IOFunctions.readFullInt(b, 0x14);
             int length = offset2 - offset;
@@ -1661,8 +1658,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int currentMapNum = 0;
 
         // Read all the "normal" encounters in the encounters GARC.
-        for (int i = 0; i < encounterGarc.files.size() - 1; i++) {
-            byte[] b = encounterGarc.files.get(i).get(0);
+        for (int i = 0; i < encounterGarc.size() - 1; i++) {
+            byte[] b = encounterGarc.getFile(i);
             int offset = IOFunctions.readFullInt(b, 0x10) + 0x10;
             int length = b.length - offset;
             if (length < 0x178) { // No encounters in this map
@@ -1726,8 +1723,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private void updatePokedexAreaDataORAS(GARCArchive encounterGarc) throws IOException {
         byte[] pokedexAreaData = new byte[(Gen6Constants.pokemonCount + 1) * Gen6Constants.perPokemonAreaDataLengthORAS];
         int currentMapNum = 0;
-        for (int i = 0; i < encounterGarc.files.size() - 2; i++) {
-            byte[] b = encounterGarc.files.get(i).get(0);
+        for (int i = 0; i < encounterGarc.size() - 2; i++) {
+            byte[] b = encounterGarc.getFile(i);
             int offset = IOFunctions.readFullInt(b, 0x10) + 0xE;
             int offset2 = IOFunctions.readFullInt(b, 0x14);
             int length = offset2 - offset;
@@ -1775,7 +1772,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     private void updatePokedexAreaDataFromEncounterArea(EncounterArea area, byte[] pokedexAreaData, int areaIndex, int encounterType) {
         for (Encounter enc : area) {
-            Species pk = enc.getSpecies();
+            Species pk = enc.getSpecies().getBaseForme();
             int perPokemonAreaDataLength = romEntry.getRomType() == Gen6Constants.Type_XY ?
                     Gen6Constants.perPokemonAreaDataLengthXY : Gen6Constants.perPokemonAreaDataLengthORAS;
             int offset = pk.getBaseNumber() * perPokemonAreaDataLength + areaIndex * 4;
@@ -1788,7 +1785,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     private void writeEncounters(byte[] data, int offset, List<Encounter> encounters) {
         for (int i = 0; i < encounters.size(); i++) {
             Encounter encounter = encounters.get(i);
-            int speciesAndFormeData = (encounter.getFormeNumber() << 11) + encounter.getSpecies().getBaseNumber();
+            int speciesAndFormeData = (encounter.getSpeciesHolder().getFormeNumber() << 11)
+                    + encounter.getSpecies().getBaseNumber();
             writeWord(data, offset + i * 4, speciesAndFormeData);
             data[offset + 2 + i * 4] = (byte) encounter.getLevel();
             data[offset + 3 + i * 4] = (byte) encounter.getMaxLevel();
@@ -1808,7 +1806,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             wildMapNames = new HashMap<>();
             GARCArchive encounterGarc = this.readGARC(romEntry.getFile("WildPokemon"), false);
             int zoneDataOffset = romEntry.getIntValue("MapTableFileOffset");
-            byte[] zoneData = encounterGarc.files.get(zoneDataOffset).get(0);
+            byte[] zoneData = encounterGarc.getFile(zoneDataOffset);
             List<String> allMapNames = getStrings(false, romEntry.getIntValue("MapNamesTextOffset"));
             for (int map = 0; map < zoneDataOffset; map++) {
                 int indexNum = (map * 56) + 0x1C;
@@ -1830,7 +1828,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         try {
             GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
-            int trainernum = trs.files.size();
+            int trainernum = trs.size();
             List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
@@ -1854,8 +1852,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 // Victory Item; 2 bytes; The item given out after defeat.
                 //         In X/Y, these are berries, nuggets, pearls (e.g. Battle Chateau)
                 //         In ORAS, none of these are set.
-                byte[] trainer = trs.files.get(i).get(0);
-                byte[] trpoke = trpokes.files.get(i).get(0);
+                byte[] trainer = trs.getFile(i);
+                byte[] trpoke = trpokes.getFile(i);
                 Trainer tr = new Trainer();
                 int pokeType = isORAS ? readWord(trainer,0) : trainer[0] & 0xFF;
                 boolean readMovesets = (pokeType & 1) != 0;
@@ -1906,9 +1904,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int level = readWord(trpoke, pokeOffs + 2);
                     int species = readWord(trpoke, pokeOffs + 4);
                     int formnum = readWord(trpoke, pokeOffs + 6);
-                    TrainerPokemon tpk = new TrainerPokemon();
-                    tpk.setLevel(level);
-                    tpk.setSpecies(pokes[species]);
+                    if (!pokes[species].isValidFormeNumber(formnum)) {
+                        formnum = 0;
+                    }
+                    TrainerPokemon tpk = new TrainerPokemon(pokes[species], level);
                     tpk.setStrength(trpoke[pokeOffs]);
                     if (isORAS) {
                         tpk.setIVs((tpk.getStrength() * 31 / 255));
@@ -1918,8 +1917,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int abilityAndFlag = trpoke[pokeOffs + 1];
                     tpk.setAbilitySlot((abilityAndFlag >>> 4) & 0xF);
                     tpk.setForcedGenderFlag((abilityAndFlag & 0xF));
-                    tpk.setForme(formnum);
-                    tpk.setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(species,formnum));
+                    SpeciesHolder sh = tpk.getSpeciesHolder();
+                    sh.setAltFormeAllowed();
+                    sh.setFormeNumber(formnum);
                     pokeOffs += 8;
                     if (readItems) {
                         tpk.setHeldItem(items.get(readWord(trpoke, pokeOffs)));
@@ -1983,9 +1983,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             // Get current movesets in case we need to reset them for certain
             // trainer mons.
             Map<Integer, List<MoveLearnt>> movesets = this.getMovesLearnt();
-            int trainernum = trs.files.size();
+            int trainernum = trs.size();
             for (int i = 1; i < trainernum; i++) {
-                byte[] trainer = trs.files.get(i).get(0);
+                byte[] trainer = trs.getFile(i);
                 Trainer tr = allTrainers.next();
                 // preserve original poketype for held item & moves
                 int offset = 0;
@@ -2043,8 +2043,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     trpoke[pokeOffs] = (byte) tp.getStrength();
                     trpoke[pokeOffs + 1] = abilityAndFlag;
                     writeWord(trpoke, pokeOffs + 2, tp.getLevel());
-                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getNumber());
-                    writeWord(trpoke, pokeOffs + 6, tp.getForme());
+                    writeWord(trpoke, pokeOffs + 4, tp.getSpecies().getBaseNumber());
+                    writeWord(trpoke, pokeOffs + 6, tp.getSpeciesHolder().getFormeNumber());
                     pokeOffs += 8;
                     if (tr.pokemonHaveItems()) {
                         int itemId = tp.getHeldItem() == null ? 0 : tp.getHeldItem().getId();
@@ -2053,7 +2053,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     if (tr.pokemonHaveCustomMoves()) {
                         if (tp.isResetMoves()) {
-                            int[] pokeMoves = getMovesAtLevel(getAltFormeOfSpecies(tp.getSpecies(), tp.getForme()).getNumber(), movesets, tp.getLevel());
+                            int[] pokeMoves = getMovesAtLevel(tp.getSpecies(), movesets, tp.getLevel());
                             for (int m = 0; m < 4; m++) {
                                 writeWord(trpoke, pokeOffs + m * 2, pokeMoves[m]);
                             }
@@ -2090,7 +2090,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 //                } else {
 //                    movedata = movesLearnt.files.get(i);
 //                }
-                movedata = movesLearnt.files.get(i).get(0);
+                movedata = movesLearnt.getFile(i);
                 int moveDataLoc = 0;
                 List<MoveLearnt> learnt = new ArrayList<>();
                 while (readWord(movedata, moveDataLoc) != 0xFFFF || readWord(movedata, moveDataLoc + 2) != 0xFFFF) {
@@ -2148,7 +2148,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             GARCArchive eggMovesGarc = this.readGARC(romEntry.getFile("EggMoves"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 Species pkmn = pokes[i];
-                byte[] movedata = eggMovesGarc.files.get(i).get(0);
+                byte[] movedata = eggMovesGarc.getFile(i);
                 int numberOfEggMoves = readWord(movedata, 0);
                 List<Integer> moves = new ArrayList<>();
                 for (int j = 0; j < numberOfEggMoves; j++) {
@@ -2169,7 +2169,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             GARCArchive eggMovesGarc = this.readGARC(romEntry.getFile("EggMoves"), true);
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 Species pkmn = pokes[i];
-                byte[] movedata = eggMovesGarc.files.get(i).get(0);
+                byte[] movedata = eggMovesGarc.getFile(i);
                 List<Integer> moves = eggMoves.get(pkmn.getNumber());
                 for (int j = 0; j < moves.size(); j++) {
                     writeWord(movedata, 2 + (j * 2), moves.get(j));
@@ -2198,18 +2198,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int size = Gen6Constants.staticPokemonSize;
             int offset = romEntry.getIntValue("StaticPokemonOffset");
             for (int i = 0; i < count; i++) {
-                StaticEncounter se = new StaticEncounter();
                 int species = IOFunctions.read2ByteInt(staticCRO,offset+i*size);
-                Species pokemon = pokes[species];
                 int forme = staticCRO[offset+i*size + 2];
-                if (forme > pokemon.getCosmeticForms() && forme != 30 && forme != 31) {
-                    int speciesWithForme = absolutePokeNumByBaseForme
-                            .getOrDefault(species, dummyAbsolutePokeNums)
-                            .getOrDefault(forme, 0);
-                    pokemon = pokes[speciesWithForme];
+                if (forme == 30 || forme == 31) {
+                    forme = 0;
                 }
-                se.setSpecies(pokemon);
-                se.setForme(forme);
+                StaticEncounter se = new StaticEncounter(pokes[species]);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 3]);
                 short heldItem = (short)IOFunctions.read2ByteInt(staticCRO,offset+i*size + 4);
                 if (heldItem < 0) {
@@ -2227,18 +2224,16 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             offset = romEntry.getIntValue("GiftPokemonOffset");
             for (int i = 0; i < count; i++) {
                 if (skipStarters.contains(i)) continue;
-                StaticEncounter se = new StaticEncounter();
                 int species = IOFunctions.read2ByteInt(staticCRO,offset+i*size);
-                Species pokemon = pokes[species];
+                Species pk = pokes[species];
                 int forme = staticCRO[offset+i*size + 4];
-                if (forme > pokemon.getCosmeticForms() && forme != 30 && forme != 31) {
-                    int speciesWithForme = absolutePokeNumByBaseForme
-                            .getOrDefault(species, dummyAbsolutePokeNums)
-                            .getOrDefault(forme, 0);
-                    pokemon = pokes[speciesWithForme];
+                if (forme == 30 || forme == 31) {
+                    forme = 0;
                 }
-                se.setSpecies(pokemon);
-                se.setForme(forme);
+                StaticEncounter se = new StaticEncounter(pk);
+                SpeciesHolder sh = se.getSpeciesHolder();
+                sh.setAltFormeAllowed();
+                sh.setFormeNumber(forme);
                 se.setLevel(staticCRO[offset+i*size + 5]);
                 int heldItem = IOFunctions.readFullInt(staticCRO,offset+i*size + 12);
                 if (heldItem < 0) {
@@ -2310,16 +2305,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int species = IOFunctions.readFullInt(code, offset);
         int forme = IOFunctions.readFullInt(code, offset + 4);
         int level = IOFunctions.readFullInt(code, offset + 8);
-        StaticEncounter se = new StaticEncounter();
-        Species pokemon = pokes[species];
-        if (forme > pokemon.getCosmeticForms() && forme != 30 && forme != 31) {
-            int speciesWithForme = absolutePokeNumByBaseForme
-                    .getOrDefault(species, dummyAbsolutePokeNums)
-                    .getOrDefault(forme, 0);
-            pokemon = pokes[speciesWithForme];
+        Species pk = pokes[species];
+        if (forme == 30 || forme == 31) {
+            forme = 0;
         }
-        se.setSpecies(pokemon);
-        se.setForme(forme);
+        StaticEncounter se = new StaticEncounter(pk);
+        SpeciesHolder sh = se.getSpeciesHolder();
+        sh.setAltFormeAllowed();
+        sh.setFormeNumber(forme);
         se.setLevel(level);
         return se;
     }
@@ -2339,7 +2332,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 0; i < staticCount; i++) {
                 StaticEncounter se = staticIter.next();
                 writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
-                staticCRO[offset+i*size + 2] = (byte) se.getForme();
+                staticCRO[offset+i*size + 2] = (byte) se.getSpeciesHolder().getFormeNumber();
                 staticCRO[offset+i*size + 3] = (byte) se.getLevel();
                 if (se.getHeldItem() == null) {
                     writeWord(staticCRO,offset+i*size + 4,-1);
@@ -2358,7 +2351,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 if (skipStarters.contains(i)) continue;
                 StaticEncounter se = staticIter.next();
                 writeWord(staticCRO,offset+i*size, se.getSpecies().getBaseNumber());
-                staticCRO[offset+i*size + 4] = (byte) se.getForme();
+                staticCRO[offset+i*size + 4] = (byte) se.getSpeciesHolder().getFormeNumber();
                 staticCRO[offset+i*size + 5] = (byte) se.getLevel();
                 if (se.getHeldItem() == null) {
                     IOFunctions.writeFullInt(staticCRO,offset+i*size + 12,-1);
@@ -2377,14 +2370,14 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     while (currentCount != Gen6Constants.xyTrashCanEncounterCount) {
                         StaticEncounter se = staticIter.next();
                         IOFunctions.writeFullInt(code, offset, se.getSpecies().getBaseNumber());
-                        IOFunctions.writeFullInt(code, offset + 4, se.getForme());
+                        IOFunctions.writeFullInt(code, offset + 4, se.getSpeciesHolder().getFormeNumber());
                         IOFunctions.writeFullInt(code, offset + 8, se.getLevel());
                         offset += Gen6Constants.xyTrashEncounterDataLength;
                         currentCount++;
                         for (int i = 0; i < se.getLinkedEncounters().size(); i++) {
                             StaticEncounter linkedEncounter = se.getLinkedEncounters().get(i);
                             IOFunctions.writeFullInt(code, offset, linkedEncounter.getSpecies().getBaseNumber());
-                            IOFunctions.writeFullInt(code, offset + 4, linkedEncounter.getForme());
+                            IOFunctions.writeFullInt(code, offset + 4, linkedEncounter.getSpeciesHolder().getFormeNumber());
                             IOFunctions.writeFullInt(code, offset + 8, linkedEncounter.getLevel());
                             offset += Gen6Constants.xyTrashEncounterDataLength;
                             currentCount++;
@@ -2396,11 +2389,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int[] boxLegendaryOffsets = romEntry.getArrayValue("BoxLegendaryOffsets");
                 StaticEncounter boxLegendaryEncounter = staticPokemon.get(boxLegendaryOffsets[0]);
-                fixBoxLegendariesXY(boxLegendaryEncounter.getSpecies().getNumber());
+                fixBoxLegendariesXY(boxLegendaryEncounter.getSpecies().getBaseNumber());
                 setRoamersXY(staticPokemon);
             } else {
                 StaticEncounter rayquazaEncounter = staticPokemon.get(romEntry.getIntValue("RayquazaEncounterNumber"));
-                fixRayquazaORAS(rayquazaEncounter.getSpecies().getNumber());
+                fixRayquazaORAS(rayquazaEncounter.getSpecies().getBaseNumber());
             }
 
             return true;
@@ -2416,7 +2409,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
         Collections.sort(offsetsToInsert);
         for (Integer offsetToInsert : offsetsToInsert) {
-            statics.add(offsetToInsert, new StaticEncounter());
+            // shouldn't matter what's added here so we add bulbasaur
+            statics.add(offsetToInsert, new StaticEncounter(pokes[SpeciesIDs.bulbasaur]));
         }
         for (ThreeDSLinkedEncounter le : romEntry.getLinkedEncounters()) {
             StaticEncounter baseEncounter = statics.get(le.getBase());
@@ -2558,7 +2552,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         // We need to edit the script file or otherwise the text will still say "Rayquaza"
         int rayquazaScriptFile = romEntry.getIntValue("RayquazaEncounterScriptNumber");
         GARCArchive scriptGarc = readGARC(romEntry.getFile("Scripts"), true);
-        AMX rayquazaAMX = new AMX(scriptGarc.files.get(rayquazaScriptFile).get(0));
+        AMX rayquazaAMX = new AMX(scriptGarc.getFile(rayquazaScriptFile));
         byte[] data = rayquazaAMX.decData;
         for (int i = 0; i < Gen6Constants.rayquazaScriptOffsetsORAS.length; i++) {
             IOFunctions.write2ByteInt(data, Gen6Constants.rayquazaScriptOffsetsORAS[i], rayquazaEncounterSpecies);
@@ -2606,6 +2600,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             // TODO
             available |= MiscTweak.FAST_EGG_HATCHING.getValue();
         }
+        available |= MiscTweak.NO_EV_YIELDS.getValue();
         return available;
     }
 
@@ -2619,12 +2614,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             try {
                 patchFormeReversion();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RomIOException(e);
             }
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
         } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
             getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
+            EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
+            getSpeciesSetInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
         }
     }
 
@@ -2943,7 +2941,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
         for (int i = 1; i <= Gen6Constants.pokemonCount + formeCount; i++) {
             byte[] data;
-            data = pokeGarc.files.get(i).get(0);
+            try {
+                data = pokeGarc.getFile(i);
+            } catch (IOException e) {
+                throw new RomIOException(e);
+            }
             Species pkmn = pokes[i];
             boolean[] flags = new boolean[Gen6Constants.tmCount + Gen6Constants.getHMCount(romEntry.getRomType()) + 1];
             for (int j = 0; j < 14; j++) {
@@ -2959,7 +2961,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         for (Map.Entry<Species, boolean[]> compatEntry : compatData.entrySet()) {
             Species pkmn = compatEntry.getKey();
             boolean[] flags = compatEntry.getValue();
-            byte[] data = pokeGarc.files.get(pkmn.getNumber()).get(0);
+            byte[] data;
+            try {
+                data = pokeGarc.getFile(pkmn.getNumber());
+            } catch (IOException e) {
+                throw new RomIOException(e);
+            }
             for (int j = 0; j < 14; j++) {
                 data[Gen6Constants.bsTMHMCompatOffset + j] = getByteFromFlags(flags, j * 8 + 1);
             }
@@ -3027,7 +3034,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
         for (int i = 1; i <= Gen6Constants.pokemonCount + formeCount; i++) {
             byte[] data;
-            data = pokeGarc.files.get(i).get(0);
+            try {
+                data = pokeGarc.getFile(i);
+            } catch (IOException e) {
+                throw new RomIOException(e);
+            }
             Species pkmn = pokes[i];
             boolean[] flags = new boolean[Arrays.stream(sizes).sum() + 1];
             int offset = 0;
@@ -3049,7 +3060,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
         for (int i = 1; i <= Gen6Constants.pokemonCount + formeCount; i++) {
             byte[] data;
-            data = pokeGarc.files.get(i).get(0);
+            try {
+                data = pokeGarc.getFile(i);
+            } catch (IOException e) {
+                throw new RomIOException(e);
+            }
             Species pkmn = pokes[i];
             boolean[] flags = compatData.get(pkmn);
             int offset = 0;
@@ -3081,7 +3096,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public SpeciesSet getBannedForStaticPokemon() {
-        return new SpeciesSet(Gen6Constants.actuallyCosmeticForms
+        return new SpeciesSet(Gen6Constants.essentiallyCosmeticForms
                 .stream()
                 .filter(index -> index < Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()))
                 .map(index -> pokes[index])
@@ -3423,7 +3438,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
             writeFile(romEntry.getFile("Intro"), introCRO);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RomIOException(e);
         }
         return true;
     }
@@ -3498,7 +3513,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int normalItemsFile = romEntry.getIntValue("FieldItemsScriptNumber");
             int normalItemsOffset = romEntry.getIntValue("FieldItemsOffset");
             GARCArchive scriptGarc = readGARC(romEntry.getFile("Scripts"),true);
-            AMX normalItemAMX = new AMX(scriptGarc.files.get(normalItemsFile).get(0));
+            AMX normalItemAMX = new AMX(scriptGarc.getFile(normalItemsFile));
             byte[] data = normalItemAMX.decData;
             for (int i = normalItemsOffset; i < data.length; i += 12) {
                 int item = IOFunctions.read2ByteInt(data,i);
@@ -3511,7 +3526,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int hiddenItemsFile = romEntry.getIntValue("HiddenItemsScriptNumber");
                 int hiddenItemsOffset = romEntry.getIntValue("HiddenItemsOffset");
-                AMX hiddenItemAMX = new AMX(scriptGarc.files.get(hiddenItemsFile).get(0));
+                AMX hiddenItemAMX = new AMX(scriptGarc.getFile(hiddenItemsFile));
                 data = hiddenItemAMX.decData;
                 for (int i = hiddenItemsOffset; i < data.length; i += 12) {
                     int item = IOFunctions.read2ByteInt(data,i);
@@ -3562,7 +3577,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             int normalItemsFile = romEntry.getIntValue("FieldItemsScriptNumber");
             int normalItemsOffset = romEntry.getIntValue("FieldItemsOffset");
             GARCArchive scriptGarc = readGARC(romEntry.getFile("Scripts"),true);
-            AMX normalItemAMX = new AMX(scriptGarc.files.get(normalItemsFile).get(0));
+            AMX normalItemAMX = new AMX(scriptGarc.getFile(normalItemsFile));
             byte[] data = normalItemAMX.decData;
             for (int i = normalItemsOffset; i < data.length; i += 12) {
                 int item = iterItems.next();
@@ -3574,7 +3589,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             if (romEntry.getRomType() == Gen6Constants.Type_XY) {
                 int hiddenItemsFile = romEntry.getIntValue("HiddenItemsScriptNumber");
                 int hiddenItemsOffset = romEntry.getIntValue("HiddenItemsOffset");
-                AMX hiddenItemAMX = new AMX(scriptGarc.files.get(hiddenItemsFile).get(0));
+                AMX hiddenItemAMX = new AMX(scriptGarc.getFile(hiddenItemsFile));
                 data = hiddenItemAMX.decData;
                 for (int i = hiddenItemsOffset; i < data.length; i += 12) {
                     int item = iterItems.next();
@@ -3635,9 +3650,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         if (offset > 0) {
             offset += prefix.length() / 2;
             for (int i = 0; i < count; i++) {
-                InGameTrade trade = new InGameTrade();
+                Species requested = pokes[IOFunctions.read2ByteInt(code,offset + 0x20)];
+                Species given = pokes[IOFunctions.read2ByteInt(code,offset)];
+                InGameTrade trade = new InGameTrade(requested, given);
                 trade.setNickname(tradeStrings.get(textOffset + i));
-                trade.setGivenSpecies(pokes[IOFunctions.read2ByteInt(code,offset)]);
                 trade.setIVs(new int[6]);
                 for (int iv = 0; iv < 6; iv++) {
                     trade.getIVs()[iv] = code[offset + 5 + iv];
@@ -3645,7 +3661,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 trade.setOtId(IOFunctions.read2ByteInt(code,offset + 0xE));
                 trade.setHeldItem(items.get(IOFunctions.read2ByteInt(code,offset + 0x10)));
                 trade.setOtName(tradeStrings.get(textOffset + count + i));
-                trade.setRequestedSpecies(pokes[IOFunctions.read2ByteInt(code,offset + 0x20)]);
                 trades.add(trade);
                 offset += Gen6Constants.ingameTradeSize;
             }
@@ -3851,8 +3866,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         prices.add(0);
         try {
             GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"), true);
-            for (int i = 1; i < itemPriceGarc.files.size(); i++) {
-                prices.add(readWord(itemPriceGarc.files.get(i).get(0), 0) * 10);
+            for (int i = 1; i < itemPriceGarc.size(); i++) {
+                prices.add(readWord(itemPriceGarc.getFile(i), 0) * 10);
             }
             writeGARC(romEntry.getFile("ItemData"), itemPriceGarc);
         } catch (IOException e) {
@@ -3872,8 +3887,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         // so the last digit of each input price will be ignored.
         try {
             GARCArchive itemPriceGarc = this.readGARC(romEntry.getFile("ItemData"), true);
-            for (int i = 1; i < itemPriceGarc.files.size(); i++) {
-                writeWord(itemPriceGarc.files.get(i).get(0), 0, prices.get(i) / 10);
+            for (int i = 1; i < itemPriceGarc.size(); i++) {
+                writeWord(itemPriceGarc.getFile(i), 0, prices.get(i) / 10);
             }
             writeGARC(romEntry.getFile("ItemData"), itemPriceGarc);
         } catch (IOException e) {
@@ -3979,7 +3994,12 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public BufferedImage getPokemonIcon(int iconIndex, GARCArchive pokeGraphicsGARC,
                                         boolean transparentBackground, boolean includePalette) {
-        byte[] icon = pokeGraphicsGARC.files.get(iconIndex).get(0);
+        byte[] icon;
+        try {
+            icon = pokeGraphicsGARC.getFile(iconIndex);
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
         Palette palette = Palette.read3DSIconPalette(icon);
 
         int width = 64;
@@ -4119,5 +4139,5 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     @Override
     public int getMaxMoveNameLength() {
         return 24;
-    };
+    }
 }

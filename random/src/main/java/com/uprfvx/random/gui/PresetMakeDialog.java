@@ -30,6 +30,7 @@ package com.uprfvx.random.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.uprfvx.random.Version;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import filefunctions.FileFunctions;
 import filefunctions.FileNameFunctions;
@@ -190,10 +191,10 @@ public class PresetMakeDialog extends javax.swing.JDialog {
             fh = FileNameFunctions.fixFilename(fh, "rndp");
             try {
                 DataOutputStream dos = new DataOutputStream(Files.newOutputStream(fh.toPath()));
+                // intentionally redundant inclusion of version (it is also in configString) for compatibility
+                dos.writeInt(Version.LATEST.id);
                 dos.writeLong(seed);
                 dos.writeUTF(configString);
-                byte[] customNameData = CustomNamesSet.readNamesFromFile().getBytes();
-                dos.write(customNameData);
                 dos.close();
                 JOptionPane.showMessageDialog(this, "Preset file saved to\n" + fh.getAbsolutePath());
             } catch (IOException ex) {

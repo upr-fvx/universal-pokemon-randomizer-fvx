@@ -11,9 +11,9 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] @Gobl943 for reporting Issues,
+[Every person who submitted a solved issue] @AxelElric8 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] for the CPG sprites, and
+[Every person who made a new CPG] 2torial_ from Spriter's Resource for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -39,8 +39,8 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
 
-### Items
-- (Gen 5-7) Made Pretty Wing count as a bad item. (Issue #198)
+### Graphics
+- (Gen 1) New Custom Player Graphics: Sonic (the Hedgehog) by 2torial_.
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
@@ -50,5 +50,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
+- (Gen 4-7) Fixed "No EVs from Pokémon" randomization failure. (#218)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

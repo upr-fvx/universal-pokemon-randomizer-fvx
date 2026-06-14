@@ -2,18 +2,25 @@ package com.uprfvx.romio.gamedata;
 
 public class BreedingInfo {
 
+    // these aren't official terms, but ones chosen since their behavior code-wise mirrors the species types
     private EggGroup primaryEggGroup;
     private EggGroup secondaryEggGroup;
 
     private int eggCycles;
 
-    public BreedingInfo(EggGroup eggGroup1, EggGroup eggGroup2, int eggCycles) {
+    public BreedingInfo(EggGroup primaryEggGroup, EggGroup secondaryEggGroup, int eggCycles) {
         if (eggCycles < 0) {
             throw new IllegalArgumentException("eggCycles must be >=0");
         }
-        this.primaryEggGroup = eggGroup1;
-        this.secondaryEggGroup = eggGroup1 == eggGroup2 ? null : eggGroup2;
+        this.primaryEggGroup = primaryEggGroup;
+        this.secondaryEggGroup = primaryEggGroup == secondaryEggGroup ? null : secondaryEggGroup;
         this.eggCycles = eggCycles;
+    }
+
+    public BreedingInfo(BreedingInfo original) {
+        this.primaryEggGroup = original.primaryEggGroup;
+        this.secondaryEggGroup = original.secondaryEggGroup;
+        this.eggCycles = original.eggCycles;
     }
 
     public EggGroup getPrimaryEggGroup() {

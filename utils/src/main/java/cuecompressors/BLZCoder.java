@@ -279,8 +279,7 @@ public class BLZCoder {
         ByteBuffer buf = ByteBuffer.wrap(data);
         buf.order(ByteOrder.LITTLE_ENDIAN);
         if (buf.get(0) != 0x11) {
-            System.err.println("Not a valid LZSS compressed file");
-            return null;
+            throw new IllegalArgumentException("Not a valid LZSS compressed file");
         }
         int decSize = buf.getInt() >>> 8;
         if (decSize == 0) {
@@ -293,8 +292,7 @@ public class BLZCoder {
         while (outBuf.position() < decSize) {
             if (mask == 1) {
                 if (buf.position() >= data.length) {
-                    System.err.println("Not enough data");
-                    return null;
+                    throw new RuntimeException("Not enough data");
                 }
                 flags = buf.get();
                 mask = 0x80;
@@ -304,16 +302,14 @@ public class BLZCoder {
 
             if ((flags & mask) > 0) {
                 if (buf.position() >= data.length) {
-                    System.err.println("Not enough data");
-                    return null;
+                    throw new RuntimeException("Not enough data");
                 }
                 byte byte1 = buf.get();
                 int length = byte1 >> 4;
                 int disp;
                 if (length == 0) {
                     if (buf.position() + 1 >= data.length) {
-                        System.err.println("Not enough data");
-                        return null;
+                        throw new RuntimeException("Not enough data");
                     }
                     byte byte2 = buf.get();
                     byte byte3 = buf.get();
@@ -321,8 +317,7 @@ public class BLZCoder {
                     disp = (((byte2 & 0x0F) << 8) | (byte3 & 0xFF)) + 0x1;
                 } else if (length == 1) {
                     if (buf.position() + 2 >= data.length) {
-                        System.err.println("Not enough data");
-                        return null;
+                        throw new RuntimeException("Not enough data");
                     }
 
                     byte byte2 = buf.get();
@@ -333,8 +328,7 @@ public class BLZCoder {
                     disp = (((byte3 & 0x0F) << 8) | (byte4 & 0xFF)) + 0x1;
                 } else {
                     if (buf.position() > data.length) {
-                        System.err.println("Not enough data");
-                        return null;
+                        throw new RuntimeException("Not enough data");
                     }
                     byte byte2 = buf.get();
 
@@ -343,8 +337,7 @@ public class BLZCoder {
                 }
 
                 if (disp > outBuf.position()) {
-                    System.err.println("oops");
-                    return null;
+                    throw new RuntimeException("oops");
                 }
                 int bufIndex = outBuf.position() - disp;
                 for (int i = 0; i < length; i++) {
@@ -354,8 +347,7 @@ public class BLZCoder {
                 }
             } else {
                 if (buf.position() > data.length) {
-                    System.err.println("Not enough data");
-                    return null;
+                    throw new RuntimeException("Not enough data");
                 }
                 byte next = buf.get();
                 outBuf.put(next);
@@ -363,8 +355,7 @@ public class BLZCoder {
             }
         }
         if ((buf.position() ^ (buf.position() & 0x3)) + 4 < data.length) {
-            System.err.println("Too much input");
-            return null;
+            throw new RuntimeException("Too much input");
         }
         outBuf.flip();
         return outBuf.array();
@@ -598,8 +589,7 @@ public class BLZCoder {
 
     private byte[] LZSS_Encode(byte[] data) {
         if (data.length > 0xFFFFFF) {
-            System.err.println("Encoding: Too much data");
-            return null;
+            throw new IllegalArgumentException("Encoding: Too much data");
         }
 
         ByteBuffer inBuf = ByteBuffer.wrap(data);

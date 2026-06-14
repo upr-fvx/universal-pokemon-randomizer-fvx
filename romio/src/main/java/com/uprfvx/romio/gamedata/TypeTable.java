@@ -9,9 +9,7 @@ import static com.uprfvx.romio.gamedata.Effectiveness.*;
  */
 public class TypeTable {
 
-    private static final List<Effectiveness> VALID_EFFECTIVENESSES = Collections.unmodifiableList(Arrays.asList(
-            ZERO, HALF, NEUTRAL, DOUBLE
-    ));
+    private static final List<Effectiveness> VALID_EFFECTIVENESSES = List.of(ZERO, HALF, NEUTRAL, DOUBLE);
 
     // Each TypeTable has its own mapping of Types to indexes in the map.
     // This is both so the actual table only has to be types.length^2, instead of [AllTypes]^2,
@@ -116,6 +114,11 @@ public class TypeTable {
         return effectivenesses[typeIndexMap.get(attacker)][typeIndexMap.get(defender)];
     }
 
+    /**
+     * Returns a {@link Map} of each {@link Type} contained in this TypeTable, and how effective they
+     * would be against a defender with the two given types. defenderSecondary can be null to represent a
+     * monotype defender.
+     */
     public Map<Type, Effectiveness> against(Type defenderPrimary, Type defenderSecondary) {
         validTypeCheck(defenderPrimary);
         if (defenderSecondary != null) {
@@ -231,8 +234,7 @@ public class TypeTable {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof TypeTable) {
-            TypeTable other = (TypeTable) o;
+        if (o instanceof TypeTable other) {
             return equalTypes(other) && equalEffectivenesses(other);
         }
         return false;
@@ -321,10 +323,10 @@ public class TypeTable {
         return new TypeTable(gen6PlusTypes, gen6PlusTable);
     }
 
-    private static final List<Type> gen1Types = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Type> gen1Types = List.of(
             Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.GRASS, Type.WATER, Type.FIRE, Type.ROCK, Type.GROUND,
             Type.PSYCHIC, Type.BUG, Type.DRAGON, Type.ELECTRIC, Type.GHOST, Type.POISON, Type.ICE
-    ));
+    );
     private static final Effectiveness[][] gen1Table = {
             /*            NORMAL,FIGHTING, FLYING,   GRASS ,   WATER,   FIRE ,   ROCK , GROUND,  PSYCHIC,   BUG  ,  DRAGON,ELECTRIC,   GHOST , POISON,   ICE  */
             /*NORMAL */ {NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,    HALF, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,    ZERO, NEUTRAL, NEUTRAL},
@@ -344,10 +346,10 @@ public class TypeTable {
             /*ICE    */ {NEUTRAL, NEUTRAL,  DOUBLE,  DOUBLE,    HALF, NEUTRAL, NEUTRAL,  DOUBLE, NEUTRAL, NEUTRAL,  DOUBLE, NEUTRAL, NEUTRAL, NEUTRAL,    HALF},
     };
 
-    private static final List<Type> gen2To5Types = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Type> gen2To5Types = List.of(
             Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.GRASS, Type.WATER, Type.FIRE, Type.ROCK, Type.GROUND,
             Type.PSYCHIC, Type.BUG, Type.DRAGON, Type.ELECTRIC, Type.GHOST, Type.POISON, Type.ICE, Type.STEEL, Type.DARK
-    ));
+    );
     private static final Effectiveness[][] gen2To5Table = {
         /*            NORMAL,FIGHTING, FLYING,   GRASS ,   WATER,   FIRE ,   ROCK , GROUND,  PSYCHIC,   BUG  ,  DRAGON,ELECTRIC,   GHOST , POISON,   ICE  ,  STEEL ,  DARK  */
         /*NORMAL */ {NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,    HALF, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,    ZERO, NEUTRAL, NEUTRAL,    HALF, NEUTRAL},
@@ -369,11 +371,11 @@ public class TypeTable {
         /*DARK   */ {NEUTRAL,    HALF, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,  DOUBLE, NEUTRAL, NEUTRAL, NEUTRAL,  DOUBLE, NEUTRAL, NEUTRAL,    HALF,    HALF},
     };
 
-    private static final List<Type> gen6PlusTypes = Collections.unmodifiableList(Arrays.asList(
+    private static final List<Type> gen6PlusTypes = List.of(
             Type.NORMAL, Type.FIGHTING, Type.FLYING, Type.GRASS, Type.WATER, Type.FIRE, Type.ROCK, Type.GROUND,
             Type.PSYCHIC, Type.BUG, Type.DRAGON, Type.ELECTRIC, Type.GHOST, Type.POISON, Type.ICE, Type.STEEL,
             Type.DARK, Type.FAIRY
-    ));
+    );
     private static final Effectiveness[][] gen6PlusTable = {
             /*            NORMAL,FIGHTING, FLYING,   GRASS ,   WATER,   FIRE ,   ROCK , GROUND,  PSYCHIC,   BUG  ,  DRAGON,ELECTRIC,   GHOST , POISON,   ICE  ,  STEEL ,  DARK  , FAIRY */
             /*NORMAL */ {NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,    HALF, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL, NEUTRAL,    ZERO, NEUTRAL, NEUTRAL,    HALF, NEUTRAL, NEUTRAL},

@@ -45,7 +45,8 @@ public class Gen7Constants {
 
     public static final int bsHPOffset = 0, bsAttackOffset = 1, bsDefenseOffset = 2, bsSpeedOffset = 3,
             bsSpAtkOffset = 4, bsSpDefOffset = 5, bsPrimaryTypeOffset = 6, bsSecondaryTypeOffset = 7,
-            bsCatchRateOffset = 8, bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsDarkGrassHeldItemOffset = 16,
+            bsCatchRateOffset = 8, bsEVYieldOffset = 10,
+            bsCommonHeldItemOffset = 12, bsRareHeldItemOffset = 14, bsDarkGrassHeldItemOffset = 16,
             bsGenderOffset = 18,  bsEggCyclesOffset = 19, bsGrowthCurveOffset = 21,
             bsPrimaryEggGroupOffset = 22, bsSecondaryEggGroupOffset = 23, bsAbility1Offset = 24, bsAbility2Offset = 25,
             bsAbility3Offset = 26, bsCallRateOffset = 27, bsFormeOffset = 28, bsFormeSpriteOffset = 30,
@@ -56,18 +57,15 @@ public class Gen7Constants {
     public static final int evolutionMethodCount = 42;
 
     private static final List<Integer> speciesWithAlolanForms = Arrays.asList(
-            SpeciesIDs.rattata, SpeciesIDs.raticate, SpeciesIDs.raichu, SpeciesIDs.sandshrew, SpeciesIDs.sandslash, SpeciesIDs.vulpix,
+            // Raticate and Marowak intentionally excluded from here
+            SpeciesIDs.rattata, SpeciesIDs.raichu, SpeciesIDs.sandshrew, SpeciesIDs.sandslash, SpeciesIDs.vulpix,
             SpeciesIDs.ninetales, SpeciesIDs.diglett, SpeciesIDs.dugtrio, SpeciesIDs.meowth, SpeciesIDs.persian, SpeciesIDs.geodude,
-            SpeciesIDs.graveler, SpeciesIDs.golem, SpeciesIDs.grimer, SpeciesIDs.muk, SpeciesIDs.exeggutor, SpeciesIDs.marowak
+            SpeciesIDs.graveler, SpeciesIDs.golem, SpeciesIDs.grimer, SpeciesIDs.muk, SpeciesIDs.exeggutor
     );
 
     private static final List<Integer> speciesWithTotemForms = Arrays.asList(
-            // Raticate-Alolan and Marowak-Alolan being here depends on the USUM formes that share their SM species IDs,
-            // (Oricorio-Pom-Pom and Geodude-Alolan) not having cosmetic alt formes of their own.
-            // Wishiwashi is also excluded, since it seems to simply not have a totem forme.
             SpeciesIDs.gumshoos, SpeciesIDs.vikavolt, SpeciesIDs.lurantis, SpeciesIDs.salazzle, SpeciesIDs.kommoO,
-            SpeciesIDs.araquanid, SpeciesIDs.togedemaru, SpeciesIDs.ribombee, SpeciesIDs.SMFormes.raticateA,
-            SpeciesIDs.USUMFormes.raticateA, SpeciesIDs.SMFormes.marowakA, SpeciesIDs.USUMFormes.marowakA
+            SpeciesIDs.araquanid, SpeciesIDs.togedemaru, SpeciesIDs.ribombee
     );
 
     private static final Map<Integer,String> dummyFormeSuffixes = setupDummyFormeSuffixes();
@@ -548,6 +546,8 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.pikachu,
                 // the last one is Partner Cap because it is only in USUM, but unsure which is which of the others
                 "-InACap", "-InACap", "-InACap", "-InACap", "-InACap", "-InACap", "-PartnerCap");
+        putFormSuffixes(map, SpeciesIDs.raticate, "-Alolan", "-Totem");
+        putFormSuffixes(map, SpeciesIDs.marowak, "-Alolan", "-Totem");
 
         putFormSuffixes(map, SpeciesIDs.castform, "-Sunny", "-Rainy", "-Snowy");
         putFormSuffixes(map, SpeciesIDs.kyogre, "-Primal");
@@ -576,14 +576,15 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.floette, "", "", "", "", "-Eternal"); // first 4 are just colors
         putFormSuffixes(map, SpeciesIDs.zygarde,
                 // using '%' causes issues with Java's string formatting, so avoid it/use 'p' instead
-                "-10p", "-10p-PowerConstruct", "-PowerConstruct", "-Complete");
+                "-10p", "-PowerConstruct", "-PowerConstruct", "-Complete");
         putFormSuffixes(map, SpeciesIDs.hoopa, "-Unbound");
 
         putFormSuffixes(map, SpeciesIDs.oricorio, "-Pom-Pom", "-Pa'u", "-Sensu");
         putFormSuffixes(map, SpeciesIDs.rockruff, "-OwnTempo");
         putFormSuffixes(map, SpeciesIDs.lycanroc, "-Midnight", "-Dusk");
         putFormSuffixes(map, SpeciesIDs.wishiwashi, "-School");
-        putFormSuffixes(map, SpeciesIDs.minior, "", "", "", "", "", "", "-Core"); // first 6 are just colors
+        putFormSuffixes(map, SpeciesIDs.minior, // first 6 are just colors, last 6 are just core colors
+                "", "", "", "", "", "", "-Core", "", "", "", "", "", "");
         putFormSuffixes(map, SpeciesIDs.necrozma, "-DuskMane", "-DawnWings", "-Ultra");
         putFormSuffixes(map, SpeciesIDs.magearna, "-OGColors");
 
@@ -621,7 +622,13 @@ public class Gen7Constants {
         return m;
     }
 
-    private static final List<Integer> actuallyCosmeticFormsSM = Arrays.asList(
+    public static final List<Integer> ignoreTrueCosmeticForms = List.of(
+            // Arceus/Genesect/Silvally: to avoid confusion
+            // Xerneas: Should be handled automatically?
+            SpeciesIDs.arceus, SpeciesIDs.genesect, SpeciesIDs.silvally, SpeciesIDs.xerneas
+    );
+
+    private static final List<Integer> essentiallyCosmeticFormsSM = Arrays.asList(
             SpeciesIDs.SMFormes.cherrimCosmetic1,
             SpeciesIDs.SMFormes.shellosCosmetic1,
             SpeciesIDs.SMFormes.gastrodonCosmetic1,
@@ -655,7 +662,7 @@ public class Gen7Constants {
             SpeciesIDs.SMFormes.pikachuCosmetic4, SpeciesIDs.SMFormes.pikachuCosmetic5, SpeciesIDs.SMFormes.pikachuCosmetic6 // Pikachu With Funny Hats
     );
 
-    private static final List<Integer> actuallyCosmeticFormsUSUM = Arrays.asList(
+    private static final List<Integer> essentiallyCosmeticFormsUSUM = Arrays.asList(
             SpeciesIDs.USUMFormes.cherrimCosmetic1,
             SpeciesIDs.USUMFormes.shellosCosmetic1,
             SpeciesIDs.USUMFormes.gastrodonCosmetic1,
@@ -695,11 +702,11 @@ public class Gen7Constants {
             SpeciesIDs.USUMFormes.rockruffCosmetic1
     );
 
-    public static List<Integer> getActuallyCosmeticForms(int romType) {
+    public static List<Integer> getEssentiallyCosmeticForms(int romType) {
         if (romType == Type_SM) {
-            return actuallyCosmeticFormsSM;
+            return essentiallyCosmeticFormsSM;
         } else {
-            return actuallyCosmeticFormsUSUM;
+            return essentiallyCosmeticFormsUSUM;
         }
     }
 
@@ -742,31 +749,35 @@ public class Gen7Constants {
         }
     }
 
-    private static final Map<Integer,Integer> altFormesWithCosmeticFormsSM = setupAltFormesWithCosmeticForms(Type_SM);
-    private static final Map<Integer,Integer> altFormesWithCosmeticFormsUSUM = setupAltFormesWithCosmeticForms(Type_USUM);
+    private static final Map<Integer,Integer> altFormesWithConceptualBaseFormesSM = Map.of(
+            SpeciesIDs.SMFormes.raticateACosmetic1, SpeciesIDs.SMFormes.raticateA,
+            SpeciesIDs.SMFormes.zygarde10Cosmetic1, SpeciesIDs.SMFormes.zygarde10,
+            SpeciesIDs.SMFormes.miniorCCosmetic1, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic2, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic3, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic4, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic5, SpeciesIDs.SMFormes.miniorC,
+            SpeciesIDs.SMFormes.miniorCCosmetic6, SpeciesIDs.SMFormes.miniorC
+    );
 
-    public static Map<Integer,Integer> getAltFormesWithCosmeticForms(int romType) {
+    private static final Map<Integer,Integer> altFormesWithConceptualBaseFormesUSUM = Map.of(
+            SpeciesIDs.USUMFormes.raticateACosmetic1, SpeciesIDs.USUMFormes.raticateA,
+            SpeciesIDs.USUMFormes.marowakACosmetic1, SpeciesIDs.USUMFormes.marowakA,
+            SpeciesIDs.USUMFormes.zygarde10Cosmetic1, SpeciesIDs.USUMFormes.zygarde10,
+            SpeciesIDs.USUMFormes.miniorCCosmetic1, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic2, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic3, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic4, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic5, SpeciesIDs.USUMFormes.miniorC,
+            SpeciesIDs.USUMFormes.miniorCCosmetic6, SpeciesIDs.USUMFormes.miniorC
+    );
+
+    public static Map<Integer,Integer> getAltFormesWithConceptualBaseFormes(int romType) {
         if (romType == Type_SM) {
-            return altFormesWithCosmeticFormsSM;
+            return altFormesWithConceptualBaseFormesSM;
         } else {
-            return altFormesWithCosmeticFormsUSUM;
+            return altFormesWithConceptualBaseFormesUSUM;
         }
-    }
-
-    private static Map<Integer,Integer> setupAltFormesWithCosmeticForms(int romType) {
-        Map<Integer,Integer> map = new HashMap<>();
-        if (romType == Type_SM) {
-            map.put(SpeciesIDs.SMFormes.raticateA,1); // 1 form (Totem)
-            map.put(SpeciesIDs.SMFormes.zygarde10,1); // 1 form (Power Construct)
-            map.put(SpeciesIDs.SMFormes.miniorC,6); // 6 forms (colors)
-        } else {
-            map.put(SpeciesIDs.USUMFormes.raticateA,1); // 1 form (Totem)
-            map.put(SpeciesIDs.USUMFormes.marowakA,1); // 1 form (Totem)
-            map.put(SpeciesIDs.USUMFormes.zygarde10,1); // 1 form (Power Construct)
-            map.put(SpeciesIDs.USUMFormes.miniorC,6); // 6 forms (colors)
-        }
-
-        return map;
     }
 
     private static Type[] constructTypeTable() {

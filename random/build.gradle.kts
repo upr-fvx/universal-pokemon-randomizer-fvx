@@ -142,7 +142,7 @@ PlatformConfig.entries.forEach { cfg ->
         dependsOn(jlink)
 
         from("src/main/resources") {
-            exclude("data/players_unused")
+            exclude("data/custom_player_graphics_unused")
             exclude("com")
         }
         val launcherName = "launcher.${cfg.launcherExtension}"

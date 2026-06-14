@@ -1,8 +1,6 @@
 package com.uprfvx.random.customnames;
 
 /*----------------------------------------------------------------------------*/
-/*--  CustomNamesSet.java - handles functionality related to custom names.  --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -24,273 +22,77 @@ package com.uprfvx.random.customnames;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.SysConstants;
-import com.uprfvx.romio.RootPath;
-import filefunctions.FileFunctions;
-import filefunctions.IOFunctions;
-
-import java.io.*;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
-import java.util.zip.CRC32;
 
-public class CustomNamesSet {
+/**
+ * A record for all lists of custom names; for trainers, trainer classes, and (gift/trade) Pokémon nicknames.
+ * @param trainerNames
+ * @param trainerClasses
+ * @param doublesTrainerNames
+ * @param doublesTrainerClasses
+ * @param pokemonNicknames
+ */
+public record CustomNamesSet(List<String> trainerNames, List<String> trainerClasses, List<String> doublesTrainerNames,
+                             List<String> doublesTrainerClasses, List<String> pokemonNicknames) {
 
-    // TODO: standardize CustomNamesSet to work like the /data resources
-
-    private static final int CUSTOM_NAMES_VERSION = 1;
-    private static final String DEFAULT_FILE_PATH = "/com/uprfvx/random/customnames/";
+    public static final String FOLDER_PATH = "data/trainer_and_mon_names";
+    private static final String TRAINER_NAMES_PATH = FOLDER_PATH + "/TrainerNames.txt";
+    private static final String TRAINER_CLASSES_PATH = FOLDER_PATH + "/TrainerClasses.txt";
+    private static final String DOUBLES_TRAINER_NAMES_PATH = FOLDER_PATH + "/DoublesTrainerNames.txt";
+    private static final String DOUBLES_TRAINER_CLASSES_PATH = FOLDER_PATH + "/DoublesTrainerClasses.txt";
+    private static final String POKEMON_NICKNAMES_PATH = FOLDER_PATH + "/PokemonNicknames.txt";
 
     public static CustomNamesSet readNamesFromFile() throws IOException {
-        InputStream is = openFile(SysConstants.customNamesFile);
-        CustomNamesSet cns = new CustomNamesSet(is);
-        is.close();
-        return cns;
+        List<String> trainerNames = readLines(TRAINER_NAMES_PATH);
+        List<String> trainerClasses = readLines(TRAINER_CLASSES_PATH);
+        List<String> doublesTrainerNames = readLines(DOUBLES_TRAINER_NAMES_PATH);
+        List<String> doublesTrainerClasses = readLines(DOUBLES_TRAINER_CLASSES_PATH);
+        List<String> pokemonNicknames = readLines(POKEMON_NICKNAMES_PATH);
+        return new CustomNamesSet(trainerNames, trainerClasses,
+                doublesTrainerNames, doublesTrainerClasses,
+                pokemonNicknames);
     }
 
-    public static CustomNamesSet importOldNames() throws IOException {
-        CustomNamesSet cns = new CustomNamesSet();
-
-        importOldTrainerNames(cns);
-        importOldTrainerClasses(cns);
-        importOldNicknames(cns);
-
-        return cns;
+    private static List<String> readLines(String path) throws IOException {
+        return Files.readAllLines(Path.of(path), StandardCharsets.UTF_8).stream()
+                .map(String::trim).map(String::strip).toList();
     }
 
-    private static void importOldTrainerNames(CustomNamesSet cns) throws IOException {
-        if (fileExists(SysConstants.tnamesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.tnamesFile), StandardCharsets.UTF_8);
-            while (sc.hasNextLine()) {
-                String trainername = sc.nextLine().trim();
-                if (trainername.isEmpty()) {
-                    continue;
-                }
-                if (trainername.startsWith("\uFEFF")) {
-                    trainername = trainername.substring(1);
-                }
-                if (trainername.contains("&")) {
-                    cns.doublesTrainerNames.add(trainername);
-                } else {
-                    cns.trainerNames.add(trainername);
-                }
-            }
-            sc.close();
-        }
+    public static void writeNamesToFile(CustomNamesSet customNamesSet) throws IOException {
+        Files.write(Path.of(TRAINER_NAMES_PATH), customNamesSet.trainerNames, StandardCharsets.UTF_8);
+        Files.write(Path.of(TRAINER_CLASSES_PATH), customNamesSet.trainerClasses, StandardCharsets.UTF_8);
+        Files.write(Path.of(DOUBLES_TRAINER_NAMES_PATH), customNamesSet.doublesTrainerNames, StandardCharsets.UTF_8);
+        Files.write(Path.of(DOUBLES_TRAINER_CLASSES_PATH), customNamesSet.doublesTrainerClasses, StandardCharsets.UTF_8);
+        Files.write(Path.of(POKEMON_NICKNAMES_PATH), customNamesSet.pokemonNicknames, StandardCharsets.UTF_8);
     }
 
-    private static void importOldTrainerClasses(CustomNamesSet cns) throws IOException {
-        if (fileExists(SysConstants.tclassesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.tclassesFile), StandardCharsets.UTF_8);
-            while (sc.hasNextLine()) {
-                String trainerClassName = sc.nextLine().trim();
-                if (trainerClassName.isEmpty()) {
-                    continue;
-                }
-                if (trainerClassName.startsWith("\uFEFF")) {
-                    trainerClassName = trainerClassName.substring(1);
-                }
-                String checkName = trainerClassName.toLowerCase();
-                int idx = (checkName.endsWith("couple") || checkName.contains(" and ") || checkName.endsWith("kin")
-                        || checkName.endsWith("team") || checkName.contains("&") || (checkName.endsWith("s") && !checkName
-                        .endsWith("ss"))) ? 1 : 0;
-                if (idx == 1) {
-                    cns.doublesTrainerClasses.add(trainerClassName);
-                } else {
-                    cns.trainerClasses.add(trainerClassName);
-                }
-            }
-            sc.close();
-        }
-    }
-
-    private static void importOldNicknames(CustomNamesSet cns) throws IOException {
-        if (fileExists(SysConstants.nnamesFile)) {
-            Scanner sc = new Scanner(openFile(SysConstants.nnamesFile), StandardCharsets.UTF_8);
-            while (sc.hasNextLine()) {
-                String nickname = sc.nextLine().trim();
-                if (nickname.isEmpty()) {
-                    continue;
-                }
-                if (nickname.startsWith("\uFEFF")) {
-                    nickname = nickname.substring(1);
-                }
-                cns.pokemonNicknames.add(nickname);
-            }
-            sc.close();
-        }
-    }
-
-    private static InputStream openFile(String filename) throws IOException {
-        File fh = new File(RootPath.path + filename);
-        if (fh.exists() && fh.canRead()) {
-            return Files.newInputStream(fh.toPath());
-        }
-
-        String resourcePath = DEFAULT_FILE_PATH + filename;
-        InputStream is = CustomNamesSet.class.getResourceAsStream(resourcePath);
-        if (is == null) {
-            throw new FileNotFoundException("Could not find resource " + resourcePath);
-        }
-        return is;
-    }
-
-    private static boolean fileExists(String filename) {
-        File fh = new File(RootPath.path + filename);
-        if (fh.exists() && fh.canRead()) {
-            return true;
-        }
-
-        return CustomNamesSet.class.getResource(DEFAULT_FILE_PATH + filename) != null;
-    }
-
-    // Custom Names use TWO custom check sum methods for whatever reason.
-    // It might be possible to replace them with something more standard,
-    // but am not looking into that now. -- voliol 2025-04-27
-
-    public static int getFileChecksum() {
-        try {
-            Scanner sc = new Scanner(openFile(SysConstants.customNamesFile), StandardCharsets.UTF_8);
-            CRC32 checksum = new CRC32();
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine().trim();
-                if (!line.isEmpty()) {
-                    checksum.update(line.getBytes(StandardCharsets.UTF_8));
-                }
-            }
-            sc.close();
-            return (int) checksum.getValue();
-        } catch (IOException e) {
-            return 0;
-        }
-    }
-
-    public static boolean checkOtherCRC(byte[] data, int byteIndex, int switchIndex, int offsetInData) {
-        // If the switch at data[byteIndex].switchIndex is on, then check that
-        // the CRC at data[offsetInData] ... data[offsetInData+3] matches the
-        // CRC of filename.
-        // If not, return false.
-        // If any other case, return true.
-        int switches = data[byteIndex] & 0xFF;
-        if (((switches >> switchIndex) & 0x01) == 0x01) {
-            // have to check the CRC
-            int crc = IOFunctions.readFullIntBigEndian(data, offsetInData);
-
-            return getFileChecksum() == crc;
-        }
-        return true;
-    }
-
-    private final List<String> trainerNames;
-    private final List<String> trainerClasses;
-    private final List<String> doublesTrainerNames;
-    private final List<String> doublesTrainerClasses;
-    private final List<String> pokemonNicknames;
-
-    public CustomNamesSet(List<String> trainerNames, List<String> trainerClasses,
-                          List<String> doublesTrainerNames, List<String> doublesTrainerClasses,
-                          List<String> pokemonNicknames) {
-        this.trainerNames = trainerNames;
-        this.trainerClasses = trainerClasses;
-        this.doublesTrainerNames = doublesTrainerNames;
-        this.doublesTrainerClasses = doublesTrainerClasses;
-        this.pokemonNicknames = pokemonNicknames;
-    }
-
-    public CustomNamesSet(InputStream data) throws IOException {
-        if (data.read() != CUSTOM_NAMES_VERSION) {
-            throw new IOException("Invalid custom names file provided.");
-        }
-        trainerNames = readNamesBlock(data);
-        trainerClasses = readNamesBlock(data);
-        doublesTrainerNames = readNamesBlock(data);
-        doublesTrainerClasses = readNamesBlock(data);
-        pokemonNicknames = readNamesBlock(data);
-    }
-
-    public CustomNamesSet() {
-        trainerNames = new ArrayList<>();
-        trainerClasses = new ArrayList<>();
-        doublesTrainerNames = new ArrayList<>();
-        doublesTrainerClasses = new ArrayList<>();
-        pokemonNicknames = new ArrayList<>();
-    }
-
-    private List<String> readNamesBlock(InputStream in) throws IOException {
-        // Read the size of the block to come.
-        byte[] szData = FileFunctions.readFullyIntoBuffer(in, 4);
-        int size = IOFunctions.readFullIntBigEndian(szData, 0);
-        if (in.available() < size) {
-            throw new IOException("Invalid size specified.");
-        }
-
-        // Read the block and translate it into a list of names.
-        byte[] namesData = FileFunctions.readFullyIntoBuffer(in, size);
-        List<String> names = new ArrayList<>();
-        Scanner sc = new Scanner(new ByteArrayInputStream(namesData), StandardCharsets.UTF_8);
-        while (sc.hasNextLine()) {
-            String name = sc.nextLine().trim();
-            if (!name.isEmpty()) {
-                names.add(name);
-            }
-        }
-        sc.close();
-
-        return names;
-    }
-
-    public byte[] getBytes() throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        baos.write(CUSTOM_NAMES_VERSION);
-
-        writeNamesBlock(baos, trainerNames);
-        writeNamesBlock(baos, trainerClasses);
-        writeNamesBlock(baos, doublesTrainerNames);
-        writeNamesBlock(baos, doublesTrainerClasses);
-        writeNamesBlock(baos, pokemonNicknames);
-
-        return baos.toByteArray();
-    }
-
-    private void writeNamesBlock(OutputStream out, List<String> names) throws IOException {
-        StringBuilder outNames = new StringBuilder();
-        boolean first = true;
-        for (String name : names) {
-            if (!first) {
-                outNames.append(System.lineSeparator());
-            }
-            first = false;
-            outNames.append(name);
-        }
-        byte[] namesData = outNames.toString().getBytes(StandardCharsets.UTF_8);
-        byte[] szData = new byte[4];
-        IOFunctions.writeFullIntBigEndian(szData, 0, namesData.length);
-        out.write(szData);
-        out.write(namesData);
-    }
-
-    public List<String> getTrainerNames() {
+    @Override
+    public List<String> trainerNames() {
         return Collections.unmodifiableList(trainerNames);
     }
 
-    public List<String> getTrainerClasses() {
+    @Override
+    public List<String> trainerClasses() {
         return Collections.unmodifiableList(trainerClasses);
     }
 
-    public List<String> getDoublesTrainerNames() {
+    @Override
+    public List<String> doublesTrainerNames() {
         return Collections.unmodifiableList(doublesTrainerNames);
     }
 
-    public List<String> getDoublesTrainerClasses() {
+    @Override
+    public List<String> doublesTrainerClasses() {
         return Collections.unmodifiableList(doublesTrainerClasses);
     }
 
-    public List<String> getPokemonNicknames() {
+    @Override
+    public List<String> pokemonNicknames() {
         return Collections.unmodifiableList(pokemonNicknames);
     }
 

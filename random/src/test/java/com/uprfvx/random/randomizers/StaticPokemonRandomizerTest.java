@@ -102,4 +102,26 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         return copy;
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomTotemPokemonDoesNotThrow(String romName) {
+        // A most basic test which does not have great coverage,
+        // but at least runs the randomizeTotemPokemon() method at all.
+        // Wanted to get a bug fix out fast, thus did not want to
+        // spend the time to write the more proper tests the method really deserves.
+        // -- voliol 2026-06-08
+        activateRomHandler(romName);
+        assumeTrue(romHandler.hasTotemPokemon());
+
+        Settings s = new Settings();
+        s.setTotemPokemonMod(Settings.TotemPokemonMod.RANDOM);
+        s.setAllyPokemonMod(Settings.AllyPokemonMod.RANDOM);
+        s.setAllowTotemAltFormes(true);
+
+        // small loop in case it just throws sometimes
+        for (int i = 0; i < 10; i++) {
+            new StaticPokemonRandomizer(romHandler, s, RND).randomizeTotemPokemon();
+        }
+    }
+
 }

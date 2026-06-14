@@ -26,7 +26,6 @@ package com.uprfvx.random;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.*;
 import filefunctions.FileFunctions;
@@ -47,10 +46,16 @@ public class Settings {
     public static final int VERSION = Version.LATEST.id;
 
     public static final int LENGTH_OF_SETTINGS_DATA = 67;
+    public static final int LENGTH_OF_NAME_LENGTH = 1;
+    public static final int LENGTH_OF_CHECKSUM = 4;
+    // There used to be a checksum for the custom names, post the usual checksum
+    // As you can see, the custom names no longer live here, but keeping the bytes as padding
+    // makes older settings easier to read.
+    public static final int LENGTH_OF_END_PADDING = 4;
+    public static final int TOTAL_LENGTH_EXCEPT_NAME =
+            LENGTH_OF_SETTINGS_DATA + LENGTH_OF_NAME_LENGTH + LENGTH_OF_CHECKSUM + LENGTH_OF_END_PADDING;
 
     public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
-
-    private CustomNamesSet customNames;
 
     private String romName;
     private boolean updatedFromOldVersion = false;
@@ -579,23 +584,12 @@ public class Settings {
                 trainersAvoidDuplicates));
 
         // 30 - 33: pokemon restrictions
-        try {
-            if (currentRestrictions == null) {
-                writeFullInt(out, -1);
-            } else {
-                writeFullInt(out, currentRestrictions.toInt());
-            }
-        } catch (IOException e) {
-            e.printStackTrace(); // better than nothing
-        }
+        int restrictionsVal = currentRestrictions == null ? -1 : currentRestrictions.toInt();
+        writeFullInt(out, restrictionsVal);
 
         // 34 - 37: misc tweaks
-        try {
-            // TODO: make misc tweaks little endian. No one likes big endian.
-            writeFullIntBigEndian(out, currentMiscTweaks);
-        } catch (IOException e) {
-            e.printStackTrace(); // better than nothing
-        }
+        // TODO: make misc tweaks little endian. No one likes big endian.
+        writeFullIntBigEndian(out, currentMiscTweaks);
 
         // 38 trainer pokemon level modifier
         out.write(trainersLevelModifier - 28); // Shift to int8 range: [-100, 155] --> [-128, 127]
@@ -741,31 +735,25 @@ public class Settings {
         // 66 'Make evolutions easier' level select slider
         out.write(makeEvolutionsEasierLvl);
 
-        try {
-            byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
-            out.write(romName.length);
-            out.write(romName);
-        } catch (IOException e) {
-            out.write(0);
-        }
+        byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
+        out.write(romName.length);
+        out.write(romName, 0, romName.length);
 
         byte[] current = out.toByteArray();
         CRC32 checksum = new CRC32();
         checksum.update(current);
+        writeFullIntBigEndian(out, (int) checksum.getValue());
 
-        try {
-            writeFullIntBigEndian(out, (int) checksum.getValue());
-            writeFullIntBigEndian(out, CustomNamesSet.getFileChecksum());
-        } catch (IOException e) {
-            e.printStackTrace(); // better than nothing
-        }
+        writeFullInt(out, 0); // padding
 
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
     private static Settings fromStringWithoutVersion(String settingsString) throws IllegalArgumentException {
         byte[] data = Base64.getDecoder().decode(settingsString);
-        checkChecksum(data);
+        if (hasInvalidChecksum(data)) {
+            throw new IllegalArgumentException("Malformed input string");
+        }
 
         Settings settings = new Settings();
 
@@ -1283,15 +1271,6 @@ public class Settings {
     }
 
     // getters and setters
-
-    public CustomNamesSet getCustomNames() {
-        return customNames;
-    }
-
-    public Settings setCustomNames(CustomNamesSet customNames) {
-        this.customNames = customNames;
-        return this;
-    }
 
     public String getRomName() {
         return romName;
@@ -2897,15 +2876,15 @@ public class Settings {
         return ((value >> index) & 0x01) == 0x01;
     }
 
-    private static void writeFullInt(ByteArrayOutputStream out, int value) throws IOException {
+    private static void writeFullInt(ByteArrayOutputStream out, int value) {
         byte[] crc = new byte[4];
         IOFunctions.writeFullInt(crc, 0, value);
-        out.write(crc);
+        out.write(crc, 0, crc.length);
     }
 
-    private static void writeFullIntBigEndian(ByteArrayOutputStream out, int value) throws IOException {
+    private static void writeFullIntBigEndian(ByteArrayOutputStream out, int value) {
         byte[] crc = ByteBuffer.allocate(4).putInt(value).array();
-        out.write(crc);
+        out.write(crc, 0, crc.length);
     }
 
     private static void write2ByteIntBigEndian(ByteArrayOutputStream out, int value) {
@@ -2948,18 +2927,21 @@ public class Settings {
         return index >= 0 ? index : 0;
     }
 
-    private static void checkChecksum(byte[] data) {
+    /**
+     * Returns whether the input settings bytes has an invalid checksum.
+     * @param data A byte array representing a Settings object.
+     */
+    public static boolean hasInvalidChecksum(byte[] data) {
         // Check the checksum
-        ByteBuffer buf = ByteBuffer.allocate(4).put(data, data.length - 8, 4);
+        ByteBuffer buf = ByteBuffer.allocate(LENGTH_OF_CHECKSUM)
+                .put(data, data.length - LENGTH_OF_CHECKSUM - LENGTH_OF_END_PADDING, LENGTH_OF_CHECKSUM);
         buf.rewind();
         int crc = buf.getInt();
 
         CRC32 checksum = new CRC32();
-        checksum.update(data, 0, data.length - 8);
+        checksum.update(data, 0, data.length - LENGTH_OF_CHECKSUM - LENGTH_OF_END_PADDING);
 
-        if ((int) checksum.getValue() != crc) {
-            throw new IllegalArgumentException("Malformed input string");
-        }
+        return (int) checksum.getValue() != crc;
     }
 
 }

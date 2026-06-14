@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
@@ -28,8 +28,7 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof BaseStatRecord)) return false;
-            BaseStatRecord that = (BaseStatRecord) o;
+            if (!(o instanceof BaseStatRecord that)) return false;
             return hp == that.hp && attack == that.attack && defense == that.defense && spatk == that.spatk
                     && spdef == that.spdef && speed == that.speed && special == that.special;
         }
@@ -57,8 +56,7 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
         @Override
         public boolean equals(Object o) {
-            if (!(o instanceof HeldItemsRecord)) return false;
-            HeldItemsRecord that = (HeldItemsRecord) o;
+            if (!(o instanceof HeldItemsRecord that)) return false;
             return Objects.equals(guaranteed, that.guaranteed) && Objects.equals(common, that.common)
                     && Objects.equals(rare, that.rare) && Objects.equals(darkGrass, that.darkGrass);
         }
@@ -87,16 +85,24 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void baseFormeOfAlolanFormesHasCorrectAlolanForme(String romName) {
+    public void allAlolanFormesHaveAlolanSuffix(String romName) {
         loadROM(romName);
-        SpeciesSet speciesSet = romHandler.getSpeciesSetInclFormes();
-        for (Species pk : speciesSet) {
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            if (pk.isAlolan()) {
+                System.out.println(pk);
+                assertEquals("-Alolan", pk.getFormeSuffix());
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void allSpeciesWithAlolanSuffixAreAlolanFormes(String romName) {
+        loadROM(romName);
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             if (pk.getFormeSuffix().equals("-Alolan")) {
-                // Alolan formes must have a base forme that must have the alolan forme as alolanForme
-                assertEquals(pk, pk.getBaseForme().getAlolanForme());
-            } else if (!pk.equals(pk.getBaseForme())) {
-                // Any forme that is not alolan forme must not have a base forme with alolan forme
-                assertNull(pk.getBaseForme().getAlolanForme());
+                System.out.println(pk);
+                assertTrue(pk.isAlolan());
             }
         }
     }
@@ -155,6 +161,60 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk.getFullName());
             assertEquals(records.get(pk), new BreedingInfoRecord(pk));
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void evYieldsDoNotChangeWithLoadAndSave(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        loadROM(romName);
+        // it always loads the base stats once
+
+        Map<Species, EVYield> before = new HashMap<>();
+        romHandler.getSpeciesSetInclFormes()
+                .forEach(pk -> before.put(pk, new EVYield(pk.getEVYield())));
+
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            System.out.println(pk.getFullName());
+            System.out.println(pk.getEVYield());
+            assertEquals(before.get(pk), pk.getEVYield());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void evYieldsCanBeChangedWithLoadAndSave(String romName) {
+        assumeTrue(getGenerationNumberOf(romName) >= 3);
+        loadROM(romName);
+        // maxed out EV Yield that no mon will have in vanilla
+        EVYield maxEVYield = new EVYield(3, 3, 3, 3, 3, 3);
+        romHandler.getSpeciesSetInclFormes()
+                .forEach(pk -> pk.setEVYield(maxEVYield));
+
+        romHandler.saveSpeciesStats();
+        romHandler.loadSpeciesStats();
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            System.out.println(pk.getFullName());
+            assertEquals(maxEVYield, pk.getEVYield());
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void printFormes(String romName) {
+        loadROM(romName);
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            if (pk.getAltFormes().isEmpty()) continue;
+            System.out.println(pk.getNumberAndFullName());
+            for (Species altForme : pk.getAltFormes()) {
+                System.out.println(altForme.getFormeNumber() + ":\t" + altForme.getNumberAndFullName());
+            }
         }
     }
 

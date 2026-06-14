@@ -15,6 +15,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RandomizationLogger {
@@ -216,8 +217,10 @@ public class RandomizationLogger {
             printContentsRow("pms");
         if (shouldLogMoveUpdates() || shouldLogMoveData() || shouldLogMovesets())
             log.println();
-        if (shouldLogTrainers())
+        if (shouldLogTrainers()) {
+            printContentsRow("lvlc");
             printContentsRow("tp");
+        }
         if (shouldLogTotemPokemon())
             printContentsRow("totp");
         if (shouldLogTrainers() || shouldLogTotemPokemon())
@@ -366,9 +369,10 @@ public class RandomizationLogger {
             logMoveData(originalMoveNames);
         if (shouldLogMovesets())
             logMovesets();
-
-        if (shouldLogTrainers())
+        if (shouldLogTrainers()) {
+            logTrainersLevelCaps();
             logTrainers(originalTrainerNames);
+        }
         if (shouldLogTotemPokemon())
             logTotemPokemon(originalTotems);
 
@@ -715,9 +719,9 @@ public class RandomizationLogger {
 
     private void logMoveData(List<String> originalMoveNames) {
         printSectionTitle("md");
-    
+
         boolean namesChanged = moveNameRandomizer.isChangesMade();
-    
+
         List<String> head = new ArrayList<>(Arrays.asList(
                 getBS("Log.md.num"), getBS("Log.md.name")
         ));
@@ -736,7 +740,7 @@ public class RandomizationLogger {
         }
         TextTable table = new TextTable(columns);
         table.addRow(head);
-    
+
         for (int i = 0; i < romHandler.getMoves().size(); i++) {
             Move mv = romHandler.getMoves().get(i);
             if (mv == null) continue;
@@ -756,7 +760,7 @@ public class RandomizationLogger {
             }
             table.addRow(row);
         }
-    
+
         log.print(table);
         printSectionSeparator();
     }
@@ -996,6 +1000,41 @@ public class RandomizationLogger {
     private boolean shouldLogTrainers() {
         return trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
                 || trainerNameRandomizer.isChangesMade();
+    }
+
+    private void logTrainersLevelCaps() {
+        printSectionTitle("lvlc");
+        int generation = romHandler.generationOfPokemon();
+        int romType = romHandler.getROMType();
+
+        Map<String, Trainer> gymLeaders = romHandler.getTrainers().stream()
+                .filter(getFilterForEachGen(generation, romType))
+
+                .collect(Collectors.toMap(
+                        Trainer::getFullDisplayName,
+                        t -> t,
+                        (exist, replace) -> {
+                            if (getMaxGymLeaderLevel(exist) <= getMaxGymLeaderLevel(replace)) {
+                                return exist;
+                            } else {
+                                return replace;
+                            }
+                        }
+                ));
+
+        // Sort trainers by level so they appear in the log in the game's original order
+        List<Trainer> orderedLeaders = gymLeaders.values().stream()
+                .sorted((l1, l2) -> Integer.compare(getMaxGymLeaderLevel(l1), getMaxGymLeaderLevel(l2)))
+                .toList();
+
+        // Print trainers
+        for (Trainer t : orderedLeaders) {
+            int capLevel = getMaxGymLeaderLevel(t);
+            log.print(t.getFullDisplayName());
+            log.print(" - Level Cap: " + capLevel + "\n");
+        }
+
+        printSectionSeparator();
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
@@ -1369,6 +1408,90 @@ public class RandomizationLogger {
         }
         return names;
     }
+
+    private int getMaxGymLeaderLevel(Trainer trainer) {
+        List<TrainerPokemon> trainersPokemon = trainer.getPokemon();
+        int maxLevel = 0;
+
+        for (TrainerPokemon trpkm : trainersPokemon) {
+            if (trpkm.getLevel() > maxLevel) {
+                maxLevel = trpkm.getLevel();
+            }
+        }
+
+        return maxLevel;
+    }
+
+    private Predicate<Trainer> getFilterForEachGen(int generation, int romType) {
+        return trainer -> {
+            String tag = trainer.getTag();
+            String name = trainer.getFullDisplayName();
+
+            boolean isDefaultLeader = tag != null && (
+                    (tag.startsWith("GYM") && tag.endsWith("-LEADER")) ||
+                            tag.startsWith("ELITE") ||
+                            tag.startsWith("CHAMPION")
+            );
+
+            int trainerClass = trainer.getTrainerclass();
+            switch (generation) {
+                case 1:
+                    // Add Champion fight vs Rival
+                    return (trainerClass == 42) || isDefaultLeader;
+
+                case 3:
+                    // Add Champion fight vs Rival in FRLG
+                    if (romType == 3) {
+                        return isDefaultLeader || "RIVAL8-0".equals(tag);
+                    }
+                    return isDefaultLeader;
+
+                case 5:
+                    if (!isDefaultLeader) return false;
+
+                    // If it's a BW ROM, remove Cilan, Chili, Cress and Drayden
+                    if (romType == 0 && (trainerClass == 10 || trainerClass == 11 || trainerClass == 56)) {
+                        return false;
+                    }
+                    // If it's a BW2 ROM, remove Cilan, Chili, and Cress
+                    if (romType == 1 && (trainerClass == 10 || trainerClass == 11 || trainerClass == 12)) {
+                        return false;
+                    }
+                    return true;
+
+                case 6:
+                    if (!isDefaultLeader) return false;
+
+                    // Remove Sootopolitan Wallace and Lvl 35 Steven in ORAS
+                    if (romType == 1 && (trainerClass == 219 || trainerClass == 268)) {
+                        return false;
+                    }
+                    return true;
+
+                case 7:
+                    // Filter Captains
+                    if (name != null && name.startsWith("Captain")) {
+
+                        // Remove from log corrupt names
+                        if (name.contains("[") || name.contains("●")) {
+                            return false;
+                        }
+                        return true;
+                    }
+
+                    // Elite4 and Kahunas Filter
+                    if (isDefaultLeader) return true;
+
+                    // 3. Profesores y Rivales finales por ID de clase
+                    if (romType == 2 && trainerClass == 111) return true;
+                    if (romType == 3 && trainerClass == 194) return true;
+                    return false;
+
+                default:
+                    return isDefaultLeader;
+            }
+        };
+    }
+
+
 }
-
-

@@ -8,6 +8,10 @@ import com.uprfvx.random.random.RandomSource;
 import com.uprfvx.random.randomizers.*;
 import com.uprfvx.random.updaters.*;
 import com.uprfvx.romio.MiscTweak;
+import com.uprfvx.romio.constants.Gen3Constants;
+import com.uprfvx.romio.constants.Gen5Constants;
+import com.uprfvx.romio.constants.Gen6Constants;
+import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.Gen1RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -1007,9 +1011,7 @@ public class RandomizationLogger {
         int generation = romHandler.generationOfPokemon();
         int romType = romHandler.getROMType();
 
-        Map<String, Trainer> gymLeaders = romHandler.getTrainers().stream()
-                .filter(getFilterForEachGen(generation, romType))
-
+        Map<String, Trainer> bossTrainers = romHandler.getTrainers().stream().filter(getFilterForEachGen(generation, romType))
                 .collect(Collectors.toMap(
                         Trainer::getFullDisplayName,
                         t -> t,
@@ -1023,7 +1025,7 @@ public class RandomizationLogger {
                 ));
 
         // Sort trainers by level so they appear in the log in the game's original order
-        List<Trainer> orderedLeaders = gymLeaders.values().stream()
+        List<Trainer> orderedLeaders = bossTrainers.values().stream()
                 .sorted((l1, l2) -> Integer.compare(getMaxGymLeaderLevel(l1), getMaxGymLeaderLevel(l2)))
                 .toList();
 
@@ -1104,6 +1106,11 @@ public class RandomizationLogger {
             if (settings.getBattleStyle().isBattleStyleChanged()) {
                 log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
             }
+            // TODO BORRAR
+            log.print("Trainer Class: " +t.getTrainerclass());
+            log.print("Trainer Tag: " +t.getTag());
+            log.print("Trainer Name: " +t.getName());
+            // TODO END BORRAR
             log.println();
         }
         printSectionSeparator();
@@ -1423,6 +1430,7 @@ public class RandomizationLogger {
     }
 
     private Predicate<Trainer> getFilterForEachGen(int generation, int romType) {
+        String romCode = romHandler.getROMCode();
         return trainer -> {
             String tag = trainer.getTag();
             String name = trainer.getFullDisplayName();
@@ -1436,25 +1444,33 @@ public class RandomizationLogger {
             int trainerClass = trainer.getTrainerclass();
             switch (generation) {
                 case 1:
-                    // Add Champion fight vs Rival
-                    return (trainerClass == 42) || isDefaultLeader;
+                    // Include Champion fight against the Rival
+                    return "RIVAL8-0".equals(tag) || isDefaultLeader;
 
                 case 3:
-                    // Add Champion fight vs Rival in FRLG
-                    if (romType == 3) {
-                        return isDefaultLeader || "RIVAL8-0".equals(tag);
+                    // Include Champion fight against the Rival in FireRed/LeafGreen
+                    if (romType == Gen3Constants.RomType_FRLG) {
+                        return "RIVAL8-0".equals(tag) || isDefaultLeader;
                     }
                     return isDefaultLeader;
 
                 case 5:
                     if (!isDefaultLeader) return false;
 
-                    // If it's a BW ROM, remove Cilan, Chili, Cress and Drayden
-                    if (romType == 0 && (trainerClass == 10 || trainerClass == 11 || trainerClass == 56)) {
-                        return false;
+                    // In Black/White 1, filter out the duplicate 8th Gym Leader based on rom versions
+                    if (romType == Gen5Constants.Type_BW && romCode != null) {
+                        // If romCode starts with "IRB" (Pokémon Black), exclude Iris
+                        if (romCode.startsWith("IRB") && trainerClass == 55) {
+                            return false;
+                        }
+                        // If romCode starts with "IRA" (Pokémon White), exclude Drayden
+                        if (romCode.startsWith("IRA") && trainerClass == 56) {
+                            return false;
+                        }
                     }
-                    // If it's a BW2 ROM, remove Cilan, Chili, and Cress
-                    if (romType == 1 && (trainerClass == 10 || trainerClass == 11 || trainerClass == 12)) {
+
+                    // In BW1 and BW2, exclude the redundant Striaton Gym brothers using their extra tags
+                    if ("GYM9-LEADER".equals(tag) || "GYM10-LEADER".equals(tag) || "GYM11-LEADER".equals(tag)) {
                         return false;
                     }
                     return true;
@@ -1463,28 +1479,44 @@ public class RandomizationLogger {
                     if (!isDefaultLeader) return false;
 
                     // Remove Sootopolitan Wallace and Lvl 35 Steven in ORAS
-                    if (romType == 1 && (trainerClass == 219 || trainerClass == 268)) {
+                    if (romType == Gen6Constants.Type_ORAS && (trainerClass == 219 || trainerClass == 268)) {
                         return false;
                     }
                     return true;
 
                 case 7:
-                    // Filter Captains
-                    if (name != null && name.startsWith("Captain")) {
+                    // Security check: Exclude corrupted trainer names from log
+                    if (name != null && (name.contains("[") || name.contains("●"))) {
+                        return false;
+                    }
 
-                        // Remove from log corrupt names
-                        if (name.contains("[") || name.contains("●")) {
-                            return false;
-                        }
+                    if (tag == null) {
+                        return false;
+                    }
+
+                    // 1. Include ONLY Ilima from the Captains group
+                    if ("THEMED:ILIMA-STRONG".equals(tag)) {
                         return true;
                     }
 
-                    // Elite4 and Kahunas Filter
-                    if (isDefaultLeader) return true;
+                    // 2. EXCLUSION: Block all other optional captains/rivals (Lana, Kiawe, Mallow, Sophocles, Mina)
+                    // They all use the pattern "THEMED:[NAME]-STRONG" in the game files
+                    if (tag.startsWith("THEMED:") && tag.endsWith("-STRONG")) {
+                        return false;
+                    }
 
-                    // 3. Profesores y Rivales finales por ID de clase
-                    if (romType == 2 && trainerClass == 111) return true;
-                    if (romType == 3 && trainerClass == 194) return true;
+                    // 3. Elite 4 and Kahunas Filter (Kahunas use ELITE[n] tags)
+                    if (isDefaultLeader) {
+                        return true;
+                    }
+
+                    // Include Kukui and Hau as Champions depending on the game variant (SM or USUM)
+                    if (romType == Gen7Constants.Type_SM && "RIVAL2-0".equals(tag)) {
+                        return true;
+                    }
+                    if (romType == Gen7Constants.Type_USUM && "FRIEND11-0".equals(tag)) {
+                        return true;
+                    }
                     return false;
 
                 default:

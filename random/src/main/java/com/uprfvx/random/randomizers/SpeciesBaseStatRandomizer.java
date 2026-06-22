@@ -49,7 +49,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 Species donator = donators.get(bp);
                 // bp.setBSTForPowerLevels(donator.getBSTForPowerLevels(true));
             });
-            EvolvedSpeciesAction<Species> epAction = ((evFrom, evTo, toMonIsFinalEvo) -> {
+            EvolvedSpeciesAction<Species> epAction = ((evFrom, evTo, _) -> {
                 Species fromDonator = donators.get(evFrom);
                 // assumes lines are even; Applin could break this
                 Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
@@ -148,9 +148,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();
 
         BasicSpeciesAction<Species> bpAction = this::randomizeStatsWithinBST;
-        EvolvedSpeciesAction<Species> randomEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
+        EvolvedSpeciesAction<Species> randomEpAction = (evFrom, evTo, _) ->
                 assignNewStatsForEvolution(evFrom, evTo);
-        EvolvedSpeciesAction<Species> copyEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
+        EvolvedSpeciesAction<Species> copyEpAction = (evFrom, evTo, _) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
 
         copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
@@ -234,23 +234,23 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spdDiff = Math.round((spdW / totW) * bstDiff);
         double speDiff = Math.round((speW / totW) * bstDiff);
 
-        to.setHp((int) Math.min(255, Math.max(1, from.getHp() + hpDiff)));
-        to.setAttack((int) Math.min(255, Math.max(1, from.getAttack() + atkDiff)));
-        to.setDefense((int) Math.min(255, Math.max(1, from.getDefense() + defDiff)));
-        to.setSpatk((int) Math.min(255, Math.max(1, from.getSpatk() + spaDiff)));
-        to.setSpdef((int) Math.min(255, Math.max(1, from.getSpdef() + spdDiff)));
-        to.setSpeed((int) Math.min(255, Math.max(1, from.getSpeed() + speDiff)));
+        to.setHp((int) Math.clamp(from.getHp() + hpDiff, 1, 255));
+        to.setAttack((int) Math.clamp(from.getAttack() + atkDiff, 1, 255));
+        to.setDefense((int) Math.clamp(from.getDefense() + defDiff, 1, 255));
+        to.setSpatk((int) Math.clamp(from.getSpatk() + spaDiff, 1, 255));
+        to.setSpdef((int) Math.clamp(from.getSpdef() + spdDiff, 1, 255));
+        to.setSpeed((int) Math.clamp(from.getSpeed() + speDiff, 1, 255));
     }
 
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {
         double bstRatio = (double) to.getBST() / (double) from.getBST();
 
-        to.setHp((int) Math.min(255, Math.max(1, Math.round(from.getHp() * bstRatio))));
-        to.setAttack((int) Math.min(255, Math.max(1, Math.round(from.getAttack() * bstRatio))));
-        to.setDefense((int) Math.min(255, Math.max(1, Math.round(from.getDefense() * bstRatio))));
-        to.setSpatk((int) Math.min(255, Math.max(1, Math.round(from.getSpatk() * bstRatio))));
-        to.setSpdef((int) Math.min(255, Math.max(1, Math.round(from.getSpdef() * bstRatio))));
-        to.setSpeed((int) Math.min(255, Math.max(1, Math.round(from.getSpeed() * bstRatio))));
+        to.setHp(Math.clamp(Math.round(from.getHp() * bstRatio), 1, 255));
+        to.setAttack(Math.clamp(Math.round(from.getAttack() * bstRatio), 1, 255));
+        to.setDefense(Math.clamp(Math.round(from.getDefense() * bstRatio), 1, 255));
+        to.setSpatk(Math.clamp(Math.round(from.getSpatk() * bstRatio), 1, 255));
+        to.setSpdef(Math.clamp(Math.round(from.getSpdef() * bstRatio), 1, 255));
+        to.setSpeed(Math.clamp(Math.round(from.getSpeed() * bstRatio), 1, 255));
     }
 
     public void standardizeEXPCurves() {

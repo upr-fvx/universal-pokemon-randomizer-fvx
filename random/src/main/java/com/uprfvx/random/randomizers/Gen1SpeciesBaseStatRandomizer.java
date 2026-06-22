@@ -78,21 +78,21 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
         double specDiff = Math.round((specW / totW) * bstDiff);
         double speDiff = Math.round((speW / totW) * bstDiff);
 
-        to.setHp((int) Math.min(255, Math.max(1, from.getHp() + hpDiff)));
-        to.setAttack((int) Math.min(255, Math.max(1, from.getAttack() + atkDiff)));
-        to.setDefense((int) Math.min(255, Math.max(1, from.getDefense() + defDiff)));
-        to.setSpeed((int) Math.min(255, Math.max(1, from.getSpeed() + speDiff)));
-        to.setSpecial((int) Math.min(255, Math.max(1, from.getSpecial() + specDiff)));
+        to.setHp((int) Math.clamp(from.getHp() + hpDiff, 1, 255));
+        to.setAttack((int) Math.clamp(from.getAttack() + atkDiff, 1, 255));
+        to.setDefense((int) Math.clamp(from.getDefense() + defDiff, 1, 255));
+        to.setSpeed((int) Math.clamp(from.getSpeed() + speDiff, 1, 255));
+        to.setSpecial((int) Math.clamp(from.getSpecial() + specDiff, 1, 255));
     }
 
     @Override
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {
         double bstRatio = (double) to.getBST() / (double) from.getBST();
 
-        to.setHp((int) Math.min(255, Math.max(1, Math.round(from.getHp() * bstRatio))));
-        to.setAttack((int) Math.min(255, Math.max(1, Math.round(from.getAttack() * bstRatio))));
-        to.setDefense((int) Math.min(255, Math.max(1, Math.round(from.getDefense() * bstRatio))));
-        to.setSpeed((int) Math.min(255, Math.max(1, Math.round(from.getSpeed() * bstRatio))));
-        to.setSpecial((int) Math.min(255, Math.max(1, Math.round(from.getSpecial() * bstRatio))));
+        to.setHp(Math.clamp(Math.round(from.getHp() * bstRatio), 1, 255));
+        to.setAttack(Math.clamp(Math.round(from.getAttack() * bstRatio), 1, 255));
+        to.setDefense(Math.clamp(Math.round(from.getDefense() * bstRatio), 1, 255));
+        to.setSpeed(Math.clamp(Math.round(from.getSpeed() * bstRatio), 1, 255));
+        to.setSpecial(Math.clamp(Math.round(from.getSpecial() * bstRatio), 1, 255));
     }
 }

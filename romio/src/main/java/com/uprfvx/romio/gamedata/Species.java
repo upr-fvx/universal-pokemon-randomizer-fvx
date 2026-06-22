@@ -26,6 +26,7 @@ package com.uprfvx.romio.gamedata;
 
 import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.graphics.palettes.Palette;
+import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
 
 import java.util.*;
 import java.util.function.Function;
@@ -138,7 +139,8 @@ public class Species implements Comparable<Species> {
     private ExpCurve growthCurve;
 
     private BreedingInfo breedingInfo;
-    
+
+    private SGBPaletteID paletteID; // only relevant for Gen 1
     private Palette normalPalette;
     private Palette shinyPalette;
 
@@ -1068,6 +1070,20 @@ public class Species implements Comparable<Species> {
         this.breedingInfo = breedingInfo;
     }
 
+    /**
+     * Gets the Palette ID. Relevant only for Gen 1.
+     */
+    public SGBPaletteID getPaletteID() {
+        return paletteID;
+    }
+
+    /**
+     * Sets the Palette ID. Relevant only for Gen 1.
+     */
+    public void setPaletteID(SGBPaletteID paletteID) {
+        this.paletteID = paletteID;
+    }
+
     public Palette getNormalPalette() {
         return normalPalette;
     }
@@ -1221,6 +1237,7 @@ public class Species implements Comparable<Species> {
                 null : new BreedingInfo(original.breedingInfo);
 
         //palettes
+        copy.paletteID = original.paletteID;
         copy.normalPalette = original.normalPalette == null ?
                 null : new Palette(original.normalPalette);
         copy.shinyPalette = original.shinyPalette == null ?

@@ -350,8 +350,7 @@ public class TestRomHandler extends AbstractRomHandler {
         // We need to create empty copies of all Species before transferring/copying traits,
         // otherwise species relations can't be copied.
         for (Species orig : originalSet) {
-            Species copy = orig instanceof Gen1Species ?
-                    new Gen1Species(orig.getNumber()) : new Species(orig.getNumber());
+            Species copy = new Species(orig.getNumber());
             newSet.add(copy);
             originalToTest.put(orig, copy);
         }

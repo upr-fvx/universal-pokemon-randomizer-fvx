@@ -564,22 +564,22 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     public void loadSpeciesStats() {
         loadPokedexOrder();
 
-        pokes = new Gen1Species[pokedexCount + 1];
+        pokes = new Species[pokedexCount + 1];
         // Fetch our names
         String[] pokeNames = readPokemonNames();
         // Get base stats
         int pokeStatsOffset = romEntry.getIntValue("PokemonStatsOffset");
         for (int i = 1; i <= pokedexCount; i++) {
-            pokes[i] = new Gen1Species(i);
+            pokes[i] = new Species(i);
             if (i != SpeciesIDs.mew || romEntry.isYellow()) {
-                loadBasicPokeStats((Gen1Species) pokes[i], pokeStatsOffset + (i - 1) * Gen1Constants.baseStatsEntrySize);
+                loadBasicPokeStats(pokes[i], pokeStatsOffset + (i - 1) * Gen1Constants.baseStatsEntrySize);
             }
             pokes[i].setName(pokeNames[pokeNumToRBYTable[i]]);
         }
 
         // Mew override for R/B
         if (!romEntry.isYellow()) {
-            loadBasicPokeStats((Gen1Species) pokes[SpeciesIDs.mew], romEntry.getIntValue("MewStatsOffset"));
+            loadBasicPokeStats(pokes[SpeciesIDs.mew], romEntry.getIntValue("MewStatsOffset"));
         }
 
         this.speciesList = Arrays.asList(pokes);
@@ -612,7 +612,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         saveEvosAndMovesLearnt();
     }
 
-    private void loadBasicPokeStats(Gen1Species pkmn, int offset) {
+    private void loadBasicPokeStats(Species pkmn, int offset) {
         pkmn.setBaseStats(new Gen1BaseStats(
                 rom[offset + Gen1Constants.bsHPOffset] & 0xFF,
                 rom[offset + Gen1Constants.bsAttackOffset] & 0xFF,
@@ -631,6 +631,8 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         pkmn.setCatchRate(rom[offset + Gen1Constants.bsCatchRateOffset] & 0xFF);
         pkmn.setExpYield(rom[offset + Gen1Constants.bsExpYieldOffset] & 0xFF);
         pkmn.setGrowthCurve(ExpCurve.fromByte(rom[offset + Gen1Constants.bsGrowthCurveOffset]));
+
+        pkmn.setGeneration(1);
 
         speciesFrontImageDimensions.put(pkmn, rom[offset + Gen1Constants.bsFrontImageDimensionsOffset] & 0xFF);
         speciesFrontImagePointers.put(pkmn, readWord(offset + Gen1Constants.bsFrontImagePointerOffset));
@@ -2915,7 +2917,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private int calculateFrontSpriteBank(Gen1Species pk) {
+    private int calculateFrontSpriteBank(Species pk) {
         int idx = pokeNumToRBYTable[pk.getNumber()];
         int pointer = speciesFrontImagePointers.get(pk);
         int fsBank;
@@ -2942,8 +2944,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 		int palIndex = romEntry.getIntValue("MonPaletteIndicesOffset");
 		for (Species pk : getSpeciesSet()) {
             // they are in Pokédex order
-			Gen1Species gen1pk = (Gen1Species) pk;
-			gen1pk.setPaletteID((SGBPaletteID.values()[rom[palIndex + gen1pk.getNumber()]]));
+            pk.setPaletteID((SGBPaletteID.values()[rom[palIndex + pk.getNumber()]]));
 		}
 	}
 
@@ -2952,8 +2953,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 		int palIndex = romEntry.getIntValue("MonPaletteIndicesOffset");
 		for (Species pk : getSpeciesSet()) {
             // they are in Pokédex order
-			Gen1Species gen1pk = (Gen1Species) pk;
-			writeByte(palIndex + gen1pk.getNumber(), (byte) gen1pk.getPaletteID().ordinal());
+			writeByte(palIndex + pk.getNumber(), (byte) pk.getPaletteID().ordinal());
 		}
 	}
     
@@ -3091,14 +3091,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     public class Gen1PokemonImageGetter extends GBPokemonImageGetter {
-        private final Gen1Species pk;
 
         public Gen1PokemonImageGetter(Species pk) {
             super(pk);
-            if (!(pk instanceof Gen1Species)) {
-                throw new IllegalArgumentException("Argument \"pk\" is not a Gen1Pokemon");
-            }
-            this.pk = (Gen1Species) pk;
         }
 
         @Override
@@ -3145,7 +3140,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             return image.getData();
         }
 
-        private Palette getVisiblePokemonPalette(Gen1Species pk) {
+        private Palette getVisiblePokemonPalette(Species pk) {
             Palette palette;
             if (romEntry.getIntValue("MonPaletteIndicesOffset") > 0 && romEntry.getIntValue("SGBPalettesOffset") > 0) {
                 int palIndex = pk.getPaletteID().ordinal();

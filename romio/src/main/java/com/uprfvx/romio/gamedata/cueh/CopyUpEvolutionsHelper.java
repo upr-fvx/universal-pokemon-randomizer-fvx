@@ -23,7 +23,6 @@ package com.uprfvx.romio.gamedata.cueh;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.gamedata.Evolution;
-import com.uprfvx.romio.gamedata.Gen1Species;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 
@@ -35,10 +34,7 @@ import java.util.function.Supplier;
 /**
  * Universal implementation for things that have "copy X up evolutions" support.<br>
  * Assumes no two Species evolve into the same third Species. Note this might not hold true if evolutions are
- * randomized.<br>
- * Another assumption made, is that evolutions and prevolutions of a Species of generic type T are also
- * of T - E.g. that the evolutions and prevolutions of a {@link Gen1Species} are
- * always Gen1Species.
+ * randomized.
  */
 public class CopyUpEvolutionsHelper<T extends Species> {
 

@@ -2,6 +2,7 @@ package com.uprfvx.romio.gamedata;
 
 import com.uprfvx.romio.graphics.palettes.Color;
 import com.uprfvx.romio.graphics.palettes.Palette;
+import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -344,8 +345,18 @@ public class SpeciesTest {
     
     @Test
     public void transferAttributesToCopy_CopyHasDifferentClass_ThrowsIllegalArgumentException() {
+        // At the time of writing, we don't have any subclasses of Species.
+        // There might be in the future, perhaps? Or perhaps not.
+        // In any case there used to be a Gen1RomHandler subclass, and so this test was written.
+        // Felt like a waste to erase it.
+        // -- voliol 2026-06-22
         use(a, b);
-        Species aCopy = new Gen1Species(A_NUM);
+        class SpeciesExtension extends Species {
+            public SpeciesExtension(int number) {
+                super(number);
+            }
+        }
+        Species aCopy = new SpeciesExtension(A_NUM);
         assertThrowsExactly(IllegalArgumentException.class,
                 () -> Species.transferAttributesToCopy(a, Map.of(a, aCopy)));
     }
@@ -483,11 +494,13 @@ public class SpeciesTest {
     @Test
     public void transferAttributesToCopy_WithPalettes_TransfersPalettes() {
         use(a, aCopy);
+        a.setPaletteID(SGBPaletteID.MEWMON);
         a.setNormalPalette(new Palette(1, Color.BLACK));
         a.setShinyPalette(new Palette(1, Color.WHITE));
 
         transferAttributesToCopies();
 
+        assertEquals(SGBPaletteID.MEWMON, aCopy.getPaletteID());
         assertNotNull(aCopy.getNormalPalette());
         assertEquals(new Palette(1, Color.BLACK), aCopy.getNormalPalette());
         assertNotNull(aCopy.getShinyPalette());

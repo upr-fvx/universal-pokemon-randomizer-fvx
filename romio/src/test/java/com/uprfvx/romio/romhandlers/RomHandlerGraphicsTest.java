@@ -1,7 +1,6 @@
 package com.uprfvx.romio.romhandlers;
 
 import com.uprfvx.romio.constants.Gen3Constants;
-import com.uprfvx.romio.gamedata.Gen1Species;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.graphics.packs.*;
@@ -33,8 +32,7 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
         public PaletteRecord(Species pk) {
             this.normal = pk.getNormalPalette() == null ? null : new Palette(pk.getNormalPalette());
             this.shiny = pk.getShinyPalette() == null ? null : new Palette(pk.getShinyPalette());
-            // not pretty but super brief
-            this.sgbID = pk instanceof Gen1Species ? ((Gen1Species) pk).getPaletteID() : null;
+            this.sgbID = pk.getPaletteID();
         }
 
         @Override
@@ -112,14 +110,14 @@ public class RomHandlerGraphicsTest extends RomHandlerTest {
         SGBPaletteID replaceID = SGBPaletteID.BADGE;
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
-            ((Gen1Species) pk).setPaletteID(replaceID);
+            pk.setPaletteID(replaceID);
         }
         romHandler.savePokemonPalettes();
         romHandler.savePokemonPalettes();
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             System.out.println(pk.getFullName());
-            assertEquals(replaceID, ((Gen1Species) pk).getPaletteID());
+            assertEquals(replaceID, pk.getPaletteID());
         }
     }
 

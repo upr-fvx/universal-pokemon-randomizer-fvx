@@ -1,0 +1,48 @@
+{% comment %}
+
+    Takes the path to a release note, and sets the variable "ret"
+    to a list of links for that release's downloads, using the
+    short names defined in [release note].download_short_names.
+
+    Input: include.url
+    Output: ret
+
+    E.g. "release_notes/v1_2_2.html" -> "<a href="https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/releases/download/v1.2.2/UPR_FVX_v1.2.2.zip">Download</a>",
+         "release_notes/v1_3_0.html" -> "<a href="[...]/UPR_FVX_v1.3.0.zip">v1.3.0</a>, <a href="[...]/UniversalPokemonShopEditor.zip.zip">UPSE</a>"
+
+{% endcomment %}
+{%- assign found = false -%}
+{%- for rn in site.release_notes -%}
+    {%- if rn.url == include.url -%}
+
+        {%- if rn.download -%}
+            {%- assign downloads = rn.download | split: ", " -%}
+
+            {%- if downloads.size == 1 -%}
+                {% capture ret %}<a href="{{ downloads[0] }}">Download</a>{% endcapture %}
+
+            {%- else -%}
+                {% capture ret %}
+                    {%- assign i = 0 -%}
+                    {% unless rn.download_short_names %}!!!{{ rn.url }}.download_short_names is missing!!!<br>{% endunless %}
+
+                    {%- for download in downloads -%}
+                        {%- assign parts = rn.download_short_names | split: ", " -%}
+                        {%- assign name = parts[i] -%}
+                        <a href="{{ download }}">{{ name }}</a>
+                        {%- unless download == downloads[-1] -%}, {% endunless %}
+                        {%- assign i = i | plus: 1 -%}
+                    {%- endfor -%}
+                {% endcapture %}
+
+            {%- endif -%}
+
+        {%- else -%}
+            {% capture ret %}---{% endcapture %}
+        {%- endif -%}
+
+        {%- assign found = true -%}
+        {%- break -%}
+    {%- endif -%}
+{%- endfor -%}
+{% unless found %}!!! could not find release note corresponding to: {{include.url}} !!!{% endunless %}

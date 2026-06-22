@@ -30,7 +30,6 @@ If available, include the Settings String and Seed for the randomized ROM. These
 
 **System (please complete the following information):**
  - Operating System: 
- - Java Version:
  - Randomizer Version: 
 
 

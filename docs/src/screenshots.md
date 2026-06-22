@@ -1,0 +1,73 @@
+---
+layout: default
+title: Screenshots
+---
+## Screenshots
+
+Most screenshots below were borrowed (with permission) from Dabomstew's original Randomizer website, found [archived here](https://web.archive.org/web/20240106083538/https://pokehacks.dabomstew.com/randomizer/index.php).
+
+### The Program
+
+![the Randomizer's GUI]({{ site.baseurl }}/assets/images/screenshots/program_main.png "Randomize games from Gen 1-7"){:.screenshot}
+![the Randomizer's GUI]({{ site.baseurl }}/assets/images/screenshots/program_starter.png "With plenty of options to choose from"){:.screenshot}
+![the Randomizer's GUI]({{ site.baseurl }}/assets/images/screenshots/program_preset.png "It is fun to share a seed/settings with friends..."){:.screenshot}
+![a log file]({{ site.baseurl }}/assets/images/screenshots/program_log.png "...and to read through a detailed log of your randomized game."){:.screenshot}
+
+### Generation 1 (R/B/Y/G)
+
+![the helix fossil contains Ekans]({{ site.baseurl }}/assets/images/screenshots/g1_fossil_change.png "Fossilized Snakes")
+![Professor Oak catches a Mewtwo]({{ site.baseurl }}/assets/images/screenshots/g1_oak_mewtwo.png "Mewtwo's hanging around Palette Town")
+![Abra uses scratch against a Dratini. Both are level 5.]({{ site.baseurl }}/assets/images/screenshots/g1_abra.png "Odd starters")
+
+### Generation 2 (G/S/C)
+
+![one of the starters in Elm's lab is Dragonite]({{ site.baseurl }}/assets/images/screenshots/g2_starter.png "This ain't no Totodile...")
+![the Rocket Grunt is called "Fisher Becky"]({{ site.baseurl }}/assets/images/screenshots/g2_becky.png "Revealing the Rockets' civilian identities")
+![a level 18 Dragonite is fighting a level 7 Blissey]({{ site.baseurl }}/assets/images/screenshots/g2_vsblissey.png "Plenty of EXP in the earlygame")
+![TMs for Future Sight and Hidden Power. Future Sight is TM31.]({{ site.baseurl }}/assets/images/screenshots/g2_tms.png "In Generation 2, TM31 is normally Mud-Slap")
+
+### Generation 3 (R/S/E/FR/LG)
+
+![one of the starters in Birch's bag is Cacturne]({{ site.baseurl }}/assets/images/screenshots/g3_starter.png "This looks appealing")
+![a wild level 2 Mewtwo]({{ site.baseurl }}/assets/images/screenshots/g3_mewtwo.png "... whuh?")
+![Ruin Maniac Olivia has sent out a level 4 Moltres]({{ site.baseurl }}/assets/images/screenshots/g3_moltres.png "... whuh again?")
+![One of the starters in Oak's lab is Cradily]({{ site.baseurl }}/assets/images/screenshots/g3_cradily.png "Archeologist Oak")
+
+### Generation 4 (D/P/Pt/HG/SS)
+
+![a level 5 Alakazam is battling a Starly. Alakazam knows Seed Bomb, Follow Me, and Giga Drain]({{ site.baseurl }}/assets/images/screenshots/g4_moveset.png "An odd moveset, never mind the Pokemon itself.")
+![One of the starters in Elm's lab is Sharpedo]({{ site.baseurl }}/assets/images/screenshots/g4_starter.png "Are you sure this is safe to give out as a starter?")
+![a level 5 Magnezone is battling a level 2 Mewtwo]({{ site.baseurl }}/assets/images/screenshots/g4_mewtwo.png "Nightmare first encounter")
+![Starly uses Dragon Pulse]({{ site.baseurl }}/assets/images/screenshots/g4_starly.png "Odd-looking dragon, that.")
+![a level 5 Flygon uses Guillotine]({{ site.baseurl }}/assets/images/screenshots/g4_flygon.png "Sometimes things just don't roll your way.")
+![Barry is called "Sailor Gavin"]({{ site.baseurl }}/assets/images/screenshots/g4_gavin.png "Pfft, some Sailor he is.")
+
+### Generation 5 (B/W/B2/W2)
+
+![Pre-battle screen, Bianca is called "Lowell"]({{ site.baseurl }}/assets/images/screenshots/g5_lowell1.png "Lowell???")
+![Battle screen, Bianca is called "Castle Valet Lowell"]({{ site.baseurl }}/assets/images/screenshots/g5_lowell2.png "Yes, Lowell.")
+![Pre-battle screen, Cheren is called "Tom"]({{ site.baseurl }}/assets/images/screenshots/g5_tom.png "And here's Tom.") <!--TODO: when CPGs come for Gen5, make this use a CPG!-->
+![One of the starters in Cheren's bag is Electivire, "The Electric-type Pokémon"]({{ site.baseurl }}/assets/images/screenshots/g5_electivire.png "Electivire is Electric? :O")
+<!-- TODO: ![One of the starters in Cheren's bag is Electivire, "The Grass-type Pokémon". It is notably green.]({{ site.baseurl }}/assets/images/screenshots/g5_electivire2.png "Electivire is Grass??? :O :O :O") !-->
+![a level 5 Heracross knows Mist Ball, Hypnosis, Counter, and Guillotine]({{ site.baseurl }}/assets/images/screenshots/g5_guillotine.png "OHKO move at level 5 - totally balanced.")
+![a level 2 Terrakion]({{ site.baseurl }}/assets/images/screenshots/g5_terrakion.png "Continuing the theme of horrible first encounters.")
+
+
+### Generation 6 (X/Y/OR/AS)
+
+![the XY starters are Cherrim, Floette-Eternal, and Terrakion]({{ site.baseurl }}/assets/images/screenshots/g6_starter.jpg "Some starters are small, others are BIG."){:.screenshot}
+![a shop with Insect Plate, Big Mushroom, Heart Scale, X Attack, Metal Powder, Gardevoirite, Ampharosite, Qualot Berry]({{ site.baseurl }}/assets/images/screenshots/g6_shop.png "Finally, a replacement for Luvdisc-fishing!"){:.screenshot}
+![two level 3 Quilladins battling. one knows crafty shield, hyper fang, and psyshock]({{ site.baseurl }}/assets/images/screenshots/g6_quilladin.jpg "Underleveled mirror-match"){:.screenshot}
+![the ORAS starters are Aipom, Vibrava, and Onix]({{ site.baseurl }}/assets/images/screenshots/g6_starter_oras.jpeg "Birch has a more varied set in his bag."){:.screenshot}
+![the stats screen of Vibrava. It is a flying/electric-type with the moves "Tranch' Air", "Chargeur", "Bourdon", and "Coup Victoire"]({{ site.baseurl }}/assets/images/screenshots/g6_moveset.jpeg "That's French for Victory Flare, btw."){:.screenshot}
+![a horde battle with three Natu, one Emboar, and one Spritzee. They are all level 3."]({{ site.baseurl }}/assets/images/screenshots/g6_horde2.jpeg "Odd fellows"){:.screenshot}
+![a horde battle with four Spinda, and one one Emboar, and one Carnivine. They are all level 3."]({{ site.baseurl }}/assets/images/screenshots/g6_horde1.jpeg "Spinda party in Petalburg forest, with one extra carnivorous plant."){:.screenshot}
+
+### Generation 7 (S/M/US/UM)
+
+![the SM starters are Pansage, Dodrio, and Armaldo. They are named as grass, normal, and rock-type, respectively.]({{ site.baseurl }}/assets/images/screenshots/g7_starter.png "Not the usual type triangle."){:.screenshot}
+![A battle against Hau. Hau has a level 5 Dodrio. The player has a level 5 Armaldo. The armaldo knows slash, sky drop, brave bird, and frenzy plant.]({{ site.baseurl }}/assets/images/screenshots/g7_rival.png "And Hau picked the Dodrio!"){:.screenshot}
+![a level 8 Reshiram]({{ site.baseurl }}/assets/images/screenshots/g7_reshiram.png "A legendary in every grass!"){:.screenshot}
+![a shop with Griseous Orb, and other odd items. The Griseous orb costs 0¥.]({{ site.baseurl }}/assets/images/screenshots/g7_shop.png "What a bargain! (the Randomizer also has an option to balance shop prizes)"){:.screenshot}
+![battle versus totem floatzel]({{ site.baseurl }}/assets/images/screenshots/g7_totem2.png "Expected another mustelid to be here"){:.screenshot}
+![battle versus two masquerains, at level 7 and 8]({{ site.baseurl }}/assets/images/screenshots/g7_sos.png "SOS! SOS! Please help me, other Masquerain!!"){:.screenshot}

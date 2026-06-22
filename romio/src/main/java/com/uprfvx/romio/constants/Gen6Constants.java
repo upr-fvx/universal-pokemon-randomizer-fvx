@@ -38,6 +38,10 @@ public class Gen6Constants {
     public static final int Type_XY = N3DSConstants.Type_XY;
     public static final int Type_ORAS = N3DSConstants.Type_ORAS;
 
+    // Trainer Class IDs
+    public static final int CLASS_WALLACE = 219;
+    public static final int CLASS_STEVEN = 268;
+
     public static final int pokemonCount = 721;
     private static final int xyFormeCount = 77, orasFormeCount = 104;
     private static final int orasformeMovesetOffset = 35;

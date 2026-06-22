@@ -1011,7 +1011,7 @@ public class RandomizationLogger {
         int generation = romHandler.generationOfPokemon();
         int romType = romHandler.getROMType();
 
-        Map<String, Trainer> bossTrainers = romHandler.getTrainers().stream().filter(getFilterForEachGen(generation, romType))
+        Map<String, Trainer> bossTrainers = romHandler.getTrainers().stream().filter(getBossTrainerFilter(generation, romType))
                 .collect(Collectors.toMap(
                         Trainer::getFullDisplayName,
                         t -> t,
@@ -1025,12 +1025,12 @@ public class RandomizationLogger {
                 ));
 
         // Sort trainers by level so they appear in the log in the game's original order
-        List<Trainer> orderedLeaders = bossTrainers.values().stream()
+        List<Trainer> orderedBosses = bossTrainers.values().stream()
                 .sorted((l1, l2) -> Integer.compare(getMaxGymLeaderLevel(l1), getMaxGymLeaderLevel(l2)))
                 .toList();
 
         // Print trainers
-        for (Trainer t : orderedLeaders) {
+        for (Trainer t : orderedBosses) {
             int capLevel = getMaxGymLeaderLevel(t);
             log.print(t.getFullDisplayName());
             log.print(" - Level Cap: " + capLevel + "\n");
@@ -1106,11 +1106,6 @@ public class RandomizationLogger {
             if (settings.getBattleStyle().isBattleStyleChanged()) {
                 log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
             }
-            // TODO BORRAR
-            log.print("Trainer Class: " +t.getTrainerclass());
-            log.print("Trainer Tag: " +t.getTag());
-            log.print("Trainer Name: " +t.getName());
-            // TODO END BORRAR
             log.println();
         }
         printSectionSeparator();
@@ -1429,7 +1424,7 @@ public class RandomizationLogger {
         return maxLevel;
     }
 
-    private Predicate<Trainer> getFilterForEachGen(int generation, int romType) {
+    private Predicate<Trainer> getBossTrainerFilter(int generation, int romType) {
         String romCode = romHandler.getROMCode();
         return trainer -> {
             String tag = trainer.getTag();
@@ -1460,11 +1455,11 @@ public class RandomizationLogger {
                     // In Black/White 1, filter out the duplicate 8th Gym Leader based on rom versions
                     if (romType == Gen5Constants.Type_BW && romCode != null) {
                         // If romCode starts with "IRB" (Pokémon Black), exclude Iris
-                        if (romCode.startsWith("IRB") && trainerClass == 55) {
+                        if (romCode.startsWith("IRB") && trainerClass == Gen5Constants.CLASS_IRIS) {
                             return false;
                         }
                         // If romCode starts with "IRA" (Pokémon White), exclude Drayden
-                        if (romCode.startsWith("IRA") && trainerClass == 56) {
+                        if (romCode.startsWith("IRA") && trainerClass == Gen5Constants.CLASS_DRAYDEN) {
                             return false;
                         }
                     }
@@ -1479,16 +1474,12 @@ public class RandomizationLogger {
                     if (!isDefaultLeader) return false;
 
                     // Remove Sootopolitan Wallace and Lvl 35 Steven in ORAS
-                    if (romType == Gen6Constants.Type_ORAS && (trainerClass == 219 || trainerClass == 268)) {
+                    if (romType == Gen6Constants.Type_ORAS && (trainerClass == Gen6Constants.CLASS_WALLACE || trainerClass == Gen6Constants.CLASS_STEVEN)) {
                         return false;
                     }
                     return true;
 
                 case 7:
-                    // Security check: Exclude corrupted trainer names from log
-                    if (name != null && (name.contains("[") || name.contains("●"))) {
-                        return false;
-                    }
 
                     if (tag == null) {
                         return false;

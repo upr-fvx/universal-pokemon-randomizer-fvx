@@ -315,14 +315,14 @@
                         </properties>
                         <border type="none" title="Base Stat Totals"/>
                         <children>
-                          <component id="333f5" class="javax.swing.JRadioButton" binding="unchangedRadioButton" default-binding="true">
+                          <component id="333f5" class="javax.swing.JRadioButton" binding="pbstUnchangedRadioButton">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text value="Unchanged"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstUnchangedRadioButton.text"/>
                             </properties>
                           </component>
                           <hspacer id="63169">
@@ -331,24 +331,24 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </hspacer>
-                          <component id="b4f32" class="javax.swing.JCheckBox" binding="followEvolutionsCheckBox" default-binding="true">
+                          <component id="b4f32" class="javax.swing.JCheckBox" binding="pbstFollowEvolutionsCheckBox">
                             <constraints>
                               <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text value="Follow Evolutions"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstFollowEvolutionsCheckBox.text"/>
                             </properties>
                           </component>
-                          <component id="84d7a" class="javax.swing.JRadioButton" binding="randomBuffNerfRadioButton" default-binding="true">
+                          <component id="84d7a" class="javax.swing.JRadioButton" binding="pbstRandomBuffNerfRadioButton">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text value=" Random Buff/Nerf (%)"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstRandomBuffNerfRadioButton.text"/>
                             </properties>
                           </component>
                           <component id="c5c7c" class="javax.swing.JSlider" default-binding="true">
@@ -365,34 +365,34 @@
                               <value value="0"/>
                             </properties>
                           </component>
-                          <component id="d367a" class="javax.swing.JRadioButton" binding="shuffleRadioButton" default-binding="true">
+                          <component id="d367a" class="javax.swing.JRadioButton" binding="pbstShuffleRadioButton">
                             <constraints>
                               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text value="Shuffle"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstShuffleRadioButton"/>
                             </properties>
                           </component>
-                          <component id="256d0" class="javax.swing.JRadioButton" binding="randomRadioButton" default-binding="true">
+                          <component id="256d0" class="javax.swing.JRadioButton" binding="pbstRandomRadioButton">
                             <constraints>
                               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text value="Random"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstRandomRadioButton.text"/>
                             </properties>
                           </component>
-                          <component id="8d461" class="javax.swing.JCheckBox" binding="followMegaEvolutionsCheckBox" default-binding="true">
+                          <component id="8d461" class="javax.swing.JCheckBox" binding="pbstFollowMegaEvolutionsCheckBox">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text value="Follow Mega Evolutions"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstFollowMegaEvolutionsCheckBox.text"/>
                             </properties>
                           </component>
                         </children>
@@ -1500,7 +1500,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                         </properties>
                       </component>
                       <component id="ae826" class="javax.swing.JCheckBox" binding="stpRandomize600BSTCheckBox">
@@ -1973,7 +1973,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pmsForceGoodDamagingSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -2205,7 +2205,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageEvolutionLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -2237,7 +2237,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -2735,7 +2735,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                         </properties>
                       </component>
                       <component id="69ebe" class="javax.swing.JCheckBox" binding="totpPercentageLevelModifierCheckBox">
@@ -3077,7 +3077,7 @@
                           <gridbag weightx="0.0" weighty="0.0" ipadx="30"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpPercentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -3349,7 +3349,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <enabled value="false"/>
+                              <enabled value="true"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmForceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
@@ -3574,7 +3574,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <enabled value="false"/>
+                              <enabled value="true"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtForceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>

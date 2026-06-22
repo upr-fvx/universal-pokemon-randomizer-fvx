@@ -373,13 +373,12 @@ public class RandomizerGUI {
     private JCheckBox tpBetterMovesetsBossTrainersCheckBox;
     private JCheckBox tpBetterMovesetsImportantTrainersCheckBox;
     private JCheckBox tpBetterMovesetsRegularTrainersCheckBox;
-    // TODO: rename these shoddily named ui elements
-    private JRadioButton unchangedRadioButton;
-    private JRadioButton randomBuffNerfRadioButton;
-    private JRadioButton shuffleRadioButton;
-    private JRadioButton randomRadioButton;
-    private JCheckBox followEvolutionsCheckBox;
-    private JCheckBox followMegaEvolutionsCheckBox;
+    private JRadioButton pbstUnchangedRadioButton;
+    private JRadioButton pbstRandomBuffNerfRadioButton;
+    private JRadioButton pbstShuffleRadioButton;
+    private JRadioButton pbstRandomRadioButton;
+    private JCheckBox pbstFollowEvolutionsCheckBox;
+    private JCheckBox pbstFollowMegaEvolutionsCheckBox;
 
     private static final Random RND = new Random();
 

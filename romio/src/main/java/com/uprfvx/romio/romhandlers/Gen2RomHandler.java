@@ -98,6 +98,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     private String[][] mapNames;
     private String[] landmarkNames;
     private boolean isVietCrystal;
+    private Map<Species, Integer> speciesFrontImageDimensions = new HashMap<>();
 
     @Override
     public boolean detectRom(byte[] rom) {
@@ -621,7 +622,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 rom[offset + Gen2Constants.bsEggCyclesOffset] & 0xFF
         );
         pkmn.setBreedingInfo(bi);
-        pkmn.setFrontImageDimensions(rom[offset + Gen2Constants.bsFrontImageDimensionsOffset] & 0xFF);
+
+        speciesFrontImageDimensions.put(pkmn, rom[offset + Gen2Constants.bsFrontImageDimensionsOffset] & 0xFF);
 
     }
 
@@ -3331,8 +3333,9 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
             int pointerOffset = getPokemonImagePointerOffset(pk, back);
 
-            int width = back ? 6 : pk.getFrontImageDimensions() & 0x0F;
-            int height = back ? 6 : (pk.getFrontImageDimensions() >> 4) & 0x0F;
+            int dims = speciesFrontImageDimensions.get(pk);
+            int width = back ? 6 : dims & 0x0F;
+            int height = back ? 6 : (dims >> 4) & 0x0F;
 
             byte[] data;
             try {

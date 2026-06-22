@@ -25,35 +25,18 @@ import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
 
 /**
  * Represents an individual Gen 1 Species.
- * Used to handle things related to stats because of the lack of the Special split in Gen 1.
  */
 public class Gen1Species extends Species {
+    // This used to be a more central class, holding the logic for Gen 1 having the combined special stat.
+    // That logic has since been moved, so this is looking more and more stubby.
+    // TODO: eliminate this class
 
     public Gen1Species(int number) {
         super(number);
         setGeneration(1);
     }
-
-    private int frontImagePointer;
-    private int backImagePointer;
 	
 	private SGBPaletteID paletteID;
-
-    public int getFrontImagePointer() {
-        return frontImagePointer;
-    }
-
-    public void setFrontImagePointer(int frontImagePointer) {
-        this.frontImagePointer = frontImagePointer;
-    }
-
-    public int getBackImagePointer() {
-        return backImagePointer;
-    }
-
-    public void setBackImagePointer(int backImagePointer) {
-        this.backImagePointer = backImagePointer;
-    }
 
     public SGBPaletteID getPaletteID() {
         return paletteID;

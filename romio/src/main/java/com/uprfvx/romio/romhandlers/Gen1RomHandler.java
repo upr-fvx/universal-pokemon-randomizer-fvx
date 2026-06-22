@@ -104,6 +104,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     private boolean xAccNerfed;
     private Species yellowRivalStarter;
 
+    private final Map<Species, Integer> speciesFrontImageDimensions = new HashMap<>();
+    private final Map<Species, Integer> speciesFrontImagePointers = new HashMap<>();
+    private final Map<Species, Integer> speciesBackImagePointers = new HashMap<>();
+
     @Override
     public boolean detectRom(byte[] rom) {
         return detectRomInner(rom, rom.length);
@@ -627,9 +631,10 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         pkmn.setCatchRate(rom[offset + Gen1Constants.bsCatchRateOffset] & 0xFF);
         pkmn.setExpYield(rom[offset + Gen1Constants.bsExpYieldOffset] & 0xFF);
         pkmn.setGrowthCurve(ExpCurve.fromByte(rom[offset + Gen1Constants.bsGrowthCurveOffset]));
-        pkmn.setFrontImageDimensions(rom[offset + Gen1Constants.bsFrontImageDimensionsOffset] & 0xFF);
-        pkmn.setFrontImagePointer(readWord(offset + Gen1Constants.bsFrontImagePointerOffset));
-        pkmn.setBackImagePointer(readWord(offset + Gen1Constants.bsBackImagePointerOffset));
+
+        speciesFrontImageDimensions.put(pkmn, rom[offset + Gen1Constants.bsFrontImageDimensionsOffset] & 0xFF);
+        speciesFrontImagePointers.put(pkmn, readWord(offset + Gen1Constants.bsFrontImagePointerOffset));
+        speciesBackImagePointers.put(pkmn, readWord(offset + Gen1Constants.bsBackImagePointerOffset));
     }
 
     private void saveBasicPokeStats(Species pkmn, int offset) {
@@ -2912,6 +2917,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     private int calculateFrontSpriteBank(Gen1Species pk) {
         int idx = pokeNumToRBYTable[pk.getNumber()];
+        int pointer = speciesFrontImagePointers.get(pk);
         int fsBank;
         // define (by index number) the bank that a pokemon's image is in
         // using pokered code
@@ -2921,9 +2927,9 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             fsBank = 0x9;
         } else if (idx < 0x4A) {
             fsBank = 0xA;
-        } else if (idx < 0x74 || idx == 0x74 && pk.getFrontImagePointer() > 0x7000) {
+        } else if (idx < 0x74 || idx == 0x74 && pointer > 0x7000) {
             fsBank = 0xB;
-        } else if (idx < 0x99 || idx == 0x99 && pk.getFrontImagePointer() > 0x7000) {
+        } else if (idx < 0x99 || idx == 0x99 && pointer > 0x7000) {
             fsBank = 0xC;
         } else {
             fsBank = 0xD;
@@ -3107,11 +3113,15 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         @Override
         public BufferedImage get() {
-            int width = back ? 4 : pk.getFrontImageDimensions() & 0x0F;
-            int height = back ? 4 : (pk.getFrontImageDimensions() >> 4) & 0x0F;
+            int dims = speciesFrontImageDimensions.get(pk);
+            int width = back ? 4 : dims & 0x0F;
+            int height = back ? 4 : (dims >> 4) & 0x0F;
 
             int bank = calculateFrontSpriteBank(pk);
-            int imageOffset = calculateOffset(back ? pk.getBackImagePointer() : pk.getFrontImagePointer(), bank);
+            int imageOffset = calculateOffset(
+                    back ? speciesBackImagePointers.get(pk) : speciesFrontImagePointers.get(pk),
+                    bank
+            );
             byte[] data = readImageData(imageOffset);
             Palette palette = getVisiblePokemonPalette(pk);
 

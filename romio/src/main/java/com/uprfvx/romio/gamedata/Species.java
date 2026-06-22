@@ -1044,15 +1044,6 @@ public class Species implements Comparable<Species> {
         this.genderRatio = genderRatio;
     }
 
-    // TODO: move this to be a RomHandler internal field; it is not interesting to other classes
-    public int getFrontImageDimensions() {
-        return frontImageDimensions;
-    }
-
-    public void setFrontImageDimensions(int frontImageDimensions) {
-        this.frontImageDimensions = frontImageDimensions;
-    }
-
     public int getCallRate() {
         return callRate;
     }

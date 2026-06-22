@@ -370,7 +370,6 @@ public class SpeciesTest {
         a.setCatchRate(6);
         a.setGenderRatio(7);
         a.setCallRate(8);
-        a.setFrontImageDimensions(9);
         a.setGrowthCurve(ExpCurve.MEDIUM_FAST);
 
         transferAttributesToCopies();
@@ -388,7 +387,6 @@ public class SpeciesTest {
         assertEquals(6, aCopy.getCatchRate());
         assertEquals(7, aCopy.getGenderRatio());
         assertEquals(8, aCopy.getCallRate());
-        assertEquals(9, aCopy.getFrontImageDimensions());
         assertEquals(ExpCurve.MEDIUM_FAST, aCopy.getGrowthCurve());
     }
 

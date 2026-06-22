@@ -2,10 +2,7 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.SpeciesIDs;
-import com.uprfvx.romio.gamedata.ExpCurve;
-import com.uprfvx.romio.gamedata.MegaEvolution;
-import com.uprfvx.romio.gamedata.Species;
-import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -130,15 +127,20 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     protected void applyShuffledOrderToStats(Species pk) {
         if (shuffledStatsOrders.containsKey(pk)) {
             List<Integer> order = shuffledStatsOrders.get(pk);
+            BaseStats bs = pk.getBaseStats();
             List<Integer> stats = Arrays.asList(
-                    pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpatk(), pk.getSpdef(), pk.getSpeed()
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed()
             );
-            pk.setHp(stats.get(order.get(0)));
-            pk.setAttack(stats.get(order.get(1)));
-            pk.setDefense(stats.get(order.get(2)));
-            pk.setSpatk(stats.get(order.get(3)));
-            pk.setSpdef(stats.get(order.get(4)));
-            pk.setSpeed(stats.get(order.get(5)));
+
+            pk.setBaseStats(new BaseStats(
+                    stats.get(order.get(0)),
+                    stats.get(order.get(1)),
+                    stats.get(order.get(2)),
+                    stats.get(order.get(3)),
+                    stats.get(order.get(4)),
+                    stats.get(order.get(5)),
+                    bs.isShedinja()
+            ));
         }
     }
 
@@ -157,7 +159,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
 
         romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getConceptualBaseForme()));
+                .forEach(pk -> pk.setBaseStats(new BaseStats((pk.getConceptualBaseForme().getBaseStats()))));
 
         if (megaEvolutionSanity) {
             for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
@@ -179,13 +181,16 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 randomizeRegularStatsWithinBST(pk);
             }
             // Re-roll if the stats become something we can't store
-        } while (pk.getHp() > 255 || pk.getAttack() > 255 || pk.getDefense() > 255 || pk.getSpecial() > 255
-                || pk.getSpeed() > 255);
+            // TODO: this check probably doesn't work; should throw before
+        } while (pk.getBaseStats().getHp() > 255
+                || pk.getBaseStats().getAttack() > 255 || pk.getBaseStats().getDefense() > 255
+                || pk.getBaseStats().getSpatk() > 255 || pk.getBaseStats().getSpdef() > 255
+                || pk.getBaseStats().getSpeed() > 255);
     }
 
     private void randomizeShedinjaStatsWithinBST(Species pk) {
         // Shedinja is horribly broken unless we restrict it to 1HP.
-        int bst = pk.getBST() - (SHEDINJA_HP + MIN_NON_HP_STAT * 5);
+        int bst = pk.getBaseStats().getBST() - (SHEDINJA_HP + MIN_NON_HP_STAT * 5);
 
         // Make weightings
         double atkW = random.nextDouble(), defW = random.nextDouble();
@@ -193,16 +198,19 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         double totW = atkW + defW + spaW + spdW + speW;
 
-        pk.setHp(SHEDINJA_HP);
-        pk.setAttack((int) Math.max(1, Math.round(atkW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setDefense((int) Math.max(1, Math.round(defW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setSpatk((int) Math.max(1, Math.round(spaW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setSpdef((int) Math.max(1, Math.round(spdW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setSpeed((int) Math.max(1, Math.round(speW / totW * bst)) + MIN_NON_HP_STAT);
+        pk.setBaseStats(new BaseStats(
+                SHEDINJA_HP,
+                (int) Math.max(1, Math.round(atkW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(defW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(spaW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(spdW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(speW / totW * bst)) + MIN_NON_HP_STAT,
+                true
+        ));
     }
 
     private void randomizeRegularStatsWithinBST(Species pk) {
-        int bst = pk.getBST() - (MIN_HP + MIN_NON_HP_STAT * 5);
+        int bst = pk.getBaseStats().getBST() - (MIN_HP + MIN_NON_HP_STAT * 5);
 
         // Make weightings
         double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
@@ -210,16 +218,19 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         double totW = hpW + atkW + defW + spaW + spdW + speW;
 
-        pk.setHp((int) Math.max(1, Math.round(hpW / totW * bst)) + MIN_HP);
-        pk.setAttack((int) Math.max(1, Math.round(atkW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setDefense((int) Math.max(1, Math.round(defW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setSpatk((int) Math.max(1, Math.round(spaW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setSpdef((int) Math.max(1, Math.round(spdW / totW * bst)) + MIN_NON_HP_STAT);
-        pk.setSpeed((int) Math.max(1, Math.round(speW / totW * bst)) + MIN_NON_HP_STAT);
+        pk.setBaseStats(new BaseStats(
+                (int) Math.max(1, Math.round(hpW / totW * bst)) + MIN_HP,
+                (int) Math.max(1, Math.round(atkW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(defW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(spaW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(spdW / totW * bst)) + MIN_NON_HP_STAT,
+                (int) Math.max(1, Math.round(speW / totW * bst)) + MIN_NON_HP_STAT,
+                false
+        ));
     }
 
     protected void assignNewStatsForEvolution(Species from, Species to) {
-        double bstDiff = to.getBST() - from.getBST();
+        double bstDiff = to.getBaseStats().getBST() - from.getBaseStats().getBST();
 
         // Make weightings
         double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
@@ -234,23 +245,32 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spdDiff = Math.round((spdW / totW) * bstDiff);
         double speDiff = Math.round((speW / totW) * bstDiff);
 
-        to.setHp((int) Math.clamp(from.getHp() + hpDiff, 1, 255));
-        to.setAttack((int) Math.clamp(from.getAttack() + atkDiff, 1, 255));
-        to.setDefense((int) Math.clamp(from.getDefense() + defDiff, 1, 255));
-        to.setSpatk((int) Math.clamp(from.getSpatk() + spaDiff, 1, 255));
-        to.setSpdef((int) Math.clamp(from.getSpdef() + spdDiff, 1, 255));
-        to.setSpeed((int) Math.clamp(from.getSpeed() + speDiff, 1, 255));
+        BaseStats fromBS = from.getBaseStats();
+
+        to.setBaseStats(new BaseStats(
+                (int) Math.clamp(fromBS.getHp() + hpDiff, 1, 255),
+                (int) Math.clamp(fromBS.getAttack() + atkDiff, 1, 255),
+                (int) Math.clamp(fromBS.getDefense() + defDiff, 1, 255),
+                (int) Math.clamp(fromBS.getSpatk() + spaDiff, 1, 255),
+                (int) Math.clamp(fromBS.getSpdef() + spdDiff, 1, 255),
+                (int) Math.clamp(fromBS.getSpeed() + speDiff, 1, 255),
+                fromBS.isShedinja()
+        ));
     }
 
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {
-        double bstRatio = (double) to.getBST() / (double) from.getBST();
+        double bstRatio = (double) to.getBaseStats().getBST() / (double) from.getBaseStats().getBST();
+        BaseStats fromBS = from.getBaseStats();
 
-        to.setHp(Math.clamp(Math.round(from.getHp() * bstRatio), 1, 255));
-        to.setAttack(Math.clamp(Math.round(from.getAttack() * bstRatio), 1, 255));
-        to.setDefense(Math.clamp(Math.round(from.getDefense() * bstRatio), 1, 255));
-        to.setSpatk(Math.clamp(Math.round(from.getSpatk() * bstRatio), 1, 255));
-        to.setSpdef(Math.clamp(Math.round(from.getSpdef() * bstRatio), 1, 255));
-        to.setSpeed(Math.clamp(Math.round(from.getSpeed() * bstRatio), 1, 255));
+        to.setBaseStats(new BaseStats(
+                Math.clamp(Math.round(fromBS.getHp() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getAttack() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getDefense() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getSpatk() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getSpdef() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getSpeed() * bstRatio), 1, 255),
+                fromBS.isShedinja()
+        ));
     }
 
     public void standardizeEXPCurves() {

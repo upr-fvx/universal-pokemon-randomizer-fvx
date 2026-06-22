@@ -593,12 +593,15 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, int offset) {
-        pkmn.setHp(rom[offset + Gen2Constants.bsHPOffset] & 0xFF);
-        pkmn.setAttack(rom[offset + Gen2Constants.bsAttackOffset] & 0xFF);
-        pkmn.setDefense(rom[offset + Gen2Constants.bsDefenseOffset] & 0xFF);
-        pkmn.setSpeed(rom[offset + Gen2Constants.bsSpeedOffset] & 0xFF);
-        pkmn.setSpatk(rom[offset + Gen2Constants.bsSpAtkOffset] & 0xFF);
-        pkmn.setSpdef(rom[offset + Gen2Constants.bsSpDefOffset] & 0xFF);
+        pkmn.setBaseStats(new BaseStats(
+                rom[offset + Gen2Constants.bsHPOffset] & 0xFF,
+                rom[offset + Gen2Constants.bsAttackOffset] & 0xFF,
+                rom[offset + Gen2Constants.bsDefenseOffset] & 0xFF,
+                rom[offset + Gen2Constants.bsSpAtkOffset] & 0xFF,
+                rom[offset + Gen2Constants.bsSpDefOffset] & 0xFF,
+                rom[offset + Gen2Constants.bsSpeedOffset] & 0xFF,
+                false
+        ));
         // Type
         pkmn.setPrimaryType(Gen2Constants.typeTable[rom[offset + Gen2Constants.bsPrimaryTypeOffset] & 0xFF]);
         pkmn.setSecondaryType(Gen2Constants.typeTable[rom[offset + Gen2Constants.bsSecondaryTypeOffset] & 0xFF]);
@@ -623,12 +626,13 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     private void saveBasicPokeStats(Species pkmn, int offset) {
-        writeByte(offset + Gen2Constants.bsHPOffset, (byte) pkmn.getHp());
-        writeByte(offset + Gen2Constants.bsAttackOffset, (byte) pkmn.getAttack());
-        writeByte(offset + Gen2Constants.bsDefenseOffset, (byte) pkmn.getDefense());
-        writeByte(offset + Gen2Constants.bsSpeedOffset, (byte) pkmn.getSpeed());
-        writeByte(offset + Gen2Constants.bsSpAtkOffset, (byte) pkmn.getSpatk());
-        writeByte(offset + Gen2Constants.bsSpDefOffset, (byte) pkmn.getSpdef());
+        BaseStats bs = pkmn.getBaseStats();
+        writeByte(offset + Gen2Constants.bsHPOffset, (byte) bs.getHp());
+        writeByte(offset + Gen2Constants.bsAttackOffset, (byte) bs.getAttack());
+        writeByte(offset + Gen2Constants.bsDefenseOffset, (byte) bs.getDefense());
+        writeByte(offset + Gen2Constants.bsSpeedOffset, (byte) bs.getSpeed());
+        writeByte(offset + Gen2Constants.bsSpAtkOffset, (byte) bs.getSpatk());
+        writeByte(offset + Gen2Constants.bsSpDefOffset, (byte) bs.getSpdef());
         writeByte(offset + Gen2Constants.bsPrimaryTypeOffset, Gen2Constants.typeToByte(pkmn.getPrimaryType(false)));
         byte secondaryTypeByte = pkmn.getSecondaryType(false) == null ? rom[offset + Gen2Constants.bsPrimaryTypeOffset]
                 : Gen2Constants.typeToByte(pkmn.getSecondaryType(false));

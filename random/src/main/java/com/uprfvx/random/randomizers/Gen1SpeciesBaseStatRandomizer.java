@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.gamedata.Gen1BaseStats;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -29,42 +30,50 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
     protected void applyShuffledOrderToStats(Species pk) {
         if (shuffledStatsOrders.containsKey(pk)) {
             List<Integer> order = shuffledStatsOrders.get(pk);
+            Gen1BaseStats bs = (Gen1BaseStats) pk.getBaseStats();
             List<Integer> stats = Arrays.asList(
-                    pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpeed(), pk.getSpecial()
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpeed(), bs.getSpecial()
             );
-            pk.setHp(stats.get(order.get(0)));
-            pk.setAttack(stats.get(order.get(1)));
-            pk.setDefense(stats.get(order.get(2)));
-            pk.setSpeed(stats.get(order.get(3)));
-            pk.setSpecial(stats.get(order.get(4)));
+
+            pk.setBaseStats(new Gen1BaseStats(
+                    stats.get(order.get(0)),
+                    stats.get(order.get(1)),
+                    stats.get(order.get(2)),
+                    stats.get(order.get(3)),
+                    stats.get(order.get(4))
+            ));
         }
     }
 
     @Override
     protected void randomizeStatsWithinBST(Species pk) {
+        Gen1BaseStats bs = (Gen1BaseStats) pk.getBaseStats();
         do {
-            int bst = pk.getBST() - (MIN_HP + MIN_NON_HP_STAT * 4);
+            int bst = pk.getBaseStats().getBST() - (MIN_HP + MIN_NON_HP_STAT * 4);
 
             // Make weightings
             double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-            double specW = random.nextDouble(), speW = random.nextDouble();
+            double speW = random.nextDouble(), specW = random.nextDouble();
 
             double totW = hpW + atkW + defW + specW + speW;
 
-            pk.setHp((int) Math.max(1, Math.round(hpW / totW * bst)) + MIN_HP);
-            pk.setAttack((int) Math.max(1, Math.round(atkW / totW * bst)) + MIN_NON_HP_STAT);
-            pk.setDefense((int) Math.max(1, Math.round(defW / totW * bst)) + MIN_NON_HP_STAT);
-            pk.setSpecial((int) Math.max(1, Math.round(specW / totW * bst)) + MIN_NON_HP_STAT);
-            pk.setSpeed((int) Math.max(1, Math.round(speW / totW * bst)) + MIN_NON_HP_STAT);
+            pk.setBaseStats(new Gen1BaseStats(
+                    (int) Math.max(1, Math.round(hpW / totW * bst)) + MIN_HP,
+                    (int) Math.max(1, Math.round(atkW / totW * bst)) + MIN_NON_HP_STAT,
+                    (int) Math.max(1, Math.round(defW / totW * bst)) + MIN_NON_HP_STAT,
+                    (int) Math.max(1, Math.round(speW / totW * bst)) + MIN_NON_HP_STAT,
+                    (int) Math.max(1, Math.round(specW / totW * bst)) + MIN_NON_HP_STAT
+            ));
 
             // Re-roll if the stats become something we can't store
-        } while (pk.getHp() > 255 || pk.getAttack() > 255 || pk.getDefense() > 255 || pk.getSpecial() > 255
-                || pk.getSpeed() > 255);
+            // TODO: this check probably doesn't work; should throw before
+        } while (bs.getHp() > 255 || bs.getAttack() > 255 || bs.getDefense() > 255 || bs.getSpecial() > 255
+                || bs.getSpeed() > 255);
     }
 
     @Override
     protected void assignNewStatsForEvolution(Species from, Species to) {
-        double bstDiff = to.getBST() - from.getBST();
+        double bstDiff = to.getBaseStats().getBST() - from.getBaseStats().getBST();
 
         // Make weightings
         double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
@@ -78,21 +87,28 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
         double specDiff = Math.round((specW / totW) * bstDiff);
         double speDiff = Math.round((speW / totW) * bstDiff);
 
-        to.setHp((int) Math.clamp(from.getHp() + hpDiff, 1, 255));
-        to.setAttack((int) Math.clamp(from.getAttack() + atkDiff, 1, 255));
-        to.setDefense((int) Math.clamp(from.getDefense() + defDiff, 1, 255));
-        to.setSpeed((int) Math.clamp(from.getSpeed() + speDiff, 1, 255));
-        to.setSpecial((int) Math.clamp(from.getSpecial() + specDiff, 1, 255));
+        Gen1BaseStats fromBS = (Gen1BaseStats) from.getBaseStats();
+
+        to.setBaseStats(new Gen1BaseStats(
+                (int) Math.clamp(fromBS.getHp() + hpDiff, 1, 255),
+                (int) Math.clamp(fromBS.getAttack() + atkDiff, 1, 255),
+                (int) Math.clamp(fromBS.getDefense() + defDiff, 1, 255),
+                (int) Math.clamp(fromBS.getSpeed() + speDiff, 1, 255),
+                (int) Math.clamp(fromBS.getSpecial() + specDiff, 1, 255)
+        ));
     }
 
     @Override
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {
-        double bstRatio = (double) to.getBST() / (double) from.getBST();
+        double bstRatio = (double) to.getBaseStats().getBST() / (double) from.getBaseStats().getBST();
+        Gen1BaseStats fromBS = (Gen1BaseStats) from.getBaseStats();
 
-        to.setHp(Math.clamp(Math.round(from.getHp() * bstRatio), 1, 255));
-        to.setAttack(Math.clamp(Math.round(from.getAttack() * bstRatio), 1, 255));
-        to.setDefense(Math.clamp(Math.round(from.getDefense() * bstRatio), 1, 255));
-        to.setSpeed(Math.clamp(Math.round(from.getSpeed() * bstRatio), 1, 255));
-        to.setSpecial(Math.clamp(Math.round(from.getSpecial() * bstRatio), 1, 255));
+        to.setBaseStats(new Gen1BaseStats(
+                Math.clamp(Math.round(fromBS.getHp() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getAttack() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getDefense() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getSpeed() * bstRatio), 1, 255),
+                Math.clamp(Math.round(fromBS.getSpecial() * bstRatio), 1, 255)
+        ));
     }
 }

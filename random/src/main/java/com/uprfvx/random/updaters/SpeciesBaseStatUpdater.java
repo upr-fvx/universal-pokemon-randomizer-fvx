@@ -1,6 +1,8 @@
 package com.uprfvx.random.updaters;
 
 import com.uprfvx.romio.constants.SpeciesIDs;
+import com.uprfvx.romio.gamedata.BaseStats;
+import com.uprfvx.romio.gamedata.Gen1BaseStats;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -17,14 +19,8 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
     // starts with two null-consumers so the indexing can be nicer,
     // and then four more since Gens 2-5 didn't change the base stats of any existing Species
     private final List<Consumer<List<Species>>> updates = Arrays.asList(
-            l -> {
-            }, l -> {
-            },
-            l -> {
-            }, l -> {
-            }, l -> {
-            }, l -> {
-            },
+            _ -> {}, _ -> {},
+            _ -> {}, _ -> {}, _ -> {}, _ -> {},
             this::gen6Updates, this::gen7Updates, this::gen8Updates, this::gen9Updates
     );
 
@@ -175,22 +171,25 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
 
     private void updateHP(List<Species> pokes, int species, int value) {
         Species spec = pokes.get(species);
-        int before = spec.getHp();
-        spec.setHp(value);
+        BaseStats bs = spec.getBaseStats();
+        int before = bs.getHp();
+        bs.setHp(value);
         addUpdate(spec, before, value, BSUpdateType.HP);
     }
 
     private void updateAtk(List<Species> pokes, int species, int value) {
         Species spec = pokes.get(species);
-        int before = spec.getAttack();
-        spec.setAttack(value);
+        BaseStats bs = spec.getBaseStats();
+        int before = bs.getAttack();
+        bs.setAttack(value);
         addUpdate(spec, before, value, BSUpdateType.ATK);
     }
 
     private void updateDef(List<Species> pokes, int species, int value) {
         Species spec = pokes.get(species);
-        int before = spec.getDefense();
-        spec.setDefense(value);
+        BaseStats bs = spec.getBaseStats();
+        int before = bs.getDefense();
+        bs.setDefense(value);
         addUpdate(spec, before, value, BSUpdateType.DEF);
     }
 
@@ -198,8 +197,9 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         // just gets ignored in Gen 1 games
         if (romHandler.generationOfPokemon() != 1) {
             Species spec = pokes.get(species);
-            int before = spec.getSpatk();
-            spec.setSpatk(value);
+            BaseStats bs = spec.getBaseStats();
+            int before = bs.getSpatk();
+            bs.setSpatk(value);
             addUpdate(spec, before, value, BSUpdateType.SPATK);
         }
     }
@@ -208,16 +208,18 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         // just gets ignored in Gen 1 games
         if (romHandler.generationOfPokemon() != 1) {
             Species spec = pokes.get(species);
-            int before = spec.getSpdef();
-            spec.setSpdef(value);
+            BaseStats bs = spec.getBaseStats();
+            int before = bs.getSpdef();
+            bs.setSpdef(value);
             addUpdate(spec, before, value, BSUpdateType.SPDEF);
         }
     }
 
     private void updateSpeed(List<Species> pokes, int species, int value) {
         Species spec = pokes.get(species);
-        int before = spec.getSpeed();
-        spec.setSpeed(value);
+        BaseStats bs = spec.getBaseStats();
+        int before = bs.getSpeed();
+        bs.setSpeed(value);
         addUpdate(spec, before, value, BSUpdateType.SPEED);
     }
 
@@ -225,8 +227,9 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         // just gets ignored in non-Gen 1 games
         if (romHandler.generationOfPokemon() == 1) {
             Species spec = pokes.get(species);
-            int before = spec.getSpecial();
-            spec.setSpecial(value);
+            Gen1BaseStats bs = (Gen1BaseStats) spec.getBaseStats();
+            int before = bs.getSpecial();
+            bs.setSpecial(value);
             addUpdate(spec, before, value, BSUpdateType.SPECIAL);
         }
     }

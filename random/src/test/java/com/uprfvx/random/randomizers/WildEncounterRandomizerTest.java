@@ -348,8 +348,8 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     }
 
     private double calcPowerLevelDiff(Species a, Species b) {
-        return Math.abs((double) a.getBSTForPowerLevels() /
-                b.getBSTForPowerLevels() - 1);
+        return Math.abs((double) a.getBaseStats().getBSTForPowerLevels() /
+                b.getBaseStats().getBSTForPowerLevels() - 1);
     }
 
     @ParameterizedTest

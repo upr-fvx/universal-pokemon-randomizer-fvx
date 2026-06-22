@@ -114,13 +114,7 @@ public class Species implements Comparable<Species> {
     private boolean hasSetPrimaryType;
     private boolean hasSetSecondaryType;
 
-    private int hp;
-    private int attack;
-    private int defense;
-    private int spatk;
-    private int spdef;
-    private int speed;
-    private int special;
+    private BaseStats baseStats;
 
     private int ability1;
     private int ability2;
@@ -156,27 +150,6 @@ public class Species implements Comparable<Species> {
 
     public Species(int number) {
         this.number = number;
-    }
-
-    /**
-     * Gets the raw Base Stat Total. In most cases, {@link #getBSTForPowerLevels()}
-     * should be used instead.
-     */
-    public int getBST() {
-        return hp + attack + defense + spatk + spdef + speed;
-    }
-
-    public int getBSTForPowerLevels() {
-        // Take into account Shedinja's purposefully nerfed HP
-        if (number == SpeciesIDs.shedinja) {
-            return (attack + defense + spatk + spdef + speed) * 6 / 5;
-        } else {
-            return hp + attack + defense + spatk + spdef + speed;
-        }
-    }
-
-    public double getAttackSpecialAttackRatio() {
-        return (double)attack / ((double)attack + (double)spatk);
     }
 
     /**
@@ -534,15 +507,6 @@ public class Species implements Comparable<Species> {
         originalPreEvolvedForms = SpeciesSet.unmodifiable(getPreEvolvedSpecies(false));
     }
 
-    public void copyBaseFormeBaseStats(Species baseForme) {
-        hp = baseForme.hp;
-        attack = baseForme.attack;
-        defense = baseForme.defense;
-        speed = baseForme.speed;
-        spatk = baseForme.spatk;
-        spdef = baseForme.spdef;
-    }
-
     public void copyBaseFormeAbilities(Species baseForme) {
         ability1 = baseForme.ability1;
         ability2 = baseForme.ability2;
@@ -569,8 +533,7 @@ public class Species implements Comparable<Species> {
     @Override
     public String toString() {
         return "Species [name=" + name + formeSuffix + ", number=" + number + ", primaryType=" + primaryType
-                + ", secondaryType=" + secondaryType + ", hp=" + hp + ", attack=" + attack + ", defense=" + defense
-                + ", spatk=" + spatk + ", spdef=" + spdef + ", speed=" + speed + "]";
+                + ", secondaryType=" + secondaryType + ", " + baseStats + "]";
     }
 
     @Override
@@ -985,60 +948,12 @@ public class Species implements Comparable<Species> {
                 (getSecondaryType(false).equals(other.getPrimaryType(false)) || getSecondaryType(false).equals(other.getSecondaryType(false))));
     }
 
-    public int getHp() {
-        return hp;
+    public BaseStats getBaseStats() {
+        return baseStats;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public int getAttack() {
-        return attack;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
-    }
-
-    public int getDefense() {
-        return defense;
-    }
-
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
-    public int getSpatk() {
-        return spatk;
-    }
-
-    public void setSpatk(int spatk) {
-        this.spatk = spatk;
-    }
-
-    public int getSpdef() {
-        return spdef;
-    }
-
-    public void setSpdef(int spdef) {
-        this.spdef = spdef;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
-    }
-
-    public int getSpecial() {
-        return special;
-    }
-
-    public void setSpecial(int special) {
-        this.special = special;
+    public void setBaseStats(BaseStats baseStats) {
+        this.baseStats = baseStats;
     }
 
     public int getAbility1() {
@@ -1283,13 +1198,12 @@ public class Species implements Comparable<Species> {
         copy.hasSetSecondaryType = original.hasSetSecondaryType;
 
         //base stats
-        copy.hp = original.hp;
-        copy.attack = original.attack;
-        copy.defense = original.defense;
-        copy.spatk = original.spatk;
-        copy.spdef = original.spdef;
-        copy.speed = original.speed;
-        copy.special = original.special;
+        // TODO: write copy tests
+        copy.baseStats = switch (original.baseStats) {
+            case null -> null;
+            case Gen1BaseStats origGen1BaseStats -> new Gen1BaseStats(origGen1BaseStats);
+            default -> new BaseStats(original.baseStats);
+        };
 
         //abilities
         copy.ability1 = original.ability1;

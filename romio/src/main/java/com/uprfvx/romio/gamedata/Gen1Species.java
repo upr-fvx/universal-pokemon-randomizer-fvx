@@ -39,28 +39,6 @@ public class Gen1Species extends Species {
 	
 	private SGBPaletteID paletteID;
 
-    @Override
-    public int getBST() {
-        return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
-    }
-
-    @Override
-    public int getBSTForPowerLevels() {
-        return getBST(); // no Shedinja clause
-    }
-
-    @Override
-    public double getAttackSpecialAttackRatio() {
-        return (double) getAttack() / ((double) getAttack() + (double) getSpecial());
-    }
-
-    @Override
-    public String toString() {
-        return "Species [name=" + getName() + ", number=" + getNumber() + ", primaryType=" + getPrimaryType(false) + ", secondaryType="
-                + getSecondaryType(false) + ", hp=" + getHp() + ", attack=" + getAttack() + ", defense=" + getDefense() + ", special=" + getSpecial()
-                + ", speed=" + getSpeed() + "]";
-    }
-
     public int getFrontImagePointer() {
         return frontImagePointer;
     }

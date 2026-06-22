@@ -613,15 +613,17 @@ public class RandomizationLogger {
                     pk.getPrimaryType(false)
                             + (pk.hasSecondaryType(false) ? "/" + pk.getSecondaryType(false) : ""));
             if (romHandler.generationOfPokemon() == 1) {
+                Gen1BaseStats bs = (Gen1BaseStats) pk.getBaseStats();
                 log.printf("|%4d|%4d|%4d|%4d|%4d",
-                        pk.getHp(), pk.getAttack(),
-                        pk.getDefense(), pk.getSpeed(),
-                        pk.getSpecial());
+                        bs.getHp(), bs.getAttack(),
+                        bs.getDefense(), bs.getSpeed(),
+                        bs.getSpecial());
             } else {
+                BaseStats bs = pk.getBaseStats();
                 log.printf("|%4s|%4s|%4s|%4s|%4s|%4s",
-                        pk.getHp(), pk.getAttack(),
-                        pk.getDefense(), pk.getSpatk(),
-                        pk.getSpdef(), pk.getSpeed());
+                        bs.getHp(), bs.getAttack(),
+                        bs.getDefense(), bs.getSpatk(),
+                        bs.getSpdef(), bs.getSpeed());
             }
             if (romHandler.abilitiesPerSpecies() >= 1) {
                 log.printf("|%-" + abilityLen + "s", romHandler.abilityName(pk.getAbility1()));
@@ -791,11 +793,13 @@ public class RandomizationLogger {
             }
 
             if (romHandler instanceof Gen1RomHandler) {
-                log.printf("  HP| ATK| DEF|SPEC| SPD %n%4d|%4d|%4d|%4d|%4d %n",
-                        pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpecial(), pk.getSpeed());
+                Gen1BaseStats bs = (Gen1BaseStats) pk.getBaseStats();
+                log.printf("  HP| ATK| DEF| SPD|SPEC %n%4d|%4d|%4d|%4d|%4d %n",
+                        bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpeed(), bs.getSpecial());
             } else {
+                BaseStats bs = pk.getBaseStats();
                 log.printf("  HP| ATK| DEF|SATK|SDEF| SPD %n%4d|%4d|%4d|%4d|%4d|%4d %n",
-                        pk.getHp(), pk.getAttack(), pk.getDefense(), pk.getSpatk(), pk.getSpdef(), pk.getSpeed());
+                        bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed());
             }
 
             List<MoveLearnt> data = moveData.get(pk.getNumber());

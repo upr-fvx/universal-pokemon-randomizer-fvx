@@ -43,7 +43,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
                 continue;
             }
 
-            double atkSpAtkRatio = pkmn.getAttackSpecialAttackRatio();
+            double atkSpAtkRatio = pkmn.getBaseStats().getAttackSpecialAttackRatio();
 
             // 4 starting moves?
             if (forceStartingMoves) {
@@ -217,7 +217,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
                 continue;
             }
 
-            double atkSpAtkRatio = pkmn.getAttackSpecialAttackRatio();
+            double atkSpAtkRatio = pkmn.getBaseStats().getAttackSpecialAttackRatio();
 
             if (pkmn.isEssentiallyCosmetic()) {
                 for (int i = 0; i < moves.size(); i++) {

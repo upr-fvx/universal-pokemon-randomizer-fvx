@@ -382,12 +382,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, byte[] stats, Map<Integer,FormeInfo> altFormes) {
-        pkmn.setHp(stats[Gen5Constants.bsHPOffset] & 0xFF);
-        pkmn.setAttack(stats[Gen5Constants.bsAttackOffset] & 0xFF);
-        pkmn.setDefense(stats[Gen5Constants.bsDefenseOffset] & 0xFF);
-        pkmn.setSpeed(stats[Gen5Constants.bsSpeedOffset] & 0xFF);
-        pkmn.setSpatk(stats[Gen5Constants.bsSpAtkOffset] & 0xFF);
-        pkmn.setSpdef(stats[Gen5Constants.bsSpDefOffset] & 0xFF);
+        pkmn.setBaseStats(new BaseStats(
+                stats[Gen5Constants.bsHPOffset] & 0xFF,
+                stats[Gen5Constants.bsAttackOffset] & 0xFF,
+                stats[Gen5Constants.bsDefenseOffset] & 0xFF,
+                stats[Gen5Constants.bsSpAtkOffset] & 0xFF,
+                stats[Gen5Constants.bsSpDefOffset] & 0xFF,
+                stats[Gen5Constants.bsSpeedOffset] & 0xFF,
+                pkmn.getNumber() == SpeciesIDs.shedinja
+        ));
         // Type
         pkmn.setPrimaryType(Gen5Constants.typeTable[stats[Gen5Constants.bsPrimaryTypeOffset] & 0xFF]);
         pkmn.setSecondaryType(Gen5Constants.typeTable[stats[Gen5Constants.bsSecondaryTypeOffset] & 0xFF]);
@@ -547,12 +550,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private void saveBasicPokeStats(Species pkmn, byte[] stats) {
-        stats[Gen5Constants.bsHPOffset] = (byte) pkmn.getHp();
-        stats[Gen5Constants.bsAttackOffset] = (byte) pkmn.getAttack();
-        stats[Gen5Constants.bsDefenseOffset] = (byte) pkmn.getDefense();
-        stats[Gen5Constants.bsSpeedOffset] = (byte) pkmn.getSpeed();
-        stats[Gen5Constants.bsSpAtkOffset] = (byte) pkmn.getSpatk();
-        stats[Gen5Constants.bsSpDefOffset] = (byte) pkmn.getSpdef();
+        BaseStats bs = pkmn.getBaseStats();
+        stats[Gen5Constants.bsHPOffset] = (byte) bs.getHp();
+        stats[Gen5Constants.bsAttackOffset] = (byte) bs.getAttack();
+        stats[Gen5Constants.bsDefenseOffset] = (byte) bs.getDefense();
+        stats[Gen5Constants.bsSpeedOffset] = (byte) bs.getSpeed();
+        stats[Gen5Constants.bsSpAtkOffset] = (byte) bs.getSpatk();
+        stats[Gen5Constants.bsSpDefOffset] = (byte) bs.getSpdef();
         stats[Gen5Constants.bsPrimaryTypeOffset] = Gen5Constants.typeToByte(pkmn.getPrimaryType(false));
         if (pkmn.getSecondaryType(false) == null) {
             stats[Gen5Constants.bsSecondaryTypeOffset] = stats[Gen5Constants.bsPrimaryTypeOffset];

@@ -363,21 +363,14 @@ public class SpeciesTest {
         a.setSecondaryType(null);
         a.setPrimaryType(Type.FIRE);
         a.setSecondaryType(Type.FIGHTING);
-        a.setHp(2);
-        a.setAttack(3);
-        a.setDefense(4);
-        a.setSpatk(5);
-        a.setSpdef(6);
-        a.setSpeed(7);
-        a.setSpecial(8);
-        a.setAbility1(9);
-        a.setAbility2(10);
-        a.setAbility3(11);
-        a.setExpYield(12);
-        a.setCatchRate(13);
-        a.setGenderRatio(14);
-        a.setCallRate(15);
-        a.setFrontImageDimensions(16);
+        a.setAbility1(2);
+        a.setAbility2(3);
+        a.setAbility3(4);
+        a.setExpYield(5);
+        a.setCatchRate(6);
+        a.setGenderRatio(7);
+        a.setCallRate(8);
+        a.setFrontImageDimensions(9);
         a.setGrowthCurve(ExpCurve.MEDIUM_FAST);
 
         transferAttributesToCopies();
@@ -388,22 +381,51 @@ public class SpeciesTest {
         assertNull(aCopy.getSecondaryType(true));
         assertEquals(Type.FIRE, aCopy.getPrimaryType(false));
         assertEquals(Type.FIGHTING, aCopy.getSecondaryType(false));
-        assertEquals(2, aCopy.getHp());
-        assertEquals(3, aCopy.getAttack());
-        assertEquals(4, aCopy.getDefense());
-        assertEquals(5, aCopy.getSpatk());
-        assertEquals(6, aCopy.getSpdef());
-        assertEquals(7, aCopy.getSpeed());
-        assertEquals(8, aCopy.getSpecial());
-        assertEquals(9, aCopy.getAbility1());
-        assertEquals(10, aCopy.getAbility2());
-        assertEquals(11, aCopy.getAbility3());
-        assertEquals(12, aCopy.getExpYield());
-        assertEquals(13, aCopy.getCatchRate());
-        assertEquals(14, aCopy.getGenderRatio());
-        assertEquals(15, aCopy.getCallRate());
-        assertEquals(16, aCopy.getFrontImageDimensions());
+        assertEquals(2, aCopy.getAbility1());
+        assertEquals(3, aCopy.getAbility2());
+        assertEquals(4, aCopy.getAbility3());
+        assertEquals(5, aCopy.getExpYield());
+        assertEquals(6, aCopy.getCatchRate());
+        assertEquals(7, aCopy.getGenderRatio());
+        assertEquals(8, aCopy.getCallRate());
+        assertEquals(9, aCopy.getFrontImageDimensions());
         assertEquals(ExpCurve.MEDIUM_FAST, aCopy.getGrowthCurve());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithNormalBaseStats_TransfersBaseStats() {
+        use(a, aCopy);
+        a.setBaseStats(new BaseStats(
+                1, 2, 3, 4, 5, 6, true
+        ));
+
+        transferAttributesToCopies();
+
+        assertEquals(1, aCopy.getBaseStats().getHp());
+        assertEquals(2, aCopy.getBaseStats().getAttack());
+        assertEquals(3, aCopy.getBaseStats().getDefense());
+        assertEquals(4, aCopy.getBaseStats().getSpatk());
+        assertEquals(5, aCopy.getBaseStats().getSpdef());
+        assertEquals(6, aCopy.getBaseStats().getSpeed());
+        assertTrue(aCopy.getBaseStats().isShedinja());
+    }
+
+    @Test
+    public void transferAttributesToCopy_WithGen1BaseStats_TransfersBaseStats() {
+        use(a, aCopy);
+        a.setBaseStats(new Gen1BaseStats(
+                1, 2, 3, 4, 5
+        ));
+
+        transferAttributesToCopies();
+
+        assertInstanceOf(Gen1BaseStats.class, aCopy.getBaseStats());
+        Gen1BaseStats aCopyBaseStats = (Gen1BaseStats) aCopy.getBaseStats();
+        assertEquals(1, aCopyBaseStats.getHp());
+        assertEquals(2, aCopyBaseStats.getAttack());
+        assertEquals(3, aCopyBaseStats.getDefense());
+        assertEquals(4, aCopyBaseStats.getSpeed());
+        assertEquals(5, aCopyBaseStats.getSpecial());
     }
 
     @Test

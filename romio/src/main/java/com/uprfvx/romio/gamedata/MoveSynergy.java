@@ -720,38 +720,38 @@ public class MoveSynergy {
                 .collect(toCollection(ArrayList::new));
     }
 
-    public static List<Move> getStatMoveSynergy(Species sp, List<Move> moveList) {
+    public static List<Move> getStatMoveSynergy(BaseStats bs, List<Move> moveList) {
         List<Integer> synergisticMoves = new ArrayList<>();
 
-        if ((double) sp.getHp() / (double)sp.getBST() < 1.0/8) {
+        if ((double) bs.getHp() / (double)bs.getBST() < 1.0/8) {
             synergisticMoves.add(MoveIDs.painSplit);
             synergisticMoves.add(MoveIDs.endeavor);
         }
 
-        if ((double) sp.getHp() / (double)sp.getBST() >= 1.0/4) {
+        if ((double) bs.getHp() / (double)bs.getBST() >= 1.0/4) {
             synergisticMoves.add(MoveIDs.waterSpout);
             synergisticMoves.add(MoveIDs.eruption);
             synergisticMoves.add(MoveIDs.counter);
             synergisticMoves.add(MoveIDs.mirrorCoat);
         }
 
-        if (sp.getAttack() * 2 < sp.getDefense()) {
+        if (bs.getAttack() * 2 < bs.getDefense()) {
             synergisticMoves.add(MoveIDs.powerTrick);
         }
 
-        if ((double)(sp.getAttack() + sp.getSpatk()) / (double)sp.getBST() < 1.0/4) {
+        if ((double)(bs.getAttack() + bs.getSpatk()) / (double)bs.getBST() < 1.0/4) {
             synergisticMoves.add(MoveIDs.powerSplit);
         }
 
-        if ((double)(sp.getDefense() + sp.getSpdef()) / (double)sp.getBST() < 1.0/4) {
+        if ((double)(bs.getDefense() + bs.getSpdef()) / (double)bs.getBST() < 1.0/4) {
             synergisticMoves.add(MoveIDs.guardSplit);
         }
 
-        if ((double) sp.getSpeed() / (double)sp.getBST() < 1.0/8) {
+        if ((double) bs.getSpeed() / (double)bs.getBST() < 1.0/8) {
             synergisticMoves.add(MoveIDs.gyroBall);
         }
 
-        if ((double) sp.getSpeed() / (double)sp.getBST() >= 1.0/4) {
+        if ((double) bs.getSpeed() / (double)bs.getBST() >= 1.0/4) {
             synergisticMoves.add(MoveIDs.electroBall);
         }
 
@@ -762,31 +762,31 @@ public class MoveSynergy {
                 .collect(toCollection(ArrayList::new));
     }
 
-    public static List<Move> getStatMoveAntiSynergy(Species sp, List<Move> moveList) {
+    public static List<Move> getStatMoveAntiSynergy(BaseStats bs, List<Move> moveList) {
         List<Integer> antiSynergisticMoves = new ArrayList<>();
 
-        if ((double) sp.getHp() / (double)sp.getBST() >= 1.0/4) {
+        if ((double) bs.getHp() / (double)bs.getBST() >= 1.0/4) {
             antiSynergisticMoves.add(MoveIDs.painSplit);
             antiSynergisticMoves.add(MoveIDs.endeavor);
         }
 
-        if (sp.getDefense() * 2 < sp.getAttack()) {
+        if (bs.getDefense() * 2 < bs.getAttack()) {
             antiSynergisticMoves.add(MoveIDs.powerTrick);
         }
 
-        if ((double)(sp.getAttack() + sp.getSpatk()) / (double)sp.getBST() >= 1.0/3) {
+        if ((double)(bs.getAttack() + bs.getSpatk()) / (double)bs.getBST() >= 1.0/3) {
             antiSynergisticMoves.add(MoveIDs.powerSplit);
         }
 
-        if ((double)(sp.getDefense() + sp.getSpdef()) / (double)sp.getBST() >= 1.0/3) {
+        if ((double)(bs.getDefense() + bs.getSpdef()) / (double)bs.getBST() >= 1.0/3) {
             antiSynergisticMoves.add(MoveIDs.guardSplit);
         }
 
-        if ((double) sp.getSpeed() / (double)sp.getBST() >= 1.0/4) {
+        if ((double) bs.getSpeed() / (double)bs.getBST() >= 1.0/4) {
             antiSynergisticMoves.add(MoveIDs.gyroBall);
         }
 
-        if ((double) sp.getSpeed() / (double)sp.getBST() < 1.0/8) {
+        if ((double) bs.getSpeed() / (double)bs.getBST() < 1.0/8) {
             antiSynergisticMoves.add(MoveIDs.electroBall);
         }
 

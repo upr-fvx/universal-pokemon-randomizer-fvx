@@ -16,14 +16,22 @@ public class RomHandlerSpeciesStatsTest extends RomHandlerTest {
     private static class BaseStatRecord {
         private final int hp, attack, defense, spatk, spdef, speed, special;
 
-        public BaseStatRecord(Species pk) {
-            this.hp = pk.getHp();
-            this.attack = pk.getAttack();
-            this.defense = pk.getDefense();
-            this.spatk = pk.getSpatk();
-            this.spdef = pk.getSpdef();
-            this.speed = pk.getSpeed();
-            this.special = pk.getSpecial();
+        BaseStatRecord(Species pk) {
+            BaseStats baseStats = pk.getBaseStats();
+            this.hp = baseStats.getHp();
+            this.attack = baseStats.getAttack();
+            this.defense = baseStats.getDefense();
+            this.speed = baseStats.getSpeed();
+
+            if (baseStats instanceof Gen1BaseStats gen1BaseStats) {
+                this.spatk = -1;
+                this.spdef = -1;
+                this.special = gen1BaseStats.getSpecial();
+            } else {
+                this.spatk = baseStats.getSpatk();
+                this.spdef = baseStats.getSpdef();
+                this.special = -1;
+            }
         }
 
         @Override

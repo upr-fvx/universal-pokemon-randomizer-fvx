@@ -1,5 +1,7 @@
 package com.uprfvx.random.updaters;
 
+import com.uprfvx.romio.gamedata.BaseStats;
+import com.uprfvx.romio.gamedata.Gen1BaseStats;
 import com.uprfvx.romio.gamedata.Species;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,15 +20,22 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
         String name;
         int hp, atk, def, spAtk, spDef, speed, special;
 
-        BaseStatRecord(String name, int hp, int atk, int def, int spAtk, int spDef, int speed, int special) {
+        BaseStatRecord(String name, BaseStats baseStats) {
             this.name = name;
-            this.hp = hp;
-            this.atk = atk;
-            this.def = def;
-            this.spAtk = spAtk;
-            this.spDef = spDef;
-            this.speed = speed;
-            this.special = special;
+            this.hp = baseStats.getHp();
+            this.atk = baseStats.getAttack();
+            this.def = baseStats.getDefense();
+            this.speed = baseStats.getSpeed();
+
+            if (baseStats instanceof Gen1BaseStats gen1BaseStats) {
+                this.spAtk = -1;
+                this.spDef = -1;
+                this.special = gen1BaseStats.getSpecial();
+            } else {
+                this.spAtk = baseStats.getSpatk();
+                this.spDef = baseStats.getSpdef();
+                this.special = -1;
+            }
         }
 
         @Override
@@ -103,8 +112,7 @@ public class SpeciesBaseStatUpdaterTest extends UpdaterTest {
         List<BaseStatRecord> records = new ArrayList<>(pokes.size());
         for (Species pk : pokes) {
             if (pk != null) {
-                records.add(new BaseStatRecord(pk.getFullName(), pk.getHp(), pk.getAttack(), pk.getDefense(),
-                        pk.getSpatk(), pk.getSpdef(), pk.getSpeed(), pk.getSpecial()));
+                records.add(new BaseStatRecord(pk.getFullName(), pk.getBaseStats()));
             }
         }
         return records;

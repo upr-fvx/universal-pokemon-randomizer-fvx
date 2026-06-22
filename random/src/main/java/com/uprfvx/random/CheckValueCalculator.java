@@ -33,8 +33,9 @@ public class CheckValueCalculator {
     private void addSpeciesInfo() {
         for (Species pkmn : romHandler.getSpecies()) {
             if (pkmn != null) {
-                addToCV(pkmn.getHp(), pkmn.getAttack(), pkmn.getDefense(), pkmn.getSpeed(), pkmn.getSpatk(),
-                        pkmn.getSpdef(), pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
+                BaseStats bs = pkmn.getBaseStats();
+                addToCV(bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpeed(), bs.getSpatk(),
+                        bs.getSpdef(), pkmn.getAbility1(), pkmn.getAbility2(), pkmn.getAbility3());
             }
         }
     }

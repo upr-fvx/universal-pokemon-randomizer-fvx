@@ -294,12 +294,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, byte[] stats, Map<Integer,FormeInfo> altFormes) {
-        pkmn.setHp(stats[Gen7Constants.bsHPOffset] & 0xFF);
-        pkmn.setAttack(stats[Gen7Constants.bsAttackOffset] & 0xFF);
-        pkmn.setDefense(stats[Gen7Constants.bsDefenseOffset] & 0xFF);
-        pkmn.setSpeed(stats[Gen7Constants.bsSpeedOffset] & 0xFF);
-        pkmn.setSpatk(stats[Gen7Constants.bsSpAtkOffset] & 0xFF);
-        pkmn.setSpdef(stats[Gen7Constants.bsSpDefOffset] & 0xFF);
+        pkmn.setBaseStats(new BaseStats(
+                stats[Gen7Constants.bsHPOffset] & 0xFF,
+                stats[Gen7Constants.bsAttackOffset] & 0xFF,
+                stats[Gen7Constants.bsDefenseOffset] & 0xFF,
+                stats[Gen7Constants.bsSpAtkOffset] & 0xFF,
+                stats[Gen7Constants.bsSpDefOffset] & 0xFF,
+                stats[Gen7Constants.bsSpeedOffset] & 0xFF,
+                pkmn.getNumber() == SpeciesIDs.shedinja
+        ));
         // Type
         pkmn.setPrimaryType(Gen7Constants.typeTable[stats[Gen7Constants.bsPrimaryTypeOffset] & 0xFF]);
         Type secondary = Gen7Constants.typeTable[stats[Gen7Constants.bsSecondaryTypeOffset] & 0xFF];
@@ -654,12 +657,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void saveBasicPokeStats(Species pkmn, byte[] stats) {
-        stats[Gen7Constants.bsHPOffset] = (byte) pkmn.getHp();
-        stats[Gen7Constants.bsAttackOffset] = (byte) pkmn.getAttack();
-        stats[Gen7Constants.bsDefenseOffset] = (byte) pkmn.getDefense();
-        stats[Gen7Constants.bsSpeedOffset] = (byte) pkmn.getSpeed();
-        stats[Gen7Constants.bsSpAtkOffset] = (byte) pkmn.getSpatk();
-        stats[Gen7Constants.bsSpDefOffset] = (byte) pkmn.getSpdef();
+        BaseStats bs = pkmn.getBaseStats();
+        stats[Gen7Constants.bsHPOffset] = (byte) bs.getHp();
+        stats[Gen7Constants.bsAttackOffset] = (byte) bs.getAttack();
+        stats[Gen7Constants.bsDefenseOffset] = (byte) bs.getDefense();
+        stats[Gen7Constants.bsSpeedOffset] = (byte) bs.getSpeed();
+        stats[Gen7Constants.bsSpAtkOffset] = (byte) bs.getSpatk();
+        stats[Gen7Constants.bsSpDefOffset] = (byte) bs.getSpdef();
         stats[Gen7Constants.bsPrimaryTypeOffset] = Gen7Constants.typeToByte(pkmn.getPrimaryType(false));
         if (pkmn.getSecondaryType(false) == null) {
             stats[Gen7Constants.bsSecondaryTypeOffset] = stats[Gen7Constants.bsPrimaryTypeOffset];
@@ -1751,8 +1755,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     // In the case where two or more stats are tied for the highest stat, it randomly selects one.
     private int getAuraNumberForHighestStat(Species boostedSpecies) {
 
-        List<Supplier<Integer>> statSuppliers = Arrays.asList(boostedSpecies::getAttack, boostedSpecies::getDefense,
-                boostedSpecies::getSpatk, boostedSpecies::getSpdef, boostedSpecies::getSpeed);
+        BaseStats bs = boostedSpecies.getBaseStats();
+        List<Supplier<Integer>> statSuppliers = Arrays.asList(bs::getAttack, bs::getDefense,
+                bs::getSpatk, bs::getSpdef, bs::getSpeed);
 
         // finds the highest stat(s)
         int currentBestStat = -1;

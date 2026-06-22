@@ -530,12 +530,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (offset > 0) {
                 offset += deoxysStatPrefix.length() / 2; // because it was a prefix
                 Species deoxys = pokes[SpeciesIDs.deoxys];
-                deoxys.setHp(readWord(offset));
-                deoxys.setAttack(readWord(offset + 2));
-                deoxys.setDefense(readWord(offset + 4));
-                deoxys.setSpeed(readWord(offset + 6));
-                deoxys.setSpatk(readWord(offset + 8));
-                deoxys.setSpdef(readWord(offset + 10));
+                deoxys.setBaseStats(new BaseStats(
+                        readWord(offset) & 0xFF,
+                        readWord(offset + 2) & 0xFF,
+                        readWord(offset + 4) & 0xFF,
+                        readWord(offset + 8) & 0xFF,
+                        readWord(offset + 10) & 0xFF,
+                        readWord(offset + 6) & 0xFF,
+                        false
+                ));
             }
         }
 
@@ -573,12 +576,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             if (offset > 0) {
                 offset += deoxysStatPrefix.length() / 2; // because it was a prefix
                 Species deoxys = pokes[SpeciesIDs.deoxys];
-                writeWord(offset, deoxys.getHp());
-                writeWord(offset + 2, deoxys.getAttack());
-                writeWord(offset + 4, deoxys.getDefense());
-                writeWord(offset + 6, deoxys.getSpeed());
-                writeWord(offset + 8, deoxys.getSpatk());
-                writeWord(offset + 10, deoxys.getSpdef());
+                BaseStats bs = deoxys.getBaseStats();
+                writeWord(offset, bs.getHp());
+                writeWord(offset + 2, bs.getAttack());
+                writeWord(offset + 4, bs.getDefense());
+                writeWord(offset + 6, bs.getSpeed());
+                writeWord(offset + 8, bs.getSpatk());
+                writeWord(offset + 10, bs.getSpdef());
             }
         }
 
@@ -1038,12 +1042,15 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, int offset) {
-        pkmn.setHp(rom[offset + Gen3Constants.bsHPOffset] & 0xFF);
-        pkmn.setAttack(rom[offset + Gen3Constants.bsAttackOffset] & 0xFF);
-        pkmn.setDefense(rom[offset + Gen3Constants.bsDefenseOffset] & 0xFF);
-        pkmn.setSpeed(rom[offset + Gen3Constants.bsSpeedOffset] & 0xFF);
-        pkmn.setSpatk(rom[offset + Gen3Constants.bsSpAtkOffset] & 0xFF);
-        pkmn.setSpdef(rom[offset + Gen3Constants.bsSpDefOffset] & 0xFF);
+        pkmn.setBaseStats(new BaseStats(
+                rom[offset + Gen3Constants.bsHPOffset] & 0xFF,
+                rom[offset + Gen3Constants.bsAttackOffset] & 0xFF,
+                rom[offset + Gen3Constants.bsDefenseOffset] & 0xFF,
+                rom[offset + Gen3Constants.bsSpAtkOffset] & 0xFF,
+                rom[offset + Gen3Constants.bsSpDefOffset] & 0xFF,
+                rom[offset + Gen3Constants.bsSpeedOffset] & 0xFF,
+                pkmn.getNumber() == SpeciesIDs.shedinja
+        ));
         // Type
         pkmn.setPrimaryType(Gen3Constants.typeTable[rom[offset + Gen3Constants.bsPrimaryTypeOffset] & 0xFF]);
         pkmn.setSecondaryType(Gen3Constants.typeTable[rom[offset + Gen3Constants.bsSecondaryTypeOffset] & 0xFF]);
@@ -1083,12 +1090,13 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void saveBasicPokeStats(Species pkmn, int offset) {
-        writeByte(offset + Gen3Constants.bsHPOffset, (byte) pkmn.getHp());
-        writeByte(offset + Gen3Constants.bsAttackOffset, (byte) pkmn.getAttack());
-        writeByte(offset + Gen3Constants.bsDefenseOffset, (byte) pkmn.getDefense());
-        writeByte(offset + Gen3Constants.bsSpeedOffset, (byte) pkmn.getSpeed());
-        writeByte(offset + Gen3Constants.bsSpAtkOffset, (byte) pkmn.getSpatk());
-        writeByte(offset + Gen3Constants.bsSpDefOffset, (byte) pkmn.getSpdef());
+        BaseStats bs = pkmn.getBaseStats();
+        writeByte(offset + Gen3Constants.bsHPOffset, (byte) bs.getHp());
+        writeByte(offset + Gen3Constants.bsAttackOffset, (byte) bs.getAttack());
+        writeByte(offset + Gen3Constants.bsDefenseOffset, (byte) bs.getDefense());
+        writeByte(offset + Gen3Constants.bsSpeedOffset, (byte) bs.getSpeed());
+        writeByte(offset + Gen3Constants.bsSpAtkOffset, (byte) bs.getSpatk());
+        writeByte(offset + Gen3Constants.bsSpDefOffset, (byte) bs.getSpdef());
         writeByte(offset + Gen3Constants.bsPrimaryTypeOffset, Gen3Constants.typeToByte(pkmn.getPrimaryType(false)));
         writeByte(offset + Gen3Constants.bsSecondaryTypeOffset, Gen3Constants.typeToByte(
                 pkmn.getSecondaryType(false) == null ? pkmn.getPrimaryType(false) : pkmn.getSecondaryType(false)

@@ -41,6 +41,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
     private JSpinner numberOfRandomizedROMsSpinner;
     private JSpinner startingIndexSpinner;
     private JTextField fileNamePrefixTextField;
+    private JTextField logFileEndingTextField;
     private JCheckBox generateLogFilesCheckBox;
     private JCheckBox autoAdvanceIndexCheckBox;
     private JButton chooseDirectoryButton;
@@ -108,6 +109,11 @@ public class BatchRandomizationSettingsDialog extends JDialog {
                 outputDirectoryLabel.setText(outputDirectoryFileChooser.getSelectedFile().getAbsolutePath());
             }
         });
+
+        generateLogFilesCheckBox.addActionListener(e -> {
+            logFileEndingTextField.setEnabled(generateLogFilesCheckBox.isSelected());
+        });
+
         setInitialControlValues();
         setControlsEnabled(currentSettings.isBatchRandomizationEnabled());
     }
@@ -115,6 +121,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
     private void setInitialControlValues() {
         enableBatchRandomizationCheckBox.setSelected(currentSettings.isBatchRandomizationEnabled());
         generateLogFilesCheckBox.setSelected(currentSettings.shouldGenerateLogFile());
+        logFileEndingTextField.setText(currentSettings.getLogFileEnding());
         autoAdvanceIndexCheckBox.setSelected(currentSettings.shouldAutoAdvanceStartingIndex());
         numberOfRandomizedROMsSpinner.setValue(currentSettings.getNumberOfRandomizedROMs());
         startingIndexSpinner.setValue(currentSettings.getStartingIndex());
@@ -131,6 +138,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
         startingIndexSpinner.setEnabled(enabled);
         fileNamePrefixTextField.setEnabled(enabled);
         generateLogFilesCheckBox.setEnabled(enabled);
+        logFileEndingTextField.setEnabled(generateLogFilesCheckBox.isSelected());
         autoAdvanceIndexCheckBox.setEnabled(enabled);
         chooseDirectoryButton.setEnabled(enabled);
     }
@@ -138,6 +146,7 @@ public class BatchRandomizationSettingsDialog extends JDialog {
     private void updateSettings() {
         currentSettings.setBatchRandomizationEnabled(enableBatchRandomizationCheckBox.isSelected());
         currentSettings.setGenerateLogFile(generateLogFilesCheckBox.isSelected());
+        currentSettings.setLogFileEnding(logFileEndingTextField.getText());
         currentSettings.setAutoAdvanceStartingIndex(autoAdvanceIndexCheckBox.isSelected());
         currentSettings.setNumberOfRandomizedROMs((Integer) numberOfRandomizedROMsSpinner.getValue());
         currentSettings.setStartingIndex((Integer) startingIndexSpinner.getValue());

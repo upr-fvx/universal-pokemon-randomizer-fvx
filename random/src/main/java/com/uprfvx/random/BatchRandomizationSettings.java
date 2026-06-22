@@ -36,6 +36,7 @@ public class BatchRandomizationSettings implements Cloneable {
     private Integer numberOfRandomizedROMs;
     private Integer startingIndex;
     private String fileNamePrefix;
+    private String logFileEnding;
     private String outputDirectory;
 
     public BatchRandomizationSettings() {
@@ -45,6 +46,7 @@ public class BatchRandomizationSettings implements Cloneable {
         numberOfRandomizedROMs = 10;
         startingIndex = 0;
         fileNamePrefix = "random";
+        logFileEnding = "log";
         outputDirectory = RootPath.path;
     }
 
@@ -96,6 +98,14 @@ public class BatchRandomizationSettings implements Cloneable {
         this.fileNamePrefix = fileNamePrefix;
     }
 
+    public String getLogFileEnding() {
+        return logFileEnding;
+    }
+
+    public void setLogFileEnding(String logFileEnding) {
+        this.logFileEnding = logFileEnding;
+    }
+
     public String getOutputDirectory() {
         return outputDirectory;
     }
@@ -109,6 +119,7 @@ public class BatchRandomizationSettings implements Cloneable {
         StringJoiner sj = new StringJoiner(System.lineSeparator());
         sj.add("batchrandomization.enabled=" + batchRandomizationEnabled.toString());
         sj.add("batchrandomization.generatelogfiles=" + generateLogFile.toString());
+        sj.add("batchrandomization.logfileending=" + logFileEnding);
         sj.add("batchrandomization.autoadvanceindex=" + autoAdvanceStartingIndex.toString());
         sj.add("batchrandomization.numberofrandomizedroms=" + numberOfRandomizedROMs.toString());
         sj.add("batchrandomization.startingindex=" + startingIndex.toString());

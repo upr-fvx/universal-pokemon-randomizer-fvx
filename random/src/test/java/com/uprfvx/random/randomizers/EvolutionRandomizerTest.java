@@ -296,8 +296,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
     }
 
     private double calcPowerLevelDiff(Species a, Species b) {
-        return Math.abs((double) a.getBaseStats().getBSTForPowerLevels() /
-                b.getBaseStats().getBSTForPowerLevels() - 1);
+        return Math.abs((double) a.getBST() / b.getBST() - 1);
     }
 
     @ParameterizedTest
@@ -311,10 +310,10 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
-            System.out.println(pk.getFullName() + " BST=" + pk.getBaseStats().getBSTForPowerLevels() + " ->");
+            System.out.println(pk.getFullName() + " BST=" + pk.getBST() + " ->");
             for (Evolution evo : pk.getEvolutionsFrom()) {
-                System.out.println("\t" + evo.getTo().getFullName() + " BST=" + evo.getTo().getBaseStats().getBSTForPowerLevels());
-                assertTrue(evo.getTo().getBaseStats().getBSTForPowerLevels() > pk.getBaseStats().getBSTForPowerLevels());
+                System.out.println("\t" + evo.getTo().getFullName() + " BST=" + evo.getTo().getBST());
+                assertTrue(evo.getTo().getBST() > pk.getBST());
             }
         }
     }

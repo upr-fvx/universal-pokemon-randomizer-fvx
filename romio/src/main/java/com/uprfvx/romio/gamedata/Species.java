@@ -958,6 +958,16 @@ public class Species implements Comparable<Species> {
         this.baseStats = baseStats;
     }
 
+    /**
+     * Short for {@link #getBaseStats()}.{@link BaseStats#getBSTForPowerLevels() getBSTForPowerLevels()}.<br>
+     * <b>NOT</b> short for the similarly named {@link #getBaseStats()}.{@link BaseStats#getBST() getBST()}.
+     * The former is used in a lot of places, so the name being short takes priority, even though the naming
+     * convention might be a little confusing.
+     */
+    public int getBST() {
+        return getBaseStats().getBSTForPowerLevels();
+    }
+
     public int getAbility1() {
         return ability1;
     }

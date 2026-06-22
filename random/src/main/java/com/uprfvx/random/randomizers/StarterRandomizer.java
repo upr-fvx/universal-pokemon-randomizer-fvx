@@ -6,7 +6,6 @@ import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class StarterRandomizer extends Randomizer {
 
@@ -321,7 +320,7 @@ public class StarterRandomizer extends Randomizer {
             available.removeIf(p -> p.getStagesAfter(false) < 2);
         }
         if(bstMin != 0 || bstMax != 1530) {
-            available.removeIf(p -> p.getBaseStats().getBSTForPowerLevels() < bstMin || p.getBaseStats().getBSTForPowerLevels() > bstMax);
+            available.removeIf(p -> p.getBST() < bstMin || p.getBST() > bstMax);
         }
 
         //all constraints except type done!

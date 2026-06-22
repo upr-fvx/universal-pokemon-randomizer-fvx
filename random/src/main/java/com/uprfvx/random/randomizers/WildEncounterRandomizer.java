@@ -854,7 +854,7 @@ public class WildEncounterRandomizer extends Randomizer {
             } else if (similarStrength) {
                 if(balanceLowLevelEncounters && areaInformationMap != null) {
                     SpeciesAreaInformation info = areaInformationMap.get(current);
-                    int bstToUse = Math.min(current.getBaseStats().getBSTForPowerLevels(), info.getLowestLevel() * 10 + 250);
+                    int bstToUse = Math.min(current.getBST(), info.getLowestLevel() * 10 + 250);
 
                     replacement = allowedForReplacement.getRandomSimilarStrengthSpecies(bstToUse, random);
                 } else {

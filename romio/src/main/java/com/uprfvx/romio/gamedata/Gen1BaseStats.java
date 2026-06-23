@@ -5,7 +5,7 @@ package com.uprfvx.romio.gamedata;
  */
 public class Gen1BaseStats extends BaseStats {
 
-    private int special;
+    private final int special;
 
     public Gen1BaseStats(int hp, int attack, int defense, int speed, int special) {
         super(hp, attack, defense, 0, 0, speed, false);
@@ -22,27 +22,13 @@ public class Gen1BaseStats extends BaseStats {
         return special;
     }
 
-    public void setSpecial(int special) {
-        this.special = special;
-    }
-
     @Override
     public int getSpatk() {
         throw new UnsupportedOperationException("Not a valid Gen 1 stat");
     }
 
     @Override
-    public void setSpatk(int spatk) {
-        throw new UnsupportedOperationException("Not a valid Gen 1 stat");
-    }
-
-    @Override
     public int getSpdef() {
-        throw new UnsupportedOperationException("Not a valid Gen 1 stat");
-    }
-
-    @Override
-    public void setSpdef(int spdef) {
         throw new UnsupportedOperationException("Not a valid Gen 1 stat");
     }
 

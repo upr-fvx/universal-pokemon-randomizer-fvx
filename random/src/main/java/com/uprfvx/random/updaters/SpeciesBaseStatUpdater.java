@@ -173,7 +173,12 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         Species spec = pokes.get(species);
         BaseStats bs = spec.getBaseStats();
         int before = bs.getHp();
-        bs.setHp(value);
+
+        BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
+                new Gen1BaseStats(value, bs.getAttack(), bs.getDefense(), bs.getSpeed(), gen1BS.getSpecial()) :
+                new BaseStats(value, bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed(), bs.isShedinja());
+        spec.setBaseStats(updated);
+
         addUpdate(spec, before, value, BSUpdateType.HP);
     }
 
@@ -181,7 +186,12 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         Species spec = pokes.get(species);
         BaseStats bs = spec.getBaseStats();
         int before = bs.getAttack();
-        bs.setAttack(value);
+
+        BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
+                new Gen1BaseStats(bs.getHp(), value, bs.getDefense(), bs.getSpeed(), gen1BS.getSpecial()) :
+                new BaseStats(bs.getHp(), value, bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed(), bs.isShedinja());
+        spec.setBaseStats(updated);
+
         addUpdate(spec, before, value, BSUpdateType.ATK);
     }
 
@@ -189,7 +199,12 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         Species spec = pokes.get(species);
         BaseStats bs = spec.getBaseStats();
         int before = bs.getDefense();
-        bs.setDefense(value);
+
+        BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
+                new Gen1BaseStats(bs.getHp(), bs.getAttack(), value, bs.getSpeed(), gen1BS.getSpecial()) :
+                new BaseStats(bs.getHp(), bs.getAttack(), value, bs.getSpatk(), bs.getSpdef(), bs.getSpeed(), bs.isShedinja());
+        spec.setBaseStats(updated);
+
         addUpdate(spec, before, value, BSUpdateType.DEF);
     }
 
@@ -199,7 +214,11 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
             Species spec = pokes.get(species);
             BaseStats bs = spec.getBaseStats();
             int before = bs.getSpatk();
-            bs.setSpatk(value);
+
+            spec.setBaseStats(new BaseStats(
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), value, bs.getSpdef(), bs.getSpeed(), bs.isShedinja()
+            ));
+
             addUpdate(spec, before, value, BSUpdateType.SPATK);
         }
     }
@@ -210,7 +229,11 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
             Species spec = pokes.get(species);
             BaseStats bs = spec.getBaseStats();
             int before = bs.getSpdef();
-            bs.setSpdef(value);
+
+            spec.setBaseStats(new BaseStats(
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), value, bs.getSpeed(), bs.isShedinja()
+            ));
+
             addUpdate(spec, before, value, BSUpdateType.SPDEF);
         }
     }
@@ -219,7 +242,12 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         Species spec = pokes.get(species);
         BaseStats bs = spec.getBaseStats();
         int before = bs.getSpeed();
-        bs.setSpeed(value);
+
+        BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
+                new Gen1BaseStats(bs.getHp(), bs.getAttack(), bs.getDefense(), value, gen1BS.getSpecial()) :
+                new BaseStats(bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), value, bs.isShedinja());
+        spec.setBaseStats(updated);
+
         addUpdate(spec, before, value, BSUpdateType.SPEED);
     }
 
@@ -229,7 +257,11 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
             Species spec = pokes.get(species);
             Gen1BaseStats bs = (Gen1BaseStats) spec.getBaseStats();
             int before = bs.getSpecial();
-            bs.setSpecial(value);
+
+            spec.setBaseStats(new Gen1BaseStats(
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpeed(), value
+            ));
+
             addUpdate(spec, before, value, BSUpdateType.SPECIAL);
         }
     }

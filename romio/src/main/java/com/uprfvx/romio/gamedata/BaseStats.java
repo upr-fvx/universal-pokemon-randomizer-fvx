@@ -5,12 +5,12 @@ package com.uprfvx.romio.gamedata;
  */
 public class BaseStats {
 
-    private int hp;
-    private int attack;
-    private int defense;
-    private int spatk;
-    private int spdef;
-    private int speed;
+    private final int hp;
+    private final int attack;
+    private final int defense;
+    private final int spatk;
+    private final int spdef;
+    private final int speed;
 
     private final boolean isShedinja;
 
@@ -50,48 +50,24 @@ public class BaseStats {
         return hp;
     }
 
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
     public int getAttack() {
         return attack;
-    }
-
-    public void setAttack(int attack) {
-        this.attack = attack;
     }
 
     public int getDefense() {
         return defense;
     }
 
-    public void setDefense(int defense) {
-        this.defense = defense;
-    }
-
     public int getSpatk() {
         return spatk;
-    }
-
-    public void setSpatk(int spatk) {
-        this.spatk = spatk;
     }
 
     public int getSpdef() {
         return spdef;
     }
 
-    public void setSpdef(int spdef) {
-        this.spdef = spdef;
-    }
-
     public int getSpeed() {
         return speed;
-    }
-
-    public void setSpeed(int speed) {
-        this.speed = speed;
     }
 
     public boolean isShedinja() {

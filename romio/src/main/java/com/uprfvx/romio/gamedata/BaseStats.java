@@ -91,6 +91,14 @@ public class BaseStats {
         }
     }
 
+    public void setBSTForPowerLevels(int bst) {
+        // TODO: implement
+    }
+
+    public void setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
+        // TODO: implement
+    }
+
     /**
      * Doesn't actually return attack/spatk. Returns attack/(attack + spatk).
      */

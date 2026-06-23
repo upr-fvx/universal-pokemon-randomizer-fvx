@@ -49,6 +49,7 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
     protected void randomizeStatsWithinBST(Species pk) {
         Gen1BaseStats bs = (Gen1BaseStats) pk.getBaseStats();
         do {
+            // TODO: refactor to use BaseStats.setStatRatios()
             int bst = pk.getBaseStats().getBST() - (MIN_HP + MIN_NON_HP_STAT * 4);
 
             // Make weightings
@@ -89,6 +90,7 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
 
         Gen1BaseStats fromBS = (Gen1BaseStats) from.getBaseStats();
 
+        // TODO: refactor away these clamps; reroll instead
         to.setBaseStats(new Gen1BaseStats(
                 (int) Math.clamp(fromBS.getHp() + hpDiff, 1, 255),
                 (int) Math.clamp(fromBS.getAttack() + atkDiff, 1, 255),
@@ -100,15 +102,9 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
 
     @Override
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {
-        double bstRatio = (double) to.getBaseStats().getBST() / (double) from.getBaseStats().getBST();
         Gen1BaseStats fromBS = (Gen1BaseStats) from.getBaseStats();
-
-        to.setBaseStats(new Gen1BaseStats(
-                Math.clamp(Math.round(fromBS.getHp() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getAttack() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getDefense() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getSpeed() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getSpecial() * bstRatio), 1, 255)
-        ));
+        ((Gen1BaseStats) to.getBaseStats()).setStatRatios(
+                fromBS.getHp(), fromBS.getAttack(), fromBS.getDefense(), fromBS.getSpeed(), fromBS.getSpecial()
+        );
     }
 }

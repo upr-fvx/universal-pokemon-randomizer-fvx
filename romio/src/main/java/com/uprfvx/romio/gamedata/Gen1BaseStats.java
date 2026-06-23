@@ -38,6 +38,20 @@ public class Gen1BaseStats extends BaseStats {
     }
 
     @Override
+    public void setBSTForPowerLevels(int bst) {
+        // TODO: implement
+    }
+
+    @Override
+    public void setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
+        throw new UnsupportedOperationException("Use the Gen1BaseStats-specific setStatRatios instead.");
+    }
+
+    public void setStatRatios(double hp, double attack, double defense, double speed, double special) {
+        // TODO: implement
+    }
+
+    @Override
     public double getAttackSpecialAttackRatio() {
         return (double) getAttack() / ((double) getAttack() + (double) getSpecial());
     }

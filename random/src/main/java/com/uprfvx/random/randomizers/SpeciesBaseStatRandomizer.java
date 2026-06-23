@@ -21,6 +21,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void shuffleBSTs(boolean evolutionSanity, boolean swapLegendaries) {
+        // TODO: deal with mega evos somehow
 
         List<SpeciesSet> shuffleGroups = new ArrayList<>();
         shuffleGroups.add(romHandler.getSpeciesSet());
@@ -44,14 +45,16 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             CopyUpEvolutionsHelper<Species> cueh = new CopyUpEvolutionsHelper<>(group);
             BasicSpeciesAction<Species> bpAction = (bp -> {
                 Species donator = donators.get(bp);
-                // bp.setBSTForPowerLevels(donator.getBSTForPowerLevels(true));
+                // TODO: for this to work, we need some way to access a Species' original BST (for power levels)
+                bp.getBaseStats().setBSTForPowerLevels(donator.getBaseStats().getBSTForPowerLevels());
             });
             EvolvedSpeciesAction<Species> epAction = ((evFrom, evTo, _) -> {
                 Species fromDonator = donators.get(evFrom);
                 // assumes lines are even; Applin could break this
+                // so could split evos where the BST differs
                 Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
                 donators.put(evTo, toDonator);
-                // evTo.setBSTForPowerLevels(toDonator.getBSTForPowerLevels(true));
+                evTo.getBaseStats().setBSTForPowerLevels(toDonator.getBaseStats().getBSTForPowerLevels());
             });
             cueh.apply(evolutionSanity, true, bpAction, epAction);
         }
@@ -132,15 +135,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                     bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed()
             );
 
-            pk.setBaseStats(new BaseStats(
+            pk.getBaseStats().setStatRatios(
                     stats.get(order.get(0)),
                     stats.get(order.get(1)),
                     stats.get(order.get(2)),
                     stats.get(order.get(3)),
                     stats.get(order.get(4)),
-                    stats.get(order.get(5)),
-                    bs.isShedinja()
-            ));
+                    stats.get(order.get(5))
+            );
         }
     }
 
@@ -189,6 +191,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     private void randomizeShedinjaStatsWithinBST(Species pk) {
+        // TODO: refactor to use BaseStats.setStatRatios()
         // Shedinja is horribly broken unless we restrict it to 1HP.
         int bst = pk.getBaseStats().getBST() - (SHEDINJA_HP + MIN_NON_HP_STAT * 5);
 
@@ -210,6 +213,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     private void randomizeRegularStatsWithinBST(Species pk) {
+        // TODO: refactor to use BaseStats.setStatRatios()
         int bst = pk.getBaseStats().getBST() - (MIN_HP + MIN_NON_HP_STAT * 5);
 
         // Make weightings
@@ -247,6 +251,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         BaseStats fromBS = from.getBaseStats();
 
+        // TODO: refactor away these clamps; reroll instead
         to.setBaseStats(new BaseStats(
                 (int) Math.clamp(fromBS.getHp() + hpDiff, 1, 255),
                 (int) Math.clamp(fromBS.getAttack() + atkDiff, 1, 255),
@@ -259,18 +264,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {
-        double bstRatio = (double) to.getBaseStats().getBST() / (double) from.getBaseStats().getBST();
         BaseStats fromBS = from.getBaseStats();
-
-        to.setBaseStats(new BaseStats(
-                Math.clamp(Math.round(fromBS.getHp() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getAttack() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getDefense() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getSpatk() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getSpdef() * bstRatio), 1, 255),
-                Math.clamp(Math.round(fromBS.getSpeed() * bstRatio), 1, 255),
-                fromBS.isShedinja()
-        ));
+        to.getBaseStats().setStatRatios(
+                fromBS.getHp(),
+                fromBS.getAttack(), fromBS.getDefense(),
+                fromBS.getSpatk(), fromBS.getSpdef(),
+                fromBS.getSpeed()
+        );
     }
 
     public void standardizeEXPCurves() {

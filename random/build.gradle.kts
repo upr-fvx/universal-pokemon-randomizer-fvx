@@ -170,13 +170,10 @@ PlatformConfig.entries.forEach { cfg ->
 
         from(layout.buildDirectory.dir("target/${cfg.name}"))
         destinationDirectory = file("build/dist")
-        archiveFileName = "DummyName_${cfg.name}"
-        doLast {
-            val oldPath = Paths.get(destinationDirectory.asFile.get().absolutePath + "/" + archiveFileName.get())
+        doFirst {
+            // needs to be inside doFirst because extra["randomizerVersion"] is not defined before getVersionName runs.
             val versionName = (rootProject.extra["randomizerVersion"] as String).replace(".", "_")
-            val newName = "UPR_FVX-${versionName}-${cfg.name}.zip"
-            val newPath = Paths.get(destinationDirectory.asFile.get().absolutePath + "/" + newName)
-            Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING)
+            archiveFileName = "UPR_FVX-${versionName}-${cfg.name}.zip"
         }
     }
     zipTasks.add(zip)

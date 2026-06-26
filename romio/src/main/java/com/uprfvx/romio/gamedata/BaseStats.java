@@ -82,8 +82,10 @@ public class BaseStats {
         return hp + attack + defense + spatk + spdef + speed;
     }
 
+    /**
+     * Gets the Base Stat Total, taking Shedinja's purposefully nerfed HP into account.
+     */
     public int getBSTForPowerLevels() {
-        // Take into account Shedinja's purposefully nerfed HP
         if (isShedinja) {
             return (attack + defense + spatk + spdef + speed) * 6 / 5;
         } else {
@@ -91,12 +93,24 @@ public class BaseStats {
         }
     }
 
+    /**
+     * Modifies the stats by setting the BST. The ratios of each stat will be the same, as far as possible.<br>
+     * This is "for power levels" since it takes Shedinja's purposefully nerfed HP into account. It thus mirrors
+     * {@link #getBSTForPowerLevels()}.
+     */
     public void setBSTForPowerLevels(int bst) {
         // TODO: implement
     }
 
-    public void setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
+    /**
+     * Modifies the stats by setting the ratios of each stat. The BST is guaranteed to be untouched.<br>
+     * Ensures every stat is at least 1.
+     * <br><br>
+     * Returns false if any of the stats would be above 255, or above 1.
+     */
+    public boolean setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
         // TODO: implement
+        return false;
     }
 
     /**

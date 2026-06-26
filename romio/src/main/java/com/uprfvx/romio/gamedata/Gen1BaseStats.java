@@ -43,12 +43,17 @@ public class Gen1BaseStats extends BaseStats {
     }
 
     @Override
-    public void setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
+    public boolean setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
         throw new UnsupportedOperationException("Use the Gen1BaseStats-specific setStatRatios instead.");
     }
 
-    public void setStatRatios(double hp, double attack, double defense, double speed, double special) {
+    /**
+     * A Gen 1 version of {@link #setStatRatios(double, double, double, double, double, double)},
+     * with the combined special stat.
+     */
+    public boolean setStatRatios(double hp, double attack, double defense, double speed, double special) {
         // TODO: implement
+        return false;
     }
 
     @Override

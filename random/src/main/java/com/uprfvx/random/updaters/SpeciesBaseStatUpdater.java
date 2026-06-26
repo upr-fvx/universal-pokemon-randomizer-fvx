@@ -169,6 +169,11 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
         // Zamazenta (crowned shield) Atk -> 120, Def -> 140, SpDef -> 140
     }
 
+    // The below doesn't support Shedinja's stats being updated
+    // This is because it doesn't have to! So supporting Shedinja
+    // would make the code more complicated for naught.
+    // -- voliol 2026-06-26
+
     private void updateHP(List<Species> pokes, int species, int value) {
         Species spec = pokes.get(species);
         BaseStats bs = spec.getBaseStats();
@@ -176,7 +181,7 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
 
         BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
                 new Gen1BaseStats(value, bs.getAttack(), bs.getDefense(), bs.getSpeed(), gen1BS.getSpecial()) :
-                new BaseStats(value, bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed(), bs.isShedinja());
+                new BaseStats(value, bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed());
         spec.setBaseStats(updated);
 
         addUpdate(spec, before, value, BSUpdateType.HP);
@@ -189,7 +194,7 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
 
         BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
                 new Gen1BaseStats(bs.getHp(), value, bs.getDefense(), bs.getSpeed(), gen1BS.getSpecial()) :
-                new BaseStats(bs.getHp(), value, bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed(), bs.isShedinja());
+                new BaseStats(bs.getHp(), value, bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed());
         spec.setBaseStats(updated);
 
         addUpdate(spec, before, value, BSUpdateType.ATK);
@@ -202,7 +207,7 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
 
         BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
                 new Gen1BaseStats(bs.getHp(), bs.getAttack(), value, bs.getSpeed(), gen1BS.getSpecial()) :
-                new BaseStats(bs.getHp(), bs.getAttack(), value, bs.getSpatk(), bs.getSpdef(), bs.getSpeed(), bs.isShedinja());
+                new BaseStats(bs.getHp(), bs.getAttack(), value, bs.getSpatk(), bs.getSpdef(), bs.getSpeed());
         spec.setBaseStats(updated);
 
         addUpdate(spec, before, value, BSUpdateType.DEF);
@@ -216,7 +221,7 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
             int before = bs.getSpatk();
 
             spec.setBaseStats(new BaseStats(
-                    bs.getHp(), bs.getAttack(), bs.getDefense(), value, bs.getSpdef(), bs.getSpeed(), bs.isShedinja()
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), value, bs.getSpdef(), bs.getSpeed()
             ));
 
             addUpdate(spec, before, value, BSUpdateType.SPATK);
@@ -231,7 +236,7 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
             int before = bs.getSpdef();
 
             spec.setBaseStats(new BaseStats(
-                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), value, bs.getSpeed(), bs.isShedinja()
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), value, bs.getSpeed()
             ));
 
             addUpdate(spec, before, value, BSUpdateType.SPDEF);
@@ -245,7 +250,7 @@ public class SpeciesBaseStatUpdater extends Updater<Species, BSUpdateType, Integ
 
         BaseStats updated = bs instanceof Gen1BaseStats gen1BS ?
                 new Gen1BaseStats(bs.getHp(), bs.getAttack(), bs.getDefense(), value, gen1BS.getSpecial()) :
-                new BaseStats(bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), value, bs.isShedinja());
+                new BaseStats(bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), value);
         spec.setBaseStats(updated);
 
         addUpdate(spec, before, value, BSUpdateType.SPEED);

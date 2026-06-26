@@ -382,15 +382,24 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, byte[] stats, Map<Integer,FormeInfo> altFormes) {
-        pkmn.setBaseStats(new BaseStats(
+        if (pkmn.getNumber() == SpeciesIDs.shedinja) {
+            pkmn.setBaseStats(new ShedinjaBaseStats(
+                stats[Gen5Constants.bsAttackOffset] & 0xFF,
+                stats[Gen5Constants.bsDefenseOffset] & 0xFF,
+                stats[Gen5Constants.bsSpAtkOffset] & 0xFF,
+                stats[Gen5Constants.bsSpDefOffset] & 0xFF,
+                stats[Gen5Constants.bsSpeedOffset] & 0xFF
+            ));
+        } else {
+            pkmn.setBaseStats(new BaseStats(
                 stats[Gen5Constants.bsHPOffset] & 0xFF,
                 stats[Gen5Constants.bsAttackOffset] & 0xFF,
                 stats[Gen5Constants.bsDefenseOffset] & 0xFF,
                 stats[Gen5Constants.bsSpAtkOffset] & 0xFF,
                 stats[Gen5Constants.bsSpDefOffset] & 0xFF,
-                stats[Gen5Constants.bsSpeedOffset] & 0xFF,
-                pkmn.getNumber() == SpeciesIDs.shedinja
-        ));
+                stats[Gen5Constants.bsSpeedOffset] & 0xFF
+            ));
+        }
         // Type
         pkmn.setPrimaryType(Gen5Constants.typeTable[stats[Gen5Constants.bsPrimaryTypeOffset] & 0xFF]);
         pkmn.setSecondaryType(Gen5Constants.typeTable[stats[Gen5Constants.bsSecondaryTypeOffset] & 0xFF]);

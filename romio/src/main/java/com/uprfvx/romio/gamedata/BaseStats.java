@@ -12,9 +12,7 @@ public class BaseStats {
     private final int spdef;
     private final int speed;
 
-    private final boolean isShedinja;
-
-    public BaseStats(int hp, int attack, int defense, int spatk, int spdef, int speed, boolean isShedinja) {
+    public BaseStats(int hp, int attack, int defense, int spatk, int spdef, int speed) {
         rangeCheck(hp, "hp");
         rangeCheck(attack, "attack");
         rangeCheck(defense, "defense");
@@ -27,7 +25,6 @@ public class BaseStats {
         this.spatk = spatk;
         this.spdef = spdef;
         this.speed = speed;
-        this.isShedinja = isShedinja;
     }
 
     protected void rangeCheck(int val, String name) {
@@ -37,7 +34,6 @@ public class BaseStats {
     }
 
     public BaseStats(BaseStats original) {
-        this.isShedinja = original.isShedinja;
         this.hp = original.hp;
         this.attack = original.attack;
         this.defense = original.defense;
@@ -70,35 +66,17 @@ public class BaseStats {
         return speed;
     }
 
-    public boolean isShedinja() {
-        return isShedinja;
-    }
-
     /**
-     * Gets the raw Base Stat Total. In most cases, {@link #getBSTForPowerLevels()}
-     * should be used instead.
+     * Gets the Base Stat Total.
      */
     public int getBST() {
         return hp + attack + defense + spatk + spdef + speed;
     }
 
     /**
-     * Gets the Base Stat Total, taking Shedinja's purposefully nerfed HP into account.
+     * Modifies the stats by setting the BST. The ratios of each stat will be the same, as far as possible.
      */
-    public int getBSTForPowerLevels() {
-        if (isShedinja) {
-            return (attack + defense + spatk + spdef + speed) * 6 / 5;
-        } else {
-            return getBST();
-        }
-    }
-
-    /**
-     * Modifies the stats by setting the BST. The ratios of each stat will be the same, as far as possible.<br>
-     * This is "for power levels" since it takes Shedinja's purposefully nerfed HP into account. It thus mirrors
-     * {@link #getBSTForPowerLevels()}.
-     */
-    public void setBSTForPowerLevels(int bst) {
+    public void setBST(int bst) {
         // TODO: implement
     }
 

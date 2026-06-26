@@ -8,7 +8,7 @@ public class Gen1BaseStats extends BaseStats {
     private final int special;
 
     public Gen1BaseStats(int hp, int attack, int defense, int speed, int special) {
-        super(hp, attack, defense, 0, 0, speed, false);
+        super(hp, attack, defense, 0, 0, speed);
         rangeCheck(special, "special");
         this.special = special;
     }
@@ -38,7 +38,7 @@ public class Gen1BaseStats extends BaseStats {
     }
 
     @Override
-    public void setBSTForPowerLevels(int bst) {
+    public void setBST(int bst) {
         // TODO: implement
     }
 

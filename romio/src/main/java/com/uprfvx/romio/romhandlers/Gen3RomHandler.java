@@ -536,8 +536,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                         readWord(offset + 4) & 0xFF,
                         readWord(offset + 8) & 0xFF,
                         readWord(offset + 10) & 0xFF,
-                        readWord(offset + 6) & 0xFF,
-                        false
+                        readWord(offset + 6) & 0xFF
                 ));
             }
         }
@@ -1042,15 +1041,24 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, int offset) {
-        pkmn.setBaseStats(new BaseStats(
-                rom[offset + Gen3Constants.bsHPOffset] & 0xFF,
-                rom[offset + Gen3Constants.bsAttackOffset] & 0xFF,
-                rom[offset + Gen3Constants.bsDefenseOffset] & 0xFF,
-                rom[offset + Gen3Constants.bsSpAtkOffset] & 0xFF,
-                rom[offset + Gen3Constants.bsSpDefOffset] & 0xFF,
-                rom[offset + Gen3Constants.bsSpeedOffset] & 0xFF,
-                pkmn.getNumber() == SpeciesIDs.shedinja
-        ));
+        if (pkmn.getNumber() == SpeciesIDs.shedinja) {
+            pkmn.setBaseStats(new ShedinjaBaseStats(
+                    rom[offset + Gen3Constants.bsAttackOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsDefenseOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsSpAtkOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsSpDefOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsSpeedOffset] & 0xFF
+            ));
+        } else {
+            pkmn.setBaseStats(new BaseStats(
+                    rom[offset + Gen3Constants.bsHPOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsAttackOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsDefenseOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsSpAtkOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsSpDefOffset] & 0xFF,
+                    rom[offset + Gen3Constants.bsSpeedOffset] & 0xFF
+            ));
+        }
         // Type
         pkmn.setPrimaryType(Gen3Constants.typeTable[rom[offset + Gen3Constants.bsPrimaryTypeOffset] & 0xFF]);
         pkmn.setSecondaryType(Gen3Constants.typeTable[rom[offset + Gen3Constants.bsSecondaryTypeOffset] & 0xFF]);

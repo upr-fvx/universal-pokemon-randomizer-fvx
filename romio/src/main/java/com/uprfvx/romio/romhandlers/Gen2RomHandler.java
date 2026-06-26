@@ -600,8 +600,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
                 rom[offset + Gen2Constants.bsDefenseOffset] & 0xFF,
                 rom[offset + Gen2Constants.bsSpAtkOffset] & 0xFF,
                 rom[offset + Gen2Constants.bsSpDefOffset] & 0xFF,
-                rom[offset + Gen2Constants.bsSpeedOffset] & 0xFF,
-                false
+                rom[offset + Gen2Constants.bsSpeedOffset] & 0xFF
         ));
         // Type
         pkmn.setPrimaryType(Gen2Constants.typeTable[rom[offset + Gen2Constants.bsPrimaryTypeOffset] & 0xFF]);

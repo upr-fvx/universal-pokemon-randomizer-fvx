@@ -405,7 +405,7 @@ public class SpeciesTest {
     public void transferAttributesToCopy_WithNormalBaseStats_TransfersBaseStats() {
         use(a, aCopy);
         a.setBaseStats(new BaseStats(
-                1, 2, 3, 4, 5, 6, true
+                1, 2, 3, 4, 5, 6
         ));
 
         transferAttributesToCopies();
@@ -416,7 +416,6 @@ public class SpeciesTest {
         assertEquals(4, aCopy.getBaseStats().getSpatk());
         assertEquals(5, aCopy.getBaseStats().getSpdef());
         assertEquals(6, aCopy.getBaseStats().getSpeed());
-        assertTrue(aCopy.getBaseStats().isShedinja());
     }
 
     @Test

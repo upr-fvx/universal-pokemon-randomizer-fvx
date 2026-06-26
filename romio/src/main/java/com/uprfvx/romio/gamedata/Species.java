@@ -959,13 +959,10 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Short for {@link #getBaseStats()}.{@link BaseStats#getBSTForPowerLevels() getBSTForPowerLevels()}.<br>
-     * <b>NOT</b> short for the similarly named {@link #getBaseStats()}.{@link BaseStats#getBST() getBST()}.
-     * The former is used in a lot of places, so the name being short takes priority, even though the naming
-     * convention might be a little confusing.
+     * Short for {@link #getBaseStats()}.{@link BaseStats#getBST() getBST()}.
      */
     public int getBST() {
-        return getBaseStats().getBSTForPowerLevels();
+        return getBaseStats().getBST();
     }
 
     public int getAbility1() {
@@ -1215,10 +1212,10 @@ public class Species implements Comparable<Species> {
         copy.hasSetSecondaryType = original.hasSetSecondaryType;
 
         //base stats
-        // TODO: write copy tests
         copy.baseStats = switch (original.baseStats) {
             case null -> null;
             case Gen1BaseStats origGen1BaseStats -> new Gen1BaseStats(origGen1BaseStats);
+            case ShedinjaBaseStats origShedinjaBaseStats -> new ShedinjaBaseStats(origShedinjaBaseStats);
             default -> new BaseStats(original.baseStats);
         };
 

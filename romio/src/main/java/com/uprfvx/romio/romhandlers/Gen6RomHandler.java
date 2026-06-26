@@ -280,15 +280,24 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void loadBasicPokeStats(Species pkmn, byte[] stats, Map<Integer,FormeInfo> altFormes) {
-        pkmn.setBaseStats(new BaseStats(
-                stats[Gen6Constants.bsHPOffset] & 0xFF,
-                stats[Gen6Constants.bsAttackOffset] & 0xFF,
-                stats[Gen6Constants.bsDefenseOffset] & 0xFF,
-                stats[Gen6Constants.bsSpAtkOffset] & 0xFF,
-                stats[Gen6Constants.bsSpDefOffset] & 0xFF,
-                stats[Gen6Constants.bsSpeedOffset] & 0xFF,
-                pkmn.getNumber() == SpeciesIDs.shedinja
-        ));
+        if (pkmn.getNumber() == SpeciesIDs.shedinja) {
+            pkmn.setBaseStats(new ShedinjaBaseStats(
+                    stats[Gen6Constants.bsAttackOffset] & 0xFF,
+                    stats[Gen6Constants.bsDefenseOffset] & 0xFF,
+                    stats[Gen6Constants.bsSpAtkOffset] & 0xFF,
+                    stats[Gen6Constants.bsSpDefOffset] & 0xFF,
+                    stats[Gen6Constants.bsSpeedOffset] & 0xFF
+            ));
+        } else {
+            pkmn.setBaseStats(new BaseStats(
+                    stats[Gen6Constants.bsHPOffset] & 0xFF,
+                    stats[Gen6Constants.bsAttackOffset] & 0xFF,
+                    stats[Gen6Constants.bsDefenseOffset] & 0xFF,
+                    stats[Gen6Constants.bsSpAtkOffset] & 0xFF,
+                    stats[Gen6Constants.bsSpDefOffset] & 0xFF,
+                    stats[Gen6Constants.bsSpeedOffset] & 0xFF
+            ));
+        }
         // Type
         pkmn.setPrimaryType(Gen6Constants.typeTable[stats[Gen6Constants.bsPrimaryTypeOffset] & 0xFF]);
         pkmn.setSecondaryType(Gen6Constants.typeTable[stats[Gen6Constants.bsSecondaryTypeOffset] & 0xFF]);

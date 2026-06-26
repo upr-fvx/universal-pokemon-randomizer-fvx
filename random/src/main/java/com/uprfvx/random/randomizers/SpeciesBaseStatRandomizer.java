@@ -48,7 +48,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             BasicSpeciesAction<Species> bpAction = (bp -> {
                 Species donator = donators.get(bp);
                 // TODO: for this to work, we need some way to access a Species' original BST (for power levels)
-                bp.getBaseStats().setBSTForPowerLevels(donator.getBaseStats().getBSTForPowerLevels());
+                bp.getBaseStats().setBST(donator.getBaseStats().getBST());
             });
             EvolvedSpeciesAction<Species> epAction = ((evFrom, evTo, _) -> {
                 Species fromDonator = donators.get(evFrom);
@@ -59,7 +59,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 // Poliwrath/Politoed (only 10 BST diff, could be ignored and no one will notice)
                 Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
                 donators.put(evTo, toDonator);
-                evTo.getBaseStats().setBSTForPowerLevels(toDonator.getBaseStats().getBSTForPowerLevels());
+                evTo.getBaseStats().setBST(toDonator.getBaseStats().getBST());
             });
             cueh.apply(evolutionSanity, true, bpAction, epAction);
         }
@@ -182,28 +182,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     protected void randomizeStatsWithinBST(Species pk) {
         // Shedinja is horribly broken unless we restrict it to 1HP.
-        boolean shedinja = pk.getBaseStats().isShedinja();
-
-        int minHP = shedinja ? SHEDINJA_HP : MIN_HP;
-        int bst = pk.getBaseStats().getBST() - (minHP + MIN_NON_HP_STAT * 5);
+        //boolean shedinja = pk.getBaseStats().isShedinja();
+        BaseStats bs = pk.getBaseStats();
 
         for (int i = 0; i < MAX_TRIES_PER_SPECIES; i++) {
-            // Make weightings
-            double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-            double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
-
-            double totW = hpW + atkW + defW + spaW + spdW + speW;
-            if (shedinja) totW -= hpW;
-
-            double hp = shedinja ? SHEDINJA_HP : hpW / totW * bst + MIN_HP;
-            double atk = atkW / totW * bst + MIN_NON_HP_STAT;
-            double def = defW / totW * bst + MIN_NON_HP_STAT;
-            double spa = spaW / totW * bst + MIN_NON_HP_STAT;
-            double spd = spdW / totW * bst + MIN_NON_HP_STAT;
-            double spe = speW / totW * bst + MIN_NON_HP_STAT;
-
-            if (pk.getBaseStats().setStatRatios(hp, atk, def, spa, spd, spe)) {
-                return;
+            if (bs instanceof ShedinjaBaseStats shedBS) {
+                if (randomizeStatsWithinBSTShedinja(shedBS)) return;
+            } else {
+                if (randomizeStatsWithinBSTNormal(bs)) return;
             }
         }
 
@@ -211,40 +197,110 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 + MAX_TRIES_PER_SPECIES + " tries.");
     }
 
+    private boolean randomizeStatsWithinBSTShedinja(ShedinjaBaseStats bs) {
+        int bst = bs.getBST() - (MIN_NON_HP_STAT * 5);
+
+        // Make weightings
+        double atkW = random.nextDouble(), defW = random.nextDouble();
+        double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
+
+        double totW = atkW + defW + spaW + spdW + speW;
+
+        double atk = atkW / totW * bst + MIN_NON_HP_STAT;
+        double def = defW / totW * bst + MIN_NON_HP_STAT;
+        double spa = spaW / totW * bst + MIN_NON_HP_STAT;
+        double spd = spdW / totW * bst + MIN_NON_HP_STAT;
+        double spe = speW / totW * bst + MIN_NON_HP_STAT;
+
+        return bs.setStatRatios(atk, def, spa, spd, spe);
+    }
+
+    private boolean randomizeStatsWithinBSTNormal(BaseStats bs) {
+        int bst = bs.getBST() - (MIN_HP + MIN_NON_HP_STAT * 5);
+
+        // Make weightings
+        double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
+        double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
+
+        double totW = hpW + atkW + defW + spaW + spdW + speW;
+
+        double hp = hpW / totW * bst + MIN_HP;
+        double atk = atkW / totW * bst + MIN_NON_HP_STAT;
+        double def = defW / totW * bst + MIN_NON_HP_STAT;
+        double spa = spaW / totW * bst + MIN_NON_HP_STAT;
+        double spd = spdW / totW * bst + MIN_NON_HP_STAT;
+        double spe = speW / totW * bst + MIN_NON_HP_STAT;
+
+        return bs.setStatRatios(hp, atk, def, spa, spd, spe);
+    }
+
     protected void assignNewStatsForEvolution(Species from, Species to) {
-        // TODO: Needs special shedinja handling
-        double bstDiff = to.getBaseStats().getBST() - from.getBaseStats().getBST();
+        BaseStats fromBS = from.getBaseStats();
+        BaseStats toBS = to.getBaseStats();
 
         for (int i = 0; i < MAX_TRIES_PER_SPECIES; i++) {
-            // Make weightings
-            double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-            double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
-
-            double totW = hpW + atkW + defW + spaW + spdW + speW;
-
-            double hpDiff = Math.round((hpW / totW) * bstDiff);
-            double atkDiff = Math.round((atkW / totW) * bstDiff);
-            double defDiff = Math.round((defW / totW) * bstDiff);
-            double spaDiff = Math.round((spaW / totW) * bstDiff);
-            double spdDiff = Math.round((spdW / totW) * bstDiff);
-            double speDiff = Math.round((speW / totW) * bstDiff);
-
-            BaseStats fromBS = from.getBaseStats();
-
-            double hp = fromBS.getHp() + hpDiff;
-            double atk = fromBS.getAttack() + atkDiff;
-            double def = fromBS.getDefense() + defDiff;
-            double spa = fromBS.getSpatk() + spaDiff;
-            double spd = fromBS.getSpdef() + spdDiff;
-            double spe = fromBS.getSpeed() + speDiff;
-
-            if (to.getBaseStats().setStatRatios(hp, atk, def, spa, spd, spe)) {
-                return;
+            if (toBS instanceof ShedinjaBaseStats shedBS) {
+                if (assignNewStatsForEvolutionShedinja(fromBS, shedBS)) return;
+            } else {
+                if (assignNewStatsForEvolutionNormal(fromBS, toBS)) return;
             }
         }
 
         throw new RandomizationException("Could not randomize the stats of " + from.getFullName() + " in "
                 + MAX_TRIES_PER_SPECIES + " tries.");
+    }
+
+    private boolean assignNewStatsForEvolutionShedinja(BaseStats fromBS, ShedinjaBaseStats toBS) {
+        // This is conceptually so muddy, what does this mean, really?
+        // And what if a mon evolves *from* Shedinja?
+        // TODO: think about it more
+        double bstDiff = toBS.getBST() - fromBS.getBST();
+
+        // Make weightings
+        double atkW = random.nextDouble(), defW = random.nextDouble();
+        double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
+
+        double totW = atkW + defW + spaW + spdW + speW;
+
+        double atkDiff = Math.round((atkW / totW) * bstDiff);
+        double defDiff = Math.round((defW / totW) * bstDiff);
+        double spaDiff = Math.round((spaW / totW) * bstDiff);
+        double spdDiff = Math.round((spdW / totW) * bstDiff);
+        double speDiff = Math.round((speW / totW) * bstDiff);
+
+        double atk = fromBS.getAttack() + atkDiff;
+        double def = fromBS.getDefense() + defDiff;
+        double spa = fromBS.getSpatk() + spaDiff;
+        double spd = fromBS.getSpdef() + spdDiff;
+        double spe = fromBS.getSpeed() + speDiff;
+
+        return toBS.setStatRatios(atk, def, spa, spd, spe);
+    }
+
+    private boolean assignNewStatsForEvolutionNormal(BaseStats fromBS, BaseStats toBS) {
+        double bstDiff = toBS.getBST() - fromBS.getBST();
+
+        // Make weightings
+        double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
+        double spaW = random.nextDouble(), spdW = random.nextDouble(), speW = random.nextDouble();
+
+        double totW = hpW + atkW + defW + spaW + spdW + speW;
+
+        double hpDiff = Math.round((hpW / totW) * bstDiff);
+        double atkDiff = Math.round((atkW / totW) * bstDiff);
+        double defDiff = Math.round((defW / totW) * bstDiff);
+        double spaDiff = Math.round((spaW / totW) * bstDiff);
+        double spdDiff = Math.round((spdW / totW) * bstDiff);
+        double speDiff = Math.round((speW / totW) * bstDiff);
+
+        double hp = fromBS.getHp() + hpDiff;
+        double atk = fromBS.getAttack() + atkDiff;
+        double def = fromBS.getDefense() + defDiff;
+        double spa = fromBS.getSpatk() + spaDiff;
+        double spd = fromBS.getSpdef() + spdDiff;
+        double spe = fromBS.getSpeed() + speDiff;
+
+        return toBS.setStatRatios(hp, atk, def, spa, spd, spe);
     }
 
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {

@@ -9,21 +9,21 @@ public class BaseStats {
     
     private static final int STAT_MAX = 255;
 
-    private int bst;
+    protected int bst;
 
-    private double hpRatio;
-    private double attackRatio;
-    private double defenseRatio;
-    private double spatkRatio;
-    private double spdefRatio;
-    private double speedRatio;
+    protected double hpRatio;
+    protected double attackRatio;
+    protected double defenseRatio;
+    protected double spatkRatio;
+    protected double spdefRatio;
+    protected double speedRatio;
 
-    private int hp;
-    private int attack;
-    private int defense;
-    private int spatk;
-    private int spdef;
-    private int speed;
+    protected int hp;
+    protected int attack;
+    protected int defense;
+    protected int spatk;
+    protected int spdef;
+    protected int speed;
 
     public BaseStats(int hp, int attack, int defense, int spatk, int spdef, int speed) {
         rangeCheck(hp, "hp");
@@ -160,14 +160,14 @@ public class BaseStats {
      * <br><br>
      * Stats can be calculated to be 0, but not negative.
      */
-    private void calculateStats() {
+    protected void calculateStats() {
         double[] raw = calculateRawStats();
         int[] stats = calculateIntStatsWithinBounds(raw);
         alignStatsWithBST(stats, raw);
         assignCalculatedStats(stats);
     }
 
-    private double[] calculateRawStats() {
+    protected double[] calculateRawStats() {
         double total = hpRatio + attackRatio + defenseRatio + spatkRatio + spdefRatio + speedRatio;
         return new double[]{
                 bst * (hpRatio / total),
@@ -180,8 +180,8 @@ public class BaseStats {
     }
 
     private int[] calculateIntStatsWithinBounds(double[] raw) {
-        int[] stats = new int[6];
-        for (int i = 0; i < 6; i++) {
+        int[] stats = new int[raw.length];
+        for (int i = 0; i < raw.length; i++) {
             stats[i] = Math.clamp((int) Math.floor(raw[i]), 0, STAT_MAX);
         }
         return stats;
@@ -209,7 +209,7 @@ public class BaseStats {
         // adds to stat with highest fraction
         int best = -1;
         double bestFrac = -1;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < stats.length; i++) {
             if (stats[i] < STAT_MAX) {
                 double frac = raw[i] - Math.floor(raw[i]);
                 if (frac > bestFrac) {
@@ -228,7 +228,7 @@ public class BaseStats {
         // subtracts from stat with highest value
         int best = -1;
         int bestVal = -1;
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < stats.length; i++) {
             if (stats[i] > bestVal) {
                 bestVal = stats[i];
                 best = i;

@@ -9,6 +9,8 @@ public class ShedinjaBaseStats extends BaseStats {
 
     public ShedinjaBaseStats(int attack, int defense, int spatk, int spdef, int speed) {
         super(0, attack, defense, spatk, spdef, speed);
+        this.bst = attack + defense + spatk + spdef + speed;
+        calculateStats();
     }
 
     public ShedinjaBaseStats(ShedinjaBaseStats original) {
@@ -33,7 +35,8 @@ public class ShedinjaBaseStats extends BaseStats {
 
     @Override
     public void setBST(int bst) {
-        // TODO: implement
+        this.bst = bst * 5 / 6;
+        calculateStats();
     }
 
     @Override
@@ -42,7 +45,38 @@ public class ShedinjaBaseStats extends BaseStats {
     }
 
     public void setStatRatios(double attack, double defense, double spatk, double spdef, double speed) {
-        // TODO: implement
+        positiveCheck(attack, "attack");
+        positiveCheck(defense, "defense");
+        positiveCheck(spatk, "spatk");
+        positiveCheck(spdef, "spdef");
+        positiveCheck(speed, "speed");
+        this.attackRatio = attack;
+        this.defenseRatio = defense;
+        this.spatkRatio = spatk;
+        this.spdefRatio = spdef;
+        this.speedRatio = speed;
+        calculateStats();
+    }
+
+    @Override
+    protected double[] calculateRawStats() {
+        double total = attackRatio + defenseRatio + spatkRatio + spdefRatio + speedRatio;
+        return new double[]{
+                bst * (attackRatio / total),
+                bst * (defenseRatio / total),
+                bst * (spatkRatio / total),
+                bst * (spdefRatio / total),
+                bst * (speedRatio / total)
+        };
+    }
+
+    @Override
+    protected void assignCalculatedStats(int[] stats) {
+        attack = stats[0];
+        defense = stats[1];
+        spatk = stats[2];
+        spdef = stats[3];
+        speed = stats[4];
     }
 
     @Override

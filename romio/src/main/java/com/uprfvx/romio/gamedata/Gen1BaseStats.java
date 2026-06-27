@@ -5,16 +5,23 @@ package com.uprfvx.romio.gamedata;
  */
 public class Gen1BaseStats extends BaseStats {
 
-    private final int special;
+    protected double specialRatio;
+
+    private int special;
 
     public Gen1BaseStats(int hp, int attack, int defense, int speed, int special) {
         super(hp, attack, defense, 0, 0, speed);
+
         rangeCheck(special, "special");
-        this.special = special;
+        this.bst = hp + attack + defense + speed + special;
+        this.specialRatio = special;
+
+        calculateStats();
     }
 
     public Gen1BaseStats(Gen1BaseStats original) {
         super(original);
+        this.specialRatio = original.specialRatio;
         this.special = original.special;
     }
 
@@ -52,12 +59,43 @@ public class Gen1BaseStats extends BaseStats {
      * with the combined special stat.
      */
     public void setStatRatios(double hp, double attack, double defense, double speed, double special) {
-        // TODO: implement
+        positiveCheck(hp, "hp");
+        positiveCheck(attack, "attack");
+        positiveCheck(defense, "defense");
+        positiveCheck(speed, "speed");
+        positiveCheck(special, "special");
+        this.hpRatio = hp;
+        this.attackRatio = attack;
+        this.defenseRatio = defense;
+        this.speedRatio = speed;
+        this.specialRatio = special;
+        calculateStats();
     }
 
     @Override
     public double getAttackSpecialAttackRatio() {
         return (double) getAttack() / ((double) getAttack() + (double) getSpecial());
+    }
+
+    @Override
+    protected double[] calculateRawStats() {
+        double total = hpRatio + attackRatio + defenseRatio + speedRatio + specialRatio;
+        return new double[]{
+                bst * (hpRatio / total),
+                bst * (attackRatio / total),
+                bst * (defenseRatio / total),
+                bst * (speedRatio / total),
+                bst * (specialRatio / total)
+        };
+    }
+
+    @Override
+    protected void assignCalculatedStats(int[] stats) {
+        hp = stats[0];
+        attack = stats[1];
+        defense = stats[2];
+        speed = stats[3];
+        special = stats[4];
     }
 
     @Override

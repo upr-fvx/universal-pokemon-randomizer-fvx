@@ -1,7 +1,6 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
-import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
@@ -12,9 +11,6 @@ import java.util.*;
 
 public class SpeciesBaseStatRandomizer extends Randomizer {
 
-    protected static final int MAX_TRIES_PER_SPECIES = 500;
-
-    private static final int SHEDINJA_HP = 1;
     protected static final int MIN_HP = 20;
     protected static final int MIN_NON_HP_STAT = 10;
 
@@ -181,23 +177,16 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     protected void randomizeStatsWithinBST(Species pk) {
-        // Shedinja is horribly broken unless we restrict it to 1HP.
-        //boolean shedinja = pk.getBaseStats().isShedinja();
         BaseStats bs = pk.getBaseStats();
 
-        for (int i = 0; i < MAX_TRIES_PER_SPECIES; i++) {
-            if (bs instanceof ShedinjaBaseStats shedBS) {
-                if (randomizeStatsWithinBSTShedinja(shedBS)) return;
-            } else {
-                if (randomizeStatsWithinBSTNormal(bs)) return;
-            }
+        if (bs instanceof ShedinjaBaseStats shedBS) {
+            randomizeStatsWithinBSTShedinja(shedBS);
+        } else {
+            randomizeStatsWithinBSTNormal(bs);
         }
-
-        throw new RandomizationException("Could not randomize the stats of " + pk.getFullName() + " in "
-                + MAX_TRIES_PER_SPECIES + " tries.");
     }
 
-    private boolean randomizeStatsWithinBSTShedinja(ShedinjaBaseStats bs) {
+    private void randomizeStatsWithinBSTShedinja(ShedinjaBaseStats bs) {
         int bst = bs.getBST() - (MIN_NON_HP_STAT * 5);
 
         // Make weightings
@@ -212,10 +201,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spd = spdW / totW * bst + MIN_NON_HP_STAT;
         double spe = speW / totW * bst + MIN_NON_HP_STAT;
 
-        return bs.setStatRatios(atk, def, spa, spd, spe);
+        bs.setStatRatios(atk, def, spa, spd, spe);
     }
 
-    private boolean randomizeStatsWithinBSTNormal(BaseStats bs) {
+    private void randomizeStatsWithinBSTNormal(BaseStats bs) {
         int bst = bs.getBST() - (MIN_HP + MIN_NON_HP_STAT * 5);
 
         // Make weightings
@@ -231,26 +220,21 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spd = spdW / totW * bst + MIN_NON_HP_STAT;
         double spe = speW / totW * bst + MIN_NON_HP_STAT;
 
-        return bs.setStatRatios(hp, atk, def, spa, spd, spe);
+        bs.setStatRatios(hp, atk, def, spa, spd, spe);
     }
 
     protected void assignNewStatsForEvolution(Species from, Species to) {
         BaseStats fromBS = from.getBaseStats();
         BaseStats toBS = to.getBaseStats();
 
-        for (int i = 0; i < MAX_TRIES_PER_SPECIES; i++) {
-            if (toBS instanceof ShedinjaBaseStats shedBS) {
-                if (assignNewStatsForEvolutionShedinja(fromBS, shedBS)) return;
-            } else {
-                if (assignNewStatsForEvolutionNormal(fromBS, toBS)) return;
-            }
+        if (toBS instanceof ShedinjaBaseStats shedBS) {
+            assignNewStatsForEvolutionShedinja(fromBS, shedBS);
+        } else {
+            assignNewStatsForEvolutionNormal(fromBS, toBS);
         }
-
-        throw new RandomizationException("Could not randomize the stats of " + from.getFullName() + " in "
-                + MAX_TRIES_PER_SPECIES + " tries.");
     }
 
-    private boolean assignNewStatsForEvolutionShedinja(BaseStats fromBS, ShedinjaBaseStats toBS) {
+    private void assignNewStatsForEvolutionShedinja(BaseStats fromBS, ShedinjaBaseStats toBS) {
         // This is conceptually so muddy, what does this mean, really?
         // And what if a mon evolves *from* Shedinja?
         // TODO: think about it more
@@ -274,10 +258,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spd = fromBS.getSpdef() + spdDiff;
         double spe = fromBS.getSpeed() + speDiff;
 
-        return toBS.setStatRatios(atk, def, spa, spd, spe);
+        toBS.setStatRatios(atk, def, spa, spd, spe);
     }
 
-    private boolean assignNewStatsForEvolutionNormal(BaseStats fromBS, BaseStats toBS) {
+    private void assignNewStatsForEvolutionNormal(BaseStats fromBS, BaseStats toBS) {
         double bstDiff = toBS.getBST() - fromBS.getBST();
 
         // Make weightings
@@ -300,7 +284,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spd = fromBS.getSpdef() + spdDiff;
         double spe = fromBS.getSpeed() + speDiff;
 
-        return toBS.setStatRatios(hp, atk, def, spa, spd, spe);
+        toBS.setStatRatios(hp, atk, def, spa, spd, spe);
     }
 
     protected void copyRandomizedStatsUpEvolution(Species from, Species to) {

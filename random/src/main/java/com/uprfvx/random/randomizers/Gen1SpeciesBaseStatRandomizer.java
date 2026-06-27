@@ -1,7 +1,6 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
-import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.Gen1BaseStats;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -50,57 +49,46 @@ public class Gen1SpeciesBaseStatRandomizer extends SpeciesBaseStatRandomizer {
     protected void randomizeStatsWithinBST(Species pk) {
         int bst = pk.getBaseStats().getBST() - (MIN_HP + MIN_NON_HP_STAT * 4);
 
-        for (int i = 0; i < MAX_TRIES_PER_SPECIES; i++) {
-            // Make weightings
-            double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-            double speW = random.nextDouble(), specW = random.nextDouble();
+        // Make weightings
+        double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
+        double speW = random.nextDouble(), specW = random.nextDouble();
 
-            double totW = hpW + atkW + defW + speW + specW;
+        double totW = hpW + atkW + defW + speW + specW;
 
-            double hp = hpW / totW * bst + MIN_HP;
-            double atk = atkW / totW * bst + MIN_NON_HP_STAT;
-            double def = defW / totW * bst + MIN_NON_HP_STAT;
-            double spe = speW / totW * bst + MIN_NON_HP_STAT;
-            double spec = specW / totW * bst + MIN_NON_HP_STAT;
+        double hp = hpW / totW * bst + MIN_HP;
+        double atk = atkW / totW * bst + MIN_NON_HP_STAT;
+        double def = defW / totW * bst + MIN_NON_HP_STAT;
+        double spe = speW / totW * bst + MIN_NON_HP_STAT;
+        double spec = specW / totW * bst + MIN_NON_HP_STAT;
 
-            if (((Gen1BaseStats) pk.getBaseStats()).setStatRatios(hp, atk, def, spe, spec)) {
-                return;
-            }
-        }
-
-        throw new RandomizationException("Could not randomize the stats of " + pk.getFullName() + " in "
-                + MAX_TRIES_PER_SPECIES + " tries.");
+        ((Gen1BaseStats) pk.getBaseStats()).setStatRatios(hp, atk, def, spe, spec);
     }
 
     @Override
     protected void assignNewStatsForEvolution(Species from, Species to) {
         double bstDiff = to.getBaseStats().getBST() - from.getBaseStats().getBST();
 
-        for (int i = 0; i < MAX_TRIES_PER_SPECIES; i++) {
-            // Make weightings
-            double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
-            double speW = random.nextDouble(), specW = random.nextDouble();
+        // Make weightings
+        double hpW = random.nextDouble(), atkW = random.nextDouble(), defW = random.nextDouble();
+        double speW = random.nextDouble(), specW = random.nextDouble();
 
-            double totW = hpW + atkW + defW + speW + specW;
+        double totW = hpW + atkW + defW + speW + specW;
 
-            double hpDiff = Math.round((hpW / totW) * bstDiff);
-            double atkDiff = Math.round((atkW / totW) * bstDiff);
-            double defDiff = Math.round((defW / totW) * bstDiff);
-            double speDiff = Math.round((speW / totW) * bstDiff);
-            double specDiff = Math.round((specW / totW) * bstDiff);
+        double hpDiff = Math.round((hpW / totW) * bstDiff);
+        double atkDiff = Math.round((atkW / totW) * bstDiff);
+        double defDiff = Math.round((defW / totW) * bstDiff);
+        double speDiff = Math.round((speW / totW) * bstDiff);
+        double specDiff = Math.round((specW / totW) * bstDiff);
 
-            Gen1BaseStats fromBS = (Gen1BaseStats) from.getBaseStats();
+        Gen1BaseStats fromBS = (Gen1BaseStats) from.getBaseStats();
 
-            double hp = fromBS.getHp() + hpDiff;
-            double atk = fromBS.getAttack() + atkDiff;
-            double def = fromBS.getDefense() + defDiff;
-            double spe = fromBS.getSpeed() + speDiff;
-            double spec = fromBS.getSpecial() + specDiff;
+        double hp = fromBS.getHp() + hpDiff;
+        double atk = fromBS.getAttack() + atkDiff;
+        double def = fromBS.getDefense() + defDiff;
+        double spe = fromBS.getSpeed() + speDiff;
+        double spec = fromBS.getSpecial() + specDiff;
 
-            if (((Gen1BaseStats) to.getBaseStats()).setStatRatios(hp, atk, def, spe, spec)) {
-                return;
-            }
-        }
+        ((Gen1BaseStats) to.getBaseStats()).setStatRatios(hp, atk, def, spe, spec);
     }
 
     @Override

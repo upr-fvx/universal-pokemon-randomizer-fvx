@@ -37,13 +37,12 @@ public class ShedinjaBaseStats extends BaseStats {
     }
 
     @Override
-    public boolean setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
+    public void setStatRatios(double hp, double attack, double defense, double spatk, double spdef, double speed) {
         throw new UnsupportedOperationException("Use the ShedinjaBaseStats-specific setStatRatios instead.");
     }
 
-    public boolean setStatRatios(double attack, double defense, double spatk, double spdef, double speed) {
+    public void setStatRatios(double attack, double defense, double spatk, double spdef, double speed) {
         // TODO: implement
-        return false;
     }
 
     @Override

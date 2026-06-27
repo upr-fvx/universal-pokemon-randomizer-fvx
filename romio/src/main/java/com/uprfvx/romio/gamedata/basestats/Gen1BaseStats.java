@@ -1,4 +1,6 @@
-package com.uprfvx.romio.gamedata;
+package com.uprfvx.romio.gamedata.basestats;
+
+import com.uprfvx.romio.gamedata.Species;
 
 /**
  * The {@link BaseStats} for a Gen 1 {@link Species}. Accounts for the combined special stat.

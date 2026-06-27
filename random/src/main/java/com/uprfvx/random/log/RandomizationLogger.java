@@ -9,6 +9,8 @@ import com.uprfvx.random.randomizers.*;
 import com.uprfvx.random.updaters.*;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.Gen1BaseStats;
 import com.uprfvx.romio.romhandlers.Gen1RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 

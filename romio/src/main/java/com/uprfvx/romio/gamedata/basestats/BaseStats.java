@@ -1,4 +1,6 @@
-package com.uprfvx.romio.gamedata;
+package com.uprfvx.romio.gamedata.basestats;
+
+import com.uprfvx.romio.gamedata.Species;
 
 import java.util.Arrays;
 

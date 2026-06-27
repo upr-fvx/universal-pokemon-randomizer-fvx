@@ -29,6 +29,8 @@ import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.constants.enctaggers.Gen5EncounterAreaTagger;
 import com.uprfvx.romio.exceptions.RomIOException;
 import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
 import com.uprfvx.romio.graphics.palettes.Palette;
 import com.uprfvx.romio.newnds.NARCArchive;
 import com.uprfvx.romio.romhandlers.romentries.DSStaticPokemon;

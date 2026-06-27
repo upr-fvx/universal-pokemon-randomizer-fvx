@@ -1,7 +1,7 @@
 package com.uprfvx.random.updaters;
 
-import com.uprfvx.romio.gamedata.BaseStats;
-import com.uprfvx.romio.gamedata.Gen1BaseStats;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.Gen1BaseStats;
 import com.uprfvx.romio.gamedata.Species;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;

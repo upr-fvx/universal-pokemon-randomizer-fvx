@@ -28,6 +28,8 @@ import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.constants.enctaggers.Gen3EncounterAreaTagger;
 import com.uprfvx.romio.exceptions.RomIOException;
 import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
 import com.uprfvx.romio.gbspace.FreedSpace;
 import com.uprfvx.romio.graphics.images.GBAImage;
 import com.uprfvx.romio.graphics.packs.*;

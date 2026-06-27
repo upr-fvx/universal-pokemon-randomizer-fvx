@@ -1,4 +1,4 @@
-package com.uprfvx.romio.gamedata;
+package com.uprfvx.romio.gamedata.basestats;
 
 /**
  * A {@link BaseStats} for Shedinja. Unlike all other mons,

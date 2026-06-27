@@ -27,6 +27,8 @@ package com.uprfvx.romio.gamedata;
 
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.MoveIDs;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.Gen1BaseStats;
 
 import java.util.ArrayList;
 import java.util.List;

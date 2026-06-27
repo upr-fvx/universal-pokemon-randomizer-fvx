@@ -31,6 +31,8 @@ import com.uprfvx.romio.ctr.GARCArchive;
 import com.uprfvx.romio.ctr.Mini;
 import com.uprfvx.romio.exceptions.RomIOException;
 import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
 import com.uprfvx.romio.romhandlers.romentries.Gen7RomEntry;
 import com.uprfvx.romio.romhandlers.romentries.ThreeDSLinkedEncounter;
 import filefunctions.IOFunctions;

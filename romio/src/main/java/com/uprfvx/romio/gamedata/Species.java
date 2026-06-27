@@ -25,6 +25,9 @@ package com.uprfvx.romio.gamedata;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.constants.SpeciesIDs;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.Gen1BaseStats;
+import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
 import com.uprfvx.romio.graphics.palettes.Palette;
 import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
 

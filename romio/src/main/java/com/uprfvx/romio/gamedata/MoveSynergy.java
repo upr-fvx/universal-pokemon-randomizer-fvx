@@ -739,20 +739,22 @@ public class MoveSynergy {
             synergisticMoves.add(MoveIDs.powerTrick);
         }
 
-        if ((double)(bs.getAttack() + bs.getSpatk()) / (double)bs.getBST() < 1.0/4) {
-            synergisticMoves.add(MoveIDs.powerSplit);
-        }
-
-        if ((double)(bs.getDefense() + bs.getSpdef()) / (double)bs.getBST() < 1.0/4) {
-            synergisticMoves.add(MoveIDs.guardSplit);
-        }
-
         if ((double) bs.getSpeed() / (double)bs.getBST() < 1.0/8) {
             synergisticMoves.add(MoveIDs.gyroBall);
         }
 
         if ((double) bs.getSpeed() / (double)bs.getBST() >= 1.0/4) {
             synergisticMoves.add(MoveIDs.electroBall);
+        }
+
+        if (!(bs instanceof Gen1BaseStats)) {
+            if ((double) (bs.getAttack() + bs.getSpatk()) / (double) bs.getBST() < 1.0 / 4) {
+                synergisticMoves.add(MoveIDs.powerSplit);
+            }
+
+            if ((double) (bs.getDefense() + bs.getSpdef()) / (double) bs.getBST() < 1.0 / 4) {
+                synergisticMoves.add(MoveIDs.guardSplit);
+            }
         }
 
         return moveList
@@ -774,20 +776,22 @@ public class MoveSynergy {
             antiSynergisticMoves.add(MoveIDs.powerTrick);
         }
 
-        if ((double)(bs.getAttack() + bs.getSpatk()) / (double)bs.getBST() >= 1.0/3) {
-            antiSynergisticMoves.add(MoveIDs.powerSplit);
-        }
-
-        if ((double)(bs.getDefense() + bs.getSpdef()) / (double)bs.getBST() >= 1.0/3) {
-            antiSynergisticMoves.add(MoveIDs.guardSplit);
-        }
-
         if ((double) bs.getSpeed() / (double)bs.getBST() >= 1.0/4) {
             antiSynergisticMoves.add(MoveIDs.gyroBall);
         }
 
         if ((double) bs.getSpeed() / (double)bs.getBST() < 1.0/8) {
             antiSynergisticMoves.add(MoveIDs.electroBall);
+        }
+
+        if (!(bs instanceof Gen1BaseStats)) {
+            if ((double)(bs.getAttack() + bs.getSpatk()) / (double)bs.getBST() >= 1.0/3) {
+                antiSynergisticMoves.add(MoveIDs.powerSplit);
+            }
+
+            if ((double)(bs.getDefense() + bs.getSpdef()) / (double)bs.getBST() >= 1.0/3) {
+                antiSynergisticMoves.add(MoveIDs.guardSplit);
+            }
         }
 
         return moveList

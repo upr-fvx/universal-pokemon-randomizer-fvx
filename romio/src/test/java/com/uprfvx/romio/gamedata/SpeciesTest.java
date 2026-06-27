@@ -437,6 +437,23 @@ public class SpeciesTest {
     }
 
     @Test
+    public void transferAttributesToCopy_WithShedinjaBaseStats_TransfersBaseStats() {
+        use(a, aCopy);
+        a.setBaseStats(new ShedinjaBaseStats(
+                1, 2, 3, 4, 5
+        ));
+
+        transferAttributesToCopies();
+
+        assertEquals(1, aCopy.getBaseStats().getAttack());
+        assertEquals(2, aCopy.getBaseStats().getDefense());
+        assertEquals(3, aCopy.getBaseStats().getSpatk());
+        assertEquals(4, aCopy.getBaseStats().getSpdef());
+        assertEquals(5, aCopy.getBaseStats().getSpeed());
+    }
+
+
+    @Test
     public void transferAttributesToCopy_WithGuaranteedHeldItem_TransfersGuaranteedHeldItem() {
         use(a, aCopy);
         Item guaranteedItem = new Item(1, "Guaranteed");

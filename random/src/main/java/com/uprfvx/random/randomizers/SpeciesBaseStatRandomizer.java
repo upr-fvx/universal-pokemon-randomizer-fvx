@@ -87,6 +87,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         return newShuffleGroups;
     }
 
+    // TODO: when the percentage BST in-/decrease feature is implemented, it needs upper (and lower?) caps
+    //  as to not throw if a mon gets randomized to have BST > 255 * 6. (i.e. if Eternatus gets a *1.5 boost)
 
     Map<Species, List<Integer>> shuffledStatsOrders;
 

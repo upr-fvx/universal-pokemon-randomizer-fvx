@@ -59,15 +59,8 @@ public class ShedinjaBaseStats extends BaseStats {
     }
 
     @Override
-    protected double[] calculateRawStats() {
-        double total = attackRatio + defenseRatio + spatkRatio + spdefRatio + speedRatio;
-        return new double[]{
-                bst * (attackRatio / total),
-                bst * (defenseRatio / total),
-                bst * (spatkRatio / total),
-                bst * (spdefRatio / total),
-                bst * (speedRatio / total)
-        };
+    protected double[] getStatRatios() {
+        return new double[]{attackRatio, defenseRatio, spatkRatio, spdefRatio, speedRatio};
     }
 
     @Override

@@ -80,15 +80,8 @@ public class Gen1BaseStats extends BaseStats {
     }
 
     @Override
-    protected double[] calculateRawStats() {
-        double total = hpRatio + attackRatio + defenseRatio + speedRatio + specialRatio;
-        return new double[]{
-                bst * (hpRatio / total),
-                bst * (attackRatio / total),
-                bst * (defenseRatio / total),
-                bst * (speedRatio / total),
-                bst * (specialRatio / total)
-        };
+    protected double[] getStatRatios() {
+        return new double[]{hpRatio, attackRatio, defenseRatio, speedRatio, specialRatio};
     }
 
     @Override

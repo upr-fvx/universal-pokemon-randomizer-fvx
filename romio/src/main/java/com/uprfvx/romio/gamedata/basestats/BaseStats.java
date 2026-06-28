@@ -9,7 +9,7 @@ import java.util.Arrays;
  */
 public class BaseStats {
     
-    private static final int STAT_MAX = 255;
+    public static final int STAT_MAX = 255;
 
     protected int bst;
 
@@ -135,7 +135,7 @@ public class BaseStats {
     }
 
     protected void positiveCheck(double val, String name) {
-        if (bst < 0) {
+        if (val < 0) {
             throw new IllegalArgumentException(name + " must be positive. Was: " + val);
         }
     }
@@ -152,7 +152,7 @@ public class BaseStats {
      * using the BST and stat ratios held by this object. This does not change the BST nor the stat ratios.
      * <br><br>
      * BST takes priority in this calculation, and is always matched. The integer stats always add
-     * up to the BST. In addition, each stat is capped at 255.
+     * up to the BST. In addition, each stat is capped at 255, and cannot be negative.
      * This has the consequence that stat ratios cannot always be followed.<br>
      * <b>As an example</b>, Blissey has the stats 255/10/10/75/135/55. Its BST is 540.
      * If we were to increase its BST, no further points could be put into its HP.
@@ -160,7 +160,15 @@ public class BaseStats {
      * according to their ratios. Blissey's (new) BST and the stat cap would be respected,
      * but its HP would be <i>relatively</i> lower.
      * <br><br>
-     * Stats can be calculated to be 0, but not negative.
+     * Stat ratios of 0 will always lead to a stat of 0. This, in addition to the stat cap,
+     * means that not all stat ratios+BSTs will be possible. In these cases, an {@link IllegalStateException}
+     * will be thrown. This also happens if BST > 255 * 6.
+     * <br><br>
+     * Most parts of this algorithm is written to be agnostic to exactly which the stats are.<br>
+     * When implementing a subclass, all that needs to be overwritten are the {@link #getStatRatios()}
+     * and {@link #assignCalculatedStats(int[])} methods.
+     * @throws IllegalStateException when all stat ratios are 0, but BST is not.
+     * @throws IllegalStateException when the stats cannot be assigned according to the stat ratios + BST.
      */
     protected void calculateStats() {
         double[] raw = calculateRawStats();
@@ -169,16 +177,25 @@ public class BaseStats {
         assignCalculatedStats(stats);
     }
 
-    protected double[] calculateRawStats() {
-        double total = hpRatio + attackRatio + defenseRatio + spatkRatio + spdefRatio + speedRatio;
-        return new double[]{
-                bst * (hpRatio / total),
-                bst * (attackRatio / total),
-                bst * (defenseRatio / total),
-                bst * (spatkRatio / total),
-                bst * (spdefRatio / total),
-                bst * (speedRatio / total)
-        };
+    /**
+     * Calculates idealized "raw" stats, which follow the stat ratios and bst but <br>
+     * Assumes the stat ratios and bst are non-negative.
+     */
+    private double[] calculateRawStats() {
+        double[] ratios = getStatRatios();
+        double total = Arrays.stream(ratios).sum();
+        if (total == 0) {
+            if (bst != 0) {
+                throw new IllegalStateException("All stat ratios are 0, but BST is not 0.");
+            }
+            // having 0 in all stats is fine if bst also is, but we need to avoid the coming division-by-zero
+            return new double[]{0, 0, 0, 0, 0, 0};
+        }
+        return Arrays.stream(ratios).map(ratio -> bst * (ratio / total)).toArray();
+    }
+
+    protected double[] getStatRatios() {
+        return new double[]{hpRatio, attackRatio, defenseRatio, spatkRatio, spdefRatio, speedRatio};
     }
 
     private int[] calculateIntStatsWithinBounds(double[] raw) {

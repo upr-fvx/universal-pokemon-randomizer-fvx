@@ -8,6 +8,10 @@ import com.uprfvx.random.random.RandomSource;
 import com.uprfvx.random.randomizers.*;
 import com.uprfvx.random.updaters.*;
 import com.uprfvx.romio.MiscTweak;
+import com.uprfvx.romio.constants.Gen3Constants;
+import com.uprfvx.romio.constants.Gen5Constants;
+import com.uprfvx.romio.constants.Gen6Constants;
+import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.Gen1RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -15,6 +19,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import java.io.PrintStream;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RandomizationLogger {
@@ -216,8 +221,10 @@ public class RandomizationLogger {
             printContentsRow("pms");
         if (shouldLogMoveUpdates() || shouldLogMoveData() || shouldLogMovesets())
             log.println();
-        if (shouldLogTrainers())
+        if (shouldLogTrainers()) {
+            printContentsRow("lvlc");
             printContentsRow("tp");
+        }
         if (shouldLogTotemPokemon())
             printContentsRow("totp");
         if (shouldLogTrainers() || shouldLogTotemPokemon())
@@ -366,9 +373,10 @@ public class RandomizationLogger {
             logMoveData(originalMoveNames);
         if (shouldLogMovesets())
             logMovesets();
-
-        if (shouldLogTrainers())
+        if (shouldLogTrainers()) {
+            logTrainersLevelCaps();
             logTrainers(originalTrainerNames);
+        }
         if (shouldLogTotemPokemon())
             logTotemPokemon(originalTotems);
 
@@ -715,9 +723,9 @@ public class RandomizationLogger {
 
     private void logMoveData(List<String> originalMoveNames) {
         printSectionTitle("md");
-    
+
         boolean namesChanged = moveNameRandomizer.isChangesMade();
-    
+
         List<String> head = new ArrayList<>(Arrays.asList(
                 getBS("Log.md.num"), getBS("Log.md.name")
         ));
@@ -736,7 +744,7 @@ public class RandomizationLogger {
         }
         TextTable table = new TextTable(columns);
         table.addRow(head);
-    
+
         for (int i = 0; i < romHandler.getMoves().size(); i++) {
             Move mv = romHandler.getMoves().get(i);
             if (mv == null) continue;
@@ -756,7 +764,7 @@ public class RandomizationLogger {
             }
             table.addRow(row);
         }
-    
+
         log.print(table);
         printSectionSeparator();
     }
@@ -996,6 +1004,39 @@ public class RandomizationLogger {
     private boolean shouldLogTrainers() {
         return trainerPokeRandomizer.isChangesMade() || trainerMovesetRandomizer.isChangesMade()
                 || trainerNameRandomizer.isChangesMade();
+    }
+
+    private void logTrainersLevelCaps() {
+        printSectionTitle("lvlc");
+        int generation = romHandler.generationOfPokemon();
+        int romType = romHandler.getROMType();
+
+        Map<String, Trainer> bossTrainers = romHandler.getTrainers().stream().filter(getBossTrainerFilter(generation, romType))
+                .collect(Collectors.toMap(
+                        Trainer::getFullDisplayName,
+                        t -> t,
+                        (exist, replace) -> {
+                            if (getMaxGymLeaderLevel(exist) <= getMaxGymLeaderLevel(replace)) {
+                                return exist;
+                            } else {
+                                return replace;
+                            }
+                        }
+                ));
+
+        // Sort trainers by level so they appear in the log in the game's original order
+        List<Trainer> orderedBosses = bossTrainers.values().stream()
+                .sorted((l1, l2) -> Integer.compare(getMaxGymLeaderLevel(l1), getMaxGymLeaderLevel(l2)))
+                .toList();
+
+        // Print trainers
+        for (Trainer t : orderedBosses) {
+            int capLevel = getMaxGymLeaderLevel(t);
+            log.print(t.getFullDisplayName());
+            log.print(" - Level Cap: " + capLevel + "\n");
+        }
+
+        printSectionSeparator();
     }
 
     private void logTrainers(List<String> originalTrainerNames) {
@@ -1369,6 +1410,111 @@ public class RandomizationLogger {
         }
         return names;
     }
+
+    private int getMaxGymLeaderLevel(Trainer trainer) {
+        List<TrainerPokemon> trainersPokemon = trainer.getPokemon();
+        int maxLevel = 0;
+
+        for (TrainerPokemon trpkm : trainersPokemon) {
+            if (trpkm.getLevel() > maxLevel) {
+                maxLevel = trpkm.getLevel();
+            }
+        }
+
+        return maxLevel;
+    }
+
+    private Predicate<Trainer> getBossTrainerFilter(int generation, int romType) {
+        String romCode = romHandler.getROMCode();
+        return trainer -> {
+            String tag = trainer.getTag();
+            String name = trainer.getFullDisplayName();
+
+            boolean isDefaultLeader = tag != null && (
+                    (tag.startsWith("GYM") && tag.endsWith("-LEADER")) ||
+                            tag.startsWith("ELITE") ||
+                            tag.startsWith("CHAMPION")
+            );
+
+            int trainerClass = trainer.getTrainerclass();
+            switch (generation) {
+                case 1:
+                    // Include Champion fight against the Rival
+                    return "RIVAL8-0".equals(tag) || isDefaultLeader;
+
+                case 3:
+                    // Include Champion fight against the Rival in FireRed/LeafGreen
+                    if (romType == Gen3Constants.RomType_FRLG) {
+                        return "RIVAL8-0".equals(tag) || isDefaultLeader;
+                    }
+                    return isDefaultLeader;
+
+                case 5:
+                    if (!isDefaultLeader) return false;
+
+                    // In Black/White 1, filter out the duplicate 8th Gym Leader based on rom versions
+                    if (romType == Gen5Constants.Type_BW && romCode != null) {
+                        // If romCode starts with "IRB" (Pokémon Black), exclude Iris
+                        if (romCode.startsWith("IRB") && trainerClass == Gen5Constants.CLASS_IRIS) {
+                            return false;
+                        }
+                        // If romCode starts with "IRA" (Pokémon White), exclude Drayden
+                        if (romCode.startsWith("IRA") && trainerClass == Gen5Constants.CLASS_DRAYDEN) {
+                            return false;
+                        }
+                    }
+
+                    // In BW1 and BW2, exclude the redundant Striaton Gym brothers using their extra tags
+                    if ("GYM9-LEADER".equals(tag) || "GYM10-LEADER".equals(tag) || "GYM11-LEADER".equals(tag)) {
+                        return false;
+                    }
+                    return true;
+
+                case 6:
+                    if (!isDefaultLeader) return false;
+
+                    // Remove Sootopolitan Wallace and Lvl 35 Steven in ORAS
+                    if (romType == Gen6Constants.Type_ORAS && (trainerClass == Gen6Constants.CLASS_WALLACE || trainerClass == Gen6Constants.CLASS_STEVEN)) {
+                        return false;
+                    }
+                    return true;
+
+                case 7:
+
+                    if (tag == null) {
+                        return false;
+                    }
+
+                    // 1. Include ONLY Ilima from the Captains group
+                    if ("THEMED:ILIMA-STRONG".equals(tag)) {
+                        return true;
+                    }
+
+                    // 2. EXCLUSION: Block all other optional captains/rivals (Lana, Kiawe, Mallow, Sophocles, Mina)
+                    // They all use the pattern "THEMED:[NAME]-STRONG" in the game files
+                    if (tag.startsWith("THEMED:") && tag.endsWith("-STRONG")) {
+                        return false;
+                    }
+
+                    // 3. Elite 4 and Kahunas Filter (Kahunas use ELITE[n] tags)
+                    if (isDefaultLeader) {
+                        return true;
+                    }
+
+                    // Include Kukui and Hau as Champions depending on the game variant (SM or USUM)
+                    if (romType == Gen7Constants.Type_SM && "RIVAL2-0".equals(tag)) {
+                        return true;
+                    }
+                    if (romType == Gen7Constants.Type_USUM && "FRIEND11-0".equals(tag)) {
+                        return true;
+                    }
+                    return false;
+
+                default:
+                    return isDefaultLeader;
+            }
+        };
+    }
+
+
 }
-
-

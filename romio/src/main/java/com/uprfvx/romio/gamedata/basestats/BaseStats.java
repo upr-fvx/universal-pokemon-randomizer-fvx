@@ -98,6 +98,13 @@ public class BaseStats {
     }
 
     /**
+     * Doesn't actually return attack/spatk. Returns attack/(attack + spatk).
+     */
+    public double getAttackSpecialAttackRatio() {
+        return (double)attack / ((double)attack + (double)spatk);
+    }
+
+    /**
      * Gets the Base Stat Total.
      */
     public int getBST() {
@@ -140,13 +147,6 @@ public class BaseStats {
         if (val < 0) {
             throw new IllegalArgumentException(name + " must be positive. Was: " + val);
         }
-    }
-
-    /**
-     * Doesn't actually return attack/spatk. Returns attack/(attack + spatk).
-     */
-    public double getAttackSpecialAttackRatio() {
-        return (double)attack / ((double)attack + (double)spatk);
     }
 
     /**

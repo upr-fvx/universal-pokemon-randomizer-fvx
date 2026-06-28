@@ -42,13 +42,13 @@ public class Gen1BaseStats extends BaseStats {
     }
 
     @Override
-    public int getBST() {
-        return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
+    public double getAttackSpecialAttackRatio() {
+        return (double) getAttack() / ((double) getAttack() + (double) getSpecial());
     }
 
     @Override
-    public void setBST(int bst) {
-        // TODO: implement
+    public int getBST() {
+        return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
     }
 
     @Override
@@ -72,11 +72,6 @@ public class Gen1BaseStats extends BaseStats {
         this.speedRatio = speed;
         this.specialRatio = special;
         calculateStats();
-    }
-
-    @Override
-    public double getAttackSpecialAttackRatio() {
-        return (double) getAttack() / ((double) getAttack() + (double) getSpecial());
     }
 
     @Override

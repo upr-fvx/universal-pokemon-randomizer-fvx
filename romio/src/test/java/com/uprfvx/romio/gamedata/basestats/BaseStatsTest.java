@@ -175,9 +175,81 @@ public class BaseStatsTest {
         assertEquals(0, a.getSpeed());
     }
 
-    // needed: a bunch of rounding tests
-    // - test something with a monstrously higher ratio (that gets maxed out) in one stat very low ratios in the rest,
-    //      them still getting raised stats instead of being 0:d out
-    // ...
+    @Test
+    public void calculateStats_FractionalStatRatios_HighestFractionGetsFirst() {
+        BaseStats a = new BaseStats(100, 100, 100, 100, 100, 100);
+        a.setStatRatios(100.1, 100.2, 100.3, 100.4, 100.5, 100.6);
+
+        assertEquals(100, a.getHp());
+        assertEquals(100, a.getAttack());
+        assertEquals(100, a.getDefense());
+        assertEquals(100, a.getSpatk());
+        assertEquals(100, a.getSpdef());
+        assertEquals(100, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // should go to speed
+
+        assertEquals(100, a.getHp());
+        assertEquals(100, a.getAttack());
+        assertEquals(100, a.getDefense());
+        assertEquals(100, a.getSpatk());
+        assertEquals(100, a.getSpdef());
+        assertEquals(101, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // should go to spdef
+
+        assertEquals(100, a.getHp());
+        assertEquals(100, a.getAttack());
+        assertEquals(100, a.getDefense());
+        assertEquals(100, a.getSpatk());
+        assertEquals(101, a.getSpdef());
+        assertEquals(101, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // should go to spatk
+
+        assertEquals(100, a.getHp());
+        assertEquals(100, a.getAttack());
+        assertEquals(100, a.getDefense());
+        assertEquals(101, a.getSpatk());
+        assertEquals(101, a.getSpdef());
+        assertEquals(101, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // should go to defense
+
+        assertEquals(100, a.getHp());
+        assertEquals(100, a.getAttack());
+        assertEquals(101, a.getDefense());
+        assertEquals(101, a.getSpatk());
+        assertEquals(101, a.getSpdef());
+        assertEquals(101, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // should go to attack
+
+        assertEquals(100, a.getHp());
+        assertEquals(101, a.getAttack());
+        assertEquals(101, a.getDefense());
+        assertEquals(101, a.getSpatk());
+        assertEquals(101, a.getSpdef());
+        assertEquals(101, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // should go to hp
+
+        assertEquals(101, a.getHp());
+        assertEquals(101, a.getAttack());
+        assertEquals(101, a.getDefense());
+        assertEquals(101, a.getSpatk());
+        assertEquals(101, a.getSpdef());
+        assertEquals(101, a.getSpeed());
+
+        a.setBST(a.getBST() + 1); // and finally speed gets another go
+
+        assertEquals(101, a.getHp());
+        assertEquals(101, a.getAttack());
+        assertEquals(101, a.getDefense());
+        assertEquals(101, a.getSpatk());
+        assertEquals(101, a.getSpdef());
+        assertEquals(102, a.getSpeed());
+    }
+
 }
 

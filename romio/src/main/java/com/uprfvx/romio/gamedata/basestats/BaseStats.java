@@ -3,6 +3,8 @@ package com.uprfvx.romio.gamedata.basestats;
 import com.uprfvx.romio.gamedata.Species;
 
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 /**
  * The base stats of a {@link Species}. HP, attack, etc...
@@ -173,7 +175,6 @@ public class BaseStats {
     protected void calculateStats() {
         double[] raw = calculateRawStats();
         int[] stats = calculateIntStatsWithinBounds(raw);
-        alignStatsWithBST(stats, raw);
         assignCalculatedStats(stats);
     }
 
@@ -200,60 +201,31 @@ public class BaseStats {
 
     private int[] calculateIntStatsWithinBounds(double[] raw) {
         int[] stats = new int[raw.length];
-        for (int i = 0; i < raw.length; i++) {
-            stats[i] = Math.clamp((int) Math.floor(raw[i]), 0, STAT_MAX);
+
+        PriorityQueue<Integer> statNeedinessQueue = new PriorityQueue<>(raw.length, Comparator.comparingDouble(
+                // + 0.000001 ensures higher raw stats get priority before any points have been handed out.
+                // Without it, it simplifies to -raw[statOff]/raw[statOff] = -1 for all stats,
+                // and the order becomes essentially random (really based on stat order).
+                statOff -> (stats[statOff] - raw[statOff] + 0.000001) / raw[statOff]
+        ));
+        for (int statOff = 0; statOff < raw.length; statOff++) {
+            if (raw[statOff] != 0) { // stats with ratio 0 should not get any points
+                statNeedinessQueue.add(statOff);
+            }
+        }
+        
+        for (int i = 0; i < bst; i++) {
+            Integer statOff = statNeedinessQueue.poll();
+            if (statOff == null) {
+                throw new IllegalStateException("Could not distribute all stat points."
+                        + "distributed=" + Arrays.toString(stats) + " left=" + (bst - i));
+            }
+            stats[statOff]++;
+            if (stats[statOff] < STAT_MAX) {
+                statNeedinessQueue.add(statOff);
+            }
         }
         return stats;
-    }
-
-    private void alignStatsWithBST(int[] stats, double[] raw) {
-        int sum = Arrays.stream(stats).sum();
-        int diff = bst - sum;
-
-        while (diff != 0) {
-            if (diff > 0) {
-                addToStat(stats, raw);
-                diff--;
-            } else {
-                subtractFromStat(stats);
-                diff++;
-            }
-        }
-    }
-
-    // TODO: the add/subtract methods below are likely to change.
-    //  Used genAI to get a sketch (not directly committed), and these are the non-obvious parts.
-
-    private void addToStat(int[] stats, double[] raw) {
-        // adds to stat with highest fraction
-        int best = -1;
-        double bestFrac = -1;
-        for (int i = 0; i < stats.length; i++) {
-            if (stats[i] < STAT_MAX) {
-                double frac = raw[i] - Math.floor(raw[i]);
-                if (frac > bestFrac) {
-                    bestFrac = frac;
-                    best = i;
-                }
-            }
-        }
-        if (best == -1) {
-            throw new IllegalStateException("Cannot increase stats without exceeding " + STAT_MAX);
-        }
-        stats[best]++;
-    }
-
-    private void subtractFromStat(int[] stats) {
-        // subtracts from stat with highest value
-        int best = -1;
-        int bestVal = -1;
-        for (int i = 0; i < stats.length; i++) {
-            if (stats[i] > bestVal) {
-                bestVal = stats[i];
-                best = i;
-            }
-        }
-        stats[best]--;
     }
 
     protected void assignCalculatedStats(int[] stats) {

@@ -277,8 +277,8 @@ public abstract class AbstractRomHandler implements RomHandler {
         List<int[]> levelUpTriplet = new ArrayList<>();
         for (Evolution evo : levelUpEvos) {
             int[] triplet = {
-                    evo.getFrom().getBST(),
-                    evo.getTo().getBST(),
+                    evo.getFrom().getBST(true),
+                    evo.getTo().getBST(true),
                     evo.getExtraInfo()
             };
             levelUpTriplet.add(triplet);
@@ -287,8 +287,8 @@ public abstract class AbstractRomHandler implements RomHandler {
         for (Evolution evo : nonLevelUpEvos) {
             evo.setEstimatedEvoLvl(findEvolutionLevel(
                     levelUpTriplet,
-                    evo.getFrom().getBST(),
-                    evo.getTo().getBST()
+                    evo.getFrom().getBST(true),
+                    evo.getTo().getBST(true)
             ));
         }
 

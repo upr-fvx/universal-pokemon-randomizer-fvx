@@ -172,7 +172,7 @@ public class StaticPokemonRandomizer extends Randomizer {
                 StaticEncounter newStatic = cloneStaticEncounter(old);
                 Species newPK;
                 Species oldPK = old.getSpecies();
-                if (oldPK.getBST() >= 600 && limit600) {
+                if (oldPK.getBST(true) >= 600 && limit600) {
                     if (reallySwapMegaEvos && old.canMegaEvolve()) {
                         newPK = getMegaEvoPokemon(rSpecService.getAll(false), pokemonLeft, newStatic);
                     } else {
@@ -202,8 +202,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                                     .collect(Collectors.toCollection(SpeciesSet::new));
                         }
                         if(limitBST) {
-                            int bstMax = oldPK.getBST();
-                            SpeciesSet lowerStrengthMEs = megaEvoPokemonLeft.filter(p -> p.getBST() <= bstMax);
+                            int bstMax = oldPK.getBST(true);
+                            SpeciesSet lowerStrengthMEs = megaEvoPokemonLeft.filter(p -> p.getBST(false) <= bstMax);
                             if(!lowerStrengthMEs.isEmpty()) {
                                 megaEvoPokemonLeft = lowerStrengthMEs;
                             }
@@ -473,8 +473,8 @@ public class StaticPokemonRandomizer extends Randomizer {
                                                   boolean banSamePokemon, boolean limitBST) {
         SpeciesSet finalPool = pokemonPool;
         if(limitBST) {
-            int maxBST = current.getBST();
-            finalPool = finalPool.filter(p -> p.getBST() <= maxBST);
+            int maxBST = current.getBST(false);
+            finalPool = finalPool.filter(p -> p.getBST(true) <= maxBST);
         }
 
         return finalPool.getRandomSimilarStrengthSpecies(current, banSamePokemon, random);

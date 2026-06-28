@@ -119,6 +119,7 @@ public class Species implements Comparable<Species> {
     private boolean hasSetSecondaryType;
 
     private BaseStats baseStats;
+    private int originalBST = -1;
 
     private int ability1;
     private int ability2;
@@ -959,13 +960,17 @@ public class Species implements Comparable<Species> {
 
     public void setBaseStats(BaseStats baseStats) {
         this.baseStats = baseStats;
+        if (originalBST == -1) {
+            originalBST = baseStats.getBST();
+        }
     }
 
     /**
      * Short for {@link #getBaseStats()}.{@link BaseStats#getBST() getBST()}.
+     * @param useOriginal Whether to use base stat data from before randomization.
      */
-    public int getBST() {
-        return getBaseStats().getBST();
+    public int getBST(boolean useOriginal) {
+        return useOriginal ? originalBST : getBaseStats().getBST();
     }
 
     public int getAbility1() {
@@ -1221,6 +1226,7 @@ public class Species implements Comparable<Species> {
             case ShedinjaBaseStats origShedinjaBaseStats -> new ShedinjaBaseStats(origShedinjaBaseStats);
             default -> new BaseStats(original.baseStats);
         };
+        copy.originalBST = original.originalBST;
 
         //abilities
         copy.ability1 = original.ability1;

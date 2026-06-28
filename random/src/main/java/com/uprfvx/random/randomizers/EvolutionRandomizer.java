@@ -196,7 +196,7 @@ public class EvolutionRandomizer extends Randomizer {
                 filters.add(to -> !isAnOriginalEvo(from, to));
             }
             if (forceGrowth) {
-                filters.add(to -> to.getBST() > from.getBST());
+                filters.add(to -> to.getBST(false) > from.getBST(false));
             }
             if (sameType) {
                 if (from.getNumber() == SpeciesIDs.eevee && !evolveEveryLevel) {

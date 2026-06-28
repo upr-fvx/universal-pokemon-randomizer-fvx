@@ -1,7 +1,10 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
-import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.MegaEvolution;
+import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.basestats.BaseStats;
 import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
@@ -20,8 +23,17 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         super(romHandler, settings, random);
     }
 
+    // TODO: Most features make sense with BST randomization with no need to think about it,
+    //  but what should happen first, evo randomization or BST randomization?
+    //  Since BST randomization follows evos, and vice versa.
+
+    // TODO: After BST randomization, adjust all levelup evo levels. (should this be optional?)
+
     public void shuffleBSTs(boolean evolutionSanity, boolean swapLegendaries) {
         // TODO: deal with mega evos somehow
+
+        // This is ready for testing now
+        // TODO: write tests
 
         List<SpeciesSet> shuffleGroups = new ArrayList<>();
         shuffleGroups.add(romHandler.getSpeciesSet());
@@ -29,6 +41,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         if (evolutionSanity) {
             shuffleGroups = splitByLineLength(shuffleGroups);
         }
+        // TODO: swapLegendaries exists here but not in the GUI; implement in GUI
         if (swapLegendaries) {
             shuffleGroups = splitByLegendaryStatus(shuffleGroups);
         }
@@ -45,19 +58,18 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             CopyUpEvolutionsHelper cueh = new CopyUpEvolutionsHelper(group);
             BasicSpeciesAction bpAction = (bp -> {
                 Species donator = donators.get(bp);
-                // TODO: for this to work, we need some way to access a Species' original BST (for power levels)
-                bp.getBaseStats().setBST(donator.getBaseStats().getBST());
+                bp.getBaseStats().setBST(donator.getBST(true));
             });
             EvolvedSpeciesAction epAction = ((evFrom, evTo, _) -> {
                 Species fromDonator = donators.get(evFrom);
-                // assumes lines are even; Applin could break this
-                // so could split evos where the BST differs
-                // up until Gen 7, the only split evos where the BST differs are:
-                // Ninjask/Ninjada (which could use a special case), and
-                // Poliwrath/Politoed (only 10 BST diff, could be ignored and no one will notice)
+                // Assumes lines are even; Applin could break this.
+                // So could split evos where the BST differs...
+                // though up until Gen 7, the only split evos where the BST differs are:
+                // - Ninjask/Ninjada (which could use a special case), and
+                // - Poliwrath/Politoed (only 10 BST diff, could be ignored and no one will notice)
                 Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
                 donators.put(evTo, toDonator);
-                evTo.getBaseStats().setBST(toDonator.getBaseStats().getBST());
+                evTo.getBaseStats().setBST(toDonator.getBST(true));
             });
             cueh.apply(evolutionSanity, true, bpAction, epAction);
         }
@@ -89,6 +101,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     // TODO: when the percentage BST in-/decrease feature is implemented, it needs upper (and lower?) caps
     //  as to not throw if a mon gets randomized to have BST > 255 * 6. (i.e. if Eternatus gets a *1.5 boost)
+
+    // TODO: write tests for these older randomization options
 
     Map<Species, List<Integer>> shuffledStatsOrders;
 
@@ -306,22 +320,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         ExpCurve expCurve = settings.getSelectedEXPCurve();
 
         SpeciesSet pokes = romHandler.getSpeciesSetInclFormes();
-        switch (mod) {
-            case LEGENDARIES:
-                for (Species pk : pokes) {
-                    pk.setGrowthCurve(pk.isLegendary() ? ExpCurve.SLOW : expCurve);
-                }
-                break;
-            case STRONG_LEGENDARIES:
-                for (Species pk : pokes) {
-                    pk.setGrowthCurve(pk.isStrongLegendary() ? ExpCurve.SLOW : expCurve);
-                }
-                break;
-            case ALL:
-                for (Species pk : pokes) {
-                    pk.setGrowthCurve(expCurve);
-                }
-                break;
+        for (Species pk : pokes) {
+            pk.setGrowthCurve(
+                    switch (mod) {
+                        case LEGENDARIES -> pk.isLegendary() ? ExpCurve.SLOW : expCurve;
+                        case STRONG_LEGENDARIES -> pk.isStrongLegendary() ? ExpCurve.SLOW : expCurve;
+                        case ALL -> expCurve;
+                    }
+            );
         }
     }
 

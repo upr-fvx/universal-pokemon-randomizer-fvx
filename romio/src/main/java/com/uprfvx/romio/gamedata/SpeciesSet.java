@@ -993,7 +993,7 @@ public class SpeciesSet extends HashSet<Species> {
         // start with within 10% and add 5% either direction until the pool is big enough
         int matchBST;
         if(overrideBST < 0) {
-            matchBST = match.getBST();
+            matchBST = match.getBST(true);
         } else {
             matchBST = overrideBST;
         }
@@ -1005,7 +1005,7 @@ public class SpeciesSet extends HashSet<Species> {
             Iterator<Species> itor = availablePool.iterator();
             while (itor.hasNext()) {
                 Species spec = itor.next();
-                if(spec.getBST() >= minTarget && spec.getBST() <= maxTarget) {
+                if(spec.getBST(false) >= minTarget && spec.getBST(false) <= maxTarget) {
                     canPick.add(spec);
                     itor.remove();
                 }

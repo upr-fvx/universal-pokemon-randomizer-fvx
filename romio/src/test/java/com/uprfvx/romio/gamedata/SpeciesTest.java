@@ -419,6 +419,7 @@ public class SpeciesTest {
         assertEquals(4, aCopy.getBaseStats().getSpatk());
         assertEquals(5, aCopy.getBaseStats().getSpdef());
         assertEquals(6, aCopy.getBaseStats().getSpeed());
+        assertEquals(1 + 2 + 3 + 4 + 5 + 6, aCopy.getBST(true)); // the originalBST field
     }
 
     @Test

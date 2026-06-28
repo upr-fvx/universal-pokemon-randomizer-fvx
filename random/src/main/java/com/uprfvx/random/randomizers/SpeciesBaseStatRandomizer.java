@@ -29,6 +29,30 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     // TODO: After BST randomization, adjust all levelup evo levels. (should this be optional?)
 
+    public void randomlyModifyBSTsByPercentage(boolean evolutionSanity, double maxModifier) {
+        Map<Species, Double> modifiersBySpecies = new HashMap<>();
+
+        BasicSpeciesAction basicSpeciesAction = pk -> {
+            double modifier = random.nextDouble(1.0 - maxModifier, 1.0 + maxModifier);
+            modifiersBySpecies.put(pk, modifier);
+            applyBSTModifier(pk, modifier);
+        };
+
+        EvolvedSpeciesAction evolvedSpeciesAction = (evFrom, evTo, _) -> {
+            double modifier = modifiersBySpecies.get(evFrom);
+            modifiersBySpecies.put(evTo, modifier);
+            applyBSTModifier(evTo, modifier);
+        };
+
+        copyUpEvolutionsHelper.apply(evolutionSanity, true, basicSpeciesAction, evolvedSpeciesAction);
+    }
+
+    private void applyBSTModifier(Species pk, double modifier) {
+        int newBST = (int) (pk.getBST(false) * modifier);
+        newBST = Math.min(newBST, pk.getBaseStats().getMaxBST());
+        pk.getBaseStats().setBST(newBST);
+    }
+
     public void shuffleBSTs(boolean evolutionSanity, boolean swapLegendaries) {
         // TODO: deal with mega evos somehow
 
@@ -50,28 +74,31 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             Map<Species, Species> donators = new HashMap<>(group.size());
             List<Species> keys = new ArrayList<>(group);
             List<Species> values = new ArrayList<>(keys);
-            Collections.shuffle(values);
+            Collections.shuffle(values, random);
             for (int i = 0; i < keys.size(); i++) {
                 donators.put(keys.get(i), values.get(i));
             }
 
             CopyUpEvolutionsHelper cueh = new CopyUpEvolutionsHelper(group);
-            BasicSpeciesAction bpAction = (bp -> {
-                Species donator = donators.get(bp);
-                bp.getBaseStats().setBST(donator.getBST(true));
-            });
-            EvolvedSpeciesAction epAction = ((evFrom, evTo, _) -> {
-                Species fromDonator = donators.get(evFrom);
+            
+            BasicSpeciesAction basicSpeciesAction = pk -> {
+                Species donator = donators.get(pk);
+                pk.getBaseStats().setBST(donator.getBST(true));
+            };
+            
+            EvolvedSpeciesAction evolvedSpeciesAction = (evFrom, evTo, _) -> {
                 // Assumes lines are even; Applin could break this.
                 // So could split evos where the BST differs...
                 // though up until Gen 7, the only split evos where the BST differs are:
                 // - Ninjask/Ninjada (which could use a special case), and
                 // - Poliwrath/Politoed (only 10 BST diff, could be ignored and no one will notice)
+                Species fromDonator = donators.get(evFrom);
                 Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
                 donators.put(evTo, toDonator);
                 evTo.getBaseStats().setBST(toDonator.getBST(true));
-            });
-            cueh.apply(evolutionSanity, true, bpAction, epAction);
+            };
+            
+            cueh.apply(evolutionSanity, true, basicSpeciesAction, evolvedSpeciesAction);
         }
 
     }
@@ -98,9 +125,6 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         }
         return newShuffleGroups;
     }
-
-    // TODO: when the percentage BST in-/decrease feature is implemented, it needs upper (and lower?) caps
-    //  as to not throw if a mon gets randomized to have BST > 255 * 6. (i.e. if Eternatus gets a *1.5 boost)
 
     // TODO: write tests for these older randomization options
 
@@ -170,14 +194,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
         boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();
 
-        BasicSpeciesAction bpAction = this::randomizeStatsWithinBST;
-        EvolvedSpeciesAction randomEpAction = (evFrom, evTo, _) ->
+        BasicSpeciesAction bsAction = this::randomizeStatsWithinBST;
+        EvolvedSpeciesAction randomEsAction = (evFrom, evTo, _) ->
                 assignNewStatsForEvolution(evFrom, evTo);
-        EvolvedSpeciesAction copyEpAction = (evFrom, evTo, _) ->
+        EvolvedSpeciesAction copyEsAction = (evFrom, evTo, _) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
-                assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
+        copyUpEvolutionsHelper.apply(evolutionSanity, true, bsAction,
+                assignEvoStatsRandomly ? randomEsAction : copyEsAction, randomEsAction, bsAction);
 
         romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
                 .forEach(pk -> pk.setBaseStats(new BaseStats(pk.getConceptualBaseForme().getBaseStats())));

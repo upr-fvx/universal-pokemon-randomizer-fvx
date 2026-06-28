@@ -47,6 +47,11 @@ public class Gen1BaseStats extends BaseStats {
     }
 
     @Override
+    public int getMaxBST() {
+        return STAT_MAX * 5;
+    }
+
+    @Override
     public int getBST() {
         return getHp() + getAttack() + getDefense() + getSpecial() + getSpeed();
     }

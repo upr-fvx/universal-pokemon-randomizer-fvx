@@ -105,6 +105,13 @@ public class BaseStats {
     }
 
     /**
+     * Gets the maximum BST that can be set for this BaseStats object.
+     */
+    public int getMaxBST() {
+        return STAT_MAX * 6;
+    }
+
+    /**
      * Gets the Base Stat Total.
      */
     public int getBST() {

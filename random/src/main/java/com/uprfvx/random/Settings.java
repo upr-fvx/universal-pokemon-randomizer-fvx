@@ -74,12 +74,19 @@ public class Settings {
     private boolean banPrematureEvos;
     private boolean dualTypeOnly;
 
-    public enum BaseStatisticsMod {
-        UNCHANGED, SHUFFLE, RANDOM,
+    // TODO: reading and writing these settings from/to the setting string
+    public enum BSTMod {
+        UNCHANGED, RANDOM_BUFF_NERF_PERC, SHUFFLE, RANDOM
     }
 
-    public enum ExpCurveMod {
-        LEGENDARIES, STRONG_LEGENDARIES, ALL
+    private BSTMod bstMod = BSTMod.UNCHANGED;
+    private boolean bstFollowEvolutions;
+    private int bstBuffNerfMaxPercentage;
+    private boolean bstShuffleSwapLegendaries;
+
+
+    public enum BaseStatisticsMod {
+        UNCHANGED, SHUFFLE, RANDOM
     }
 
     private BaseStatisticsMod baseStatisticsMod = BaseStatisticsMod.UNCHANGED;
@@ -88,6 +95,11 @@ public class Settings {
     private boolean assignEvoStatsRandomly;
     private boolean updateBaseStats;
     private int updateBaseStatsToGeneration;
+
+    public enum ExpCurveMod {
+        LEGENDARIES, STRONG_LEGENDARIES, ALL
+    }
+
     private boolean standardizeEXPCurves;
     private ExpCurve selectedEXPCurve;
     private ExpCurveMod expCurveMod = ExpCurveMod.LEGENDARIES;
@@ -1406,6 +1418,44 @@ public class Settings {
 
     public void setLimitPokemon(boolean limitPokemon) {
         this.limitPokemon = limitPokemon;
+    }
+
+
+    public BSTMod getBSTMod() {
+        return bstMod;
+    }
+
+    public void setBSTMod(boolean... bools) {
+        setBSTMod(getEnum(BSTMod.class, bools));
+    }
+
+    public void setBSTMod(BSTMod bstMod) {
+        this.bstMod = bstMod;
+    }
+
+    public boolean isBSTFollowEvolutions() {
+        return bstFollowEvolutions;
+    }
+
+    public void setBSTFollowEvolutions(boolean bstFollowEvolutions) {
+        this.bstFollowEvolutions = bstFollowEvolutions;
+    }
+
+    public int getBSTBuffNerfMaxPercentage() {
+        return bstBuffNerfMaxPercentage;
+    }
+
+    public void setBSTBuffNerfMaxPercentage(int bstBuffNerfMaxPercentage) {
+        // TODO: boundary check?
+        this.bstBuffNerfMaxPercentage = bstBuffNerfMaxPercentage;
+    }
+
+    public boolean isBSTShuffleSwapLegendaries() {
+        return bstShuffleSwapLegendaries;
+    }
+
+    public void setBSTShuffleSwapLegendaries(boolean bstShuffleSwapLegendaries) {
+        this.bstShuffleSwapLegendaries = bstShuffleSwapLegendaries;
     }
 
     public BaseStatisticsMod getBaseStatisticsMod() {

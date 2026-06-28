@@ -16,6 +16,10 @@ import java.util.*;
 
 public class SpeciesBaseStatRandomizer extends Randomizer {
 
+    private static final int MEGA_BST_BOOST = 100;
+    private static final int SUNKERN_BST = 180;
+    private static final int ARCEUS_BST = 720;
+
     protected static final int MIN_HP = 20;
     protected static final int MIN_NON_HP_STAT = 10;
 
@@ -29,10 +33,37 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     // TODO: After BST randomization, adjust all levelup evo levels. (should this be optional?)
 
-    // TODO: remember to carry BSTs to cosmetic formes
-    // TODO: megas should have +100 BST
+    public void randomizeBSTs() {
+        switch (settings.getBSTMod()) {
+            case RANDOM_BUFF_NERF_PERC -> randomlyModifyBSTsByPercentage();
+            case SHUFFLE -> shuffleBSTs();
+            case RANDOM -> fullyRandomizeBSTs();
+        }
 
-    public void randomlyModifyBSTsByPercentage(boolean evolutionSanity, double maxModifier) {
+        copyBSTsToCosmeticFormes();
+        updateMegaEvolutionBSTs(); // TODO: we always do this because that's how megas work, so remove GUI option
+    }
+
+    private void copyBSTsToCosmeticFormes() {
+        for (Species pk : romHandler.getAltFormes()) {
+            if (pk.isEssentiallyCosmetic()) {
+                pk.getBaseStats().setBST(pk.getBaseForme().getBST(false));
+            }
+        }
+    }
+
+    private void updateMegaEvolutionBSTs() {
+        for (Species pk : romHandler.getSpeciesSet()) {
+            for (MegaEvolution mevo : pk.getMegaEvolutionsFrom()) {
+                mevo.getTo().getBaseStats().setBST(pk.getBST(false) + MEGA_BST_BOOST);
+            }
+        }
+    }
+
+    private void randomlyModifyBSTsByPercentage() {
+        boolean evolutionSanity = settings.isBSTFollowEvolutions();
+        double maxModifier = (double) settings.getBSTBuffNerfMaxPercentage() / 100;
+
         Map<Species, Double> modifiersBySpecies = new HashMap<>();
 
         BasicSpeciesAction basicSpeciesAction = pk -> {
@@ -56,8 +87,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         pk.getBaseStats().setBST(newBST);
     }
 
-    public void shuffleBSTs(boolean evolutionSanity, boolean swapLegendaries) {
-        // TODO: deal with mega evos somehow
+    private void shuffleBSTs() {
+        boolean evolutionSanity = settings.isBSTFollowEvolutions();
+        boolean swapLegendaries = settings.isBSTShuffleSwapLegendaries();
 
         // This is ready for testing now
         // TODO: write tests
@@ -129,7 +161,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         return newShuffleGroups;
     }
 
-    public void fullyRandomizeBSTs() {
+    private void fullyRandomizeBSTs() {
         // This is very simple because it is a sort of chaos mode,
         // but it might be more interesting if it were to be weighted.
         // Could play around with normal, binormal distributions, etc...
@@ -137,7 +169,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             if (pk.isEssentiallyCosmetic()) continue;
 
-            int newBST = random.nextInt(180, 720); // between Sunkern and Arceus
+            // between Sunkern and Arceus; almost all mons are between here to this day
+            int newBST = random.nextInt(SUNKERN_BST, ARCEUS_BST);
             pk.getBaseStats().setBST(newBST);
         }
     }

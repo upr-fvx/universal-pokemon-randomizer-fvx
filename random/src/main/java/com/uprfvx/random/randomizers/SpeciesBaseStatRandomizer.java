@@ -29,6 +29,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     // TODO: After BST randomization, adjust all levelup evo levels. (should this be optional?)
 
+    // TODO: remember to carry BSTs to cosmetic formes
+    // TODO: megas should have +100 BST
+
     public void randomlyModifyBSTsByPercentage(boolean evolutionSanity, double maxModifier) {
         Map<Species, Double> modifiersBySpecies = new HashMap<>();
 
@@ -124,6 +127,19 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             newShuffleGroups.add(group.filter(species -> !species.isLegendary()));
         }
         return newShuffleGroups;
+    }
+
+    public void fullyRandomizeBSTs() {
+        // This is very simple because it is a sort of chaos mode,
+        // but it might be more interesting if it were to be weighted.
+        // Could play around with normal, binormal distributions, etc...
+
+        for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            if (pk.isEssentiallyCosmetic()) continue;
+
+            int newBST = random.nextInt(180, 720); // between Sunkern and Arceus
+            pk.getBaseStats().setBST(newBST);
+        }
     }
 
     // TODO: write tests for these older randomization options

@@ -25,7 +25,6 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
-import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -72,9 +71,8 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 		this.typeSanity = settings.isPokemonPalettesFollowTypes();
 		boolean evolutionSanity = settings.isPokemonPalettesFollowEvolutions();
 
-		// has to use a separate CopyUpEvolutionsHelper which works with Gen1Pokemon
-		CopyUpEvolutionsHelper<Species> cueh = new CopyUpEvolutionsHelper<>(romHandler::getSpeciesSet);
-		cueh.apply(evolutionSanity, true, new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction());
+		copyUpEvolutionsHelper.apply(evolutionSanity, true,
+				new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction());
 	}
 
 	private SGBPaletteID getRandomPaletteID() {
@@ -86,7 +84,7 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 		return typeIDs == null ? DEFAULT_PALETTE_ID : typeIDs[random.nextInt(typeIDs.length)];
 	}
 
-	private class BaseSpeciesIDAction implements BasicSpeciesAction<Species> {
+	private class BaseSpeciesIDAction implements BasicSpeciesAction {
 
 		@Override
 		public void applyTo(Species pk) {
@@ -95,7 +93,7 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 
 	}
 
-	private class EvolvedSpeciesIDAction implements EvolvedSpeciesAction<Species> {
+	private class EvolvedSpeciesIDAction implements EvolvedSpeciesAction {
 
 		@Override
 		public void applyTo(Species evFrom, Species evTo, boolean toMonIsFinalEvo) {

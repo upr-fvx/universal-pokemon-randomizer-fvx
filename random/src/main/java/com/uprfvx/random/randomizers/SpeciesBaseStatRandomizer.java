@@ -42,13 +42,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 donators.put(keys.get(i), values.get(i));
             }
 
-            CopyUpEvolutionsHelper<Species> cueh = new CopyUpEvolutionsHelper<>(group);
-            BasicSpeciesAction<Species> bpAction = (bp -> {
+            CopyUpEvolutionsHelper cueh = new CopyUpEvolutionsHelper(group);
+            BasicSpeciesAction bpAction = (bp -> {
                 Species donator = donators.get(bp);
                 // TODO: for this to work, we need some way to access a Species' original BST (for power levels)
                 bp.getBaseStats().setBST(donator.getBaseStats().getBST());
             });
-            EvolvedSpeciesAction<Species> epAction = ((evFrom, evTo, _) -> {
+            EvolvedSpeciesAction epAction = ((evFrom, evTo, _) -> {
                 Species fromDonator = donators.get(evFrom);
                 // assumes lines are even; Applin could break this
                 // so could split evos where the BST differs
@@ -156,10 +156,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
         boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();
 
-        BasicSpeciesAction<Species> bpAction = this::randomizeStatsWithinBST;
-        EvolvedSpeciesAction<Species> randomEpAction = (evFrom, evTo, _) ->
+        BasicSpeciesAction bpAction = this::randomizeStatsWithinBST;
+        EvolvedSpeciesAction randomEpAction = (evFrom, evTo, _) ->
                 assignNewStatsForEvolution(evFrom, evTo);
-        EvolvedSpeciesAction<Species> copyEpAction = (evFrom, evTo, _) ->
+        EvolvedSpeciesAction copyEpAction = (evFrom, evTo, _) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
 
         copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,

@@ -36,19 +36,17 @@ import java.util.function.Supplier;
  * Assumes no two Species evolve into the same third Species. Note this might not hold true if evolutions are
  * randomized.
  */
-public class CopyUpEvolutionsHelper<T extends Species> {
+public class CopyUpEvolutionsHelper {
 
-    private final BasicSpeciesAction<T> nullBasicSpeciesAction = pk -> {
-    };
-    private final EvolvedSpeciesAction<T> nullEvolvedSpeciesAction = (evFrom, evTo, toMonIsFinalEvo) -> {
-    };
+    private final BasicSpeciesAction nullBasicSpeciesAction = _ -> {};
+    private final EvolvedSpeciesAction nullEvolvedSpeciesAction = (_, _, _) -> {};
 
     private final Supplier<SpeciesSet> speciesSetSupplier;
 
-    private BasicSpeciesAction<T> noEvoAction;
-    private BasicSpeciesAction<T> basicAction;
-    private EvolvedSpeciesAction<T> evolvedAction;
-    private EvolvedSpeciesAction<T> splitAction;
+    private BasicSpeciesAction noEvoAction;
+    private BasicSpeciesAction basicAction;
+    private EvolvedSpeciesAction evolvedAction;
+    private EvolvedSpeciesAction splitAction;
 
     public CopyUpEvolutionsHelper(SpeciesSet speciesSet) {
         this.speciesSetSupplier = () -> speciesSet;
@@ -61,28 +59,28 @@ public class CopyUpEvolutionsHelper<T extends Species> {
     /**
      * Sets the method to run on all {@link Species}, when evolutionSanity == false. (see {@link #apply(boolean, boolean)})
      */
-    private void setNoEvoAction(BasicSpeciesAction<T> noEvoAction) {
+    private void setNoEvoAction(BasicSpeciesAction noEvoAction) {
         this.noEvoAction = noEvoAction == null ? nullBasicSpeciesAction : noEvoAction;
     }
 
     /**
      * Sets the method to run on basic {@link Species}.
      */
-    private void setBasicAction(BasicSpeciesAction<T> basicAction) {
+    private void setBasicAction(BasicSpeciesAction basicAction) {
         this.basicAction = basicAction == null ? nullBasicSpeciesAction : basicAction;
     }
 
     /**
      * Sets the method to run on evolved {@link Species}.
      */
-    private void setEvolvedAction(EvolvedSpeciesAction<T> evolvedAction) {
+    private void setEvolvedAction(EvolvedSpeciesAction evolvedAction) {
         this.evolvedAction = evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction;
     }
 
     /**
      * Sets the method to run on split evos.
      */
-    private void setSplitAction(EvolvedSpeciesAction<T> splitAction) {
+    private void setSplitAction(EvolvedSpeciesAction splitAction) {
         this.splitAction = splitAction == null ? nullEvolvedSpeciesAction : splitAction;
     }
 
@@ -103,8 +101,8 @@ public class CopyUpEvolutionsHelper<T extends Species> {
      * @param noEvoAction     Method to run on all {@link Species}, when evolutionSanity ==
      *                        false.
      */
-    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction<T> bpAction,
-                      EvolvedSpeciesAction<T> epAction, EvolvedSpeciesAction<T> splitAction, BasicSpeciesAction<T> noEvoAction) {
+    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction bpAction,
+                      EvolvedSpeciesAction epAction, EvolvedSpeciesAction splitAction, BasicSpeciesAction noEvoAction) {
         setBasicAction(bpAction);
         setEvolvedAction(epAction);
         setSplitAction(splitAction);
@@ -125,8 +123,8 @@ public class CopyUpEvolutionsHelper<T extends Species> {
      * @param bpAction        Method to run on all basic Pokemon {@link Species}.
      * @param epAction        Method to run on all evolved Pokemon {@link Species}.
      */
-    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction<T> bpAction,
-                      EvolvedSpeciesAction<T> epAction) {
+    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction bpAction,
+                      EvolvedSpeciesAction epAction) {
         setBasicAction(bpAction);
         setEvolvedAction(epAction);
         setSplitAction(epAction);
@@ -139,13 +137,12 @@ public class CopyUpEvolutionsHelper<T extends Species> {
      * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
      * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and will thus use basicAction instead of splitAction.
      */
-    @SuppressWarnings("unchecked")
     private void apply(boolean evolutionSanity, boolean copySplitEvos) {
 
         SpeciesSet allSpecs = speciesSetSupplier.get();
 
         if (!evolutionSanity) {
-            allSpecs.forEach(pk -> noEvoAction.applyTo((T) pk));
+            allSpecs.forEach(pk -> noEvoAction.applyTo(pk));
             return;
         }
 
@@ -160,7 +157,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
         }
 
         for (Species pk : basicSpecs) {
-            basicAction.applyTo((T) pk);
+            basicAction.applyTo(pk);
             processed.add(pk);
         }
 
@@ -172,10 +169,10 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 // a linear chain of single evolutions down to
                 // a processed spec.
                 Stack<Evolution> evStack = new Stack<>();
-                Evolution ev = pk.getEvolutionsTo().get(0);
+                Evolution ev = pk.getEvolutionsTo().getFirst();
                 while (!processed.contains(ev.getFrom())) {
                     evStack.push(ev);
-                    ev = ev.getFrom().getEvolutionsTo().get(0);
+                    ev = ev.getFrom().getEvolutionsTo().getFirst();
                 }
                 evStack.push(ev);
 
@@ -185,9 +182,9 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 while (!evStack.isEmpty()) {
                     ev = evStack.pop();
                     if (copySplitEvos && splitEvos.contains(ev.getTo())) {
-                        splitAction.applyTo((T) ev.getFrom(), (T) ev.getTo(), finalEvos.contains(ev.getTo()));
+                        splitAction.applyTo(ev.getFrom(), ev.getTo(), finalEvos.contains(ev.getTo()));
                     } else {
-                        evolvedAction.applyTo((T) ev.getFrom(), (T) ev.getTo(), finalEvos.contains(ev.getTo()));
+                        evolvedAction.applyTo(ev.getFrom(), ev.getTo(), finalEvos.contains(ev.getTo()));
                     }
                     processed.add(ev.getTo());
                 }

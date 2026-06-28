@@ -213,7 +213,7 @@ public class BaseStats {
                 statNeedinessQueue.add(statOff);
             }
         }
-        
+
         for (int i = 0; i < bst; i++) {
             Integer statOff = statNeedinessQueue.poll();
             if (statOff == null) {

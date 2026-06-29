@@ -7,14 +7,20 @@ package com.uprfvx.romio.gamedata.basestats;
  */
 public class ShedinjaBaseStats extends BaseStats {
 
+    // its own field to avoid rounding errors; so get/setBST() correspond 1-1.
+    private int bstForPowerLevels;
+
     public ShedinjaBaseStats(int attack, int defense, int spatk, int spdef, int speed) {
         super(0, attack, defense, spatk, spdef, speed);
         this.bst = attack + defense + spatk + spdef + speed;
+        // * 6/5 to reflect that Shedinja is much stronger than its BST would otherwise reflect
+        this.bstForPowerLevels = bst * 6 / 5;
         calculateStats();
     }
 
     public ShedinjaBaseStats(ShedinjaBaseStats original) {
         super(original);
+        this.bstForPowerLevels = original.bstForPowerLevels;
     }
 
     @Override
@@ -28,13 +34,12 @@ public class ShedinjaBaseStats extends BaseStats {
 
     @Override
     public int getBST() {
-        // * 6/5 to reflect that Shedinja is much stronger than its BST would otherwise reflect;
-        // and almost every BST usage is for gauging power levels.
-        return (getAttack() + getDefense() + getSpatk() + getSpdef() + getSpeed()) * 6 / 5;
+        return bstForPowerLevels;
     }
 
     @Override
     public void setBST(int bst) {
+        this.bstForPowerLevels = bst;
         this.bst = bst * 5 / 6;
         calculateStats();
     }

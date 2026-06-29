@@ -16,9 +16,9 @@ import java.util.*;
 
 public class SpeciesBaseStatRandomizer extends Randomizer {
 
-    private static final int MEGA_BST_BOOST = 100;
-    private static final int SUNKERN_BST = 180;
-    private static final int ARCEUS_BST = 720;
+    protected static final int MEGA_BST_BOOST = 100;
+    protected static final int SUNKERN_BST = 180;
+    protected static final int ARCEUS_BST = 720;
 
     protected static final int MIN_HP = 20;
     protected static final int MIN_NON_HP_STAT = 10;

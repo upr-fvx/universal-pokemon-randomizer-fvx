@@ -91,9 +91,6 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         boolean evolutionSanity = settings.isBSTFollowEvolutions();
         boolean swapLegendaries = settings.isBSTShuffleSwapLegendaries();
 
-        // This is ready for testing now
-        // TODO: write tests
-
         List<SpeciesSet> shuffleGroups = new ArrayList<>();
         shuffleGroups.add(romHandler.getSpeciesSet());
 
@@ -114,11 +111,15 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 donators.put(keys.get(i), values.get(i));
             }
 
+            group.addFullFamilies(true); // because splitByLineLength() removes all but basics
             CopyUpEvolutionsHelper cueh = new CopyUpEvolutionsHelper(group);
             
             BasicSpeciesAction basicSpeciesAction = pk -> {
                 Species donator = donators.get(pk);
                 pk.getBaseStats().setBST(donator.getBST(true));
+
+                System.out.println("\n" + pk.getNumberAndFullName());
+                System.out.println("bsc donator: " + donator.getNumberAndFullName() + " (" + donator.getBST(true) + ")");
             };
             
             EvolvedSpeciesAction evolvedSpeciesAction = (evFrom, evTo, _) -> {
@@ -128,7 +129,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 // - Ninjask/Ninjada (which could use a special case), and
                 // - Poliwrath/Politoed (only 10 BST diff, could be ignored and no one will notice)
                 Species fromDonator = donators.get(evFrom);
+                System.out.println("\n" + evFrom.getNumberAndFullName());
+                System.out.println("evFrom donator: " + fromDonator.getNumberAndFullName() + " (" + fromDonator.getBST(true) + ")");
+
                 Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
+                System.out.println("\t" + evTo.getNumberAndFullName());
+                System.out.println("\tevTo donator: " + toDonator.getNumberAndFullName() + " (" + toDonator.getBST(true) + ")");
+
                 donators.put(evTo, toDonator);
                 evTo.getBaseStats().setBST(toDonator.getBST(true));
             };
@@ -138,6 +145,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     }
 
+    /**
+     * Splits the input shuffleGroups by line length (Mewtwo->1, Paras->2, Bulbasaur->3).
+     * Only includes the basic mons in the returned SpeciesSets.
+     */
     private List<SpeciesSet> splitByLineLength(List<SpeciesSet> shuffleGroups) {
         List<SpeciesSet> newShuffleGroups = new ArrayList<>();
         for (SpeciesSet group : shuffleGroups) {

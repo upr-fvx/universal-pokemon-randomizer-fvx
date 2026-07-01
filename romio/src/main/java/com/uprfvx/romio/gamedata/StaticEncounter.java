@@ -129,8 +129,8 @@ public class StaticEncounter {
         // If you force the encounter to be Venusaur-Mega from the start and give it Venusaurite,
         // can it mega evolve? Into Venusaur-Mega again??
         // TODO: figure out
-        for (MegaEvolution mega: getSpecies().getMegaEvolutionsFrom()) {
-            if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
+        for (Species mega : getSpecies().getAltFormes().filter(Species::isMegaEvolution)) {
+            if (mega.needsMegaEvolutionItem() && mega.getMegaEvolutionItem().equals(heldItem)) {
                 return true;
             }
         }

@@ -77,7 +77,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
-    private List<MegaEvolution> megaEvolutions;
     private List<Item> items;
     private List<AreaData> areaDataList;
     private Move[] moves;
@@ -459,16 +458,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     private void populateMegaEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                pkmn.getMegaEvolutionsFrom().clear();
-                pkmn.getMegaEvolutionsTo().clear();
-            }
-        }
-
         // Read GARC
         try {
-            megaEvolutions = new ArrayList<>();
             GARCArchive megaEvoGARC = readGARC(romEntry.getFile("MegaEvolutions"),true);
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()); i++) {
                 Species pk = pokes[i];
@@ -480,12 +471,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         Species mega = pk.getForme(formNum);
                         boolean needsItem = method == 1; // true for every mega but Mega Rayquaza, which has method==2.
                         Item item = items.get(readWord(megaEvoEntry, evo * 8 + 4));
-                        MegaEvolution megaEvo = new MegaEvolution(pk, mega, needsItem, item);
-                        if (!pk.getMegaEvolutionsFrom().contains(megaEvo)) {
-                            pk.getMegaEvolutionsFrom().add(megaEvo);
-                            mega.getMegaEvolutionsTo().add(megaEvo);
-                        }
-                        megaEvolutions.add(megaEvo);
+                        mega.setMegaEvolution(needsItem ? item : null);
                     }
                 }
             }
@@ -1007,11 +993,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         int formeCount = Gen7Constants.getFormeCount(romEntry.getRomType());
         int pokemonCount = Gen7Constants.getPokemonCount(romEntry.getRomType());
         return new SpeciesSet(Arrays.asList(pokes).subList(pokemonCount + 1, pokemonCount + formeCount + 1));
-    }
-
-    @Override
-    public List<MegaEvolution> getMegaEvolutions() {
-        return megaEvolutions;
     }
 
 	@Override

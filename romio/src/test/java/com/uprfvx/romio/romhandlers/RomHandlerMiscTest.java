@@ -3,7 +3,6 @@ package com.uprfvx.romio.romhandlers;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.gamedata.GenRestrictions;
-import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
@@ -315,9 +314,9 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     public void megaEvosShareNameWithBaseFormes(String romName) {
         loadROM(romName);
 
-        for (MegaEvolution mev : romHandler.getMegaEvolutions()) {
-            System.out.println(mev);
-            assertEquals(mev.getFrom().getName(), mev.getTo().getName());
+        for (Species mega : romHandler.getSpeciesSetInclFormes().filter(Species::isMegaEvolution)) {
+            System.out.println(mega);
+            assertEquals(mega.getBaseForme().getName(), mega.getName());
         }
     }
 
@@ -327,11 +326,11 @@ public class RomHandlerMiscTest extends RomHandlerTest {
         // i.e. Venusaur is linked to Venusaurite, Sableye to Sablenite
         loadROM(romName);
 
-        for (MegaEvolution mev : romHandler.getMegaEvolutions()) {
-            System.out.println(mev);
-            if (mev.isNeedsItem()) {
-                String prefix = mev.getFrom().getName().substring(0, 3);
-                String itemName = mev.getItem().getName();
+        for (Species mega : romHandler.getSpeciesSetInclFormes().filter(Species::isMegaEvolution)) {
+            System.out.println(mega);
+            if (mega.needsMegaEvolutionItem()) {
+                String prefix = mega.getName().substring(0, 3);
+                String itemName = mega.getMegaEvolutionItem().getName();
                 assertTrue(itemName.startsWith(prefix));
             }
         }

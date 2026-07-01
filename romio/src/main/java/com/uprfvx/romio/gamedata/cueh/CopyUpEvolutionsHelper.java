@@ -42,10 +42,8 @@ import java.util.function.Supplier;
  */
 public class CopyUpEvolutionsHelper<T extends Species> {
 
-    private final BasicSpeciesAction<T> nullBasicSpeciesAction = pk -> {
-    };
-    private final EvolvedSpeciesAction<T> nullEvolvedSpeciesAction = (evFrom, evTo, toMonIsFinalEvo) -> {
-    };
+    private final BasicSpeciesAction<T> nullBasicSpeciesAction = _ -> {};
+    private final EvolvedSpeciesAction<T> nullEvolvedSpeciesAction = (_, _, _) -> {};
 
     private final Supplier<SpeciesSet> speciesSetSupplier;
 
@@ -176,10 +174,10 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 // a linear chain of single evolutions down to
                 // a processed spec.
                 Stack<Evolution> evStack = new Stack<>();
-                Evolution ev = pk.getEvolutionsTo().get(0);
+                Evolution ev = pk.getEvolutionsTo().getFirst();
                 while (!processed.contains(ev.getFrom())) {
                     evStack.push(ev);
-                    ev = ev.getFrom().getEvolutionsTo().get(0);
+                    ev = ev.getFrom().getEvolutionsTo().getFirst();
                 }
                 evStack.push(ev);
 

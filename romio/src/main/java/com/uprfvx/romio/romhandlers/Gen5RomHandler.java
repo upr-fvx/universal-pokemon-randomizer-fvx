@@ -606,11 +606,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 				Gen5Constants.pokemonCount + formeCount + 1));
 	}
 
-    @Override
-    public List<MegaEvolution> getMegaEvolutions() {
-        return new ArrayList<>();
-    }
-
 	@Override
 	public SpeciesSet getIrregularFormes() {
 		return Gen5Constants.getIrregularFormes(romEntry.getRomType())

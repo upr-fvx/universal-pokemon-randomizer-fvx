@@ -4,8 +4,6 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.GlobalConstants;
-import com.uprfvx.romio.gamedata.MegaEvolution;
-import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.List;
@@ -90,7 +88,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                             pk.getAbility1(), pk.getAbility2()));
                 }
             }
-        }, (evFrom, evTo, toMonIsFinalEvo) -> {
+        }, (evFrom, evTo, _) -> {
             if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
                     && evTo.getAbility3() != AbilityIDs.wonderGuard) {
                 evTo.setAbility1(evFrom.getAbility1());
@@ -99,19 +97,11 @@ public class SpeciesAbilityRandomizer extends Randomizer {
             }
         });
 
-
-        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
+        // TODO: this removes the notion that "split" mega evos should not get abilities carried,
+        //  found in earlier code. Think about it some.
+        romHandler.getSpeciesSetInclFormes()
+                .filter(pk -> pk.isEssentiallyCosmetic() || (megaEvolutionSanity && pk.isMegaEvolution()))
                 .forEach(pk -> pk.copyBaseFormeAbilities(pk.getConceptualBaseForme()));
-
-        if (megaEvolutionSanity) {
-            for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
-                    continue;
-                megaEvo.getTo().setAbility1(megaEvo.getFrom().getAbility1());
-                megaEvo.getTo().setAbility2(megaEvo.getFrom().getAbility2());
-                megaEvo.getTo().setAbility3(megaEvo.getFrom().getAbility3());
-            }
-        }
 
         changesMade = true;
     }

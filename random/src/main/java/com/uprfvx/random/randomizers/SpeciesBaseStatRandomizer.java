@@ -3,7 +3,6 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.ExpCurve;
-import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
@@ -33,16 +32,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         copyUpEvolutionsHelper.apply(evolutionSanity, false,
                 this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder);
 
-        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
+        romHandler.getSpeciesSetInclFormes()
+                .filter(pk -> pk.isEssentiallyCosmetic() || (megaEvolutionSanity && pk.isMegaEvolution()))
                 .forEach(pk -> copyUpShuffledStatsOrder(pk.getConceptualBaseForme(), pk));
-
-        if (megaEvolutionSanity) {
-            for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() == 1) {
-                    copyUpShuffledStatsOrder(megaEvo.getFrom(), megaEvo.getTo());
-                }
-            }
-        }
 
         romHandler.getSpeciesSetInclFormes().forEach(this::applyShuffledOrderToStats);
 
@@ -96,15 +88,16 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
                 .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getConceptualBaseForme()));
 
-        if (megaEvolutionSanity) {
-            for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1 || assignEvoStatsRandomly) {
-                    assignNewStatsForEvolution(megaEvo.getFrom(), megaEvo.getTo());
-                } else {
-                    copyRandomizedStatsUpEvolution(megaEvo.getFrom(), megaEvo.getTo());
-                }
-            }
-        }
+        romHandler.getMegaEvolutions()
+                .forEach(megaEvo -> {
+                    // TODO: make split megas get assignEvoStatsRandomly.
+                    if (assignEvoStatsRandomly) {
+                        assignNewStatsForEvolution(megaEvo.getBaseForme(), megaEvo);
+                    } else {
+                        copyRandomizedStatsUpEvolution(megaEvo.getBaseForme(), megaEvo);
+                    }
+                });
+
         changesMade = true;
     }
 

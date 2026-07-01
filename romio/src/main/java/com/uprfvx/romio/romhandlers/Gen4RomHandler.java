@@ -957,11 +957,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<MegaEvolution> getMegaEvolutions() {
-		return new ArrayList<>();
-	}
-
-	@Override
 	public SpeciesSet getIrregularFormes() {
 		return new SpeciesSet();
 	}

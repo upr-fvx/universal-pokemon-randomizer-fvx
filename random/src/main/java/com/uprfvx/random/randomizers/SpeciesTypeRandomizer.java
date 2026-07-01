@@ -1,14 +1,12 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
-import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import java.util.List;
 import java.util.Random;
 
 public class SpeciesTypeRandomizer extends Randomizer {
@@ -70,19 +68,13 @@ public class SpeciesTypeRandomizer extends Randomizer {
 
     private void carryTypesToMegas(boolean megaEvolutionSanity) {
         if (megaEvolutionSanity) {
-            List<MegaEvolution> allMegaEvos = romHandler.getMegaEvolutions();
-            for (MegaEvolution megaEvo: allMegaEvos) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1) continue;
-                megaEvo.getTo().setPrimaryType(megaEvo.getFrom().getPrimaryType(false));
-                megaEvo.getTo().setSecondaryType(megaEvo.getFrom().getSecondaryType(false));
+            for (Species megaEvo: romHandler.getMegaEvolutions()) {
+                // TODO: reinstate notion that split megas should not carry type?
+                megaEvo.setPrimaryType(megaEvo.getBaseForme().getPrimaryType(false));
+                megaEvo.setSecondaryType(megaEvo.getBaseForme().getSecondaryType(false));
 
-                if (megaEvo.getTo().getSecondaryType(false) == null) {
-                    if (random.nextDouble() < 0.25) {
-                        megaEvo.getTo().setSecondaryType(typeService.randomType(random));
-                        while (megaEvo.getTo().getSecondaryType(false) == megaEvo.getTo().getPrimaryType(false)) {
-                            megaEvo.getTo().setSecondaryType(typeService.randomType(random));
-                        }
-                    }
+                if (megaEvo.hasSecondaryType(false)) {
+                    assignRandomSecondaryType(megaEvo, 0.25, false);
                 }
             }
         }

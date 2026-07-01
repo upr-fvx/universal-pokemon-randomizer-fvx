@@ -163,7 +163,7 @@ public interface RomHandler {
     
     SpeciesSet getSpeciesSetInclFormes();
 
-    List<MegaEvolution> getMegaEvolutions();
+    SpeciesSet getMegaEvolutions();
 
     SpeciesSet getIrregularFormes();
 

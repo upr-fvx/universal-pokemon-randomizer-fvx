@@ -80,9 +80,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
-    private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
-    private Map<Integer,Integer> dummyAbsolutePokeNums;
-    private List<MegaEvolution> megaEvolutions;
     private List<Item> items;
     private Move[] moves;
     private Gen6RomEntry romEntry;
@@ -209,33 +206,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
             }
 
-            absolutePokeNumByBaseForme = new HashMap<>();
-            dummyAbsolutePokeNums = new HashMap<>();
-            dummyAbsolutePokeNums.put(255,0);
-
             int i = Gen6Constants.pokemonCount + 1;
-            int formNum = 1;
-            int prevSpecies = 0;
-            Map<Integer,Integer> currentMap = new HashMap<>();
             for (int k: formeMappings.keySet()) {
                 pokes[i] = new Species(i);
                 loadBasicPokeStats(pokes[i], pokeGarc.getFile(k), formeMappings);
                 FormeInfo fi = formeMappings.get(k);
                 pokes[i].setName(pokeNames[fi.baseForme]);
+
                 pokes[i].setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
-                if (fi.baseForme == prevSpecies) {
-                    formNum++;
-                    currentMap.put(formNum,i);
-                } else {
-                    if (prevSpecies != 0) {
-                        absolutePokeNumByBaseForme.put(prevSpecies,currentMap);
-                    }
-                    prevSpecies = fi.baseForme;
-                    formNum = 1;
-                    currentMap = new HashMap<>();
-                    currentMap.put(formNum,i);
-                }
                 if (Gen6Constants.essentiallyCosmeticForms.contains(i)) {
                     pokes[i].setEssentiallyCosmetic();
                 }
@@ -244,9 +223,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 i++;
-            }
-            if (prevSpecies != 0) {
-                absolutePokeNumByBaseForme.put(prevSpecies,currentMap);
             }
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -398,16 +374,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     private void populateMegaEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                pkmn.getMegaEvolutionsFrom().clear();
-                pkmn.getMegaEvolutionsTo().clear();
-            }
-        }
-
         // Read GARC
         try {
-            megaEvolutions = new ArrayList<>();
             GARCArchive megaEvoGARC = readGARC(romEntry.getFile("MegaEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 Species pk = pokes[i];
@@ -416,17 +384,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int formNum = readWord(megaEvoEntry, evo * 8);
                     int method = readWord(megaEvoEntry, evo * 8 + 2);
                     if (method >= 1) {
-                        int megaSpecies = absolutePokeNumByBaseForme
-                                .getOrDefault(pk.getNumber(),dummyAbsolutePokeNums)
-                                .getOrDefault(formNum,0);
+                        Species mega = pk.getForme(formNum);
                         boolean needsItem = method == 1; // true for every mega but Mega Rayquaza, which has method==2.
                         Item item = items.get(readWord(megaEvoEntry, evo * 8 + 4));
-                        MegaEvolution megaEvo = new MegaEvolution(pk, pokes[megaSpecies], needsItem, item);
-                        if (!pk.getMegaEvolutionsFrom().contains(megaEvo)) {
-                            pk.getMegaEvolutionsFrom().add(megaEvo);
-                            pokes[megaSpecies].getMegaEvolutionsTo().add(megaEvo);
-                        }
-                        megaEvolutions.add(megaEvo);
+                        mega.setMegaEvolution(needsItem ? item : null);
                     }
                 }
             }
@@ -921,11 +882,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
         return new SpeciesSet(Arrays.asList(pokes).subList(Gen6Constants.pokemonCount + 1,
                 Gen6Constants.pokemonCount + formeCount + 1));
-    }
-
-    @Override
-    public List<MegaEvolution> getMegaEvolutions() {
-        return megaEvolutions;
     }
 
 	@Override

@@ -38,7 +38,6 @@ public class TestRomHandler extends AbstractRomHandler {
     private SpeciesSet testSpeciesInclFormes = null;
     private SpeciesSet testSpeciesNoFormes = null;
     Map<Species, Species> originalToTest = null;
-    private List<MegaEvolution> testMegaEvolutions = null;
     private SpeciesSet testAltFormes = null;
     private final SpeciesSet originalIrregularFormes;
     private SpeciesSet testIrregularFormes = null;
@@ -294,7 +293,6 @@ public class TestRomHandler extends AbstractRomHandler {
         testSpeciesInclFormes = null;
         testSpeciesNoFormes = null;
         originalToTest = null;
-        testMegaEvolutions = null;
         testAltFormes = null;
         testIrregularFormes = null;
         testRSS = null;
@@ -362,8 +360,6 @@ public class TestRomHandler extends AbstractRomHandler {
         // And these can be populated once the copy process is done
         testAltFormes = new SpeciesSet(newSet).filter(pk -> !pk.isBaseForme());
         testIrregularFormes = new SpeciesSet(originalIrregularFormes.stream().map(originalToTest::get).toList());
-        testMegaEvolutions = new ArrayList<>();
-        newSet.forEach(pk -> testMegaEvolutions.addAll(pk.getMegaEvolutionsFrom()));
 
         return newSet;
     }
@@ -629,12 +625,6 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public SpeciesSet getSpeciesSetInclFormes() {
         return testSpeciesInclFormes;
-    }
-
-    @Override
-    public List<MegaEvolution> getMegaEvolutions() {
-        return testMegaEvolutions;
-        //why does this even exist????
     }
 
     @Override

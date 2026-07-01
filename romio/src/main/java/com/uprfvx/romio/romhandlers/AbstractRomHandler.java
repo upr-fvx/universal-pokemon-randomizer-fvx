@@ -89,6 +89,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public SpeciesSet getMegaEvolutions() {
+        return getSpeciesSetInclFormes().filter(Species::isMegaEvolution);
+    }
+
+    @Override
     public List<EncounterArea> getSortedEncounters(boolean useTimeOfDay) {
         return getEncounters(useTimeOfDay);
     }

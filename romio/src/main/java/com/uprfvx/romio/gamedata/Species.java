@@ -542,10 +542,10 @@ public class Species implements Comparable<Species> {
         spdef = baseForme.spdef;
     }
 
-    public void copyBaseFormeAbilities(Species baseForme) {
-        ability1 = baseForme.ability1;
-        ability2 = baseForme.ability2;
-        ability3 = baseForme.ability3;
+    public void copyAbilities(Species other) {
+        ability1 = other.ability1;
+        ability2 = other.ability2;
+        ability3 = other.ability3;
     }
 
     public void copyBaseFormeEvolutions(Species baseForme) {

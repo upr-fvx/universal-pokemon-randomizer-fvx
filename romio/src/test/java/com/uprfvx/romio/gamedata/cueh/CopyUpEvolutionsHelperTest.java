@@ -26,22 +26,34 @@ public class CopyUpEvolutionsHelperTest {
     }
 
     private record CallCounter(
-            Map<NameOnlySpecies, Integer> noEvo,
-            Map<NameOnlySpecies, Integer> basic,
-            Map<NameOnlySpecies, Integer> evolved,
-            Map<NameOnlySpecies, Integer> split
+            Map<Species, Integer> noEvo,
+            Map<Species, Integer> basic,
+            Map<Species, Integer> evolved,
+            Map<Species, Integer> split,
+            Map<Species, Integer> altForme,
+            Map<Species, Integer> cosmetic
     ) {}
 
-    private final CallCounter callCounter = new CallCounter(new HashMap<>(), new HashMap<>(), new HashMap<>(), new HashMap<>());
+    private final CallCounter callCounter = new CallCounter(
+            new HashMap<>(), new HashMap<>(), new HashMap<>(),
+            new HashMap<>(), new HashMap<>(), new HashMap<>()
+    );
 
     private void applyCallCountingCUEH(SpeciesSet set, boolean evolutionSanity, boolean copySplitEvos) {
-        BiFunction<NameOnlySpecies, Integer, Integer> addOne = (_, v) -> v == null ? 1 : v + 1;
-        new CopyUpEvolutionsHelper<NameOnlySpecies>(set).apply(evolutionSanity, copySplitEvos,
-                pk -> callCounter.basic.compute(pk, addOne),
-                (_, pk, _) -> callCounter.evolved.compute(pk, addOne),
-                (_, pk, _) -> callCounter.split.compute(pk, addOne),
-                pk -> callCounter.noEvo.compute(pk, addOne)
-                );
+        BiFunction<Species, Integer, Integer> addOne = (_, v) -> v == null ? 1 : v + 1;
+
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(pk -> callCounter.basic.compute(pk, addOne), // basicAction
+                         (_, pk, _) -> callCounter.evolved.compute(pk, addOne)) // evolvedAction
+                .splitAction((_, pk, _) -> callCounter.split.compute(pk, addOne))
+                .noEvoAction(pk -> callCounter.noEvo.compute(pk, addOne))
+                .altFormeAction(((_, pk) -> callCounter.altForme.compute(pk, addOne)))
+                .cosmeticAction(((_, pk) -> callCounter.cosmetic.compute(pk, addOne)))
+                
+                .evolutionSanity(evolutionSanity)
+                .copySplitEvos(copySplitEvos)
+                .build();
+        new CopyUpEvolutionsHelper(set).apply(options);
     }
 
     @Test

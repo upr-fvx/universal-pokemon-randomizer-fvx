@@ -5,6 +5,7 @@ import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -32,13 +33,15 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder)
+                .altFormeAction((baseForme, altForme) -> {
+                    if (megaEvolutionSanity && altForme.isMegaEvolution()) {
+                        copyUpShuffledStatsOrder(baseForme, altForme);
+                    }
+                })
+                .cosmeticAction(this::copyUpShuffledStatsOrder)
                 .evolutionSanity(evolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
-
-        romHandler.getSpeciesSetInclFormes()
-                .filter(pk -> pk.isEssentiallyCosmetic() || (megaEvolutionSanity && pk.isMegaEvolution()))
-                .forEach(pk -> copyUpShuffledStatsOrder(pk.getConceptualBaseForme(), pk));
 
         romHandler.getSpeciesSetInclFormes().forEach(this::applyShuffledOrderToStats);
 
@@ -85,27 +88,28 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 assignNewStatsForEvolution(evFrom, evTo);
         EvolvedSpeciesAction copyEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
+        AltFormeAction cosmeticAction = (baseForme, altForme) ->
+                altForme.copyBaseFormeBaseStats(baseForme);
+        AltFormeAction altFormeAction = (baseForme, altForme) -> {
+            if (altForme.isMegaEvolution()) {
+                // TODO: make split megas get assignEvoStatsRandomly.
+                if (assignEvoStatsRandomly) {
+                    assignNewStatsForEvolution(baseForme, altForme);
+                } else {
+                    copyRandomizedStatsUpEvolution(baseForme, altForme);
+                }
+            }
+        };
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(bpAction, assignEvoStatsRandomly ? randomEpAction : copyEpAction)
                 .splitAction(randomEpAction)
+                .cosmeticAction(cosmeticAction)
+                .altFormeAction(altFormeAction)
                 .evolutionSanity(evolutionSanity)
                 .copySplitEvos(true)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
-
-        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getConceptualBaseForme()));
-
-        romHandler.getMegaEvolutions()
-                .forEach(megaEvo -> {
-                    // TODO: make split megas get assignEvoStatsRandomly.
-                    if (assignEvoStatsRandomly) {
-                        assignNewStatsForEvolution(megaEvo.getBaseForme(), megaEvo);
-                    } else {
-                        copyRandomizedStatsUpEvolution(megaEvo.getBaseForme(), megaEvo);
-                    }
-                });
 
         changesMade = true;
     }

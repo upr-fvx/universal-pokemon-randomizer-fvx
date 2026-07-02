@@ -46,16 +46,16 @@ public class CopyUpEvolutionsHelper {
         private final EvolvedSpeciesAction evolvedAction;
         private final BasicSpeciesAction basicAction;
         private final EvolvedSpeciesAction splitAction;
-        private final EvolvedSpeciesAction altFormeAction;
-        private final EvolvedSpeciesAction cosmeticAction;
+        private final AltFormeAction altFormeAction;
+        private final AltFormeAction cosmeticAction;
 
         private Options(boolean evolutionSanity, boolean copySplitEvos,
-                       BasicSpeciesAction noEvoAction,
-                       BasicSpeciesAction basicAction,
-                       EvolvedSpeciesAction evolvedAction,
-                       EvolvedSpeciesAction splitAction,
-                       EvolvedSpeciesAction altFormeAction,
-                       EvolvedSpeciesAction cosmeticAction) {
+                        BasicSpeciesAction noEvoAction,
+                        BasicSpeciesAction basicAction,
+                        EvolvedSpeciesAction evolvedAction,
+                        EvolvedSpeciesAction splitAction,
+                        AltFormeAction altFormeAction,
+                        AltFormeAction cosmeticAction) {
             this.evolutionSanity = evolutionSanity;
             this.copySplitEvos = copySplitEvos;
             this.noEvoAction = noEvoAction;
@@ -69,6 +69,7 @@ public class CopyUpEvolutionsHelper {
         public static class Builder {
             private final BasicSpeciesAction nullBasicSpeciesAction = _ -> {};
             private final EvolvedSpeciesAction nullEvolvedSpeciesAction = (_, _, _) -> {};
+            private final AltFormeAction nullAltFormeAction = (_, _) -> {};
 
             private boolean evolutionSanity = true;
             private boolean copySplitEvos;
@@ -77,8 +78,8 @@ public class CopyUpEvolutionsHelper {
             private final EvolvedSpeciesAction evolvedAction;
             private BasicSpeciesAction noEvoAction;
             private EvolvedSpeciesAction splitAction;
-            private EvolvedSpeciesAction altFormeAction;
-            private EvolvedSpeciesAction cosmeticAction;
+            private AltFormeAction altFormeAction;
+            private AltFormeAction cosmeticAction;
 
             public Builder(BasicSpeciesAction basicAction, EvolvedSpeciesAction evolvedAction) {
                 this.basicAction = basicAction;
@@ -126,7 +127,7 @@ public class CopyUpEvolutionsHelper {
             /**
              * Sets the method to run on non-cosmetic alt formes.
              */
-            public Builder altFormeAction(EvolvedSpeciesAction altFormeAction) {
+            public Builder altFormeAction(AltFormeAction altFormeAction) {
                 this.altFormeAction = altFormeAction;
                 return this;
             }
@@ -134,7 +135,7 @@ public class CopyUpEvolutionsHelper {
             /**
              * Sets the method to run on essentially cosmetic alt formes ({@link Species} explains what that is).
              */
-            public Builder cosmeticAction(EvolvedSpeciesAction cosmeticAction) {
+            public Builder cosmeticAction(AltFormeAction cosmeticAction) {
                 this.cosmeticAction = cosmeticAction;
                 return this;
             }
@@ -148,8 +149,8 @@ public class CopyUpEvolutionsHelper {
                         basicAction == null ? nullBasicSpeciesAction : basicAction,
                         evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction,
                         splitAction == null ? nullEvolvedSpeciesAction : splitAction,
-                        altFormeAction == null ? nullEvolvedSpeciesAction : altFormeAction,
-                        cosmeticAction == null ? nullEvolvedSpeciesAction : cosmeticAction
+                        altFormeAction == null ? nullAltFormeAction : altFormeAction,
+                        cosmeticAction == null ? nullAltFormeAction : cosmeticAction
                 );
             }
         }
@@ -192,7 +193,8 @@ public class CopyUpEvolutionsHelper {
             return;
         }
 
-        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec));
+        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec)).filter(Species::isBaseForme);
+        SpeciesSet allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec));
         SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec));
         SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec));
 
@@ -216,9 +218,9 @@ public class CopyUpEvolutionsHelper {
                 // a processed spec.
                 Stack<CopyUpRelation> relStack = new Stack<>();
                 CopyUpRelation rel = CopyUpRelation.into(pk);
-                while (!processed.contains(rel.from())) {
+                while (!processed.contains(rel.from)) {
                     relStack.push(rel);
-                    rel = CopyUpRelation.into(rel.from());
+                    rel = CopyUpRelation.into(rel.from);
                 }
                 relStack.push(rel);
 
@@ -227,12 +229,19 @@ public class CopyUpEvolutionsHelper {
                 // Do the evolution action for everything left on the stack.
                 while (!relStack.isEmpty()) {
                     rel = relStack.pop();
-                    if (options.copySplitEvos && splitEvos.contains(rel.to())) {
-                        options.splitAction.applyTo(rel.from(), rel.to(), finalEvos.contains(rel.to()));
+                    if (options.copySplitEvos && splitEvos.contains(rel.to)) {
+                        options.splitAction.applyTo(rel.from, rel.to, finalEvos.contains(rel.to));
+                    } else if (allEvos.contains(rel.to)) {
+                        options.evolvedAction.applyTo(rel.from, rel.to, finalEvos.contains(rel.to));
+                    } else if (rel.to.isEssentiallyCosmetic()) {
+                        options.cosmeticAction.applyTo(rel.from, rel.to);
+                    } else if (!rel.to.isBaseForme()) {
+                        // if it gets here it must be an alt forme
+                        options.altFormeAction.applyTo(rel.from, rel.to);
                     } else {
-                        options.evolvedAction.applyTo(rel.from(), rel.to(), finalEvos.contains(rel.to()));
+                        throw new IllegalStateException(rel + " was not eligible for any copy-up actions...");
                     }
-                    processed.add(rel.to());
+                    processed.add(rel.to);
                 }
 
             }

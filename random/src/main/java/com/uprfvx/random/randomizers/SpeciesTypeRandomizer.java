@@ -2,7 +2,7 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Species;
-import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -33,6 +33,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
             double chance = pk.getEvolutionsFrom().size() == 1 ? GSTC_HAS_EVO : GSTC_NO_EVO;
             assignRandomSecondaryType(pk, chance, dualTypeOnly);
         };
+
         EvolvedSpeciesAction evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
             evTo.setPrimaryType(evFrom.getPrimaryType(false));
             evTo.setSecondaryType(evFrom.getSecondaryType(false));
@@ -42,47 +43,40 @@ public class SpeciesTypeRandomizer extends Randomizer {
                 assignRandomSecondaryType(evTo, chance, dualTypeOnly);
             }
         };
+
         BasicSpeciesAction noEvoAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);
         };
 
+        AltFormeAction cosmeticAction = (baseForme, altForme) -> {
+            altForme.setPrimaryType(baseForme.getPrimaryType(false));
+            altForme.setSecondaryType(baseForme.getSecondaryType(false));
+        };
+
+        AltFormeAction altFormeAction = (baseForme, altForme) -> {
+            if (megaEvolutionSanity) {
+                // TODO: reinstate notion that split megas should not carry type?
+                altForme.setPrimaryType(baseForme.getPrimaryType(false));
+                altForme.setSecondaryType(baseForme.getSecondaryType(false));
+
+                if (altForme.hasSecondaryType(false)) {
+                    assignRandomSecondaryType(altForme, 0.25, false);
+                }
+            }
+        };
+
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(basicAction, evolvedAction)
                 .noEvoAction(noEvoAction)
+                .cosmeticAction(cosmeticAction)
+                .altFormeAction(altFormeAction)
                 .evolutionSanity(evolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
 
-        carryTypesToAltFormes();
-
-        carryTypesToMegas(megaEvolutionSanity);
         changesMade = true;
-    }
-
-    private void carryTypesToAltFormes() {
-        SpeciesSet allPokes = romHandler.getSpeciesSetInclFormes();
-        for (Species sp : allPokes) {
-            if (sp != null && sp.isEssentiallyCosmetic()) {
-                sp.setPrimaryType(sp.getConceptualBaseForme().getPrimaryType(false));
-                sp.setSecondaryType(sp.getConceptualBaseForme().getSecondaryType(false));
-            }
-        }
-    }
-
-    private void carryTypesToMegas(boolean megaEvolutionSanity) {
-        if (megaEvolutionSanity) {
-            for (Species megaEvo: romHandler.getMegaEvolutions()) {
-                // TODO: reinstate notion that split megas should not carry type?
-                megaEvo.setPrimaryType(megaEvo.getBaseForme().getPrimaryType(false));
-                megaEvo.setSecondaryType(megaEvo.getBaseForme().getSecondaryType(false));
-
-                if (megaEvo.hasSecondaryType(false)) {
-                    assignRandomSecondaryType(megaEvo, 0.25, false);
-                }
-            }
-        }
     }
 
     private void assignRandomSecondaryType(Species sp, double chance, boolean dualTypeOnly) {

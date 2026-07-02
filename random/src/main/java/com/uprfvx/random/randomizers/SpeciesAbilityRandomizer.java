@@ -4,7 +4,7 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.GlobalConstants;
-import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -96,23 +96,23 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) -> {
             if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
                     && evTo.getAbility3() != AbilityIDs.wonderGuard) {
-                evTo.setAbility1(evFrom.getAbility1());
-                evTo.setAbility2(evFrom.getAbility2());
-                evTo.setAbility3(evFrom.getAbility3());
+                evTo.copyAbilities(evFrom);
+            }
+        };
+        AltFormeAction altFormeAction = (baseForme, altForme) -> {
+            // TODO: maybe reproduce older behavior of "split" megas not copying abilities
+            if (megaEvolutionSanity && altForme.isMegaEvolution()) {
+                altForme.copyAbilities(baseForme);
             }
         };
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(basicAction, evolvedAction)
+                .altFormeAction(altFormeAction)
+                .cosmeticAction((baseForme, altForme) -> altForme.copyAbilities(baseForme))
                 .evolutionSanity(evolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
-
-        // TODO: this removes the notion that "split" mega evos should not get abilities carried,
-        //  found in earlier code. Think about it some.
-        romHandler.getSpeciesSetInclFormes()
-                .filter(pk -> pk.isEssentiallyCosmetic() || (megaEvolutionSanity && pk.isMegaEvolution()))
-                .forEach(pk -> pk.copyBaseFormeAbilities(pk.getConceptualBaseForme()));
 
         changesMade = true;
     }

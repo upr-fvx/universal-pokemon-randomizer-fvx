@@ -80,10 +80,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
         boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();
 
-        BasicSpeciesAction<Species> bpAction = this::randomizeStatsWithinBST;
-        EvolvedSpeciesAction<Species> randomEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
+        BasicSpeciesAction bpAction = this::randomizeStatsWithinBST;
+        EvolvedSpeciesAction randomEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
                 assignNewStatsForEvolution(evFrom, evTo);
-        EvolvedSpeciesAction<Species> copyEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
+        EvolvedSpeciesAction copyEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options

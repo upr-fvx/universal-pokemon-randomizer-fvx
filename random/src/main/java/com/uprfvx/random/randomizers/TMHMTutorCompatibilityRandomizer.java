@@ -50,9 +50,9 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         tmHMs.addAll(romHandler.getHMMoves());
 
         if (followEvolutions) {
-            BasicSpeciesAction<Species> basicAction = pk ->
+            BasicSpeciesAction basicAction = pk ->
                     randomizePokemonMoveCompatibility(pk, compat.get(pk), tmHMs, requiredEarlyOn, preferSameType);
-            EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) ->
+            EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) ->
                     copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo, compat.get(evFrom), compat.get(evTo),
                             tmHMs, preferSameType);
 
@@ -174,7 +174,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         // Don't do anything with the base, just copy upwards to ensure later evolutions
         // retain learn compatibility
-        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) -> {
+        EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) -> {
             boolean[] fromCompat = compat.get(evFrom);
             boolean[] toCompat = compat.get(evTo);
             for (int i = 1; i < toCompat.length; i++) {
@@ -238,9 +238,9 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         List<Integer> priorityTutors = new ArrayList<>();
 
         if (followEvolutions) {
-            BasicSpeciesAction<Species> basicAction = pk ->
+            BasicSpeciesAction basicAction = pk ->
                     randomizePokemonMoveCompatibility(pk, compat.get(pk), mts, priorityTutors, preferSameType);
-            EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) ->
+            EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) ->
                     copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo, compat.get(evFrom), compat.get(evTo),
                             mts, preferSameType);
 
@@ -306,7 +306,7 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         }
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         // Don't do anything with the base, just copy upwards to ensure later evolutions retain learn compatibility
-        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) -> {
+        EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) -> {
             boolean[] fromCompat = compat.get(evFrom);
             boolean[] toCompat = compat.get(evTo);
             for (int i = 1; i < toCompat.length; i++) {

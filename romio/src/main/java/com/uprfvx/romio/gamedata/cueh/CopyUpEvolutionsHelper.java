@@ -23,7 +23,6 @@ package com.uprfvx.romio.gamedata.cueh;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.gamedata.Evolution;
-import com.uprfvx.romio.gamedata.Gen1Species;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 
@@ -35,33 +34,28 @@ import java.util.function.Supplier;
 /**
  * Universal implementation for things that have "copy X up evolutions" support.<br>
  * Assumes no two Species evolve into the same third Species. Note this might not hold true if evolutions are
- * randomized.<br>
- * Another assumption made, is that evolutions and prevolutions of a Species of generic type T are also
- * of T - E.g. that the evolutions and prevolutions of a {@link Gen1Species} are
- * always Gen1Species.
+ * randomized.
  */
-public class CopyUpEvolutionsHelper<T extends Species> {
+public class CopyUpEvolutionsHelper {
 
     public static class Options {
 
         private final boolean evolutionSanity;
         private final boolean copySplitEvos;
-        // The generic-isms is going to disappear either way,
-        // so having them be Species here is fine
-        private final BasicSpeciesAction<Species> noEvoAction;
-        private final EvolvedSpeciesAction<Species> evolvedAction;
-        private final BasicSpeciesAction<Species> basicAction;
-        private final EvolvedSpeciesAction<Species> splitAction;
-        private final EvolvedSpeciesAction<Species> altFormeAction;
-        private final EvolvedSpeciesAction<Species> cosmeticAction;
+        private final BasicSpeciesAction noEvoAction;
+        private final EvolvedSpeciesAction evolvedAction;
+        private final BasicSpeciesAction basicAction;
+        private final EvolvedSpeciesAction splitAction;
+        private final EvolvedSpeciesAction altFormeAction;
+        private final EvolvedSpeciesAction cosmeticAction;
 
         private Options(boolean evolutionSanity, boolean copySplitEvos,
-                       BasicSpeciesAction<Species> noEvoAction,
-                       BasicSpeciesAction<Species> basicAction,
-                       EvolvedSpeciesAction<Species> evolvedAction,
-                       EvolvedSpeciesAction<Species> splitAction,
-                       EvolvedSpeciesAction<Species> altFormeAction,
-                       EvolvedSpeciesAction<Species> cosmeticAction) {
+                       BasicSpeciesAction noEvoAction,
+                       BasicSpeciesAction basicAction,
+                       EvolvedSpeciesAction evolvedAction,
+                       EvolvedSpeciesAction splitAction,
+                       EvolvedSpeciesAction altFormeAction,
+                       EvolvedSpeciesAction cosmeticAction) {
             this.evolutionSanity = evolutionSanity;
             this.copySplitEvos = copySplitEvos;
             this.noEvoAction = noEvoAction;
@@ -73,20 +67,20 @@ public class CopyUpEvolutionsHelper<T extends Species> {
         }
 
         public static class Builder {
-            private final BasicSpeciesAction<Species> nullBasicSpeciesAction = _ -> {};
-            private final EvolvedSpeciesAction<Species> nullEvolvedSpeciesAction = (_, _, _) -> {};
+            private final BasicSpeciesAction nullBasicSpeciesAction = _ -> {};
+            private final EvolvedSpeciesAction nullEvolvedSpeciesAction = (_, _, _) -> {};
 
             private boolean evolutionSanity = true;
             private boolean copySplitEvos;
 
-            private final BasicSpeciesAction<Species> basicAction;
-            private final EvolvedSpeciesAction<Species> evolvedAction;
-            private BasicSpeciesAction<Species> noEvoAction;
-            private EvolvedSpeciesAction<Species> splitAction;
-            private EvolvedSpeciesAction<Species> altFormeAction;
-            private EvolvedSpeciesAction<Species> cosmeticAction;
+            private final BasicSpeciesAction basicAction;
+            private final EvolvedSpeciesAction evolvedAction;
+            private BasicSpeciesAction noEvoAction;
+            private EvolvedSpeciesAction splitAction;
+            private EvolvedSpeciesAction altFormeAction;
+            private EvolvedSpeciesAction cosmeticAction;
 
-            public Builder(BasicSpeciesAction<Species> basicAction, EvolvedSpeciesAction<Species> evolvedAction) {
+            public Builder(BasicSpeciesAction basicAction, EvolvedSpeciesAction evolvedAction) {
                 this.basicAction = basicAction;
                 this.evolvedAction = evolvedAction;
             }
@@ -114,7 +108,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
              * See {@link #evolutionSanity}.<br>
              * Defaults to equaling the basicAction.
              */
-            public Builder noEvoAction(BasicSpeciesAction<Species> noEvoAction) {
+            public Builder noEvoAction(BasicSpeciesAction noEvoAction) {
                 this.noEvoAction = noEvoAction;
                 return this;
             }
@@ -124,7 +118,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
              * (e.g. Poliwrath and Politoed, Silcoon and Cascoon). See also {@link #copySplitEvos}<br>
              * Defaults to equaling the evolvedAction.
              */
-            public Builder splitAction(EvolvedSpeciesAction<Species> splitAction) {
+            public Builder splitAction(EvolvedSpeciesAction splitAction) {
                 this.splitAction = splitAction;
                 return this;
             }
@@ -132,7 +126,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
             /**
              * Sets the method to run on non-cosmetic alt formes.
              */
-            public Builder altFormeAction(EvolvedSpeciesAction<Species> altFormeAction) {
+            public Builder altFormeAction(EvolvedSpeciesAction altFormeAction) {
                 this.altFormeAction = altFormeAction;
                 return this;
             }
@@ -140,7 +134,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
             /**
              * Sets the method to run on essentially cosmetic alt formes ({@link Species} explains what that is).
              */
-            public Builder cosmeticAction(EvolvedSpeciesAction<Species> cosmeticAction) {
+            public Builder cosmeticAction(EvolvedSpeciesAction cosmeticAction) {
                 this.cosmeticAction = cosmeticAction;
                 return this;
             }
@@ -189,7 +183,6 @@ public class CopyUpEvolutionsHelper<T extends Species> {
     /**
      * Applies the CopyUpEvolutionsHelper, using the supplied Options object.
      */
-    @SuppressWarnings("unchecked")
     public void apply(Options options) {
 
         SpeciesSet allSpecs = speciesSetSupplier.get();
@@ -210,7 +203,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
         }
 
         for (Species pk : basicSpecs) {
-            options.basicAction.applyTo((T) pk);
+            options.basicAction.applyTo(pk);
             processed.add(pk);
         }
 
@@ -235,9 +228,9 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 while (!relStack.isEmpty()) {
                     rel = relStack.pop();
                     if (options.copySplitEvos && splitEvos.contains(rel.to())) {
-                        options.splitAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
+                        options.splitAction.applyTo(rel.from(), rel.to(), finalEvos.contains(rel.to()));
                     } else {
-                        options.evolvedAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
+                        options.evolvedAction.applyTo(rel.from(), rel.to(), finalEvos.contains(rel.to()));
                     }
                     processed.add(rel.to());
                 }

@@ -200,7 +200,7 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 		return "src/main/java/resources/com/uprfvx/romio/graphics/" + getFileName(fileKey);
 	}
 
-	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {
+	private class BasicSpeciesPaletteAction implements BasicSpeciesAction {
 
 		@Override
 		public void applyTo(Species pk) {
@@ -215,7 +215,7 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 
 	}
 
-	private class EvolvedSpeciesPaletteAction implements EvolvedSpeciesAction<Species> {
+	private class EvolvedSpeciesPaletteAction implements EvolvedSpeciesAction {
 
 		@Override
 		public void applyTo(Species evFrom, Species evTo, boolean toMonIsFinalEvo) {

@@ -70,7 +70,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
         // copy abilities straight up evolution lines
         // still keep WG as an exception, though
-        BasicSpeciesAction<Species> basicAction = pk -> {
+        BasicSpeciesAction basicAction = pk -> {
             if (pk.getAbility1() != AbilityIDs.wonderGuard && pk.getAbility2() != AbilityIDs.wonderGuard
                     && pk.getAbility3() != AbilityIDs.wonderGuard) {
                 // Pick first ability
@@ -93,7 +93,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                 }
             }
         };
-        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) -> {
+        EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) -> {
             if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
                     && evTo.getAbility3() != AbilityIDs.wonderGuard) {
                 evTo.setAbility1(evFrom.getAbility1());

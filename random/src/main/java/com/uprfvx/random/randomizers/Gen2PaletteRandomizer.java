@@ -79,7 +79,7 @@ public class Gen2PaletteRandomizer extends PaletteRandomizer {
 		return palette;
 	}
 
-	private class BasicSpeciesPaletteAction implements BasicSpeciesAction<Species> {
+	private class BasicSpeciesPaletteAction implements BasicSpeciesAction {
 
 		@Override
 		public void applyTo(Species pk) {
@@ -96,7 +96,7 @@ public class Gen2PaletteRandomizer extends PaletteRandomizer {
 
 	}
 
-	private class EvolvedSpeciesPaletteAction implements EvolvedSpeciesAction<Species> {
+	private class EvolvedSpeciesPaletteAction implements EvolvedSpeciesAction {
 
 		@Override
 		public void applyTo(Species evFrom, Species evTo, boolean toMonIsFinalEvo) {

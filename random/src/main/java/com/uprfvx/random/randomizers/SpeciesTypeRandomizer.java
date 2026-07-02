@@ -27,13 +27,13 @@ public class SpeciesTypeRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.isTypesFollowMegaEvolutions();
         boolean dualTypeOnly = settings.isDualTypeOnly();
 
-        BasicSpeciesAction<Species> basicAction = pk -> {
+        BasicSpeciesAction basicAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             double chance = pk.getEvolutionsFrom().size() == 1 ? GSTC_HAS_EVO : GSTC_NO_EVO;
             assignRandomSecondaryType(pk, chance, dualTypeOnly);
         };
-        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
+        EvolvedSpeciesAction evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
             evTo.setPrimaryType(evFrom.getPrimaryType(false));
             evTo.setSecondaryType(evFrom.getSecondaryType(false));
 
@@ -42,7 +42,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
                 assignRandomSecondaryType(evTo, chance, dualTypeOnly);
             }
         };
-        BasicSpeciesAction<Species> noEvoAction = pk -> {
+        BasicSpeciesAction noEvoAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);

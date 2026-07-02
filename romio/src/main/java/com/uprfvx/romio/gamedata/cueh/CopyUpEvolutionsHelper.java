@@ -198,6 +198,42 @@ public class CopyUpEvolutionsHelper<T extends Species> {
         }
     }
 
+    // ----- Thoughts/Requirements for adding forme support to CUEH -----
+
+    // There needs to be an action for copying up traits to formes.
+
+    // All alt formes need to get from their conceptual base forme. If there is a chain,
+    // "lower" conceptual base formes need to be applied to first.
+
+    // Starting in Gen 7 (?), forms can have their own evolutions. How does this work?
+    // The order is probably:
+    // - Rattata
+    // - Rattata -> Raticate
+    // - Rattata -> Rattata-Alolan
+    // - Rattata-Alolan -> Raticate-Alolan
+    // - Raticate-Alolan -> Raticate-Alolan-Totem
+    // Having Raticate at the end is fine too. Note that Raticate-Alolan here never copies up from Raticate;
+    // it only copies up from Rattata-Alolan.
+    // Essentially this means that all Species incl. alt formes have a single mon they copy up from.
+    // We can still use the stack method of the current code, it just has to be able to put forme connections on there.
+
+    // Megas are alt forms that are sometimes like evos. Might be nice to have a toggle that makes
+    // megas use the evolution actions (including auto-getting the split evo one for Charizard and Mewtwo).
+
+    // There are alt formes that are essentially split evos. These should (always?) get the split evos treatment.
+    // A weird circumstance here is that Burmy does NOT have evos into each of its formes,
+    // but Meowstic and Rockruff do.
+    // Also, how do we consider Raichu-Alolan and its base forme?
+    // Is it a split evo? Or more of a forme of Raichu? The latter might be more apt solely because Pikachu->Raichu
+    // was designed as a normal evo line. Then again, the same is true for Poliwhirl->Poliwrath.
+    // Complicating things further is the fact that the Pikachu->Raichu evolution doesn't exist by default
+    // in SuMo, same with Cubone->Marowak and Exeggcute->Exeggutor.
+
+    // Essentially cosmetic alt formes should have an action, that copies over the traits.
+
+    // Since this will by necessity add even more parameters, a builder might be appropriate.
+    // -----
+
     // SpeciesSet has inbuilt filter methods for different evolutionary stages.
     // However, those assume alt forms evolve from the prevos of their base form,
     // and can thus not be used in this class.
@@ -207,10 +243,6 @@ public class CopyUpEvolutionsHelper<T extends Species> {
     // given SpeciesSet. This should make them usable with smaller SpeciesSet / species restrictions.
     // However, at the time of writing all CopyUpEvolutionsHelpers use RomHandler::getSpeciesSet...
     // TODO: integrate with species restrictions
-    // Also, there is some risk/possible bug when one Species evolves into the same other Species
-    // in two different ways. Feebas, Meowstic, Pikachu/Exeggute/Cubone (USUM), and Species granted
-    // extra Evolutions when removing time-based evos are of notice here.
-    // TODO: investigate split evos into the same species
 
     /**
      * Returns true if spec has no other {@link Species} in allSpecs that evolves into it.
@@ -237,6 +269,7 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 long evoCount = evo.getFrom().getEvolutionsFrom().stream()
                         .map(Evolution::getTo)
                         .filter(allSpecs::contains)
+                        .distinct()
                         .count();
                 if (evoCount > 1) {
                     return true;

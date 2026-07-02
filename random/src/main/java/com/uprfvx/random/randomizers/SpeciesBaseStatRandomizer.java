@@ -33,13 +33,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder)
-                .altFormeAction((baseForme, altForme) -> {
-                    if (megaEvolutionSanity && altForme.isMegaEvolution()) {
-                        copyUpShuffledStatsOrder(baseForme, altForme);
-                    }
-                })
                 .cosmeticAction(this::copyUpShuffledStatsOrder)
                 .evolutionSanity(evolutionSanity)
+                .treatMegasAsEvos(megaEvolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
 
@@ -90,24 +86,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
         AltFormeAction cosmeticAction = (baseForme, altForme) ->
                 altForme.copyBaseFormeBaseStats(baseForme);
-        AltFormeAction altFormeAction = (baseForme, altForme) -> {
-            if (altForme.isMegaEvolution()) {
-                // TODO: make split megas get assignEvoStatsRandomly.
-                if (assignEvoStatsRandomly) {
-                    assignNewStatsForEvolution(baseForme, altForme);
-                } else {
-                    copyRandomizedStatsUpEvolution(baseForme, altForme);
-                }
-            }
-        };
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(bpAction, assignEvoStatsRandomly ? randomEpAction : copyEpAction)
                 .splitAction(randomEpAction)
                 .cosmeticAction(cosmeticAction)
-                .altFormeAction(altFormeAction)
                 .evolutionSanity(evolutionSanity)
                 .copySplitEvos(true)
+                .treatMegasAsEvos(megaEvolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
 

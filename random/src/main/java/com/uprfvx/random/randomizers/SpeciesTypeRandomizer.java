@@ -17,6 +17,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
     private static final double GSTC_HAS_EVO = 0.35;
     private static final double GSTC_MIDDLE_EVO = 0.15;
     private static final double GSTC_FINAL_EVO = 0.25;
+    private static final double GSTC_MEGA_EVO = 0.25;
 
     public SpeciesTypeRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
@@ -40,6 +41,9 @@ public class SpeciesTypeRandomizer extends Randomizer {
 
             if (evTo.getSecondaryType(false) == null) {
                 double chance = toMonIsFinalEvo ? GSTC_FINAL_EVO : GSTC_MIDDLE_EVO;
+                if (evTo.isMegaEvolution()) {
+                    chance = GSTC_MEGA_EVO;
+                }
                 assignRandomSecondaryType(evTo, chance, dualTypeOnly);
             }
         };
@@ -55,24 +59,12 @@ public class SpeciesTypeRandomizer extends Randomizer {
             altForme.setSecondaryType(baseForme.getSecondaryType(false));
         };
 
-        AltFormeAction altFormeAction = (baseForme, altForme) -> {
-            if (megaEvolutionSanity) {
-                // TODO: reinstate notion that split megas should not carry type?
-                altForme.setPrimaryType(baseForme.getPrimaryType(false));
-                altForme.setSecondaryType(baseForme.getSecondaryType(false));
-
-                if (altForme.hasSecondaryType(false)) {
-                    assignRandomSecondaryType(altForme, 0.25, false);
-                }
-            }
-        };
-
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(basicAction, evolvedAction)
                 .noEvoAction(noEvoAction)
                 .cosmeticAction(cosmeticAction)
-                .altFormeAction(altFormeAction)
                 .evolutionSanity(evolutionSanity)
+                .treatMegasAsEvos(megaEvolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
 

@@ -42,6 +42,7 @@ public class CopyUpEvolutionsHelper {
 
         private final boolean evolutionSanity;
         private final boolean copySplitEvos;
+        private final boolean treatMegasAsEvos;
         private final BasicSpeciesAction noEvoAction;
         private final EvolvedSpeciesAction evolvedAction;
         private final BasicSpeciesAction basicAction;
@@ -49,7 +50,7 @@ public class CopyUpEvolutionsHelper {
         private final AltFormeAction altFormeAction;
         private final AltFormeAction cosmeticAction;
 
-        private Options(boolean evolutionSanity, boolean copySplitEvos,
+        private Options(boolean evolutionSanity, boolean copySplitEvos, boolean treatMegasAsEvos,
                         BasicSpeciesAction noEvoAction,
                         BasicSpeciesAction basicAction,
                         EvolvedSpeciesAction evolvedAction,
@@ -58,6 +59,7 @@ public class CopyUpEvolutionsHelper {
                         AltFormeAction cosmeticAction) {
             this.evolutionSanity = evolutionSanity;
             this.copySplitEvos = copySplitEvos;
+            this.treatMegasAsEvos = treatMegasAsEvos;
             this.noEvoAction = noEvoAction;
             this.basicAction = basicAction;
             this.evolvedAction = evolvedAction;
@@ -73,6 +75,7 @@ public class CopyUpEvolutionsHelper {
 
             private boolean evolutionSanity = true;
             private boolean copySplitEvos;
+            private boolean treatMegasAsEvos;
 
             private final BasicSpeciesAction basicAction;
             private final EvolvedSpeciesAction evolvedAction;
@@ -95,8 +98,8 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
-             * If false, split evos (e.g. Poliwrath and Politoed) are treated as basic Pokemon {@link Species},
-             * and will thus use the method set by {@link #basicAction} instead of {@link #evolvedAction}.
+             * If false, split evos (e.g. Poliwrath and Politoed) will be treated as basic Pokemon {@link Species},
+             * and will thus use basicAction instead of evolvedAction.
              * Defaults to false.
              */
             public Builder copySplitEvos(boolean copySplitEvos) {
@@ -105,7 +108,19 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
-             * Sets the method to run on all {@link Species}, when evolutionSanity == false.
+             * If true, mega evolutions will be treated as evolutions rather than alt formes.
+             * They will use evolvedAction rather than altFormeAction, and "split" mega evolutions
+             * (Charizard X/Y and Mewtwo X/Y) will use splitAction if applicable
+             * (see {@link #splitAction(EvolvedSpeciesAction)}).<br>
+             * Defaults to false.
+             */
+            public Builder treatMegasAsEvos(boolean treatMegasAsEvos) {
+                this.treatMegasAsEvos = treatMegasAsEvos;
+                return this;
+            }
+
+            /**
+             * Sets the action to run on all {@link Species}, when evolutionSanity == false.
              * See {@link #evolutionSanity}.<br>
              * Defaults to equaling the basicAction.
              */
@@ -115,8 +130,8 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
-             * Sets the method to run on all evolved Pokemon {@link Species} that are "split evos"
-             * (e.g. Poliwrath and Politoed, Silcoon and Cascoon). See also {@link #copySplitEvos}<br>
+             * Sets the action to run on all evolved Pokemon {@link Species} that are "split evos"
+             * (e.g. Poliwrath and Politoed, Silcoon and Cascoon). See also {@link #copySplitEvos(boolean)}.<br>
              * Defaults to equaling the evolvedAction.
              */
             public Builder splitAction(EvolvedSpeciesAction splitAction) {
@@ -125,7 +140,7 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
-             * Sets the method to run on non-cosmetic alt formes.
+             * Sets the action to run on non-cosmetic alt formes.
              */
             public Builder altFormeAction(AltFormeAction altFormeAction) {
                 this.altFormeAction = altFormeAction;
@@ -133,7 +148,7 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
-             * Sets the method to run on essentially cosmetic alt formes ({@link Species} explains what that is).
+             * Sets the action to run on essentially cosmetic alt formes ({@link Species} explains what that is).
              */
             public Builder cosmeticAction(AltFormeAction cosmeticAction) {
                 this.cosmeticAction = cosmeticAction;
@@ -144,7 +159,7 @@ public class CopyUpEvolutionsHelper {
                 if (noEvoAction == null) noEvoAction = basicAction;
                 if (splitAction == null) splitAction = evolvedAction;
                 return new Options(
-                        evolutionSanity, copySplitEvos,
+                        evolutionSanity, copySplitEvos, treatMegasAsEvos,
                         noEvoAction == null ? nullBasicSpeciesAction : noEvoAction,
                         basicAction == null ? nullBasicSpeciesAction : basicAction,
                         evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction,
@@ -193,10 +208,11 @@ public class CopyUpEvolutionsHelper {
             return;
         }
 
-        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec)).filter(Species::isBaseForme);
-        SpeciesSet allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec));
-        SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec));
-        SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec));
+        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec, options))
+                .filter(Species::isBaseForme);
+        SpeciesSet allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec, options));
+        SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec, options));
+        SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec, options));
 
         Set<Species> processed = new HashSet<>();
 
@@ -249,6 +265,9 @@ public class CopyUpEvolutionsHelper {
     }
 
     // ----- Thoughts/Requirements for adding forme support to CUEH -----
+    // TODO: most things below are implemented. Test!
+    // TODO: deal with Burmy->Wormadam
+    // TODO: deal with SuMo Pikachu->Raichu
 
     // There needs to be an action for copying up traits to formes.
 
@@ -297,9 +316,14 @@ public class CopyUpEvolutionsHelper {
     /**
      * Returns true if spec has no other {@link Species} in allSpecs that evolves into it.
      */
-    private boolean isBasicSpecies(SpeciesSet allSpecs, Species spec) {
+    private boolean isBasicSpecies(SpeciesSet allSpecs, Species spec, Options options) {
         for (Evolution evo : spec.getEvolutionsTo()) {
             if (allSpecs.contains(evo.getFrom())) {
+                return false;
+            }
+        }
+        if (options.treatMegasAsEvos && spec.isMegaEvolution()) {
+            if (allSpecs.contains(spec.getConceptualBaseForme())) {
                 return false;
             }
         }
@@ -310,7 +334,7 @@ public class CopyUpEvolutionsHelper {
      * Returns true if spec evolves from some other {@link Species} in allSpecs,
      * which in turn evolves into at least 2 {@link Species} in allSpecs.
      */
-    private boolean isSplitEvo(SpeciesSet allSpecs, Species spec) {
+    private boolean isSplitEvo(SpeciesSet allSpecs, Species spec, Options options) {
         // TODO: there was a notion in earlier code, of treating Ninjask only as a non-split evo
         //  (or technically Species which evolved through EvolutionType.LEVEL_CREATE_EXTRA).
         //  Is this something we want to recreate?
@@ -326,15 +350,26 @@ public class CopyUpEvolutionsHelper {
                 }
             }
         }
+        if (options.treatMegasAsEvos && spec.isMegaEvolution()) {
+            if (allSpecs.contains(spec.getConceptualBaseForme())) {
+                int megaCount = spec.getConceptualBaseForme()
+                        .getAltFormes()
+                        .filter(Species::isMegaEvolution)
+                        .size();
+                if (megaCount > 1) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
     /**
-     * Returns true if spec is not a {@link #isBasicSpecies(SpeciesSet, Species) basic species},
+     * Returns true if spec is not a {@link #isBasicSpecies(SpeciesSet, Species, Options) basic species},
      * and also spec does not evolve into any other {@link Species} in allSpecs.
      */
-    private boolean isFinalEvo(SpeciesSet allSpecs, Species spec) {
-        if (isBasicSpecies(allSpecs, spec)) {
+    private boolean isFinalEvo(SpeciesSet allSpecs, Species spec, Options options) {
+        if (isBasicSpecies(allSpecs, spec, options)) {
             return false;
         }
         for (Evolution evo : spec.getEvolutionsFrom()) {

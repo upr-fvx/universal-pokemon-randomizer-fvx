@@ -99,18 +99,12 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                 evTo.copyAbilities(evFrom);
             }
         };
-        AltFormeAction altFormeAction = (baseForme, altForme) -> {
-            // TODO: maybe reproduce older behavior of "split" megas not copying abilities
-            if (megaEvolutionSanity && altForme.isMegaEvolution()) {
-                altForme.copyAbilities(baseForme);
-            }
-        };
 
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(basicAction, evolvedAction)
-                .altFormeAction(altFormeAction)
                 .cosmeticAction((baseForme, altForme) -> altForme.copyAbilities(baseForme))
                 .evolutionSanity(evolutionSanity)
+                .treatMegasAsEvos(true)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
 

@@ -49,7 +49,7 @@ public class CopyUpEvolutionsHelperTest {
                 .noEvoAction(pk -> callCounter.noEvo.compute(pk, addOne))
                 .altFormeAction(((_, pk) -> callCounter.altForme.compute(pk, addOne)))
                 .cosmeticAction(((_, pk) -> callCounter.cosmetic.compute(pk, addOne)))
-                
+
                 .evolutionSanity(evolutionSanity)
                 .copySplitEvos(copySplitEvos)
                 .build();

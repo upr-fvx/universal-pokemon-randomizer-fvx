@@ -6,6 +6,7 @@ import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -29,8 +30,11 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         shuffledStatsOrders = new HashMap<>();
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, false,
-                this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder);
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder)
+                .evolutionSanity(evolutionSanity)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
 
         romHandler.getSpeciesSetInclFormes()
                 .filter(pk -> pk.isEssentiallyCosmetic() || (megaEvolutionSanity && pk.isMegaEvolution()))
@@ -82,8 +86,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         EvolvedSpeciesAction<Species> copyEpAction = (evFrom, evTo, toMonIsFinalEvo) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, true, bpAction,
-                assignEvoStatsRandomly ? randomEpAction : copyEpAction, randomEpAction, bpAction);
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(bpAction, assignEvoStatsRandomly ? randomEpAction : copyEpAction)
+                .splitAction(randomEpAction)
+                .evolutionSanity(evolutionSanity)
+                .copySplitEvos(true)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
 
         romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
                 .forEach(pk -> pk.copyBaseFormeBaseStats(pk.getConceptualBaseForme()));

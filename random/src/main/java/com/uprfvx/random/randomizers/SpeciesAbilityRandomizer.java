@@ -4,6 +4,10 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.GlobalConstants;
+import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.List;
@@ -66,7 +70,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
         // copy abilities straight up evolution lines
         // still keep WG as an exception, though
-        copyUpEvolutionsHelper.apply(evolutionSanity, false, pk -> {
+        BasicSpeciesAction<Species> basicAction = pk -> {
             if (pk.getAbility1() != AbilityIDs.wonderGuard && pk.getAbility2() != AbilityIDs.wonderGuard
                     && pk.getAbility3() != AbilityIDs.wonderGuard) {
                 // Pick first ability
@@ -88,14 +92,21 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                             pk.getAbility1(), pk.getAbility2()));
                 }
             }
-        }, (evFrom, evTo, _) -> {
+        };
+        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) -> {
             if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
                     && evTo.getAbility3() != AbilityIDs.wonderGuard) {
                 evTo.setAbility1(evFrom.getAbility1());
                 evTo.setAbility2(evFrom.getAbility2());
                 evTo.setAbility3(evFrom.getAbility3());
             }
-        });
+        };
+
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(basicAction, evolvedAction)
+                .evolutionSanity(evolutionSanity)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
 
         // TODO: this removes the notion that "split" mega evos should not get abilities carried,
         //  found in earlier code. Think about it some.

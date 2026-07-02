@@ -42,15 +42,128 @@ import java.util.function.Supplier;
  */
 public class CopyUpEvolutionsHelper<T extends Species> {
 
-    private final BasicSpeciesAction<T> nullBasicSpeciesAction = _ -> {};
-    private final EvolvedSpeciesAction<T> nullEvolvedSpeciesAction = (_, _, _) -> {};
+    public static class Options {
+
+        private final boolean evolutionSanity;
+        private final boolean copySplitEvos;
+        // The generic-isms is going to disappear either way,
+        // so having them be Species here is fine
+        private final BasicSpeciesAction<Species> noEvoAction;
+        private final EvolvedSpeciesAction<Species> evolvedAction;
+        private final BasicSpeciesAction<Species> basicAction;
+        private final EvolvedSpeciesAction<Species> splitAction;
+        private final EvolvedSpeciesAction<Species> altFormeAction;
+        private final EvolvedSpeciesAction<Species> cosmeticAction;
+
+        private Options(boolean evolutionSanity, boolean copySplitEvos,
+                       BasicSpeciesAction<Species> noEvoAction,
+                       BasicSpeciesAction<Species> basicAction,
+                       EvolvedSpeciesAction<Species> evolvedAction,
+                       EvolvedSpeciesAction<Species> splitAction,
+                       EvolvedSpeciesAction<Species> altFormeAction,
+                       EvolvedSpeciesAction<Species> cosmeticAction) {
+            this.evolutionSanity = evolutionSanity;
+            this.copySplitEvos = copySplitEvos;
+            this.noEvoAction = noEvoAction;
+            this.basicAction = basicAction;
+            this.evolvedAction = evolvedAction;
+            this.splitAction = splitAction;
+            this.altFormeAction = altFormeAction;
+            this.cosmeticAction = cosmeticAction;
+        }
+
+        public static class Builder {
+            private final BasicSpeciesAction<Species> nullBasicSpeciesAction = _ -> {};
+            private final EvolvedSpeciesAction<Species> nullEvolvedSpeciesAction = (_, _, _) -> {};
+
+            private boolean evolutionSanity = true;
+            private boolean copySplitEvos;
+
+            private final BasicSpeciesAction<Species> basicAction;
+            private final EvolvedSpeciesAction<Species> evolvedAction;
+            private BasicSpeciesAction<Species> noEvoAction;
+            private EvolvedSpeciesAction<Species> splitAction;
+            private EvolvedSpeciesAction<Species> altFormeAction;
+            private EvolvedSpeciesAction<Species> cosmeticAction;
+
+            public Builder(BasicSpeciesAction<Species> basicAction, EvolvedSpeciesAction<Species> evolvedAction) {
+                this.basicAction = basicAction;
+                this.evolvedAction = evolvedAction;
+            }
+
+            /**
+             * If false, the noEvoAction will be used on all {@link Species}. Defaults to true.
+             */
+            public Builder evolutionSanity(boolean evolutionSanity) {
+                this.evolutionSanity = evolutionSanity;
+                return this;
+            }
+
+            /**
+             * If false, split evos (e.g. Poliwrath and Politoed) are treated as basic Pokemon {@link Species},
+             * and will thus use the method set by {@link #basicAction} instead of {@link #evolvedAction}.
+             * Defaults to false.
+             */
+            public Builder copySplitEvos(boolean copySplitEvos) {
+                this.copySplitEvos = copySplitEvos;
+                return this;
+            }
+
+            /**
+             * Sets the method to run on all {@link Species}, when evolutionSanity == false.
+             * See {@link #evolutionSanity}.<br>
+             * Defaults to equaling the basicAction.
+             */
+            public Builder noEvoAction(BasicSpeciesAction<Species> noEvoAction) {
+                this.noEvoAction = noEvoAction;
+                return this;
+            }
+
+            /**
+             * Sets the method to run on all evolved Pokemon {@link Species} that are "split evos"
+             * (e.g. Poliwrath and Politoed, Silcoon and Cascoon). See also {@link #copySplitEvos}<br>
+             * Defaults to equaling the evolvedAction.
+             */
+            public Builder splitAction(EvolvedSpeciesAction<Species> splitAction) {
+                this.splitAction = splitAction;
+                return this;
+            }
+
+            /**
+             * Sets the method to run on non-cosmetic alt formes.
+             */
+            public Builder altFormeAction(EvolvedSpeciesAction<Species> altFormeAction) {
+                this.altFormeAction = altFormeAction;
+                return this;
+            }
+
+            /**
+             * Sets the method to run on essentially cosmetic alt formes ({@link Species} explains what that is).
+             */
+            public Builder cosmeticAction(EvolvedSpeciesAction<Species> cosmeticAction) {
+                this.cosmeticAction = cosmeticAction;
+                return this;
+            }
+
+            public Options build() {
+                if (noEvoAction == null) noEvoAction = basicAction;
+                if (splitAction == null) splitAction = evolvedAction;
+                return new Options(
+                        evolutionSanity, copySplitEvos,
+                        noEvoAction == null ? nullBasicSpeciesAction : noEvoAction,
+                        basicAction == null ? nullBasicSpeciesAction : basicAction,
+                        evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction,
+                        splitAction == null ? nullEvolvedSpeciesAction : splitAction,
+                        altFormeAction == null ? nullEvolvedSpeciesAction : altFormeAction,
+                        cosmeticAction == null ? nullEvolvedSpeciesAction : cosmeticAction
+                );
+            }
+        }
+    }
+
+
 
     private final Supplier<SpeciesSet> speciesSetSupplier;
-
-    private BasicSpeciesAction<T> noEvoAction;
-    private BasicSpeciesAction<T> basicAction;
-    private EvolvedSpeciesAction<T> evolvedAction;
-    private EvolvedSpeciesAction<T> splitAction;
 
     public CopyUpEvolutionsHelper(SpeciesSet speciesSet) {
         this.speciesSetSupplier = () -> speciesSet;
@@ -58,83 +171,6 @@ public class CopyUpEvolutionsHelper<T extends Species> {
 
     public CopyUpEvolutionsHelper(Supplier<SpeciesSet> speciesSetSupplier) {
         this.speciesSetSupplier = speciesSetSupplier;
-    }
-
-    /**
-     * Sets the method to run on all {@link Species}, when evolutionSanity == false. (see {@link #apply(boolean, boolean)})
-     */
-    private void setNoEvoAction(BasicSpeciesAction<T> noEvoAction) {
-        this.noEvoAction = noEvoAction == null ? nullBasicSpeciesAction : noEvoAction;
-    }
-
-    /**
-     * Sets the method to run on basic {@link Species}.
-     */
-    private void setBasicAction(BasicSpeciesAction<T> basicAction) {
-        this.basicAction = basicAction == null ? nullBasicSpeciesAction : basicAction;
-    }
-
-    /**
-     * Sets the method to run on evolved {@link Species}.
-     */
-    private void setEvolvedAction(EvolvedSpeciesAction<T> evolvedAction) {
-        this.evolvedAction = evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction;
-    }
-
-    /**
-     * Sets the method to run on split evos.
-     */
-    private void setSplitAction(EvolvedSpeciesAction<T> splitAction) {
-        this.splitAction = splitAction == null ? nullEvolvedSpeciesAction : splitAction;
-    }
-
-    /**
-     * Applies the CopyUpEvolutionsHelper, using the {@link SpeciesSet} given by the constructor,
-     * boolean options, and a number of circumstantial "actions".
-     * Any action argument can be set to null, to have it do nothing.
-     *
-     * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
-     * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and
-     *                        will thus use bpAction instead of splitAction.
-     * @param bpAction        Method to run on all basic Pokemon {@link Species}.
-     * @param epAction        Method to run on all evolved Pokemon {@link Species} that are not
-     *                        "split evos" (e.g. Venusaur, Metapod).
-     * @param splitAction     Method to run on all evolved Pokemon {@link Species} that are "split
-     *                        evos" (e.g. Poliwrath and Politoed, Silcoon and
-     *                        Cascoon).
-     * @param noEvoAction     Method to run on all {@link Species}, when evolutionSanity ==
-     *                        false.
-     */
-    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction<T> bpAction,
-                      EvolvedSpeciesAction<T> epAction, EvolvedSpeciesAction<T> splitAction, BasicSpeciesAction<T> noEvoAction) {
-        setBasicAction(bpAction);
-        setEvolvedAction(epAction);
-        setSplitAction(splitAction);
-        setNoEvoAction(noEvoAction);
-
-        apply(evolutionSanity, copySplitEvos);
-    }
-
-    /**
-     * A simplified version of {@link #apply(boolean, boolean, BasicSpeciesAction, EvolvedSpeciesAction, EvolvedSpeciesAction, BasicSpeciesAction)},
-     * which supposes split evos are treated the same as other evolved {@link Species},
-     * and that the bpAction is used when evolutionSanity == false.
-     *
-     * @param evolutionSanity If false, the bpAction will be used on all {@link Species}.
-     * @param copySplitEvos   If false, split evos (e.g. Poliwrath and Politoed) are
-     *                        treated as basic Pokemon {@link Species}, and will thus use bpAction
-     *                        instead of epAction.
-     * @param bpAction        Method to run on all basic Pokemon {@link Species}.
-     * @param epAction        Method to run on all evolved Pokemon {@link Species}.
-     */
-    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction<T> bpAction,
-                      EvolvedSpeciesAction<T> epAction) {
-        setBasicAction(bpAction);
-        setEvolvedAction(epAction);
-        setSplitAction(epAction);
-        setNoEvoAction(bpAction);
-
-        apply(evolutionSanity, copySplitEvos);
     }
 
     private record CopyUpRelation(Species from, Species to) {
@@ -151,16 +187,15 @@ public class CopyUpEvolutionsHelper<T extends Species> {
     }
 
     /**
-     * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
-     * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and will thus use basicAction instead of splitAction.
+     * Applies the CopyUpEvolutionsHelper, using the supplied Options object.
      */
     @SuppressWarnings("unchecked")
-    private void apply(boolean evolutionSanity, boolean copySplitEvos) {
+    public void apply(Options options) {
 
         SpeciesSet allSpecs = speciesSetSupplier.get();
 
-        if (!evolutionSanity) {
-            allSpecs.forEach(pk -> noEvoAction.applyTo((T) pk));
+        if (!options.evolutionSanity) {
+            allSpecs.forEach(options.noEvoAction::applyTo);
             return;
         }
 
@@ -170,12 +205,12 @@ public class CopyUpEvolutionsHelper<T extends Species> {
 
         Set<Species> processed = new HashSet<>();
 
-        if (!copySplitEvos) {
+        if (!options.copySplitEvos) {
             basicSpecs.addAll(splitEvos);
         }
 
         for (Species pk : basicSpecs) {
-            basicAction.applyTo((T) pk);
+            options.basicAction.applyTo((T) pk);
             processed.add(pk);
         }
 
@@ -199,10 +234,10 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 // Do the evolution action for everything left on the stack.
                 while (!relStack.isEmpty()) {
                     rel = relStack.pop();
-                    if (copySplitEvos && splitEvos.contains(rel.to())) {
-                        splitAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
+                    if (options.copySplitEvos && splitEvos.contains(rel.to())) {
+                        options.splitAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
                     } else {
-                        evolvedAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
+                        options.evolvedAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
                     }
                     processed.add(rel.to());
                 }

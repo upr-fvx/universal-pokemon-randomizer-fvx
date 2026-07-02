@@ -74,7 +74,17 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 
 		// has to use a separate CopyUpEvolutionsHelper which works with Gen1Pokemon
 		CopyUpEvolutionsHelper<Gen1Species> cueh = new CopyUpEvolutionsHelper<>(romHandler::getSpeciesSet);
-		cueh.apply(evolutionSanity, true, new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction());
+
+		// This is temporarily commented out because of the generic nature of CUEH making it hard to work with.
+		// While not a problem if this gets merged with the base-stat-randomization branch, where CUEH has
+		// been made non-generic, it does prevent us from merging directly with master (without breaking stuff)
+		// TODO: figure out what to do here
+//		CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+//				.Builder(new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction())
+//				.evolutionSanity(evolutionSanity)
+//				.copySplitEvos(true)
+//				.build();
+//		cueh.apply(cuehOptions);
 	}
 
 	private SGBPaletteID getRandomPaletteID() {

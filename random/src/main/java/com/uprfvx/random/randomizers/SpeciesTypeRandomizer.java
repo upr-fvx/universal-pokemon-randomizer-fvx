@@ -4,6 +4,7 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -47,8 +48,12 @@ public class SpeciesTypeRandomizer extends Randomizer {
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);
         };
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, false, basicAction, evolvedAction,
-                null, noEvoAction);
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(basicAction, evolvedAction)
+                .noEvoAction(noEvoAction)
+                .evolutionSanity(evolutionSanity)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
 
         carryTypesToAltFormes();
 

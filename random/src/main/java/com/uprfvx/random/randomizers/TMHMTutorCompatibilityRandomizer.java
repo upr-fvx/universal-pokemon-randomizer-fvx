@@ -5,6 +5,9 @@ import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveLearnt;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
+import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -47,10 +50,16 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         tmHMs.addAll(romHandler.getHMMoves());
 
         if (followEvolutions) {
-            copyUpEvolutionsHelper.apply(true, false,
-                    pk -> randomizePokemonMoveCompatibility(pk, compat.get(pk), tmHMs, requiredEarlyOn, preferSameType),
-                    (evFrom, evTo, toMonIsFinalEvo) -> copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo,
-                            compat.get(evFrom), compat.get(evTo), tmHMs, preferSameType));
+            BasicSpeciesAction<Species> basicAction = pk ->
+                    randomizePokemonMoveCompatibility(pk, compat.get(pk), tmHMs, requiredEarlyOn, preferSameType);
+            EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) ->
+                    copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo, compat.get(evFrom), compat.get(evTo),
+                            tmHMs, preferSameType);
+
+            CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                    .Builder(basicAction, evolvedAction)
+                    .build();
+            copyUpEvolutionsHelper.apply(cuehOptions);
         } else {
             for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
                 randomizePokemonMoveCompatibility(compatEntry.getKey(), compatEntry.getValue(), tmHMs, requiredEarlyOn,
@@ -165,14 +174,19 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
         // Don't do anything with the base, just copy upwards to ensure later evolutions
         // retain learn compatibility
-        copyUpEvolutionsHelper.apply(true, true, pk -> {},
-                (evFrom, evTo, toMonIsFinalEvo) -> {
-                    boolean[] fromCompat = compat.get(evFrom);
-                    boolean[] toCompat = compat.get(evTo);
-                    for (int i = 1; i < toCompat.length; i++) {
-                        toCompat[i] |= fromCompat[i];
-                    }
-                });
+        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) -> {
+            boolean[] fromCompat = compat.get(evFrom);
+            boolean[] toCompat = compat.get(evTo);
+            for (int i = 1; i < toCompat.length; i++) {
+                toCompat[i] |= fromCompat[i];
+            }
+        };
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(null, evolvedAction)
+                .copySplitEvos(true)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
+
         romHandler.setTMHMCompatibility(compat);
         tmhmChangesMade = true;
     }
@@ -224,10 +238,17 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         List<Integer> priorityTutors = new ArrayList<>();
 
         if (followEvolutions) {
-            copyUpEvolutionsHelper.apply(true, true,
-                    pk -> randomizePokemonMoveCompatibility(pk, compat.get(pk), mts, priorityTutors, preferSameType),
-                    (evFrom, evTo, toMonIsFinalEvo) -> copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo,
-                            compat.get(evFrom), compat.get(evTo), mts, preferSameType));
+            BasicSpeciesAction<Species> basicAction = pk ->
+                    randomizePokemonMoveCompatibility(pk, compat.get(pk), mts, priorityTutors, preferSameType);
+            EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) ->
+                    copyPokemonMoveCompatibilityUpEvolutions(evFrom, evTo, compat.get(evFrom), compat.get(evTo),
+                            mts, preferSameType);
+
+            CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                    .Builder(basicAction, evolvedAction)
+                    .copySplitEvos(true)
+                    .build();
+            copyUpEvolutionsHelper.apply(cuehOptions);
         }
         else {
             for (Map.Entry<Species, boolean[]> compatEntry : compat.entrySet()) {
@@ -285,14 +306,19 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
         }
         Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
         // Don't do anything with the base, just copy upwards to ensure later evolutions retain learn compatibility
-        copyUpEvolutionsHelper.apply(true, true, pk -> {},
-                (evFrom, evTo, toMonIsFinalEvo) -> {
-                    boolean[] fromCompat = compat.get(evFrom);
-                    boolean[] toCompat = compat.get(evTo);
-                    for (int i = 1; i < toCompat.length; i++) {
-                        toCompat[i] |= fromCompat[i];
-                    }
-                });
+        EvolvedSpeciesAction<Species> evolvedAction = (evFrom, evTo, _) -> {
+            boolean[] fromCompat = compat.get(evFrom);
+            boolean[] toCompat = compat.get(evTo);
+            for (int i = 1; i < toCompat.length; i++) {
+                toCompat[i] |= fromCompat[i];
+            }
+        };
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(null, evolvedAction)
+                .copySplitEvos(true)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
+
         romHandler.setMoveTutorCompatibility(compat);
         tutorChangesMade = true;
     }

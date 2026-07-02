@@ -137,6 +137,19 @@ public class CopyUpEvolutionsHelper<T extends Species> {
         apply(evolutionSanity, copySplitEvos);
     }
 
+    private record CopyUpRelation(Species from, Species to) {
+        public static CopyUpRelation into(Species to) {
+            // Evolution takes priority; Raticate-Alolan should copy up from Rattata-Alolan instead of Raticate-Base.
+            if (!to.getEvolutionsTo().isEmpty()) {
+                return new CopyUpRelation(to.getEvolutionsTo().getFirst().getFrom(), to);
+            } else if (!to.isBaseForme()) {
+                return new CopyUpRelation(to.getConceptualBaseForme(), to);
+            } else {
+                throw new IllegalStateException("Argument to is neither an evolved Pokémon nor an alt forme!!");
+            }
+        }
+    }
+
     /**
      * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
      * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and will thus use basicAction instead of splitAction.
@@ -173,25 +186,25 @@ public class CopyUpEvolutionsHelper<T extends Species> {
                 // Non-processed specs at this point must have
                 // a linear chain of single evolutions down to
                 // a processed spec.
-                Stack<Evolution> evStack = new Stack<>();
-                Evolution ev = pk.getEvolutionsTo().getFirst();
-                while (!processed.contains(ev.getFrom())) {
-                    evStack.push(ev);
-                    ev = ev.getFrom().getEvolutionsTo().getFirst();
+                Stack<CopyUpRelation> relStack = new Stack<>();
+                CopyUpRelation rel = CopyUpRelation.into(pk);
+                while (!processed.contains(rel.from())) {
+                    relStack.push(rel);
+                    rel = CopyUpRelation.into(rel.from());
                 }
-                evStack.push(ev);
+                relStack.push(rel);
 
                 // Now "ev" is set to an evolution from a Species that has had
                 // the base action done on it to one that hasn't.
                 // Do the evolution action for everything left on the stack.
-                while (!evStack.isEmpty()) {
-                    ev = evStack.pop();
-                    if (copySplitEvos && splitEvos.contains(ev.getTo())) {
-                        splitAction.applyTo((T) ev.getFrom(), (T) ev.getTo(), finalEvos.contains(ev.getTo()));
+                while (!relStack.isEmpty()) {
+                    rel = relStack.pop();
+                    if (copySplitEvos && splitEvos.contains(rel.to())) {
+                        splitAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
                     } else {
-                        evolvedAction.applyTo((T) ev.getFrom(), (T) ev.getTo(), finalEvos.contains(ev.getTo()));
+                        evolvedAction.applyTo((T) rel.from(), (T) rel.to(), finalEvos.contains(rel.to()));
                     }
-                    processed.add(ev.getTo());
+                    processed.add(rel.to());
                 }
 
             }

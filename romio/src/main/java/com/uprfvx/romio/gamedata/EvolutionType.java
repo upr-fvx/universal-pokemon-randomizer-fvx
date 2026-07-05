@@ -55,7 +55,6 @@ public enum EvolutionType {
     LEVEL_UPSIDE_DOWN, // used by Inkay
     LEVEL_RAIN, // used by Sliggoo
     LEVEL_DAY, LEVEL_NIGHT,
-    LEVEL_FEMALE_ESPURR, // used by Meowstic. Separation from LEVEL_FEMALE likely has to do with this implying a forme.
     // Gen 7+
     // used by Cosmoem. The latter implies an impossible evo; you could only evolve it in some *other* game.
     LEVEL_GAME_THIS, LEVEL_GAME_OTHER,
@@ -79,7 +78,6 @@ public enum EvolutionType {
             LEVEL_UPSIDE_DOWN, // Inkay: Level 30
             LEVEL_RAIN, // Sliggoo: Level 50
             LEVEL_DAY, LEVEL_NIGHT, // Various: Level > 0
-            LEVEL_FEMALE_ESPURR, // Espurr: Level 25
             LEVEL_GAME_THIS, LEVEL_GAME_OTHER, // Cosmoem: Level 53
             LEVEL_GAME_THIS_DAY, LEVEL_GAME_OTHER_DAY, LEVEL_GAME_THIS_NIGHT, LEVEL_GAME_OTHER_NIGHT, LEVEL_DUSK, // Rockruff: Level 25
             LEVEL_ULTRA // Cubone: Level 28

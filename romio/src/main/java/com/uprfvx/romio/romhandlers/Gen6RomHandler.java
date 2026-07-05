@@ -349,6 +349,16 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     if (method >= 1 && method <= Gen6Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen6Constants.evolutionTypeFromIndex(method);
                         if (et.equals(EvolutionType.HIGH_BEAUTY)) continue; // Remove Feebas "split" evolution
+
+                        // Internally, Espurr -> Meowstic-f uses a special evo method that works like LEVEL_FEMALE_ONLY,
+                        // but also forcibly sets the forme to 1 upon evolving. This is because the evo struct
+                        // does not include forme data. We chose to hide this, with the possible future caveat
+                        // that changing the EvolutionType of this evo won't lead to one into Meowstic-F (but -M).
+                        if (pk.getNumber() == SpeciesIDs.espurr && method == Gen6Constants.meowsticFEvolutionMethod) {
+                            et = EvolutionType.LEVEL_FEMALE_ONLY;
+                            species = SpeciesIDs.Gen6Formes.meowsticF;
+                        }
+
                         int extraInfo = readWord(evoEntry, evo * 6 + 2);
                         Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
                         if (!pk.getEvolutionsFrom().contains(evol)) {
@@ -644,10 +654,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         stats[Gen6Constants.bsSecondaryEggGroupOffset] = secondaryEggGroupByte;
         stats[Gen6Constants.bsEggCyclesOffset] = (byte) bi.getEggCycles();
 
-        // TODO: this is a very risky way of checking for the form, fix it
-        if (pkmn.getFullName().equals("Meowstic")) {
+        if (pkmn.getNumber() == SpeciesIDs.meowstic) {
             stats[Gen6Constants.bsGenderOffset] = 0;
-        } else if (pkmn.getFullName().equals("Meowstic-F")) {
+        } else if (pkmn.getNumber() == SpeciesIDs.Gen6Formes.meowsticF) {
             stats[Gen6Constants.bsGenderOffset] = (byte)0xFE;
         }
     }
@@ -666,7 +675,11 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 int evosWritten = 0;
                 for (Evolution evo : pk.getEvolutionsFrom()) {
-                    writeWord(evoEntry, evosWritten * 6, Gen6Constants.evolutionTypeToIndex(evo.getType()));
+                    int method = Gen6Constants.evolutionTypeToIndex(evo.getType());
+                    if (pk.getNumber() == SpeciesIDs.espurr && evo.getType() == EvolutionType.LEVEL_FEMALE_ONLY) {
+                        method = Gen6Constants.meowsticFEvolutionMethod;
+                    }
+                    writeWord(evoEntry, evosWritten * 6, method);
                     writeWord(evoEntry, evosWritten * 6 + 2, evo.getExtraInfo());
                     writeWord(evoEntry, evosWritten * 6 + 4, evo.getTo().getNumber());
                     evosWritten++;

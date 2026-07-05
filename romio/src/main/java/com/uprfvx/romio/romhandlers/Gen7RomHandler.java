@@ -416,6 +416,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         if (forme == -1) {
                             forme = 0;
                         }
+                        // Espurr -> Meowstic-F uses a redundant forme-setting evo method, as a carryover from Gen 6
+                        // which lacked forme data in the evo struct. No reason not to normalize it.
+                        if (pkFrom.getNumber() == SpeciesIDs.espurr && method == Gen7Constants.meowsticFEvolutionMethod) {
+                            et = EvolutionType.LEVEL_FEMALE_ONLY;
+                            forme = 1; // Meowstic-F forme id
+                        }
+
                         int level = evoEntry[i * 8 + 7];
                         Species pkTo = pokes[species].getForme(forme);
                         Evolution evo = new Evolution(pkFrom, pkTo, et, extraInfo);

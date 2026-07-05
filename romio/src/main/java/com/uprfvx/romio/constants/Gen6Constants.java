@@ -688,8 +688,10 @@ public class Gen6Constants {
             EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.MAGNETIC_FIELD, EvolutionType.MOSS_ROCK,
             EvolutionType.ICE_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
             EvolutionType.LEVEL_WITH_DARK, EvolutionType.LEVEL_RAIN, EvolutionType.LEVEL_DAY, EvolutionType.LEVEL_NIGHT,
-            EvolutionType.LEVEL_FEMALE_ESPURR,
+            EvolutionType.NONE,
     };
+
+    public static final int meowsticFEvolutionMethod = 34;
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
         for (int i = 0; i < evolutionTypeTable.length; i++) {

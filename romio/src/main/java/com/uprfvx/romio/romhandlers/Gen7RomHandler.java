@@ -446,6 +446,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+
+        addSMKantoEvolutions();
     }
 
     private EvolutionType getGameSpecificEvolutionType(byte[] evoEntry, int evo) {
@@ -462,6 +464,23 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } else {
             throw new RuntimeException("Unexpected evolution method value: " + method);
         }
+    }
+
+    private void addSMKantoEvolutions() {
+        // In SM these mons have no way of evolving into the kantonian/base forms,
+        // but conceptually they definitely should be considered evolutions.
+        // This allows both to be true, by giving them an evo with EvolutionType.NONE.
+        if (romEntry.getRomType() == Gen7Constants.Type_SM) {
+            addNoneEvolutionBetween(pokes[SpeciesIDs.pikachu], pokes[SpeciesIDs.raichu]);
+            addNoneEvolutionBetween(pokes[SpeciesIDs.cubone], pokes[SpeciesIDs.marowak]);
+            addNoneEvolutionBetween(pokes[SpeciesIDs.exeggcute], pokes[SpeciesIDs.exeggutor]);
+        }
+    }
+
+    private void addNoneEvolutionBetween(Species from, Species to) {
+        Evolution evo = new Evolution(from, to, EvolutionType.NONE, 0);
+        from.getEvolutionsFrom().add(evo);
+        to.getEvolutionsTo().add(evo);
     }
 
     private void populateMegaEvolutions() {
@@ -708,6 +727,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 }
                 int evosWritten = 0;
                 for (Evolution evo : pk.getEvolutionsFrom()) {
+                    if (evo.getType() == EvolutionType.NONE) continue; // should not be written to ROM
+
                     Species toPK = evo.getTo();
                     writeWord(evoEntry, evosWritten * 8, Gen7Constants.evolutionTypeToIndex(evo.getType()));
                     int extraInfo;
@@ -2687,7 +2708,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             if (sp == null)
                 continue;
 
-            Set<Evolution> extraEvolutions = new HashSet<>();
             for (int i = 0; i < sp.getEvolutionsFrom().size(); i++) {
                 Evolution evo = sp.getEvolutionsFrom().get(i);
 
@@ -2765,29 +2785,20 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         markImprovedEvolutions(sp);
                         evo.updateEvolutionMethod(EvolutionType.LEVEL_NIGHT, evo.getExtraInfo(), useEstimatedLevels);
                         break;
+                    case NONE:
+                        //Add Kanto form evolutions
+                        //(USUM already has a function for this)
+                        if (this.getROMType() == Gen7Constants.Type_SM) {
+                            switch (evo.getFrom().getNumber()) {
+                                case SpeciesIDs.pikachu:
+                                case SpeciesIDs.exeggcute:
+                                case SpeciesIDs.cubone:
+                                    markImprovedEvolutions(sp);
+                                    evo.updateEvolutionMethod(EvolutionType.STONE, ItemIDs.moonStone, useEstimatedLevels);
+                            }
+                        }
+                        break;
                 }
-
-                if(this.getROMType() == Gen7Constants.Type_SM) {
-                    //Add Kanto form evolutions
-                    //(USUM already has a function for this)
-                    switch (evo.getFrom().getNumber()) {
-                        case SpeciesIDs.pikachu:
-                        case SpeciesIDs.exeggcute:
-                        case SpeciesIDs.cubone:
-                            markImprovedEvolutions(sp);
-                            // We don't know if evo.getTo() has a baseForme,
-                            // since it might have been randomized...
-                            Species kantoForm = evo.getTo().isBaseForme() ? evo.getTo() : evo.getTo().getBaseForme();
-                            Evolution extraEvo = new Evolution(evo.getFrom(), kantoForm,
-                                    EvolutionType.STONE, ItemIDs.moonStone, evo.getEstimatedEvoLvl());
-                            extraEvolutions.add(extraEvo);
-                    }
-                }
-            }
-
-            sp.getEvolutionsFrom().addAll(extraEvolutions);
-            for (Evolution ev : extraEvolutions) {
-                ev.getTo().getEvolutionsTo().add(ev);
             }
         }
     }

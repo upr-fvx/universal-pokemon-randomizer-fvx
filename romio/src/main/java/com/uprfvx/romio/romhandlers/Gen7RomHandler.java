@@ -411,10 +411,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         int extraInfo = readWord(evoEntry, i * 8 + 2);
                         int forme = evoEntry[i * 8 + 6];
                         // forme == -1 is used internally to mean "keep the forme upon evolving".
-                        // Most mons use this value, and it is what makes e.g. Burmy->Wormadam
-                        // and Flabébé->Floette work as expected.
+                        // Most mons use this value, and it is what makes e.g. Burmy->Wormadam,
+                        // Flabébé->Floette->Florges, and Pumpkaboo->Gourgeist work as expected.
                         if (forme == -1) {
-                            forme = 0;
+                            forme = pkFrom.getFormeNumber();
                         }
                         // Espurr -> Meowstic-F uses a redundant forme-setting evo method, as a carryover from Gen 6
                         // which lacked forme data in the evo struct. No reason not to normalize it.
@@ -425,6 +425,15 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
                         int level = evoEntry[i * 8 + 7];
                         Species pkTo = pokes[species].getForme(forme);
+                        if (pkTo.isBaseForme() && forme != 0) {
+                            // In this case the forme to evolve into was "true cosmetic", and redirected
+                            // since true cosmetic formes don't get Species objects.
+                            // This happens to Floette->Florges*, but we don't want Florges to have evolutions
+                            // from all of Floette's non-eternal alt formes.
+                            // (*because Floette-Eternal forces Floettes other formes to be essentially cosmetic)
+                            continue;
+                        }
+
                         Evolution evo = new Evolution(pkFrom, pkTo, et, extraInfo);
                         if (et.usesLevelThreshold()) {
                             evo.updateEvolutionMethod(evo.getType(), level);

@@ -267,7 +267,7 @@ public class CopyUpEvolutionsHelper {
     // ----- Thoughts/Requirements for adding forme support to CUEH -----
     // TODO: most things below are implemented. Test!
     // TODO: deal with Burmy->Wormadam
-    // TODO: deal with Pumpkaboo->Gourgeist, and all other "-1"/carry-forme-automatically evos (also floette)
+    // TODO: deal with Pumpkaboo->Gourgeist. Do we want these to be essentially cosmetic or not??
 
     // There needs to be an action for copying up traits to formes.
 

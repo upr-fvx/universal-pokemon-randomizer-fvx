@@ -341,7 +341,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         try {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
-                Species pk = pokes[i];
+                Species pkFrom = pokes[i];
                 byte[] evoEntry = evoGARC.getFile(i);
                 for (int evo = 0; evo < 8; evo++) {
                     int method = readWord(evoEntry, evo * 6);
@@ -354,27 +354,36 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         // but also forcibly sets the forme to 1 upon evolving. This is because the evo struct
                         // does not include forme data. We chose to hide this, with the possible future caveat
                         // that changing the EvolutionType of this evo won't lead to one into Meowstic-F (but -M).
-                        if (pk.getNumber() == SpeciesIDs.espurr && method == Gen6Constants.meowsticFEvolutionMethod) {
+                        if (pkFrom.getNumber() == SpeciesIDs.espurr && method == Gen6Constants.meowsticFEvolutionMethod) {
                             et = EvolutionType.LEVEL_FEMALE_ONLY;
                             species = SpeciesIDs.Gen6Formes.meowsticF;
                         }
 
-                        int extraInfo = readWord(evoEntry, evo * 6 + 2);
-                        Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
-                        if (!pk.getEvolutionsFrom().contains(evol)) {
-                            pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isEssentiallyCosmetic()) {
-                                pokes[species].getEvolutionsTo().add(evol);
+                        Species pkTo = pokes[species];
+                        // Before Gen 7, mons keep their forme number upon evolving always.
+                        // It is what makes e.g. Burmy->Wormadam, Flabébé->Floette->Florges,
+                        // and Pumpkaboo->Gourgeist work as expected.
+                        if (!pkFrom.isBaseForme()) {
+                            pkTo = pkTo.getForme(pkFrom.getFormeNumber());
+                            if (pkTo.isBaseForme()) {
+                                // That forme of pkTo was true cosmetic (Floette->Florges) so we can't
+                                // have an Evolution into it. Skip it instead.
+                                continue;
                             }
                         }
+
+                        int extraInfo = readWord(evoEntry, evo * 6 + 2);
+                        Evolution evol = new Evolution(pkFrom, pkTo, et, extraInfo);
+                        pkFrom.getEvolutionsFrom().add(evol);
+                        pkTo.getEvolutionsTo().add(evol);
                     }
                 }
                 // Nincada's Shedinja evo is hardcoded into the game's executable, so
                 // if the Pokemon is Nincada, then let's put it as one of its evolutions
-                if (pk.getNumber() == SpeciesIDs.nincada) {
+                if (pkFrom.getNumber() == SpeciesIDs.nincada) {
                     Species shedinja = pokes[SpeciesIDs.shedinja];
-                    Evolution evol = new Evolution(pk, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
-                    pk.getEvolutionsFrom().add(evol);
+                    Evolution evol = new Evolution(pkFrom, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
+                    pkFrom.getEvolutionsFrom().add(evol);
                     shedinja.getEvolutionsTo().add(evol);
                 }
             }

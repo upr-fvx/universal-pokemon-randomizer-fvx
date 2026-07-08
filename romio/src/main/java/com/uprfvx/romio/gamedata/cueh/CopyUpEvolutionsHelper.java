@@ -267,7 +267,7 @@ public class CopyUpEvolutionsHelper {
     // ----- Thoughts/Requirements for adding forme support to CUEH -----
     // TODO: most things below are implemented. Test!
     // TODO: deal with Burmy->Wormadam
-    // TODO: deal with SuMo Pikachu->Raichu
+    // TODO: deal with Pumpkaboo->Gourgeist, and all other "-1"/carry-forme-automatically evos (also floette)
 
     // There needs to be an action for copying up traits to formes.
 
@@ -303,15 +303,19 @@ public class CopyUpEvolutionsHelper {
     // Since this will by necessity add even more parameters, a builder might be appropriate.
     // -----
 
+
     // SpeciesSet has inbuilt filter methods for different evolutionary stages.
-    // However, those assume alt forms evolve from the prevos of their base form,
-    // and can thus not be used in this class.
-    // At some point, a proper form rewrite is due, but until then the methods below will do.
-    // TODO: the form rewrite
-    // Note that the below methods function in a way that ignores all Species outside of the
-    // given SpeciesSet. This should make them usable with smaller SpeciesSet / species restrictions.
-    // However, at the time of writing all CopyUpEvolutionsHelpers use RomHandler::getSpeciesSet...
-    // TODO: integrate with species restrictions
+    // This class uses its own methods, for several reasons:
+    //
+    // - The SpeciesSet methods assume alt forms evolve from the prevos of their base form;
+    //   and this class requires more precise control.
+    //
+    // - The below methods ignore all Species outside of the given SpeciesSet.
+    //   This should make them usable with smaller SpeciesSet / species restrictions,
+    //   though at the time of writing this is not actually used.
+    //   TODO: integrate with species restrictions (?)
+    //
+    // - The below methods allow treating Mega Evolutions "as evolutions", which is only relevant here.
 
     /**
      * Returns true if spec has no other {@link Species} in allSpecs that evolves into it.

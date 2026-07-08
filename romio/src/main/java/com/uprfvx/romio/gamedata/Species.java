@@ -548,11 +548,6 @@ public class Species implements Comparable<Species> {
         ability3 = other.ability3;
     }
 
-    public void copyBaseFormeEvolutions(Species baseForme) {
-        evolutionsFrom = baseForme.evolutionsFrom;
-        //Doesn't copy evolutions to as that would result in poorly-defined behavior
-    }
-
     /**
      * For debugging. Number is enough to identify a mon, but isn't immediately recognizable.
      * Full name is immediately recognizable but some formes share the same full name.

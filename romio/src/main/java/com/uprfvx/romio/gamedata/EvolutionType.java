@@ -188,7 +188,4 @@ public enum EvolutionType {
         return TIMELESS_MAP.get(this);
     }
 
-    public boolean skipSplitEvo() {
-        return (this == HIGH_BEAUTY) || (this == LEVEL_ULTRA) || (this == STONE_ULTRA);
-    }
 }

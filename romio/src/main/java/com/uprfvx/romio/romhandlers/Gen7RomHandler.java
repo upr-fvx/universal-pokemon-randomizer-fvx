@@ -406,7 +406,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         EvolutionType et = Gen7Constants.gameSpecificEvolutionMethods.contains(method) ?
                                 getGameSpecificEvolutionType(evoEntry, i) :
                                 Gen7Constants.evolutionTypeFromIndex(method);
-                        if (et.skipSplitEvo()) continue; // Remove Feebas "split" evolution
+                        if (et == EvolutionType.HIGH_BEAUTY) continue; // Remove Feebas "split" evolution
 
                         int extraInfo = readWord(evoEntry, i * 8 + 2);
                         int forme = evoEntry[i * 8 + 6];
@@ -479,8 +479,9 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     private void addNoneEvolutionBetween(Species from, Species to) {
         Evolution evo = new Evolution(from, to, EvolutionType.NONE, 0);
-        from.getEvolutionsFrom().add(evo);
-        to.getEvolutionsTo().add(evo);
+        // these evos come first, mirroring how the ULTRA evos come first in USUM.
+        from.getEvolutionsFrom().addFirst(evo);
+        to.getEvolutionsTo().addFirst(evo);
     }
 
     private void populateMegaEvolutions() {

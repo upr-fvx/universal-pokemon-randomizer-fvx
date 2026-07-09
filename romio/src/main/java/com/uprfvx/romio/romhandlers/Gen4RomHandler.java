@@ -4171,6 +4171,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} catch (IOException e) {
 			throw new RomIOException(e);
 		}
+		addBurmyAltFormeEvolutions();
 	}
 
 	private void writeEvolutions() {
@@ -4185,6 +4186,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				}
 				int evosWritten = 0;
 				for (Evolution evo : pk.getEvolutionsFrom()) {
+					if (evo.getType() == EvolutionType.NONE) continue;
+
 					writeWord(evoEntry, evosWritten * 6, Gen4Constants.evolutionTypeToIndex(evo.getType()));
 					writeWord(evoEntry, evosWritten * 6 + 2, evo.getExtraInfo());
 					writeWord(evoEntry, evosWritten * 6 + 4, evo.getTo().getNumber());

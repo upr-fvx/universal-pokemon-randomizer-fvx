@@ -33,6 +33,7 @@ import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.constants.ItemIDs;
+import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.romentries.RomEntry;
@@ -501,6 +502,21 @@ public abstract class AbstractRomHandler implements RomHandler {
     protected abstract Map<Integer, Integer> getBalancedShopPrices();
 
     /* Helper methods used by subclasses and/or this class */
+
+    protected void addBurmyAltFormeEvolutions() {
+        // So that Wormadam-Sandy and Wormadam-Trash may be considered "split evos" of Burmy.
+        addNoneEvolutionBetween(getSpecies().get(SpeciesIDs.burmy), getSpecies().get(SpeciesIDs.wormadam).getForme(1));
+        addNoneEvolutionBetween(getSpecies().get(SpeciesIDs.burmy), getSpecies().get(SpeciesIDs.wormadam).getForme(2));
+    }
+
+    /**
+     * Adds an evolution with {@link EvolutionType#NONE} between the two given {@link Species}.
+     */
+    protected void addNoneEvolutionBetween(Species from, Species to) {
+        Evolution evo = new Evolution(from, to, EvolutionType.NONE, 0);
+        from.getEvolutionsFrom().add(evo);
+        to.getEvolutionsTo().add(evo);
+    }
 
     /**
      * Splits occurrences of {@link EvolutionType#ITEM} into

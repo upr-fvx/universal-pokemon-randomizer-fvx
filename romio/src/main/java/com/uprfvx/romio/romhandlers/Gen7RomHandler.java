@@ -456,6 +456,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
 
+        addBurmyAltFormeEvolutions();
         addSMKantoEvolutions();
     }
 
@@ -484,13 +485,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             addNoneEvolutionBetween(pokes[SpeciesIDs.cubone], pokes[SpeciesIDs.marowak]);
             addNoneEvolutionBetween(pokes[SpeciesIDs.exeggcute], pokes[SpeciesIDs.exeggutor]);
         }
-    }
-
-    private void addNoneEvolutionBetween(Species from, Species to) {
-        Evolution evo = new Evolution(from, to, EvolutionType.NONE, 0);
-        // these evos come first, mirroring how the ULTRA evos come first in USUM.
-        from.getEvolutionsFrom().addFirst(evo);
-        to.getEvolutionsTo().addFirst(evo);
     }
 
     private void populateMegaEvolutions() {

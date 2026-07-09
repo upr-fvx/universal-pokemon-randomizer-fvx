@@ -445,6 +445,8 @@ public class RandomizationLogger {
 
             for (int i = 0; i < pk.getEvolutionsFrom().size(); i++) {
                 Evolution evo = pk.getEvolutionsFrom().get(i);
+                if (evo.getType() == EvolutionType.NONE) continue;
+
                 String from = i == 0 ? pk.getFullName() : "";
                 String to = evo.getTo().getFullName();
                 String method = evolutionMethodToString(evo);

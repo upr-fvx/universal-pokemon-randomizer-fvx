@@ -66,7 +66,7 @@ public enum EvolutionType {
     STONE_ULTRA, // used by Pikachu -> Raichu-K, and Exeggute -> Exeggutor-K; in Ultra Space.
     // Other
     ITEM, // not in any game internally
-    NONE; // TODO: describe
+    NONE; // a dummy type for non-real or invalid evolutions. Should not be written to the games, or shown to the user.
 
     private static final List<EvolutionType> USES_LEVEL_THRESHOLD = Arrays.asList(
             LEVEL, // Various: Level > 0

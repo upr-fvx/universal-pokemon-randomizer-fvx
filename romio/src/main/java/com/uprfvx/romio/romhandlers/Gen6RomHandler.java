@@ -390,6 +390,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        addBurmyAltFormeEvolutions();
     }
 
     private void populateMegaEvolutions() {
@@ -684,6 +685,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 int evosWritten = 0;
                 for (Evolution evo : pk.getEvolutionsFrom()) {
+                    if (evo.getType() == EvolutionType.NONE) continue;
+
                     int method = Gen6Constants.evolutionTypeToIndex(evo.getType());
                     if (pk.getNumber() == SpeciesIDs.espurr && evo.getType() == EvolutionType.LEVEL_FEMALE_ONLY) {
                         method = Gen6Constants.meowsticFEvolutionMethod;

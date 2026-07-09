@@ -32,9 +32,35 @@ import java.util.Stack;
 import java.util.function.Supplier;
 
 /**
- * Universal implementation for things that have "copy X up evolutions" support.<br>
- * Assumes no two Species evolve into the same third Species. Note this might not hold true if evolutions are
- * randomized.
+ * Universal implementation for things that have "copy X up evolutions/formes" support.<br>
+ * This class allows for running a {@link BasicSpeciesAction} on each basic (non-evolved) {@link Species},
+ * and then a {@link EvolvedSpeciesAction} on each Species they evolve into.<br>
+ * It also allows for further control, e.g. giving a separate EvolvedSpeciesAction to split evolutions.
+ * See {@link Options.Builder} for more details.
+ * <br><br>
+ * This class also allows for running a {@link AltFormeAction} on each forme. Non-cosmetic formes and
+ * cosmetic formes have their own actions.<br>
+ * Some Species are both alt formes and have evolution into them (e.g. Meowstic-F, Lycanroc-Midnight, Raticate-Alolan).
+ * These are treated as evolved species rather than alt formes, and thus use the EvolvedSpeciesActions rather
+ * than the AltFormeActions.
+ * <br><br>
+ * This class ensures actions are applied in the correct order, so traits altered by the basic action
+ * can be copied up to all evolutions and alt formes. <b>E.g.</b> Magby -> Magmar -> Magmortar will always
+ * be applied in that order. More complicated "lines" like Rattata's in USUM will too.
+ * Rattata -> Raticate; Rattata -> Rattata-Alolan -> Raticate-Alolan -> Raticate-Alolan-Totem.
+ * Note here that Raticate-Alolan has no direct connection to Raticate.
+ * <br><br>
+ * Note that this class does NOT ensure that Species in the same line are applied <i>directly</i>
+ * after one another. After applying the action to Magby, any number of species actions may be applied before
+ * getting to Magmar. It only ensures Magmar does not come before Magby.
+ * <br><br>
+ * This class ignores all Species outside the given SpeciesSet. This affects which Species
+ * it considers to be e.g. basic or split evolutions. <b>E.g.</b>, if the given SpeciesSet contains only
+ * Poliwhirl and Poliwrath, but not Poliwag nor Politoed, Poliwhirl will be considered basic,
+ * and Poliwrath will NOT be considered a split evolution.
+ * <br><br>
+ * This class assumes no two Species evolve into the same third Species.
+ * Note this might not hold true if evolutions are randomized.
  */
 public class CopyUpEvolutionsHelper {
 
@@ -185,6 +211,8 @@ public class CopyUpEvolutionsHelper {
 
     private record CopyUpRelation(Species from, Species to) {
         public static CopyUpRelation into(Species to) {
+            // TODO: this needs to ignore mons not in allSpecs
+            // TODO: in case a species is essentially cosmetic, prioritize its base forme
             // Evolution takes priority; Raticate-Alolan should copy up from Rattata-Alolan instead of Raticate-Base.
             if (!to.getEvolutionsTo().isEmpty()) {
                 return new CopyUpRelation(to.getEvolutionsTo().getFirst().getFrom(), to);

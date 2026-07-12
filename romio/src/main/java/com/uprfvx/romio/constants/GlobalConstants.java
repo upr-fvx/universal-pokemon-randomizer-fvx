@@ -178,6 +178,70 @@ public class GlobalConstants {
             MoveIDs.spitUp, MoveIDs.swallow, MoveIDs.dreamEater, MoveIDs.nightmare
     );
 
+    // --- Pokemon Showdown teambuilder move-viability lists -------------------------------------------------
+    // Source: smogon/pokemon-showdown-client, play.pokemonshowdown.com/src/battle-dex-search.ts
+    //         (BattleMoveSearch.moveIsNotUseless + its GOOD_/BAD_ constants). MIT-licensed, GPL-compatible.
+    // These mirror how Showdown splits a Pokemon's movepool into "Moves" vs "Usually useless moves".
+    // Gen 8/9 (and Legends/Let's-Go-only) moves from the originals are omitted, as this randomizer's ROM
+    // handlers only reach Gen 7, so those move IDs can never appear in a supported ROM.
+
+    // Status moves considered worth running (everything else in the Status category is "usually useless").
+    public static final List<Integer> goodStatusMoves = Arrays.asList(
+            MoveIDs.acidArmor, MoveIDs.agility, MoveIDs.aromatherapy, MoveIDs.auroraVeil, MoveIDs.autotomize,
+            MoveIDs.banefulBunker, MoveIDs.batonPass, MoveIDs.bellyDrum, MoveIDs.bulkUp, MoveIDs.calmMind,
+            MoveIDs.clangorousSoul, MoveIDs.coil, MoveIDs.cottonGuard, MoveIDs.courtChange, MoveIDs.curse,
+            MoveIDs.defog, MoveIDs.destinyBond, MoveIDs.detect, MoveIDs.disable, MoveIDs.dragonDance,
+            MoveIDs.encore, MoveIDs.extremeEvoboost, MoveIDs.geomancy, MoveIDs.glare, MoveIDs.haze,
+            MoveIDs.healBell, MoveIDs.healingWish, MoveIDs.healOrder, MoveIDs.heartSwap, MoveIDs.honeClaws,
+            MoveIDs.kingsShield, MoveIDs.leechSeed, MoveIDs.lightScreen, MoveIDs.lovelyKiss, MoveIDs.lunarDance,
+            MoveIDs.magicCoat, MoveIDs.maxGuard, MoveIDs.memento, MoveIDs.milkDrink, MoveIDs.moonlight,
+            MoveIDs.morningSun, MoveIDs.nastyPlot, MoveIDs.noRetreat, MoveIDs.obstruct,
+            MoveIDs.painSplit, MoveIDs.partingShot, MoveIDs.perishSong, MoveIDs.protect, MoveIDs.quiverDance,
+            MoveIDs.recover, MoveIDs.reflect, MoveIDs.reflectType, MoveIDs.rest, MoveIDs.roar,
+            MoveIDs.rockPolish, MoveIDs.roost, MoveIDs.shellSmash, MoveIDs.shiftGear, MoveIDs.shoreUp,
+            MoveIDs.slackOff, MoveIDs.sleepPowder, MoveIDs.sleepTalk, MoveIDs.softBoiled, MoveIDs.spikes,
+            MoveIDs.spikyShield, MoveIDs.spore, MoveIDs.stealthRock, MoveIDs.stickyWeb, MoveIDs.strengthSap,
+            MoveIDs.substitute, MoveIDs.switcheroo, MoveIDs.swordsDance, MoveIDs.synthesis, MoveIDs.tailGlow,
+            MoveIDs.tailwind, MoveIDs.taunt, MoveIDs.thunderWave, MoveIDs.toxic, MoveIDs.transform,
+            MoveIDs.trick, MoveIDs.whirlwind, MoveIDs.willOWisp, MoveIDs.wish, MoveIDs.yawn
+    );
+
+    // Sub-75 base power attacks that are still worth running (utility/priority/pivot/etc.).
+    public static final List<Integer> goodWeakMoves = Arrays.asList(
+            MoveIDs.accelerock, MoveIDs.acrobatics, MoveIDs.avalanche, MoveIDs.bonemerang, MoveIDs.bouncyBubble,
+            MoveIDs.bulletPunch, MoveIDs.buzzyBuzz, MoveIDs.circleThrow, MoveIDs.clearSmog, MoveIDs.doubleIronBash,
+            MoveIDs.dragonDarts, MoveIDs.dragonTail, MoveIDs.drainingKiss, MoveIDs.endeavor, MoveIDs.facade,
+            MoveIDs.fireFang, MoveIDs.flipTurn, MoveIDs.freezeDry, MoveIDs.frustration, MoveIDs.gearGrind,
+            MoveIDs.gigaDrain, MoveIDs.grassKnot, MoveIDs.gyroBall, MoveIDs.iceFang, MoveIDs.iceShard,
+            MoveIDs.icicleSpear, MoveIDs.knockOff, MoveIDs.lowKick, MoveIDs.machPunch, MoveIDs.naturesMadness,
+            MoveIDs.nightShade, MoveIDs.nuzzle, MoveIDs.pikaPapow, MoveIDs.psychoCut, MoveIDs.pursuit,
+            MoveIDs.quickAttack, MoveIDs.rapidSpin, MoveIDs.rockBlast, MoveIDs.scorchingSands, MoveIDs.seismicToss,
+            MoveIDs.shadowClaw, MoveIDs.shadowSneak, MoveIDs.sizzlySlide, MoveIDs.storedPower, MoveIDs.stormThrow,
+            MoveIDs.suckerPunch, MoveIDs.superFang, MoveIDs.surgingStrikes, MoveIDs.tailSlap, MoveIDs.tripleAxel,
+            MoveIDs.uTurn, MoveIDs.vacuumWave, MoveIDs.veeveeVolley, MoveIDs.voltSwitch, MoveIDs.waterShuriken,
+            MoveIDs.weatherBall, MoveIDs.returnTheMoveNotTheKeyword
+    );
+
+    // 75+ base power attacks that are nonetheless "usually useless" (recharge, bad accuracy/recoil, gimmicks).
+    public static final List<Integer> badStrongMoves = Arrays.asList(
+            MoveIDs.belch, MoveIDs.burnUp, MoveIDs.crushClaw, MoveIDs.dragonRush, MoveIDs.dreamEater,
+            MoveIDs.eggBomb, MoveIDs.firePledge, MoveIDs.flyingPress, MoveIDs.futureSight, MoveIDs.grassPledge,
+            MoveIDs.hyperBeam, MoveIDs.hyperFang, MoveIDs.hyperspaceHole, MoveIDs.jawLock, MoveIDs.landsWrath,
+            MoveIDs.megaKick, MoveIDs.megaPunch, MoveIDs.mistyExplosion, MoveIDs.muddyWater, MoveIDs.nightDaze,
+            MoveIDs.pollenPuff, MoveIDs.rockClimb, MoveIDs.selfDestruct, MoveIDs.shellTrap, MoveIDs.skyUppercut,
+            MoveIDs.slam, MoveIDs.strength, MoveIDs.submission, MoveIDs.synchronoise, MoveIDs.takeDown,
+            MoveIDs.thrash, MoveIDs.uproar, MoveIDs.waterPledge
+    );
+
+    // Moves that are specifically good in double battles (Showdown only whitelists these in the doubles builder).
+    public static final List<Integer> goodDoublesMoves = Arrays.asList(
+            MoveIDs.allySwitch, MoveIDs.bulldoze, MoveIDs.coaching, MoveIDs.electroweb, MoveIDs.fakeTears,
+            MoveIDs.fling, MoveIDs.followMe, MoveIDs.healPulse, MoveIDs.helpingHand, MoveIDs.jungleHealing,
+            MoveIDs.lifeDew, MoveIDs.muddyWater, MoveIDs.pollenPuff, MoveIDs.psychUp, MoveIDs.ragePowder,
+            MoveIDs.safeguard, MoveIDs.skillSwap, MoveIDs.snipeShot, MoveIDs.wideGuard, MoveIDs.decorate,
+            MoveIDs.snarl
+    );
+
     // Because some base formes are non-obvious, they deserve forme suffixes to explain themselves
     public static final Map<Integer, String> baseFormesWithFormeSuffixes = Map.of(
             SpeciesIDs.wormadam, "-Plant",

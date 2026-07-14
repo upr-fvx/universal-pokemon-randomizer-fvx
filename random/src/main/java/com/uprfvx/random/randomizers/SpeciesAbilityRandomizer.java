@@ -104,7 +104,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                 .Builder(basicAction, evolvedAction)
                 .cosmeticAction((baseForme, altForme) -> altForme.copyAbilities(baseForme))
                 .evolutionSanity(evolutionSanity)
-                .treatMegasAsEvos(true)
+                .treatMegasAsEvos(megaEvolutionSanity)
                 .build();
         copyUpEvolutionsHelper.apply(cuehOptions);
 

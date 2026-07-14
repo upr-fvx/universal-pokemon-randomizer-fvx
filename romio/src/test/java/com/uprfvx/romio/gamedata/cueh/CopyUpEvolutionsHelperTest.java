@@ -45,6 +45,10 @@ public class CopyUpEvolutionsHelperTest {
     );
 
     private void applyCallCountingCUEH(SpeciesSet set, boolean evolutionSanity, boolean copySplitEvos) {
+        applyCallCountingCUEH(set, evolutionSanity, copySplitEvos, false);
+    }
+
+    private void applyCallCountingCUEH(SpeciesSet set, boolean evolutionSanity, boolean copySplitEvos, boolean treatMegasAsEvos) {
         BiFunction<Species, Integer, Integer> addOne = (_, v) -> v == null ? 1 : v + 1;
 
         CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
@@ -57,6 +61,7 @@ public class CopyUpEvolutionsHelperTest {
 
                 .evolutionSanity(evolutionSanity)
                 .copySplitEvos(copySplitEvos)
+                .treatMegasAsEvos(treatMegasAsEvos)
                 .build();
         new CopyUpEvolutionsHelper(set).apply(options);
     }
@@ -278,7 +283,111 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(c, 1), callCounter.cosmetic);
     }
 
-    // TODO: mega evolution tests
+    @Test
+    public void MegaEvoForme_NoTreatMegasAsEvos_UsesAltFormeAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+        b.setMegaEvolution(null);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, true, true, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(b, 1), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void MegaEvoForme_TreatMegasAsEvos_UsesEvolvedAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+        b.setMegaEvolution(null);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, true, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(b, 1), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void SplitMegaEvoForme_NoTreatMegasAsEvos_UsesAltFormeAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        a.addAltForme(1, b);
+        b.setMegaEvolution(null);
+        a.addAltForme(2, c);
+        c.setMegaEvolution(null);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, true, true, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(b, 1, c, 1), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void SplitMegaEvoForme_TreatMegasAsEvos_NoCopySplitEvos_UsesBasicAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        a.addAltForme(1, b);
+        b.setMegaEvolution(null);
+        a.addAltForme(2, c);
+        c.setMegaEvolution(null);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, true, false, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1, b, 1, c, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+
+    @Test
+    public void SplitMegaEvoForme_TreatMegasAsEvos_CopySplitEvos_UsesSplitAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        a.addAltForme(1, b);
+        b.setMegaEvolution(null);
+        a.addAltForme(2, c);
+        c.setMegaEvolution(null);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, true, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(b, 1, c, 1), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+    
     // TODO: tests where some species are NOT in the set
 
     @Test
@@ -293,6 +402,7 @@ public class CopyUpEvolutionsHelperTest {
         raticate.addAltForme(1, raticateAlolan);
         raticate.addAltForme(2, raticateAlolanTotem);
         raticateAlolanTotem.setConceptualBaseForme(raticateAlolan);
+        raticateAlolanTotem.setEssentiallyCosmetic();
         addEvolutionBetween(rattata, raticate);
         addEvolutionBetween(rattataAlolan, raticateAlolan);
 

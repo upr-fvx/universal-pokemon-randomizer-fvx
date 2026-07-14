@@ -45,6 +45,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
 - Added Level Caps section to the log file to track boss levels across generations.
+- Made the alt formes of Wormadam, Meowstic, and Lycanroc be treated as split evolutions, when "Follow Evolutions" options are used.
 
 ## Bugfixes
 - (Gen [N]) Fixed [...]. 

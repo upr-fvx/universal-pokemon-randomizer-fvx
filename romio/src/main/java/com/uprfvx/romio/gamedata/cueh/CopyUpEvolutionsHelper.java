@@ -27,6 +27,7 @@ import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Supplier;
@@ -209,18 +210,27 @@ public class CopyUpEvolutionsHelper {
         this.speciesSetSupplier = speciesSetSupplier;
     }
 
-    private record CopyUpRelation(Species from, Species to) {
-        public static CopyUpRelation into(Species to) {
-            // TODO: this needs to ignore mons not in allSpecs
-            // TODO: in case a species is essentially cosmetic, prioritize its base forme
-            // Evolution takes priority; Raticate-Alolan should copy up from Rattata-Alolan instead of Raticate-Base.
-            if (!to.getEvolutionsTo().isEmpty()) {
-                return new CopyUpRelation(to.getEvolutionsTo().getFirst().getFrom(), to);
-            } else if (!to.isBaseForme()) {
-                return new CopyUpRelation(to.getConceptualBaseForme(), to);
-            } else {
-                throw new IllegalStateException("Argument to is neither an evolved Pokémon nor an alt forme!!");
-            }
+    private record CopyUpRelation(Species from, Species to) {}
+
+    /**
+     * Creates/finds the correct CopyUpRelation using the <code>to</code> {@link Species}.<br>
+     * Evolution takes priority; Raticate-Alolan should copy up from Rattata-Alolan instead of Raticate-Base.
+     * The exception to this rule is essentially cosmetic formes, which always copy from their (conceptual) base forme.
+     */
+    private CopyUpRelation findRelationInto(Species to) {
+        SpeciesSet allSpecs = speciesSetSupplier.get();
+
+        List<Evolution> validEvolutionsTo = to.getEvolutionsTo().stream()
+                .filter(evo -> allSpecs.contains(evo.getFrom())).toList();
+        if (!validEvolutionsTo.isEmpty() && !to.isEssentiallyCosmetic()) {
+            return new CopyUpRelation(to.getEvolutionsTo().getFirst().getFrom(), to);
+
+        } else if (!to.isBaseForme() && allSpecs.contains(to.getConceptualBaseForme())) {
+            return new CopyUpRelation(to.getConceptualBaseForme(), to);
+
+        } else {
+            throw new IllegalStateException("Argument to is neither an evolved Pokémon nor an alt forme!! " +
+                    "(counting only Species in allSpecs)");
         }
     }
 
@@ -253,24 +263,23 @@ public class CopyUpEvolutionsHelper {
             processed.add(pk);
         }
 
-        // go "up" evolutions looking for pre-evos to do first
+        // process the rest / all Species that did not get the basic action
         for (Species pk : allSpecs) {
             if (!processed.contains(pk)) {
 
                 // Non-processed specs at this point must have
-                // a linear chain of single evolutions down to
-                // a processed spec.
+                // a linear chain down to a processed spec.
                 Stack<CopyUpRelation> relStack = new Stack<>();
-                CopyUpRelation rel = CopyUpRelation.into(pk);
+                CopyUpRelation rel = findRelationInto(pk);
                 while (!processed.contains(rel.from)) {
                     relStack.push(rel);
-                    rel = CopyUpRelation.into(rel.from);
+                    rel = findRelationInto(rel.from);
                 }
                 relStack.push(rel);
 
-                // Now "ev" is set to an evolution from a Species that has had
-                // the base action done on it to one that hasn't.
-                // Do the evolution action for everything left on the stack.
+                // Now "ev" is set to an evolution from/forme of a Species that has had
+                // the basic action done on it to one that hasn't.
+                // Do the evolved/forme action for everything left on the stack.
                 while (!relStack.isEmpty()) {
                     rel = relStack.pop();
                     if (options.copySplitEvos && splitEvos.contains(rel.to)) {
@@ -294,7 +303,6 @@ public class CopyUpEvolutionsHelper {
 
     // ----- Thoughts/Requirements for adding forme support to CUEH -----
     // TODO: most things below are implemented. Test!
-    // TODO: deal with Pumpkaboo->Gourgeist. Do we want these to be essentially cosmetic or not??
 
     // There needs to be an action for copying up traits to formes.
 

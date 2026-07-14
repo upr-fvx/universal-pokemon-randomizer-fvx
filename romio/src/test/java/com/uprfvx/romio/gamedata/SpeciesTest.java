@@ -552,6 +552,19 @@ public class SpeciesTest {
     }
 
     @Test
+    public void transferAttributesToCopy_WithFormes_MegaEvolutionAttributesGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+        Item megaEvolutionItem = new Item(1, "dummy");
+        b.setMegaEvolution(megaEvolutionItem);
+
+        transferAttributesToCopies();
+
+        assertTrue(bCopy.isMegaEvolution());
+        assertEquals(megaEvolutionItem, bCopy.getMegaEvolutionItem());
+    }
+
+    @Test
     public void transferAttributesToCopy_WithFormes_AlolanGetsCopied() {
         use(a, b, aCopy, bCopy);
         a.addAltForme(1, b);

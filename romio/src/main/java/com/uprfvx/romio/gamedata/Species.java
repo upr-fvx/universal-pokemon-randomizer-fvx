@@ -1344,7 +1344,6 @@ public class Species implements Comparable<Species> {
         copy.formeSuffix = original.formeSuffix;
         copy.formeNumber = original.formeNumber;
 
-        // TODO: add these to test cases
         copy.megaEvolution = original.megaEvolution;
         copy.megaEvolutionItem = original.megaEvolutionItem;
         copy.alolan = original.alolan;

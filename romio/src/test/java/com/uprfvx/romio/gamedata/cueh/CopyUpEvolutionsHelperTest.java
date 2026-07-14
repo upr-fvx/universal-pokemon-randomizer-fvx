@@ -1,12 +1,17 @@
 package com.uprfvx.romio.gamedata.cueh;
 
-import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.Evolution;
+import com.uprfvx.romio.gamedata.EvolutionType;
+import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.SpeciesSet;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CopyUpEvolutionsHelperTest {
 
@@ -56,13 +61,17 @@ public class CopyUpEvolutionsHelperTest {
         new CopyUpEvolutionsHelper(set).apply(options);
     }
 
+    private void addEvolutionBetween(Species from, Species to) {
+        Evolution evo = new Evolution(from, to, EvolutionType.LEVEL, 0);
+        from.getEvolutionsFrom().add(evo);
+        to.getEvolutionsTo().add(evo);
+    }
+
     @Test
     public void NormalEvo_NoEvolutionSanity_UsesNoEvoAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
-        Evolution evo1 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo1);
-        b.getEvolutionsTo().add(evo1);
+        addEvolutionBetween(a, b);
 
         SpeciesSet set = new SpeciesSet(List.of(a, b));
         applyCallCountingCUEH(set, false, false);
@@ -72,15 +81,15 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(), callCounter.basic);
         assertEquals(Map.of(), callCounter.evolved);
         assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
     }
 
     @Test
     public void NormalEvo_EvolutionSanity_UsesEvolvedAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
-        Evolution evo1 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo1);
-        b.getEvolutionsTo().add(evo1);
+        addEvolutionBetween(a, b);
 
         SpeciesSet set = new SpeciesSet(List.of(a, b));
         applyCallCountingCUEH(set, true, false);
@@ -90,6 +99,8 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(a, 1), callCounter.basic);
         assertEquals(Map.of(b, 1), callCounter.evolved);
         assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
     }
 
     @Test
@@ -97,12 +108,8 @@ public class CopyUpEvolutionsHelperTest {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
         Species c = new NameOnlySpecies("C");
-        Evolution evo1 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo1);
-        b.getEvolutionsTo().add(evo1);
-        Evolution evo2 = new Evolution(a, c, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo2);
-        c.getEvolutionsTo().add(evo2);
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(a, c);
 
         SpeciesSet set = new SpeciesSet(List.of(a, b, c));
         applyCallCountingCUEH(set, true, false);
@@ -112,6 +119,8 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(a, 1, b, 1, c, 1), callCounter.basic);
         assertEquals(Map.of(), callCounter.evolved);
         assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
     }
 
     @Test
@@ -119,12 +128,8 @@ public class CopyUpEvolutionsHelperTest {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
         Species c = new NameOnlySpecies("C");
-        Evolution evo1 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo1);
-        b.getEvolutionsTo().add(evo1);
-        Evolution evo2 = new Evolution(a, c, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo2);
-        c.getEvolutionsTo().add(evo2);
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(a, c);
 
         SpeciesSet set = new SpeciesSet(List.of(a, b, c));
         applyCallCountingCUEH(set, true, true);
@@ -134,18 +139,16 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(a, 1), callCounter.basic);
         assertEquals(Map.of(), callCounter.evolved);
         assertEquals(Map.of(b, 1, c, 1), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
     }
 
     @Test
     public void SplitEvoIntoSameSpecies_NoCopySplitEvos_UsesEvolvedAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
-        Evolution evo1 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo1);
-        b.getEvolutionsTo().add(evo1);
-        Evolution evo2 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo2);
-        b.getEvolutionsTo().add(evo2);
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(a, b);
 
         SpeciesSet set = new SpeciesSet(List.of(a, b));
         applyCallCountingCUEH(set, true, true);
@@ -155,18 +158,16 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(a, 1), callCounter.basic);
         assertEquals(Map.of(b, 1), callCounter.evolved);
         assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
     }
 
     @Test
     public void SplitEvoIntoSameSpecies_CopySplitEvos_UsesEvolvedAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
-        Evolution evo1 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo1);
-        b.getEvolutionsTo().add(evo1);
-        Evolution evo2 = new Evolution(a, b, EvolutionType.LEVEL, 0);
-        a.getEvolutionsFrom().add(evo2);
-        b.getEvolutionsTo().add(evo2);
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(a, b);
 
         SpeciesSet set = new SpeciesSet(List.of(a, b));
         applyCallCountingCUEH(set, true, true);
@@ -176,6 +177,143 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(a, 1), callCounter.basic);
         assertEquals(Map.of(b, 1), callCounter.evolved);
         assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NonCosmeticForme_UsesAltFormeAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, true, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(b, 1), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NonCosmeticFormeAndEvo_UsesEvolvedAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(b, 1), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NonCosmeticFormeAndSplitEvo_UsesSplitAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        b.addAltForme(1, c);
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(a, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(b, 1, c, 1), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void CosmeticForme_UsesCosmeticAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+        b.setEssentiallyCosmetic();
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(b, 1), callCounter.cosmetic);
+    }
+
+    @Test
+    public void CosmeticFormeAndEvo_UsesCosmeticAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        b.addAltForme(1, c);
+        c.setEssentiallyCosmetic();
+        addEvolutionBetween(a, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1, b, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(c, 1), callCounter.cosmetic);
+    }
+
+    // TODO: mega evolution tests
+    // TODO: tests where some species are NOT in the set
+
+    @Test
+    public void ComplexLine_AppliedInRightOrder() {
+        Species rattata = new NameOnlySpecies("Rattata");
+        Species raticate = new NameOnlySpecies("Raticate");
+        Species rattataAlolan = new NameOnlySpecies("Rattata-Alolan");
+        Species raticateAlolan = new NameOnlySpecies("Raticate-Alolan");
+        Species raticateAlolanTotem = new NameOnlySpecies("Raticate-Alolan-Totem");
+
+        rattata.addAltForme(1, rattataAlolan);
+        raticate.addAltForme(1, raticateAlolan);
+        raticate.addAltForme(2, raticateAlolanTotem);
+        raticateAlolanTotem.setConceptualBaseForme(raticateAlolan);
+        addEvolutionBetween(rattata, raticate);
+        addEvolutionBetween(rattataAlolan, raticateAlolan);
+
+        Map<Species, String> chainPerSpecies = new HashMap<>();
+        SpeciesSet set = new SpeciesSet(List.of(rattata, raticate, rattataAlolan, raticateAlolan, raticateAlolanTotem));
+
+        BasicSpeciesAction basicAction = pk -> chainPerSpecies.put(pk, pk.getName());
+        AltFormeAction nonBasicAction = (from, to) -> chainPerSpecies.put(to, chainPerSpecies.get(from) + " -> " + to.getName());
+        new CopyUpEvolutionsHelper(set).apply(
+                new CopyUpEvolutionsHelper.Options
+                        .Builder(basicAction, (from, to, _) -> nonBasicAction.applyTo(from, to))
+                        .altFormeAction(nonBasicAction)
+                        .cosmeticAction(nonBasicAction)
+                        .build()
+        );
+
+        assertEquals("Rattata", chainPerSpecies.get(rattata));
+        assertEquals("Rattata -> Raticate", chainPerSpecies.get(raticate));
+        assertEquals("Rattata -> Rattata-Alolan", chainPerSpecies.get(rattataAlolan));
+        assertEquals("Rattata -> Rattata-Alolan -> Raticate-Alolan", chainPerSpecies.get(raticateAlolan));
+        assertEquals("Rattata -> Rattata-Alolan -> Raticate-Alolan -> Raticate-Alolan-Totem", chainPerSpecies.get(raticateAlolanTotem));
     }
 
 }

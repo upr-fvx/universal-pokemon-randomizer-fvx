@@ -282,12 +282,12 @@ public class CopyUpEvolutionsHelper {
                 // Do the evolved/forme action for everything left on the stack.
                 while (!relStack.isEmpty()) {
                     rel = relStack.pop();
-                    if (options.copySplitEvos && splitEvos.contains(rel.to)) {
+                    if (rel.to.isEssentiallyCosmetic()) {
+                        options.cosmeticAction.applyTo(rel.from, rel.to);
+                    } else if (options.copySplitEvos && splitEvos.contains(rel.to)) {
                         options.splitAction.applyTo(rel.from, rel.to, finalEvos.contains(rel.to));
                     } else if (allEvos.contains(rel.to)) {
                         options.evolvedAction.applyTo(rel.from, rel.to, finalEvos.contains(rel.to));
-                    } else if (rel.to.isEssentiallyCosmetic()) {
-                        options.cosmeticAction.applyTo(rel.from, rel.to);
                     } else if (!rel.to.isBaseForme()) {
                         // if it gets here it must be an alt forme
                         options.altFormeAction.applyTo(rel.from, rel.to);

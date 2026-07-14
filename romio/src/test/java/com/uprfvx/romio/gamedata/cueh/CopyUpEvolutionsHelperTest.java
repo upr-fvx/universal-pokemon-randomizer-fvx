@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class CopyUpEvolutionsHelperTest {
 
@@ -387,8 +388,108 @@ public class CopyUpEvolutionsHelperTest {
         assertEquals(Map.of(), callCounter.altForme);
         assertEquals(Map.of(), callCounter.cosmetic);
     }
-    
-    // TODO: tests where some species are NOT in the set
+
+    @Test
+    public void NotInSet_BasicEvo_EvolutionUsesBasicAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        addEvolutionBetween(a, b);
+
+        SpeciesSet set = new SpeciesSet(List.of(b));
+        applyCallCountingCUEH(set, true, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(b, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NotInSet_MiddleEvo_EvolutionUsesBasicAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(b, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, c));
+        applyCallCountingCUEH(set, true, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1, c, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NotInSet_FinalEvo_MiddleEvoCountsAsFinal() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(b, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        new CopyUpEvolutionsHelper(set).apply(new CopyUpEvolutionsHelper.Options.Builder(
+                null,
+                (_, _, toMonIsFinalEvo) -> {
+                    if (!toMonIsFinalEvo) fail();
+                }
+        ).build());
+        applyCallCountingCUEH(set, true, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(b, 1), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NotInSet_SplitEvo_OtherSplitEvoUsesEvolvedAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        addEvolutionBetween(a, b);
+        addEvolutionBetween(a, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(b, 1), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NotInSet_BaseForme_AltFormeUsesBasicAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+
+        SpeciesSet set = new SpeciesSet(List.of(b));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(b, 1), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
 
     @Test
     public void ComplexLine_AppliedInRightOrder() {

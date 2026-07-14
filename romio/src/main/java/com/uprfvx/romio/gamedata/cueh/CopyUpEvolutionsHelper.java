@@ -58,7 +58,9 @@ import java.util.function.Supplier;
  * This class ignores all Species outside the given SpeciesSet. This affects which Species
  * it considers to be e.g. basic or split evolutions. <b>E.g.</b>, if the given SpeciesSet contains only
  * Poliwhirl and Poliwrath, but not Poliwag nor Politoed, Poliwhirl will be considered basic,
- * and Poliwrath will NOT be considered a split evolution.
+ * and Poliwrath will NOT be considered a split evolution.<br>
+ * If an alt forme is in the SpeciesSet, but its conceptual base forme is not, the alt forme will be
+ * treated like a base forme.
  * <br><br>
  * This class assumes no two Species evolve into the same third Species.
  * Note this might not hold true if evolutions are randomized.
@@ -198,8 +200,6 @@ public class CopyUpEvolutionsHelper {
         }
     }
 
-
-
     private final Supplier<SpeciesSet> speciesSetSupplier;
 
     public CopyUpEvolutionsHelper(SpeciesSet speciesSet) {
@@ -247,7 +247,7 @@ public class CopyUpEvolutionsHelper {
         }
 
         SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec, options))
-                .filter(Species::isBaseForme);
+                .filter(pk -> pk.isBaseForme() || !allSpecs.contains(pk.getConceptualBaseForme()));
         SpeciesSet allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec, options));
         SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec, options));
         SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec, options));
@@ -300,44 +300,6 @@ public class CopyUpEvolutionsHelper {
             }
         }
     }
-
-    // ----- Thoughts/Requirements for adding forme support to CUEH -----
-    // TODO: most things below are implemented. Test!
-
-    // There needs to be an action for copying up traits to formes.
-
-    // All alt formes need to get from their conceptual base forme. If there is a chain,
-    // "lower" conceptual base formes need to be applied to first.
-
-    // Starting in Gen 7 (?), forms can have their own evolutions. How does this work?
-    // The order is probably:
-    // - Rattata
-    // - Rattata -> Raticate
-    // - Rattata -> Rattata-Alolan
-    // - Rattata-Alolan -> Raticate-Alolan
-    // - Raticate-Alolan -> Raticate-Alolan-Totem
-    // Having Raticate at the end is fine too. Note that Raticate-Alolan here never copies up from Raticate;
-    // it only copies up from Rattata-Alolan.
-    // Essentially this means that all Species incl. alt formes have a single mon they copy up from.
-    // We can still use the stack method of the current code, it just has to be able to put forme connections on there.
-
-    // Megas are alt forms that are sometimes like evos. Might be nice to have a toggle that makes
-    // megas use the evolution actions (including auto-getting the split evo one for Charizard and Mewtwo).
-
-    // There are alt formes that are essentially split evos. These should (always?) get the split evos treatment.
-    // A weird circumstance here is that Burmy does NOT have evos into each of its formes,
-    // but Meowstic and Rockruff do.
-    // Also, how do we consider Raichu-Alolan and its base forme?
-    // Is it a split evo? Or more of a forme of Raichu? The latter might be more apt solely because Pikachu->Raichu
-    // was designed as a normal evo line. Then again, the same is true for Poliwhirl->Poliwrath.
-    // Complicating things further is the fact that the Pikachu->Raichu evolution doesn't exist by default
-    // in SuMo, same with Cubone->Marowak and Exeggcute->Exeggutor.
-
-    // Essentially cosmetic alt formes should have an action, that copies over the traits.
-
-    // Since this will by necessity add even more parameters, a builder might be appropriate.
-    // -----
-
 
     // SpeciesSet has inbuilt filter methods for different evolutionary stages.
     // This class uses its own methods, for several reasons:

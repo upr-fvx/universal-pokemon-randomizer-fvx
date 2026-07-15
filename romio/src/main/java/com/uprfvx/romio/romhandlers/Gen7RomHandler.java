@@ -77,6 +77,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
+    private final Set<Species> formesThatCopyBaseEvolutions = new HashSet<>();
     private List<Item> items;
     private List<AreaData> areaDataList;
     private Move[] moves;
@@ -392,6 +393,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 pk.getEvolutionsTo().clear();
             }
         }
+        formesThatCopyBaseEvolutions.clear();
 
         // Read GARC
         try {
@@ -410,12 +412,25 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
                         int extraInfo = readWord(evoEntry, i * 8 + 2);
                         int forme = evoEntry[i * 8 + 6];
+
                         // forme == -1 is used internally to mean "keep the forme upon evolving".
                         // Most mons use this value, and it is what makes e.g. Burmy->Wormadam,
                         // Flabébé->Floette->Florges, and Pumpkaboo->Gourgeist work as expected.
                         if (forme == -1) {
-                            forme = pkFrom.getFormeNumber();
+                            if (pkFrom.isBaseForme()) {
+                                forme = 0;
+                            } else {
+                                // The alt formes with evo data with forme == -1
+                                // are all problematic (see Gen6RomHandler) so we ignore them,
+                                // though making note of them so we can write the evo data later.
+                                // And entirely ignore Floette-Eternal, it doesn't evolve.
+                                if (pokes[species].isValidFormeNumber(pkFrom.getFormeNumber())) {
+                                    formesThatCopyBaseEvolutions.add(pkFrom);
+                                }
+                                continue;
+                            }
                         }
+
                         // Espurr -> Meowstic-F uses a redundant forme-setting evo method, as a carryover from Gen 6
                         // which lacked forme data in the evo struct. No reason not to normalize it.
                         if (pkFrom.getNumber() == SpeciesIDs.espurr && method == Gen7Constants.meowsticFEvolutionMethod) {
@@ -425,15 +440,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
                         int level = evoEntry[i * 8 + 7];
                         Species pkTo = pokes[species].getForme(forme);
-                        if (pkTo.isBaseForme() && forme != 0) {
-                            // In this case the forme to evolve into was "true cosmetic", and redirected
-                            // since true cosmetic formes don't get Species objects.
-                            // This happens to Floette->Florges*, but we don't want Florges to have evolutions
-                            // from all of Floette's non-eternal alt formes.
-                            // (*because Floette-Eternal forces Floettes other formes to be essentially cosmetic)
-                            continue;
-                        }
-
                         Evolution evo = new Evolution(pkFrom, pkTo, et, extraInfo);
                         if (et.usesLevelThreshold()) {
                             evo.updateEvolutionMethod(evo.getType(), level);
@@ -726,11 +732,17 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= Gen7Constants.getPokemonCount(romEntry.getRomType()) + Gen7Constants.getFormeCount(romEntry.getRomType()); i++) {
                 byte[] evoEntry = evoGARC.getFile(i);
                 Species pk = pokes[i];
+
                 if (pk.getNumber() == SpeciesIDs.nincada) {
                     writeShedinjaEvolution();
                 }
+
                 int evosWritten = 0;
-                for (Evolution evo : pk.getEvolutionsFrom()) {
+                List<Evolution> evolutionsFrom = pk.getEvolutionsFrom();
+                if (formesThatCopyBaseEvolutions.contains(pk)) {
+                    evolutionsFrom = pk.getBaseForme().getEvolutionsFrom();
+                }
+                for (Evolution evo : evolutionsFrom) {
                     if (evo.getType() == EvolutionType.NONE) continue; // should not be written to ROM
 
                     Species toPK = evo.getTo();

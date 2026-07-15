@@ -80,6 +80,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
+    private final Set<Species> formesThatCopyBaseEvolutions = new HashSet<>();
     private List<Item> items;
     private Move[] moves;
     private Gen6RomEntry romEntry;
@@ -336,6 +337,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 pkmn.getEvolutionsTo().clear();
             }
         }
+        formesThatCopyBaseEvolutions.clear();
 
         // Read GARC
         try {
@@ -360,16 +362,21 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         }
 
                         Species pkTo = pokes[species];
-                        // Before Gen 7, mons keep their forme number upon evolving always.
-                        // It is what makes e.g. Burmy->Wormadam, Flabébé->Floette->Florges,
-                        // and Pumpkaboo->Gourgeist work as expected.
+
+                        // The only alt formes with evo data are Floette's and Pumpkaboo's.
+                        // Floette's are problematic because Florges' formes are all truly cosmetic,
+                        // and thus not valid Species objects to evolve into.
+                        // (Floette-Eternal forces Floettes other formes to be essentially cosmetic)
+                        // Pumpkaboo's formes are similarly problematic because they are Gourgeist's
+                        // are essentially cosmetic. We don't want evolutions between them.
+                        // We chose to hide them, but need to make note so they can be written later.
+                        // (A further forme rewrite might remedy this special handling)
                         if (!pkFrom.isBaseForme()) {
-                            pkTo = pkTo.getForme(pkFrom.getFormeNumber());
-                            if (pkTo.isBaseForme()) {
-                                // That forme of pkTo was true cosmetic (Floette->Florges) so we can't
-                                // have an Evolution into it. Skip it instead.
-                                continue;
+                            // ignore Floette-Eternal, it doesn't evolve
+                            if (pkTo.isValidFormeNumber(pkFrom.getFormeNumber())) {
+                                formesThatCopyBaseEvolutions.add(pkFrom);
                             }
+                            continue;
                         }
 
                         int extraInfo = readWord(evoEntry, evo * 6 + 2);
@@ -678,13 +685,19 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
                 byte[] evoEntry = evoGARC.getFile(i);
                 Species pk = pokes[i];
+
                 if (pk.getNumber() == SpeciesIDs.nincada) {
                     writeShedinjaEvolution();
                 } else if (pk.getNumber() == SpeciesIDs.feebas && romEntry.getRomType() == Gen6Constants.Type_ORAS) {
                     recreateFeebasBeautyEvolution();
                 }
+
                 int evosWritten = 0;
-                for (Evolution evo : pk.getEvolutionsFrom()) {
+                List<Evolution> evolutionsFrom = pk.getEvolutionsFrom();
+                if (formesThatCopyBaseEvolutions.contains(pk)) {
+                    evolutionsFrom = pk.getBaseForme().getEvolutionsFrom();
+                }
+                for (Evolution evo : evolutionsFrom) {
                     if (evo.getType() == EvolutionType.NONE) continue;
 
                     int method = Gen6Constants.evolutionTypeToIndex(evo.getType());

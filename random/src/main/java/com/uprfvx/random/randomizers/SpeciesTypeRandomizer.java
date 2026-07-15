@@ -1,14 +1,13 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
-import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
-import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import java.util.List;
 import java.util.Random;
 
 public class SpeciesTypeRandomizer extends Randomizer {
@@ -18,6 +17,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
     private static final double GSTC_HAS_EVO = 0.35;
     private static final double GSTC_MIDDLE_EVO = 0.15;
     private static final double GSTC_FINAL_EVO = 0.25;
+    private static final double GSTC_MEGA_EVO = 0.25;
 
     public SpeciesTypeRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
@@ -34,58 +34,41 @@ public class SpeciesTypeRandomizer extends Randomizer {
             double chance = pk.getEvolutionsFrom().size() == 1 ? GSTC_HAS_EVO : GSTC_NO_EVO;
             assignRandomSecondaryType(pk, chance, dualTypeOnly);
         };
+
         EvolvedSpeciesAction evolvedAction = (evFrom, evTo, toMonIsFinalEvo) -> {
             evTo.setPrimaryType(evFrom.getPrimaryType(false));
             evTo.setSecondaryType(evFrom.getSecondaryType(false));
 
             if (evTo.getSecondaryType(false) == null) {
                 double chance = toMonIsFinalEvo ? GSTC_FINAL_EVO : GSTC_MIDDLE_EVO;
+                if (evTo.isMegaEvolution()) {
+                    chance = GSTC_MEGA_EVO;
+                }
                 assignRandomSecondaryType(evTo, chance, dualTypeOnly);
             }
         };
+
         BasicSpeciesAction noEvoAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);
         };
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, false, basicAction, evolvedAction,
-                null, noEvoAction);
+        AltFormeAction cosmeticAction = (baseForme, altForme) -> {
+            altForme.setPrimaryType(baseForme.getPrimaryType(false));
+            altForme.setSecondaryType(baseForme.getSecondaryType(false));
+        };
 
-        carryTypesToAltFormes();
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(basicAction, evolvedAction)
+                .noEvoAction(noEvoAction)
+                .cosmeticAction(cosmeticAction)
+                .evolutionSanity(evolutionSanity)
+                .treatMegasAsEvos(megaEvolutionSanity)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
 
-        carryTypesToMegas(megaEvolutionSanity);
         changesMade = true;
-    }
-
-    private void carryTypesToAltFormes() {
-        SpeciesSet allPokes = romHandler.getSpeciesSetInclFormes();
-        for (Species sp : allPokes) {
-            if (sp != null && sp.isEssentiallyCosmetic()) {
-                sp.setPrimaryType(sp.getConceptualBaseForme().getPrimaryType(false));
-                sp.setSecondaryType(sp.getConceptualBaseForme().getSecondaryType(false));
-            }
-        }
-    }
-
-    private void carryTypesToMegas(boolean megaEvolutionSanity) {
-        if (megaEvolutionSanity) {
-            List<MegaEvolution> allMegaEvos = romHandler.getMegaEvolutions();
-            for (MegaEvolution megaEvo: allMegaEvos) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1) continue;
-                megaEvo.getTo().setPrimaryType(megaEvo.getFrom().getPrimaryType(false));
-                megaEvo.getTo().setSecondaryType(megaEvo.getFrom().getSecondaryType(false));
-
-                if (megaEvo.getTo().getSecondaryType(false) == null) {
-                    if (random.nextDouble() < 0.25) {
-                        megaEvo.getTo().setSecondaryType(typeService.randomType(random));
-                        while (megaEvo.getTo().getSecondaryType(false) == megaEvo.getTo().getPrimaryType(false)) {
-                            megaEvo.getTo().setSecondaryType(typeService.randomType(random));
-                        }
-                    }
-                }
-            }
-        }
     }
 
     private void assignRandomSecondaryType(Species sp, double chance, boolean dualTypeOnly) {

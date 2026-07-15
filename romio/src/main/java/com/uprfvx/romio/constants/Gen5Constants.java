@@ -36,6 +36,10 @@ public class Gen5Constants {
     public static final int Type_BW = 0;
     public static final int Type_BW2 = 1;
 
+    // Trainer Class IDs
+    public static final int CLASS_IRIS = 55;
+    public static final int CLASS_DRAYDEN = 56;
+
     public static final int arm9Offset = 0x02004000;
 
     public static final int pokemonCount = 649, moveCount = 559;

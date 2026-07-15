@@ -605,6 +605,19 @@ public class SpeciesTest {
     }
 
     @Test
+    public void transferAttributesToCopy_WithFormes_MegaEvolutionAttributesGetsCopied() {
+        use(a, b, aCopy, bCopy);
+        a.addAltForme(1, b);
+        Item megaEvolutionItem = new Item(1, "dummy");
+        b.setMegaEvolution(megaEvolutionItem);
+
+        transferAttributesToCopies();
+
+        assertTrue(bCopy.isMegaEvolution());
+        assertEquals(megaEvolutionItem, bCopy.getMegaEvolutionItem());
+    }
+
+    @Test
     public void transferAttributesToCopy_WithFormes_AlolanGetsCopied() {
         use(a, b, aCopy, bCopy);
         a.addAltForme(1, b);
@@ -697,66 +710,4 @@ public class SpeciesTest {
 
         assertEquals(2, aCopy.getEvolutionsFrom().getFirst().getEstimatedEvoLvl());
     }
-
-    @Test
-    public void transferAttributesToCopy_WithMegaEvolutions_MatchingMegaEvolutionsFromAndToAreSame() {
-        use(a, b, aCopy, bCopy);
-        MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);
-        a.getMegaEvolutionsFrom().add(megaEvolution);
-        b.getMegaEvolutionsTo().add(megaEvolution);
-
-        transferAttributesToCopies();
-
-        assertSame(aCopy.getMegaEvolutionsFrom().getFirst(), bCopy.getMegaEvolutionsTo().getFirst());
-    }
-
-    @Test
-    public void transferAttributesToCopy_WithMegaEvolutions_FromReferenceGetCopied() {
-        use(a, b, aCopy, bCopy);
-        MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);
-        a.getMegaEvolutionsFrom().add(megaEvolution);
-        b.getMegaEvolutionsTo().add(megaEvolution);
-
-        transferAttributesToCopies();
-
-        assertSame(aCopy, aCopy.getMegaEvolutionsFrom().getFirst().getFrom());
-    }
-
-    @Test
-    public void transferAttributesToCopy_WithMegaEvolutions_ToReferenceGetCopied() {
-        use(a, b, aCopy, bCopy);
-        MegaEvolution megaEvolution = new MegaEvolution(a, b, false, null);
-        a.getMegaEvolutionsFrom().add(megaEvolution);
-        b.getMegaEvolutionsTo().add(megaEvolution);
-
-        transferAttributesToCopies();
-
-        assertSame(bCopy, aCopy.getMegaEvolutionsFrom().getFirst().getTo());
-    }
-
-    @Test
-    public void transferAttributesToCopy_WithMegaEvolutions_NeedsItemGetsCopied() {
-        use(a, b, aCopy, bCopy);
-        MegaEvolution megaEvolution = new MegaEvolution(a, b, true, null);
-        a.getMegaEvolutionsFrom().add(megaEvolution);
-        b.getMegaEvolutionsTo().add(megaEvolution);
-
-        transferAttributesToCopies();
-
-        assertTrue(aCopy.getMegaEvolutionsFrom().getFirst().isNeedsItem());
-    }
-
-    @Test
-    public void transferAttributesToCopy_WithMegaEvolutions_ItemGetsCopied() {
-        use(a, b, aCopy, bCopy);
-        Item item = new Item(1, "Item");
-        MegaEvolution megaEvolution = new MegaEvolution(a, b, true, item);
-        a.getMegaEvolutionsFrom().add(megaEvolution);
-        b.getMegaEvolutionsTo().add(megaEvolution);
-
-        transferAttributesToCopies();
-
-        assertEquals(item, aCopy.getMegaEvolutionsFrom().getFirst().getItem());
-    }
-
 }

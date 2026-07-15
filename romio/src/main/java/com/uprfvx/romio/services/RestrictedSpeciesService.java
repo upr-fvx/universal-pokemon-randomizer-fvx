@@ -2,16 +2,11 @@ package com.uprfvx.romio.services;
 
 import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.GenRestrictions;
-import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Random;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * A service for restricted Pokemon. After setting restrictions with {@link #setRestrictions(GenRestrictions)},
@@ -37,7 +32,7 @@ public class RestrictedSpeciesService {
     private SpeciesSet legendariesInclAltFormes;
     private SpeciesSet ultraBeasts;
     private SpeciesSet ultraBeastsInclAltFormes;
-    private Set<MegaEvolution> megaEvolutions;
+    private SpeciesSet megaEvolutions;
 
     public RestrictedSpeciesService(RomHandler romHandler) {
         this.romHandler = romHandler;
@@ -103,9 +98,9 @@ public class RestrictedSpeciesService {
     }
 
     /**
-     * Returns an unmodifiable {@link Set} containing all {@link MegaEvolution}s that follow the restrictions.
+     * Returns an unmodifiable {@link SpeciesSet} containing all mega evolutions that follow the restrictions.
      */
-    public Set<MegaEvolution> getMegaEvolutions() {
+    public SpeciesSet getMegaEvolutions() {
         if (!restrictionsSet) {
             throw new IllegalStateException("Restrictions not set.");
         }
@@ -157,13 +152,8 @@ public class RestrictedSpeciesService {
 
         if (restrictions != null) {
             allInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormesFromRestrictions(restrictions));
-            megaEvolutions = romHandler.getMegaEvolutions().stream()
-                    .filter(mevo -> allInclAltFormes.contains(mevo.getTo()))
-                    .collect(Collectors.toSet());
-            megaEvolutions = Collections.unmodifiableSet(megaEvolutions);
         } else {
             allInclAltFormes = SpeciesSet.unmodifiable(romHandler.getSpeciesSetInclFormes());
-            megaEvolutions = Collections.unmodifiableSet(new HashSet<>(romHandler.getMegaEvolutions()));
         }
 
         nonLegendariesInclAltFormes = SpeciesSet.unmodifiable(allInclAltFormes.filter(pk -> !pk.isLegendary()));
@@ -174,6 +164,7 @@ public class RestrictedSpeciesService {
         nonLegendaries = SpeciesSet.unmodifiable(nonLegendariesInclAltFormes.filter(pk -> !altFormes.contains(pk)));
         legendaries = SpeciesSet.unmodifiable(legendariesInclAltFormes.filter(pk -> !altFormes.contains(pk)));
         ultraBeasts = SpeciesSet.unmodifiable(ultraBeastsInclAltFormes.filter(pk -> !altFormes.contains(pk)));
+        megaEvolutions = SpeciesSet.unmodifiable(allInclAltFormes.filter(Species::isMegaEvolution));
 
         restrictionsSet = true;
 

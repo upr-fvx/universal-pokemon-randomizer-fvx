@@ -2,11 +2,11 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.ExpCurve;
-import com.uprfvx.romio.gamedata.MegaEvolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import com.uprfvx.romio.gamedata.basestats.BaseStats;
 import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
+import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -39,26 +39,17 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             case SHUFFLE -> shuffleBSTs();
             case RANDOM -> fullyRandomizeBSTs();
         }
-
-        copyBSTsToCosmeticFormes();
-        updateMegaEvolutionBSTs(); // TODO: we always do this because that's how megas work, so remove GUI option
+        // TODO: remove "follow mega evolutions" GUI option
     }
 
-    private void copyBSTsToCosmeticFormes() {
-        for (Species pk : romHandler.getAltFormes()) {
-            if (pk.isEssentiallyCosmetic()) {
-                pk.getBaseStats().setBST(pk.getBaseForme().getBST(false));
-            }
+    private final AltFormeAction copyBSTAction = (baseForme, altForme) ->
+            altForme.getBaseStats().setBST(baseForme.getBST(false));
+
+    private final AltFormeAction giveMegaBoostAction = (baseForme, altForme) -> {
+        if (altForme.isMegaEvolution()) {
+            altForme.getBaseStats().setBST(baseForme.getBST(false) + MEGA_BST_BOOST);
         }
-    }
-
-    private void updateMegaEvolutionBSTs() {
-        for (Species pk : romHandler.getSpeciesSet()) {
-            for (MegaEvolution mevo : pk.getMegaEvolutionsFrom()) {
-                mevo.getTo().getBaseStats().setBST(pk.getBST(false) + MEGA_BST_BOOST);
-            }
-        }
-    }
+    };
 
     private void randomlyModifyBSTsByPercentage() {
         boolean evolutionSanity = settings.isBSTFollowEvolutions();
@@ -78,7 +69,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             applyBSTModifier(evTo, modifier);
         };
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, true, basicSpeciesAction, evolvedSpeciesAction);
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(basicSpeciesAction, evolvedSpeciesAction)
+                .evolutionSanity(evolutionSanity)
+                .copySplitEvos(true)
+                .altFormeAction(giveMegaBoostAction)
+                .cosmeticAction(copyBSTAction)
+                .build();
+        copyUpEvolutionsHelper.apply(options);
     }
 
     private void applyBSTModifier(Species pk, double modifier) {
@@ -139,10 +137,25 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                 donators.put(evTo, toDonator);
                 evTo.getBaseStats().setBST(toDonator.getBST(true));
             };
-            
-            cueh.apply(evolutionSanity, true, basicSpeciesAction, evolvedSpeciesAction);
+
+
+            CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                    .Builder(basicSpeciesAction, evolvedSpeciesAction)
+                    .evolutionSanity(evolutionSanity)
+                    .copySplitEvos(true)
+                    .build();
+            cueh.apply(options);
         }
 
+        // copying up to formes needs to happen out here (?)
+        // TODO: how does this whole big method work with formes?
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(null, null)
+                .copySplitEvos(true)
+                .altFormeAction(giveMegaBoostAction)
+                .cosmeticAction(copyBSTAction)
+                .build();
+        copyUpEvolutionsHelper.apply(options);
     }
 
     /**
@@ -184,6 +197,17 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             int newBST = random.nextInt(SUNKERN_BST, ARCEUS_BST);
             pk.getBaseStats().setBST(newBST);
         }
+
+        // TODO: consider breaking out
+        // TODO: how should this even work with formes??
+        // ensures cosmetic formes/megas get what they should
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(null, null)
+                .copySplitEvos(true)
+                .altFormeAction(giveMegaBoostAction)
+                .cosmeticAction(copyBSTAction)
+                .build();
+        copyUpEvolutionsHelper.apply(options);
     }
 
     // TODO: write tests for these older randomization options
@@ -196,19 +220,14 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         shuffledStatsOrders = new HashMap<>();
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, false,
-                this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder);
-
-        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> copyUpShuffledStatsOrder(pk.getConceptualBaseForme(), pk));
-
-        if (megaEvolutionSanity) {
-            for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() == 1) {
-                    copyUpShuffledStatsOrder(megaEvo.getFrom(), megaEvo.getTo());
-                }
-            }
-        }
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder)
+                .evolutionSanity(evolutionSanity)
+                .copySplitEvos(false)
+                .treatMegasAsEvos(megaEvolutionSanity)
+                .cosmeticAction(this::copyUpShuffledStatsOrder)
+                .build();
+        copyUpEvolutionsHelper.apply(options);
 
         romHandler.getSpeciesSetInclFormes().forEach(this::applyShuffledOrderToStats);
 
@@ -260,21 +279,16 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         EvolvedSpeciesAction copyEsAction = (evFrom, evTo, _) ->
                 copyRandomizedStatsUpEvolution(evFrom, evTo);
 
-        copyUpEvolutionsHelper.apply(evolutionSanity, true, bsAction,
-                assignEvoStatsRandomly ? randomEsAction : copyEsAction, randomEsAction, bsAction);
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(bsAction, assignEvoStatsRandomly ? randomEsAction : copyEsAction)
+                .evolutionSanity(evolutionSanity)
+                .copySplitEvos(true)
+                .treatMegasAsEvos(megaEvolutionSanity)
+                .splitAction(randomEsAction)
+                .cosmeticAction(this::copyRandomizedStatsUpEvolution)
+                .build();
+        copyUpEvolutionsHelper.apply(options);
 
-        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> pk.setBaseStats(new BaseStats(pk.getConceptualBaseForme().getBaseStats())));
-
-        if (megaEvolutionSanity) {
-            for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1 || assignEvoStatsRandomly) {
-                    assignNewStatsForEvolution(megaEvo.getFrom(), megaEvo.getTo());
-                } else {
-                    copyRandomizedStatsUpEvolution(megaEvo.getFrom(), megaEvo.getTo());
-                }
-            }
-        }
         changesMade = true;
     }
 

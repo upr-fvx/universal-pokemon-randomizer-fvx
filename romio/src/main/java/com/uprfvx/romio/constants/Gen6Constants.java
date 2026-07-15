@@ -38,6 +38,10 @@ public class Gen6Constants {
     public static final int Type_XY = N3DSConstants.Type_XY;
     public static final int Type_ORAS = N3DSConstants.Type_ORAS;
 
+    // Trainer Class IDs
+    public static final int CLASS_WALLACE = 219;
+    public static final int CLASS_STEVEN = 268;
+
     public static final int pokemonCount = 721;
     private static final int xyFormeCount = 77, orasFormeCount = 104;
     private static final int orasformeMovesetOffset = 35;
@@ -684,8 +688,10 @@ public class Gen6Constants {
             EvolutionType.LEVEL_FEMALE_ONLY, EvolutionType.MAGNETIC_FIELD, EvolutionType.MOSS_ROCK,
             EvolutionType.ICE_ROCK, EvolutionType.LEVEL_UPSIDE_DOWN, EvolutionType.FAIRY_AFFECTION,
             EvolutionType.LEVEL_WITH_DARK, EvolutionType.LEVEL_RAIN, EvolutionType.LEVEL_DAY, EvolutionType.LEVEL_NIGHT,
-            EvolutionType.LEVEL_FEMALE_ESPURR,
+            EvolutionType.NONE,
     };
+
+    public static final int meowsticFEvolutionMethod = 34;
 
     public static int evolutionTypeToIndex(EvolutionType evolutionType) {
         for (int i = 0; i < evolutionTypeTable.length; i++) {

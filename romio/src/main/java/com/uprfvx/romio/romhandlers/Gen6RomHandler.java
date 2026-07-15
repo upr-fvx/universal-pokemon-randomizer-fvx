@@ -82,9 +82,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     // This ROM
     private Species[] pokes;
     private final Map<Integer,FormeInfo> formeMappings = new TreeMap<>();
-    private Map<Integer,Map<Integer,Integer>> absolutePokeNumByBaseForme;
-    private Map<Integer,Integer> dummyAbsolutePokeNums;
-    private List<MegaEvolution> megaEvolutions;
+    private final Set<Species> formesThatCopyBaseEvolutions = new HashSet<>();
     private List<Item> items;
     private Move[] moves;
     private Gen6RomEntry romEntry;
@@ -211,33 +209,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
             }
 
-            absolutePokeNumByBaseForme = new HashMap<>();
-            dummyAbsolutePokeNums = new HashMap<>();
-            dummyAbsolutePokeNums.put(255,0);
-
             int i = Gen6Constants.pokemonCount + 1;
-            int formNum = 1;
-            int prevSpecies = 0;
-            Map<Integer,Integer> currentMap = new HashMap<>();
             for (int k: formeMappings.keySet()) {
                 pokes[i] = new Species(i);
                 loadBasicPokeStats(pokes[i], pokeGarc.getFile(k), formeMappings);
                 FormeInfo fi = formeMappings.get(k);
                 pokes[i].setName(pokeNames[fi.baseForme]);
+
                 pokes[i].setFormeSuffix(Gen6Constants.getFormeSuffixByBaseForme(fi.baseForme, fi.formeNumber));
                 pokes[fi.baseForme].addAltForme(fi.formeNumber, pokes[i]);
-                if (fi.baseForme == prevSpecies) {
-                    formNum++;
-                    currentMap.put(formNum,i);
-                } else {
-                    if (prevSpecies != 0) {
-                        absolutePokeNumByBaseForme.put(prevSpecies,currentMap);
-                    }
-                    prevSpecies = fi.baseForme;
-                    formNum = 1;
-                    currentMap = new HashMap<>();
-                    currentMap.put(formNum,i);
-                }
                 if (Gen6Constants.essentiallyCosmeticForms.contains(i)) {
                     pokes[i].setEssentiallyCosmetic();
                 }
@@ -246,9 +226,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 }
                 pokes[i].setGeneration(generationOf(pokes[i]));
                 i++;
-            }
-            if (prevSpecies != 0) {
-                absolutePokeNumByBaseForme.put(prevSpecies,currentMap);
             }
         } catch (IOException e) {
             throw new RomIOException(e);
@@ -374,12 +351,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 pkmn.getEvolutionsTo().clear();
             }
         }
+        formesThatCopyBaseEvolutions.clear();
 
         // Read GARC
         try {
             GARCArchive evoGARC = readGARC(romEntry.getFile("PokemonEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
-                Species pk = pokes[i];
+                Species pkFrom = pokes[i];
                 byte[] evoEntry = evoGARC.getFile(i);
                 for (int evo = 0; evo < 8; evo++) {
                     int method = readWord(evoEntry, evo * 6);
@@ -387,41 +365,58 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     if (method >= 1 && method <= Gen6Constants.evolutionMethodCount && species >= 1) {
                         EvolutionType et = Gen6Constants.evolutionTypeFromIndex(method);
                         if (et.equals(EvolutionType.HIGH_BEAUTY)) continue; // Remove Feebas "split" evolution
-                        int extraInfo = readWord(evoEntry, evo * 6 + 2);
-                        Evolution evol = new Evolution(pk, pokes[species], et, extraInfo);
-                        if (!pk.getEvolutionsFrom().contains(evol)) {
-                            pk.getEvolutionsFrom().add(evol);
-                            if (!pk.isEssentiallyCosmetic()) {
-                                pokes[species].getEvolutionsTo().add(evol);
-                            }
+
+                        // Internally, Espurr -> Meowstic-f uses a special evo method that works like LEVEL_FEMALE_ONLY,
+                        // but also forcibly sets the forme to 1 upon evolving. This is because the evo struct
+                        // does not include forme data. We chose to hide this, with the possible future caveat
+                        // that changing the EvolutionType of this evo won't lead to one into Meowstic-F (but -M).
+                        if (pkFrom.getNumber() == SpeciesIDs.espurr && method == Gen6Constants.meowsticFEvolutionMethod) {
+                            et = EvolutionType.LEVEL_FEMALE_ONLY;
+                            species = SpeciesIDs.Gen6Formes.meowsticF;
                         }
+
+                        Species pkTo = pokes[species];
+
+                        // The only alt formes with evo data are Floette's and Pumpkaboo's.
+                        // Floette's are problematic because Florges' formes are all truly cosmetic,
+                        // and thus not valid Species objects to evolve into.
+                        // (Floette-Eternal forces Floettes other formes to be essentially cosmetic)
+                        // Pumpkaboo's formes are similarly problematic because they are Gourgeist's
+                        // are essentially cosmetic. We don't want evolutions between them.
+                        // We chose to hide them, but need to make note so they can be written later.
+                        // (A further forme rewrite might remedy this special handling)
+                        if (!pkFrom.isBaseForme()) {
+                            // ignore Floette-Eternal, it doesn't evolve
+                            if (pkTo.isValidFormeNumber(pkFrom.getFormeNumber())) {
+                                formesThatCopyBaseEvolutions.add(pkFrom);
+                            }
+                            continue;
+                        }
+
+                        int extraInfo = readWord(evoEntry, evo * 6 + 2);
+                        Evolution evol = new Evolution(pkFrom, pkTo, et, extraInfo);
+                        pkFrom.getEvolutionsFrom().add(evol);
+                        pkTo.getEvolutionsTo().add(evol);
                     }
                 }
                 // Nincada's Shedinja evo is hardcoded into the game's executable, so
                 // if the Pokemon is Nincada, then let's put it as one of its evolutions
-                if (pk.getNumber() == SpeciesIDs.nincada) {
+                if (pkFrom.getNumber() == SpeciesIDs.nincada) {
                     Species shedinja = pokes[SpeciesIDs.shedinja];
-                    Evolution evol = new Evolution(pk, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
-                    pk.getEvolutionsFrom().add(evol);
+                    Evolution evol = new Evolution(pkFrom, shedinja, EvolutionType.LEVEL_IS_EXTRA, 20);
+                    pkFrom.getEvolutionsFrom().add(evol);
                     shedinja.getEvolutionsTo().add(evol);
                 }
             }
         } catch (IOException e) {
             throw new RomIOException(e);
         }
+        addBurmyAltFormeEvolutions();
     }
 
     private void populateMegaEvolutions() {
-        for (Species pkmn : pokes) {
-            if (pkmn != null) {
-                pkmn.getMegaEvolutionsFrom().clear();
-                pkmn.getMegaEvolutionsTo().clear();
-            }
-        }
-
         // Read GARC
         try {
-            megaEvolutions = new ArrayList<>();
             GARCArchive megaEvoGARC = readGARC(romEntry.getFile("MegaEvolutions"),true);
             for (int i = 1; i <= Gen6Constants.pokemonCount; i++) {
                 Species pk = pokes[i];
@@ -430,17 +425,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     int formNum = readWord(megaEvoEntry, evo * 8);
                     int method = readWord(megaEvoEntry, evo * 8 + 2);
                     if (method >= 1) {
-                        int megaSpecies = absolutePokeNumByBaseForme
-                                .getOrDefault(pk.getNumber(),dummyAbsolutePokeNums)
-                                .getOrDefault(formNum,0);
+                        Species mega = pk.getForme(formNum);
                         boolean needsItem = method == 1; // true for every mega but Mega Rayquaza, which has method==2.
                         Item item = items.get(readWord(megaEvoEntry, evo * 8 + 4));
-                        MegaEvolution megaEvo = new MegaEvolution(pk, pokes[megaSpecies], needsItem, item);
-                        if (!pk.getMegaEvolutionsFrom().contains(megaEvo)) {
-                            pk.getMegaEvolutionsFrom().add(megaEvo);
-                            pokes[megaSpecies].getMegaEvolutionsTo().add(megaEvo);
-                        }
-                        megaEvolutions.add(megaEvo);
+                        mega.setMegaEvolution(needsItem ? item : null);
                     }
                 }
             }
@@ -698,10 +686,9 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         stats[Gen6Constants.bsSecondaryEggGroupOffset] = secondaryEggGroupByte;
         stats[Gen6Constants.bsEggCyclesOffset] = (byte) bi.getEggCycles();
 
-        // TODO: this is a very risky way of checking for the form, fix it
-        if (pkmn.getFullName().equals("Meowstic")) {
+        if (pkmn.getNumber() == SpeciesIDs.meowstic) {
             stats[Gen6Constants.bsGenderOffset] = 0;
-        } else if (pkmn.getFullName().equals("Meowstic-F")) {
+        } else if (pkmn.getNumber() == SpeciesIDs.Gen6Formes.meowsticF) {
             stats[Gen6Constants.bsGenderOffset] = (byte)0xFE;
         }
     }
@@ -713,14 +700,26 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             for (int i = 1; i <= Gen6Constants.pokemonCount + Gen6Constants.getFormeCount(romEntry.getRomType()); i++) {
                 byte[] evoEntry = evoGARC.getFile(i);
                 Species pk = pokes[i];
+
                 if (pk.getNumber() == SpeciesIDs.nincada) {
                     writeShedinjaEvolution();
                 } else if (pk.getNumber() == SpeciesIDs.feebas && romEntry.getRomType() == Gen6Constants.Type_ORAS) {
                     recreateFeebasBeautyEvolution();
                 }
+
                 int evosWritten = 0;
-                for (Evolution evo : pk.getEvolutionsFrom()) {
-                    writeWord(evoEntry, evosWritten * 6, Gen6Constants.evolutionTypeToIndex(evo.getType()));
+                List<Evolution> evolutionsFrom = pk.getEvolutionsFrom();
+                if (formesThatCopyBaseEvolutions.contains(pk)) {
+                    evolutionsFrom = pk.getBaseForme().getEvolutionsFrom();
+                }
+                for (Evolution evo : evolutionsFrom) {
+                    if (evo.getType() == EvolutionType.NONE) continue;
+
+                    int method = Gen6Constants.evolutionTypeToIndex(evo.getType());
+                    if (pk.getNumber() == SpeciesIDs.espurr && evo.getType() == EvolutionType.LEVEL_FEMALE_ONLY) {
+                        method = Gen6Constants.meowsticFEvolutionMethod;
+                    }
+                    writeWord(evoEntry, evosWritten * 6, method);
                     writeWord(evoEntry, evosWritten * 6 + 2, evo.getExtraInfo());
                     writeWord(evoEntry, evosWritten * 6 + 4, evo.getTo().getNumber());
                     evosWritten++;
@@ -936,11 +935,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         int formeCount = Gen6Constants.getFormeCount(romEntry.getRomType());
         return new SpeciesSet(Arrays.asList(pokes).subList(Gen6Constants.pokemonCount + 1,
                 Gen6Constants.pokemonCount + formeCount + 1));
-    }
-
-    @Override
-    public List<MegaEvolution> getMegaEvolutions() {
-        return megaEvolutions;
     }
 
 	@Override

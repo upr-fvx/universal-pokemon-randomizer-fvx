@@ -103,6 +103,8 @@ public class Species implements Comparable<Species> {
     private Species baseForme = null;
     private Species conceptualBaseForme = null; // for "formes-of-formes"
 
+    private boolean megaEvolution = false;
+    private Item megaEvolutionItem = null;
     private boolean alolan = false;
     private boolean essentiallyCosmetic = false;
 
@@ -150,9 +152,6 @@ public class Species implements Comparable<Species> {
 
     private List<Evolution> evolutionsFrom = new ArrayList<>();
     private List<Evolution> evolutionsTo = new ArrayList<>();
-
-    private List<MegaEvolution> megaEvolutionsFrom = new ArrayList<>();
-    private List<MegaEvolution> megaEvolutionsTo = new ArrayList<>();
 
     public Species(int number) {
         this.number = number;
@@ -513,15 +512,10 @@ public class Species implements Comparable<Species> {
         originalPreEvolvedForms = SpeciesSet.unmodifiable(getPreEvolvedSpecies(false));
     }
 
-    public void copyBaseFormeAbilities(Species baseForme) {
-        ability1 = baseForme.ability1;
-        ability2 = baseForme.ability2;
-        ability3 = baseForme.ability3;
-    }
-
-    public void copyBaseFormeEvolutions(Species baseForme) {
-        evolutionsFrom = baseForme.evolutionsFrom;
-        //Doesn't copy evolutions to as that would result in poorly-defined behavior
+    public void copyBaseFormeAbilities(Species other) {
+        ability1 = other.ability1;
+        ability2 = other.ability2;
+        ability3 = other.ability3;
     }
 
     /**
@@ -785,6 +779,34 @@ public class Species implements Comparable<Species> {
 
     public int getFormeNumber() {
         return formeNumber;
+    }
+
+    /**
+     * Returns whether this is a mega evolution.
+     */
+    public boolean isMegaEvolution() {
+        return megaEvolution;
+    }
+
+    /**
+     * Marks this alt forme as a mega evolution.
+     * @param item The item this needs to mega evolve. Can be null, in which no item is required (Mega Rayquaza).
+     * @throws IllegalStateException if this is not an alt forme.
+     */
+    public void setMegaEvolution(Item item) {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.megaEvolution = true;
+        this.megaEvolutionItem = item;
+    }
+
+    public boolean needsMegaEvolutionItem() {
+        return megaEvolutionItem != null;
+    }
+
+    public Item getMegaEvolutionItem() {
+        return megaEvolutionItem;
     }
 
     /**
@@ -1141,22 +1163,6 @@ public class Species implements Comparable<Species> {
         return evolutionsTo;
     }
 
-    public List<MegaEvolution> getMegaEvolutionsFrom() {
-        return megaEvolutionsFrom;
-    }
-
-    public void setMegaEvolutionsFrom(List<MegaEvolution> megaEvolutionsFrom) {
-        this.megaEvolutionsFrom = megaEvolutionsFrom;
-    }
-
-    public List<MegaEvolution> getMegaEvolutionsTo() {
-        return megaEvolutionsTo;
-    }
-
-    public void setMegaEvolutionsTo(List<MegaEvolution> megaEvolutionsTo) {
-        this.megaEvolutionsTo = megaEvolutionsTo;
-    }
-
     /**
      * Transfers (copies) all attributes from one species to another. This method is expected to be called
      * as part of a process of copying all Species. For this reason, it takes a {@link Map} of all
@@ -1264,7 +1270,6 @@ public class Species implements Comparable<Species> {
                                                         Map<Species, Species> originalToCopies) {
         transferFormesToCopy(copy, original, originalToCopies);
         transferEvolutionsToCopy(copy, original, originalToCopies);
-        transferMegaEvolutionsToCopy(copy, original, originalToCopies);
     }
 
     private static void transferFormesToCopy(Species copy, Species original,
@@ -1277,6 +1282,8 @@ public class Species implements Comparable<Species> {
         copy.formeSuffix = original.formeSuffix;
         copy.formeNumber = original.formeNumber;
 
+        copy.megaEvolution = original.megaEvolution;
+        copy.megaEvolutionItem = original.megaEvolutionItem;
         copy.alolan = original.alolan;
         copy.essentiallyCosmetic = original.essentiallyCosmetic;
 
@@ -1297,16 +1304,6 @@ public class Species implements Comparable<Species> {
                     evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
             copy.getEvolutionsFrom().add(evoCopy);
             evoCopy.getTo().getEvolutionsTo().add(evoCopy);
-        }
-    }
-
-    private static void transferMegaEvolutionsToCopy(Species copy, Species original,
-                                                     Map<Species, Species> originalToCopies) {
-        for (MegaEvolution mevo : original.getMegaEvolutionsFrom()) {
-            MegaEvolution mevoCopy = new MegaEvolution(copy, originalToCopies.get(mevo.getTo()),
-                    mevo.isNeedsItem(), mevo.getItem());
-            copy.getMegaEvolutionsFrom().add(mevoCopy);
-            mevoCopy.getTo().getMegaEvolutionsTo().add(mevoCopy);
         }
     }
 }

@@ -4,8 +4,9 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.GlobalConstants;
-import com.uprfvx.romio.gamedata.MegaEvolution;
-import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.List;
@@ -68,7 +69,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
 
         // copy abilities straight up evolution lines
         // still keep WG as an exception, though
-        copyUpEvolutionsHelper.apply(evolutionSanity, false, pk -> {
+        BasicSpeciesAction basicAction = pk -> {
             if (pk.getAbility1() != AbilityIDs.wonderGuard && pk.getAbility2() != AbilityIDs.wonderGuard
                     && pk.getAbility3() != AbilityIDs.wonderGuard) {
                 // Pick first ability
@@ -90,28 +91,21 @@ public class SpeciesAbilityRandomizer extends Randomizer {
                             pk.getAbility1(), pk.getAbility2()));
                 }
             }
-        }, (evFrom, evTo, toMonIsFinalEvo) -> {
+        };
+        EvolvedSpeciesAction evolvedAction = (evFrom, evTo, _) -> {
             if (evTo.getAbility1() != AbilityIDs.wonderGuard && evTo.getAbility2() != AbilityIDs.wonderGuard
                     && evTo.getAbility3() != AbilityIDs.wonderGuard) {
-                evTo.setAbility1(evFrom.getAbility1());
-                evTo.setAbility2(evFrom.getAbility2());
-                evTo.setAbility3(evFrom.getAbility3());
+                evTo.copyBaseFormeAbilities(evFrom);
             }
-        });
+        };
 
-
-        romHandler.getSpeciesSetInclFormes().filter(Species::isEssentiallyCosmetic)
-                .forEach(pk -> pk.copyBaseFormeAbilities(pk.getConceptualBaseForme()));
-
-        if (megaEvolutionSanity) {
-            for (MegaEvolution megaEvo : romHandler.getMegaEvolutions()) {
-                if (megaEvo.getFrom().getMegaEvolutionsFrom().size() > 1)
-                    continue;
-                megaEvo.getTo().setAbility1(megaEvo.getFrom().getAbility1());
-                megaEvo.getTo().setAbility2(megaEvo.getFrom().getAbility2());
-                megaEvo.getTo().setAbility3(megaEvo.getFrom().getAbility3());
-            }
-        }
+        CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+                .Builder(basicAction, evolvedAction)
+                .cosmeticAction((baseForme, altForme) -> altForme.copyBaseFormeAbilities(baseForme))
+                .evolutionSanity(evolutionSanity)
+                .treatMegasAsEvos(megaEvolutionSanity)
+                .build();
+        copyUpEvolutionsHelper.apply(cuehOptions);
 
         changesMade = true;
     }

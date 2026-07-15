@@ -155,8 +155,8 @@ public class TrainerPokemon {
     }
 
     public boolean canMegaEvolve() {
-        for (MegaEvolution mega: getSpecies().getMegaEvolutionsFrom()) {
-            if (mega.isNeedsItem() && mega.getItem().equals(heldItem)) {
+        for (Species mega : getSpecies().getAltFormes().filter(Species::isMegaEvolution)) {
+            if (mega.needsMegaEvolutionItem() && mega.getMegaEvolutionItem().equals(heldItem)) {
                 return true;
             }
         }

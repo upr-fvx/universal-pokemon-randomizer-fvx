@@ -172,9 +172,6 @@ public class EvolutionRandomizer extends Randomizer {
             } else {
                 newEvo = new Evolution(from, picked, evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
             }
-            if (newEvo.getType() == EvolutionType.LEVEL_FEMALE_ESPURR) {
-                newEvo.updateEvolutionMethod(EvolutionType.LEVEL_FEMALE_ONLY, newEvo.getExtraInfo());
-            }
             return newEvo;
         }
 

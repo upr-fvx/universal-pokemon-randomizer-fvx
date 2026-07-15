@@ -25,6 +25,7 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -71,8 +72,12 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 		this.typeSanity = settings.isPokemonPalettesFollowTypes();
 		boolean evolutionSanity = settings.isPokemonPalettesFollowEvolutions();
 
-		copyUpEvolutionsHelper.apply(evolutionSanity, true,
-				new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction());
+		CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
+				.Builder(new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction())
+				.evolutionSanity(evolutionSanity)
+				.copySplitEvos(true)
+				.build();
+		copyUpEvolutionsHelper.apply(cuehOptions);
 	}
 
 	private SGBPaletteID getRandomPaletteID() {

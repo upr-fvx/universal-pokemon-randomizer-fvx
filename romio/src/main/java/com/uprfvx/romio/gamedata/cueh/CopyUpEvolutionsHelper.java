@@ -27,26 +27,182 @@ import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Supplier;
 
 /**
- * Universal implementation for things that have "copy X up evolutions" support.<br>
- * Assumes no two Species evolve into the same third Species. Note this might not hold true if evolutions are
- * randomized.
+ * Universal implementation for things that have "copy X up evolutions/formes" support.<br>
+ * This class allows for running a {@link BasicSpeciesAction} on each basic (non-evolved) {@link Species},
+ * and then a {@link EvolvedSpeciesAction} on each Species they evolve into.<br>
+ * It also allows for further control, e.g. giving a separate EvolvedSpeciesAction to split evolutions.
+ * See {@link Options.Builder} for more details.
+ * <br><br>
+ * This class also allows for running a {@link AltFormeAction} on each forme. Non-cosmetic formes and
+ * cosmetic formes have their own actions.<br>
+ * Some Species are both alt formes and have evolution into them (e.g. Meowstic-F, Lycanroc-Midnight, Raticate-Alolan).
+ * These are treated as evolved species rather than alt formes, and thus use the EvolvedSpeciesActions rather
+ * than the AltFormeActions.
+ * <br><br>
+ * This class ensures actions are applied in the correct order, so traits altered by the basic action
+ * can be copied up to all evolutions and alt formes. <b>E.g.</b> Magby -> Magmar -> Magmortar will always
+ * be applied in that order. More complicated "lines" like Rattata's in USUM will too.
+ * Rattata -> Raticate; Rattata -> Rattata-Alolan -> Raticate-Alolan -> Raticate-Alolan-Totem.
+ * Note here that Raticate-Alolan has no direct connection to Raticate.
+ * <br><br>
+ * Note that this class does NOT ensure that Species in the same line are applied <i>directly</i>
+ * after one another. After applying the action to Magby, any number of species actions may be applied before
+ * getting to Magmar. It only ensures Magmar does not come before Magby.
+ * <br><br>
+ * This class ignores all Species outside the given SpeciesSet. This affects which Species
+ * it considers to be e.g. basic or split evolutions. <b>E.g.</b>, if the given SpeciesSet contains only
+ * Poliwhirl and Poliwrath, but not Poliwag nor Politoed, Poliwhirl will be considered basic,
+ * and Poliwrath will NOT be considered a split evolution.<br>
+ * If an alt forme is in the SpeciesSet, but its conceptual base forme is not, the alt forme will be
+ * treated like a base forme.
+ * <br><br>
+ * This class assumes no two Species evolve into the same third Species.
+ * Note this might not hold true if evolutions are randomized.
  */
 public class CopyUpEvolutionsHelper {
 
-    private final BasicSpeciesAction nullBasicSpeciesAction = _ -> {};
-    private final EvolvedSpeciesAction nullEvolvedSpeciesAction = (_, _, _) -> {};
+    public static class Options {
+
+        private final boolean evolutionSanity;
+        private final boolean copySplitEvos;
+        private final boolean treatMegasAsEvos;
+        private final BasicSpeciesAction noEvoAction;
+        private final EvolvedSpeciesAction evolvedAction;
+        private final BasicSpeciesAction basicAction;
+        private final EvolvedSpeciesAction splitAction;
+        private final AltFormeAction altFormeAction;
+        private final AltFormeAction cosmeticAction;
+
+        private Options(boolean evolutionSanity, boolean copySplitEvos, boolean treatMegasAsEvos,
+                        BasicSpeciesAction noEvoAction,
+                        BasicSpeciesAction basicAction,
+                        EvolvedSpeciesAction evolvedAction,
+                        EvolvedSpeciesAction splitAction,
+                        AltFormeAction altFormeAction,
+                        AltFormeAction cosmeticAction) {
+            this.evolutionSanity = evolutionSanity;
+            this.copySplitEvos = copySplitEvos;
+            this.treatMegasAsEvos = treatMegasAsEvos;
+            this.noEvoAction = noEvoAction;
+            this.basicAction = basicAction;
+            this.evolvedAction = evolvedAction;
+            this.splitAction = splitAction;
+            this.altFormeAction = altFormeAction;
+            this.cosmeticAction = cosmeticAction;
+        }
+
+        public static class Builder {
+            private final BasicSpeciesAction nullBasicSpeciesAction = _ -> {};
+            private final EvolvedSpeciesAction nullEvolvedSpeciesAction = (_, _, _) -> {};
+            private final AltFormeAction nullAltFormeAction = (_, _) -> {};
+
+            private boolean evolutionSanity = true;
+            private boolean copySplitEvos;
+            private boolean treatMegasAsEvos;
+
+            private final BasicSpeciesAction basicAction;
+            private final EvolvedSpeciesAction evolvedAction;
+            private BasicSpeciesAction noEvoAction;
+            private EvolvedSpeciesAction splitAction;
+            private AltFormeAction altFormeAction;
+            private AltFormeAction cosmeticAction;
+
+            public Builder(BasicSpeciesAction basicAction, EvolvedSpeciesAction evolvedAction) {
+                this.basicAction = basicAction;
+                this.evolvedAction = evolvedAction;
+            }
+
+            /**
+             * If false, the noEvoAction will be used on all {@link Species} that are base formes.
+             * The altFormeAction and cosmeticAction are not affected by this option.<br>
+             * Defaults to true.
+             */
+            public Builder evolutionSanity(boolean evolutionSanity) {
+                this.evolutionSanity = evolutionSanity;
+                return this;
+            }
+
+            /**
+             * If false, split evos (e.g. Poliwrath and Politoed) will be treated as basic Pokemon {@link Species},
+             * and will thus use basicAction instead of evolvedAction.
+             * Defaults to false.
+             */
+            public Builder copySplitEvos(boolean copySplitEvos) {
+                this.copySplitEvos = copySplitEvos;
+                return this;
+            }
+
+            /**
+             * If true, mega evolutions will be treated as evolutions rather than alt formes.
+             * They will use evolvedAction rather than altFormeAction, and "split" mega evolutions
+             * (Charizard X/Y and Mewtwo X/Y) will use splitAction if applicable
+             * (see {@link #splitAction(EvolvedSpeciesAction)}).<br>
+             * Defaults to false.
+             */
+            public Builder treatMegasAsEvos(boolean treatMegasAsEvos) {
+                this.treatMegasAsEvos = treatMegasAsEvos;
+                return this;
+            }
+
+            /**
+             * Sets the action to run on all {@link Species}, when evolutionSanity == false.
+             * See {@link #evolutionSanity}.<br>
+             * Defaults to equaling the basicAction.
+             */
+            public Builder noEvoAction(BasicSpeciesAction noEvoAction) {
+                this.noEvoAction = noEvoAction;
+                return this;
+            }
+
+            /**
+             * Sets the action to run on all evolved Pokemon {@link Species} that are "split evos"
+             * (e.g. Poliwrath and Politoed, Silcoon and Cascoon). See also {@link #copySplitEvos(boolean)}.<br>
+             * Defaults to equaling the evolvedAction.
+             */
+            public Builder splitAction(EvolvedSpeciesAction splitAction) {
+                this.splitAction = splitAction;
+                return this;
+            }
+
+            /**
+             * Sets the action to run on non-cosmetic alt formes.
+             */
+            public Builder altFormeAction(AltFormeAction altFormeAction) {
+                this.altFormeAction = altFormeAction;
+                return this;
+            }
+
+            /**
+             * Sets the action to run on essentially cosmetic alt formes ({@link Species} explains what that is).
+             */
+            public Builder cosmeticAction(AltFormeAction cosmeticAction) {
+                this.cosmeticAction = cosmeticAction;
+                return this;
+            }
+
+            public Options build() {
+                if (noEvoAction == null) noEvoAction = basicAction;
+                if (splitAction == null) splitAction = evolvedAction;
+                return new Options(
+                        evolutionSanity, copySplitEvos, treatMegasAsEvos,
+                        noEvoAction == null ? nullBasicSpeciesAction : noEvoAction,
+                        basicAction == null ? nullBasicSpeciesAction : basicAction,
+                        evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction,
+                        splitAction == null ? nullEvolvedSpeciesAction : splitAction,
+                        altFormeAction == null ? nullAltFormeAction : altFormeAction,
+                        cosmeticAction == null ? nullAltFormeAction : cosmeticAction
+                );
+            }
+        }
+    }
 
     private final Supplier<SpeciesSet> speciesSetSupplier;
-
-    private BasicSpeciesAction noEvoAction;
-    private BasicSpeciesAction basicAction;
-    private EvolvedSpeciesAction evolvedAction;
-    private EvolvedSpeciesAction splitAction;
 
     public CopyUpEvolutionsHelper(SpeciesSet speciesSet) {
         this.speciesSetSupplier = () -> speciesSet;
@@ -56,137 +212,100 @@ public class CopyUpEvolutionsHelper {
         this.speciesSetSupplier = speciesSetSupplier;
     }
 
+    private record CopyUpRelation(Species from, Species to) {}
+
     /**
-     * Sets the method to run on all {@link Species}, when evolutionSanity == false. (see {@link #apply(boolean, boolean)})
+     * Creates/finds the correct CopyUpRelation using the <code>to</code> {@link Species}.<br>
+     * Evolution takes priority; Raticate-Alolan should copy up from Rattata-Alolan instead of Raticate-Base.
+     * The exception to this rule is essentially cosmetic formes, which always copy from their (conceptual) base forme.
      */
-    private void setNoEvoAction(BasicSpeciesAction noEvoAction) {
-        this.noEvoAction = noEvoAction == null ? nullBasicSpeciesAction : noEvoAction;
+    private CopyUpRelation findRelationInto(Species to) {
+        SpeciesSet allSpecs = speciesSetSupplier.get();
+
+        List<Evolution> validEvolutionsTo = to.getEvolutionsTo().stream()
+                .filter(evo -> allSpecs.contains(evo.getFrom())).toList();
+        if (!validEvolutionsTo.isEmpty() && !to.isEssentiallyCosmetic()) {
+            return new CopyUpRelation(to.getEvolutionsTo().getFirst().getFrom(), to);
+
+        } else if (!to.isBaseForme() && allSpecs.contains(to.getConceptualBaseForme())) {
+            return new CopyUpRelation(to.getConceptualBaseForme(), to);
+
+        } else {
+            throw new IllegalStateException("Argument to is neither an evolved Pokémon nor an alt forme!! " +
+                    "(counting only Species in allSpecs)");
+        }
     }
 
     /**
-     * Sets the method to run on basic {@link Species}.
+     * Applies the CopyUpEvolutionsHelper, using the supplied Options object.
      */
-    private void setBasicAction(BasicSpeciesAction basicAction) {
-        this.basicAction = basicAction == null ? nullBasicSpeciesAction : basicAction;
-    }
-
-    /**
-     * Sets the method to run on evolved {@link Species}.
-     */
-    private void setEvolvedAction(EvolvedSpeciesAction evolvedAction) {
-        this.evolvedAction = evolvedAction == null ? nullEvolvedSpeciesAction : evolvedAction;
-    }
-
-    /**
-     * Sets the method to run on split evos.
-     */
-    private void setSplitAction(EvolvedSpeciesAction splitAction) {
-        this.splitAction = splitAction == null ? nullEvolvedSpeciesAction : splitAction;
-    }
-
-    /**
-     * Applies the CopyUpEvolutionsHelper, using the {@link SpeciesSet} given by the constructor,
-     * boolean options, and a number of circumstantial "actions".
-     * Any action argument can be set to null, to have it do nothing.
-     *
-     * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
-     * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and
-     *                        will thus use bpAction instead of splitAction.
-     * @param bpAction        Method to run on all basic Pokemon {@link Species}.
-     * @param epAction        Method to run on all evolved Pokemon {@link Species} that are not
-     *                        "split evos" (e.g. Venusaur, Metapod).
-     * @param splitAction     Method to run on all evolved Pokemon {@link Species} that are "split
-     *                        evos" (e.g. Poliwrath and Politoed, Silcoon and
-     *                        Cascoon).
-     * @param noEvoAction     Method to run on all {@link Species}, when evolutionSanity ==
-     *                        false.
-     */
-    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction bpAction,
-                      EvolvedSpeciesAction epAction, EvolvedSpeciesAction splitAction, BasicSpeciesAction noEvoAction) {
-        setBasicAction(bpAction);
-        setEvolvedAction(epAction);
-        setSplitAction(splitAction);
-        setNoEvoAction(noEvoAction);
-
-        apply(evolutionSanity, copySplitEvos);
-    }
-
-    /**
-     * A simplified version of {@link #apply(boolean, boolean, BasicSpeciesAction, EvolvedSpeciesAction, EvolvedSpeciesAction, BasicSpeciesAction)},
-     * which supposes split evos are treated the same as other evolved {@link Species},
-     * and that the bpAction is used when evolutionSanity == false.
-     *
-     * @param evolutionSanity If false, the bpAction will be used on all {@link Species}.
-     * @param copySplitEvos   If false, split evos (e.g. Poliwrath and Politoed) are
-     *                        treated as basic Pokemon {@link Species}, and will thus use bpAction
-     *                        instead of epAction.
-     * @param bpAction        Method to run on all basic Pokemon {@link Species}.
-     * @param epAction        Method to run on all evolved Pokemon {@link Species}.
-     */
-    public void apply(boolean evolutionSanity, boolean copySplitEvos, BasicSpeciesAction bpAction,
-                      EvolvedSpeciesAction epAction) {
-        setBasicAction(bpAction);
-        setEvolvedAction(epAction);
-        setSplitAction(epAction);
-        setNoEvoAction(bpAction);
-
-        apply(evolutionSanity, copySplitEvos);
-    }
-
-    /**
-     * @param evolutionSanity If false, the noEvoAction will be used on all {@link Species}.
-     * @param copySplitEvos   If false, split evos are treated as basic Pokemon {@link Species}, and will thus use basicAction instead of splitAction.
-     */
-    private void apply(boolean evolutionSanity, boolean copySplitEvos) {
+    public void apply(Options options) {
 
         SpeciesSet allSpecs = speciesSetSupplier.get();
 
-        if (!evolutionSanity) {
-            allSpecs.forEach(pk -> noEvoAction.applyTo(pk));
-            return;
-        }
+        SpeciesSet basicSpecs, allEvos, splitEvos, finalEvos;
 
-        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec));
-        SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec));
-        SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec));
+        if (options.evolutionSanity) {
+            basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec, options))
+                    .filter(spec -> isBaseForme(allSpecs, spec));
+            allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec, options));
+            splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec, options));
+            finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec, options));
+
+        } else {
+            basicSpecs = allSpecs.filter(spec -> isBaseForme(allSpecs, spec));
+            allEvos = new SpeciesSet();
+            splitEvos = new SpeciesSet();
+            finalEvos = new SpeciesSet();
+        }
 
         Set<Species> processed = new HashSet<>();
 
-        if (!copySplitEvos) {
+        if (!options.copySplitEvos) {
             basicSpecs.addAll(splitEvos);
         }
 
         for (Species pk : basicSpecs) {
-            basicAction.applyTo(pk);
+            if (options.evolutionSanity) {
+                options.basicAction.applyTo(pk);
+            } else {
+                options.noEvoAction.applyTo(pk);
+            }
             processed.add(pk);
         }
 
-        // go "up" evolutions looking for pre-evos to do first
+        // process the rest / all Species that did not get the basic action
         for (Species pk : allSpecs) {
             if (!processed.contains(pk)) {
 
                 // Non-processed specs at this point must have
-                // a linear chain of single evolutions down to
-                // a processed spec.
-                Stack<Evolution> evStack = new Stack<>();
-                Evolution ev = pk.getEvolutionsTo().getFirst();
-                while (!processed.contains(ev.getFrom())) {
-                    evStack.push(ev);
-                    ev = ev.getFrom().getEvolutionsTo().getFirst();
+                // a linear chain down to a processed spec.
+                Stack<CopyUpRelation> relStack = new Stack<>();
+                CopyUpRelation rel = findRelationInto(pk);
+                while (!processed.contains(rel.from)) {
+                    relStack.push(rel);
+                    rel = findRelationInto(rel.from);
                 }
-                evStack.push(ev);
+                relStack.push(rel);
 
-                // Now "ev" is set to an evolution from a Species that has had
-                // the base action done on it to one that hasn't.
-                // Do the evolution action for everything left on the stack.
-                while (!evStack.isEmpty()) {
-                    ev = evStack.pop();
-                    if (copySplitEvos && splitEvos.contains(ev.getTo())) {
-                        splitAction.applyTo(ev.getFrom(), ev.getTo(), finalEvos.contains(ev.getTo()));
+                // Now "ev" is set to an evolution from/forme of a Species that has had
+                // the basic action done on it to one that hasn't.
+                // Do the evolved/forme action for everything left on the stack.
+                while (!relStack.isEmpty()) {
+                    rel = relStack.pop();
+                    if (rel.to.isEssentiallyCosmetic()) {
+                        options.cosmeticAction.applyTo(rel.from, rel.to);
+                    } else if (options.copySplitEvos && splitEvos.contains(rel.to)) {
+                        options.splitAction.applyTo(rel.from, rel.to, finalEvos.contains(rel.to));
+                    } else if (allEvos.contains(rel.to)) {
+                        options.evolvedAction.applyTo(rel.from, rel.to, finalEvos.contains(rel.to));
+                    } else if (!rel.to.isBaseForme()) {
+                        // if it gets here it must be an alt forme
+                        options.altFormeAction.applyTo(rel.from, rel.to);
                     } else {
-                        evolvedAction.applyTo(ev.getFrom(), ev.getTo(), finalEvos.contains(ev.getTo()));
+                        throw new IllegalStateException(rel + " was not eligible for any copy-up actions...");
                     }
-                    processed.add(ev.getTo());
+                    processed.add(rel.to);
                 }
 
             }
@@ -194,25 +313,29 @@ public class CopyUpEvolutionsHelper {
     }
 
     // SpeciesSet has inbuilt filter methods for different evolutionary stages.
-    // However, those assume alt forms evolve from the prevos of their base form,
-    // and can thus not be used in this class.
-    // At some point, a proper form rewrite is due, but until then the methods below will do.
-    // TODO: the form rewrite
-    // Note that the below methods function in a way that ignores all Species outside of the
-    // given SpeciesSet. This should make them usable with smaller SpeciesSet / species restrictions.
-    // However, at the time of writing all CopyUpEvolutionsHelpers use RomHandler::getSpeciesSet...
-    // TODO: integrate with species restrictions
-    // Also, there is some risk/possible bug when one Species evolves into the same other Species
-    // in two different ways. Feebas, Meowstic, Pikachu/Exeggute/Cubone (USUM), and Species granted
-    // extra Evolutions when removing time-based evos are of notice here.
-    // TODO: investigate split evos into the same species
+    // This class uses its own methods, for several reasons:
+    //
+    // - The SpeciesSet methods assume alt forms evolve from the prevos of their base form;
+    //   and this class requires more precise control.
+    //
+    // - The below methods ignore all Species outside of the given SpeciesSet.
+    //   This should make them usable with smaller SpeciesSet / species restrictions,
+    //   though at the time of writing this is not actually used.
+    //   TODO: integrate with species restrictions (?)
+    //
+    // - The below methods allow treating Mega Evolutions "as evolutions", which is only relevant here.
 
     /**
      * Returns true if spec has no other {@link Species} in allSpecs that evolves into it.
      */
-    private boolean isBasicSpecies(SpeciesSet allSpecs, Species spec) {
+    private boolean isBasicSpecies(SpeciesSet allSpecs, Species spec, Options options) {
         for (Evolution evo : spec.getEvolutionsTo()) {
             if (allSpecs.contains(evo.getFrom())) {
+                return false;
+            }
+        }
+        if (options.treatMegasAsEvos && spec.isMegaEvolution()) {
+            if (allSpecs.contains(spec.getConceptualBaseForme())) {
                 return false;
             }
         }
@@ -223,7 +346,7 @@ public class CopyUpEvolutionsHelper {
      * Returns true if spec evolves from some other {@link Species} in allSpecs,
      * which in turn evolves into at least 2 {@link Species} in allSpecs.
      */
-    private boolean isSplitEvo(SpeciesSet allSpecs, Species spec) {
+    private boolean isSplitEvo(SpeciesSet allSpecs, Species spec, Options options) {
         // TODO: there was a notion in earlier code, of treating Ninjask only as a non-split evo
         //  (or technically Species which evolved through EvolutionType.LEVEL_CREATE_EXTRA).
         //  Is this something we want to recreate?
@@ -232,8 +355,20 @@ public class CopyUpEvolutionsHelper {
                 long evoCount = evo.getFrom().getEvolutionsFrom().stream()
                         .map(Evolution::getTo)
                         .filter(allSpecs::contains)
+                        .distinct()
                         .count();
                 if (evoCount > 1) {
+                    return true;
+                }
+            }
+        }
+        if (options.treatMegasAsEvos && spec.isMegaEvolution()) {
+            if (allSpecs.contains(spec.getConceptualBaseForme())) {
+                int megaCount = spec.getConceptualBaseForme()
+                        .getAltFormes()
+                        .filter(Species::isMegaEvolution)
+                        .size();
+                if (megaCount > 1) {
                     return true;
                 }
             }
@@ -242,11 +377,11 @@ public class CopyUpEvolutionsHelper {
     }
 
     /**
-     * Returns true if spec is not a {@link #isBasicSpecies(SpeciesSet, Species) basic species},
+     * Returns true if spec is not a {@link #isBasicSpecies(SpeciesSet, Species, Options) basic species},
      * and also spec does not evolve into any other {@link Species} in allSpecs.
      */
-    private boolean isFinalEvo(SpeciesSet allSpecs, Species spec) {
-        if (isBasicSpecies(allSpecs, spec)) {
+    private boolean isFinalEvo(SpeciesSet allSpecs, Species spec, Options options) {
+        if (isBasicSpecies(allSpecs, spec, options)) {
             return false;
         }
         for (Evolution evo : spec.getEvolutionsFrom()) {
@@ -257,5 +392,11 @@ public class CopyUpEvolutionsHelper {
         return true;
     }
 
+    /**
+     * Returns true if spec is a base forme, or its conceptual base forme is not in allSpecs.
+     */
+    private boolean isBaseForme(SpeciesSet allSpecs, Species spec) {
+        return spec.isBaseForme() || !allSpecs.contains(spec.getConceptualBaseForme());
+    }
 
 }

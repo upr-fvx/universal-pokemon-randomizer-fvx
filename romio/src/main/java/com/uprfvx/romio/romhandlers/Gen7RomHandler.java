@@ -739,8 +739,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
                 int evosWritten = 0;
                 List<Evolution> evolutionsFrom = pk.getEvolutionsFrom();
+                boolean evosCarryForme = false;
                 if (formesThatCopyBaseEvolutions.contains(pk)) {
                     evolutionsFrom = pk.getBaseForme().getEvolutionsFrom();
+                    evosCarryForme = true;
                 }
                 for (Evolution evo : evolutionsFrom) {
                     if (evo.getType() == EvolutionType.NONE) continue; // should not be written to ROM
@@ -757,7 +759,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                     }
                     writeWord(evoEntry, evosWritten * 8 + 2, extraInfo);
                     writeWord(evoEntry, evosWritten * 8 + 4, toPK.getBaseNumber());
-                    evoEntry[evosWritten * 8 + 6] = (byte) toPK.getFormeNumber();
+                    evoEntry[evosWritten * 8 + 6] = evosCarryForme ? (byte) -1 : (byte) toPK.getFormeNumber();
                     byte level;
                     if (evo.getType().usesLevelThreshold()) {
                         level = (byte) evo.getExtraInfo();

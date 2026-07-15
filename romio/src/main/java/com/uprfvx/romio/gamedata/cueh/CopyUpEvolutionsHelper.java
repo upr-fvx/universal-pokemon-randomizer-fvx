@@ -119,7 +119,9 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
-             * If false, the noEvoAction will be used on all {@link Species}. Defaults to true.
+             * If false, the noEvoAction will be used on all {@link Species} that are base formes.
+             * The altFormeAction and cosmeticAction are not affected by this option.<br>
+             * Defaults to true.
              */
             public Builder evolutionSanity(boolean evolutionSanity) {
                 this.evolutionSanity = evolutionSanity;
@@ -241,16 +243,21 @@ public class CopyUpEvolutionsHelper {
 
         SpeciesSet allSpecs = speciesSetSupplier.get();
 
-        if (!options.evolutionSanity) {
-            allSpecs.forEach(options.noEvoAction::applyTo);
-            return;
-        }
+        SpeciesSet basicSpecs, allEvos, splitEvos, finalEvos;
 
-        SpeciesSet basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec, options))
-                .filter(pk -> pk.isBaseForme() || !allSpecs.contains(pk.getConceptualBaseForme()));
-        SpeciesSet allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec, options));
-        SpeciesSet splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec, options));
-        SpeciesSet finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec, options));
+        if (options.evolutionSanity) {
+            basicSpecs = allSpecs.filter(spec -> isBasicSpecies(allSpecs, spec, options))
+                    .filter(spec -> isBaseForme(allSpecs, spec));
+            allEvos = allSpecs.filter(spec -> !isBasicSpecies(allSpecs, spec, options));
+            splitEvos = allSpecs.filter(spec -> isSplitEvo(allSpecs, spec, options));
+            finalEvos = allSpecs.filter(spec -> isFinalEvo(allSpecs, spec, options));
+
+        } else {
+            basicSpecs = allSpecs.filter(spec -> isBaseForme(allSpecs, spec));
+            allEvos = new SpeciesSet();
+            splitEvos = new SpeciesSet();
+            finalEvos = new SpeciesSet();
+        }
 
         Set<Species> processed = new HashSet<>();
 
@@ -259,7 +266,11 @@ public class CopyUpEvolutionsHelper {
         }
 
         for (Species pk : basicSpecs) {
-            options.basicAction.applyTo(pk);
+            if (options.evolutionSanity) {
+                options.basicAction.applyTo(pk);
+            } else {
+                options.noEvoAction.applyTo(pk);
+            }
             processed.add(pk);
         }
 
@@ -381,5 +392,11 @@ public class CopyUpEvolutionsHelper {
         return true;
     }
 
+    /**
+     * Returns true if spec is a base forme, or its conceptual base forme is not in allSpecs.
+     */
+    private boolean isBaseForme(SpeciesSet allSpecs, Species spec) {
+        return spec.isBaseForme() || !allSpecs.contains(spec.getConceptualBaseForme());
+    }
 
 }

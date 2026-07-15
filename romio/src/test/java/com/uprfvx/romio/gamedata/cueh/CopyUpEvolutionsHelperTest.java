@@ -188,7 +188,25 @@ public class CopyUpEvolutionsHelperTest {
     }
 
     @Test
-    public void NonCosmeticForme_UsesAltFormeAction() {
+    public void NonCosmeticForme_NoEvolutionSanity_UsesAltFormeAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, false, false);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(a, 1), callCounter.noEvo);
+        assertEquals(Map.of(), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(b, 1), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NonCosmeticForme_EvolutionSanity_UsesAltFormeAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
         a.addAltForme(1, b);
@@ -206,25 +224,47 @@ public class CopyUpEvolutionsHelperTest {
     }
 
     @Test
-    public void NonCosmeticFormeAndEvo_UsesEvolvedAction() {
+    public void NonCosmeticFormeAndEvo_NoEvolutionSanity_UsesAltFormeAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
-        a.addAltForme(1, b);
+        Species c = new NameOnlySpecies("C");
+        b.addAltForme(1, c);
+        addEvolutionBetween(a, c);
 
-        SpeciesSet set = new SpeciesSet(List.of(a, b));
-        applyCallCountingCUEH(set, true, true);
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, false, true);
 
         System.out.println(callCounter);
-        assertEquals(Map.of(), callCounter.noEvo);
-        assertEquals(Map.of(a, 1), callCounter.basic);
+        assertEquals(Map.of(a, 1, b, 1), callCounter.noEvo);
+        assertEquals(Map.of(), callCounter.basic);
         assertEquals(Map.of(), callCounter.evolved);
         assertEquals(Map.of(), callCounter.split);
-        assertEquals(Map.of(b, 1), callCounter.altForme);
+        assertEquals(Map.of(c, 1), callCounter.altForme);
         assertEquals(Map.of(), callCounter.cosmetic);
     }
 
     @Test
-    public void NonCosmeticFormeAndSplitEvo_UsesSplitAction() {
+    public void NonCosmeticFormeAndEvo_EvolutionSanity_UsesEvolvedAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        b.addAltForme(1, c);
+        addEvolutionBetween(a, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, true, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(), callCounter.noEvo);
+        assertEquals(Map.of(a, 1, b, 1), callCounter.basic);
+        assertEquals(Map.of(c, 1), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(), callCounter.cosmetic);
+    }
+
+    @Test
+    public void NonCosmeticFormeAndSplitEvo_EvolutionSanity_UsesSplitAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
         Species c = new NameOnlySpecies("C");
@@ -245,7 +285,26 @@ public class CopyUpEvolutionsHelperTest {
     }
 
     @Test
-    public void CosmeticForme_UsesCosmeticAction() {
+    public void CosmeticForme_NoEvolutionSanity_UsesCosmeticAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        a.addAltForme(1, b);
+        b.setEssentiallyCosmetic();
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b));
+        applyCallCountingCUEH(set, false, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(a, 1), callCounter.noEvo);
+        assertEquals(Map.of(), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(b, 1), callCounter.cosmetic);
+    }
+
+    @Test
+    public void CosmeticForme_EvolutionSanity_UsesCosmeticAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
         a.addAltForme(1, b);
@@ -264,7 +323,28 @@ public class CopyUpEvolutionsHelperTest {
     }
 
     @Test
-    public void CosmeticFormeAndEvo_UsesCosmeticAction() {
+    public void CosmeticFormeAndEvo_NoEvolutionSanity_UsesCosmeticAction() {
+        Species a = new NameOnlySpecies("A");
+        Species b = new NameOnlySpecies("B");
+        Species c = new NameOnlySpecies("C");
+        b.addAltForme(1, c);
+        c.setEssentiallyCosmetic();
+        addEvolutionBetween(a, c);
+
+        SpeciesSet set = new SpeciesSet(List.of(a, b, c));
+        applyCallCountingCUEH(set, false, true);
+
+        System.out.println(callCounter);
+        assertEquals(Map.of(a, 1, b, 1), callCounter.noEvo);
+        assertEquals(Map.of(), callCounter.basic);
+        assertEquals(Map.of(), callCounter.evolved);
+        assertEquals(Map.of(), callCounter.split);
+        assertEquals(Map.of(), callCounter.altForme);
+        assertEquals(Map.of(c, 1), callCounter.cosmetic);
+    }
+
+    @Test
+    public void CosmeticFormeAndEvo_EvolutionSanity_UsesCosmeticAction() {
         Species a = new NameOnlySpecies("A");
         Species b = new NameOnlySpecies("B");
         Species c = new NameOnlySpecies("C");

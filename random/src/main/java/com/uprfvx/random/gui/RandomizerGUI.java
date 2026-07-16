@@ -2157,7 +2157,7 @@ public class RandomizerGUI {
         settings.setBetterBossTrainerMovesets(tpBetterMovesetsBossTrainersCheckBox.isVisible() && tpBetterMovesetsBossTrainersCheckBox.isSelected());
         settings.setBetterImportantTrainerMovesets(tpBetterMovesetsImportantTrainersCheckBox.isVisible() && tpBetterMovesetsImportantTrainersCheckBox.isSelected());
         settings.setBetterRegularTrainerMovesets(tpBetterMovesetsRegularTrainersCheckBox.isVisible() && tpBetterMovesetsRegularTrainersCheckBox.isSelected());
-        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
+        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpBossTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForImportantTrainerPokemon(tpImportantTrainersItemsCheckBox.isVisible() && tpImportantTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForRegularTrainerPokemon(tpRegularTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
         settings.setConsumableItemsOnlyForTrainers(tpConsumableItemsOnlyCheckBox.isVisible() && tpConsumableItemsOnlyCheckBox.isSelected());

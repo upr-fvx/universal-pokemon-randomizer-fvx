@@ -2394,8 +2394,10 @@ public class RandomizerGUI {
         peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
         setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
-				spRandomTwoEvosRadioButton, spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
-				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox, spNoLegendariesCheckBox,
+				spRandomTwoEvosRadioButton, spRandomBasicRadioButton,
+                spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
+				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox,
+                spNoLegendariesCheckBox,
 				spRandomizeStarterHeldItemsCheckBox, spBanBadItemsCheckBox, spAllowAltFormesCheckBox,
                 spBSTMinimumCheckbox, spBSTMaximumCheckbox);
 		spComboBox1.setVisible(true);

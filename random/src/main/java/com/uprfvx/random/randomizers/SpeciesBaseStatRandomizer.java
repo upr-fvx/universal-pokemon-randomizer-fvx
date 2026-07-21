@@ -90,7 +90,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         boolean swapLegendaries = settings.isBSTShuffleSwapLegendaries();
 
         List<SpeciesSet> shuffleGroups = new ArrayList<>();
-        shuffleGroups.add(romHandler.getSpeciesSet());
+        shuffleGroups.add(new SpeciesSet(romHandler.getSpeciesSet()));
 
         if (evolutionSanity) {
             shuffleGroups = splitByLineLength(shuffleGroups);

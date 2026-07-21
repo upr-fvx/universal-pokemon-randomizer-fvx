@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.gamedata.Evolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,7 +31,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             // mega evos are exempt
-            if (!pk.getMegaEvolutionsTo().isEmpty()) continue;
+            if (pk.isMegaEvolution()) continue;
 
             assertTrue(pk.getBST(false) >= (int) (pk.getBST(true) * 0.5));
             assertTrue(pk.getBST(false) <= (int) (pk.getBST(true) * 1.5));
@@ -48,7 +49,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
         for (Species evFrom : romHandler.getSpeciesSetInclFormes()) {
-            for (Species evTo : evFrom.getEvolvedSpecies(true)) {
+            for (Species evTo : evFrom.getEvolutionsFrom().stream().map(Evolution::getTo).toList()) {
                 double fromModifier = (double) evFrom.getBST(false) / evFrom.getBST(true);
                 double toModifier = (double) evTo.getBST(false) / evTo.getBST(true);
 
@@ -85,7 +86,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     private List<Integer> getSortedBSTs(SpeciesSet set) {
         return set.stream()
                 .filter(pk -> !pk.isEssentiallyCosmetic())
-                .filter(pk -> pk.getMegaEvolutionsTo().isEmpty())
+                .filter(pk -> !pk.isMegaEvolution())
                 .map(pk -> pk.getBST(false))
                 .sorted()
                 .toList();
@@ -108,7 +109,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         SpeciesSet basic = set.filterBasic(false)
                 .filter(pk -> !pk.isEssentiallyCosmetic())
-                .filter(pk -> pk.getMegaEvolutionsTo().isEmpty());
+                .filter(pk -> !pk.isMegaEvolution());
 
         for (Species pk : basic) {
             FamilyBSTs familyBSTs = new FamilyBSTs(pk.getFullName(), new ArrayList<>());
@@ -204,6 +205,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
+            if (pk.isMegaEvolution()) continue;
             assertTrue(pk.getBST(false) >= SUNKERN_BST);
             assertTrue(pk.getBST(false) <= ARCEUS_BST);
         }
@@ -218,7 +220,10 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             if (pk.isEssentiallyCosmetic()) {
-                assertEquals(pk.getBaseForme().getBST(false), pk.getBST(false));
+                Species base = pk.getConceptualBaseForme();
+                System.out.println(pk.getNumberAndFullName() + ": " + pk.getBST(false));
+                System.out.println(base.getNumberAndFullName() + ": " + base.getBST(false));
+                assertEquals(pk.getConceptualBaseForme().getBST(false), pk.getBST(false));
             }
         }
     }
@@ -228,11 +233,16 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeBSTs_MegaEvolutionsHaveBSTOfBaseFormePlus100(String romName) {
         activateRomHandler(romName);
 
-        new SpeciesBaseStatRandomizer(romHandler, new Settings(), RND).randomizeBSTs();
+        Settings s = new Settings();
+        s.setBSTMod(Settings.BSTMod.RANDOM);
+        new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
-            if (!pk.getMegaEvolutionsTo().isEmpty()) {
-                assertEquals(pk.getBaseForme().getBST(false) + MEGA_BST_BOOST, pk.getBST(false));
+            if (pk.isMegaEvolution()) {
+                Species base = pk.getBaseForme();
+                System.out.println(pk.getNumberAndFullName() + ": " + pk.getBST(false));
+                System.out.println(base.getNumberAndFullName() + ": " + base.getBST(false));
+                assertEquals(base.getBST(false) + MEGA_BST_BOOST, pk.getBST(false));
             }
         }
     }

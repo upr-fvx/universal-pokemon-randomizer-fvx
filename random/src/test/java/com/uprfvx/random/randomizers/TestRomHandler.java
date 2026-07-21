@@ -357,10 +357,10 @@ public class TestRomHandler extends AbstractRomHandler {
         }
 
         // And these can be populated once the copy process is done
-        testAltFormes = new SpeciesSet(newSet).filter(pk -> !pk.isBaseForme());
-        testIrregularFormes = new SpeciesSet(originalIrregularFormes.stream().map(originalToTest::get).toList());
+        testAltFormes = SpeciesSet.unmodifiable(new SpeciesSet(newSet).filter(pk -> !pk.isBaseForme()));
+        testIrregularFormes =  SpeciesSet.unmodifiable(originalIrregularFormes.stream().map(originalToTest::get).toList());
 
-        return newSet;
+        return SpeciesSet.unmodifiable(newSet);
     }
 
     /**
@@ -615,7 +615,7 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public SpeciesSet getSpeciesSet() {
         if(testSpeciesNoFormes == null) {
-            testSpeciesNoFormes = testSpeciesInclFormes.filter(Species::isBaseForme);
+            testSpeciesNoFormes = SpeciesSet.unmodifiable(testSpeciesInclFormes.filter(Species::isBaseForme));
         }
 
         return testSpeciesNoFormes;

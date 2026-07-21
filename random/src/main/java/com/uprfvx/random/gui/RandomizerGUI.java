@@ -378,7 +378,7 @@ public class RandomizerGUI {
     private JRadioButton pbstShuffleRadioButton;
     private JRadioButton pbstRandomRadioButton;
     private JCheckBox pbstFollowEvolutionsCheckBox;
-    private JCheckBox pbstFollowMegaEvolutionsCheckBox;
+    private JCheckBox pbstSwapLegendariesCheckBox;
 
     private static final Random RND = new Random();
 

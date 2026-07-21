@@ -1218,6 +1218,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     private int lengthOfStringAt(int offset) {
+        System.out.println(lengthOfDataWithTerminatorAt(offset, Gen3Constants.textTerminator));
         return lengthOfDataWithTerminatorAt(offset, Gen3Constants.textTerminator);
     }
 
@@ -2410,23 +2411,32 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 			int idOffset = romEntry.getIntValue("ItemData");
 			int mdOffset = romEntry.getIntValue("MoveDescriptions");
 			int entrySize = romEntry.getIntValue("ItemEntrySize");
-			int limitPerLine = (romEntry.getRomType() == Gen3Constants.RomType_FRLG) ? Gen3Constants.frlgItemDescCharsPerLine
-					: Gen3Constants.rseItemDescCharsPerLine;
+
 			for (int i = 0; i < Gen3Constants.tmCount; i++) {
 				int itemBaseOffset = idOffset + Gen3Constants.itemIDToInternal(ItemIDs.tm01 + i) * entrySize;
-				int moveBaseOffset = mdOffset + (moveIndexes.get(i) - 1) * 4;
-				int moveTextPointer = readPointer(moveBaseOffset);
-				String moveDesc = readVariableLengthString(moveTextPointer);
-				String newItemDesc = RomFunctions.rewriteDescriptionForNewLineSize(moveDesc, "\\n", limitPerLine, ssd);
-
 				int itemDescPointerOffset = itemBaseOffset + Gen3Constants.itemDataDescriptionOffset;
-				try {
-					rewriteVariableLengthString(itemDescPointerOffset, newItemDesc);
-				} catch (RomIOException e) {
-                    // This used to be a simple logging, turned it into a full error because I don't *think* it
-                    // should be too common? Plus the RomHandler arguably should not do logging.
-					throw new RomIOException("Couldn't insert new item description. " + e.getMessage());
-				}
+                int moveDescPointerOffset = mdOffset + (moveIndexes.get(i) - 1) * 4;
+
+
+                if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
+                    // In FRLG, the same strings are used for move descriptions and TM descriptions.
+                    int descOffset = readPointer(moveDescPointerOffset);
+                    writePointer(itemDescPointerOffset, descOffset);
+
+                } else {
+                    // In RSE, TMs use separate strings, formatted like item descriptions (more chars per line)
+                    int limitPerLine = Gen3Constants.rseItemDescCharsPerLine;
+                    String moveDesc = readVariableLengthString(readPointer(moveDescPointerOffset));
+                    String newItemDesc = RomFunctions.rewriteDescriptionForNewLineSize(moveDesc, "\\n", limitPerLine, ssd);
+
+                    try {
+                        rewriteVariableLengthString(itemDescPointerOffset, newItemDesc);
+                    } catch (RomIOException e) {
+                        // This used to be a simple logging, turned it into a full error because I don't *think* it
+                        // should be too common? Plus the RomHandler arguably should not do logging.
+                        throw new RomIOException("Couldn't insert new item description. " + e.getMessage());
+                    }
+                }
 			}
 		}
     }

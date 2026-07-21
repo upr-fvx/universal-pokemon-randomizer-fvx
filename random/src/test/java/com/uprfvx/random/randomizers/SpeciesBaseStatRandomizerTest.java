@@ -24,7 +24,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings s = new Settings();
-        s.setBSTMod(Settings.BSTMod.RANDOM_BUFF_NERF_PERC);
+        s.setBSTMod(Settings.BSTMod.RANDOM_BUFF_NERF);
         s.setBSTBuffNerfMaxPercentage(50);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
@@ -42,7 +42,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         Settings s = new Settings();
-        s.setBSTMod(Settings.BSTMod.RANDOM_BUFF_NERF_PERC);
+        s.setBSTMod(Settings.BSTMod.RANDOM_BUFF_NERF);
         s.setBSTBuffNerfMaxPercentage(50);
         s.setBSTFollowEvolutions(true);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();

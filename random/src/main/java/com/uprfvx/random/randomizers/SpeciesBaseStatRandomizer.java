@@ -35,7 +35,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
     public void randomizeBSTs() {
         switch (settings.getBSTMod()) {
-            case RANDOM_BUFF_NERF_PERC -> randomlyModifyBSTsByPercentage();
+            case RANDOM_BUFF_NERF -> randomlyModifyBSTsByPercentage();
             case SHUFFLE -> shuffleBSTs();
             case RANDOM -> fullyRandomizeBSTs();
         }

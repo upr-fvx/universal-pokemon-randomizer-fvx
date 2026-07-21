@@ -76,7 +76,7 @@ public class Settings {
 
     // TODO: reading and writing these settings from/to the setting string
     public enum BSTMod {
-        UNCHANGED, RANDOM_BUFF_NERF_PERC, SHUFFLE, RANDOM
+        UNCHANGED, RANDOM_BUFF_NERF, SHUFFLE, RANDOM
     }
 
     private BSTMod bstMod = BSTMod.UNCHANGED;

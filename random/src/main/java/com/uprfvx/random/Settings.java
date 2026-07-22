@@ -153,6 +153,7 @@ public class Settings {
     private boolean evosAllowAltFormes;
     private boolean evosForceGrowth;
     private boolean evosNoConvergence;
+    private boolean adjustEvolutionLevels;
 
     // Move data
     private boolean randomizeMovePowers;
@@ -698,7 +699,8 @@ public class Settings {
                 inverseTypesRandomImmunities, updateTypeEffectiveness));
 
         // 57 evolutions 2
-        out.write(makeByteSelected(evosForceGrowth, evosNoConvergence));
+        out.write(makeByteSelected(evosForceGrowth, evosNoConvergence, adjustEvolutionLevels,
+                false, false, false, false, false));
 
         // 58-60 starter BST limits
         byte highEndByte = (byte)(((startersBSTMinimum >> 8) & 0x0F) + ((startersBSTMaximum >> 4) & 0xF0));
@@ -1060,6 +1062,7 @@ public class Settings {
 
         settings.setEvosForceGrowth(restoreState(data[57], 0));
         settings.setEvosNoConvergence(restoreState(data[57], 1));
+        settings.setAdjustEvolutionLevels(restoreState(data[57], 2));
 
         settings.setStartersBSTMinimum(((Byte.toUnsignedInt(data[58]) & 0x0F) << 8) + Byte.toUnsignedInt(data[59]));
         settings.setStartersBSTMaximum(((Byte.toUnsignedInt(data[58]) & 0xF0) << 4) + Byte.toUnsignedInt(data[60]));
@@ -1753,6 +1756,14 @@ public class Settings {
 
     public void setEvosNoConvergence(boolean evosNoConvergence) {
         this.evosNoConvergence = evosNoConvergence;
+    }
+
+    public boolean isAdjustEvolutionLevels() {
+        return adjustEvolutionLevels;
+    }
+
+    public void setAdjustEvolutionLevels(boolean adjustEvolutionLevels) {
+        this.adjustEvolutionLevels = adjustEvolutionLevels;
     }
 
     public boolean isRandomizeMovePowers() {

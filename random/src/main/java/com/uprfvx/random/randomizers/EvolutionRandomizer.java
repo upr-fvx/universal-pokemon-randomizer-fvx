@@ -32,6 +32,10 @@ public class EvolutionRandomizer extends Randomizer {
         boolean evolveEveryLevel = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         randomizeEvolutions(similarStrength, sameType, limitToThreeStages, forceChange, forceGrowth, noConvergence,
                 banIrregularAltFormes, abilitiesAreRandomized, evolveEveryLevel);
+        if (settings.isAdjustEvolutionLevels()) {
+            romHandler.adjustEvolutionLevels();
+        }
+
         changesMade = true;
     }
 

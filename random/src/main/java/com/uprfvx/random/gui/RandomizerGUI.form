@@ -643,7 +643,7 @@
                       </component>
                       <hspacer id="25cc7">
                         <constraints>
-                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -679,7 +679,7 @@
                       <component id="b5878" class="javax.swing.JCheckBox" binding="peSimilarStrengthCheckBox">
                         <constraints>
                           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.9" weighty="0.0"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
@@ -722,7 +722,7 @@
                       </component>
                       <component id="9fe2f" class="javax.swing.JCheckBox" binding="peChangeImpossibleEvosCheckBox">
                         <constraints>
-                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -733,7 +733,7 @@
                       </component>
                       <component id="4ad81" class="javax.swing.JCheckBox" binding="peMakeEvolutionsEasierCheckBox">
                         <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -744,7 +744,7 @@
                       </component>
                       <component id="65825" class="javax.swing.JSlider" binding="peMakeEvolutionsEasierLvlSlider">
                         <constraints>
-                          <grid row="3" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="4" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -762,7 +762,7 @@
                       </component>
                       <component id="9ae0g" class="javax.swing.JCheckBox" binding="peUseEstimatedInsteadOfHardcodedLevelsCheckBox">
                         <constraints>
-                          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -784,7 +784,7 @@
                       </component>
                       <component id="b091c" class="javax.swing.JCheckBox" binding="peRemoveTimeBasedEvolutionsCheckBox">
                         <constraints>
-                          <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -807,7 +807,7 @@
                       <component id="c0bf9" class="javax.swing.JCheckBox" binding="peForceGrowthCheckBox">
                         <constraints>
                           <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.9" weighty="0.0"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
@@ -818,13 +818,24 @@
                       <component id="def2f" class="javax.swing.JCheckBox" binding="peNoConvergenceCheckBox">
                         <constraints>
                           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.9" weighty="0.0"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
                           <hideActionText value="true"/>
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.peNoConvergenceCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.peNoConvergenceCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="67449" class="javax.swing.JCheckBox" binding="peAdjustLevelsCheckBox">
+                        <constraints>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.9" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.peAdjustLevelsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.peAdjustLevelsCheckBox.toolTipText"/>
                         </properties>
                       </component>
                     </children>
@@ -1356,7 +1367,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                         </properties>
                       </component>
                       <component id="ae826" class="javax.swing.JCheckBox" binding="stpRandomize600BSTCheckBox">
@@ -1829,7 +1840,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pmsForceGoodDamagingSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -2061,7 +2072,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageEvolutionLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -2093,7 +2104,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -2591,7 +2602,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                         </properties>
                       </component>
                       <component id="69ebe" class="javax.swing.JCheckBox" binding="totpPercentageLevelModifierCheckBox">
@@ -2933,7 +2944,7 @@
                           <gridbag weightx="0.0" weighty="0.0" ipadx="30"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
+                          <enabled value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpPercentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -3205,7 +3216,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <enabled value="false"/>
+                              <enabled value="true"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmForceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
@@ -3430,7 +3441,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <enabled value="false"/>
+                              <enabled value="true"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtForceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>

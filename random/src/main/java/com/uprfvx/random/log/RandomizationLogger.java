@@ -590,6 +590,7 @@ public class RandomizationLogger {
         log.printf("%" + numLen + "s", getBS("Log.psta.num"));
         log.printf("|%-" + nameLen + "s", getBS("Log.psta.name"));
         log.printf("|%-" + typeLen + "s", getBS("Log.psta.type"));
+        log.printf("|%4s", getBS("Log.psta.bst"));
         if (romHandler.generationOfPokemon() == 1) {
             log.printf("|%4s|%4s|%4s|%4s|%4s",
                     getBS("Log.psta.hp"), getBS("Log.psta.attack"),
@@ -624,6 +625,7 @@ public class RandomizationLogger {
             log.printf("|%-" + typeLen + "s",
                     pk.getPrimaryType(false)
                             + (pk.hasSecondaryType(false) ? "/" + pk.getSecondaryType(false) : ""));
+            log.printf("|%4d", pk.getBST(false));
             if (romHandler.generationOfPokemon() == 1) {
                 Gen1BaseStats bs = (Gen1BaseStats) pk.getBaseStats();
                 log.printf("|%4d|%4d|%4d|%4d|%4d",

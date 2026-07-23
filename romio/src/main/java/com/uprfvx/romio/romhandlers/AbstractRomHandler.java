@@ -309,8 +309,8 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
     private void calculateEstimatedLevels(List<Evolution> targetEvos) {
         for (Evolution evo : targetEvos) {
-            int bstFrom = evo.getFrom().getBST(true);
-            int bstTo = evo.getTo().getBST(true);
+            int bstFrom = evo.getFrom().getBST(false);
+            int bstTo = evo.getTo().getBST(false);
             evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpEstimationTriplets, bstFrom, bstTo));
         }
 

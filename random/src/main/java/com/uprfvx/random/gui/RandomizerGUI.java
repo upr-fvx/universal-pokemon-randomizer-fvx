@@ -3341,17 +3341,21 @@ public class RandomizerGUI {
 
         if (peRandomRadioButton.isSelected()) {
             enableButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
-                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox,
-                    peAdjustLevelsCheckBox);
+                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
         } else if (peRandomEveryLevelRadioButton.isSelected()) {
             enableButtons(peSameTypingCheckBox, peForceChangeCheckBox,
                     peAllowAltFormesCheckBox, peNoConvergenceCheckBox);
             disableAndDeselectButtons(peSimilarStrengthCheckBox,
-                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox, peAdjustLevelsCheckBox);
+                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox);
         } else {
             disableAndDeselectButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
-                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox,
-                    peAdjustLevelsCheckBox);
+                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
+        }
+
+        if (peRandomRadioButton.isSelected() || !pbstUnchangedRadioButton.isSelected()) {
+            enableButtons(peAdjustLevelsCheckBox);
+        } else {
+            disableAndDeselectButtons(peAdjustLevelsCheckBox);
         }
 
         if (peMakeEvolutionsEasierCheckBox.isSelected()) {

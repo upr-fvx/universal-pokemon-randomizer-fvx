@@ -31,15 +31,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     //  but what should happen first, evo randomization or BST randomization?
     //  Since BST randomization follows evos, and vice versa.
 
-    // TODO: After BST randomization, adjust all levelup evo levels. (should this be optional?)
-
     public void randomizeBSTs() {
         switch (settings.getBSTMod()) {
             case RANDOM_BUFF_NERF -> randomlyModifyBSTsByPercentage();
             case SHUFFLE -> shuffleBSTs();
             case RANDOM -> fullyRandomizeBSTs();
         }
-        // TODO: remove "follow mega evolutions" GUI option
+        changesMade = true;
     }
 
     private final AltFormeAction copyBSTAction = (baseForme, altForme) ->
@@ -95,7 +93,6 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         if (evolutionSanity) {
             shuffleGroups = splitByLineLength(shuffleGroups);
         }
-        // TODO: swapLegendaries exists here but not in the GUI; implement in GUI
         if (swapLegendaries) {
             shuffleGroups = splitByLegendaryStatus(shuffleGroups);
         }

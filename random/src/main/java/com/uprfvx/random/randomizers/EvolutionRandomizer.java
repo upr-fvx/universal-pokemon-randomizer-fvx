@@ -32,9 +32,6 @@ public class EvolutionRandomizer extends Randomizer {
         boolean evolveEveryLevel = settings.getEvolutionsMod() == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         randomizeEvolutions(similarStrength, sameType, limitToThreeStages, forceChange, forceGrowth, noConvergence,
                 banIrregularAltFormes, abilitiesAreRandomized, evolveEveryLevel);
-        if (settings.isAdjustEvolutionLevels()) {
-            romHandler.adjustEvolutionLevels();
-        }
 
         changesMade = true;
     }
@@ -301,6 +298,14 @@ public class EvolutionRandomizer extends Randomizer {
         private boolean isAnOriginalEvo(Species from, Species to) {
             return allOriginalEvos.get(from).stream().map(Evolution::getTo).toList().contains(to);
         }
+    }
+
+    /**
+     * Wraps {@link RomHandler#adjustEvolutionLevels()}, but also sets changesMade = true.
+     */
+    public void adjustEvolutionLevels() {
+        romHandler.adjustEvolutionLevels();
+        changesMade = true;
     }
 
 }

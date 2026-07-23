@@ -3323,7 +3323,7 @@ public class RandomizerGUI {
             enableButtons(peSameTypingCheckBox, peForceChangeCheckBox,
                     peAllowAltFormesCheckBox, peNoConvergenceCheckBox);
             disableAndDeselectButtons(peSimilarStrengthCheckBox,
-                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox);
+                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox, peAdjustLevelsCheckBox);
         } else {
             disableAndDeselectButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
                     peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox,

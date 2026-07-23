@@ -101,6 +101,7 @@ public class RandomizerGUI {
     private JSlider peMakeEvolutionsEasierLvlSlider;
     private JCheckBox peForceGrowthCheckBox;
     private JCheckBox peNoConvergenceCheckBox;
+    private JCheckBox peAdjustLevelsCheckBox;
     private JRadioButton spUnchangedRadioButton;
     private JRadioButton spCustomRadioButton;
     private JRadioButton spRandomCompletelyRadioButton;
@@ -1791,6 +1792,7 @@ public class RandomizerGUI {
         peAllowAltFormesCheckBox.setSelected(settings.isEvosAllowAltFormes());
         peForceGrowthCheckBox.setSelected(settings.isEvosForceGrowth());
         peNoConvergenceCheckBox.setSelected(settings.isEvosNoConvergence());
+        peAdjustLevelsCheckBox.setSelected(settings.isAdjustEvolutionLevels());
 
         mdRandomizeMoveAccuracyCheckBox.setSelected(settings.isRandomizeMoveAccuracies());
         mdRandomizeMoveCategoryCheckBox.setSelected(settings.isRandomizeMoveCategory());
@@ -2087,6 +2089,7 @@ public class RandomizerGUI {
         settings.setEvosAllowAltFormes(peAllowAltFormesCheckBox.isSelected() && peAllowAltFormesCheckBox.isVisible());
         settings.setEvosForceGrowth(peForceGrowthCheckBox.isSelected());
         settings.setEvosNoConvergence(peNoConvergenceCheckBox.isSelected());
+        settings.setAdjustEvolutionLevels(peAdjustLevelsCheckBox.isSelected());
 
         settings.setRandomizeMoveAccuracies(mdRandomizeMoveAccuracyCheckBox.isSelected());
         settings.setRandomizeMoveCategory(mdRandomizeMoveCategoryCheckBox.isSelected());
@@ -2134,7 +2137,7 @@ public class RandomizerGUI {
         settings.setBetterBossTrainerMovesets(tpBetterMovesetsBossTrainersCheckBox.isVisible() && tpBetterMovesetsBossTrainersCheckBox.isSelected());
         settings.setBetterImportantTrainerMovesets(tpBetterMovesetsImportantTrainersCheckBox.isVisible() && tpBetterMovesetsImportantTrainersCheckBox.isSelected());
         settings.setBetterRegularTrainerMovesets(tpBetterMovesetsRegularTrainersCheckBox.isVisible() && tpBetterMovesetsRegularTrainersCheckBox.isSelected());
-        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
+        settings.setRandomizeHeldItemsForBossTrainerPokemon(tpBossTrainersItemsCheckBox.isVisible() && tpBossTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForImportantTrainerPokemon(tpImportantTrainersItemsCheckBox.isVisible() && tpImportantTrainersItemsCheckBox.isSelected());
         settings.setRandomizeHeldItemsForRegularTrainerPokemon(tpRegularTrainersItemsCheckBox.isVisible() && tpRegularTrainersItemsCheckBox.isSelected());
         settings.setConsumableItemsOnlyForTrainers(tpConsumableItemsOnlyCheckBox.isVisible() && tpConsumableItemsOnlyCheckBox.isSelected());
@@ -2369,14 +2372,16 @@ public class RandomizerGUI {
 				peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
 				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
                 peUseEstimatedInsteadOfHardcodedLevelsCheckBox, peRemoveTimeBasedEvolutionsCheckBox,
-                peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
+                peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox, peAdjustLevelsCheckBox);
         peMakeEvolutionsEasierLvlSlider.setVisible(true);
         peMakeEvolutionsEasierLvlSlider.setEnabled(false);
         peMakeEvolutionsEasierLvlSlider.setValue(Settings.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
         setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
-				spRandomTwoEvosRadioButton, spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
-				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox, spNoLegendariesCheckBox,
+				spRandomTwoEvosRadioButton, spRandomBasicRadioButton,
+                spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
+				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox,
+                spNoLegendariesCheckBox,
 				spRandomizeStarterHeldItemsCheckBox, spBanBadItemsCheckBox, spAllowAltFormesCheckBox,
                 spBSTMinimumCheckbox, spBSTMaximumCheckbox);
 		spComboBox1.setVisible(true);
@@ -3315,15 +3320,17 @@ public class RandomizerGUI {
 
         if (peRandomRadioButton.isSelected()) {
             enableButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
-                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
+                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox,
+                    peAdjustLevelsCheckBox);
         } else if (peRandomEveryLevelRadioButton.isSelected()) {
             enableButtons(peSameTypingCheckBox, peForceChangeCheckBox,
                     peAllowAltFormesCheckBox, peNoConvergenceCheckBox);
             disableAndDeselectButtons(peSimilarStrengthCheckBox,
-                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox);
+                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox, peAdjustLevelsCheckBox);
         } else {
             disableAndDeselectButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
-                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
+                    peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox,
+                    peAdjustLevelsCheckBox);
         }
 
         if (peMakeEvolutionsEasierCheckBox.isSelected()) {

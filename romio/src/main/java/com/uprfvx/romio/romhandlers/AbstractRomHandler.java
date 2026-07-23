@@ -256,6 +256,16 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
+    protected List<int[]> levelUpEstimationTriplets;
+
+    /**
+     * Calculates and sets the estimated evo levels of all {@link Evolution}s.<br>
+     * Evolutions with a level-threshold type get an estimated evo level equal to their
+     * extra info; all other Evolutions estimated evo levels are algorithmically chosen.<br>
+     * This algorithm uses the data of all extant level-threshold Evolutions.
+     * The data is saved in {@link #levelUpEstimationTriplets}, so it may be used
+     * in future calculations.
+     */
     protected void estimateEvolutionLevels() {
         // Get a list of all level-up evolutions and a list of all non-level-up evolutions
         List<Evolution> levelUpEvos = new ArrayList<>();
@@ -280,29 +290,35 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
 
         // For all level-up evolutions, get triplets (BSTfrom, BSTto, evoLevel)
-        List<int[]> levelUpTriplet = new ArrayList<>();
+        levelUpEstimationTriplets = new ArrayList<>();
         for (Evolution evo : levelUpEvos) {
             int[] triplet = {
                     evo.getFrom().getBST(true),
                     evo.getTo().getBST(true),
                     evo.getExtraInfo()
             };
-            levelUpTriplet.add(triplet);
+            levelUpEstimationTriplets.add(triplet);
         }
 
-        for (Evolution evo : nonLevelUpEvos) {
-            evo.setEstimatedEvoLvl(findEvolutionLevel(
-                    levelUpTriplet,
-                    evo.getFrom().getBST(true),
-                    evo.getTo().getBST(true)
-            ));
+        calculateEstimatedLevels(nonLevelUpEvos);
+    }
+
+    /**
+     * Calculates and sets the estimated evo levels of all {@link Evolution}s in <code>targetEvos</code>.
+     * Assumes {@link #levelUpEstimationTriplets} has already been set.
+     */
+    private void calculateEstimatedLevels(List<Evolution> targetEvos) {
+        for (Evolution evo : targetEvos) {
+            int bstFrom = evo.getFrom().getBST(true);
+            int bstTo = evo.getTo().getBST(true);
+            evo.setEstimatedEvoLvl(findEvolutionLevel(levelUpEstimationTriplets, bstFrom, bstTo));
         }
 
         // Postprocess estimated level
-        for (Evolution evo : nonLevelUpEvos) {
+        for (Evolution evo : targetEvos) {
             if (!evo.getFrom().getEvolutionsTo().isEmpty()) { // getFrom Pkmn has a pre-evolution
                 // Make sure the estimatedlevel is at least 25% higher than the evo level of the previous evolution
-                Evolution previousEvo = evo.getFrom().getEvolutionsTo().get(0);
+                Evolution previousEvo = evo.getFrom().getEvolutionsTo().getFirst();
                 evo.setEstimatedEvoLvl(
                         Math.max(evo.getEstimatedEvoLvl(), (int) Math.ceil(1.25 * previousEvo.getEstimatedEvoLvl())));
             }
@@ -357,6 +373,30 @@ public abstract class AbstractRomHandler implements RomHandler {
 
         // Return weighted average
         return (int) Math.round(weightedSum / weightSum);
+    }
+
+    @Override
+    public void adjustEvolutionLevels() {
+        if (levelUpEstimationTriplets == null) {
+            throw new IllegalStateException("levelUpEstimationTriplets has not been set");
+        }
+
+        List<Evolution> allEvos = new ArrayList<>();
+        List<Evolution> levelUpEvos = new ArrayList<>();
+        for (Species pk : getSpeciesSetInclFormes()) {
+            for (Evolution evo : pk.getEvolutionsFrom()) {
+                allEvos.add(evo);
+                if (evo.getType().usesLevelThreshold()) {
+                    levelUpEvos.add(evo);
+                }
+            }
+        }
+
+        calculateEstimatedLevels(allEvos);
+
+        for (Evolution levelUpEvo : levelUpEvos) {
+            levelUpEvo.updateEvolutionMethod(levelUpEvo.getType(), levelUpEvo.getEstimatedEvoLvl(), true);
+        }
     }
 
     @Override

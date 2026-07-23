@@ -646,6 +646,16 @@ public interface RomHandler {
     // Pokemon Evolutions
     // ==================
 
+    /**
+     * Recalculates and sets the estimated evo level of all {@link Evolution}s,
+     * using the current from/to BSTs of each Evolution, but based on the original distribution of evo levels.<br>
+     * Evolutions that use a level threshold also have their extra info updated,
+     * to match the new estimated evo level.
+     * <br><br>
+     * Assumes estimated evo levels have already been calculated once.
+     */
+    void adjustEvolutionLevels();
+
     void removeImpossibleEvolutions(boolean changeMoveEvos, boolean useEstimatedLevels);
 
     void condenseLevelEvolutions(int maxLevel);

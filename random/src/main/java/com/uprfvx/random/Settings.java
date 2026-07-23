@@ -45,7 +45,7 @@ public class Settings {
 
     public static final int VERSION = Version.LATEST.id;
 
-    public static final int LENGTH_OF_SETTINGS_DATA = 67;
+    public static final int LENGTH_OF_SETTINGS_DATA = 69;
     public static final int LENGTH_OF_NAME_LENGTH = 1;
     public static final int LENGTH_OF_CHECKSUM = 4;
     // There used to be a checksum for the custom names, post the usual checksum
@@ -749,6 +749,17 @@ public class Settings {
         // 66 'Make evolutions easier' level select slider
         out.write(makeEvolutionsEasierLvl);
 
+        // 67 base stat totals
+        out.write(makeByteSelected(bstMod == BSTMod.UNCHANGED,
+                bstMod == BSTMod.RANDOM_BUFF_NERF,
+                bstMod == BSTMod.SHUFFLE,
+                bstMod == BSTMod.RANDOM,
+                bstFollowEvolutions, bstShuffleSwapLegendaries,
+                false, false));
+
+        // 68 base stat total, random buff/nerf max percentage
+        out.write(bstBuffNerfMaxPercentage);
+
         byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
         out.write(romName.length);
         out.write(romName, 0, romName.length);
@@ -1104,6 +1115,12 @@ public class Settings {
 
         settings.setLimitPokemon(restoreState(data[65], 3));
         settings.setMakeEvolutionsEasierLvl(data[66] & 0x7F);
+
+        settings.setBSTMod(restoreEnum(BSTMod.class, data[67], 0, 1, 2, 3));
+        settings.setBSTFollowEvolutions(restoreState(data[67], 4));
+        settings.setBSTShuffleSwapLegendaries(restoreState(data[67], 5));
+
+        settings.setBSTBuffNerfMaxPercentage(data[68]); // small enough values that int8 range [-128, 127] is ok
 
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);

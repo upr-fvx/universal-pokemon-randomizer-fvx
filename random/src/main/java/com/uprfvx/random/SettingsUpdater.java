@@ -769,6 +769,12 @@ public class SettingsUpdater {
             updatePercentageLevelModifier(49, 5); // Static Pokemon level modifier
         }
 
+        if (oldVersion < Version.FVX_1_6_0.id) {
+            // add byte to hold BST randomization options. Set the BSTMod.UNCHANGED bit.
+            insertExtraByte(67, (byte) 1);
+            // add byte to hold BST random buff/nerf %
+            insertExtraByte(68, (byte) 0);
+        }
 
         // ^ Insert update for new version above!! ^
 

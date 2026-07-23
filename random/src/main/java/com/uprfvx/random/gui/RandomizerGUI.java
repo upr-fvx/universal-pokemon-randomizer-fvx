@@ -1707,7 +1707,7 @@ public class RandomizerGUI {
         pbstRandomBuffNerfRadioButton.setSelected(settings.getBSTMod() == Settings.BSTMod.RANDOM_BUFF_NERF);
         pbstShuffleRadioButton.setSelected(settings.getBSTMod() == Settings.BSTMod.SHUFFLE);
         pbstRandomRadioButton.setSelected(settings.getBSTMod() == Settings.BSTMod.RANDOM);
-        pbstFollowEvolutionsCheckBox.setSelected(settings.isBaseStatsFollowEvolutions());
+        pbstFollowEvolutionsCheckBox.setSelected(settings.isBSTFollowEvolutions());
         pbstSwapLegendariesCheckBox.setSelected(settings.isBSTShuffleSwapLegendaries());
         pbstRandomBuffNerfSpinSlider.setValue(settings.getBSTBuffNerfMaxPercentage());
 

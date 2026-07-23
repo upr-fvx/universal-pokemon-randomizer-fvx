@@ -380,6 +380,7 @@ public class RandomizerGUI {
     private JRadioButton pbstRandomRadioButton;
     private JCheckBox pbstFollowEvolutionsCheckBox;
     private JCheckBox pbstSwapLegendariesCheckBox;
+    private SpinSlider pbstRandomBuffNerfSpinSlider;
 
     private static final Random RND = new Random();
 
@@ -507,6 +508,8 @@ public class RandomizerGUI {
 
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
                 limitPokemonCheckBox, noIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
+
+                pbstUnchangedRadioButton, pbstRandomBuffNerfRadioButton, pbstShuffleRadioButton, pbstRandomRadioButton,
 
                 pbsUnchangedRadioButton, pbsShuffleRadioButton, pbsRandomRadioButton, pbsFollowMegaEvosCheckBox,
                 pbsFollowEvolutionsCheckBox, pbsStandardizeEXPCurvesCheckBox, pbsUpdateBaseStatsCheckBox,
@@ -824,6 +827,13 @@ public class RandomizerGUI {
                 2,
                 1
         );
+
+        pbstRandomBuffNerfSpinSlider.setModel(new SpinnerNumberModel(
+                0,
+                0,
+                50,
+                1
+        ));
 
         stpPercentageLevelModifierSpinSlider.setModel(new SpinnerNumberModel(
                 0,
@@ -1699,6 +1709,7 @@ public class RandomizerGUI {
         pbstRandomRadioButton.setSelected(settings.getBSTMod() == Settings.BSTMod.RANDOM);
         pbstFollowEvolutionsCheckBox.setSelected(settings.isBaseStatsFollowEvolutions());
         pbstSwapLegendariesCheckBox.setSelected(settings.isBSTShuffleSwapLegendaries());
+        pbstRandomBuffNerfSpinSlider.setValue(settings.getBSTBuffNerfMaxPercentage());
 
         pbsRandomRadioButton.setSelected(settings.getBaseStatisticsMod() == Settings.BaseStatisticsMod.RANDOM);
         pbsShuffleRadioButton.setSelected(settings.getBaseStatisticsMod() == Settings.BaseStatisticsMod.SHUFFLE);
@@ -2029,6 +2040,7 @@ public class RandomizerGUI {
                 pbstShuffleRadioButton.isSelected(), pbstRandomRadioButton.isSelected());
         settings.setBSTFollowEvolutions(pbstFollowEvolutionsCheckBox.isSelected());
         settings.setBSTShuffleSwapLegendaries(pbstSwapLegendariesCheckBox.isSelected());
+        settings.setBSTBuffNerfMaxPercentage(pbstRandomBuffNerfSpinSlider.getValue());
 
         settings.setBaseStatisticsMod(pbsUnchangedRadioButton.isSelected(), pbsShuffleRadioButton.isSelected(),
                 pbsRandomRadioButton.isSelected());
@@ -2344,7 +2356,9 @@ public class RandomizerGUI {
 
         setInitialButtonState(pbstUnchangedRadioButton, pbstRandomBuffNerfRadioButton, pbstShuffleRadioButton,
                 pbstRandomRadioButton, pbstFollowEvolutionsCheckBox, pbstSwapLegendariesCheckBox);
-        // TODO: slider
+        spComboBox1.setEnabled(false);
+        pbstRandomBuffNerfSpinSlider.setEnabled(false);
+        pbstRandomBuffNerfSpinSlider.setValue(0);
 
         setInitialButtonState(pbsUnchangedRadioButton, pbsShuffleRadioButton, pbsRandomRadioButton,
 				pbsLegendariesSlowRadioButton, pbsStrongLegendariesSlowRadioButton, pbsAllMediumFastRadioButton,
@@ -3258,6 +3272,13 @@ public class RandomizerGUI {
             enableButtons(pbstFollowEvolutionsCheckBox);
         } else {
             disableAndDeselectButtons(pbstFollowEvolutionsCheckBox);
+        }
+
+        if (pbstRandomBuffNerfRadioButton.isSelected()) {
+            pbstRandomBuffNerfSpinSlider.setEnabled(true);
+        } else {
+            pbstRandomBuffNerfSpinSlider.setEnabled(false);
+            pbstRandomBuffNerfSpinSlider.setValue(0);
         }
 
         if (pbstShuffleRadioButton.isSelected()) {

@@ -354,20 +354,6 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstRandomBuffNerfRadioButton.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="c5c7c" class="javax.swing.JSlider" default-binding="true">
-                            <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <majorTickSpacing value="10"/>
-                              <paintLabels value="true"/>
-                              <paintTicks value="true"/>
-                              <snapToTicks value="true"/>
-                              <value value="0"/>
-                            </properties>
-                          </component>
                           <component id="d367a" class="javax.swing.JRadioButton" binding="pbstShuffleRadioButton">
                             <constraints>
                               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -399,6 +385,16 @@
                               <enabled value="false"/>
                               <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstSwapLegendariesCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.pbstSwapLegendariesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="74e8b" class="com.uprfvx.random.gui.SpinSlider" binding="pbstRandomBuffNerfSpinSlider">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="true"/>
+                              <value value="0"/>
                             </properties>
                           </component>
                         </children>
@@ -5154,6 +5150,12 @@
       <member id="89267"/>
       <member id="6ee3"/>
       <member id="70ffc"/>
+    </group>
+    <group name="pokemonBaseStatTotalsButtonGroup">
+      <member id="333f5"/>
+      <member id="84d7a"/>
+      <member id="d367a"/>
+      <member id="256d0"/>
     </group>
   </buttonGroups>
   <inspectionSuppressions>

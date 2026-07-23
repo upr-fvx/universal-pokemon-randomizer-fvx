@@ -74,7 +74,6 @@ public class Settings {
     private boolean banPrematureEvos;
     private boolean dualTypeOnly;
 
-    // TODO: reading and writing these settings from/to the setting string
     public enum BSTMod {
         UNCHANGED, RANDOM_BUFF_NERF, SHUFFLE, RANDOM
     }
@@ -1466,7 +1465,6 @@ public class Settings {
     }
 
     public void setBSTBuffNerfMaxPercentage(int bstBuffNerfMaxPercentage) {
-        // TODO: boundary check?
         this.bstBuffNerfMaxPercentage = bstBuffNerfMaxPercentage;
     }
 

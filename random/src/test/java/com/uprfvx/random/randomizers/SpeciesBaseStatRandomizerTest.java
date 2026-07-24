@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -147,6 +148,15 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         List<FamilyBSTs> after = getSortedFamilyBSTs(romHandler.getSpeciesSet());
 
+        assertEquals(before.size(), after.size());
+        for (int i = 0; i < before.size(); i++) {
+            System.out.println(before.get(i).name);
+            System.out.println(after.get(i).name);
+            System.out.println(before.get(i).bsts);
+            System.out.print(after.get(i).bsts);
+            System.out.println(before.get(i).bsts.equals(after.get(i).bsts) ? "" : " MISMATCH!!");
+            System.out.println();
+        }
         assertEquals(before, after);
     }
 
@@ -191,7 +201,9 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         List<FamilyBSTs> afterLegs = getSortedFamilyBSTs(legendaries);
         List<FamilyBSTs> afterNonLegs = getSortedFamilyBSTs(nonLegendaries);
 
+        assertEquals(beforeLegs.size(), afterLegs.size());
         assertEquals(beforeLegs, afterLegs);
+        assertEquals(beforeNonLegs.size(), afterNonLegs.size());
         assertEquals(beforeNonLegs, afterNonLegs);
     }
 

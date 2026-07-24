@@ -13,6 +13,7 @@ import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class SpeciesBaseStatRandomizer extends Randomizer {
 
@@ -61,18 +62,32 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             applyBSTModifier(pk, modifier);
         };
 
-        EvolvedSpeciesAction evolvedSpeciesAction = (evFrom, evTo, _) -> {
-            double modifier = modifiersBySpecies.get(evFrom);
-            modifiersBySpecies.put(evTo, modifier);
-            applyBSTModifier(evTo, modifier);
+        BiConsumer<Species, Species> copyModifierAction = (from, to) -> {
+            double modifier = modifiersBySpecies.get(from);
+            modifiersBySpecies.put(to, modifier);
+            applyBSTModifier(to, modifier);
+        };
+
+        EvolvedSpeciesAction evolvedSpeciesAction =
+                (evFrom, evTo, _) -> copyModifierAction.accept(evFrom, evTo);
+
+        AltFormeAction altFormeAction = (baseForme, altForme) -> {
+            copyModifierAction.accept(baseForme, altForme);
+            giveMegaBoostAction.applyTo(baseForme, altForme);
+        };
+
+        AltFormeAction cosmeticAction = (baseForme, altForme) -> {
+            // In case something evolves from a cosmetic forme
+            copyBSTAction.applyTo(baseForme, altForme);
+            modifiersBySpecies.put(altForme, modifiersBySpecies.get(baseForme));
         };
 
         CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
                 .Builder(basicSpeciesAction, evolvedSpeciesAction)
                 .evolutionSanity(evolutionSanity)
                 .copySplitEvos(true)
-                .altFormeAction(giveMegaBoostAction)
-                .cosmeticAction(copyBSTAction)
+                .altFormeAction(altFormeAction)
+                .cosmeticAction(cosmeticAction)
                 .build();
         copyUpEvolutionsHelper.apply(options);
     }
@@ -84,9 +99,27 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     private void shuffleBSTs() {
+        // This method only shuffles the base formes, and then copies their new stats to alt formes.
+        // The assumption here is that even if alt formes have evolutions of their own:
+        // 1. their lines will be as long as those of the base formes, and
+        // 2. if a Pokémon evolves from an alt forme, it is also an alt forme.
+        // These assumptions make sense for Gens 1-7, which are supported at the time of writing...
+        // but Gen 8+ will be annoying, sorry. Good luck adding support to e.g. Perrserker or Obstagoon ^^.
+        // -- voliol 2026-07-24
+
         boolean evolutionSanity = settings.isBSTFollowEvolutions();
         boolean swapLegendaries = settings.isBSTShuffleSwapLegendaries();
 
+        List<SpeciesSet> shuffleGroups = prepareBSTShuffleGroups(evolutionSanity, swapLegendaries);
+
+        for (SpeciesSet group : shuffleGroups) {
+            shuffleBSTsOfGroup(group, evolutionSanity);
+        }
+
+        copyShuffledBSTsToAltFormes();
+    }
+
+    private List<SpeciesSet> prepareBSTShuffleGroups(boolean evolutionSanity, boolean swapLegendaries) {
         List<SpeciesSet> shuffleGroups = new ArrayList<>();
         shuffleGroups.add(new SpeciesSet(romHandler.getSpeciesSet()));
 
@@ -96,68 +129,11 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         if (swapLegendaries) {
             shuffleGroups = splitByLegendaryStatus(shuffleGroups);
         }
-
-        for (SpeciesSet group : shuffleGroups) {
-            Map<Species, Species> donators = new HashMap<>(group.size());
-            List<Species> keys = new ArrayList<>(group);
-            List<Species> values = new ArrayList<>(keys);
-            Collections.shuffle(values, random);
-            for (int i = 0; i < keys.size(); i++) {
-                donators.put(keys.get(i), values.get(i));
-            }
-
-            group.addFullFamilies(true); // because splitByLineLength() removes all but basics
-            CopyUpEvolutionsHelper cueh = new CopyUpEvolutionsHelper(group);
-            
-            BasicSpeciesAction basicSpeciesAction = pk -> {
-                Species donator = donators.get(pk);
-                pk.getBaseStats().setBST(donator.getBST(true));
-
-                System.out.println("\n" + pk.getNumberAndFullName());
-                System.out.println("bsc donator: " + donator.getNumberAndFullName() + " (" + donator.getBST(true) + ")");
-            };
-            
-            EvolvedSpeciesAction evolvedSpeciesAction = (evFrom, evTo, _) -> {
-                // Assumes lines are even; Applin could break this.
-                // So could split evos where the BST differs...
-                // though up until Gen 7, the only split evos where the BST differs are:
-                // - Ninjask/Ninjada (which could use a special case), and
-                // - Poliwrath/Politoed (only 10 BST diff, could be ignored and no one will notice)
-                Species fromDonator = donators.get(evFrom);
-                System.out.println("\n" + evFrom.getNumberAndFullName());
-                System.out.println("evFrom donator: " + fromDonator.getNumberAndFullName() + " (" + fromDonator.getBST(true) + ")");
-
-                Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
-                System.out.println("\t" + evTo.getNumberAndFullName());
-                System.out.println("\tevTo donator: " + toDonator.getNumberAndFullName() + " (" + toDonator.getBST(true) + ")");
-
-                donators.put(evTo, toDonator);
-                evTo.getBaseStats().setBST(toDonator.getBST(true));
-            };
-
-
-            CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
-                    .Builder(basicSpeciesAction, evolvedSpeciesAction)
-                    .evolutionSanity(evolutionSanity)
-                    .copySplitEvos(true)
-                    .build();
-            cueh.apply(options);
-        }
-
-        // copying up to formes needs to happen out here (?)
-        // TODO: how does this whole big method work with formes?
-        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
-                .Builder(null, null)
-                .copySplitEvos(true)
-                .altFormeAction(giveMegaBoostAction)
-                .cosmeticAction(copyBSTAction)
-                .build();
-        copyUpEvolutionsHelper.apply(options);
+        return shuffleGroups;
     }
 
     /**
      * Splits the input shuffleGroups by line length (Mewtwo->1, Paras->2, Bulbasaur->3).
-     * Only includes the basic mons in the returned SpeciesSets.
      */
     private List<SpeciesSet> splitByLineLength(List<SpeciesSet> shuffleGroups) {
         List<SpeciesSet> newShuffleGroups = new ArrayList<>();
@@ -166,7 +142,10 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             for (Species pk : group.filterBasic(true)) {
                 int lineLength = pk.getStagesAfter(true);
                 groupsByLineLength.putIfAbsent(lineLength, new SpeciesSet());
-                groupsByLineLength.get(lineLength).add(pk);
+
+                // can't use SpeciesSet.addFamily() because we only want to add species from the shuffleGroup
+                SpeciesSet family = pk.getFamily(true).filter(group::contains);
+                groupsByLineLength.get(lineLength).addAll(family);
             }
             newShuffleGroups.addAll(groupsByLineLength.values());
         }
@@ -182,6 +161,70 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         return newShuffleGroups;
     }
 
+    private void shuffleBSTsOfGroup(SpeciesSet group, boolean evolutionSanity) {
+        // this definition of basic is slightly different from the CUEH's, but it should be fine
+        SpeciesSet basics = evolutionSanity ? group.filterBasic(true) : group;
+        Map<Species, Species> donators = new HashMap<>(basics.size());
+        List<Species> keys = new ArrayList<>(basics);
+        List<Species> values = new ArrayList<>(keys);
+        Collections.shuffle(values, random);
+        for (int i = 0; i < keys.size(); i++) {
+            donators.put(keys.get(i), values.get(i));
+        }
+
+        CopyUpEvolutionsHelper cueh = new CopyUpEvolutionsHelper(group);
+
+        BasicSpeciesAction basicSpeciesAction = pk -> {
+            Species donator = donators.get(pk);
+            pk.getBaseStats().setBST(donator.getBST(true));
+        };
+
+        EvolvedSpeciesAction evolvedSpeciesAction = (evFrom, evTo, _) -> {
+            // Assumes lines are even; Applin could break this.
+            // So could split evos where the BST differs...
+            // though up until Gen 7, the only split evos where the BST differs are:
+            // - Ninjask/Ninjada (which could use a special case; none implemented yet), and
+            // - Poliwrath/Politoed (only 10 BST diff, can be ignored and no one will notice)
+            Species fromDonator = donators.get(evFrom);
+            Species toDonator = fromDonator.getEvolutionsFrom().getFirst().getTo();
+            donators.put(evTo, toDonator);
+            evTo.getBaseStats().setBST(toDonator.getBST(true));
+        };
+
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(basicSpeciesAction, evolvedSpeciesAction)
+                .evolutionSanity(evolutionSanity)
+                .copySplitEvos(true)
+                .build();
+        cueh.apply(options);
+    }
+
+    private void copyShuffledBSTsToAltFormes() {
+        AltFormeAction carryPercChangeAction = (baseForme, altForme) -> {
+            float formeMultiplier = (float) altForme.getBST(true) / baseForme.getBST(true);
+            int newBST = (int) (baseForme.getBST(false) * formeMultiplier);
+            // TODO: what to do with Wishiwashi-school? It almost always maxing out is boring.
+            newBST = Math.min(newBST, altForme.getBaseStats().getMaxBST());
+            altForme.getBaseStats().setBST(newBST);
+
+            giveMegaBoostAction.applyTo(baseForme, altForme);
+        };
+
+        EvolvedSpeciesAction carryPercChangeForEvolvedFormesAction = (_, to, _) -> {
+            if (!to.isBaseForme()) {
+                carryPercChangeAction.applyTo(to.getConceptualBaseForme(), to);
+            }
+        };
+
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(null, carryPercChangeForEvolvedFormesAction)
+                .copySplitEvos(true)
+                .altFormeAction(carryPercChangeAction)
+                .cosmeticAction(copyBSTAction)
+                .build();
+        copyUpEvolutionsHelper.apply(options);
+    }
+
     private void fullyRandomizeBSTs() {
         // This is very simple because it is a sort of chaos mode,
         // but it might be more interesting if it were to be weighted.
@@ -195,12 +238,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             pk.getBaseStats().setBST(newBST);
         }
 
-        // TODO: consider breaking out
-        // TODO: how should this even work with formes??
         // ensures cosmetic formes/megas get what they should
         CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
                 .Builder(null, null)
-                .copySplitEvos(true)
                 .altFormeAction(giveMegaBoostAction)
                 .cosmeticAction(copyBSTAction)
                 .build();

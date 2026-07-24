@@ -225,7 +225,7 @@ public class BaseStats {
             Integer statOff = statNeedinessQueue.poll();
             if (statOff == null) {
                 throw new IllegalStateException("Could not distribute all stat points."
-                        + "distributed=" + Arrays.toString(stats) + " left=" + (bst - i));
+                        + " distributed=" + Arrays.toString(stats) + " left=" + (bst - i));
             }
             stats[statOff]++;
             if (stats[statOff] < STAT_MAX) {

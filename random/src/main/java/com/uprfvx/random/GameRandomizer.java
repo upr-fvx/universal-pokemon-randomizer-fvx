@@ -272,7 +272,6 @@ public class GameRandomizer {
         // Applied before anything that can be carried up evolutions, so the new evos are used for that.
         maybeRandomizeEvolutions();
 
-        // TODO: where should this be in relation to evo randomization?
         maybeRandomizeSpeciesBaseStatTotals();
 
         // Applied after both evo and BST randomization, so the right evos/BSTs are used.

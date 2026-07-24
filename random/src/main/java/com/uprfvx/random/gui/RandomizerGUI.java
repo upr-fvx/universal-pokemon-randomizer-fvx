@@ -3207,6 +3207,7 @@ public class RandomizerGUI {
 
         if (peRandomEveryLevelRadioButton.isSelected()) {
             // If Evolve Every Level is enabled, unselect all "Follow Evolutions" controls
+            pbstFollowEvolutionsCheckBox.setSelected(false);
             pbsFollowEvolutionsCheckBox.setSelected(false);
             ptRandomFollowEvolutionsRadioButton.setEnabled(false);
             if (ptRandomFollowEvolutionsRadioButton.isSelected()) {
@@ -3268,7 +3269,10 @@ public class RandomizerGUI {
             noPrematureEvosCheckbox.setEnabled(true);
         }
 
-        if (pbstRandomBuffNerfRadioButton.isSelected() || pbstShuffleRadioButton.isSelected()) {
+        // shuffle BST+follow evolutions does not make sense if the evos are random
+        if ((pbstRandomBuffNerfRadioButton.isSelected()
+                || (pbstShuffleRadioButton.isSelected() && !peRandomRadioButton.isSelected()))
+                && !peRandomEveryLevelRadioButton.isSelected()) {
             enableButtons(pbstFollowEvolutionsCheckBox);
         } else {
             disableAndDeselectButtons(pbstFollowEvolutionsCheckBox);

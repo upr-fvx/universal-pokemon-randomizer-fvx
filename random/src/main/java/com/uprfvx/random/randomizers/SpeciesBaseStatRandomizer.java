@@ -28,10 +28,6 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         super(romHandler, settings, random);
     }
 
-    // TODO: Most features make sense with BST randomization with no need to think about it,
-    //  but what should happen first, evo randomization or BST randomization?
-    //  Since BST randomization follows evos, and vice versa.
-
     public void randomizeBSTs() {
         switch (settings.getBSTMod()) {
             case RANDOM_BUFF_NERF -> randomlyModifyBSTsByPercentage();

@@ -290,14 +290,30 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
                     bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed()
             );
 
-            pk.getBaseStats().setStatRatios(
-                    stats.get(order.get(0)),
-                    stats.get(order.get(1)),
-                    stats.get(order.get(2)),
-                    stats.get(order.get(3)),
-                    stats.get(order.get(4)),
-                    stats.get(order.get(5))
-            );
+            if (pk.getBaseStats() instanceof ShedinjaBaseStats sbs) {
+                // this allows shedinja to mostly copy up order, while also not putting points into HP
+                for (int i = 0; i < order.size(); i++) {
+                    if (order.get(i) == 0) {
+                        order.set(i, i);
+                    }
+                }
+                sbs.setStatRatios(
+                        stats.get(order.get(1)),
+                        stats.get(order.get(2)),
+                        stats.get(order.get(3)),
+                        stats.get(order.get(4)),
+                        stats.get(order.get(5))
+                );
+            } else {
+                bs.setStatRatios(
+                        stats.get(order.get(0)),
+                        stats.get(order.get(1)),
+                        stats.get(order.get(2)),
+                        stats.get(order.get(3)),
+                        stats.get(order.get(4)),
+                        stats.get(order.get(5))
+                );
+            }
         }
     }
 

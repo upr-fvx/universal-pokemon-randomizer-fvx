@@ -4,17 +4,18 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.gamedata.Evolution;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.Gen1BaseStats;
+import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
+import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
+import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import static com.uprfvx.random.randomizers.SpeciesBaseStatRandomizer.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
@@ -40,7 +41,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     }
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void randomizeBSTs_RandomBuffNerf_FollowFamilyWorks(String romName) {
+    public void randomizeBSTs_RandomBuffNerf_FollowEvolutions_Works(String romName) {
         activateRomHandler(romName);
 
         Settings s = new Settings();
@@ -259,5 +260,96 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         }
     }
 
-    // TODO: tests for base stat distribution randomization
+    // TODO: just write coverage tests for the rest of base stat distribution, so we got *something*
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shuffleSpeciesStats_StatValuesAreTheSame(String romName) {
+        // TODO: oh heck what's up with shedinja again? The bugger...
+        activateRomHandler(romName);
+
+        List<List<Integer>> statsBefore = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();
+
+        SpeciesBaseStatRandomizer sbsr = romHandler.generationOfPokemon() == 1
+                ? new Gen1SpeciesBaseStatRandomizer(romHandler, new Settings(), RND)
+                : new SpeciesBaseStatRandomizer(romHandler, new Settings(), RND);
+        sbsr.shuffleSpeciesStats();
+
+        List<List<Integer>> statsAfter = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();
+
+        assertEquals(statsBefore, statsAfter);
+    }
+
+    private List<Integer> getSortedStats(Species pk) {
+        BaseStats bs = pk.getBaseStats();
+        List<Integer> stats;
+        if (bs instanceof Gen1BaseStats g1bs) {
+            stats = new ArrayList<>(List.of(
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpeed(), g1bs.getSpecial()
+            ));
+        } else if (bs instanceof ShedinjaBaseStats) {
+            stats = new ArrayList<>(List.of(
+                    bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed()
+            ));
+        } else {
+            stats = new ArrayList<>(List.of(
+                    bs.getHp(), bs.getAttack(), bs.getDefense(), bs.getSpatk(), bs.getSpdef(), bs.getSpeed()
+            ));
+        }
+        Collections.sort(stats);
+        return stats;
+    }
+
+    // If it's this rare, literally no one will notice. And getting it to never ever fail would be hard.
+    private static final int ALLOWED_STAT_LOWER_THAN_PREVOS_FAILS = 3;
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizeStats_FollowEvolutions_AssignStatsRandomly_EachStatIsAtLeastThatOfPrevo(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBaseStatsFollowEvolutions(true);
+        s.setAssignEvoStatsRandomly(true);
+        SpeciesBaseStatRandomizer sbsr = romHandler.generationOfPokemon() == 1
+                ? new Gen1SpeciesBaseStatRandomizer(romHandler, s, RND)
+                : new SpeciesBaseStatRandomizer(romHandler, s, RND);
+        sbsr.randomizeSpeciesStats();
+
+        List<Species> fails = new ArrayList<>();
+        EvolvedSpeciesAction evolvedAction = (from, to, _) -> {
+            if (to.getBST(false) < from.getBST(false)) {
+                System.out.println("ignoring " + from.getFullName() + "->" + to.getFullName()
+                        + " since BST is lower after evolution.");
+            }
+            BaseStats fromBS = from.getBaseStats();
+            BaseStats toBS = to.getBaseStats();
+            System.out.println(from.getNumberAndFullName() + ": " + fromBS);
+            System.out.println(to.getNumberAndFullName() + ": " + toBS);
+            if (!(toBS instanceof ShedinjaBaseStats)) {
+                if (fromBS.getHp() > toBS.getHp()) fails.add(to);
+            }
+            if (fromBS.getAttack() > toBS.getAttack()) fails.add(to);
+            if (fromBS.getDefense() > toBS.getDefense()) fails.add(to);
+            if (fromBS.getSpeed() > toBS.getSpeed()) fails.add(to);
+            if (toBS instanceof Gen1BaseStats) {
+                if (((Gen1BaseStats) fromBS).getSpecial() > ((Gen1BaseStats) toBS).getSpecial()) fails.add(to);
+            } else {
+                if (fromBS.getSpatk() > toBS.getSpatk()) fails.add(to);
+                if (fromBS.getSpdef() > toBS.getSpdef()) fails.add(to);
+            }
+        };
+
+        CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
+                .Builder(null, evolvedAction).build();
+        new CopyUpEvolutionsHelper(romHandler.getSpeciesSet()).apply(options);
+
+        System.out.println("Failed " + fails.size() + " times.");
+        System.out.println(fails.stream().map(Species::getNumberAndFullName).toList());
+        if (fails.size() <= ALLOWED_STAT_LOWER_THAN_PREVOS_FAILS) {
+            System.out.println("This is within acceptable expectations.");
+        } else {
+            fail("This is too common. Do something about it.");
+        }
+    }
 }

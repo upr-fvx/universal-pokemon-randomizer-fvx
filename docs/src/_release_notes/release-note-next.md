@@ -9,9 +9,9 @@
 <!-- People on GitHub should be referred to using their ID with the @. E.g. @namehere. 
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
-Thanks to
-@AxelElric8 for your code contributions,
-[Every person who submitted a solved issue] @kiliwily, @Angeluco, @GeCAF, MClarke93, and @DrSodaCan for reporting Issues,
+Thanks to 
+[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -34,21 +34,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 <!-- (Gen [N]) can be used to denote a feature or bugfix only is relevant when randomizing certain Generations, and (GUI) for GUI stuff. -->
 
 ### Pokemon Base Stats
-- New Panel: Base Stat Totals (Issue #4)
-  - New Option: <b>Random Buff/Nerf</b>. Gives each Pokémon a random buff or nerf to their BST. The extent of these buffs/nerfs are given by a slider, going between 0-50%. <b>E.g.</b> if set to 20%, each Pokémon will randomly get between 80-120% of their original BST.
-  - New Option: <b>Shuffle</b>. Shuffles the BSTs of all Pokémon. If there were originally 6 Pokémon with 600 BST, there will be 6 after applying this option, but the Pokémon will be different. <b>E.g.</b> Weedle might receive the BST of Mewtwo, Charizard the BST of Butterfree.
-  - New Option: <b>Random</b>. Entirely randomizes the BST of each Pokémon.
-  - New Option: <b>Follow Evolutions</b>. Can be used with "Random Buff/Nerf" and "Shuffle". 
-   
-    If used with "Random Buff/Nerf", every Pokémon in a family will get the same buff/nerf.
-    
-    If used with "Shuffle", BSTs will be shuffled family-by-family, going by length. (3-stage families will be shuffled with 3-stage families, 2-stage families with 2-stage families, non-evolving mons with non-evolving mons)
-  - New Option: <b>Separate Legendaries</b>. Can only be used with "Shuffle". Makes legendaries have their BSTs shuffled separately from all other Pokémon. This prevents extremes like Farfetch'd getting the BST of Mewtwo, or vice versa, while still allowing variety within the categories.
-- Moved "Standardize EXP Curves" to its own panel further down in the GUI.
 - [The description of a new feature here.] (Issue #[issue num])
-
-### Pokemon Evolutions
-- New Option: Adjust Evolution Levels. This option is only available when you randomize evolutions or BSTs. If checked, level-up evolutions will have their levels algorithmically adjusted, to better fit the Pokemon before and after evolution (this reuses [the "estimated evo levels" algorithm](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/estimatedLevels.html)). <b>E.g.</b>, if a Pokemon evolves into Dragonite, it will do so at a high level.
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
@@ -58,14 +44,8 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
-- Added Level Caps section to the log file to track boss levels across generations. (Issue #152)
-- Made the alt formes of Wormadam, Meowstic, and Lycanroc be treated as split evolutions, when "Follow Evolutions" options are used.
-- Improved launcher error reporting. (Issue #237)
-- Using Linux and Mac, all console output is now logged in the file `console-output.log`. Using Windows, said file only logs launch errors.
+- [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes
-- (GUI) Fixed "Random (any basic Pokemon)" starter radio button not getting disabled after randomization. (Issue #230)
-- Fixed "Add Held Items to Boss Trainers" instead adding held items to regular trainers. (Issue #232)
-- (Gen 3) Fixed randomized TMs corrupting move description text, in FRLG. (Issue #154) 
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

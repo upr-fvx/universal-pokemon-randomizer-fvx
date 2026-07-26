@@ -10,14 +10,14 @@ import java.util.function.Predicate;
 public abstract class SettingDefinition<T> {
 
     //The setting's name. Should be a unique identifier. Should be relatively human-readable.
-    private final String name;
+    protected final String name;
 
     //The setting's category. Should be the lowest-level category applicable (e.g. "StarterTypeRestrictions"
     //rather than "Starters" or "Starters, Statics, & Trades"
-    private final String category;
+    protected final String category;
 
     //The default value.
-    private final T defaultValue;
+    protected final T defaultValue;
 
     //The prerequisite of other settings' states required for this setting to be applicable.
     //If the prerequisite conditions are false, this setting will be disabled and set to the default value.
@@ -27,14 +27,14 @@ public abstract class SettingDefinition<T> {
     //If the conditions are not met, the setting will be hidden and ignored.
     private final Predicate<RomHandler> supported;
 
-    //A list of settings that apply restrictions to some values of the setting.
-    //Different types of settings apply restrictions differently, so this list can only check if changes might occur,
+    //A list of settings that disable or apply restrictions to this setting.
+    //Different types of settings apply restrictions differently, so this list can only check if changes MIGHT occur,
     //not determine if they actually do occur or what those changes are.
-    private final List<String> valueRestrictors;
+    private final List<String> dependentOn;
 
     //Whether the setting has values that are not supported by all games. If true, the possible values will be
     // polled when a new game is loaded.
-    private final boolean hasValueSupportRestrictions;
+    private final boolean hasSupportRestrictions;
 
 
     /**
@@ -54,8 +54,13 @@ public abstract class SettingDefinition<T> {
         this.defaultValue = defaultValue;
         this.prerequisite = prerequisite;
         this.supported = supported;
-        this.valueRestrictors = Collections.unmodifiableList(valueRestrictors);
-        this.hasValueSupportRestrictions = hasValueSupportRestrictions;
+        Set<String> restrictors = new HashSet<>(valueRestrictors);
+        if (prerequisite != null)
+        {
+            restrictors.addAll(prerequisite.getRelevantSettingNames());
+        }
+        this.dependentOn = Collections.unmodifiableList(new ArrayList<>(restrictors));
+        this.hasSupportRestrictions = hasValueSupportRestrictions;
     }
 
     /**
@@ -77,14 +82,18 @@ public abstract class SettingDefinition<T> {
         this.prerequisite = prerequisite;
         this.supported = supported;
 
-        Set<String> valueRestrictors = new HashSet<>();
+        Set<String> restrictors = new HashSet<>();
         if (valueRestrictions != null) {
             for (SettingRestriction restriction : valueRestrictions) {
-                valueRestrictors.addAll(restriction.getRelevantSettingNames());
+                restrictors.addAll(restriction.getRelevantSettingNames());
             }
         }
-        this.valueRestrictors = Collections.unmodifiableList(new ArrayList<>(valueRestrictors));
-        this.hasValueSupportRestrictions = hasValueSupportRestrictions;
+        if (prerequisite != null)
+        {
+            restrictors.addAll(prerequisite.getRelevantSettingNames());
+        }
+        this.dependentOn = Collections.unmodifiableList(new ArrayList<>(restrictors));
+        this.hasSupportRestrictions = hasValueSupportRestrictions;
     }
 
     public String getName() {
@@ -109,7 +118,7 @@ public abstract class SettingDefinition<T> {
     }
 
     public boolean isSupported(RomHandler game) {
-        if(supported == null) {
+        if (supported == null) {
             return true;
         }
         return supported.test(game);
@@ -131,65 +140,25 @@ public abstract class SettingDefinition<T> {
      */
     public abstract boolean isValueSupported(T value, RomHandler game);
 
-
-    //These functions only make sense for numeric values,
-    //but are being put in the base class anyway for ease of interfacing.
-    //Obviously, they throw exceptions when called on a non-numeric SettingDefinition.
-    //#region numeric-functions
-
     /**
-     * The lowest value that can ever be applied to this setting.
+     * Returns a list of all settings which have states that enable/disable this setting or some of its values.
+     * If there are none, returns an empty list.
+     * @return An unmodifiable List containing the names of all settings which this setting is dependent on.
      */
-    public T minimum() { throw new NotImplementedException(); }
-
-    /**
-     * The highest value that can ever be applied to this setting.
-     */
-    public T maximum() { throw new NotImplementedException(); }
-
-    /**
-     * The lowest value that is currently enabled.
-     * Note that this may be lower or higher than the lowest value supported,
-     * so both should always be checked.
-     * @param manager The SettingsManager to test against.
-     * @return The lowest enabled value.
-     */
-    public T minimumEnabled(SettingsManager manager)
+    public List<String> getSettingsDependentOn()
     {
-        throw new NotImplementedException();
+        return dependentOn;
     }
 
     /**
-     * The highest value that is currently enabled.
-     * Note that this may be lower or higher than the highest value supported,
-     * so both should always be checked.
-     * @param manager The SettingsManager to test against.
-     * @return The highest enabled value.
+     * Whether the setting has restrictions on what values are supported based on the game (RomHandler)
+     * being randomized.
+     * Does NOT include if the entire setting is disabled based on support. isSupported should ALWAYS be called.
+     * TODO: consider if this should be changed?
+     * @return True if there are any restrictions on values based on support.
      */
-    public T maximumEnabled(SettingsManager manager)
+    public boolean hasValueSupportRestrictions()
     {
-        throw new NotImplementedException();
+        return hasSupportRestrictions;
     }
-
-    /**
-     * The lowest value that is supported by the current game.
-     * @param game The RomHandler to check for support.
-     * @return The lowest supported value.
-     */
-    public T minimumSupported(RomHandler game)
-    {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * The highest value that is supported by the current game.
-     * @param game The RomHandler to check for support.
-     * @return The highest supported value.
-     */
-    public T maximumSupported(RomHandler game)
-    {
-        throw new NotImplementedException();
-    }
-
-    //#endregion
 }

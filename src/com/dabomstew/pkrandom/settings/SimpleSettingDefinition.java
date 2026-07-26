@@ -11,7 +11,7 @@ public class SimpleSettingDefinition<T> extends SettingDefinition<T>  {
 
     public SimpleSettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
                                    Predicate<RomHandler> supported) {
-        super(name, category, defaultValue, prerequisite, supported, null, null);
+        super(name, category, defaultValue, prerequisite, supported, null, false);
     }
 
     @Override

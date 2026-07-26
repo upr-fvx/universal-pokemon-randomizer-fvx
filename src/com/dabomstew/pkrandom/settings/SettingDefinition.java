@@ -1,17 +1,15 @@
 package com.dabomstew.pkrandom.settings;
 
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
+import com.sun.istack.internal.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class SettingDefinition<T> {
 
-    //The setting's name. Should be a unique identifier.
+    //The setting's name. Should be a unique identifier. Should be relatively human-readable.
     private final String name;
 
     //The setting's category. Should be the lowest-level category applicable (e.g. "StarterTypeRestrictions"
@@ -29,25 +27,64 @@ public abstract class SettingDefinition<T> {
     //If the conditions are not met, the setting will be hidden and ignored.
     private final Predicate<RomHandler> supported;
 
-    //A list of restrictions that apply to some values of the setting.
-    //Different types of settings use these differently, so this list can only check if ANY changes occur,
-    //not determine what those changes are.
-    private final List<SettingRestriction> valueRestrictions;
+    //A list of settings that apply restrictions to some values of the setting.
+    //Different types of settings apply restrictions differently, so this list can only check if changes might occur,
+    //not determine if they actually do occur or what those changes are.
+    private final List<String> valueRestrictors;
 
-    //As the previous, but for RomHandler support.
-    private final List<Predicate<RomHandler>> valueSupport;
+    //Whether the setting has values that are not supported by all games. If true, the possible values will be
+    // polled when a new game is loaded.
+    private final boolean hasValueSupportRestrictions;
 
 
-    public SettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
-                             Predicate<RomHandler> supported, Collection<SettingRestriction> valueRestrictions,
-                             Collection<Predicate<RomHandler>> valueSupport) {
+    /**
+     * @param name
+     * @param category
+     * @param defaultValue
+     * @param prerequisite
+     * @param supported
+     * @param hasValueSupportRestrictions
+     * @param valueRestrictors
+     */
+    public SettingDefinition(String name, String category, T defaultValue,
+                             SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                             boolean hasValueSupportRestrictions, List<String> valueRestrictors) {
         this.name = name;
         this.category = category;
         this.defaultValue = defaultValue;
         this.prerequisite = prerequisite;
         this.supported = supported;
-        this.valueRestrictions = Collections.unmodifiableList(new ArrayList<>(valueRestrictions));
-        this.valueSupport = Collections.unmodifiableList(new ArrayList<>(valueSupport));
+        this.valueRestrictors = Collections.unmodifiableList(valueRestrictors);
+        this.hasValueSupportRestrictions = hasValueSupportRestrictions;
+    }
+
+    /**
+     * Creates a new SettingDefinition.
+     * @param name The setting's name.
+     * @param category The category the setting falls under.
+     * @param defaultValue
+     * @param prerequisite
+     * @param supported
+     * @param valueRestrictions
+     * @param hasValueSupportRestrictions
+     */
+    public SettingDefinition(String name, String category, T defaultValue,
+                             SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                             Collection<SettingRestriction> valueRestrictions, boolean hasValueSupportRestrictions) {
+        this.name = name;
+        this.category = category;
+        this.defaultValue = defaultValue;
+        this.prerequisite = prerequisite;
+        this.supported = supported;
+
+        Set<String> valueRestrictors = new HashSet<>();
+        if (valueRestrictions != null) {
+            for (SettingRestriction restriction : valueRestrictions) {
+                valueRestrictors.addAll(restriction.getRelevantSettingNames());
+            }
+        }
+        this.valueRestrictors = Collections.unmodifiableList(new ArrayList<>(valueRestrictors));
+        this.hasValueSupportRestrictions = hasValueSupportRestrictions;
     }
 
     public String getName() {
@@ -99,6 +136,16 @@ public abstract class SettingDefinition<T> {
     //but are being put in the base class anyway for ease of interfacing.
     //Obviously, they throw exceptions when called on a non-numeric SettingDefinition.
     //#region numeric-functions
+
+    /**
+     * The lowest value that can ever be applied to this setting.
+     */
+    public T minimum() { throw new NotImplementedException(); }
+
+    /**
+     * The highest value that can ever be applied to this setting.
+     */
+    public T maximum() { throw new NotImplementedException(); }
 
     /**
      * The lowest value that is currently enabled.

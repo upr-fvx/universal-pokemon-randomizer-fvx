@@ -7,15 +7,9 @@ import java.util.function.Predicate;
 
 /**
  * A SettingDefinition for enums that supports restrictions for individual enum states.
- * @param <T>
+ * If no such definitions are needed, use SimpleSettingDefinition instead.
  */
 public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<T> {
-
-    //TODO: There may need to be an equivalent to this class for numerics.
-    // Possibly there's a way to combine them into a single more generic class?
-    // Or an interface, at least.
-    // If so, it would probably have to have some functions that don't always make sense
-    // (Such as min and max value functions)
 
     Map<T, SettingRestriction> restrictions;
     Map<T, Predicate<RomHandler>> support;
@@ -23,14 +17,11 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
     public EnumSettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
                                  Predicate<RomHandler> supported, Map<T, SettingRestriction> restrictedStates,
                                  Map<T, Predicate<RomHandler>> supportedStates) {
-        super(name, category, defaultValue, prerequisite, supported, restrictedStates.values(), supportedStates.values());
+        super(name, category, defaultValue, prerequisite, supported,
+                restrictedStates != null? restrictedStates.values() : null,
+                supportedStates != null);
         this.restrictions = restrictedStates;
-        support = supportedStates;
-    }
-
-    public EnumSettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
-                                 Predicate<RomHandler> supported) {
-        this(name, category, defaultValue, prerequisite, supported, null, null);
+        this.support = supportedStates;
     }
 
     /**

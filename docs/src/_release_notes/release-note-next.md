@@ -11,7 +11,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to
 @AxelElric8 for your code contributions,
-[Every person who submitted a solved issue] @kiliwily, @Angeluco, @GeCAF, and MClarke93 for reporting Issues,
+[Every person who submitted a solved issue] @kiliwily, @Angeluco, @GeCAF, MClarke93, and @DrSodaCan for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -60,6 +60,8 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ### Misc.
 - Added Level Caps section to the log file to track boss levels across generations. (Issue #152)
 - Made the alt formes of Wormadam, Meowstic, and Lycanroc be treated as split evolutions, when "Follow Evolutions" options are used.
+- Improved launcher error reporting. (Issue #237)
+- Using Linux and Mac, all console output is now logged in the file `console-output.log`. Using Windows, said file only logs launch errors.
 
 ## Bugfixes
 - (GUI) Fixed "Random (any basic Pokemon)" starter radio button not getting disabled after randomization. (Issue #230)

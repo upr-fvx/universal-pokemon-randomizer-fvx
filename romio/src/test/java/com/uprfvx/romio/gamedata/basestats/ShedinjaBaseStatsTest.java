@@ -33,10 +33,6 @@ public class ShedinjaBaseStatsTest {
 
     @Test
     public void setBST_WithShedinjasActualStats_ToCurrentBST_DoesNotChangeBST() {
-        // get/setBST() do integer division, so it only makes sense some BST will fall to rounding.
-        // In fact, due to maths 2/3 of them do.
-        // What is important though is Shedinja's actual vanilla stats don't,
-        // which they don't! How lucky. :)
         ShedinjaBaseStats a = new ShedinjaBaseStats(90, 45, 30, 30, 40);
 
         int before = a.getBST();
@@ -49,6 +45,17 @@ public class ShedinjaBaseStatsTest {
         ShedinjaBaseStats a = new ShedinjaBaseStats(10, 10, 10, 10, 10);
         assertThrows(UnsupportedOperationException.class,
                 () -> a.setStatRatios(1, 1, 1, 1, 1, 1));
+    }
+
+    @Test
+    public void setStatRatios_ToShuffledVanillaStats_SetsThemProperly() {
+        ShedinjaBaseStats a = new ShedinjaBaseStats(90, 45, 30, 30, 40);
+        a.setStatRatios(30, 30, 40, 45, 90);
+        assertEquals(30, a.getAttack());
+        assertEquals(30, a.getDefense());
+        assertEquals(40, a.getSpatk());
+        assertEquals(45, a.getSpdef());
+        assertEquals(90, a.getSpeed());
     }
 
 }

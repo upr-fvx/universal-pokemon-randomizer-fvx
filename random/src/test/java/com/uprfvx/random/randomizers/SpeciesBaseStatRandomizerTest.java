@@ -260,7 +260,16 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         }
     }
 
-    // TODO: just write coverage tests for the rest of base stat distribution, so we got *something*
+    // === Tests for the base stat distribution ===
+    // These are mostly just coverage tests checking for throwing,
+    // since notions like "follow evolutions" get rather complicated
+    // to check automatically, but doing so manually is trivial. 
+
+    private SpeciesBaseStatRandomizer getSpeciesBaseStatRandomizer(Settings s) {
+        return romHandler.generationOfPokemon() == 1
+                ? new Gen1SpeciesBaseStatRandomizer(romHandler, s, RND)
+                : new SpeciesBaseStatRandomizer(romHandler, s, RND);
+    }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
@@ -270,9 +279,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         List<List<Integer>> statsBefore = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();
 
-        SpeciesBaseStatRandomizer sbsr = romHandler.generationOfPokemon() == 1
-                ? new Gen1SpeciesBaseStatRandomizer(romHandler, new Settings(), RND)
-                : new SpeciesBaseStatRandomizer(romHandler, new Settings(), RND);
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(new Settings());
         sbsr.shuffleSpeciesStats();
 
         List<List<Integer>> statsAfter = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();
@@ -300,6 +307,64 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         return stats;
     }
 
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shuffleSpeciesStats_FollowEvolutions_DoesNotThrow(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBaseStatsFollowEvolutions(true);
+
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
+        sbsr.shuffleSpeciesStats();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void shuffleSpeciesStats_FollowEvolutions_FollowMegaEvolutions_DoesNotThrow(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBaseStatsFollowEvolutions(true);
+        s.setBaseStatsFollowMegaEvolutions(true);
+
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
+        sbsr.shuffleSpeciesStats();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizeStats_NoFollowEvolutions_DoesNotThrow(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
+        sbsr.randomizeSpeciesStats();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizeStats_FollowEvolutions_DoesNotThrow(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBaseStatsFollowEvolutions(true);
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
+        sbsr.randomizeSpeciesStats();
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void randomizeStats_FollowEvolutions_FollowMegaEvolutions_DoesNotThrow(String romName) {
+        activateRomHandler(romName);
+
+        Settings s = new Settings();
+        s.setBaseStatsFollowEvolutions(true);
+        s.setBaseStatsFollowMegaEvolutions(true);
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
+        sbsr.randomizeSpeciesStats();
+    }
+
     // If it's this rare, literally no one will notice. And getting it to never ever fail would be hard.
     private static final int ALLOWED_STAT_LOWER_THAN_PREVOS_FAILS = 3;
 
@@ -311,9 +376,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         Settings s = new Settings();
         s.setBaseStatsFollowEvolutions(true);
         s.setAssignEvoStatsRandomly(true);
-        SpeciesBaseStatRandomizer sbsr = romHandler.generationOfPokemon() == 1
-                ? new Gen1SpeciesBaseStatRandomizer(romHandler, s, RND)
-                : new SpeciesBaseStatRandomizer(romHandler, s, RND);
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
         sbsr.randomizeSpeciesStats();
 
         List<Species> fails = new ArrayList<>();

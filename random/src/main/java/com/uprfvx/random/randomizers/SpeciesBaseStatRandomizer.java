@@ -46,11 +46,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         }
     };
 
+    private Map<Species, Double> modifiersBySpecies;
+
     private void randomlyModifyBSTsByPercentage() {
         boolean evolutionSanity = settings.isBSTFollowEvolutions();
         double maxModifier = (double) settings.getBSTBuffNerfMaxPercentage() / 100;
 
-        Map<Species, Double> modifiersBySpecies = new HashMap<>();
+        modifiersBySpecies = new HashMap<>();
 
         BasicSpeciesAction basicSpeciesAction = pk -> {
             double modifier = random.nextDouble(1.0 - maxModifier, 1.0 + maxModifier);
@@ -243,8 +245,6 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         copyUpEvolutionsHelper.apply(options);
     }
 
-    // TODO: write tests for these older randomization options
-
     Map<Species, List<Integer>> shuffledStatsOrders;
 
     public void shuffleSpeciesStats() {
@@ -255,10 +255,11 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
 
         CopyUpEvolutionsHelper.Options options = new CopyUpEvolutionsHelper.Options
                 .Builder(this::putShuffledStatsOrder, this::copyUpShuffledStatsOrder)
+                .altFormeAction(this::copyUpShuffledStatsOrder)
+                .cosmeticAction(this::copyUpShuffledStatsOrder)
                 .evolutionSanity(evolutionSanity)
                 .copySplitEvos(false)
                 .treatMegasAsEvos(megaEvolutionSanity)
-                .cosmeticAction(this::copyUpShuffledStatsOrder)
                 .build();
         copyUpEvolutionsHelper.apply(options);
 
@@ -291,30 +292,38 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
             );
 
             if (pk.getBaseStats() instanceof ShedinjaBaseStats sbs) {
-                // this allows shedinja to mostly copy up order, while also not putting points into HP
-                for (int i = 0; i < order.size(); i++) {
-                    if (order.get(i) == 0) {
-                        order.set(i, i);
-                    }
-                }
-                sbs.setStatRatios(
-                        stats.get(order.get(1)),
-                        stats.get(order.get(2)),
-                        stats.get(order.get(3)),
-                        stats.get(order.get(4)),
-                        stats.get(order.get(5))
-                );
+                setShuffledShedinjaStata(sbs, order, stats);
             } else {
-                bs.setStatRatios(
-                        stats.get(order.get(0)),
-                        stats.get(order.get(1)),
-                        stats.get(order.get(2)),
-                        stats.get(order.get(3)),
-                        stats.get(order.get(4)),
-                        stats.get(order.get(5))
-                );
+                setShuffledStats(bs, stats, order);
             }
         }
+    }
+
+    private void setShuffledShedinjaStata(ShedinjaBaseStats sbs, List<Integer> order, List<Integer> stats) {
+        // this allows shedinja to mostly copy up order, while also not putting points into HP
+        for (int i = 0; i < order.size(); i++) {
+            if (order.get(i) == 0) {
+                order.set(i, order.get(0));
+            }
+        }
+        sbs.setStatRatios(
+                stats.get(order.get(1)),
+                stats.get(order.get(2)),
+                stats.get(order.get(3)),
+                stats.get(order.get(4)),
+                stats.get(order.get(5))
+        );
+    }
+
+    private void setShuffledStats(BaseStats bs, List<Integer> stats, List<Integer> order) {
+        bs.setStatRatios(
+                stats.get(order.get(0)),
+                stats.get(order.get(1)),
+                stats.get(order.get(2)),
+                stats.get(order.get(3)),
+                stats.get(order.get(4)),
+                stats.get(order.get(5))
+        );
     }
 
     public void randomizeSpeciesStats() {

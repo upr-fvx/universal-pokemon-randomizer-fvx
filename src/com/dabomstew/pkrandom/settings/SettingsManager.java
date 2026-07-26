@@ -49,6 +49,11 @@ public class SettingsManager {
         return null;
     }
 
+    public SettingDefinition<?> getSettingDefinition(String settingName)
+    {
+        return settingStates.get(settingName).getDefinition();
+    }
+
     public <T> void setSetting(String settingName, T state) {
         //TODO
         //Should retrieve the setting, check that its type matches T (how exactly?) and throw if it doesn't,
@@ -68,6 +73,8 @@ public class SettingsManager {
     // or have their POSSIBLE values changed.
     // (Or more likely, a single listener that reports ANY of these events, since anything that listens for one
     // probably needs to listen for all.)
+    // (Also, it's easier to implement that way.)
+    // ...Actually, probably doesn't listen for "has value changed".
 
     private HashMap<String, SettingState<?>> settingStates;
     private HashMap<String, Set<String>> dependencies;

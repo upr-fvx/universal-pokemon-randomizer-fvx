@@ -7,6 +7,32 @@ import java.util.List;
 
 import static com.dabomstew.pkrandom.settings.SettingUtils.*;
 
+//The list of EVERY setting supported by the randomizer.
+
+//The types of setting definition are:
+//SimpleSettingDefinition: Any setting that does not have restrictions on its values (that is to say, any value
+// supported by the data type is applicable whenever the setting itself is supported and enabled.)
+//EnumSettingDefinition: A setting which is an enum type, which can disable certain values based on other settings
+// or RomHandler support. If you do not need to disable certain values, use a SimpleSettingDefinition.
+//NumericSettingDefinition: A setting that is a numeric type, which is restricted to a certain range. The range can
+// be restricted further based on other settings or RomHandler support.
+
+//Support is determined by a simple Predicate(RomHandler).
+//Enablement(? word?) is determined by SettingRestrictions, which contain two parts: The setting(s) which must be checked,
+// and the function to check them against.
+//Most cases can be handled by a SimpleSettingRestriction, which compares the value of a single setting against a predicate.
+//If there are multiple relevant settings, there is also MultiSettingRestriction, which combines the results of two
+// or more SettingRestrictions in an AND, OR, NAND, or NOR manner. (This can include other MultiSettingRestrictions.)
+//For more complicated checks (such as comparing one setting's value to another's) you may need to write your own
+// extension of SettingRestriction.
+
+//SettingsUtils contains several helpful functions for convenience:
+//isTrue and isFalse, which check the states of boolean settings.
+//TODO: enum and numeric helper functions
+//ofGeneration, notOfGeneration, atLeastGeneration, and atMostGeneration, which check the generation of a RomHandler.
+
+//Setting names should be unique. They also will (eventually) be used as ini keys, so they should (a) be relatively
+// human-readable, (b) contain no spaces nor the equals sign.
 public class Settings {
     public static final List<SettingDefinition<?>> ALL_SETTINGS;
 
@@ -69,6 +95,8 @@ public class Settings {
                     false, null, null)
     );
 
+    //TODO: complete list, move enum declarations to this file.
+
     static {
         List<SettingDefinition<?>> all = new ArrayList<>(GENERAL_OPTIONS);
         all.addAll(POKEMON_TRAITS);
@@ -76,11 +104,5 @@ public class Settings {
         all.addAll(FOE_POKEMON);
         ALL_SETTINGS = Collections.unmodifiableList(all);
     }
-
-
-
-
-
-
 
 }

@@ -4,10 +4,14 @@ import com.dabomstew.pkrandom.romhandlers.RomHandler;
 import com.sun.istack.internal.NotNull;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Predicate;
 
-public abstract class SettingDefinition<T> {
+//TODO: StringSettingDefinition
+//Possibly some other oddball ones
+
+public abstract class SettingDefinition<T extends Serializable> {
 
     //The setting's name. Should be a unique identifier. Should be relatively human-readable.
     protected final String name;

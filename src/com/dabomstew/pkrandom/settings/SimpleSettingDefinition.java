@@ -2,10 +2,11 @@ package com.dabomstew.pkrandom.settings;
 
 import com.dabomstew.pkrandom.romhandlers.RomHandler;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class SimpleSettingDefinition<T> extends SettingDefinition<T>  {
+public class SimpleSettingDefinition<T extends Serializable> extends SettingDefinition<T>  {
 
     //A simple SettingDefinition that makes no restrictions on values.
 

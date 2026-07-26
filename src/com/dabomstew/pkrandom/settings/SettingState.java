@@ -1,6 +1,8 @@
 package com.dabomstew.pkrandom.settings;
 
-public class SettingState<T> {
+import java.io.Serializable;
+
+public class SettingState<T extends Serializable> {
     private final SettingDefinition<T> definition;
     private T value;
 

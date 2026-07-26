@@ -263,7 +263,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     // === Tests for the base stat distribution ===
     // These are mostly just coverage tests checking for throwing,
     // since notions like "follow evolutions" get rather complicated
-    // to check automatically, but doing so manually is trivial. 
+    // to check automatically, but doing so manually is trivial.
 
     private SpeciesBaseStatRandomizer getSpeciesBaseStatRandomizer(Settings s) {
         return romHandler.generationOfPokemon() == 1
@@ -274,7 +274,6 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void shuffleSpeciesStats_StatValuesAreTheSame(String romName) {
-        // TODO: oh heck what's up with shedinja again? The bugger...
         activateRomHandler(romName);
 
         List<List<Integer>> statsBefore = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();

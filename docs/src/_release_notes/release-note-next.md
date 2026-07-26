@@ -48,7 +48,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - [The description of a new feature here.] (Issue #[issue num])
 
 ### Pokemon Evolutions
-- New Option: Adjust Evolution Levels. This option is only available when you randomize evolutions . If checked, level-up evolutions will have their levels algorithmically adjusted, to better fit the Pokemon before and after evolution (this reuses [the "estimated evo levels" algorithm](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/estimatedLevels.html)). <b>E.g.</b>, if a Pokemon evolves into Dragonite, it will do so at a high level.
+- New Option: Adjust Evolution Levels. This option is only available when you randomize evolutions or BSTs. If checked, level-up evolutions will have their levels algorithmically adjusted, to better fit the Pokemon before and after evolution (this reuses [the "estimated evo levels" algorithm](https://upr-fvx.github.io/universal-pokemon-randomizer-fvx/wikipages/estimatedLevels.html)). <b>E.g.</b>, if a Pokemon evolves into Dragonite, it will do so at a high level.
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]

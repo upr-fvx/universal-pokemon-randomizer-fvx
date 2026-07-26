@@ -1,6 +1,7 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.Settings;
+import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
@@ -16,6 +17,8 @@ import java.util.*;
 import java.util.function.BiConsumer;
 
 public class SpeciesBaseStatRandomizer extends Randomizer {
+
+    protected static final float WISHIWASHI_SCHOOL_MULTIPLIER = 1.8f;
 
     protected static final int MEGA_BST_BOOST = 100;
     protected static final int SUNKERN_BST = 180;
@@ -200,8 +203,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     private void copyShuffledBSTsToAltFormes() {
         AltFormeAction carryPercChangeAction = (baseForme, altForme) -> {
             float formeMultiplier = (float) altForme.getBST(true) / baseForme.getBST(true);
+            if (baseForme.getNumber() == SpeciesIDs.wishiwashi) {
+                // Wishiwashi-school's multiplier is so high (~3.54) that it maxes out almost
+                // all the time. This is both boring and totally breaks balance,
+                // so we give it another (still dramatically high) multiplier.
+                formeMultiplier = WISHIWASHI_SCHOOL_MULTIPLIER;
+            }
             int newBST = (int) (baseForme.getBST(false) * formeMultiplier);
-            // TODO: what to do with Wishiwashi-school? It almost always maxing out is boring.
             newBST = Math.min(newBST, altForme.getBaseStats().getMaxBST());
             altForme.getBaseStats().setBST(newBST);
 
@@ -408,10 +416,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         }
     }
 
+    /**
+     * Assigns the extra stat points to only those stats that Shedinja has,
+     * though with rounding and Shedinja having an externally distorted (for power levels) BST,
+     * the results are less obvious than this method might make them seem.<br>
+     * Note: nothing in this code covers a mon evolving *from* Shedinja.
+     */
     private void assignNewStatsForEvolutionShedinja(BaseStats fromBS, ShedinjaBaseStats toBS) {
-        // This is conceptually so muddy, what does this mean, really?
-        // And what if a mon evolves *from* Shedinja?
-        // TODO: think about it more
         double bstDiff = toBS.getBST() - fromBS.getBST();
 
         // Make weightings

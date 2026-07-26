@@ -43,25 +43,48 @@ import java.util.zip.CRC32;
 import com.dabomstew.pkrandom.Version;
 public class SettingsManager {
 
+    public <T> T getSetting(String settingName) {
+        //TODO
+        //Should retrieve the setting, then attempt a cast of its state, throwing an exception if the cast fails.
+        return null;
+    }
+
+    public <T> void setSetting(String settingName, T state) {
+        //TODO
+        //Should retrieve the setting, check that its type matches T (how exactly?) and throw if it doesn't,
+        //actually set the state to the given value,
+        //then run checkDependencies for the changed setting.
+        return;
+    }
+
+    private void checkDependencies(String settingName) {
+        //TODO
+        //Should check all settings listed as dependencies for the given setting against its current state,
+        //enable/disable and return them to default if necessary,
+        //then run checkDependencies again on any settings which had their values change as a result.
+    }
+
+    //TODO: event listeners for when settings are enabled, disabled, have their values changed,
+    // or have their POSSIBLE values changed.
+    // (Or more likely, a single listener that reports ANY of these events, since anything that listens for one
+    // probably needs to listen for all.)
+
+    private HashMap<String, SettingState<?>> settingStates;
+    private HashMap<String, Set<String>> dependencies;
+    //A reverse lookup of setting restrictions.
+    //Needed so that dependent settings can be updated when a setting is changed.
+    //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)
+    //which might be a little trickier to determine.
+
+
+    //*********************************************************
+    //BELOW LIES PRE-REFACTOR CODE
+
     public static final int VERSION = Version.LATEST.id;
 
     public static final int LENGTH_OF_SETTINGS_DATA = 67;
 
     public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
-
-    public <T> T getSetting(String settingName) {
-        //TODO
-        return null;
-    }
-
-    public <T> void setSetting(String settingName, T state)
-    {
-        //TODO
-        return;
-    }
-
-    private HashMap<String, SettingState<?>> settingStates;
-    private HashMap<String, Set<String>> dependencies;
 
     private CustomNamesSet customNames;
 

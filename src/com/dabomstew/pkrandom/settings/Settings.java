@@ -16,6 +16,8 @@ import static com.dabomstew.pkrandom.settings.SettingUtils.*;
 // or RomHandler support. If you do not need to disable certain values, use a SimpleSettingDefinition.
 //NumericSettingDefinition: A setting that is a numeric type, which is restricted to a certain range. The range can
 // be restricted further based on other settings or RomHandler support.
+//TODO: StringSettingDefinition, for restrictions like charset and string length.
+//TODO: Image settings??
 
 //Support is determined by a simple Predicate(RomHandler).
 //Enablement(? word?) is determined by SettingRestrictions, which contain two parts: The setting(s) which must be checked,

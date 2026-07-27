@@ -7,9 +7,13 @@ assignees: ''
 
 ---
 
-<!-- Be aware that while feature requests are welcome, they are done at my own pace and discretion. 
+<!-- Be aware that while feature requests are welcome, they are done at our own pace and discretion. 
 If you want to guarantee a feature, you will have to implement it in the codebase yourself. 
 In that case, the "Contribution Idea" issue template may be used for discussion and pointers.-->
+
+<!-- If you have multiple ideas for features you want to see, 
+consider separating them into multiple feature requests, one for each idea/feature. 
+This might feel spammy, but it actually makes it easier for us to keep track of the requests.-->
 
 **Is your idea a new setting, a change to an existing setting, or something else? Please describe clearly:** 
 

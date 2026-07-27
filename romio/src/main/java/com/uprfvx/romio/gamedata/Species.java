@@ -1,0 +1,1309 @@
+package com.uprfvx.romio.gamedata;
+
+/*----------------------------------------------------------------------------*/
+/*--  Species.java                                                          --*/
+/*--                                                                        --*/
+/*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
+/*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
+/*--  Pokemon and any associated names and the like are                     --*/
+/*--  trademark and (C) Nintendo 1996-2020.                                 --*/
+/*--                                                                        --*/
+/*--  The custom code written here is licensed under the terms of the GPL:  --*/
+/*--                                                                        --*/
+/*--  This program is free software: you can redistribute it and/or modify  --*/
+/*--  it under the terms of the GNU General Public License as published by  --*/
+/*--  the Free Software Foundation, either version 3 of the License, or     --*/
+/*--  (at your option) any later version.                                   --*/
+/*--                                                                        --*/
+/*--  This program is distributed in the hope that it will be useful,       --*/
+/*--  but WITHOUT ANY WARRANTY; without even the implied warranty of        --*/
+/*--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the          --*/
+/*--  GNU General Public License for more details.                          --*/
+/*--                                                                        --*/
+/*--  You should have received a copy of the GNU General Public License     --*/
+/*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
+/*----------------------------------------------------------------------------*/
+
+import com.uprfvx.romio.constants.SpeciesIDs;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
+import com.uprfvx.romio.gamedata.basestats.Gen1BaseStats;
+import com.uprfvx.romio.gamedata.basestats.ShedinjaBaseStats;
+import com.uprfvx.romio.graphics.palettes.Palette;
+import com.uprfvx.romio.graphics.palettes.SGBPaletteID;
+
+import java.util.*;
+import java.util.function.Function;
+
+/**
+ * Represents a Pokémon species or forme.
+ * <br><br>
+ * There are a few different kinds of formes:
+ * <dl>
+ *     <dt>Base Formes:</dt>
+ *     <dd>The default formes. Obvious for some mons, e.g., Deoxys or Venusaur.
+ *     For others, it is less obvious, but one always exists.<br>
+ *     <b>E.g.</b>, Wormadam-Plant is the base forme of Wormadam. Being the base forme,
+ *     it will be referred to as just "Wormadam" in most places by the Randomizer.
+ *     <br><b>Note:</b> All Pokémon species without alt formes, still count as base formes.</dd>
+ *
+ *     <dt>Alt Formes:</dt>
+ *     <dd>All other formes. An alt forme can get its
+ *     base forme using {@link #getBaseForme()}. A base forme can get its alt formes
+ *     using {@link #getForme(int)} or {@link #getAltFormes()}.<br>
+ *     <b>E.g.</b>, Deoxys-Attack, Venusaur-Mega, Wormadam-Sandy.</dd>
+ *
+ *     <dt>Alolan Formes:</dt>
+ *     <dd>Alt formes that are Alolan twists on the base forme.<br>
+ *     <b>E.g</b>, Alolan Raichu.</dd>
+ *
+ *     <dt>Cosmetic Formes:</dt>
+ *     <dd>Alt formes that only differ from their base forme, in non-essential ways.</dd>
+ *
+ *     <dt>True Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes that do not have stat blocks within their game's data,
+ *     which are thus not loaded in as Species objects.<br>
+ *     <b>E.g.</b>, the formes of Burmy, Shellos.</dd>
+ *
+ *     <dt>Essentially Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes with stat blocks that are thus loaded as Species objects,
+ *     but which should be treated as "cosmetic". When modifying the attributes of a
+ *     base forme, they should be carried to the cosmetic forme as well, and when
+ *     picking a random cosmetic forme they should be included.<br>
+ *     <b>E.g.</b>, the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+ *     </dd>
+ *
+ *     <dt>Ignore Cosmetic Formes:</dt>
+ *     <dd>Cosmetic formes that are identical or confusing somehow,
+ *     that should thus be ignored when picking random cosmetic formes.<br>
+ *     These can be either true or essential.<br>
+ *     <b>E.g.</b>, the formes of Arceus, Genesect, Xerneas, the different Minior-Core formes.</dd>
+ *
+ *     <dt>Conceptual Base Formes:</dt>
+ *     <dd>The formes an alt forme is conceptually based on. For most alt formes, this is
+ *     the same as the base forme. For some, it is another alt forme. Relevant when copying
+ *     attributes to alt formes.<br>
+ *     <b>E.g.,</b> Raticate-Alolan is the conceptual base forme of Raticate-Alolan-Totem.
+ *     When copying attributes, this must be used instead of the base forme, so Raticate-Alolan-Totem
+ *     gets the attributes of Raticate-Alolan.</dd>
+ * </dl>
+ */
+public class Species implements Comparable<Species> {
+    //TODO: make this backed by an unmodifiable original (set when saveOriginalData() is called, I suppose)
+    //TODO: add a reset method that reverts this to original (for testing)
+
+    private String name;
+    private final int number;
+
+    private Map<Integer, Species> formes = new HashMap<>(Map.of(0, this));
+    private List<Integer> cosmeticFormeNumbers = new ArrayList<>(List.of(0));
+    private List<Integer> ignoreCosmeticFormeNumbers = new ArrayList<>();
+
+    private String formeSuffix = "";
+    private int formeNumber = 0;
+    private Species baseForme = null;
+    private Species conceptualBaseForme = null; // for "formes-of-formes"
+
+    private boolean megaEvolution = false;
+    private Item megaEvolutionItem = null;
+    private boolean alolan = false;
+    private boolean essentiallyCosmetic = false;
+
+    private int generation = -1;
+
+    private SpeciesSet originalEvolvedForms, originalPreEvolvedForms;
+
+    private Type primaryType;
+    private Type secondaryType;
+
+    private Type originalPrimaryType;
+    private Type originalSecondaryType;
+    private boolean hasSetPrimaryType;
+    private boolean hasSetSecondaryType;
+
+    private BaseStats baseStats;
+    private int originalBST = -1;
+
+    private int ability1;
+    private int ability2;
+    private int ability3;
+
+    private int catchRate;
+    private int expYield;
+    private EVYield evYield;
+
+    private Item guaranteedHeldItem;
+    private Item commonHeldItem;
+    private Item rareHeldItem;
+    private Item darkGrassHeldItem;
+
+    private int genderRatio;
+
+    private int frontImageDimensions;
+
+    private int callRate;
+
+    private ExpCurve growthCurve;
+
+    private BreedingInfo breedingInfo;
+
+    private SGBPaletteID paletteID; // only relevant for Gen 1
+    private Palette normalPalette;
+    private Palette shinyPalette;
+
+    private List<Evolution> evolutionsFrom = new ArrayList<>();
+    private List<Evolution> evolutionsTo = new ArrayList<>();
+
+    public Species(int number) {
+        this.number = number;
+    }
+
+    /**
+     * Short for {@link #getBaseForme()}.{@link #getNumber()}
+     */
+    public int getBaseNumber() {
+        return getBaseForme().getNumber();
+    }
+
+    //Evolutionary Relatives functions
+    /**
+     * Determines whether this {@link Species} is a legal evolution stage at the given level, i.e., base stage or not
+     * an early evolved Pokemon (if this {@link Species} does not have a pre-evolution, its formes are checked a well).
+     * @param level The level of the given {@link Species}.
+     * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as legal
+     *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
+     * @return A boolean, true if this {@link Species} is a legal evolution at the level.
+     */
+    public boolean isLegalEvolutionAtLevel(int level, double evoLvlModifier) {
+        boolean isLegalEvo = true; // If this or its formes do not have any evolutions to, then it is a legal evolution.
+        for (Evolution evo : getEvolutionsOfForme(Species::getEvolutionsTo)) {
+            if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
+                return true; // One evolution to that is legal suffices
+            }
+            isLegalEvo = false;
+        }
+        return isLegalEvo; // Only true if there was no evolution to, otherwise false
+    }
+
+    /**
+     * Determines whether this {@link Species} has a legal evolution at the given level using the estimated evolution
+     * levels of its evolutions (if this {@link Species} does not have an evolution, its formes are checked a well).
+     * @param level The level of the given {@link Species}.
+     * @param evoLvlModifier Scaling factor for the (estimated) evolution level, e.g., if 1.1, only flag as having legal
+     *                       evolution if level is 10% higher than the (estimated) evolution level of the given {@link Species}.
+     * @return A boolean, true if this {@link Species} has a legal evolution at this level.
+     */
+    public boolean hasLegalEvolutionAtLevel(int level, double evoLvlModifier) {
+        for (Evolution evo : getEvolutionsOfForme(Species::getEvolutionsFrom)) {
+            if (level >= evoLvlModifier * evo.getEstimatedEvoLvl()) {
+                return true; // One evolution from that is legal suffices
+            }
+        }
+        return false; // Either no evolutions from or no legal evolution from. Either way, no legal evolution at level
+    }
+
+    /**
+     * Gets the relevant evolutions to/from of this {@link Species} or its formes.
+     * @param evolutionsAccessor Either Species.getEvolutionsFrom() or Species.getEvolutionsTo().
+     * @return A list of the evolutions to/from this {@link Species}.
+     */
+    private List<Evolution> getEvolutionsOfForme(Function<Species, List<Evolution>> evolutionsAccessor) {
+        Species species = this;
+        if (evolutionsAccessor.apply(species).isEmpty()) {
+            if (isBaseForme()) {
+                // some alt forme might carry evolution info that the base forme doesn't have, e.g. Alolan Raichu
+                for (Species altFormes : getAltFormes()) {
+                    if (!evolutionsAccessor.apply(altFormes).isEmpty()) {
+                        species = altFormes;
+                        break;
+                    }
+                }
+            } else {
+                // If species does not have the relevant evolutions but a base forme, try to determine if the base forme
+                // has the relevant evolutions, e.g., Eternal Flower Floette for evolutionsFrom or Megas for evolutionsTo
+                while (!species.isBaseForme() && evolutionsAccessor.apply(species.getConceptualBaseForme()).isEmpty()) {
+                    species = species.getConceptualBaseForme();
+                }
+                species = species.getConceptualBaseForme();
+            }
+        }
+
+        return evolutionsAccessor.apply(species);
+    }
+
+    /**
+     * Gets all {@link Species} that this {@link Species} can evolve directly into.
+     * Does not include Mega Evolution.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return A {@link SpeciesSet} containing all possible evolved forms of this {@link Species}.
+     */
+    public SpeciesSet getEvolvedSpecies(boolean useOriginal) {
+        SpeciesSet evolvedSpecies;
+        if(useOriginal) {
+            if(this.originalEvolvedForms == null) {
+                evolvedSpecies = new SpeciesSet();
+            } else {
+                evolvedSpecies = new SpeciesSet(this.originalEvolvedForms);
+            }
+        } else {
+            evolvedSpecies = new SpeciesSet();
+            for (Evolution evo : evolutionsFrom) {
+                evolvedSpecies.add(evo.getTo());
+            }
+        }
+
+        if(!isBaseForme()) {
+            evolvedSpecies.addAll(baseForme.getEvolvedSpecies(useOriginal));
+        }
+        return evolvedSpecies;
+    }
+
+    /**
+     * Gets all {@link Species} that can evolve directly into this {@link Species}.
+     * Does not include Mega Evolution.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return A new {@link SpeciesSet} containing all pre-evolved forms of this {@link Species}.
+     */
+    public SpeciesSet getPreEvolvedSpecies(boolean useOriginal) {
+        SpeciesSet evolvedSpecies;
+
+        if(useOriginal) {
+            if(this.originalPreEvolvedForms == null) {
+                evolvedSpecies = new SpeciesSet();
+            } else {
+                evolvedSpecies = new SpeciesSet(this.originalPreEvolvedForms);
+            }
+        } else {
+            evolvedSpecies = new SpeciesSet();
+            for (Evolution evo : evolutionsTo) {
+                evolvedSpecies.add(evo.getFrom());
+            }
+        }
+
+        if(!isBaseForme()) {
+            evolvedSpecies.addAll(baseForme.getPreEvolvedSpecies(useOriginal));
+            //TODO: improve handling for non-evolving forms of evolving species,
+            // e.g. Battle Bond Greninja, Eternal Flower Floette
+        }
+        return evolvedSpecies;
+    }
+
+    /**
+     * Gets all {@link Species} that this {@link Species} is related to by evolution.
+     * Includes itself. Does not include Mega Evolution.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return a {@link SpeciesSet} containing all {@link Species} this {@link Species} is related to (including itself)
+     */
+    public SpeciesSet getFamily(boolean useOriginal) {
+        SpeciesSet family = new SpeciesSet();
+
+        Queue<Species> toAdd = new ArrayDeque<>();
+        toAdd.add(this);
+        while(!toAdd.isEmpty()) {
+            Species adding = toAdd.remove();
+            if(family.contains(adding)) {
+                continue;
+            }
+            family.add(adding);
+
+            toAdd.addAll(adding.getEvolvedSpecies(useOriginal));
+            toAdd.addAll(adding.getPreEvolvedSpecies(useOriginal));
+        }
+
+        return family;
+    }
+
+    /**
+     * A tiny class intended to remove reliance on javafx.util.Pair.
+     * Holds a given species and its relation to another species.
+     */
+    private static class RelationRecord {
+        Species relative;
+        int relation;
+
+        RelationRecord(Species relative, int relation) {
+            this.relative = relative;
+            this.relation = relation;
+        }
+    }
+
+    /**
+     * Gets the relative position of the given {@link Species} in the evolutionary family.
+     * If the family is a cycle, will return the closest path. This is usually, but
+     * not always, the lowest absolute value.
+     * @return A number indicating the relative position of the given {@link Species}.
+     *         For example, if the given {@link Species} evolves directly into this {@link Species},
+     *         the number will be -1.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @throws IllegalArgumentException if the {@link Species} are not related.
+     */
+    public int getRelation(Species relative, boolean useOriginal) {
+        Queue<RelationRecord> toCheck = new ArrayDeque<>();
+        SpeciesSet checked = new SpeciesSet();
+        toCheck.add(new RelationRecord(this, 0));
+
+        while(!toCheck.isEmpty()) {
+            RelationRecord current = toCheck.remove();
+            Species currentSpecies = current.relative;
+            int currentPosition = current.relation;
+            if(checked.contains(currentSpecies)) {
+                continue;
+            }
+            checked.add(currentSpecies);
+
+            if(currentSpecies == relative) {
+                return currentPosition;
+            }
+
+            for(Species evo : currentSpecies.getEvolvedSpecies(useOriginal)) {
+                toCheck.add(new RelationRecord(evo, currentPosition + 1));
+            }
+            for(Species evo : currentSpecies.getPreEvolvedSpecies(useOriginal)) {
+                toCheck.add(new RelationRecord(evo, currentPosition - 1));
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot find relation of a non-related {@link Species}!");
+    }
+
+    /**
+     * Gets all {@link Species} related to this one that are at the given relative position, evolution-wise,
+     * from this {@link Species}, including those on different branches.
+     * For example, a value of +1 on a Cascoon would give both Dustox and Beautifly.
+     * @param position The relative position to find.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return A {@link SpeciesSet} including all {@link Species} at this relative position, or an empty set if
+     *         there are none.
+     */
+    public SpeciesSet getRelativesAtPosition(int position, boolean useOriginal) {
+        Queue<RelationRecord> toCheck = new ArrayDeque<>();
+        SpeciesSet checked = new SpeciesSet();
+        SpeciesSet relatives = new SpeciesSet();
+        toCheck.add(new RelationRecord(this, 0));
+
+        while(!toCheck.isEmpty()) {
+            RelationRecord current = toCheck.remove();
+            Species currentSpecies = current.relative;
+            int currentPosition = current.relation;
+            if(checked.contains(currentSpecies)) {
+                continue;
+            }
+            checked.add(currentSpecies);
+
+            if(currentPosition == position) {
+                relatives.add(currentSpecies);
+            }
+
+            for(Species evo : currentSpecies.getEvolvedSpecies(useOriginal)) {
+                toCheck.add(new RelationRecord(evo, currentPosition + 1));
+            }
+            for(Species evo : currentSpecies.getPreEvolvedSpecies(useOriginal)) {
+                toCheck.add(new RelationRecord(evo, currentPosition - 1));
+            }
+        }
+
+        return relatives;
+    }
+
+    /**
+     * Gets all {@link Species} related to this one by the given number of evolutions (or pre-evolutions,
+     * if position is negative).
+     * Does not include those on different branches.
+     * @param position The relative position to find.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return A {@link SpeciesSet} including all {@link Species} at this relative position, or an empty set if
+     *         there are none.
+     */
+    public SpeciesSet getRelativesAtPositionSameBranch(int position, boolean useOriginal) {
+        SpeciesSet currentStage = new SpeciesSet(this);
+
+        if(position == 0) {
+            return currentStage;
+        }
+
+        int step = position > 0 ? 1 : -1;
+
+        for(int i = 0; i != position; i += step) {
+            SpeciesSet nextStage = new SpeciesSet();
+            for(Species spec : currentStage) {
+                nextStage.addAll(position > 0 ? spec.getEvolvedSpecies(useOriginal)
+                        : spec.getPreEvolvedSpecies(useOriginal));
+            }
+
+            currentStage = nextStage;
+        }
+
+        return currentStage;
+    }
+
+    //TODO: improve behaviour around cycles
+    //(For these and the SpeciesSet versions)
+    //...also likely to have odd behavior with merged evolutions of different lengths
+    /**
+     * Gets the maximum number of times this {@link Species} can evolve into distinct {@link Species}.
+     * If an evolutionary cycle is found, will count each evolution once,
+     * including the one back to the initial {@link Species}.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return The highest count of evolution stages after this {@link Species}.
+     */
+    public int getStagesAfter(boolean useOriginal) {
+        int stages = 0;
+        SpeciesSet currentStage = new SpeciesSet(this);
+        SpeciesSet checked = new SpeciesSet();
+
+        while(!currentStage.isEmpty()) {
+            SpeciesSet nextStage = new SpeciesSet();
+            for(Species spec : currentStage) {
+                if(checked.contains(spec)) {
+                    continue;
+                }
+                nextStage.addAll(spec.getEvolvedSpecies(useOriginal));
+                checked.add(spec);
+            }
+            if(!nextStage.isEmpty()) {
+                stages++;
+            }
+            currentStage = nextStage;
+        }
+
+        return stages;
+    }
+
+    /**
+     * Gets the maximum number of times a {@link Species} can evolve into distinct {@link Species} before this one.
+     * If an evolutionary cycle is found, will count each evolution once,
+     * including the one back to the initial {@link Species}.
+     * @param useOriginal Whether to use the evolution data from before randomization.
+     * @return The highest count of evolutionary steps before this {@link Species}.
+     */
+    public int getStagesBefore(boolean useOriginal) {
+        int stages = 0;
+        SpeciesSet currentStage = new SpeciesSet(this);
+        SpeciesSet checked = new SpeciesSet();
+
+        while(!currentStage.isEmpty()) {
+            SpeciesSet previousStage = new SpeciesSet();
+            for(Species spec : currentStage) {
+                if(checked.contains(spec)) {
+                    continue;
+                }
+                previousStage.addAll(spec.getPreEvolvedSpecies(useOriginal));
+                checked.add(spec);
+            }
+            if(!previousStage.isEmpty()) {
+                stages++;
+            }
+            currentStage = previousStage;
+        }
+
+        return stages;
+    }
+
+
+    /**
+     * Saves certain pieces of data that can be randomized, but that
+     * we want to know the original version of for later randomization.
+     * Currently: Evolutions. (Types are done elsewhere.)
+     * Must be called before randomizing any of this data.
+     */
+    public void saveOriginalData() {
+        //originalPrimaryType = primaryType;
+        //originalSecondaryType = secondaryType;
+        originalEvolvedForms = SpeciesSet.unmodifiable(getEvolvedSpecies(false));
+        originalPreEvolvedForms = SpeciesSet.unmodifiable(getPreEvolvedSpecies(false));
+    }
+
+    public void copyBaseFormeAbilities(Species other) {
+        ability1 = other.ability1;
+        ability2 = other.ability2;
+        ability3 = other.ability3;
+    }
+
+    /**
+     * For debugging. Number is enough to identify a mon, but isn't immediately recognizable.
+     * Full name is immediately recognizable but some formes share the same full name.
+     */
+    public String getNumberAndFullName() {
+        return "#" + number + " - " + getFullName();
+    }
+
+    public String getFullName() {
+        return name + formeSuffix;
+    }
+
+    @Override
+    public String toString() {
+        return "Species [name=" + name + formeSuffix + ", number=" + number + ", primaryType=" + primaryType
+                + ", secondaryType=" + secondaryType + ", " + baseStats + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        // Don't change this hash!! Things *will* break.
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + number;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Species other = (Species) obj;
+        return number == other.number;
+    }
+
+    @Override
+    public int compareTo(Species o) {
+        return number - o.number;
+    }
+
+    private static final List<Integer> legendaries = Arrays.asList(SpeciesIDs.articuno, SpeciesIDs.zapdos, SpeciesIDs.moltres,
+            SpeciesIDs.mewtwo, SpeciesIDs.mew, SpeciesIDs.raikou, SpeciesIDs.entei, SpeciesIDs.suicune, SpeciesIDs.lugia, SpeciesIDs.hoOh,
+            SpeciesIDs.celebi, SpeciesIDs.regirock, SpeciesIDs.regice, SpeciesIDs.registeel, SpeciesIDs.latias, SpeciesIDs.latios,
+            SpeciesIDs.kyogre, SpeciesIDs.groudon, SpeciesIDs.rayquaza, SpeciesIDs.jirachi, SpeciesIDs.deoxys, SpeciesIDs.uxie,
+            SpeciesIDs.mesprit, SpeciesIDs.azelf, SpeciesIDs.dialga, SpeciesIDs.palkia, SpeciesIDs.heatran, SpeciesIDs.regigigas,
+            SpeciesIDs.giratina, SpeciesIDs.cresselia, SpeciesIDs.phione, SpeciesIDs.manaphy, SpeciesIDs.darkrai, SpeciesIDs.shaymin,
+            SpeciesIDs.arceus, SpeciesIDs.victini, SpeciesIDs.cobalion, SpeciesIDs.terrakion, SpeciesIDs.virizion, SpeciesIDs.tornadus,
+            SpeciesIDs.thundurus, SpeciesIDs.reshiram, SpeciesIDs.zekrom, SpeciesIDs.landorus, SpeciesIDs.kyurem, SpeciesIDs.keldeo,
+            SpeciesIDs.meloetta, SpeciesIDs.genesect, SpeciesIDs.xerneas, SpeciesIDs.yveltal, SpeciesIDs.zygarde, SpeciesIDs.diancie,
+            SpeciesIDs.hoopa, SpeciesIDs.volcanion, SpeciesIDs.typeNull, SpeciesIDs.silvally, SpeciesIDs.tapuKoko, SpeciesIDs.tapuLele,
+            SpeciesIDs.tapuBulu, SpeciesIDs.tapuFini, SpeciesIDs.cosmog, SpeciesIDs.cosmoem, SpeciesIDs.solgaleo, SpeciesIDs.lunala,
+            SpeciesIDs.necrozma, SpeciesIDs.magearna, SpeciesIDs.marshadow, SpeciesIDs.zeraora);
+
+    private static final List<Integer> strongLegendaries = Arrays.asList(SpeciesIDs.mewtwo, SpeciesIDs.lugia, SpeciesIDs.hoOh,
+            SpeciesIDs.kyogre, SpeciesIDs.groudon, SpeciesIDs.rayquaza, SpeciesIDs.dialga, SpeciesIDs.palkia, SpeciesIDs.regigigas,
+            SpeciesIDs.giratina, SpeciesIDs.arceus, SpeciesIDs.reshiram, SpeciesIDs.zekrom, SpeciesIDs.kyurem, SpeciesIDs.xerneas,
+            SpeciesIDs.yveltal, SpeciesIDs.cosmog, SpeciesIDs.cosmoem, SpeciesIDs.solgaleo, SpeciesIDs.lunala);
+
+    private static final List<Integer> ultraBeasts = Arrays.asList(SpeciesIDs.nihilego, SpeciesIDs.buzzwole, SpeciesIDs.pheromosa,
+            SpeciesIDs.xurkitree, SpeciesIDs.celesteela, SpeciesIDs.kartana, SpeciesIDs.guzzlord, SpeciesIDs.poipole, SpeciesIDs.naganadel,
+            SpeciesIDs.stakataka, SpeciesIDs.blacephalon);
+
+    public boolean isLegendary() {
+        return legendaries.contains(getBaseForme().number);
+    }
+
+    public boolean isStrongLegendary() {
+        return strongLegendaries.contains(getBaseForme().number);
+    }
+
+    // This method can only be used in contexts where alt formes are NOT involved; otherwise, some alt formes
+    // will be considered as Ultra Beasts in SM.
+    // In contexts where formes are involved, use "if (ultraBeastList.contains(...))" instead,
+    // assuming "checkSpeciesRestrictions" has been used at some point beforehand.
+    public boolean isUltraBeast() {
+        return ultraBeasts.contains(this.number);
+    }
+
+    /**
+     * Returns an unmodifiable {@link List} of the forme numbers of this Species and its cosmetic formes.
+     */
+    public List<Integer> getCosmeticFormeNumbers() {
+        return Collections.unmodifiableList(cosmeticFormeNumbers);
+    }
+
+    /**
+     * Returns an unmodifiable {@link List} of this Species' ignore cosmetic forme numbers.
+     */
+    public List<Integer> getIgnoreCosmeticFormeNumbers() {
+        return Collections.unmodifiableList(ignoreCosmeticFormeNumbers);
+    }
+
+    /**
+     * Gets a random cosmetic forme of this Species, including itself.
+     * Ignore cosmetic formes are not picked.
+     * @param random A seeded random number generator.
+     * @return A forme number for a random cosmetic forme of this Species, including itself.
+     */
+    public int getRandomCosmeticFormeNumber(Random random) {
+        int formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
+        while (ignoreCosmeticFormeNumbers.contains(formeNum)) {
+            formeNum = cosmeticFormeNumbers.get(random.nextInt(cosmeticFormeNumbers.size()));
+        }
+        return formeNum;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public String getFormeSuffix() {
+        return formeSuffix;
+    }
+
+    public void setFormeSuffix(String formeSuffix) {
+        this.formeSuffix = formeSuffix;
+    }
+
+    /**
+     * Returns the base forme of this Species, or itself if it is the base forme.<br>
+     * E.g. Deoxys and Deoxys-Attack would both return Deoxys, and Gloom would return Gloom.
+     */
+    public Species getBaseForme() {
+        return isBaseForme() ? this : baseForme;
+    }
+
+    /**
+     * Returns whether this {@link Species} is a base forme.
+     * @return False if the {@link Species} has a different base forme, true otherwise.
+     */
+    public boolean isBaseForme() {
+        return baseForme == null;
+    }
+
+    /**
+     * Returns the conceptual base forme. If no conceptual base forme has been set
+     * (via {@link #setConceptualBaseForme(Species)}), returns {@link #getBaseForme()}.
+     */
+    public Species getConceptualBaseForme() {
+        return conceptualBaseForme == null ? getBaseForme() : conceptualBaseForme;
+    }
+
+    /**
+     * Sets the conceptual base forme. This is only possible if this Species and
+     * {@code conceptualBaseForme} are alt formes of the same base forme.
+     */
+    public void setConceptualBaseForme(Species conceptualBaseForme) {
+        if (this.conceptualBaseForme != null) {
+            throw new IllegalStateException(String.format(
+                    "This Species (%s) already has a conceptual base forme (%s)",
+                    getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
+        }
+        if (isBaseForme()) {
+            throw new IllegalStateException("This Species (" + getNumberAndFullName() + ") must be an alt forme");
+        }
+        if (conceptualBaseForme.isBaseForme()) {
+            throw new IllegalArgumentException("conceptualBaseForme (" + getNumberAndFullName() + ") must be an alt forme");
+        }
+        if (conceptualBaseForme.baseForme != baseForme) {
+            throw new IllegalStateException(String.format(
+                    "This Species (%s) and conceptualBaseForme (%s) must share the same base forme",
+                    getNumberAndFullName(), conceptualBaseForme.getNumberAndFullName()));
+        }
+        this.conceptualBaseForme = conceptualBaseForme;
+        this.formeSuffix = conceptualBaseForme.formeSuffix + this.formeSuffix;
+    }
+
+    /**
+     * Registers an altForme Species with a given formeNumber.
+     */
+    public void addAltForme(int formeNumber, Species altForme) {
+//        System.out.printf("New forme to %s, formeNumber=%d, %s%n",
+//                getNumberAndFullName(), formeNumber, altForme.getNumberAndFullName());
+        if (altForme.equals(this)) {
+            throw new IllegalArgumentException(String.format(
+                    "Can't add Species %s as its own alt forme.", getNumberAndFullName()));
+        }
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        if (formes.containsKey(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
+        if (!altForme.isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "altForme (Species %s) is already the alt forme of another Species (%s)",
+                    altForme.getNumberAndFullName(), altForme.baseForme.getNumberAndFullName()
+            ));
+        }
+        formes.put(formeNumber, altForme);
+        altForme.baseForme = this;
+        altForme.formeNumber = formeNumber;
+    }
+
+    /**
+     * Registers a formeNumber as a cosmetic forme. This is useful since cosmetic formes are largely not loaded as
+     * Species objects (e.g. those of Burmy), but still need to be known of.
+     */
+    public void addCosmeticAltForme(int formeNumber) {
+//        System.out.printf("New cosmetic forme to %s, formeNumber=%d%n", getNumberAndFullName(), formeNumber);
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        if (formes.containsKey(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s already has a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
+        formes.put(formeNumber, this);
+        cosmeticFormeNumbers.add(formeNumber);
+    }
+
+    /**
+     * Returns the forme of this Species with the given formeNumber.<br>
+     * Returns this Species, if formeNumber==0, or that of a true cosmetic forme.<br>
+     * @throws IllegalStateException if this is an alt forme
+     * @throws NoSuchElementException if no forme with the formeNumber exists
+     */
+    public Species getForme(int formeNumber) {
+        if (!isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "Species %s is an alt forme, and cannot have alt formes of its own.", getNumberAndFullName()));
+        }
+        Species forme = formes.get(formeNumber);
+        if (forme == null) {
+            throw new NoSuchElementException(String.format(
+                    "Species %s does not have a forme with formeNumber=%d", getNumberAndFullName(), formeNumber));
+        }
+        return forme;
+    }
+
+    /**
+     * Returns whether the given formeNumber represents a valid forme, for use with {@link #getForme(int)};
+     */
+    public boolean isValidFormeNumber(int formeNumber) {
+        return formes.containsKey(formeNumber);
+    }
+
+    /**
+     * Returns a {@link SpeciesSet} containing all alt formes of this Species, but <b>not</b> itself.
+     */
+    public SpeciesSet getAltFormes() {
+        return new SpeciesSet(formes.values()).filter(pk -> !pk.equals(this));
+    }
+
+    public int getFormeNumber() {
+        return formeNumber;
+    }
+
+    /**
+     * Returns whether this is a mega evolution.
+     */
+    public boolean isMegaEvolution() {
+        return megaEvolution;
+    }
+
+    /**
+     * Marks this alt forme as a mega evolution.
+     * @param item The item this needs to mega evolve. Can be null, in which no item is required (Mega Rayquaza).
+     * @throws IllegalStateException if this is not an alt forme.
+     */
+    public void setMegaEvolution(Item item) {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.megaEvolution = true;
+        this.megaEvolutionItem = item;
+    }
+
+    public boolean needsMegaEvolutionItem() {
+        return megaEvolutionItem != null;
+    }
+
+    public Item getMegaEvolutionItem() {
+        return megaEvolutionItem;
+    }
+
+    /**
+     * Returns whether this is an Alolan forme.
+     */
+    public boolean isAlolan() {
+        return alolan;
+    }
+
+    public void setAlolan() {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.alolan = true;
+    }
+
+    /**
+     * Returns true if this is an "essentially cosmetic" alt forme. "Essentially",
+     * because "true" cosmetic alt formes don't get loaded as Species objects.<br>
+     * <b>E.g.</b>, the formes of Furfrou, Pumpkaboo, the non-Eternal formes of Floette.
+     * <br><br>
+     * Despite the name, not all "cosmetic" replacements are purely cosmetic
+     * (e.g. Pumpkaboo's sizing), but we view them as interchangeable nonetheless.
+     */
+    public boolean isEssentiallyCosmetic() {
+        return essentiallyCosmetic;
+    }
+
+    public void setEssentiallyCosmetic() {
+        if (isBaseForme()) {
+            throw new IllegalStateException(getNumberAndFullName() + " is a base forme.");
+        }
+        this.essentiallyCosmetic = true;
+        this.cosmeticFormeNumbers.add(formeNumber);
+    }
+
+    public void setIgnoreCosmetic() {
+        if (!essentiallyCosmetic) {
+            throw new IllegalStateException(getNumberAndFullName() + " is not an essentially cosmetic forme.");
+        }
+        baseForme.ignoreCosmeticFormeNumbers.add(formeNumber);
+    }
+
+    /**
+     * Sets the true cosmetic forme as being "ignore cosmetic".
+     * For essentially cosmetic formes, use {@link #setIgnoreCosmetic()}.
+     * @param formeNumber the forme number of the to-be ignore cosmetic forme
+     * @throws IllegalStateException if formeNumber is not a cosmetic forme of this species,
+     *                               or if it is the forme number of an essentially cosmetic forme.
+     */
+    public void setIgnoreCosmeticAltForme(int formeNumber) {
+        if (!cosmeticFormeNumbers.contains(formeNumber)) {
+            throw new IllegalStateException(String.format(
+                    "Species %s does not have a cosmetic forme with formeNumber=%d.",
+                    getNumberAndFullName(), formeNumber));
+        }
+        if (!getForme(formeNumber).isBaseForme()) {
+            throw new IllegalStateException(String.format(
+                    "The forme of %s with formeNumber=%d is essentially cosmetic. " +
+                            "This method is only for true cosmetic formes.", getNumberAndFullName(), formeNumber));
+        }
+        ignoreCosmeticFormeNumbers.add(formeNumber);
+    }
+
+    /**
+     * Returns the Generation this {@link Species} (or forme) first appeared in.
+     */
+    public int getGeneration() {
+        return generation;
+    }
+
+    public void setGeneration(int generation) {
+        this.generation = generation;
+    }
+
+    /**
+     * Returns the {@link Species}'s secondary type. If it has no secondary type, it will return null.
+     * @param useOriginal Whether to use type data from before randomization.
+     * @return The {@link Species}'s secondary type.
+     */
+    public Type getPrimaryType(boolean useOriginal) {
+        if(useOriginal) {
+            return originalPrimaryType;
+        } else {
+            return primaryType;
+        }
+    }
+
+    /**
+     * Sets the primary type.<br>
+     * The first time this method is called, it also sets the "original" primary type,
+     * which can be retrieved with {@link #getPrimaryType(boolean)}.
+     */
+    public void setPrimaryType(Type primaryType) {
+        this.primaryType = primaryType;
+        if (!hasSetPrimaryType) {
+            this.originalPrimaryType = primaryType;
+            hasSetPrimaryType = true;
+        }
+    }
+
+    /**
+     * Returns the {@link Species}'s secondary type. If it has no secondary type, it will return null.
+     * @param useOriginal Whether to use type data from before randomization.
+     * @return The {@link Species}'s secondary type.
+     */
+    public Type getSecondaryType(boolean useOriginal) {
+        if(useOriginal) {
+            return originalSecondaryType;
+        } else {
+            return secondaryType;
+        }
+    }
+
+    /**
+     * Sets the secondary type.<br>
+     * The first time this method is called, it also sets the "original" secondary type,
+     * which can be retrieved with {@link #getSecondaryType(boolean)}.
+     * For this reason, it is important to use this method when initializing a {@link Species}'s types,
+     * even if the "null" value used to represent no secondary type is technically the internal state of the
+     * secondaryType attribute before being set.
+     * <br><br>
+     * If the secondary given is the same as the current primary, it will instead be set to null.
+     * Therefore, if changing both types, it is important to change the primary type first.
+     */
+    public void setSecondaryType(Type secondaryType) {
+        if(hasSetPrimaryType && secondaryType == primaryType) {
+            secondaryType = null; //So that original types aren't full of NORMAL/NORMAL and the like
+        }
+
+        this.secondaryType = secondaryType;
+        if (!hasSetSecondaryType) {
+            this.originalSecondaryType = secondaryType;
+            hasSetSecondaryType = true;
+        }
+    }
+
+    /**
+     * Checks whether either of the {@link Species}'s types are the given type.
+     * If the given type is null, always returns false.
+     * @param type The type to check against.
+     * @param useOriginal Whether to use type data from before randomization.
+     * @return True if the {@link Species} has the given type, false otherwise.
+     */
+    public boolean hasType(Type type, boolean useOriginal) {
+        if(type == null) {
+            return false;
+        }
+        return getPrimaryType(useOriginal) == type || getSecondaryType(useOriginal) == type;
+    }
+
+    /**
+     * Checks whether the {@link Species} has a secondary type.
+     * @param useOriginal Whether to use type data from before randomization.
+     * @return True if the {@link Species} has a secondary type, false otherwise.
+     */
+    public boolean hasSecondaryType(boolean useOriginal) {
+        return this.getSecondaryType(useOriginal) != null;
+    }
+
+    /**
+     * Returns true if this shares any {@link Type} with the given {@link Species}.
+     */
+    public boolean hasSharedType(Species other) {
+        return getPrimaryType(false).equals(other.getPrimaryType(false)) || getPrimaryType(false).equals(other.getSecondaryType(false))
+                || (getSecondaryType(false) != null &&
+                (getSecondaryType(false).equals(other.getPrimaryType(false)) || getSecondaryType(false).equals(other.getSecondaryType(false))));
+    }
+
+    public BaseStats getBaseStats() {
+        return baseStats;
+    }
+
+    public void setBaseStats(BaseStats baseStats) {
+        this.baseStats = baseStats;
+        if (originalBST == -1) {
+            originalBST = baseStats.getBST();
+        }
+    }
+
+    /**
+     * Short for {@link #getBaseStats()}.{@link BaseStats#getBST() getBST()}.
+     * @param useOriginal Whether to use base stat data from before randomization.
+     */
+    public int getBST(boolean useOriginal) {
+        return useOriginal ? originalBST : getBaseStats().getBST();
+    }
+
+    public int getAbility1() {
+        return ability1;
+    }
+
+    public void setAbility1(int ability1) {
+        this.ability1 = ability1;
+    }
+
+    public int getAbility2() {
+        return ability2;
+    }
+
+    public void setAbility2(int ability2) {
+        this.ability2 = ability2;
+    }
+
+    public int getAbility3() {
+        return ability3;
+    }
+
+    public void setAbility3(int ability3) {
+        this.ability3 = ability3;
+    }
+
+    public int getCatchRate() {
+        return catchRate;
+    }
+
+    public void setCatchRate(int catchRate) {
+        this.catchRate = catchRate;
+    }
+
+    public int getExpYield() {
+        return expYield;
+    }
+
+    public void setExpYield(int expYield) {
+        this.expYield = expYield;
+    }
+
+    public EVYield getEVYield() {
+        return evYield;
+    }
+
+    public void setEVYield(EVYield evYield) {
+        this.evYield = evYield;
+    }
+
+    public Item getGuaranteedHeldItem() {
+        return guaranteedHeldItem;
+    }
+
+    public void setGuaranteedHeldItem(Item guaranteedHeldItem) {
+        this.guaranteedHeldItem = guaranteedHeldItem;
+    }
+
+    public Item getCommonHeldItem() {
+        return commonHeldItem;
+    }
+
+    public void setCommonHeldItem(Item commonHeldItem) {
+        this.commonHeldItem = commonHeldItem;
+    }
+
+    public Item getRareHeldItem() {
+        return rareHeldItem;
+    }
+
+    public void setRareHeldItem(Item rareHeldItem) {
+        this.rareHeldItem = rareHeldItem;
+    }
+
+    public Item getDarkGrassHeldItem() {
+        return darkGrassHeldItem;
+    }
+
+    public void setDarkGrassHeldItem(Item darkGrassHeldItem) {
+        this.darkGrassHeldItem = darkGrassHeldItem;
+    }
+
+    public int getGenderRatio() {
+        return genderRatio;
+    }
+
+    public void setGenderRatio(int genderRatio) {
+        this.genderRatio = genderRatio;
+    }
+
+    public int getCallRate() {
+        return callRate;
+    }
+
+    public void setCallRate(int callRate) {
+        this.callRate = callRate;
+    }
+
+    public ExpCurve getGrowthCurve() {
+        return growthCurve;
+    }
+
+    public void setGrowthCurve(ExpCurve growthCurve) {
+        this.growthCurve = growthCurve;
+    }
+
+    public BreedingInfo getBreedingInfo() {
+        return breedingInfo;
+    }
+
+    public void setBreedingInfo(BreedingInfo breedingInfo) {
+        this.breedingInfo = breedingInfo;
+    }
+
+    /**
+     * Gets the Palette ID. Relevant only for Gen 1.
+     */
+    public SGBPaletteID getPaletteID() {
+        return paletteID;
+    }
+
+    /**
+     * Sets the Palette ID. Relevant only for Gen 1.
+     */
+    public void setPaletteID(SGBPaletteID paletteID) {
+        this.paletteID = paletteID;
+    }
+
+    public Palette getNormalPalette() {
+        return normalPalette;
+    }
+
+    public void setNormalPalette(Palette normalPalette) {
+        this.normalPalette = normalPalette;
+    }
+
+    public Palette getShinyPalette() {
+        return shinyPalette;
+    }
+
+    public void setShinyPalette(Palette shinyPalette) {
+        this.shinyPalette = shinyPalette;
+    }
+
+    /**
+     * Returns a (modifiable!) {@link List} of {@link Evolution}s where this Pokémon species is what the evolution is
+     * "from".<br>
+     * E.g. if the Pokémon is Gloom, this would return a List with two elements, one being the Evolution from
+     * Gloom to Vileplume, and the other being the Evolution from Gloom to Bellossom.
+     */
+    //TODO: Make this (and getEvolutionsTo) return unmodifiable lists and use setEvolutions methods instead.
+    // (Or, alternatively, addEvolution and clearEvolutions methods, wherein the first call to clear
+    // sets the original evolutions.)
+    //(And then make setEvolutions also set original evolutions when first called.)
+    public List<Evolution> getEvolutionsFrom() {
+        return evolutionsFrom;
+    }
+
+    /**
+     * Returns a (modifiable!) {@link List} of {@link Evolution}s where this Pokémon species is what the evolution is
+     * "to".<br>
+     * E.g. if the Pokémon is Gloom, this would return a List with one element, being the Evolution from
+     * Oddish to Gloom.<br>
+     * Normally this List has only one or zero elements, because no two vanilla Pokémon evolve into
+     * the same third Pokémon.
+     */
+    public List<Evolution> getEvolutionsTo() {
+        return evolutionsTo;
+    }
+
+    /**
+     * Transfers (copies) all attributes from one species to another. This method is expected to be called
+     * as part of a process of copying all Species. For this reason, it takes a {@link Map} of all
+     * the original Species to their copies. The copy Species is then inferred, from the original Species
+     * and the map.
+     * <br><br>
+     * This transfers simple attributes like types and base stats, but also all attributes that reference other
+     * Species (formes, evolutions, mega evolutions). Transferred references are turned into references
+     * to the copies, using {@code originalToCopies}.
+     * <br><br>
+     * For evolutions and mega evolutions, it only assigns those from this Species,
+     * but also assigns it to the Species evolved to.
+     * This should result in all evolutions being properly assigned if this function is called on all Species.
+     *
+     * @param original The Species to copy attributes from.
+     * @param originalToCopies A Map of all the original Species to their copies.
+     * @throws NullPointerException if original or originalToCopies is null.
+     * @throws IllegalArgumentException if originalToCopies does not contain original as a key,
+     *                                  if the copy of original does not have the same number as original,
+     *                                  or if the copy of original does not have the same class as original.
+     */
+    // TODO: it would be nice to generalize the mass copying this expects to be part of (in SpeciesSet?),
+    //  so this can be partially hidden. Currently the mass copying is only done in/by TestRomHandler,
+    //  but it could be usable for making backed-up originals of each Species.
+    public static void transferAttributesToCopy(Species original, Map<Species, Species> originalToCopies) {
+        if (original == null) {
+            throw new NullPointerException("original is null");
+        }
+        if (originalToCopies == null) {
+            throw new NullPointerException("originalToCopies is null");
+        }
+        Species copy = originalToCopies.get(original);
+        if (copy == null) {
+            throw new IllegalArgumentException("originalToCopies does not contain original (" +
+                    original.getNumberAndFullName() + ") as a key.");
+        }
+        if (copy.number != original.number) {
+            throw new IllegalArgumentException("copy must have same number as original. Expected: " +
+                    original.number + ", was:" + copy.number);
+        }
+        if (copy.getClass() != original.getClass()) {
+            throw new IllegalArgumentException("copy must have same class as original. Expected: " +
+                    original.getClass() + ", was:" + copy.getClass());
+        }
+
+        transferSimpleAttributesToCopy(copy, original);
+        transferReferentialAttributesToCopy(copy, original, originalToCopies);
+    }
+
+    private static void transferSimpleAttributesToCopy(Species copy, Species original) {
+        copy.name = original.getName();
+
+        copy.generation = original.generation;
+
+        //Types
+        copy.primaryType = original.primaryType;
+        copy.secondaryType = original.secondaryType;
+        copy.originalPrimaryType = original.originalPrimaryType;
+        copy.originalSecondaryType = original.originalSecondaryType;
+        copy.hasSetPrimaryType = original.hasSetPrimaryType;
+        copy.hasSetSecondaryType = original.hasSetSecondaryType;
+
+        //base stats
+        copy.baseStats = switch (original.baseStats) {
+            case null -> null;
+            case Gen1BaseStats origGen1BaseStats -> new Gen1BaseStats(origGen1BaseStats);
+            case ShedinjaBaseStats origShedinjaBaseStats -> new ShedinjaBaseStats(origShedinjaBaseStats);
+            default -> new BaseStats(original.baseStats);
+        };
+        copy.originalBST = original.originalBST;
+
+        //abilities
+        copy.ability1 = original.ability1;
+        copy.ability2 = original.ability2;
+        copy.ability3 = original.ability3;
+
+        copy.expYield = original.expYield;
+        copy.evYield = original.evYield == null ?
+                null : new EVYield(original.evYield);
+
+        //wild encounter related
+        copy.catchRate = original.catchRate;
+        copy.guaranteedHeldItem = original.guaranteedHeldItem;
+        copy.commonHeldItem = original.commonHeldItem;
+        copy.rareHeldItem = original.rareHeldItem;
+        copy.darkGrassHeldItem = original.darkGrassHeldItem;
+        copy.genderRatio = original.genderRatio;
+        copy.callRate = original.callRate;
+
+        //misc
+        copy.frontImageDimensions = original.frontImageDimensions;
+        copy.growthCurve = original.growthCurve;
+        copy.breedingInfo = original.breedingInfo == null ?
+                null : new BreedingInfo(original.breedingInfo);
+
+        //palettes
+        copy.paletteID = original.paletteID;
+        copy.normalPalette = original.normalPalette == null ?
+                null : new Palette(original.normalPalette);
+        copy.shinyPalette = original.shinyPalette == null ?
+                null : new Palette(original.shinyPalette);
+    }
+
+    private static void transferReferentialAttributesToCopy(Species copy, Species original,
+                                                        Map<Species, Species> originalToCopies) {
+        transferFormesToCopy(copy, original, originalToCopies);
+        transferEvolutionsToCopy(copy, original, originalToCopies);
+    }
+
+    private static void transferFormesToCopy(Species copy, Species original,
+                                             Map<Species, Species> originalToCopies) {
+        // Simple forme Attributes are grouped with the referential
+        // Attributes so they're less likely to be missed.
+        copy.cosmeticFormeNumbers = new ArrayList<>(original.cosmeticFormeNumbers);
+        copy.ignoreCosmeticFormeNumbers = new ArrayList<>(original.ignoreCosmeticFormeNumbers);
+
+        copy.formeSuffix = original.formeSuffix;
+        copy.formeNumber = original.formeNumber;
+
+        copy.megaEvolution = original.megaEvolution;
+        copy.megaEvolutionItem = original.megaEvolutionItem;
+        copy.alolan = original.alolan;
+        copy.essentiallyCosmetic = original.essentiallyCosmetic;
+
+        copy.formes = new HashMap<>();
+        for (Map.Entry<Integer, Species> entry : original.formes.entrySet()) {
+            copy.formes.put(entry.getKey(), originalToCopies.get(entry.getValue()));
+        }
+
+        copy.baseForme = original.baseForme == null ? null : originalToCopies.get(original.baseForme);
+        copy.conceptualBaseForme = original.conceptualBaseForme == null ?
+                null : originalToCopies.get(original.conceptualBaseForme);
+    }
+
+    private static void transferEvolutionsToCopy(Species copy, Species original,
+                                                 Map<Species, Species> originalToCopies) {
+        for (Evolution evo : original.getEvolutionsFrom()) {
+            Evolution evoCopy = new Evolution(copy, originalToCopies.get(evo.getTo()),
+                    evo.getType(), evo.getExtraInfo(), evo.getEstimatedEvoLvl());
+            copy.getEvolutionsFrom().add(evoCopy);
+            evoCopy.getTo().getEvolutionsTo().add(evoCopy);
+        }
+    }
+}

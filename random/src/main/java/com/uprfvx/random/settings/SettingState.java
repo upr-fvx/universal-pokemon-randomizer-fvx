@@ -1,5 +1,7 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.definitions.SettingDefinition;
+
 import java.io.Serializable;
 
 public class SettingState<T extends Serializable> {

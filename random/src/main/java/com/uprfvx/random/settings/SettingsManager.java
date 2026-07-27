@@ -27,6 +27,7 @@ package com.uprfvx.random.settings;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.random.Version;
+import com.uprfvx.random.settings.definitions.SettingDefinition;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.*;
 import filefunctions.FileFunctions;

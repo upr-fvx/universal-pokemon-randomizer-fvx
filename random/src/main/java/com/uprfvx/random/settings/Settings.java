@@ -1,5 +1,14 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.definitions.NumericSettingDefinition;
+import com.uprfvx.random.settings.definitions.SettingDefinition;
+import com.uprfvx.random.settings.definitions.SimpleSettingDefinition;
+import com.uprfvx.random.settings.restrictions.EnumMatchRestriction;
+import com.uprfvx.random.settings.restrictions.EnumNotMatchRestriction;
+import com.uprfvx.random.settings.restrictions.MultiSettingRestriction;
+import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
+import com.uprfvx.romio.romhandlers.RomHandler;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -67,13 +76,28 @@ public class Settings {
     );
 
     public static final List<SettingDefinition<?>> POKEMON_TRAITS = Arrays.asList(
-            new SimpleSettingDefinition<>("RandomizePokemonBaseStatistics",
-                    "PokemonBaseStatistics", SettingsManager.BaseStatisticsMod.UNCHANGED, null, null),
+            new SimpleSettingDefinition<>("RandomizePokemonBaseStatistics", "PokemonBaseStatistics",
+                    SettingsManager.BaseStatisticsMod.UNCHANGED, null, null),
             new SimpleSettingDefinition<>("FollowEvolutions", "PokemonBaseStatistics",
                     false,
-                    new SimpleSettingRestriction<SettingsManager.BaseStatisticsMod>("RandomizePokemonBaseStatistics",
-                            pbs -> !(pbs == SettingsManager.BaseStatisticsMod.UNCHANGED)),
-                    null),
+                    new EnumNotMatchRestriction<>("RandomizePokemonBaseStatistics", SettingsManager.BaseStatisticsMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>("FollowMegaEvolutions", "PokemonBaseStatistics",
+                    false, new SimpleSettingRestriction<>("FollowEvolutions", isTrue),
+                    RomHandler::hasMegaEvolutions
+            ),
+            new SimpleSettingDefinition<>("AssignEvoStatsRandomly", "PokemonBaseStatistics",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonBaseStatistics", SettingsManager.BaseStatisticsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>("UpdateBaseStats", "PokemonBaseStatistics",
+                    false, null, notOfGeneration(1)),
+            new NumericSettingDefinition<>("UpdateBaseStatsGeneration", "PokemonBaseStatistics",
+                    9, new SimpleSettingRestriction<>("UpdateBaseStats", isTrue), null,
+                    6, 9
+            ),
 
             new SimpleSettingDefinition<>("ChangeImpossibleEvolutions", "PokemonEvolutions",
                     false, null, null),

@@ -1,5 +1,7 @@
-package com.uprfvx.random.settings;
+package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.restrictions.SettingRestriction;
+import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.Map;

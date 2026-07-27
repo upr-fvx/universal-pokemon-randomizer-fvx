@@ -1,4 +1,6 @@
-package com.uprfvx.random.settings;
+package com.uprfvx.random.settings.restrictions;
+
+import com.uprfvx.random.settings.SettingsManager;
 
 import java.util.Collections;
 import java.util.List;

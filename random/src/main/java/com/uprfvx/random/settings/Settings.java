@@ -75,29 +75,59 @@ public class Settings {
 
     );
 
+    public enum BSTMod {
+        UNCHANGED, RANDOM_BUFF_NERF, SHUFFLE, RANDOM
+    }
+
+    public enum BaseStatisticsMod {
+        UNCHANGED, SHUFFLE, RANDOM
+    }
+
     public static final List<SettingDefinition<?>> POKEMON_TRAITS = Arrays.asList(
-            new SimpleSettingDefinition<>("RandomizePokemonBaseStatistics", "PokemonBaseStatistics",
-                    SettingsManager.BaseStatisticsMod.UNCHANGED, null, null),
-            new SimpleSettingDefinition<>("FollowEvolutions", "PokemonBaseStatistics",
+            new SimpleSettingDefinition<>("RandomizePokemonBaseStatTotals", "PokemonBaseStatistics",
+                    BSTMod.UNCHANGED, null, null),
+            new NumericSettingDefinition<>("BSTRandomBuffNerfPercentage", "PokemonBaseStatistics",
+                    0, new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
+                    null, 0, 50
+            ),
+            new SimpleSettingDefinition<>("BSTsFollowEvolutions", "PokemonBaseStatistics",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonBaseStatistics", SettingsManager.BaseStatisticsMod.UNCHANGED),
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
+                            new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE)),
                     null
             ),
-            new SimpleSettingDefinition<>("FollowMegaEvolutions", "PokemonBaseStatistics",
-                    false, new SimpleSettingRestriction<>("FollowEvolutions", isTrue),
+            new SimpleSettingDefinition<>("BSTShuffleSeparateLegendaries", "PokemonBaseStatistics",
+                    false, new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE),
+                    null
+            ),
+
+            new SimpleSettingDefinition<>("RandomizePokemonBaseStatDistributions", "PokemonBaseStatistics",
+                    BaseStatisticsMod.UNCHANGED, null, null),
+            new SimpleSettingDefinition<>("StatDistributionsFollowEvolutions", "PokemonBaseStatistics",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>("StatDistributionsFollowMegaEvolutions", "PokemonBaseStatistics",
+                    false, new SimpleSettingRestriction<>("StatDistributionsFollowEvolutions", isTrue),
                     RomHandler::hasMegaEvolutions
             ),
-            new SimpleSettingDefinition<>("AssignEvoStatsRandomly", "PokemonBaseStatistics",
+            new SimpleSettingDefinition<>("StatDistributionsAssignEvoStatsRandomly", "PokemonBaseStatistics",
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonBaseStatistics", SettingsManager.BaseStatisticsMod.RANDOM),
+                    new EnumMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.RANDOM),
                     null
             ),
+
             new SimpleSettingDefinition<>("UpdateBaseStats", "PokemonBaseStatistics",
                     false, null, notOfGeneration(1)),
             new NumericSettingDefinition<>("UpdateBaseStatsGeneration", "PokemonBaseStatistics",
                     9, new SimpleSettingRestriction<>("UpdateBaseStats", isTrue), null,
                     6, 9
             ),
+
+            // TODO: fill in rest
+            // TODO: remember that evo randomization should affect a bunch of options
 
             new SimpleSettingDefinition<>("ChangeImpossibleEvolutions", "PokemonEvolutions",
                     false, null, null),

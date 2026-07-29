@@ -25,6 +25,7 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 // be restricted further based on other settings or RomHandler support.
 //TODO: StringSettingDefinition, for restrictions like charset and string length.
 //TODO: Image settings??
+//TODO: SpeciesSettingDefinition. That one will be real weird.
 
 //Support is determined by a simple Predicate(RomHandler).
 //Enablement(? word?) is determined by SettingRestrictions, which contain two parts: The setting(s) which must be checked,
@@ -141,7 +142,7 @@ public class Settings {
                     "StatDistributionsFollowEvolutions",
                     "PokemonBaseStatistics",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -185,7 +186,7 @@ public class Settings {
                     "PokemonTypesForceDualTypes",
                     "PokemonTypes",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonTypes", SpeciesTypesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonTypes", SpeciesTypesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -207,7 +208,7 @@ public class Settings {
                     "AbilitiesFollowEvolutions",
                     "PokemonAbilities",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -221,42 +222,42 @@ public class Settings {
                     "CombineDuplicateAbilities",
                     "PokemonAbilities",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "EnsureTwoAbilities",
                     "PokemonAbilities",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "AbilitiesAllowWonderGuard",
                     "PokemonAbilities", // TODO: flip this one? To be "BanWonderGuard", defaulting to true?
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "BanTrappingAbilities",
                     "PokemonAbilities",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "BanNegativeAbilities",
                     "PokemonAbilities",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "BanBadAbilities",
                     "PokemonAbilities",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null
             ),
 
@@ -280,7 +281,7 @@ public class Settings {
                     "EvolutionsSameType",
                     "PokemonEvolutions",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -294,14 +295,14 @@ public class Settings {
                     "EvolutionsNoConvergence",
                     "PokemonEvolutions",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "EvolutionsForceChange",
                     "PokemonEvolutions",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -315,7 +316,7 @@ public class Settings {
                     "EvolutionsAllowAltFormes",
                     "PokemonEvolutions",
                     false,
-                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED, false),
                     ofGeneration(7)
             ),
             new SimpleSettingDefinition<>(
@@ -323,8 +324,8 @@ public class Settings {
                     "PokemonEvolutions",
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumNotMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.UNCHANGED),
-                            new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED)),
+                            new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -401,8 +402,8 @@ public class Settings {
     //  since a lot of options should turn on when 1+ custom starter is "random"
     private final static SettingRestriction notUnchangedOrCustomStarterRestriction = new MultiSettingRestriction(
             false, false,
-            new EnumNotMatchRestriction<>("RandomizeStarters", StartersMod.UNCHANGED),
-            new EnumNotMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM)
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.UNCHANGED, false),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM, false)
     );
 
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = Arrays.asList(
@@ -422,7 +423,7 @@ public class Settings {
                     StartersTypeMod.NONE,
                     null,
                     null,
-                    Map.of(), // restricted states
+                    null, // restricted states
                     Map.of( // supported states
                             StartersTypeMod.FIRE_WATER_GRASS, RomHandler::hasStarterTypeTriangleSupport,
                             StartersTypeMod.TRIANGLE, RomHandler::hasStarterTypeTriangleSupport
@@ -435,13 +436,13 @@ public class Settings {
                     notUnchangedOrCustomStarterRestriction,
                     null
             ),
-            new EnumSettingDefinition<>(
+            new EnumSettingDefinition<Type>( //Compiler is lying, this one needs to be explicit
                     "SingleStarterType",
                     "Starters",
                     null, // random
                     new EnumMatchRestriction<>("StartersTypeRestriction", StartersTypeMod.SINGLE_TYPE),
                     null,
-                    Map.of(),
+                    null,
                     Arrays.stream(Type.values()).collect(Collectors.toMap(
                             // TODO: ensure null (random) is always possible
                             t -> t, t -> (rh -> rh.getTypeService().typeInGame(t))

@@ -34,6 +34,16 @@ public class SettingUtils {
         return c -> c.compareTo(value) >= 0;
     }
 
+    public static <T extends Enum<T>> Predicate<T> matchesEnumValue(T value)
+    {
+        return e -> e == value;
+    }
+
+    public static <T extends Enum<T>> Predicate<T> doesNotMatchEnumValue(T value)
+    {
+        return e -> e != value;
+    }
+
     /**
      * Determines if the given RomHandler is a game that is any of the given generations.
      * @param generations The generations to select.

@@ -17,7 +17,7 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
     Map<T, Predicate<RomHandler>> support;
 
     //TODO: handling (or explicit *non*-handling) for null values of the enum.
-    // (Useful for Types, where we want null=Random, but not
+    // (Useful for Types, in cases where we want null=Random, but not for most enums, where null is meaningless.)
 
     /**
      * Creates an EnumSettingDefinition, which allows restricting certain enum values based on other settings or

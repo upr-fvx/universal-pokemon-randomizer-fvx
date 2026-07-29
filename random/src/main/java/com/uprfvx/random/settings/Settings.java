@@ -1,19 +1,16 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.definitions.EnumSettingDefinition;
 import com.uprfvx.random.settings.definitions.NumericSettingDefinition;
 import com.uprfvx.random.settings.definitions.SettingDefinition;
 import com.uprfvx.random.settings.definitions.SimpleSettingDefinition;
-import com.uprfvx.random.settings.restrictions.EnumMatchRestriction;
-import com.uprfvx.random.settings.restrictions.EnumNotMatchRestriction;
-import com.uprfvx.random.settings.restrictions.MultiSettingRestriction;
-import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
+import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.uprfvx.random.settings.SettingUtils.*;
 
@@ -390,6 +387,104 @@ public class Settings {
                     new SimpleSettingRestriction<>("StandardizeExpCurve", isTrue),
                     null
             )
+    );
+
+    public enum StartersMod {
+        UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
+    }
+
+    public enum StartersTypeMod {
+        NONE, FIRE_WATER_GRASS, TRIANGLE, UNIQUE, SINGLE_TYPE
+    }
+
+    // TODO: starter restrictions need to be way more complicated,
+    //  since a lot of options should turn on when 1+ custom starter is "random"
+    private final static SettingRestriction notUnchangedOrCustomStarterRestriction = new MultiSettingRestriction(
+            false, false,
+            new EnumNotMatchRestriction<>("RandomizeStarters", StartersMod.UNCHANGED),
+            new EnumNotMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM)
+    );
+
+    public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = Arrays.asList(
+            new SimpleSettingDefinition<>(
+                    "RandomizeStarters",
+                    "Starters",
+                    StartersMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            // TODO: custom starter selection
+
+
+            new EnumSettingDefinition<>(
+                    "StartersTypeRestriction",
+                    "Starters",
+                    StartersTypeMod.NONE,
+                    null,
+                    null,
+                    Map.of(), // restricted states
+                    Map.of( // supported states
+                            StartersTypeMod.FIRE_WATER_GRASS, RomHandler::hasStarterTypeTriangleSupport,
+                            StartersTypeMod.TRIANGLE, RomHandler::hasStarterTypeTriangleSupport
+                    )
+            ),
+            new SimpleSettingDefinition<>(
+                    "NoDualTypeStarters",
+                    "Starters",
+                    false,
+                    notUnchangedOrCustomStarterRestriction,
+                    null
+            ),
+            new EnumSettingDefinition<>(
+                    "SingleStarterType",
+                    "Starters",
+                    null, // random
+                    new EnumMatchRestriction<>("StartersTypeRestriction", StartersTypeMod.SINGLE_TYPE),
+                    null,
+                    Map.of(),
+                    Arrays.stream(Type.values()).collect(Collectors.toMap(
+                            // TODO: ensure null (random) is always possible
+                            t -> t, t -> (rh -> rh.getTypeService().typeInGame(t))
+                    ))
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "StartersNoLegendaries",
+                    "Starters",
+                    false,
+                    notUnchangedOrCustomStarterRestriction,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeStarterHeldItems",
+                    "Starters",
+                    false,
+                    null,
+                    RomHandler::supportsStarterHeldItems
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanBadStarterHeldItems",
+                    "Starters",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeStarterHeldItems", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "LimitStartersMinimumBST",
+                    "Starters",
+                    false,
+                    notUnchangedOrCustomStarterRestriction,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "LimitStartersMaximumBST",
+                    "Starters",
+                    false,
+                    notUnchangedOrCustomStarterRestriction,
+                    null
+            )
+            // TODO: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue;
+            //  these need a variable default value depending on RomHandler
     );
 
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = Arrays.asList(

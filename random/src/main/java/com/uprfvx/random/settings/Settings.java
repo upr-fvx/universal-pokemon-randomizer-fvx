@@ -28,8 +28,8 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 //TODO: SpeciesSettingDefinition. That one will be real weird.
 
 //Support is determined by a simple Predicate(RomHandler).
-//Enablement(? word?) is determined by SettingRestrictions, which contain two parts: The setting(s) which must be checked,
-// and the function to check them against.
+//Enabled/Disabled state is determined by SettingRestrictions, which contain two parts:
+// The setting(s) which must be checked, and the function to check them against.
 //Most cases can be handled by a SimpleSettingRestriction, which compares the value of a single setting against a predicate.
 //When checking Enum settings, the explicit EnumMatchRestriction is preferred.
 //If there are multiple relevant settings, there is also MultiSettingRestriction, which combines the results of two

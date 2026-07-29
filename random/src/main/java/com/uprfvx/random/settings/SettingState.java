@@ -10,6 +10,7 @@ public class SettingState<T extends Serializable> {
 
     public SettingState(SettingDefinition<T> definition) {
         this.definition = definition;
+        value = definition.getDefaultValue();
     }
 
     public T getValue() {

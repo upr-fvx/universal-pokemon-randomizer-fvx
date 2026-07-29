@@ -9,6 +9,7 @@ import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,7 +47,7 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 //Setting names should be unique. They also will (eventually) be used as ini keys, so they should (a) be relatively
 // human-readable, (b) contain no spaces nor the equals sign.
 public class Settings {
-    public static final List<SettingDefinition<?>> ALL_SETTINGS;
+    public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = Arrays.asList(
             new SimpleSettingDefinition<>("LimitPokemon", "GeneralOptions",

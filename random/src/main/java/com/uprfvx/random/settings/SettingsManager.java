@@ -33,21 +33,37 @@ import com.uprfvx.romio.romhandlers.*;
 import filefunctions.FileFunctions;
 import filefunctions.IOFunctions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.CRC32;
 
+import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
+
 public class SettingsManager {
 
+    /**
+     * Retrieves the value of the requested setting, and attempts to cast it to T.
+     * This is an inherently unsafe operation, and the only reason it works is that we know
+     * the type of each setting.
+     * (There may be a better way to do this, but I don't know it.)
+     * @param settingName The setting to retrieve the value of.
+     * @return The value of the setting.
+     * @param <T> The type of the setting.
+     * @throws ClassCastException if the wrong type is requested.
+     */
+    @SuppressWarnings("unchecked")
     public <T> T getSetting(String settingName) {
-        //TODO
-        //Should retrieve the setting, then attempt a cast of its state, throwing an exception if the cast fails.
-        return null;
+        try {
+            return (T) settingStates.get(settingName).getValue();
+        } catch (ClassCastException e) {
+            System.out.println("Tried to retrieve the wrong type from setting: " + settingName);
+            System.out.println("Setting type: " + settingStates.get(settingName).getValue().getClass().getName());
+            throw e;
+            //...I forget if we just use System.out.println or have our own handling
+            //also uhh is this how we explicitly pass on exceptions? w/e
+        }
     }
 
     public SettingDefinition<?> getSettingDefinition(String settingName)
@@ -70,6 +86,36 @@ public class SettingsManager {
         //then run checkDependencies again on any settings which had their values change as a result.
     }
 
+    /**
+     * Populates the map of settings (and other needed maps) from the setting definitions in Settings.ALL_SETTINGS
+     */
+    private void initializeSettings() {
+        settingStates = new HashMap<>();
+        dependencies = new HashMap<>();
+        categorizedNames = new HashMap<>();
+
+        for (SettingDefinition<?> definition : ALL_SETTINGS)
+        {
+            //Create an initial state from the definition (with default value)
+            String name = definition.getName();
+            SettingState<?> state = new SettingState<>(definition);
+            settingStates.put(name, state);
+
+            //Register this setting as dependent on each setting it's dependent on
+            List<String> settingsDependentOn = definition.getSettingsDependentOn();
+            for (String otherSetting : settingsDependentOn) {
+                Set<String> otherSettingDependents = dependencies.computeIfAbsent(otherSetting,
+                        set -> new HashSet<>());
+                otherSettingDependents.add(name);
+            }
+
+            //Add the setting to its category, creating the category if needed.
+            List<String> category = categorizedNames.computeIfAbsent(definition.getCategory(),
+                    list -> new ArrayList<>());
+            category.add(name);
+        }
+    }
+
     //TODO: event listeners for when settings are enabled, disabled, have their values changed,
     // or have their POSSIBLE values changed.
     // (Or more likely, a single listener that reports ANY of these events, since anything that listens for one
@@ -77,8 +123,9 @@ public class SettingsManager {
     // (Also, it's easier to implement that way.)
     // ...Actually, probably doesn't listen for "has value changed".
 
-    private HashMap<String, SettingState<?>> settingStates;
-    private HashMap<String, Set<String>> dependencies;
+    private Map<String, SettingState<? extends Serializable>> settingStates;
+    private Map<String, Set<String>> dependencies;
+    private Map<String, List<String>> categorizedNames;
     //A reverse lookup of setting restrictions.
     //Needed so that dependent settings can be updated when a setting is changed.
     //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)

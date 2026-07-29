@@ -233,8 +233,8 @@ public class Settings {
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "AbilitiesAllowWonderGuard",
-                    "PokemonAbilities", // TODO: flip this one? To be "BanWonderGuard", defaulting to true?
+                    "AbilitiesBanWonderGuard",
+                    "PokemonAbilities",
                     false,
                     new EnumMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED, false),
                     null

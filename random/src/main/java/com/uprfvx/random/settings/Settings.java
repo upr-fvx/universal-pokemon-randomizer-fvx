@@ -7,6 +7,7 @@ import com.uprfvx.random.settings.restrictions.EnumMatchRestriction;
 import com.uprfvx.random.settings.restrictions.EnumNotMatchRestriction;
 import com.uprfvx.random.settings.restrictions.MultiSettingRestriction;
 import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
+import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
@@ -83,58 +84,312 @@ public class Settings {
         UNCHANGED, SHUFFLE, RANDOM
     }
 
+    public enum SpeciesTypesMod {
+        UNCHANGED, RANDOM_FOLLOW_EVOLUTIONS, COMPLETELY_RANDOM
+    }
+
+    public enum AbilitiesMod {
+        UNCHANGED, RANDOMIZE
+    }
+
+    public enum EvolutionsMod {
+        UNCHANGED, RANDOM, RANDOM_EVERY_LEVEL
+    }
+
+    public enum ExpCurveExtentMod {
+        LEGENDARIES, STRONG_LEGENDARIES, ALL
+    }
+
     public static final List<SettingDefinition<?>> POKEMON_TRAITS = Arrays.asList(
-            new SimpleSettingDefinition<>("RandomizePokemonBaseStatTotals", "PokemonBaseStatistics",
-                    BSTMod.UNCHANGED, null, null),
-            new NumericSettingDefinition<>("BSTRandomBuffNerfPercentage", "PokemonBaseStatistics",
-                    0, new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
-                    null, 0, 50
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonBaseStatTotals",
+                    "PokemonBaseStatistics",
+                    BSTMod.UNCHANGED,
+                    null,
+                    null
             ),
-            new SimpleSettingDefinition<>("BSTsFollowEvolutions", "PokemonBaseStatistics",
+            new NumericSettingDefinition<>(
+                    "BSTRandomBuffNerfPercentage",
+                    "PokemonBaseStatistics",
+                    0,
+                    new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
+                    null,
+                    0, 50
+            ),
+            new SimpleSettingDefinition<>(
+                    "BSTsFollowEvolutions",
+                    "PokemonBaseStatistics",
                     false,
                     new MultiSettingRestriction(true, false,
                             new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
                             new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE)),
                     null
             ),
-            new SimpleSettingDefinition<>("BSTShuffleSeparateLegendaries", "PokemonBaseStatistics",
-                    false, new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE),
+            new SimpleSettingDefinition<>(
+                    "BSTShuffleSeparateLegendaries",
+                    "PokemonBaseStatistics",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE),
                     null
             ),
 
-            new SimpleSettingDefinition<>("RandomizePokemonBaseStatDistributions", "PokemonBaseStatistics",
-                    BaseStatisticsMod.UNCHANGED, null, null),
-            new SimpleSettingDefinition<>("StatDistributionsFollowEvolutions", "PokemonBaseStatistics",
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonBaseStatDistributions",
+                    "PokemonBaseStatistics",
+                    BaseStatisticsMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "StatDistributionsFollowEvolutions",
+                    "PokemonBaseStatistics",
                     false,
                     new EnumNotMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.UNCHANGED),
                     null
             ),
-            new SimpleSettingDefinition<>("StatDistributionsFollowMegaEvolutions", "PokemonBaseStatistics",
-                    false, new SimpleSettingRestriction<>("StatDistributionsFollowEvolutions", isTrue),
+            new SimpleSettingDefinition<>(
+                    "StatDistributionsFollowMegaEvolutions",
+                    "PokemonBaseStatistics",
+                    false,
+                    new SimpleSettingRestriction<>("StatDistributionsFollowEvolutions", isTrue),
                     RomHandler::hasMegaEvolutions
             ),
-            new SimpleSettingDefinition<>("StatDistributionsAssignEvoStatsRandomly", "PokemonBaseStatistics",
+            new SimpleSettingDefinition<>(
+                    "StatDistributionsAssignEvoStatsRandomly",
+                    "PokemonBaseStatistics",
                     false,
                     new EnumMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.RANDOM),
                     null
             ),
 
-            new SimpleSettingDefinition<>("UpdateBaseStats", "PokemonBaseStatistics",
-                    false, null, notOfGeneration(1)),
-            new NumericSettingDefinition<>("UpdateBaseStatsGeneration", "PokemonBaseStatistics",
-                    9, new SimpleSettingRestriction<>("UpdateBaseStats", isTrue), null,
+            new SimpleSettingDefinition<>(
+                    "UpdateBaseStats",
+                    "PokemonBaseStatistics",
+                    false,
+                    null,
+                    notOfGeneration(1)),
+            new NumericSettingDefinition<>(
+                    "UpdateBaseStatsGeneration",
+                    "PokemonBaseStatistics",
+                    9,
+                    new SimpleSettingRestriction<>("UpdateBaseStats", isTrue),
+                    null,
                     6, 9
             ),
 
-            // TODO: fill in rest
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonTypes",
+                    "PokemonTypes",
+                    SpeciesTypesMod.UNCHANGED,
+                    null,
+                    null
+            ), // TODO: disable follow evos
+            new SimpleSettingDefinition<>(
+                    "PokemonTypesForceDualTypes",
+                    "PokemonTypes",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonTypes", SpeciesTypesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "TypesFollowMegaEvolutions",
+                    "PokemonTypes",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonTypes", SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS),
+                    RomHandler::hasMegaEvolutions
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonAbilities",
+                    "PokemonAbilities",
+                    AbilitiesMod.UNCHANGED,
+                    null,
+                    rh -> rh.abilitiesPerSpecies() != 0
+            ),
+            new SimpleSettingDefinition<>(
+                    "AbilitiesFollowEvolutions",
+                    "PokemonAbilities",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "AbilitiesFollowMegaEvolutions",
+                    "PokemonAbilities",
+                    false,
+                    new SimpleSettingRestriction<>("AbilitiesFollowEvolutions", isTrue),
+                    RomHandler::hasMegaEvolutions
+            ),
+            new SimpleSettingDefinition<>(
+                    "CombineDuplicateAbilities",
+                    "PokemonAbilities",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EnsureTwoAbilities",
+                    "PokemonAbilities",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "AbilitiesAllowWonderGuard",
+                    "PokemonAbilities", // TODO: flip this one? To be "BanWonderGuard", defaulting to true?
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanTrappingAbilities",
+                    "PokemonAbilities",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanNegativeAbilities",
+                    "PokemonAbilities",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanBadAbilities",
+                    "PokemonAbilities",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonAbilities", AbilitiesMod.UNCHANGED),
+                    null
+            ),
+
             // TODO: remember that evo randomization should affect a bunch of options
 
-            new SimpleSettingDefinition<>("ChangeImpossibleEvolutions", "PokemonEvolutions",
-                    false, null, null),
-            new SimpleSettingDefinition<>("MakeEvolutionsEasier", "PokemonEvolutions",
-                    false, null, null),
-            new SimpleSettingDefinition<>("RemoveTimeBasedEvolutions", "PokemonEvolutions",
-                    false, null, null)
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonEvolutions",
+                    "PokemonEvolutions",
+                    EvolutionsMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionsSimilarStrength",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionsSameType",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "LimitEvolutionsToThreeStages",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionsNoConvergence",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionsForceChange",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionsForceGrowth",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionsAllowAltFormes",
+                    "PokemonEvolutions",
+                    false,
+                    new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED),
+                    ofGeneration(7)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AdjustEvolutionLevels",
+                    "PokemonEvolutions",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumNotMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.UNCHANGED),
+                            new EnumNotMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.UNCHANGED)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "ChangeImpossibleEvolutions",
+                    "PokemonEvolutions",
+                    false,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "MakeEvolutionsEasier",
+                    "PokemonEvolutions",
+                    false,
+                    null,
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "MakeEvolutionsEasierLevel",
+                    "PokemonEvolutions",
+                    40,
+                    new SimpleSettingRestriction<>("MakeEvolutionsEasier", isTrue),
+                    null,
+                    30, 65
+            ),
+            new SimpleSettingDefinition<>(
+                    "UseEstimatedEvolutionLevels",
+                    "PokemonEvolutions",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new SimpleSettingRestriction<>("ChangeImpossibleEvolutions", isTrue),
+                            new SimpleSettingRestriction<>("MakeEvolutionsEasier", isTrue)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "RemoveTimeBasedEvolutions",
+                    "PokemonEvolutions",
+                    false,
+                    null,
+                    RomHandler::hasTimeBasedEvolutions
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "StandardizeExpCurve",
+                    "PokemonExpCurves",
+                    false,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "StandardExpCurveSelection",
+                    "PokemonExpCurves",
+                    ExpCurve.MEDIUM_FAST,
+                    new SimpleSettingRestriction<>("StandardizeExpCurve", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "StandardizeExpCurvesExtent",
+                    "PokemonExpCurves",
+                    ExpCurveExtentMod.LEGENDARIES,
+                    new SimpleSettingRestriction<>("StandardizeExpCurve", isTrue),
+                    null
+            )
     );
 
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = Arrays.asList(

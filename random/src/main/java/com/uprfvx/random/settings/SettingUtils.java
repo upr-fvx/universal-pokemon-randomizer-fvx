@@ -9,7 +9,30 @@ public class SettingUtils {
     public static final Predicate<Boolean> isTrue = s -> s;
     public static final Predicate<Boolean> isFalse = s -> !s;
 
-    //TODO: isValue, lessThan, greaterThan, lessOrEqual, greaterOrEqual
+    public static <T extends Comparable<T>> Predicate<T> equalsValue(T value)
+    {
+        return c -> c.compareTo(value) == 0;
+    }
+
+    public static <T extends Comparable<T>> Predicate<T> lessThanValue(T value)
+    {
+        return c -> c.compareTo(value) < 0;
+    }
+
+    public static <T extends Comparable<T>> Predicate<T> greaterThanValue(T value)
+    {
+        return c -> c.compareTo(value) > 0;
+    }
+
+    public static <T extends Comparable<T>> Predicate<T> lessThanOrEqualsValue(T value)
+    {
+        return c -> c.compareTo(value) <= 0;
+    }
+
+    public static <T extends Comparable<T>> Predicate<T> greaterThanOrEqualsValue(T value)
+    {
+        return c -> c.compareTo(value) >= 0;
+    }
 
     /**
      * Determines if the given RomHandler is a game that is any of the given generations.

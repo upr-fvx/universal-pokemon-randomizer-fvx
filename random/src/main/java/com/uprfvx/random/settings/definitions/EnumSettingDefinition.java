@@ -16,11 +16,29 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
     Map<T, SettingRestriction> restrictions;
     Map<T, Predicate<RomHandler>> support;
 
+    //TODO: handling (or explicit *non*-handling) for null values of the enum.
+    // (Useful for Types, where we want null=Random, but not
+
+    /**
+     * Creates an EnumSettingDefinition, which allows restricting certain enum values based on other settings or
+     * the game (RomHandler).
+     * If no such restrictions are needed, use SimpleSettingDefinition instead.
+     * @param name The setting's name. Must be unique among all settings.
+     *             Should contain no spaces and be relatively human-readable.
+     * @param category The setting's category.
+     * @param defaultValue The setting's default value.
+     * @param prerequisite A SettingRestriction that must return true for this setting to be enabled, or null.
+     * @param supported A Predicate<RomHandler> that must return true for this setting to be supported, or null.
+     * @param restrictedStates A Map of enum values to SettingRestrictions that must return true for the value in
+     *                         question to be enabled, or null if there are no such restrictions.
+     * @param supportedStates A Map of enum values to Predicate<RomHandler>s that must return true for the value in
+     *                         question to be supported, or null if there are no such restrictions.
+     */
     public EnumSettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
                                  Predicate<RomHandler> supported, Map<T, SettingRestriction> restrictedStates,
                                  Map<T, Predicate<RomHandler>> supportedStates) {
         super(name, category, defaultValue, prerequisite, supported,
-                restrictedStates != null? restrictedStates.values() : null,
+                restrictedStates != null ? restrictedStates.values() : null,
                 supportedStates != null);
         this.restrictions = restrictedStates;
         this.support = supportedStates;

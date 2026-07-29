@@ -22,6 +22,10 @@ public abstract class SettingDefinition<T extends Serializable> {
 
     //The default value.
     protected final T defaultValue;
+    //TODO: variable default values? (By RomHandler or by SettingRestriction)
+    // There is at least one case for this (Starter BST limits) although it's not *extremely* necessary.
+    // If that is *actually* the only case it's probably not worth it.
+    // That'll need to be its own child. (And composition is starting to look good...)
 
     //The prerequisite of other settings' states required for this setting to be applicable.
     //If the prerequisite conditions are false, this setting will be disabled and set to the default value.
@@ -42,6 +46,7 @@ public abstract class SettingDefinition<T extends Serializable> {
 
 
     /**
+     *
      * @param name
      * @param category
      * @param defaultValue

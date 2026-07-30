@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import miscutils.Pair;
 
 import java.io.Serializable;
 import java.util.*;
@@ -173,7 +174,11 @@ public class Settings {
                     9,
                     new SimpleSettingRestriction<>("UpdateBaseStats", isTrue),
                     null,
-                    6, 9
+                    6, 9,
+                    null,
+                    null,
+                    List.of(new Pair<>(6, atMostGeneration(5)), new Pair<>(7, atMostGeneration(6))),
+                    null
             ),
 
             new SimpleSettingDefinition<>(
@@ -622,12 +627,136 @@ public class Settings {
             )
     );
 
+    public enum MovesetsMod {
+        UNCHANGED, RANDOM_PREFER_SAME_TYPE, COMPLETELY_RANDOM, METRONOME_ONLY
+    }
+
+    private static SettingRestriction randomPokemonMovesetsRestriction = new MultiSettingRestriction(
+            true, false,
+            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.RANDOM_PREFER_SAME_TYPE),
+            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.COMPLETELY_RANDOM)
+    );
+
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = Arrays.asList(
-            // TODO: complete
-            new SimpleSettingDefinition<>("UpdateMoves", "MoveData",
-            false, null, null),
-            new SimpleSettingDefinition<>("UpdateMovesToGeneration", "MoveData",
-            0, new SimpleSettingRestriction<>("UpdateMoves", isTrue), null)
+            new SimpleSettingDefinition<>(
+                    "RandomizeMovePower",
+                    "MoveData",
+                    false,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeMoveAccuracy",
+                    "MoveData",
+                    false,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeMovePP",
+                    "MoveData",
+                    false,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeMoveCategory",
+                    "MoveData",
+                    false,
+                    null,
+                    RomHandler::hasPhysicalSpecialSplit
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeMoveNames",
+                    "MoveData",
+                    false,
+                    null,
+                    RomHandler::isEnglish
+            ),
+            new SimpleSettingDefinition<>(
+                    "UpdateMoves",
+                    "MoveData",
+                    false,
+                    null,
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "UpdateMovesToGeneration",
+                    "MoveData",
+                    0,
+                    new SimpleSettingRestriction<>("UpdateMoves", isTrue),
+                    null,
+                    2, 9,
+                    null,
+                    null,
+                    List.of(
+                            // It does feel a bit silly to need to list each value like this
+                            new Pair<>(2, atMostGeneration(1)), new Pair<>(3, atMostGeneration(2)),
+                            new Pair<>(4, atMostGeneration(3)), new Pair<>(5, atMostGeneration(4)),
+                            new Pair<>(6, atMostGeneration(5)), new Pair<>(7, atMostGeneration(6))
+                    ),
+                    null
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonMovesets",
+                    "PokemonMovesets",
+                    MovesetsMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            // TODO: deal with metronome only mode, it should turn off options in other places
+            new SimpleSettingDefinition<>(
+                    "GuaranteedLevel1Moves",
+                    "PokemonMovesets",
+                    false,
+                    randomPokemonMovesetsRestriction,
+                    RomHandler::supportsFourStartingMoves
+            ),
+            new NumericSettingDefinition<>(
+                    "GuaranteedLevel1MovesCount",
+                    "PokemonMovesets",
+                    2,
+                    new SimpleSettingRestriction<>("GuaranteedLevel1Moves", isTrue),
+                    null,
+                    2, 4
+            ),
+            new SimpleSettingDefinition<>(
+                    "MovesetsReorderDamagingMoves",
+                    "PokemonMovesets",
+                    false,
+                    randomPokemonMovesetsRestriction,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "MovesetsNoGameBreakingMoves",
+                    "PokemonMovesets",
+                    false,
+                    randomPokemonMovesetsRestriction,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "MovesetsForceGoodDamagingMoves",
+                    "PokemonMovesets",
+                    false,
+                    randomPokemonMovesetsRestriction,
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "MovesetsForceGoodDamagingMovesPercentage",
+                    "PokemonMovesets",
+                    0,
+                    new SimpleSettingRestriction<>("MovesetsForceGoodDamagingMoves", isTrue),
+                    null,
+                    0, 100
+            ),
+            new SimpleSettingDefinition<>(
+                    "EvolutionMovesForAllPokemon",
+                    "PokemonMovesets",
+                    false,
+                    randomPokemonMovesetsRestriction,
+                    atLeastGeneration(7)
+            )
     );
 
     public static final List<SettingDefinition<?>> FOE_POKEMON = Arrays.asList(

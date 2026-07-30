@@ -1,9 +1,6 @@
 package com.uprfvx.random.settings;
 
-import com.uprfvx.random.settings.definitions.EnumSettingDefinition;
-import com.uprfvx.random.settings.definitions.NumericSettingDefinition;
-import com.uprfvx.random.settings.definitions.SettingDefinition;
-import com.uprfvx.random.settings.definitions.SimpleSettingDefinition;
+import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Type;
@@ -401,12 +398,24 @@ public class Settings {
         NONE, FIRE_WATER_GRASS, TRIANGLE, UNIQUE, SINGLE_TYPE
     }
 
-    // TODO: starter restrictions need to be way more complicated,
-    //  since a lot of options should turn on when 1+ custom starter is "random"
-    private final static SettingRestriction notUnchangedOrCustomStarterRestriction = new MultiSettingRestriction(
+    private final static SettingRestriction anyStarterIsRandomRestriction = new MultiSettingRestriction(
+            true, false,
+            new SimpleSettingRestriction<>("CustomStarter1", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new SimpleSettingRestriction<>("CustomStarter2", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new SimpleSettingRestriction<>("CustomStarter3", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
+    );
+
+    private final static SettingRestriction allStartersAreRandomRestriction = new MultiSettingRestriction(
             false, false,
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.UNCHANGED, false),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM, false)
+            new SimpleSettingRestriction<>("CustomStarter1", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new SimpleSettingRestriction<>("CustomStarter2", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new SimpleSettingRestriction<>("CustomStarter3", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
+            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
     );
 
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = Arrays.asList(
@@ -417,16 +426,35 @@ public class Settings {
                     null,
                     null
             ),
-            // TODO: custom starter selection
-
+            new SpeciesSettingDefinition(
+                    "CustomStarter1",
+                    "Starters",
+                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    null
+            ),
+            new SpeciesSettingDefinition(
+                    "CustomStarter2",
+                    "Starters",
+                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    null
+            ),
+            new SpeciesSettingDefinition(
+                    "CustomStarter3",
+                    "Starters",
+                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    rh -> rh.getStarters().size() > 2
+            ),
 
             new EnumSettingDefinition<>(
                     "StartersTypeRestriction",
                     "Starters",
                     StartersTypeMod.NONE,
+                    anyStarterIsRandomRestriction,
                     null,
-                    null,
-                    null, // restricted states
+                    Map.of( // restricted states
+                            StartersTypeMod.FIRE_WATER_GRASS, allStartersAreRandomRestriction,
+                            StartersTypeMod.TRIANGLE, allStartersAreRandomRestriction
+                    ),
                     Map.of( // supported states
                             StartersTypeMod.FIRE_WATER_GRASS, RomHandler::hasStarterTypeTriangleSupport,
                             StartersTypeMod.TRIANGLE, RomHandler::hasStarterTypeTriangleSupport
@@ -436,7 +464,7 @@ public class Settings {
                     "NoDualTypeStarters",
                     "Starters",
                     false,
-                    notUnchangedOrCustomStarterRestriction,
+                    anyStarterIsRandomRestriction,
                     null
             ),
             new EnumSettingDefinition<Type>( //Compiler is lying, this one needs to be explicit
@@ -456,7 +484,7 @@ public class Settings {
                     "StartersNoLegendaries",
                     "Starters",
                     false,
-                    notUnchangedOrCustomStarterRestriction,
+                    anyStarterIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -477,14 +505,14 @@ public class Settings {
                     "LimitStartersMinimumBST",
                     "Starters",
                     false,
-                    notUnchangedOrCustomStarterRestriction,
+                    anyStarterIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
                     "LimitStartersMaximumBST",
                     "Starters",
                     false,
-                    notUnchangedOrCustomStarterRestriction,
+                    anyStarterIsRandomRestriction,
                     null
             )
             // TODO: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue;

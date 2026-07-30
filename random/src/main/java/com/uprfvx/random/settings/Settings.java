@@ -52,6 +52,7 @@ public class Settings {
             new SimpleSettingDefinition<>("NoRandomIntroMon", "GeneralOptions",
                     false, null, null),
                             //TODO: make this setting actually work?
+                            // "this setting" is race mode?
             new SimpleSettingDefinition<>("RaceMode", "GeneralOptions",
                     false, null, null),
             new SimpleSettingDefinition<>("BanIrregularAltFormes", "GeneralOptions",
@@ -418,6 +419,14 @@ public class Settings {
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
     );
 
+    public enum StaticPokemonMod {
+        UNCHANGED, RANDOM_MATCHING, COMPLETELY_RANDOM, SIMILAR_STRENGTH
+    }
+
+    public enum InGameTradesMod {
+        UNCHANGED, RANDOMIZE_GIVEN, RANDOMIZE_GIVEN_AND_REQUESTED
+    }
+
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = Arrays.asList(
             new SimpleSettingDefinition<>(
                     "RandomizeStarters",
@@ -514,12 +523,107 @@ public class Settings {
                     false,
                     anyStarterIsRandomRestriction,
                     null
-            )
+            ),
             // TODO: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue;
             //  these need a variable default value depending on RomHandler
+
+            new SimpleSettingDefinition<>(
+                    "RandomizeStaticPokemon",
+                    "StaticPokemon",
+                    StaticPokemonMod.UNCHANGED,
+                    null,
+                    RomHandler::canChangeStaticPokemon
+            ),
+            new SimpleSettingDefinition<>(
+                    "StaticPokemonRandomize600PlusBST",
+                    "StaticPokemon",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "StaticPokemonLimitMainGameLegendaries",
+                    "StaticPokemon",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.SIMILAR_STRENGTH),
+                    RomHandler::hasMainGameLegendaries
+            ),
+            new SimpleSettingDefinition<>(
+                    "StaticPokemonAllowAltFormes",
+                    "StaticPokemon",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    RomHandler::hasStarterAltFormes
+            ),
+            new SimpleSettingDefinition<>(
+                    "StaticPokemonSwapMegaEvolvables",
+                    "StaticPokemon",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    RomHandler::hasMegaEvolutions
+            ),
+            new SimpleSettingDefinition<>(
+                    "StaticPokemonFixMusic",
+                    "StaticPokemon",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    RomHandler::hasStaticMusicFix
+            ),
+            new SimpleSettingDefinition<>(
+                    "StaticPokemonLevelModifier",
+                    "StaticPokemon",
+                    false,
+                    null,
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "StaticPokemonLevelModifierPercentage",
+                    "StaticPokemon",
+                    100,
+                    new SimpleSettingRestriction<>("StaticPokemonLevelModifier", isTrue),
+                    null,
+                    -100, 155
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizeInGameTrades",
+                    "InGameTrades",
+                    InGameTradesMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "InGameTradesRandomizeNicknames",
+                    "InGameTrades",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "InGameTradesRandomizeOTs",
+                    "InGameTrades",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    notOfGeneration(1)
+            ),
+            new SimpleSettingDefinition<>(
+                    "InGameTradesRandomizeIVs",
+                    "InGameTrades",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    notOfGeneration(1)
+            ),
+            new SimpleSettingDefinition<>(
+                    "InGameTradesRandomizeHeldItems",
+                    "InGameTrades",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    notOfGeneration(1)
+            )
     );
 
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = Arrays.asList(
+            // TODO: complete
             new SimpleSettingDefinition<>("UpdateMoves", "MoveData",
             false, null, null),
             new SimpleSettingDefinition<>("UpdateMovesToGeneration", "MoveData",
@@ -527,19 +631,50 @@ public class Settings {
     );
 
     public static final List<SettingDefinition<?>> FOE_POKEMON = Arrays.asList(
+            // TODO: complete
             new SimpleSettingDefinition<>("RandomizeTrainerNames", "TrainerPokemon",
                     false, null, null),
             new SimpleSettingDefinition<>("RandomizeTrainerClassNames", "TrainerPokemon",
                     false, null, null)
     );
 
-    //TODO: complete list, move enum declarations to this file.
+    public static final List<SettingDefinition<?>> WILD_POKEMON = Arrays.asList(
+            // TODO
+    );
+
+    public static final List<SettingDefinition<?>> TMS_HMS_AND_TUTORS = Arrays.asList(
+            // TODO
+    );
+
+    public static final List<SettingDefinition<?>> ITEMS = Arrays.asList(
+            // TODO
+    );
+
+    public static final List<SettingDefinition<?>> TYPES = Arrays.asList(
+            // TODO
+    );
+
+    public static final List<SettingDefinition<?>> GRAPHICS = Arrays.asList(
+            // TODO
+    );
+
+    public static final List<SettingDefinition<?>> MISC_TWEAKS = Arrays.asList(
+            // TODO
+    );
+
+    //TODO: make sure all enum declarations have been moved to this file.
 
     static {
         List<SettingDefinition<?>> all = new ArrayList<>(GENERAL_OPTIONS);
         all.addAll(POKEMON_TRAITS);
         all.addAll(MOVES_AND_MOVESETS);
         all.addAll(FOE_POKEMON);
+        all.addAll(WILD_POKEMON);
+        all.addAll(TMS_HMS_AND_TUTORS);
+        all.addAll(ITEMS);
+        all.addAll(TYPES);
+        all.addAll(GRAPHICS);
+        all.addAll(MISC_TWEAKS);
         ALL_SETTINGS = Collections.unmodifiableList(all);
     }
 

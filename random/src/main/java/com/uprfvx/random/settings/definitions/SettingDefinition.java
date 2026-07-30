@@ -22,8 +22,9 @@ public abstract class SettingDefinition<T extends Serializable> {
 
     //The default value.
     protected final T defaultValue;
-    //TODO: variable default values? (By RomHandler or by SettingRestriction)
+    //TODO: variable default values? (By RomHandler only; changing by SettingRestriction risks loops.)
     // There is at least one case for this (Starter BST limits) although it's not *extremely* necessary.
+    // Two: Custom starters. (That's a very special case anyway though.)
     // If that is *actually* the only case it's probably not worth it.
     // That'll need to be its own child. (And composition is starting to look good...)
 
@@ -135,6 +136,7 @@ public abstract class SettingDefinition<T extends Serializable> {
 
     /**
      * Tests to see if the given value is valid given the current SettingsManager state.
+     * Does not check if the setting is enabled as a whole; both should be checked.
      * @param value The particular value to check.
      * @param manager The SettingsManager to test against.
      * @return True if the value is enabled, false otherwise.
@@ -143,6 +145,7 @@ public abstract class SettingDefinition<T extends Serializable> {
 
     /**
      * Tests to see if the given value is supported for the given game.
+     * Does not check if the setting is supported as a whole; both should be checked.
      * @param value The particular value to check.
      * @param game The RomHandler to check for support.
      * @return True if the value is enabled, false otherwise.

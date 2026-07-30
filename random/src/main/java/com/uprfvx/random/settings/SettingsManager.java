@@ -47,14 +47,15 @@ public class SettingsManager {
      * Retrieves the value of the requested setting, and attempts to cast it to T.
      * This is an inherently unsafe operation, and the only reason it works is that we know
      * the type of each setting.
-     * (There may be a better way to do this, but I don't know it.)
+     * (There may be a better way to do this, but I don't know it. I think what we're trying to do may just
+     * be inherently unsafe.)
      * @param settingName The setting to retrieve the value of.
      * @return The value of the setting.
      * @param <T> The type of the setting.
      * @throws ClassCastException if the wrong type is requested.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getSetting(String settingName) {
+    public <T extends Serializable> T getSetting(String settingName) {
         try {
             return (T) settingStates.get(settingName).getValue();
         } catch (ClassCastException e) {
@@ -71,19 +72,58 @@ public class SettingsManager {
         return settingStates.get(settingName).getDefinition();
     }
 
-    public <T> void setSetting(String settingName, T state) {
-        //TODO
-        //Should retrieve the setting, check that its type matches T (how exactly?) and throw if it doesn't,
-        //actually set the state to the given value,
-        //then run checkDependencies for the changed setting.
-        return;
+    /**
+     * Attempts to set the requested setting to the given value.
+     * As with the get(), this is inherently unsafe and will throw an exception if the
+     * wrong type is used.
+     * @param settingName The setting to set.
+     * @param value The value to set the setting to.
+     * @param <T> The type of the setting.
+     * @throws ClassCastException if T is the wrong type for the setting requested.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Serializable> void setSetting(String settingName, T value) {
+        SettingState<T> state;
+        try {
+            state = (SettingState<T>) settingStates.get(settingName);
+        } catch (ClassCastException e) {
+            System.out.println("Tried to insert the wrong type into setting: " + settingName);
+            System.out.println("Setting type: " + settingStates.get(settingName).getValue().getClass().getName());
+            throw e;
+        }
+
+        if (state.getValue() == value)
+            return; //if the setting is already set to the relevant value, save us checking dependencies
+
+        state.setValue(value);
+        Set<String> possibleChanges = checkDependencies(settingName);
+
+        //TODO: alert listeners to possibleChanges
     }
 
-    private void checkDependencies(String settingName) {
-        //TODO
-        //Should check all settings listed as dependencies for the given setting against its current state,
-        //enable/disable and return them to default if necessary,
-        //then run checkDependencies again on any settings which had their values change as a result.
+    /**
+     * Checks all settings dependent on this one and resets them to default if their current value is invalid.
+     * @param settingName The changed setting to start from.
+     * @return All settings which may have been enabled, disabled, partially enabled or disabled, or had their
+     *         values change.
+     */
+    private Set<String> checkDependencies(String settingName) {
+
+        Set<String> dependents = dependencies.get(settingName);
+        if (dependents == null)
+            return null;
+
+        Set<String> possiblyChanged = new HashSet<>(dependents);
+
+        for (String dependentSetting : dependents) {
+            if (settingStates.get(dependentSetting).checkValidity(this)) {
+                Set<String> recursedDependents = checkDependencies(dependentSetting);
+                if (recursedDependents != null)
+                    possiblyChanged.addAll(recursedDependents);
+            }
+        }
+
+        return possiblyChanged;
     }
 
     /**

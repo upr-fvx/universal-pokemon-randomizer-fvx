@@ -44,53 +44,45 @@ import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 public class SettingsManager {
 
     /**
-     * Retrieves the value of the requested setting, and attempts to cast it to T.
-     * This is an inherently unsafe operation, and the only reason it works is that we know
-     * the type of each setting.
-     * (There may be a better way to do this, but I don't know it. I think what we're trying to do may just
-     * be inherently unsafe.)
+     * Retrieves the value of the requested setting.
      * @param settingName The setting to retrieve the value of.
      * @return The value of the setting.
      * @param <T> The type of the setting.
-     * @throws ClassCastException if the wrong type is requested.
+     * @throws IllegalArgumentException if there is no setting of the given name.
+     * @throws ClassCastException if the type of the setting is not T.
+     * (If you believe you are getting this exception in error, try explicitly typing the method.)
      */
-    @SuppressWarnings("unchecked")
     public <T extends Serializable> T getSetting(String settingName) {
-        try {
-            return (T) settingStates.get(settingName).getValue();
-        } catch (ClassCastException e) {
-            System.out.println("Tried to retrieve the wrong type from setting: " + settingName);
-            System.out.println("Setting type: " + settingStates.get(settingName).getValue().getClass().getName());
-            throw e;
-            //...I forget if we just use System.out.println or have our own handling
-            //also uhh is this how we explicitly pass on exceptions? w/e
-        }
-    }
-
-    public SettingDefinition<?> getSettingDefinition(String settingName)
-    {
-        return settingStates.get(settingName).getDefinition();
+        SettingState<T> state = getTypedState(settingName);
+        return state.getValue();
     }
 
     /**
-     * Attempts to set the requested setting to the given value.
-     * As with the get(), this is inherently unsafe and will throw an exception if the
-     * wrong type is used.
+     * Retrieves the definition of the requested setting.
+     * @param settingName The setting to retrieve the definition of.
+     * @return The setting's definition.
+     * @param <T> The type of the setting.
+     * @throws IllegalArgumentException if there is no setting of the given name.
+     * @throws ClassCastException if the type of the setting is not T.
+     */
+    public <T extends Serializable> SettingDefinition<T> getSettingDefinition(String settingName)
+    {
+        SettingState<T> state = getTypedState(settingName);
+
+        return state.getDefinition();
+    }
+
+    /**
+     * Sets the requested setting's state to the given value.
+     * May cause other settings to change their enable/disable states and possibly return to default value.
      * @param settingName The setting to set.
      * @param value The value to set the setting to.
      * @param <T> The type of the setting.
-     * @throws ClassCastException if T is the wrong type for the setting requested.
+     * @throws IllegalArgumentException if there is no setting of the given name.
+     * @throws ClassCastException if the type of the setting is not T.
      */
-    @SuppressWarnings("unchecked")
     public <T extends Serializable> void setSetting(String settingName, T value) {
-        SettingState<T> state;
-        try {
-            state = (SettingState<T>) settingStates.get(settingName);
-        } catch (ClassCastException e) {
-            System.out.println("Tried to insert the wrong type into setting: " + settingName);
-            System.out.println("Setting type: " + settingStates.get(settingName).getValue().getClass().getName());
-            throw e;
-        }
+        SettingState<T> state = getTypedState(settingName);
 
         if (state.getValue() == value)
             return; //if the setting is already set to the relevant value, save us checking dependencies
@@ -99,6 +91,38 @@ public class SettingsManager {
         Set<String> possibleChanges = checkDependencies(settingName);
 
         //TODO: alert listeners to possibleChanges
+    }
+
+    /**
+     * The unsafe part of the implementation. Given a setting name, attempts to retrieve the SettingState
+     * and cast it to SettingState<T>.
+     * @param settingName The name of the setting to retrieve.
+     * @return The setting's state, cast to SettingState<T>.
+     * @param <T> The type of the setting.
+     * @throws IllegalArgumentException if there is no setting of the given name,
+     * @throws ClassCastException if the setting's type is not T.
+     *                            (Or cannot be cast to T? I believe it's the first thing but not 100% sure.)
+     *                            TODO: determine that for sure.
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends Serializable> SettingState<T> getTypedState(String settingName) {
+        SettingState<?> uncastState = settingStates.get(settingName);
+        if(uncastState == null)
+        {
+            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist!");
+        }
+
+        SettingState<T> state;
+        try {
+            return (SettingState<T>) uncastState;
+        } catch (ClassCastException e) {
+            System.out.println("Tried to cast setting \"" + settingName + "\" to the wrong type.");
+            System.out.println("Setting type: " + settingStates.get(settingName).getValue().getClass().getName());
+            //System.out.println("Requested type: " + T.class.getName());
+            //While this would enhance the error message, it is apparently impossible to get this information
+            //(At least in the current version of Java)
+            throw e;
+        }
     }
 
     /**

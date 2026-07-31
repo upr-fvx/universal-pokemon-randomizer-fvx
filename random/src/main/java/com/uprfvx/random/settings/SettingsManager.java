@@ -94,7 +94,7 @@ public class SettingsManager {
     }
 
     /**
-     * The unsafe part of the implementation. Given a setting name, attempts to retrieve the SettingState
+     * The unsafe part of the implementation. Given a setting name, attempts to retrieve its SettingState
      * and cast it to SettingState<T>.
      * @param settingName The name of the setting to retrieve.
      * @return The setting's state, cast to SettingState<T>.
@@ -180,16 +180,83 @@ public class SettingsManager {
         }
     }
 
-    //TODO: event listeners for when settings are enabled, disabled, have their values changed,
-    // or have their POSSIBLE values changed.
-    // (Or more likely, a single listener that reports ANY of these events, since anything that listens for one
-    // probably needs to listen for all.)
-    // (Also, it's easier to implement that way.)
-    // ...Actually, probably doesn't listen for "has value changed".
+    /**
+     * Interface for any listener to changes of settings.
+     */
+    public interface SettingChangeListener {
+        /**
+         * Alerts the listener of a possible automatic change to the setting.
+         * This could be a change to its enabled/disabled state, the enabled/disabled state of its possible values,
+         * and/or a reset to its default value.
+         * It could also be no change.
+         * @param setting The setting that might have changed.
+         * @param manager The settings manager handling the setting.
+         */
+        public void onPossibleAutomaticSettingChange(String setting, SettingsManager manager);
+
+        /**
+         * Alerts the listener to a manual change to the setting's value.
+         * @param setting The setting that had its value changed.
+         * @param manager The settings manager handling the setting.
+         */
+        public void onManualSettingChange(String setting, SettingsManager manager);
+
+        /**
+         * Alerts the listener that the support state of this setting has changed.
+         * @param setting The setting that has been changed.
+         * @param manager The settings manager handling the setting.
+         * @param isSupported Whether the setting is now supported.
+         */
+        public void onSupportChange(String setting, SettingsManager manager, boolean isSupported);
+
+        /**
+         * Alerts the listener that the supported values of this setting may have changed.
+         * @param setting The setting that may have been changed.
+         * @param manager The settings manager handling the setting.
+         * @param game The RomHandler of the game that was loaded, or null if a game was unloaded.
+         */
+        public void onPossibleSupportedValuesChange(String setting, SettingsManager manager, RomHandler game);
+    }
+
+    /**
+     * Adds the given listener to the set of listeners for the given setting.
+     * @param settingName The setting to listen to.
+     * @param listener The listener to add.
+     * @throws IllegalArgumentException If no setting of that name exists.
+     */
+    public void addListener(String settingName, SettingChangeListener listener) {
+        if (settingStates.get(settingName) == null)
+            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
+
+        Set<SettingChangeListener> settingListeners = listeners.computeIfAbsent(settingName,
+                set -> new HashSet<>());
+        settingListeners.add(listener);
+    }
+
+    /**
+     * Removes the given listener from the set of listeners for the given setting.
+     * @param settingName The setting to stop listening to.
+     * @param listener The listener to remove.
+     * @return True if the listener was removed, false if it was not present.
+     * @throws IllegalArgumentException If no setting of that name exists.
+     */
+    public boolean removeListener(String settingName, SettingChangeListener listener) {
+        if (settingStates.get(settingName) == null)
+            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
+
+        Set<SettingChangeListener> settingListeners = listeners.get(settingName);
+        if(settingListeners == null)
+            return false;
+
+        return settingListeners.remove(listener);
+    }
+
+    //TODO: passthrough functions for isEnabled, isSupported, isValueEnabled, isValueSupported?
 
     private Map<String, SettingState<? extends Serializable>> settingStates;
     private Map<String, Set<String>> dependencies;
     private Map<String, List<String>> categorizedNames;
+    private Map<String, Set<SettingChangeListener>> listeners = new HashMap<>();
     //A reverse lookup of setting restrictions.
     //Needed so that dependent settings can be updated when a setting is changed.
     //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)

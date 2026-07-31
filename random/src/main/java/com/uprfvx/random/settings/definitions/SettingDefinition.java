@@ -119,6 +119,13 @@ public abstract class SettingDefinition<T extends Serializable> {
     }
 
     //TODO: on implementing, we may decide it's more convenient to load the SettingsManager ahead of time
+
+    /**
+     * Checks to see if the setting should be enabled with the current state of the SettingsManager given.
+     * Does not check if the setting is supported by the game, nor if any specific values are disabled.
+     * @param manager The SettingsManager to check against.
+     * @return True if the setting is enabled, false otherwise.
+     */
     public boolean isEnabled(SettingsManager manager) {
         if(prerequisite == null) {
             return true;
@@ -127,6 +134,12 @@ public abstract class SettingDefinition<T extends Serializable> {
         return prerequisite.test(manager);
     }
 
+    /**
+     * Checks to see if the setting is supported by the RomHandler given.
+     * Does not check if specific values are supported.
+     * @param game The game (RomHandler) to check against.
+     * @return True if the setting is supported, false otherwise.
+     */
     public boolean isSupported(RomHandler game) {
         if (supported == null) {
             return true;
@@ -148,9 +161,11 @@ public abstract class SettingDefinition<T extends Serializable> {
      * Does not check if the setting is supported as a whole; both should be checked.
      * @param value The particular value to check.
      * @param game The RomHandler to check for support.
-     * @return True if the value is enabled, false otherwise.
+     * @return True if the value is supported, false otherwise.
      */
     public abstract boolean isValueSupported(T value, RomHandler game);
+
+    //TODO: compilation functions? (isSettingActive, isValueValid, isValueFullyEnabled, isValueFullySupported, etc
 
     /**
      * Returns a list of all settings which have states that enable/disable this setting or some of its values.

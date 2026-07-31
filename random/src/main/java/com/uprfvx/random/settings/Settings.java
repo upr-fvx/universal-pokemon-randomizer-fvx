@@ -463,19 +463,33 @@ public class Settings {
 
     private final static SettingRestriction anyStarterIsRandomRestriction = new MultiSettingRestriction(
             true, false,
-            new SimpleSettingRestriction<>("CustomStarter1", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
-            new SimpleSettingRestriction<>("CustomStarter2", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
-            new SimpleSettingRestriction<>("CustomStarter3", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            new MultiSettingRestriction(false, false,
+                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    new MultiSettingRestriction(true, false,
+                            new SimpleSettingRestriction<>("CustomStarter1",
+                                    equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                            new SimpleSettingRestriction<>("CustomStarter2",
+                                    equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                            new SimpleSettingRestriction<>("CustomStarter3",
+                                    equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES))
+                    )
+            ),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
     );
 
     private final static SettingRestriction allStartersAreRandomRestriction = new MultiSettingRestriction(
-            false, false,
-            new SimpleSettingRestriction<>("CustomStarter1", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
-            new SimpleSettingRestriction<>("CustomStarter2", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
-            new SimpleSettingRestriction<>("CustomStarter3", equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+            true, false,
+            new MultiSettingRestriction(false, false,
+                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    new SimpleSettingRestriction<>("CustomStarter1",
+                            equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                    new SimpleSettingRestriction<>("CustomStarter2",
+                            equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                    new SimpleSettingRestriction<>("CustomStarter3",
+                            equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES))
+            ),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
@@ -688,7 +702,7 @@ public class Settings {
         UNCHANGED, RANDOM_PREFER_SAME_TYPE, COMPLETELY_RANDOM, METRONOME_ONLY
     }
 
-    private static SettingRestriction randomPokemonMovesetsRestriction = new MultiSettingRestriction(
+    private static final SettingRestriction randomPokemonMovesetsRestriction = new MultiSettingRestriction(
             true, false,
             new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.RANDOM_PREFER_SAME_TYPE),
             new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.COMPLETELY_RANDOM)

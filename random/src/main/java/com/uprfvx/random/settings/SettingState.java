@@ -32,6 +32,9 @@ public class SettingState<T extends Serializable> {
      * @return True if the setting's state was changed, false otherwise.
      */
     public boolean checkValidity(SettingsManager manager) {
+        if(value == definition.getDefaultValue())
+            return false;
+
         if(!definition.isEnabled(manager) || !definition.isValueEnabled(value, manager)) {
             value = definition.getDefaultValue();
             return true;

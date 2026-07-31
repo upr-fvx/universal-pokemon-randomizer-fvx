@@ -49,32 +49,88 @@ public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = Arrays.asList(
-            new SimpleSettingDefinition<>("LimitPokemon", "GeneralOptions",
-                    false, null, notOfGeneration(1)), //TODO: might be able to eliminate this setting
-            new SimpleSettingDefinition<>("NoRandomIntroMon", "GeneralOptions",
-                    false, null, null),
+            new SimpleSettingDefinition<>(
+                    "LimitPokemon",
+                    "GeneralOptions",
+                    false,
+                    null,
+                    notOfGeneration(1)
+            ), //TODO: might be able to eliminate this setting
+            new SimpleSettingDefinition<>(
+                    "NoRandomIntroMon",
+                    "GeneralOptions",
+                    false,
+                    null,
+                    null
+            ),
                             //TODO: make this setting actually work?
                             // "this setting" is race mode?
-            new SimpleSettingDefinition<>("RaceMode", "GeneralOptions",
-                    false, null, null),
-            new SimpleSettingDefinition<>("BanIrregularAltFormes", "GeneralOptions",
-                    false, null, null),
+                            // I believe I was referring to "NoRandomIntroMon" but I cannot recall for sure anymore.
+                            //TODO investigate this todo i guess
+            new SimpleSettingDefinition<>(
+                    "RaceMode",
+                    "GeneralOptions",
+                    false,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanIrregularAltFormes",
+                    "GeneralOptions",
+                    false,
+                    null,
+                    null
+            ),
 
-            new SimpleSettingDefinition<>("AllowGeneration1", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(2)),
-            new SimpleSettingDefinition<>("AllowGeneration2", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(2)),
-            new SimpleSettingDefinition<>("AllowGeneration3", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(3)),
-            new SimpleSettingDefinition<>("AllowGeneration4", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(4)),
-            new SimpleSettingDefinition<>("AllowGeneration5", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(5)),
-            new SimpleSettingDefinition<>("AllowGeneration6", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(6)),
-            new SimpleSettingDefinition<>("AllowGeneration7", "LimitPokemon",
-                    false, new SimpleSettingRestriction<>("LimitPokemon", isTrue), atLeastGeneration(7))
-
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration1",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(2)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration2",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(2)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration3",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(3)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration4",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(4)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration5",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(5)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration6",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(6)
+            ),
+            new SimpleSettingDefinition<>(
+                    "AllowGeneration7",
+                    "LimitPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    atLeastGeneration(7)
+            )
     );
 
     public enum BSTMod {

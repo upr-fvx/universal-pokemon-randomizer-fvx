@@ -462,12 +462,13 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         double spdDiff = Math.round((spdW / totW) * bstDiff);
         double speDiff = Math.round((speW / totW) * bstDiff);
 
-        double hp = fromBS.getHp() + hpDiff;
-        double atk = fromBS.getAttack() + atkDiff;
-        double def = fromBS.getDefense() + defDiff;
-        double spa = fromBS.getSpatk() + spaDiff;
-        double spd = fromBS.getSpdef() + spdDiff;
-        double spe = fromBS.getSpeed() + speDiff;
+        // stats can get too low if bstDiff < 0
+        double hp = Math.max(MIN_HP, fromBS.getHp() + hpDiff);
+        double atk = Math.max(MIN_NON_HP_STAT, fromBS.getAttack() + atkDiff);
+        double def = Math.max(MIN_NON_HP_STAT, fromBS.getDefense() + defDiff);
+        double spa = Math.max(MIN_NON_HP_STAT, fromBS.getSpatk() + spaDiff);
+        double spd = Math.max(MIN_NON_HP_STAT, fromBS.getSpdef() + spdDiff);
+        double spe = Math.max(MIN_NON_HP_STAT, fromBS.getSpeed() + speDiff);
 
         toBS.setStatRatios(hp, atk, def, spa, spd, spe);
     }

@@ -48,5 +48,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ## Bugfixes
 - Fixed randomization failure when "Randomize Added Stats on Evolution" is used and a Pokémon evolves into another with a lower BST. (Issue #240)
+- Fixed batch randomization sometimes not resetting the ROM between randomizations. (Issue #241)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

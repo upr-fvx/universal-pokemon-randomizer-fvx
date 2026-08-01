@@ -1057,10 +1057,10 @@ public class RandomizerGUI {
         romSaveChooser.setSelectedFile(null);
         boolean allowed = false;
         File fh = null;
+
         if (batchRandomizationSettings.isBatchRandomizationEnabled() && outputType != SaveType.INVALID) {
             allowed = true;
-        }
-        else if (outputType == SaveType.FILE) {
+        } else if (outputType == SaveType.FILE) {
             romSaveChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             int returnVal = romSaveChooser.showSaveDialog(frame);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -1115,7 +1115,20 @@ public class RandomizerGUI {
                                         currentRomNumber,
                                         numberOfRandomizedROMs))
                         );
+
+                        // We got an annoying case of romHandler being reset (the ROM being re-opened)
+                        // inside saveRandomizedRom()... but in a separate thread. Ideally all of this
+                        // code should be rewritten to be properly thread-safe, but *hopefully* a full
+                        // GUI rewrite is coming up soonish either way.
+                        // With that in mind, a smelly busy-wait loop will have to do as a short-term
+                        // bug resolver. --voliol 2026-08-01
+                        RomHandler before = romHandler;
                         saveRandomizedRom(outputType, rom);
+                        while (romHandler == before) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException ignored) {}
+                        }
                     }
                     return null;
                 }

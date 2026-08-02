@@ -12,7 +12,7 @@ import java.util.function.Predicate;
 /**
  * A definition for a numeric setting that is bounded to specific ranges.
  * To get the ranges, it is necessary to cast SettingDefinition to this type.
- * Minimums and maximums are INCLUSIVE
+ * All minimums and maximums are INCLUSIVE--They allow values that are equal to themselves.
  * @param <T> The type of numeric value to use. Must implement both Number and Comparable<T>.
  */
 public class NumericSettingDefinition<T extends Number & Comparable<T>> extends SettingDefinition<T> {
@@ -42,6 +42,24 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         supportedMaximums = null;
     }
 
+    /**
+     *
+     * @param name
+     * @param category
+     * @param defaultValue
+     * @param prerequisite
+     * @param supported
+     * @param minimum The minimum allowed value.
+     * @param maximum The maximum allowed value.
+     * @param restrictedMinimums A set of additional minimum restrictions. If the SettingRestriction returns false,
+     *                           the setting's value cannot be less than the associated value.
+     * @param restrictedMaximums A set of additional maximum restrictions. If the SettingRestriction returns false,
+     *                           the setting's value cannot be greater than the associated value.
+     * @param supportedMinimums A set of additional support minimums. If the Predicate returns false,
+     *                          values below the associated value are not supported.
+     * @param supportedMaximums A set of additional support maximums. If the Predicate returns false,
+     *                          values above the associated value are not supported.
+     */
     public NumericSettingDefinition(String name, String category, T defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                     T minimum, T maximum,
@@ -57,13 +75,15 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         if (defaultValue.compareTo(minimum) < 0 || defaultValue.compareTo(maximum) > 0) {
             throw new IllegalArgumentException("Default value for " + name + " is not within the valid range!");
         }
+        this.minimum = minimum;
+        this.maximum = maximum;
+
+
         checkIntegrity(restrictedMinimums, true);
         checkIntegrity(restrictedMaximums, false);
         checkIntegrity(supportedMinimums, true);
         checkIntegrity(supportedMaximums, false);
 
-        this.minimum = minimum;
-        this.maximum = maximum;
         this.restrictedMinimums = restrictedMinimums;
         this.restrictedMaximums = restrictedMaximums;
         this.supportedMinimums = supportedMinimums;
@@ -112,12 +132,12 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
 
     @Override
     public boolean isValueEnabled(T value, SettingsManager manager) {
-        return false;
+        return value.compareTo(minimumEnabled(manager)) >= 0 && value.compareTo(maximumEnabled(manager)) <= 0;
     }
 
     @Override
     public boolean isValueSupported(T value, RomHandler game) {
-        return false;
+        return value.compareTo(minimumSupported(game)) >= 0 && value.compareTo(maximumSupported(game)) <= 0;
     }
 
     /**
@@ -149,7 +169,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMinimum = minimum;
 
         for (Pair<T, SettingRestriction> pair : restrictedMinimums) {
-            if (pair.getValue().test(manager) && pair.getKey().compareTo(rollingMinimum) > 0) {
+            if (!pair.getValue().test(manager) && pair.getKey().compareTo(rollingMinimum) > 0) {
                 rollingMinimum = pair.getKey();
             }
         }
@@ -172,7 +192,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMaximum = maximum;
 
         for (Pair<T, SettingRestriction> pair : restrictedMaximums) {
-            if (pair.getValue().test(manager) && pair.getKey().compareTo(rollingMaximum) < 0) {
+            if (!pair.getValue().test(manager) && pair.getKey().compareTo(rollingMaximum) < 0) {
                 rollingMaximum = pair.getKey();
             }
         }
@@ -193,7 +213,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMinimum = minimum;
 
         for (Pair<T, Predicate<RomHandler>> pair : supportedMinimums) {
-            if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMinimum) > 0) {
+            if (!pair.getValue().test(game) && pair.getKey().compareTo(rollingMinimum) > 0) {
                 rollingMinimum = pair.getKey();
             }
         }
@@ -214,7 +234,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMaximum = maximum;
 
         for (Pair<T, Predicate<RomHandler>> pair : supportedMaximums) {
-            if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMaximum) < 0) {
+            if (!pair.getValue().test(game) && pair.getKey().compareTo(rollingMaximum) < 0) {
                 rollingMaximum = pair.getKey();
             }
         }

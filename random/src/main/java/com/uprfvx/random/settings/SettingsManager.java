@@ -43,6 +43,14 @@ import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 
 public class SettingsManager {
 
+    public SettingsManager() {
+        initializeSettings();
+        listeners = new HashMap<>();
+
+        //...is that all it needs? it feels like there should be more, but...
+
+    }
+
     /**
      * Retrieves the value of the requested setting.
      * @param settingName The setting to retrieve the value of.
@@ -151,7 +159,7 @@ public class SettingsManager {
     }
 
     /**
-     * Populates the map of settings (and other needed maps) from the setting definitions in Settings.ALL_SETTINGS
+     * Populates the map of settings (and other related maps) from the setting definitions in Settings.ALL_SETTINGS
      */
     private void initializeSettings() {
         settingStates = new HashMap<>();

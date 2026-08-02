@@ -113,9 +113,9 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasTotemPokemon());
 
-        Settings s = new Settings();
-        s.setTotemPokemonMod(Settings.TotemPokemonMod.RANDOM);
-        s.setAllyPokemonMod(Settings.AllyPokemonMod.RANDOM);
+        SettingsManager s = new SettingsManager();
+        s.setTotemPokemonMod(SettingsManager.TotemPokemonMod.RANDOM);
+        s.setAllyPokemonMod(SettingsManager.AllyPokemonMod.RANDOM);
         s.setAllowTotemAltFormes(true);
 
         // small loop in case it just throws sometimes

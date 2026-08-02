@@ -439,7 +439,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager();
-        s.setEvolutionsMod(Settings.EvolutionsMod.RANDOM_EVERY_LEVEL);
+        s.setEvolutionsMod(SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL);
         s.setEvosNoConvergence(true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 

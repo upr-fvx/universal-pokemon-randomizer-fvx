@@ -117,14 +117,14 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     }
 
     /**
-     * Gets a new Settings object with the most common settings for testing: <br>
+     * Gets a new SettingsManager object with the most common settings for testing: <br>
      * Randomize Wild Pokemon = true <br>
      * Region Mod = None <br>
      * Use Time-based Encounters = true <br>
      * Allow Alt Formes = true in generation 5 and above, false earlier. <br>
      * Ban Irregular Alt Formes = true
      * @param romName The name of the ROM in use.
-     * @return A Settings object with the described settings.
+     * @return A SettingsManager object with the described settings.
      */
     private SettingsManager getStandardSettings(String romName) {
         SettingsManager settings = new SettingsManager();
@@ -156,7 +156,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
     public void doNotUsePrematureEvosWorks(String romName) {
         activateRomHandler(romName);
 
-        Settings settings = getStandardSettings(romName);
+        SettingsManager settings = getStandardSettings(romName);
         settings.setBanPrematureEvos(true);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();

@@ -484,8 +484,8 @@ public class StarterRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void customStartersCanBeSet(String romName) {
         activateRomHandler(romName);
-        Settings s = new Settings();
-        s.setStartersMod(Settings.StartersMod.CUSTOM);
+        SettingsManager s = new SettingsManager();
+        s.setStartersMod(SettingsManager.StartersMod.CUSTOM);
         int customCount = romHandler.starterCount();
         int[] custom = new int[customCount];
         for (int i = 0; i < custom.length; i++) {

@@ -1,6 +1,6 @@
 package com.uprfvx.random.randomizers;
 
-import com.uprfvx.random.Settings;
+import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.romhandlers.Generation;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -97,7 +97,7 @@ public class RandomizerTest {
         return romName.split("\\(")[0].trim();
     }
 
-    protected PaletteRandomizer createPaletteRandomizer(RomHandler romHandler, Settings settings) {
+    protected PaletteRandomizer createPaletteRandomizer(RomHandler romHandler, SettingsManager settings) {
         return switch (romHandler.generationOfPokemon()) {
             case 1 -> new Gen1PaletteRandomizer(romHandler, settings, RandomizerTest.RND);
             case 2 -> new Gen2PaletteRandomizer(romHandler, settings, RandomizerTest.RND);

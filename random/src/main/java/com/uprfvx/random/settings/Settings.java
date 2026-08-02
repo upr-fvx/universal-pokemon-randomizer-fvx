@@ -240,9 +240,7 @@ public class Settings {
                     6, 9,
                     null,
                     null,
-                    List.of(new Pair<>(7, atMostGeneration(5)), new Pair<>(8, atMostGeneration(6))),
-                    //The way it "skips" a generation is nonintuitive, but that's how it must work for restrictions on
-                    //false + inclusive min/max.
+                    List.of(new Pair<>(7, atLeastGeneration(6)), new Pair<>(8, atLeastGeneration(7))),
                     null
             ),
 

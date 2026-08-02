@@ -43,22 +43,18 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
     }
 
     /**
-     *
-     * @param name
-     * @param category
-     * @param defaultValue
-     * @param prerequisite
-     * @param supported
+     * Creates a new NumericSettingDefinition.
+     * @param name The setting's name. Should be a unique identifier.
+     * @param category The setting's category.
+     * @param defaultValue The default value for the setting. Should be a value that can always be selected.
+     * @param prerequisite The setting is only enabled if this restriction returns true.
+     * @param supported The setting is only supported if this predicate returns true.
      * @param minimum The minimum allowed value.
      * @param maximum The maximum allowed value.
-     * @param restrictedMinimums A set of additional minimum restrictions. If the SettingRestriction returns false,
-     *                           the setting's value cannot be less than the associated value.
-     * @param restrictedMaximums A set of additional maximum restrictions. If the SettingRestriction returns false,
-     *                           the setting's value cannot be greater than the associated value.
-     * @param supportedMinimums A set of additional support minimums. If the Predicate returns false,
-     *                          values below the associated value are not supported.
-     * @param supportedMaximums A set of additional support maximums. If the Predicate returns false,
-     *                          values above the associated value are not supported.
+     * @param restrictedMinimums A set of additional minimums which apply when the associated restrictions return TRUE.
+     * @param restrictedMaximums A set of additional maximums which apply when the associated restrictions return TRUE.
+     * @param supportedMinimums A set of additional minimums which apply when the associated predicates return TRUE.
+     * @param supportedMaximums A set of additional maximums which apply when the associated predicates return TRUE.
      */
     public NumericSettingDefinition(String name, String category, T defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
@@ -169,7 +165,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMinimum = minimum;
 
         for (Pair<T, SettingRestriction> pair : restrictedMinimums) {
-            if (!pair.getValue().test(manager) && pair.getKey().compareTo(rollingMinimum) > 0) {
+            if (pair.getValue().test(manager) && pair.getKey().compareTo(rollingMinimum) > 0) {
                 rollingMinimum = pair.getKey();
             }
         }
@@ -192,7 +188,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMaximum = maximum;
 
         for (Pair<T, SettingRestriction> pair : restrictedMaximums) {
-            if (!pair.getValue().test(manager) && pair.getKey().compareTo(rollingMaximum) < 0) {
+            if (pair.getValue().test(manager) && pair.getKey().compareTo(rollingMaximum) < 0) {
                 rollingMaximum = pair.getKey();
             }
         }
@@ -213,7 +209,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMinimum = minimum;
 
         for (Pair<T, Predicate<RomHandler>> pair : supportedMinimums) {
-            if (!pair.getValue().test(game) && pair.getKey().compareTo(rollingMinimum) > 0) {
+            if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMinimum) > 0) {
                 rollingMinimum = pair.getKey();
             }
         }
@@ -234,7 +230,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         T rollingMaximum = maximum;
 
         for (Pair<T, Predicate<RomHandler>> pair : supportedMaximums) {
-            if (!pair.getValue().test(game) && pair.getKey().compareTo(rollingMaximum) < 0) {
+            if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMaximum) < 0) {
                 rollingMaximum = pair.getKey();
             }
         }

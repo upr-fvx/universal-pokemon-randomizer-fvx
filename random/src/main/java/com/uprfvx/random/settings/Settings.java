@@ -2,6 +2,7 @@ package com.uprfvx.random.settings;
 
 import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
+import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Type;
@@ -1459,12 +1460,70 @@ public class Settings {
             )
     );
 
+    public enum TypeEffectivenessMod {
+        UNCHANGED, RANDOM, RANDOM_BALANCED, KEEP_IDENTITIES, INVERSE
+    }
+
     public static final List<SettingDefinition<?>> TYPES = Arrays.asList(
-            // TODO
+            new SimpleSettingDefinition<>(
+                    "RandomizeTypeEffectiveness",
+                    "TypeEffectiveness",
+                    TypeEffectivenessMod.UNCHANGED,
+                    null,
+                    RomHandler::hasTypeEffectivenessSupport
+            ),
+            new SimpleSettingDefinition<>(
+                    "InverseTypesRandomImmunities",
+                    "TypeEffectiveness",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeTypeEffectiveness", TypeEffectivenessMod.INVERSE),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "UpdateTypeEffectiveness",
+                    "TypeEffectiveness",
+                    false,
+                    null,
+                    rh -> rh.hasTypeEffectivenessSupport()
+                            && rh.generationOfPokemon() < TypeEffectivenessUpdater.UPDATE_TO_GEN
+                    )
     );
 
+    public enum PokemonPalettesMod {
+        UNCHANGED, RANDOM
+    }
+
     public static final List<SettingDefinition<?>> GRAPHICS = Arrays.asList(
-            // TODO
+            new SimpleSettingDefinition<>(
+                    "RandomizePokemonPalettes",
+                    "PokemonPalettes",
+                    PokemonPalettesMod.UNCHANGED,
+                    null,
+                    RomHandler::hasPokemonPaletteSupport
+            ),
+            new SimpleSettingDefinition<>(
+                    "PokemonPalettesFollowTypes",
+                    "PokemonPalettes",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "PokemonPalettesFollowEvolutions",
+                    "PokemonPalettes",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "PokemonPalettesShinyFromNormal",
+                    "PokemonPalettes",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM),
+                    notOfGeneration(1)
+            )
+
+            // TODO: what to do with CPGs? Should they be included here?
     );
 
     public static final List<SettingDefinition<?>> MISC_TWEAKS = Arrays.asList(

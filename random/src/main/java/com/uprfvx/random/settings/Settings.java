@@ -33,7 +33,7 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 //Enabled/Disabled state is determined by SettingRestrictions, which contain two parts:
 // The setting(s) which must be checked, and the function to check them against.
 //Most cases can be handled by a SimpleSettingRestriction, which compares the value of a single setting against a predicate.
-//When checking Enum settings, the explicit EnumMatchRestriction is preferred.
+//When checking Enum settings, EnumMatchRestriction is also available.
 //If there are multiple relevant settings, there is also MultiSettingRestriction, which combines the results of two
 // or more SettingRestrictions in an AND, OR, NAND, or NOR manner. (This can include other MultiSettingRestrictions.)
 //For more complicated checks (such as comparing one setting's value to another's) you may need to write your own
@@ -43,12 +43,16 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 //isTrue and isFalse, which check the states of boolean settings.
 //equalsValue, lessThanValue, greaterThanValue, lessThanOrEqualsValue, and greaterThanOrEqualsValue,
 // which compare a numeric setting to a set value.
+//matchesEnumValue and doesNotMatchEnumValue, which check enum settings' states.
 //ofGeneration, notOfGeneration, atLeastGeneration, and atMostGeneration, which check the generation of a RomHandler.
 
 //Setting names should be unique. They also will (eventually) be used as ini keys, so they should (a) be relatively
 // human-readable, (b) contain no spaces nor the equals sign.
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
+    public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
+    //When splitting a setting into multiple or changing its type, add the old version to the list of removed settings
+    //so that we can load it in and convert it to the new setting.
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = Arrays.asList(
             new SimpleSettingDefinition<>(
@@ -1588,6 +1592,9 @@ public class Settings {
         all.addAll(GRAPHICS);
         all.addAll(MISC_TWEAKS);
         ALL_SETTINGS = Collections.unmodifiableList(all);
+
+        List<SettingDefinition<?>> removed = new ArrayList<>();
+        REMOVED_SETTINGS = Collections.unmodifiableList(removed);
     }
 
 }

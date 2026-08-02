@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.uprfvx.random.settings.SettingUtils.*;
+import static com.uprfvx.random.settings.SettingUtils.higherGenerationsThan;
 
 //The list of EVERY setting supported by the randomizer.
 
@@ -240,7 +241,7 @@ public class Settings {
                     6, 9,
                     null,
                     null,
-                    List.of(new Pair<>(7, atLeastGeneration(6)), new Pair<>(8, atLeastGeneration(7))),
+                    higherGenerationsThan(6, 7),
                     null
             ),
 
@@ -766,12 +767,7 @@ public class Settings {
                     2, 9,
                     null,
                     null,
-                    List.of(
-                            // It does feel a bit silly to need to list each value like this
-                            new Pair<>(3, atLeastGeneration(2)), new Pair<>(4, atLeastGeneration(3)),
-                            new Pair<>(5, atLeastGeneration(4)), new Pair<>(6, atLeastGeneration(5)),
-                            new Pair<>(7, atLeastGeneration(6)), new Pair<>(8, atLeastGeneration(7))
-                    ),
+                    higherGenerationsThan(2,3,4,5,6,7),
                     null
             ),
 

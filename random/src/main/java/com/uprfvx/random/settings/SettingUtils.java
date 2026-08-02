@@ -1,11 +1,16 @@
 package com.uprfvx.random.settings;
 
 import com.uprfvx.romio.romhandlers.RomHandler;
+import miscutils.Pair;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class SettingUtils {
 
+    //region setting value predicates
     public static final Predicate<Boolean> isTrue = s -> s;
     public static final Predicate<Boolean> isFalse = s -> !s;
 
@@ -44,6 +49,9 @@ public class SettingUtils {
         return e -> e != value;
     }
 
+    //endregion
+
+    //region romhandler predicates
     /**
      * Determines if the given RomHandler is a game that is any of the given generations.
      * @param generations The generations to select.
@@ -94,6 +102,19 @@ public class SettingUtils {
         };
     }
 
+    /**
+     * Creates a set of minimums such that each generation given supports only generations higher than itself.
+     * @param generations Each generation that needs such a limit.
+     * @return A set of minimums as described.
+     */
+    public static List<Pair<Integer, Predicate<RomHandler>>> higherGenerationsThan(int... generations) {
+        List<Pair<Integer, Predicate<RomHandler>>> supportMinimums = new ArrayList<>();
+        for(int generation : generations){
+            supportMinimums.add(new Pair<>(generation + 1, atLeastGeneration(generation)));
+        }
+        return Collections.unmodifiableList(supportMinimums);
+    }
 
+    //endregion
 
 }

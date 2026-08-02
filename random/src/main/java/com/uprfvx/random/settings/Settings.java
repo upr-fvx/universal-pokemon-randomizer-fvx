@@ -54,7 +54,7 @@ public class Settings {
     //When splitting a setting into multiple or changing its type, add the old version to the list of removed settings
     //so that we can load it in and convert it to the new setting.
 
-    public static final List<SettingDefinition<?>> GENERAL_OPTIONS = Arrays.asList(
+    public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition<>(
                     "LimitPokemon",
                     "GeneralOptions",
@@ -163,7 +163,7 @@ public class Settings {
         LEGENDARIES, STRONG_LEGENDARIES, ALL
     }
 
-    public static final List<SettingDefinition<?>> POKEMON_TRAITS = Arrays.asList(
+    public static final List<SettingDefinition<?>> POKEMON_TRAITS = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizePokemonBaseStatTotals",
                     "PokemonBaseStatistics",
@@ -509,7 +509,7 @@ public class Settings {
         UNCHANGED, RANDOMIZE_GIVEN, RANDOMIZE_GIVEN_AND_REQUESTED
     }
 
-    public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = Arrays.asList(
+    public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeStarters",
                     "Starters",
@@ -714,7 +714,7 @@ public class Settings {
             new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.COMPLETELY_RANDOM)
     );
 
-    public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = Arrays.asList(
+    public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeMovePower",
                     "MoveData",
@@ -868,7 +868,7 @@ public class Settings {
         UNCHANGED, RANDOM, SAME_STRENGTH
     }
 
-    public static final List<SettingDefinition<?>> FOE_POKEMON = Arrays.asList(
+    public static final List<SettingDefinition<?>> FOE_POKEMON = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeTrainerPokemon",
                     "TrainerPokemon",
@@ -1206,7 +1206,7 @@ public class Settings {
         UNCHANGED, STANDARDIZED, BUFFED, SUPER, ULTRA, GUARANTEED
     }
 
-    public static final List<SettingDefinition<?>> WILD_POKEMON = Arrays.asList(
+    public static final List<SettingDefinition<?>> WILD_POKEMON = List.of(
             // TODO: all the wild mon options that have to do with randomizing wild mons
 
             new SimpleSettingDefinition<>(
@@ -1263,7 +1263,7 @@ public class Settings {
         UNCHANGED, RANDOM_PREFER_TYPE, COMPLETELY_RANDOM, FULL
     }
 
-    public static final List<SettingDefinition<?>> TMS_HMS_AND_TUTORS = Arrays.asList(
+    public static final List<SettingDefinition<?>> TMS_HMS_AND_TUTORS = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeTMMoves",
                     "TMsAndHMs",
@@ -1416,7 +1416,7 @@ public class Settings {
         UNCHANGED, RANDOM
     }
 
-    public static final List<SettingDefinition<?>> ITEMS = Arrays.asList(
+    public static final List<SettingDefinition<?>> ITEMS = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeFieldItems",
                     "FieldItems",
@@ -1511,7 +1511,7 @@ public class Settings {
         UNCHANGED, RANDOM, RANDOM_BALANCED, KEEP_IDENTITIES, INVERSE
     }
 
-    public static final List<SettingDefinition<?>> TYPES = Arrays.asList(
+    public static final List<SettingDefinition<?>> TYPES = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeTypeEffectiveness",
                     "TypeEffectiveness",
@@ -1540,7 +1540,7 @@ public class Settings {
         UNCHANGED, RANDOM
     }
 
-    public static final List<SettingDefinition<?>> GRAPHICS = Arrays.asList(
+    public static final List<SettingDefinition<?>> GRAPHICS = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizePokemonPalettes",
                     "PokemonPalettes",
@@ -1573,7 +1573,7 @@ public class Settings {
             // TODO: what to do with CPGs? Should they be included here?
     );
 
-    public static final List<SettingDefinition<?>> MISC_TWEAKS = Arrays.asList(
+    public static final List<SettingDefinition<?>> MISC_TWEAKS = List.of(
             // TODO
     );
 

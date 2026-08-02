@@ -1196,8 +1196,51 @@ public class Settings {
             )
     );
 
+    public enum CatchRateMod {
+        // replaces the numeric (but described with names) catch rates of earlier
+        // Randomizer versions
+        UNCHANGED, STANDARDIZED, BUFFED, SUPER, ULTRA, GUARANTEED
+    }
+
     public static final List<SettingDefinition<?>> WILD_POKEMON = Arrays.asList(
-            // TODO
+            // TODO: all the wild mon options that have to do with randomizing wild mons
+
+            new SimpleSettingDefinition<>(
+                    "WildPokemonCatchRate",
+                    "WildPokemon",
+                    CatchRateMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeWildPokemonHeldItems",
+                    "WildPokemon",
+                    false,
+                    null,
+                    notOfGeneration(1)
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanBadWildPokemonHeldItems",
+                    "WildPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemonHeldItems", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "WildPokemonLevelModifier",
+                    "WildPokemon",
+                    false,
+                    null,
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "WildPokemonLevelModifierPercentage",
+                    "WildPokemon",
+                    100,
+                    new SimpleSettingRestriction<>("WildPokemonLevelModifier", isTrue),
+                    null,
+                    -100, 155
+            )
     );
 
     public enum TMMovesMod {

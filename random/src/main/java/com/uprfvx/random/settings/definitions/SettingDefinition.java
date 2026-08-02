@@ -64,7 +64,10 @@ public abstract class SettingDefinition<T extends Serializable> {
         this.defaultValue = defaultValue;
         this.prerequisite = prerequisite;
         this.supported = supported;
-        Set<String> restrictors = new HashSet<>(valueRestrictors);
+        Set<String> restrictors = new HashSet<>();
+        if(valueRestrictors != null) {
+             restrictors.addAll(valueRestrictors);
+        }
         if (prerequisite != null)
         {
             restrictors.addAll(prerequisite.getRelevantSettingNames());

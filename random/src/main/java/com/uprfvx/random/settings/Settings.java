@@ -850,6 +850,18 @@ public class Settings {
             new SimpleSettingRestriction<>("AddHeldItemsToRegularTrainers", isTrue)
     );
 
+    public enum TotemPokemonMod {
+        UNCHANGED, RANDOM, SIMILAR_STRENGTH
+    }
+
+    public enum AllyPokemonMod {
+        UNCHANGED, RANDOM, SIMILAR_STRENGTH
+    }
+
+    public enum AuraMod {
+        UNCHANGED, RANDOM, SAME_STRENGTH
+    }
+
     public static final List<SettingDefinition<?>> FOE_POKEMON = Arrays.asList(
             new SimpleSettingDefinition<>(
                     "RandomizeTrainerPokemon",
@@ -1126,9 +1138,60 @@ public class Settings {
                     false,
                     null,
                     null
-            )
+            ),
 
-            // TODO: add totem pokemon settings
+            new SimpleSettingDefinition<>(
+                    "RandomizeTotemPokemon",
+                    "TotemPokemon",
+                    TotemPokemonMod.UNCHANGED,
+                    null,
+                    RomHandler::hasTotemPokemon
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeAllyPokemon",
+                    "TotemPokemon",
+                    AllyPokemonMod.UNCHANGED,
+                    null,
+                    RomHandler::hasTotemPokemon
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeTotemAuras",
+                    "TotemPokemon",
+                    AuraMod.UNCHANGED,
+                    null,
+                    RomHandler::hasTotemPokemon
+            ),
+            new SimpleSettingDefinition<>(
+                    "RandomizeTotemHeldItems",
+                    "TotemPokemon",
+                    false,
+                    null,
+                    RomHandler::hasTotemPokemon
+            ),
+            new SimpleSettingDefinition<>(
+                    "TotemPokemonAllowAltFormes",
+                    "TotemPokemon",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizeTotemPokemon", TotemPokemonMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>("RandomizeAllyPokemon", AllyPokemonMod.UNCHANGED, false)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "TotemPokemonLevelModifier",
+                    "TotemPokemon",
+                    false,
+                    null,
+                    RomHandler::hasTotemPokemon
+            ),
+            new NumericSettingDefinition<>(
+                    "TotemPokemonLevelModifierPercentage",
+                    "TotemPokemon",
+                    0,
+                    new SimpleSettingRestriction<>("TotemPokemonLevelModifier", isTrue),
+                    null,
+                    -100, 155
+            )
     );
 
     public static final List<SettingDefinition<?>> WILD_POKEMON = Arrays.asList(

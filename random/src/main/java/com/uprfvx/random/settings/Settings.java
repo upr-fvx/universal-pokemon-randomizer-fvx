@@ -760,7 +760,7 @@ public class Settings {
             new NumericSettingDefinition<>(
                     "UpdateMovesToGeneration",
                     "MoveData",
-                    0,
+                    9,
                     new SimpleSettingRestriction<>("UpdateMoves", isTrue),
                     null,
                     2, 9,
@@ -768,9 +768,9 @@ public class Settings {
                     null,
                     List.of(
                             // It does feel a bit silly to need to list each value like this
-                            new Pair<>(2, atMostGeneration(1)), new Pair<>(3, atMostGeneration(2)),
-                            new Pair<>(4, atMostGeneration(3)), new Pair<>(5, atMostGeneration(4)),
-                            new Pair<>(6, atMostGeneration(5)), new Pair<>(7, atMostGeneration(6))
+                            new Pair<>(3, atLeastGeneration(2)), new Pair<>(4, atLeastGeneration(3)),
+                            new Pair<>(5, atLeastGeneration(4)), new Pair<>(6, atLeastGeneration(5)),
+                            new Pair<>(7, atLeastGeneration(6)), new Pair<>(8, atLeastGeneration(7))
                     ),
                     null
             ),

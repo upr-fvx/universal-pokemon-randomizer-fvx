@@ -21,7 +21,7 @@ public class SpeciesSettingDefinition extends SettingDefinition<Integer> {
     public SpeciesSettingDefinition(String name, String category,
                                     SettingRestriction prerequisite,
                                     Predicate<RomHandler> supported) {
-        super(name, category, RANDOM_SPECIES, prerequisite, supported, false, null);
+        super(name, category, RANDOM_SPECIES, prerequisite, supported, true, null);
     }
 
     @Override

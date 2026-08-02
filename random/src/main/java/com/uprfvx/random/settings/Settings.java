@@ -1198,8 +1198,161 @@ public class Settings {
             // TODO
     );
 
+    public enum TMMovesMod {
+        UNCHANGED, RANDOM
+    }
+
+    public enum TMsHMsCompatibilityMod {
+        UNCHANGED, RANDOM_PREFER_TYPE, COMPLETELY_RANDOM, FULL
+    }
+
+    public enum MoveTutorMovesMod {
+        UNCHANGED, RANDOM
+    }
+
+    public enum MoveTutorsCompatibilityMod {
+        UNCHANGED, RANDOM_PREFER_TYPE, COMPLETELY_RANDOM, FULL
+    }
+
     public static final List<SettingDefinition<?>> TMS_HMS_AND_TUTORS = Arrays.asList(
-            // TODO
+            new SimpleSettingDefinition<>(
+                    "RandomizeTMMoves",
+                    "TMsAndHMs",
+                    TMMovesMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "TMsNoGameBreakingMoves",
+                    "TMsAndHMs",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeTMMoves", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "KeepFieldMoveTMs",
+                    "TMsAndHMs",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeTMMoves", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "TMsForceGoodDamagingMoves",
+                    "TMsAndHMs",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeTMMoves", isTrue),
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "TMsForceGoodDamagingMovesPercentage",
+                    "TMsAndHMs",
+                    0,
+                    new SimpleSettingRestriction<>("TMsForceGoodDamagingMoves", isTrue),
+                    null,
+                    0, 100
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizeTMHMCompatibility",
+                    "TMsAndHMs",
+                    TMsHMsCompatibilityMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "TMLevelupMoveSanity",
+                    "TMsAndHMs",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>("RandomizeTMMoves", TMMovesMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
+                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "TMHMCompatibilityFollowEvolutions",
+                    "TMsAndHMs",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
+                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE),
+                            new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "FullHMCompatibility",
+                    "TMsAndHMs",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.FULL, false),
+                    null
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizeMoveTutorMoves",
+                    "MoveTutors",
+                    MoveTutorMovesMod.UNCHANGED,
+                    null,
+                    RomHandler::hasMoveTutors
+            ),
+            new SimpleSettingDefinition<>(
+                    "MoveTutorsNoGameBreakingMoves",
+                    "MoveTutors",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "KeepFieldMoveTutors",
+                    "MoveTutors",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "MoveTutorsForceGoodDamagingMoves",
+                    "MoveTutors",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves", isTrue),
+                    null
+            ),
+            new NumericSettingDefinition<>(
+                    "MoveTutorsForceGoodDamagingMovesPercentage",
+                    "MoveTutors",
+                    0,
+                    new SimpleSettingRestriction<>("MoveTutorsForceGoodDamagingMoves", isTrue),
+                    null,
+                    0, 100
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizeMoveTutorCompatibility",
+                    "MoveTutors",
+                    MoveTutorsCompatibilityMod.UNCHANGED,
+                    null,
+                    RomHandler::hasMoveTutors
+            ),
+            new SimpleSettingDefinition<>(
+                    "MoveTutorLevelupMoveSanity",
+                    "MoveTutors",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>("RandomizeMoveTutors", MoveTutorMovesMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
+                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "MoveTutorCompatibilityFollowEvolutions",
+                    "MoveTutors",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
+                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE),
+                            new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue)),
+                    null
+            )
     );
 
     public static final List<SettingDefinition<?>> ITEMS = Arrays.asList(

@@ -9,6 +9,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import miscutils.Pair;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -1355,8 +1356,107 @@ public class Settings {
             )
     );
 
+    public enum FieldItemsMod {
+        UNCHANGED, SHUFFLE, RANDOM, RANDOM_EVEN
+    }
+
+    public enum ShopItemsMod {
+        UNCHANGED, SHUFFLE, RANDOM
+    }
+
+    public enum PickupItemsMod {
+        UNCHANGED, RANDOM
+    }
+
     public static final List<SettingDefinition<?>> ITEMS = Arrays.asList(
-            // TODO
+            new SimpleSettingDefinition<>(
+                    "RandomizeFieldItems",
+                    "FieldItems",
+                    FieldItemsMod.UNCHANGED,
+                    null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanBanFieldItems",
+                    "FieldItems",
+                    false,
+                    new MultiSettingRestriction(true, false,
+                            new EnumMatchRestriction<>("RandomizeFieldItems", FieldItemsMod.RANDOM),
+                            new EnumMatchRestriction<>("RandomizeFieldItems", FieldItemsMod.RANDOM_EVEN)),
+                    null
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizeSpecialShopItems",
+                    "ShopItems",
+                    ShopItemsMod.UNCHANGED,
+                    null,
+                    RomHandler::hasShopSupport
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanBadShopItems",
+                    "ShopItems",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanRegularShopItems",
+                    "ShopItems",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanOverpoweredShopItems",
+                    "ShopItems",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "GuaranteeEvolutionItemsInShops",
+                    "ShopItems",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "GuaranteeXItemsInShops",
+                    "ShopItems",
+                    false,
+                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BalanceShopItemPrices",
+                    "ShopItems",
+                    false,
+                    null,
+                    RomHandler::hasShopSupport
+            ),
+            new SimpleSettingDefinition<>(
+                    "AddCheapRareCandiesToShops",
+                    "ShopItems",
+                    false,
+                    null,
+                    RomHandler::canChangeShopSizes
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "RandomizePickupItems",
+                    "PickupItems",
+                    PickupItemsMod.UNCHANGED,
+                    null,
+                    rh -> rh.abilitiesPerSpecies() > 0
+            ),
+            new SimpleSettingDefinition<>(
+                    "BanBadPickupItems",
+                    "PickupItems",
+                    false,
+                    new EnumMatchRestriction<>("RandomizePickupItems", PickupItemsMod.RANDOM),
+                    null
+            )
     );
 
     public static final List<SettingDefinition<?>> TYPES = Arrays.asList(

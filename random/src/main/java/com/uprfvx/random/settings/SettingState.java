@@ -4,7 +4,8 @@ import com.uprfvx.random.settings.definitions.SettingDefinition;
 
 import java.io.Serializable;
 
-public class SettingState<T extends Serializable> {
+//Making this class package-private, just in case.
+class SettingState<T extends Serializable> {
     private final SettingDefinition<T> definition;
     private T value;
 

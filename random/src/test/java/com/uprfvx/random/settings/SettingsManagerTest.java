@@ -59,7 +59,7 @@ public class SettingsManagerTest {
     public void setWrongTypeThrows() {
         SettingsManager manager = new SettingsManager();
 
-        Exception e = assertThrows(ClassCastException.class, () -> {
+        Exception e = assertThrows(IllegalArgumentException.class, () -> {
             manager.setSetting("LimitPokemon", 3.0);
         });
     }

@@ -103,7 +103,8 @@ public class SettingUtils {
     }
 
     /**
-     * Creates a set of minimums such that each generation given supports only generations higher than itself.
+     * Creates a set of minimums (suitable for use with a NumericSettingDefinition) such that each generation given
+     * supports only generations higher than itself.
      * @param generations Each generation that needs such a limit.
      * @return A set of minimums as described.
      */

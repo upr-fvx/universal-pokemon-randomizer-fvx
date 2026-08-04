@@ -143,9 +143,13 @@ public class SettingsManager {
             return false;
         }
 
+        alertListenersToManualChange(settingName);
+
         Set<String> possibleChanges = checkDependencies(settingName);
+        if(possibleChanges != null)
+            alertListenersToPossibleEnablementChanges(possibleChanges);
+
         return true;
-        //TODO: alert listeners to possibleChanges
     }
 
     /**
@@ -227,6 +231,7 @@ public class SettingsManager {
         for (String dependentSetting : dependents) {
             if (!settingStates.get(dependentSetting).currentValueIsEnabled(this)) {
                 settingStates.get(dependentSetting).reset();
+                alertListenersToAutomaticChange(dependentSetting);
                 Set<String> recursedDependents = checkDependencies(dependentSetting);
                 if (recursedDependents != null)
                     possiblyChanged.addAll(recursedDependents);
@@ -275,8 +280,24 @@ public class SettingsManager {
         return settingStates.values();
     }
 
+    private void alertListenersToPossibleEnablementChanges(Collection<String> settingNames) {
+        for (String name : settingNames) {
+            for (SettingChangeListener listener : listeners.get(name)) {
+                listener.onPossibleEnablementChange(name, this);
+            }
+        }
+    }
 
+    private void alertListenersToManualChange(String settingName) {
+        for (SettingChangeListener listener : listeners.get(settingName)) {
+            listener.onManualSettingChange(settingName, this);
+        }
+    }
 
+    private void alertListenersToAutomaticChange(String settingName) {
+        for (SettingChangeListener listener : listeners.get(settingName)) {
+            listener.onAutomaticSettingChange(settingName, this);
+        }
     }
 
 

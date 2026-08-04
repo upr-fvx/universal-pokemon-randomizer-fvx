@@ -11,6 +11,12 @@ import java.util.function.Predicate;
 //TODO: StringSettingDefinition
 //Possibly some other oddball ones
 
+/**
+ * A definition of a setting. Establishes its name, category, default value,
+ * how to determine if it is enabled and supported,
+ * the possible values and, if applicable, how to determine if values are enabled and supported.
+ * @param <T> The type of data the setting holds.
+ */
 public abstract class SettingDefinition<T extends Serializable> {
 
     //The setting's name. Should be a unique identifier. Should be relatively human-readable.
@@ -24,8 +30,7 @@ public abstract class SettingDefinition<T extends Serializable> {
     protected final T defaultValue;
     //TODO: variable default values? (By RomHandler only; changing default by SettingRestriction risks loops.)
     // There is at least one case for this (Starter BST limits) although it's not *extremely* necessary.
-    // Two: Custom starters.
-    // That'll need to be its own child. (And composition is starting to look good...)
+    // Two: Custom starters. (That's a bit more important.)
 
     //The prerequisite of other settings' states required for this setting to be applicable.
     //If the prerequisite conditions are false, this setting will be disabled and set to the default value.
@@ -148,6 +153,13 @@ public abstract class SettingDefinition<T extends Serializable> {
         }
         return supported.test(game);
     }
+
+    /**
+     * Checks whether the given value is EVER a valid value for this setting.
+     * @param value The value to check.
+     * @return True if the value is valid, false otherwise.
+     */
+    public abstract boolean isValueValid(T value);
 
     /**
      * Tests to see if the given value is valid given the current SettingsManager state.

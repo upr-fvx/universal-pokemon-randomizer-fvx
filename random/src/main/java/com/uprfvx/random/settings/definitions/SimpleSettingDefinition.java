@@ -17,6 +17,11 @@ public class SimpleSettingDefinition<T extends Serializable> extends SettingDefi
     }
 
     @Override
+    public boolean isValueValid(T value) {
+        return true;
+    }
+
+    @Override
     public boolean isValueEnabled(T value, SettingsManager manager) {
         return true;
     }

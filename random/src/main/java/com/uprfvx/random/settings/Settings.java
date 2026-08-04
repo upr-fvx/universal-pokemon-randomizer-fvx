@@ -7,10 +7,8 @@ import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
-import miscutils.Pair;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -474,11 +472,11 @@ public class Settings {
                     new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
                     new MultiSettingRestriction(true, false,
                             new SimpleSettingRestriction<>("CustomStarter1",
-                                    equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                                    equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
                             new SimpleSettingRestriction<>("CustomStarter2",
-                                    equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                                    equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
                             new SimpleSettingRestriction<>("CustomStarter3",
-                                    equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES))
+                                    equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
                     )
             ),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
@@ -491,11 +489,11 @@ public class Settings {
             new MultiSettingRestriction(false, false,
                     new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
                     new SimpleSettingRestriction<>("CustomStarter1",
-                            equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                            equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
                     new SimpleSettingRestriction<>("CustomStarter2",
-                            equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES)),
+                            equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
                     new SimpleSettingRestriction<>("CustomStarter3",
-                            equalsValue(SpeciesSettingDefinition.RANDOM_SPECIES))
+                            equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
             ),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
             new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
@@ -518,19 +516,19 @@ public class Settings {
                     null,
                     null
             ),
-            new SpeciesSettingDefinition(
+            new SpeciesIndexSettingDefinition(
                     "CustomStarter1",
                     "Starters",
                     new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
                     null
             ),
-            new SpeciesSettingDefinition(
+            new SpeciesIndexSettingDefinition(
                     "CustomStarter2",
                     "Starters",
                     new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
                     null
             ),
-            new SpeciesSettingDefinition(
+            new SpeciesIndexSettingDefinition(
                     "CustomStarter3",
                     "Starters",
                     new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),

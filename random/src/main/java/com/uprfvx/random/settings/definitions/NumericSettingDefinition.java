@@ -127,6 +127,11 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
     }
 
     @Override
+    public boolean isValueValid(T value) {
+        return value.compareTo(minimum) >= 0 && value.compareTo(maximum) <= 0;
+    }
+
+    @Override
     public boolean isValueEnabled(T value, SettingsManager manager) {
         return value.compareTo(minimumEnabled(manager)) >= 0 && value.compareTo(maximumEnabled(manager)) <= 0;
     }
@@ -204,7 +209,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
     public T minimumSupported(RomHandler game)
     {
         if(supportedMinimums == null)
-        return minimum;
+            return minimum;
 
         T rollingMinimum = minimum;
 

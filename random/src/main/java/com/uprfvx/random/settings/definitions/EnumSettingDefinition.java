@@ -10,6 +10,7 @@ import java.util.function.Predicate;
 /**
  * A SettingDefinition for enums that supports restrictions for individual enum states.
  * If no such definitions are needed, use SimpleSettingDefinition instead.
+ * Assumes that all enum states (except null) are valid at some point.
  */
 public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<T> {
 
@@ -23,6 +24,7 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
      * Creates an EnumSettingDefinition, which allows restricting certain enum values based on other settings or
      * the game (RomHandler).
      * If no such restrictions are needed, use SimpleSettingDefinition instead.
+     * Assumes that all values of the enum are valid at some time.
      * @param name The setting's name. Must be unique among all settings.
      *             Should contain no spaces and be relatively human-readable.
      * @param category The setting's category.
@@ -42,6 +44,17 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
                 supportedStates != null);
         this.restrictions = restrictedStates;
         this.support = supportedStates;
+    }
+
+    @Override
+    public boolean isValueValid(T value) {
+        if (value == null)
+            return false;
+
+        if (value.getClass() != defaultValue.getClass())
+            return false;
+
+        return true;
     }
 
     /**

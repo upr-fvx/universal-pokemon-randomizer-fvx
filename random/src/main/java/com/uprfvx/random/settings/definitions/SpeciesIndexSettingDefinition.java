@@ -2,6 +2,7 @@ package com.uprfvx.random.settings.definitions;
 
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
+import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -14,14 +15,20 @@ import java.util.function.Predicate;
  * that the Randomizer currently has, so it is designed with that in mind.
  * ID=0 is taken to mean "Random".
  */
-public class SpeciesSettingDefinition extends SettingDefinition<Integer> {
+public class SpeciesIndexSettingDefinition extends SettingDefinition<Integer> {
 
     public static final int RANDOM_SPECIES = 0;
+    public static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
+            Gen7Constants.getFormeCount(Gen7Constants.Type_USUM); //This is clunky and possibly inaccurate. TODO: fix.
 
-    public SpeciesSettingDefinition(String name, String category,
-                                    SettingRestriction prerequisite,
-                                    Predicate<RomHandler> supported) {
+    public SpeciesIndexSettingDefinition(String name, String category,
+                                         SettingRestriction prerequisite,
+                                         Predicate<RomHandler> supported) {
         super(name, category, RANDOM_SPECIES, prerequisite, supported, true, null);
+    }
+
+    public boolean isValueValid(Integer value) {
+        return value >= 0 && value <= HIGHEST_SPECIES_INDEX;
     }
 
     @Override

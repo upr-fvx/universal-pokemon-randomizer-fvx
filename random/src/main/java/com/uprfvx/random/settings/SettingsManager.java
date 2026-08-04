@@ -43,6 +43,22 @@ import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 
 public class SettingsManager {
 
+    //region private fields
+
+    private Map<String, SettingState<? extends Serializable>> settingStates;
+    private Map<String, Set<String>> dependencies;
+    private Map<String, List<String>> categorizedNames;
+    private Map<String, Set<SettingChangeListener>> listeners;
+    //A reverse lookup of setting restrictions.
+    //Needed so that dependent settings can be updated when a setting is changed.
+    //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)
+    //which might be a little trickier to determine.
+
+
+    //endregion
+
+    //region public functions
+
     public SettingsManager() {
         initializeSettings();
         listeners = new HashMap<>();
@@ -129,6 +145,45 @@ public class SettingsManager {
     }
 
     /**
+     * Adds the given listener to the set of listeners for the given setting.
+     * @param settingName The setting to listen to.
+     * @param listener The listener to add.
+     * @throws IllegalArgumentException If no setting of that name exists.
+     */
+    public void addListener(String settingName, SettingChangeListener listener) {
+        if (settingStates.get(settingName) == null)
+            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
+
+        Set<SettingChangeListener> settingListeners = listeners.computeIfAbsent(settingName,
+                set -> new HashSet<>());
+        settingListeners.add(listener);
+    }
+
+    /**
+     * Removes the given listener from the set of listeners for the given setting.
+     * @param settingName The setting to stop listening to.
+     * @param listener The listener to remove.
+     * @return True if the listener was removed, false if it was not present.
+     * @throws IllegalArgumentException If no setting of that name exists.
+     */
+    public boolean removeListener(String settingName, SettingChangeListener listener) {
+        if (settingStates.get(settingName) == null)
+            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
+
+        Set<SettingChangeListener> settingListeners = listeners.get(settingName);
+        if(settingListeners == null)
+            return false;
+
+        return settingListeners.remove(listener);
+    }
+
+    //TODO: passthrough functions for isEnabled, isSupported, isValueEnabled, isValueSupported?
+
+    //endregion
+
+    //region private and package-private functions
+
+    /**
      * The unsafe part of the implementation. Given a setting name, retrieves its setting state,
      * then casts it to SettingState<T>.<br>
      * This cast may be improper; as far as I know, the language gives us no way to check.
@@ -208,57 +263,28 @@ public class SettingsManager {
     }
 
     /**
-     * Adds the given listener to the set of listeners for the given setting.
-     * @param settingName The setting to listen to.
-     * @param listener The listener to add.
-     * @throws IllegalArgumentException If no setting of that name exists.
-     */
-    public void addListener(String settingName, SettingChangeListener listener) {
-        if (settingStates.get(settingName) == null)
-            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
-
-        Set<SettingChangeListener> settingListeners = listeners.computeIfAbsent(settingName,
-                set -> new HashSet<>());
-        settingListeners.add(listener);
-    }
-
-    /**
-     * Removes the given listener from the set of listeners for the given setting.
-     * @param settingName The setting to stop listening to.
-     * @param listener The listener to remove.
-     * @return True if the listener was removed, false if it was not present.
-     * @throws IllegalArgumentException If no setting of that name exists.
-     */
-    public boolean removeListener(String settingName, SettingChangeListener listener) {
-        if (settingStates.get(settingName) == null)
-            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
-
-        Set<SettingChangeListener> settingListeners = listeners.get(settingName);
-        if(settingListeners == null)
-            return false;
-
-        return settingListeners.remove(listener);
-    }
-
-    //TODO: passthrough functions for isEnabled, isSupported, isValueEnabled, isValueSupported?
-
-    private Map<String, SettingState<? extends Serializable>> settingStates;
-    private Map<String, Set<String>> dependencies;
-    private Map<String, List<String>> categorizedNames;
-    private Map<String, Set<SettingChangeListener>> listeners = new HashMap<>();
-    //A reverse lookup of setting restrictions.
-    //Needed so that dependent settings can be updated when a setting is changed.
-    //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)
-    //which might be a little trickier to determine.
-
-    /**
      * A function to get ALL settings' states.
-     * Should only be used for unit testing.
+     * Should only be used for testing.
      * @return A collection containing every setting's state.
      */
     Collection<SettingState<? extends Serializable>> testGetAllSettings() {
         return settingStates.values();
     }
+
+
+
+    }
+
+
+    //endregion
+
+
+
+
+
+
+
+
 
     //*********************************************************
     //BELOW LIES PRE-REFACTOR CODE

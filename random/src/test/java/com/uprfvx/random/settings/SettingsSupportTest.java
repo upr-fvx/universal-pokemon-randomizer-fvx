@@ -10,6 +10,19 @@ public class SettingsSupportTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void canTestAllSettingsSupportInEachGame(String romName) {
+        SettingsManager manager = new SettingsManager();
+        loadROM(romName);
+        Collection<SettingState<?>> allSettings = manager.testGetAllSettings();
+
+        for (SettingState<?> setting : allSettings) {
+            System.out.println("Testing: " + setting.getDefinition().getName());
+            setting.currentValueIsSupported(romHandler);
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void allSettingsDefaultValuesSupportedInEveryGame(String romName) {
         SettingsManager manager = new SettingsManager();
         loadROM(romName);

@@ -105,6 +105,9 @@ public class SettingsManagerTest {
 
     /*
     We don't yet have any settings defined that are appropriate for this test!
+    (Need one that has enabled *value* restrictions,
+    and that is enabled by some means other than custom starters (bc that's a whole mess.))
+    Although... I guess we can still do it, it's just a hassle.
     TODO: Implement test
     @Test
     public void setToDisabledValueFails() {
@@ -133,6 +136,58 @@ public class SettingsManagerTest {
     }
 
     //TODO: returnsToDefaultWhenCurrentValueDisabled
+    //Same issue as with setToDisabledValueFails
 
-    //TODO: test listeners
+    @Test
+    public void manualChangeListenerIsCalled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+
+        manager.addListener("NoRandomIntroMon", listener);
+        manager.setSetting("NoRandomIntroMon", true);
+        assert(listener.manualSettingChangeCalled);
+    }
+
+    @Test
+    public void possibleEnablementChangeListenerIsCalledWhenSettingEnabled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+
+        manager.addListener("BSTRandomBuffNerfPercentage", listener);
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+
+        assert(listener.possibleEnablementChangeCalled);
+    }
+
+    @Test
+    public void possibleEnablementChangeListenerIsCalledWhenSettingDisabled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+
+        manager.addListener("BSTRandomBuffNerfPercentage", listener);
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener.possibleEnablementChangeCalled);
+    }
+
+    @Test
+    public void possibleEnablementChangeListenerIsCalledWhenValuesEnabled() {
+
+    }
+
+    @Test
+    public void automaticChangeListenerIsCalledWhenChangedSettingIsDisabled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        manager.addListener("BSTRandomBuffNerfPercentage", listener);
+
+        assert(!listener.automaticSettingChangeCalled);
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener.automaticSettingChangeCalled);
+    }
 }

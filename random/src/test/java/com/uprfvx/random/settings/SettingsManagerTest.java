@@ -2,6 +2,7 @@ package com.uprfvx.random.settings;
 
 import com.uprfvx.random.settings.definitions.SettingDefinition;
 import org.junit.jupiter.api.Test;
+import com.uprfvx.random.settings.Settings;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,8 +25,8 @@ public class SettingsManagerTest {
     public void canSetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("LimitPokemon", true);
-        boolean value = manager.getSetting("LimitPokemon");
+        manager.setSetting("NoRandomIntroMon", true);
+        boolean value = manager.getSetting("NoRandomIntroMon");
         assert(value == true);
     }
 
@@ -40,11 +41,31 @@ public class SettingsManagerTest {
     @Test
     public void canSetIntValue() {
         SettingsManager manager = new SettingsManager();
+        manager.setSetting("UpdateMoves", true);
 
-        manager.setSetting("UpdateMovesToGeneration", 7);
+        manager.setSetting("UpdateMovesToGeneration", 8);
         int value = manager.getSetting("UpdateMovesToGeneration");
-        assert (value == 7);
+        assert (value == 8);
     }
+
+    @Test
+    public void canGetEnumValue() {
+        SettingsManager manager = new SettingsManager();
+
+        Settings.BSTMod value = manager.getSetting("RandomizePokemonBaseStatTotals");
+        assert (value == Settings.BSTMod.UNCHANGED);
+    }
+
+    @Test
+    public void canSetEnumValue() {
+        SettingsManager manager = new SettingsManager();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        Settings.BSTMod value = manager.getSetting("RandomizePokemonBaseStatTotals");
+        assert (value == Settings.BSTMod.RANDOM);
+    }
+
+    //TODO: other data types used (String, Double, ?)
 
     @Test
     public void getWrongTypeThrows() {
@@ -65,11 +86,52 @@ public class SettingsManagerTest {
     }
 
     @Test
-    public void getWrongTypeDefinitionThrows() {
+    public void setToOutOfRangeValueFails() {
         SettingsManager manager = new SettingsManager();
 
-        Exception e = assertThrows(ClassCastException.class, () -> {
-            SettingDefinition<Integer> definition = manager.getSettingDefinition("LimitPokemon");
-        });
+        manager.setSetting("UpdateMovesToGeneration", 1);
+        int value = manager.getSetting("UpdateMovesToGeneration");
+        assert (value != 1);
     }
+
+    @Test
+    public void setToDisabledSettingFails() {
+        SettingsManager manager = new SettingsManager();
+
+        manager.setSetting("AllowGeneration1", true);
+        boolean value = manager.getSetting("AllowGeneration1");
+        assert (value != true);
+    }
+
+    /*
+    We don't yet have any settings defined that are appropriate for this test!
+    TODO: Implement test
+    @Test
+    public void setToDisabledValueFails() {
+        SettingsManager manager = new SettingsManager();
+
+        manager.setSetting("", ); //Some enum setting, probably
+        boolean value = manager.getSetting("");
+        assert (value != true);
+    }
+    */
+
+    //TODO: unsupportedSetting, unsupportedValue
+
+    @Test
+    public void returnsToDefaultValueWhenSettingDisabled() {
+        SettingsManager manager = new SettingsManager();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        int value = manager.getSetting("BSTRandomBuffNerfPercentage");
+        assert (value == 22);
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        value = manager.getSetting("BSTRandomBuffNerfPercentage");
+        assert (value != 22);
+    }
+
+    //TODO: returnsToDefaultWhenCurrentValueDisabled
+    //TODO: ...whenSettingUnsupported, whenValueUnsupported
 }

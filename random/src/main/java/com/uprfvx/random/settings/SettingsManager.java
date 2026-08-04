@@ -34,7 +34,6 @@ import filefunctions.FileFunctions;
 import filefunctions.IOFunctions;
 
 import java.io.*;
-import java.lang.instrument.IllegalClassFormatException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -95,27 +94,37 @@ public class SettingsManager {
      * For security reasons, only works if the type of the value given exactly matches the type of the setting's
      * current value.
      * @param settingName The setting to set.
-     * @param value The value to set the setting to.
+     * @param newValue The value to set the setting to.
      * @param <T> The type of the setting.
+     * @return True if the value now matches the value set, false if the value is not currently valid.
      * @throws IllegalArgumentException if there is no setting of the given name,
      *                                  or if the type of the setting does not match the type of the value.
      */
-    public <T extends Serializable> void setSetting(String settingName, T value) {
+    public <T extends Serializable> boolean setSetting(String settingName, T newValue) {
         SettingState<T> state = getTypedState(settingName);
 
-        if (state.getValue().getClass() != value.getClass()) {
+        if (state.getValue().getClass() != newValue.getClass()) {
             throw new IllegalArgumentException("Tried to set setting \"" + settingName + "\" to the wrong type!\n" +
-                    "Type given: " + value.getClass().getName() + "\n" +
+                    "Type given: " + newValue.getClass().getName() + "\n" +
                     "Type needed: " + state.getValue().getClass().getName());
 
         }
 
-        if (state.getValue() == value)
-            return; //if the setting is already set to the relevant value, save us checking dependencies
+        T currentValue = state.getValue();
 
-        state.setValue(value);
+        if (currentValue == newValue)
+            return true; //if the setting is already set to the relevant value, save us checking dependencies
+
+
+        //TODO: check value's validity *before* assigning it
+        state.setValue(newValue);
+        if(!state.currentValueIsEnabled(this)) {
+            state.setValue(currentValue);
+            return false;
+        }
+
         Set<String> possibleChanges = checkDependencies(settingName);
-
+        return true;
         //TODO: alert listeners to possibleChanges
     }
 
@@ -157,7 +166,8 @@ public class SettingsManager {
         Set<String> possiblyChanged = new HashSet<>(dependents);
 
         for (String dependentSetting : dependents) {
-            if (settingStates.get(dependentSetting).checkValidity(this)) {
+            if (!settingStates.get(dependentSetting).currentValueIsEnabled(this)) {
+                settingStates.get(dependentSetting).reset();
                 Set<String> recursedDependents = checkDependencies(dependentSetting);
                 if (recursedDependents != null)
                     possiblyChanged.addAll(recursedDependents);

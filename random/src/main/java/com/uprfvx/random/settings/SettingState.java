@@ -28,18 +28,17 @@ class SettingState<T extends Serializable> {
 
     /**
      * Checks that the current value of the SettingState is valid given the state of the SettingsManager.
-     * If it is not, resets the state to the setting's default value.
      * @param manager The SettingsManager holding the current state of the settings.
-     * @return True if the setting's state was changed, false otherwise.
+     * @return True if the current value is valid, false otherwise.
      */
-    public boolean checkValidity(SettingsManager manager) {
-        if(value == definition.getDefaultValue())
-            return false;
+    public boolean currentValueIsEnabled(SettingsManager manager) {
+        return definition.isEnabled(manager) && definition.isValueEnabled(value, manager);
+    }
 
-        if(!definition.isEnabled(manager) || !definition.isValueEnabled(value, manager)) {
-            value = definition.getDefaultValue();
-            return true;
-        }
-        return false;
+    /**
+     * Returns this setting to its default value.
+     */
+    public void reset() {
+        value = definition.getDefaultValue();
     }
 }

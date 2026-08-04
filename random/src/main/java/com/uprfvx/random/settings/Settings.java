@@ -1271,21 +1271,24 @@ public class Settings {
                     "TMsNoGameBreakingMoves",
                     "TMsAndHMs",
                     false,
-                    new SimpleSettingRestriction<>("RandomizeTMMoves", isTrue),
+                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                            doesNotMatchEnumValue(TMMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "KeepFieldMoveTMs",
                     "TMsAndHMs",
                     false,
-                    new SimpleSettingRestriction<>("RandomizeTMMoves", isTrue),
+                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                            doesNotMatchEnumValue(TMMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "TMsForceGoodDamagingMoves",
                     "TMsAndHMs",
                     false,
-                    new SimpleSettingRestriction<>("RandomizeTMMoves", isTrue),
+                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                            doesNotMatchEnumValue(TMMovesMod.UNCHANGED)),
                     null
             ),
             new NumericSettingDefinition<>(
@@ -1344,21 +1347,24 @@ public class Settings {
                     "MoveTutorsNoGameBreakingMoves",
                     "MoveTutors",
                     false,
-                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves", isTrue),
+                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                            doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "KeepFieldMoveTutors",
                     "MoveTutors",
                     false,
-                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves", isTrue),
+                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                            doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
                     "MoveTutorsForceGoodDamagingMoves",
                     "MoveTutors",
                     false,
-                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves", isTrue),
+                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                            doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED)),
                     null
             ),
             new NumericSettingDefinition<>(

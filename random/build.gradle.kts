@@ -240,7 +240,7 @@ tasks.named<Test>("test") {
     filter {
         excludeTestsMatching("*Randomizer*Test")
         excludeTestsMatching("*Updater*Test")
-        excludeTestsMatching("SettingsSupportTest")
+        excludeTestsMatching("*Support*Test")
     }
 }
 
@@ -262,7 +262,7 @@ tasks.register<Test>("testROMs") {
     filter {
         includeTestsMatching("*Randomizer*Test")
         includeTestsMatching("*Updater*Test")
-        includeTestsMatching("SettingsSupportTest")
+        includeTestsMatching("*Support*Test")
     }
 }
 

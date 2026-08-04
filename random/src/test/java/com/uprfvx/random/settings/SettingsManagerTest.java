@@ -116,7 +116,7 @@ public class SettingsManagerTest {
     }
     */
 
-    //TODO: unsupportedSetting, unsupportedValue
+
 
     @Test
     public void returnsToDefaultValueWhenSettingDisabled() {
@@ -133,6 +133,6 @@ public class SettingsManagerTest {
     }
 
     //TODO: returnsToDefaultWhenCurrentValueDisabled
-    //TODO: ...whenSettingUnsupported, whenValueUnsupported
+
     //TODO: test listeners
 }

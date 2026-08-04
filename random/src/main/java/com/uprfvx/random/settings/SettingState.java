@@ -32,7 +32,8 @@ class SettingState<T extends Serializable> {
      * @return True if the current value is valid, false otherwise.
      */
     public boolean currentValueIsEnabled(SettingsManager manager) {
-        return definition.isEnabled(manager) && definition.isValueEnabled(value, manager);
+        return (definition.isEnabled(manager) || this.value == definition.getDefaultValue())
+                && definition.isValueEnabled(value, manager);
     }
 
     /**

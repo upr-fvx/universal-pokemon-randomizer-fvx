@@ -251,6 +251,14 @@ public class SettingsManager {
     //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)
     //which might be a little trickier to determine.
 
+    /**
+     * A function to get ALL settings' states.
+     * Should only be used for unit testing.
+     * @return A collection containing every setting's state.
+     */
+    Collection<SettingState<? extends Serializable>> testGetAllSettings() {
+        return settingStates.values();
+    }
 
     //*********************************************************
     //BELOW LIES PRE-REFACTOR CODE

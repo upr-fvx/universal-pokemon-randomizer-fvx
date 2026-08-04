@@ -1,6 +1,7 @@
 package com.uprfvx.random.settings;
 
 import com.uprfvx.random.settings.definitions.SettingDefinition;
+import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
 
@@ -34,6 +35,16 @@ class SettingState<T extends Serializable> {
     public boolean currentValueIsEnabled(SettingsManager manager) {
         return (definition.isEnabled(manager) || this.value == definition.getDefaultValue())
                 && definition.isValueEnabled(value, manager);
+    }
+
+    /**
+     * Checks that the current value of the SettingState is supported in the given game.
+     * @param game The RomHandler handling the game in question.
+     * @return True if the current value is supported, false otherwise.
+     */
+    public boolean currentValueIsSupported(RomHandler game) {
+        return (definition.isSupported(game) || this.value == definition.getDefaultValue())
+                && definition.isValueSupported(value, game);
     }
 
     /**

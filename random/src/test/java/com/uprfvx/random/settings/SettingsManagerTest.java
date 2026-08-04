@@ -134,4 +134,5 @@ public class SettingsManagerTest {
 
     //TODO: returnsToDefaultWhenCurrentValueDisabled
     //TODO: ...whenSettingUnsupported, whenValueUnsupported
+    //TODO: test listeners
 }

@@ -117,6 +117,10 @@ public class SettingsManager {
      *                                  or if the type of the setting does not match the type of the value.
      */
     public <T extends Serializable> boolean setSetting(String settingName, T newValue) {
+        if (newValue == null) {
+            throw new IllegalArgumentException("Cannot set settings to null!");
+        }
+
         SettingState<T> state = getTypedState(settingName);
 
         if (state.getValue().getClass() != newValue.getClass()) {

@@ -54,6 +54,7 @@ public class SettingsManager {
     //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)
     //which might be a little trickier to determine.
 
+    private RomHandler game;
 
     //endregion
 
@@ -62,9 +63,7 @@ public class SettingsManager {
     public SettingsManager() {
         initializeSettings();
         listeners = new HashMap<>();
-
-        //...is that all it needs? it feels like there should be more, but...
-
+        game = null;
     }
 
     /**
@@ -142,6 +141,10 @@ public class SettingsManager {
             state.setValue(currentValue);
             return false;
         }
+        if(game != null && !state.currentValueIsSupported(game)) {
+            state.setValue(currentValue);
+            return false;
+        }
 
         alertListenersToManualChange(settingName);
 
@@ -183,6 +186,87 @@ public class SettingsManager {
             return false;
 
         return settingListeners.remove(listener);
+    }
+
+    /**
+     * Associates a game (in RomHandler form) with this SettingsManager, for purposes of determining which
+     * settings are supported.
+     * Immediately resets all unsupported settings and values to their default values.
+     * @param game The game to associate this SettingsManager with.
+     */
+    public void associateGame(RomHandler game) {
+        if (this.game != null) {
+            throw new IllegalStateException("Current game must be unassociated before associating new game.");
+        }
+
+        this.game = game;
+
+        Set<String> changed = new HashSet<>();
+
+        for (Map.Entry<String, SettingState<?>> setting : settingStates.entrySet()) {
+            String name = setting.getKey();
+            SettingState<?> state = setting.getValue();
+
+            boolean didReset = false;
+            if(!state.currentValueIsSupported(game)) {
+                changed.add(name);
+                state.reset();
+                didReset = true;
+            }
+
+            SettingDefinition<?> definition = state.getDefinition();
+            boolean isUnsupported = !definition.isSupported(game);
+            boolean hasValueRestrictions = definition.hasValueSupportRestrictions();
+
+            if (isUnsupported || hasValueRestrictions || didReset) {
+                Set<SettingChangeListener> relevantListeners = listeners.get(name);
+
+                for(SettingChangeListener listener : relevantListeners) {
+                    if(isUnsupported)
+                        listener.onSupportChange(name, this, false);
+                    if(hasValueRestrictions)
+                        listener.onPossibleSupportedValuesChange(name, this, game);//sounds like a game show
+                    if(didReset)
+                        listener.onAutomaticSettingChange(name, this);
+                }
+            }
+        }
+
+        Set<String> possiblyChanged = new HashSet<>();
+        for(String changedSettingName : changed) {
+            Set<String> changedDependencies = checkDependencies(changedSettingName);
+            if(changedDependencies != null)
+                possiblyChanged.addAll(changedDependencies);
+        }
+
+        alertListenersToPossibleEnablementChanges(possiblyChanged);
+    }
+
+    public void unassociateGame() {
+        RomHandler oldGame = game;
+        game = null;
+
+        //TODO: check for support change
+
+        for (Map.Entry<String, SettingState<?>> setting : settingStates.entrySet()) {
+            String name = setting.getKey();
+            SettingState<?> state = setting.getValue();
+
+            SettingDefinition<?> definition = state.getDefinition();
+            boolean wasUnsupported = definition.isSupported(oldGame);
+            boolean hasValueRestrictions = definition.hasValueSupportRestrictions();
+
+            if (wasUnsupported || hasValueRestrictions) {
+                Set<SettingChangeListener> relevantListeners = listeners.get(name);
+
+                for(SettingChangeListener listener : relevantListeners) {
+                    if(wasUnsupported)
+                        listener.onSupportChange(name, this, true);
+                    if(hasValueRestrictions)
+                        listener.onPossibleSupportedValuesChange(name, this, null);
+                }
+            }
+        }
     }
 
     //TODO: passthrough functions for isEnabled, isSupported, isValueEnabled, isValueSupported?

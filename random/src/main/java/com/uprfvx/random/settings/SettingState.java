@@ -43,6 +43,9 @@ class SettingState<T extends Serializable> {
      * @return True if the current value is supported, false otherwise.
      */
     public boolean currentValueIsSupported(RomHandler game) {
+        if(game == null)
+            return true;
+
         return (definition.isSupported(game) || this.value == definition.getDefaultValue())
                 && definition.isValueSupported(value, game);
     }

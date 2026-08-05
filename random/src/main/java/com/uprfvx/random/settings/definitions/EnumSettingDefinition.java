@@ -48,13 +48,7 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
 
     @Override
     public boolean isValueValid(T value) {
-        if (value == null)
-            return false;
-
-        if (value.getClass() != defaultValue.getClass())
-            return false;
-
-        return true;
+        return value != null && value.getClass() == defaultValue.getClass();
     }
 
     /**

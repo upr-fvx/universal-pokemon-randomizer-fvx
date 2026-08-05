@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 public class SpeciesIndexSettingDefinition extends SettingDefinition<Integer> {
 
     public static final int RANDOM_SPECIES = 0;
-    public static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
+    private static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
             Gen7Constants.getFormeCount(Gen7Constants.Type_USUM); //This is clunky and possibly inaccurate. TODO: fix.
 
     public SpeciesIndexSettingDefinition(String name, String category,
@@ -28,6 +28,9 @@ public class SpeciesIndexSettingDefinition extends SettingDefinition<Integer> {
     }
 
     public boolean isValueValid(Integer value) {
+        if (value == null)
+            return false;
+
         return value >= 0 && value <= HIGHEST_SPECIES_INDEX;
     }
 

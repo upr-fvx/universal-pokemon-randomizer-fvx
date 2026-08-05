@@ -18,7 +18,7 @@ public class SimpleSettingDefinition<T extends Serializable> extends SettingDefi
 
     @Override
     public boolean isValueValid(T value) {
-        return true;
+        return value != null && value.getClass() == defaultValue.getClass();
     }
 
     @Override

@@ -128,6 +128,10 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
 
     @Override
     public boolean isValueValid(T value) {
+        if (value == null)
+            return false;
+        if(value.getClass() != defaultValue.getClass())
+            return false;
         return value.compareTo(minimum) >= 0 && value.compareTo(maximum) <= 0;
     }
 

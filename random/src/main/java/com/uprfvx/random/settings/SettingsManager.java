@@ -37,6 +37,7 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Stream;
 import java.util.zip.CRC32;
 
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
@@ -47,12 +48,12 @@ public class SettingsManager {
 
     private Map<String, SettingState<? extends Serializable>> settingStates;
     private Map<String, Set<String>> dependencies;
+    //A reverse lookup of setting restrictions (full setting and value).
+    //Needed so that dependent settings can be updated, and listeners alerted, when a setting is changed.
     private Map<String, List<String>> categorizedNames;
     private Map<String, Set<SettingChangeListener>> listeners;
-    //A reverse lookup of setting restrictions.
-    //Needed so that dependent settings can be updated when a setting is changed.
-    //...Should also contain settings for which specific values are restricted based on other settings (enums, numerics?)
-    //which might be a little trickier to determine.
+
+    private Set<SettingChangeListener> universalListeners;
 
     private RomHandler game;
 
@@ -62,8 +63,10 @@ public class SettingsManager {
 
     public SettingsManager() {
         initializeSettings();
+
         listeners = new HashMap<>();
         game = null;
+        universalListeners = new HashSet<>();
     }
 
     /**
@@ -180,6 +183,23 @@ public class SettingsManager {
             return false;
 
         return settingListeners.remove(listener);
+    }
+
+    /**
+     * Adds a listener that is alerted to changes to ALL settings.
+     * @param listener The listener to add.
+     */
+    public void addUniversalListener(SettingChangeListener listener) {
+        universalListeners.add(listener);
+    }
+
+    /**
+     * Removes the given listener from the set of universal listeners.
+     * @param listener The listener to remove.
+     * @return True if the listener was removed, false if it was not present.
+     */
+    public boolean removeUniversalListener(SettingChangeListener listener) {
+        return universalListeners.remove(listener);
     }
 
     /**
@@ -340,31 +360,32 @@ public class SettingsManager {
 
     private void alertListenersToPossibleEnablementChanges(Collection<String> settingNames) {
         for (String name : settingNames) {
-            Set<SettingChangeListener> relevantListeners = listeners.get(name);
-            if(relevantListeners != null) {
-                for (SettingChangeListener listener : relevantListeners) {
-                    listener.onPossibleEnablementChange(name, this);
-                }
+
+            Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
+            if(listeners.get(name) != null) {
+                relevantListeners = Stream.concat(relevantListeners, listeners.get(name).stream());
             }
+            relevantListeners.forEach(l -> l.onPossibleEnablementChange(name, this));
+
         }
     }
 
     private void alertListenersToManualChange(String settingName) {
-        Set<SettingChangeListener> relevantListeners = listeners.get(settingName);
-        if(relevantListeners != null) {
-            for (SettingChangeListener listener : relevantListeners) {
-                listener.onManualSettingChange(settingName, this);
-            }
+
+        Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
+        if(listeners.get(settingName) != null) {
+            relevantListeners = Stream.concat(relevantListeners, listeners.get(settingName).stream());
         }
+        relevantListeners.forEach(l -> l.onManualSettingChange(settingName, this));
+
     }
 
     private void alertListenersToAutomaticChange(String settingName) {
-        Set<SettingChangeListener> relevantListeners = listeners.get(settingName);
-        if(relevantListeners != null) {
-            for (SettingChangeListener listener : relevantListeners) {
-                listener.onAutomaticSettingChange(settingName, this);
-            }
+        Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
+        if(listeners.get(settingName) != null) {
+            relevantListeners = Stream.concat(relevantListeners, listeners.get(settingName).stream());
         }
+        relevantListeners.forEach(l -> l.onAutomaticSettingChange(settingName, this));
     }
 
     /**
@@ -379,20 +400,22 @@ public class SettingsManager {
     private void alertListenersToSupportEvents(String settingName, boolean supportChanged, boolean currentlySupported,
                                                boolean hasValueRestrictions, boolean automaticallyReset,
                                                RomHandler game) {
-        if (supportChanged || hasValueRestrictions || automaticallyReset) {
-            Set<SettingChangeListener> relevantListeners = listeners.get(settingName);
+        if (!(supportChanged || hasValueRestrictions || automaticallyReset))
+            return;
 
-            if(relevantListeners != null) {
-                for (SettingChangeListener listener : relevantListeners) {
-                    if (supportChanged)
-                        listener.onSupportChange(settingName, this, currentlySupported);
-                    if (hasValueRestrictions)
-                        listener.onPossibleSupportedValuesChange(settingName, this, game);
-                    if (automaticallyReset)
-                        listener.onAutomaticSettingChange(settingName, this);
-                }
-            }
+        Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
+        if(listeners.get(settingName) != null) {
+            relevantListeners = Stream.concat(relevantListeners, listeners.get(settingName).stream());
         }
+
+        relevantListeners.forEach(l -> {
+            if (supportChanged)
+                l.onSupportChange(settingName, this, currentlySupported);
+            if (hasValueRestrictions)
+                l.onPossibleSupportedValuesChange(settingName, this, game);
+            if (automaticallyReset)
+                l.onAutomaticSettingChange(settingName, this);
+        });
     }
 
     //endregion

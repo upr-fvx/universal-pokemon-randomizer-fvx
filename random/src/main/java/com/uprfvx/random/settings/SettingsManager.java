@@ -186,6 +186,7 @@ public class SettingsManager {
      * Associates a game (in RomHandler form) with this SettingsManager, for purposes of determining which
      * settings are supported.
      * Immediately resets all unsupported settings and values to their default values.
+     * The game must be unassociated before another game can be associated.
      * @param game The game to associate this SettingsManager with.
      */
     public void associateGame(RomHandler game) {
@@ -209,21 +210,9 @@ public class SettingsManager {
             }
 
             SettingDefinition<?> definition = state.getDefinition();
-            boolean isUnsupported = !definition.isSupported(game);
-            boolean hasValueRestrictions = definition.hasValueSupportRestrictions();
-
-            if (isUnsupported || hasValueRestrictions || didReset) {
-                Set<SettingChangeListener> relevantListeners = listeners.get(name);
-
-                for(SettingChangeListener listener : relevantListeners) {
-                    if(isUnsupported)
-                        listener.onSupportChange(name, this, false);
-                    if(hasValueRestrictions)
-                        listener.onPossibleSupportedValuesChange(name, this, game);//sounds like a game show
-                    if(didReset)
-                        listener.onAutomaticSettingChange(name, this);
-                }
-            }
+            boolean isSupported = !definition.isSupported(game);
+            alertListenersToSupportEvents(name, !isSupported, isSupported,
+                    definition.hasValueSupportRestrictions(), didReset, game);
         }
 
         Set<String> possiblyChanged = new HashSet<>();
@@ -236,34 +225,25 @@ public class SettingsManager {
         alertListenersToPossibleEnablementChanges(possiblyChanged);
     }
 
+
+    /**
+     * Removes the current game association, causing all settings to be considered supported.
+     */
     public void unassociateGame() {
         RomHandler oldGame = game;
         game = null;
-
-        //TODO: check for support change
 
         for (Map.Entry<String, SettingState<?>> setting : settingStates.entrySet()) {
             String name = setting.getKey();
             SettingState<?> state = setting.getValue();
 
             SettingDefinition<?> definition = state.getDefinition();
-            boolean wasUnsupported = definition.isSupported(oldGame);
-            boolean hasValueRestrictions = definition.hasValueSupportRestrictions();
-
-            if (wasUnsupported || hasValueRestrictions) {
-                Set<SettingChangeListener> relevantListeners = listeners.get(name);
-
-                for(SettingChangeListener listener : relevantListeners) {
-                    if(wasUnsupported)
-                        listener.onSupportChange(name, this, true);
-                    if(hasValueRestrictions)
-                        listener.onPossibleSupportedValuesChange(name, this, null);
-                }
-            }
+            alertListenersToSupportEvents(name, !definition.isSupported(oldGame), true,
+                    definition.hasValueSupportRestrictions(), false, null);
         }
     }
 
-    //TODO: passthrough functions for isEnabled, isSupported, isValueEnabled, isValueSupported?
+    //TODO: passthrough functions for isEnabled, isSupported, isValueValid, isValueEnabled, isValueSupported?
 
     //endregion
 
@@ -360,24 +340,60 @@ public class SettingsManager {
 
     private void alertListenersToPossibleEnablementChanges(Collection<String> settingNames) {
         for (String name : settingNames) {
-            for (SettingChangeListener listener : listeners.get(name)) {
-                listener.onPossibleEnablementChange(name, this);
+            Set<SettingChangeListener> relevantListeners = listeners.get(name);
+            if(relevantListeners != null) {
+                for (SettingChangeListener listener : relevantListeners) {
+                    listener.onPossibleEnablementChange(name, this);
+                }
             }
         }
     }
 
     private void alertListenersToManualChange(String settingName) {
-        for (SettingChangeListener listener : listeners.get(settingName)) {
-            listener.onManualSettingChange(settingName, this);
+        Set<SettingChangeListener> relevantListeners = listeners.get(settingName);
+        if(relevantListeners != null) {
+            for (SettingChangeListener listener : relevantListeners) {
+                listener.onManualSettingChange(settingName, this);
+            }
         }
     }
 
     private void alertListenersToAutomaticChange(String settingName) {
-        for (SettingChangeListener listener : listeners.get(settingName)) {
-            listener.onAutomaticSettingChange(settingName, this);
+        Set<SettingChangeListener> relevantListeners = listeners.get(settingName);
+        if(relevantListeners != null) {
+            for (SettingChangeListener listener : relevantListeners) {
+                listener.onAutomaticSettingChange(settingName, this);
+            }
         }
     }
 
+    /**
+     * Alerts listeners to various events that trigger on associating/unassociating a game.
+     * @param settingName The name of the relevant setting.
+     * @param supportChanged If the overall support status changed.
+     * @param currentlySupported The current overall support status. (Only matters if supportChanged is true.)
+     * @param hasValueRestrictions If the setting is listed as having support value restrictions.
+     * @param automaticallyReset If the setting has been automatically reset.
+     * @param game The game being loaded, or null if it is being unloaded.
+     */
+    private void alertListenersToSupportEvents(String settingName, boolean supportChanged, boolean currentlySupported,
+                                               boolean hasValueRestrictions, boolean automaticallyReset,
+                                               RomHandler game) {
+        if (supportChanged || hasValueRestrictions || automaticallyReset) {
+            Set<SettingChangeListener> relevantListeners = listeners.get(settingName);
+
+            if(relevantListeners != null) {
+                for (SettingChangeListener listener : relevantListeners) {
+                    if (supportChanged)
+                        listener.onSupportChange(settingName, this, currentlySupported);
+                    if (hasValueRestrictions)
+                        listener.onPossibleSupportedValuesChange(settingName, this, game);
+                    if (automaticallyReset)
+                        listener.onAutomaticSettingChange(settingName, this);
+                }
+            }
+        }
+    }
 
     //endregion
 

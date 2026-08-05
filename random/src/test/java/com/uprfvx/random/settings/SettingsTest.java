@@ -7,7 +7,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collection;
 
-//Extends RomHandlerTest to test on all ROMs
 public class SettingsTest {
 
     @Test
@@ -30,6 +29,21 @@ public class SettingsTest {
         for (SettingState<?> setting : allSettings) {
             if(!setting.currentValueIsEnabled(manager)) {
                 System.out.println("Initial value disabled for: " + setting.getDefinition().getName());
+                passing = false;
+            }
+        }
+        assert(passing);
+    }
+
+    @Test
+    public void noSettingHasInitialNullValue() {
+        SettingsManager manager = new SettingsManager();
+        Collection<SettingState<?>> allSettings = manager.testGetAllSettings();
+
+        boolean passing = true;
+        for (SettingState<?> setting : allSettings) {
+            if(setting.getValue() == null) {
+                System.out.println("Initial value is null for: " + setting.getDefinition().getName());
                 passing = false;
             }
         }

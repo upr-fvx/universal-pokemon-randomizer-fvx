@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import com.uprfvx.random.settings.Settings;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class SettingsManagerTest {
 
@@ -103,23 +105,15 @@ public class SettingsManagerTest {
         assert (value != true);
     }
 
-    /*
-    We don't yet have any settings defined that are appropriate for this test!
-    (Need one that has enabled *value* restrictions,
-    and that is enabled by some means other than custom starters (bc that's a whole mess.))
-    Although... I guess we can still do it, it's just a hassle.
-    TODO: Implement test
     @Test
-    public void setToDisabledValueFails() {
+    public void setToDisableableSettingWorksWhenEnabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("", ); //Some enum setting, probably
-        boolean value = manager.getSetting("");
-        assert (value != true);
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        int value = manager.getSetting("BSTRandomBuffNerfPercentage");
+        assert (value == 22);
     }
-    */
-
-
 
     @Test
     public void returnsToDefaultValueWhenSettingDisabled() {
@@ -128,15 +122,50 @@ public class SettingsManagerTest {
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
         manager.setSetting("BSTRandomBuffNerfPercentage", 22);
         int value = manager.getSetting("BSTRandomBuffNerfPercentage");
-        assert (value == 22);
+        assumeTrue(value == 22);
 
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
         value = manager.getSetting("BSTRandomBuffNerfPercentage");
         assert (value != 22);
     }
 
-    //TODO: returnsToDefaultWhenCurrentValueDisabled
-    //Same issue as with setToDisabledValueFails
+    @Test
+    public void setToDisabledValueFails() {
+        SettingsManager manager = new SettingsManager();
+
+        //TODO: replace this (and all disableValues tests) with a simpler case
+
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting("CustomStarter1", 15);
+
+        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
+    }
+
+    @Test
+    public void canSetToDisableableValueWhenEnabled() {
+        SettingsManager manager = new SettingsManager();
+
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        assert (value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
+    }
+
+    @Test
+    public void returnsToDefaultWhenCurrentValueDisabled() {
+        SettingsManager manager = new SettingsManager();
+
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
+
+        manager.setSetting("CustomStarter1", 15);
+        value = manager.getSetting("StartersTypeRestriction");
+        assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
+    }
 
     @Test
     public void manualChangeListenerIsCalled() {
@@ -173,7 +202,29 @@ public class SettingsManagerTest {
 
     @Test
     public void possibleEnablementChangeListenerIsCalledWhenValuesEnabled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
 
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting("CustomStarter1", 15);
+
+        manager.addListener("StartersTypeRestriction", listener);
+        manager.setSetting("CustomStarter1", 0);
+
+        assert (listener.possibleEnablementChangeCalled);
+    }
+
+    @Test
+    public void possibleEnablementChangeListenerIsCalledWhenValuesDisabled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+
+        manager.addListener("StartersTypeRestriction", listener);
+        manager.setSetting("CustomStarter1", 15);
+
+        assert (listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -185,7 +236,7 @@ public class SettingsManagerTest {
         manager.setSetting("BSTRandomBuffNerfPercentage", 22);
         manager.addListener("BSTRandomBuffNerfPercentage", listener);
 
-        assert(!listener.automaticSettingChangeCalled);
+        assumeFalse(listener.automaticSettingChangeCalled);
 
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
         assert(listener.automaticSettingChangeCalled);

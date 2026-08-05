@@ -51,6 +51,14 @@ class SettingState<T extends Serializable> {
     }
 
     /**
+     * Checks if this setting is currently set to its default value.
+     * @return True if the setting's value is equal to the default value, false otherwise.
+     */
+    public boolean isDefault() {
+        return value == definition.getDefaultValue();
+    }
+
+    /**
      * Returns this setting to its default value.
      */
     public void reset() {

@@ -99,8 +99,7 @@ public class SettingsManager {
      * @param <T> The type of the setting.
      * @throws IllegalArgumentException if there is no setting of the given name.
      */
-    public <T extends Serializable> SettingDefinition<T> getSettingDefinition(String settingName)
-    {
+    public <T extends Serializable> SettingDefinition<T> getSettingDefinition(String settingName) {
         SettingState<T> state = getTypedState(settingName);
 
         return state.getDefinition();
@@ -245,7 +244,6 @@ public class SettingsManager {
         alertListenersToPossibleEnablementChanges(possiblyChanged);
     }
 
-
     /**
      * Removes the current game association, causing all settings to be considered supported.
      */
@@ -264,6 +262,19 @@ public class SettingsManager {
     }
 
     //TODO: passthrough functions for isEnabled, isSupported, isValueValid, isValueEnabled, isValueSupported?
+
+    /**
+     * Resets all settings to their default values.
+     */
+    public void resetAll() {
+        settingStates.forEach((name, state) -> {
+            if (!state.isDefault()) {
+                state.reset();
+                alertListenersToManualChange(name); //debatable if this counts as manual or automatic
+                alertListenersToPossibleEnablementChanges(dependencies.get(name));
+            }
+        });
+    }
 
     //endregion
 
@@ -359,6 +370,9 @@ public class SettingsManager {
     }
 
     private void alertListenersToPossibleEnablementChanges(Collection<String> settingNames) {
+        if (settingNames == null)
+            return;
+
         for (String name : settingNames) {
 
             Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();

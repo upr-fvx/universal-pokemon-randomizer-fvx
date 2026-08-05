@@ -40,6 +40,16 @@ public class MultiSettingRestriction implements SettingRestriction {
 
     @Override
     public boolean test(SettingsManager manager) {
-        return false;
+        //oookay this is gonna be a little obtuse
+        boolean rollingValidity = !any;
+
+        for(SettingRestriction restriction : restrictions) {
+            if(restriction.test(manager) == any) {
+                rollingValidity = any;
+                break;
+            }
+        }
+
+        return invert ? !rollingValidity : rollingValidity;
     }
 }

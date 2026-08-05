@@ -162,8 +162,9 @@ public abstract class SettingDefinition<T extends Serializable> {
     public abstract boolean isValueValid(T value);
 
     /**
-     * Tests to see if the given value is valid given the current SettingsManager state.
+     * Tests to see if the given value is enabled given the current SettingsManager state.
      * Does not check if the setting is enabled as a whole; both should be checked.
+     * Not guaranteed to return false if the value is invalid; that should also be checked.
      * @param value The particular value to check.
      * @param manager The SettingsManager to test against.
      * @return True if the value is enabled, false otherwise.
@@ -178,6 +179,22 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @return True if the value is supported, false otherwise.
      */
     public abstract boolean isValueSupported(T value, RomHandler game);
+
+    /**
+     * Determines if all conditions are satisfied such that the setting can be set to this value.
+     * Returns false for ALL values (including the default value) if the setting is disabled or unsupported.
+     * @param value The value to test.
+     * @param manager The SettingsManager to test conditions against.
+     * @param game The RomHandler to test support against, or null to not test support.
+     * @return If the setting can be set to this value.
+     */
+    public boolean isValueSettable(T value, SettingsManager manager, RomHandler game) {
+        return isEnabled(manager)
+                && (game == null || isSupported(game))
+                && isValueValid(value)
+                && isValueEnabled(value, manager)
+                && (game == null || isValueSupported(value, game));
+    }
 
     //TODO: compilation functions? (isSettingActive, isValueValid, isValueFullyEnabled, isValueFullySupported, etc
 

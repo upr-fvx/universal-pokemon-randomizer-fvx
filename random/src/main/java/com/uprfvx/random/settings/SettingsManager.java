@@ -134,17 +134,11 @@ public class SettingsManager {
         if (currentValue == newValue)
             return true; //if the setting is already set to the relevant value, save us checking dependencies
 
+        SettingDefinition<T> definition = state.getDefinition();
+        if(!definition.isValueSettable(newValue, this, game))
+            return false;
 
-        //TODO: check value's validity *before* assigning it
         state.setValue(newValue);
-        if(!state.currentValueIsEnabled(this)) {
-            state.setValue(currentValue);
-            return false;
-        }
-        if(game != null && !state.currentValueIsSupported(game)) {
-            state.setValue(currentValue);
-            return false;
-        }
 
         alertListenersToManualChange(settingName);
 

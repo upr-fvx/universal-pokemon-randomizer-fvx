@@ -47,22 +47,42 @@ import static com.uprfvx.random.settings.SettingUtils.higherValueThanGeneration;
 
 //Setting names should be unique. They also will (eventually) be used as ini keys, so they should (a) be relatively
 // human-readable, (b) contain no spaces nor the equals sign.
+//Each setting's name should be listed in Settings.Names so developers don't have to memorize them/type
+// them correctly each time.
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
     //When splitting a setting into multiple or changing its type, add the old version to the list of removed settings
     //so that we can load it in and convert it to the new setting.
 
+    /**
+     * Contains a constant for the name of each setting used in the randomizer.
+     */
+    public static class Names {
+        //General options
+        public static final String LIMIT_POKEMON = "LimitPokemon";
+        public static final String NO_RANDOM_INTRO_MON = "NoRandomIntroMon";
+        public static final String RACE_MODE = "RaceMode";
+        public static final String NO_IRREGULAR_ALT_FORMES = "NoIrregularAltFormes";
+        public static final String ALLOW_GENERATION_1 = "AllowGeneration1";
+        public static final String ALLOW_GENERATION_2 = "AllowGeneration2";
+        public static final String ALLOW_GENERATION_3 = "AllowGeneration3";
+        public static final String ALLOW_GENERATION_4 = "AllowGeneration4";
+        public static final String ALLOW_GENERATION_5 = "AllowGeneration5";
+        public static final String ALLOW_GENERATION_6 = "AllowGeneration6";
+        public static final String ALLOW_GENERATION_7 = "AllowGeneration7";
+    }
+
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition<>(
-                    "LimitPokemon",
+                    Names.LIMIT_POKEMON,
                     "GeneralOptions",
                     false,
                     null,
                     notOfGeneration(1)
-            ), //TODO: might be able to eliminate this setting
+            ), //TODO: might be able to eliminate this setting and just use the "AllowGenerationX" settings (inverted)
             new SimpleSettingDefinition<>(
-                    "NoRandomIntroMon",
+                    Names.NO_RANDOM_INTRO_MON,
                     "GeneralOptions",
                     false,
                     null,
@@ -73,14 +93,14 @@ public class Settings {
                             // I believe I was referring to "NoRandomIntroMon" but I cannot recall for sure anymore.
                             //TODO investigate this todo i guess
             new SimpleSettingDefinition<>(
-                    "RaceMode",
+                    Names.RACE_MODE,
                     "GeneralOptions",
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BanIrregularAltFormes",
+                    Names.NO_IRREGULAR_ALT_FORMES,
                     "GeneralOptions",
                     false,
                     null,
@@ -88,52 +108,52 @@ public class Settings {
             ),
 
             new SimpleSettingDefinition<>(
-                    "AllowGeneration1",
+                    Names.ALLOW_GENERATION_1,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(2)
             ),
             new SimpleSettingDefinition<>(
-                    "AllowGeneration2",
+                    Names.ALLOW_GENERATION_2,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(2)
             ),
             new SimpleSettingDefinition<>(
-                    "AllowGeneration3",
+                    Names.ALLOW_GENERATION_3,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(3)
             ),
             new SimpleSettingDefinition<>(
-                    "AllowGeneration4",
+                    Names.ALLOW_GENERATION_4,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(4)
             ),
             new SimpleSettingDefinition<>(
-                    "AllowGeneration5",
+                    Names.ALLOW_GENERATION_5,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(5)
             ),
             new SimpleSettingDefinition<>(
-                    "AllowGeneration6",
+                    Names.ALLOW_GENERATION_6,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(6)
             ),
             new SimpleSettingDefinition<>(
-                    "AllowGeneration7",
+                    Names.ALLOW_GENERATION_7,
                     "LimitPokemon",
                     false,
-                    new SimpleSettingRestriction<>("LimitPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(7)
             )
     );

@@ -1,8 +1,6 @@
 package com.uprfvx.random.settings;
 
-import com.uprfvx.random.settings.definitions.SettingDefinition;
 import org.junit.jupiter.api.Test;
-import com.uprfvx.random.settings.Settings;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
@@ -19,7 +17,7 @@ public class SettingsManagerTest {
     public void canGetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        boolean value = manager.getSetting("LimitPokemon");
+        boolean value = manager.getSetting(Settings.Names.LIMIT_POKEMON);
         assert(value == false);
     }
 
@@ -27,8 +25,8 @@ public class SettingsManagerTest {
     public void canSetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("NoRandomIntroMon", true);
-        boolean value = manager.getSetting("NoRandomIntroMon");
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
+        boolean value = manager.getSetting(Settings.Names.NO_RANDOM_INTRO_MON);
         assert(value == true);
     }
 
@@ -44,6 +42,8 @@ public class SettingsManagerTest {
     public void canSetIntValue() {
         SettingsManager manager = new SettingsManager();
         manager.setSetting("UpdateMoves", true);
+        boolean parent = manager.getSetting("UpdateMoves");
+        assumeTrue(parent);
 
         manager.setSetting("UpdateMovesToGeneration", 8);
         int value = manager.getSetting("UpdateMovesToGeneration");
@@ -92,7 +92,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(ClassCastException.class, () -> {
-            int value = manager.getSetting("LimitPokemon");
+            int value = manager.getSetting(Settings.Names.LIMIT_POKEMON);
         });
     }
 
@@ -101,7 +101,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            manager.setSetting("LimitPokemon", 3.0);
+            manager.setSetting(Settings.Names.LIMIT_POKEMON, 3.0);
         });
     }
 
@@ -188,17 +188,17 @@ public class SettingsManagerTest {
     @Test
     public void manualChangeListenerIsCalled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener("NoRandomIntroMon", listener);
-        manager.setSetting("NoRandomIntroMon", true);
+        manager.addListener(Settings.Names.NO_RANDOM_INTRO_MON, listener);
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
         assert(listener.manualSettingChangeCalled);
     }
 
     @Test
     public void possibleEnablementChangeListenerIsCalledWhenSettingEnabled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
         manager.addListener("BSTRandomBuffNerfPercentage", listener);
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
@@ -209,7 +209,7 @@ public class SettingsManagerTest {
     @Test
     public void possibleEnablementChangeListenerIsCalledWhenSettingDisabled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
 
@@ -221,7 +221,7 @@ public class SettingsManagerTest {
     @Test
     public void possibleEnablementChangeListenerIsCalledWhenValuesEnabled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
         manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
         manager.setSetting("CustomStarter1", 15);
@@ -235,7 +235,7 @@ public class SettingsManagerTest {
     @Test
     public void possibleEnablementChangeListenerIsCalledWhenValuesDisabled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
         manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
 
@@ -248,7 +248,7 @@ public class SettingsManagerTest {
     @Test
     public void automaticChangeListenerIsCalledWhenChangedSettingIsDisabled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
         manager.setSetting("BSTRandomBuffNerfPercentage", 22);
@@ -263,7 +263,7 @@ public class SettingsManagerTest {
     @Test
     public void automaticChangeListenerIsCalledWhenCurrentValueDisabled() {
         SettingsManager manager = new SettingsManager();
-        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+        TestSettingsListener listener = new TestSettingsListener();
 
         manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
         manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
@@ -275,4 +275,317 @@ public class SettingsManagerTest {
         manager.setSetting("CustomStarter1", 15);
         assert(listener.automaticSettingChangeCalled);
     }
+
+    @Test
+    public void universalListenerIsCalledOnManualChange() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.addUniversalListener(listener);
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
+        assert(listener.manualSettingChangeCalled);
+
+        listener.reset();
+        assumeFalse(listener.manualSettingChangeCalled);
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        assert(listener.manualSettingChangeCalled);
+    }
+
+    @Test
+    public void universalListenerIsCalledOnPotentialEnablementChanges() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+
+        manager.addUniversalListener(listener);
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        assert(listener.possibleEnablementChangeCalled);
+
+        listener.reset();
+        assumeFalse(listener.possibleEnablementChangeCalled);
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener.possibleEnablementChangeCalled);
+
+        listener.reset();
+        assumeFalse(listener.possibleEnablementChangeCalled);
+
+        manager.setSetting("CustomStarter1", 15);
+        assert (listener.possibleEnablementChangeCalled);
+
+        listener.reset();
+        assumeFalse(listener.possibleEnablementChangeCalled);
+
+        manager.setSetting("CustomStarter1", 0);
+        assert (listener.possibleEnablementChangeCalled);
+    }
+
+    @Test
+    public void universalListenerIsCalledOnAutomaticChanges() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
+
+        manager.addUniversalListener(listener);
+        assumeFalse(listener.automaticSettingChangeCalled);
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener.automaticSettingChangeCalled);
+
+        listener.reset();
+        assumeFalse(listener.automaticSettingChangeCalled);
+
+        manager.setSetting("CustomStarter1", 15);
+        assert(listener.automaticSettingChangeCalled);
+    }
+
+    @Test
+    public void listenersNotCalledAfterRemoval() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.addListener(Settings.Names.NO_RANDOM_INTRO_MON, listener);
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
+        assumeTrue(listener.manualSettingChangeCalled);
+
+        listener.reset();
+        manager.removeListener(Settings.Names.NO_RANDOM_INTRO_MON, listener);
+        assumeFalse(listener.manualSettingChangeCalled);
+
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, false);
+        assert !listener.manualSettingChangeCalled;
+
+        manager.addUniversalListener(listener);
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
+        assumeTrue(listener.manualSettingChangeCalled);
+
+        listener.reset();
+        manager.removeUniversalListener(listener);
+        assumeFalse(listener.manualSettingChangeCalled);
+
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, false);
+        assert !listener.manualSettingChangeCalled;
+    }
+
+    @Test
+    public void multipleListenersWorks() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener1 = new TestSettingsListener();
+        TestSettingsListener listener2 = new TestSettingsListener();
+
+        manager.addListener("BSTRandomBuffNerfPercentage", listener1);
+        manager.addListener("BSTRandomBuffNerfPercentage", listener2);
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        assert(listener1.possibleEnablementChangeCalled);
+        assert(listener2.possibleEnablementChangeCalled);
+
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("BSTRandomBuffNerfPercentage", 16);
+        assert(listener1.manualSettingChangeCalled);
+        assert(listener2.manualSettingChangeCalled);
+
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener1.automaticSettingChangeCalled);
+        assert(listener2.automaticSettingChangeCalled);
+
+        manager.removeListener("BSTRandomBuffNerfPercentage", listener1);
+        manager.addUniversalListener(listener1);
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        assert(listener1.possibleEnablementChangeCalled);
+        assert(listener2.possibleEnablementChangeCalled);
+
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("BSTRandomBuffNerfPercentage", 16);
+        assert(listener1.manualSettingChangeCalled);
+        assert(listener2.manualSettingChangeCalled);
+
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener1.automaticSettingChangeCalled);
+        assert(listener2.automaticSettingChangeCalled);
+
+        manager.removeListener("BSTRandomBuffNerfPercentage", listener2);
+        manager.addUniversalListener(listener2);
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        assert(listener1.possibleEnablementChangeCalled);
+        assert(listener2.possibleEnablementChangeCalled);
+
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("BSTRandomBuffNerfPercentage", 16);
+        assert(listener1.manualSettingChangeCalled);
+        assert(listener2.manualSettingChangeCalled);
+
+        listener1.reset();
+        listener2.reset();
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener1.automaticSettingChangeCalled);
+        assert(listener2.automaticSettingChangeCalled);
+    }
+
+    @Test
+    public void duplicateListenersNotAdded() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.addListener(Settings.Names.NO_RANDOM_INTRO_MON, listener);
+        manager.addListener(Settings.Names.NO_RANDOM_INTRO_MON, listener);
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
+        assumeTrue(listener.manualSettingChangeCalled);
+        assert listener.manualChangeCallCount == 1;
+
+        listener.reset();
+        manager.removeListener(Settings.Names.NO_RANDOM_INTRO_MON, listener);
+        assumeFalse(listener.manualSettingChangeCalled);
+        assumeTrue(listener.manualChangeCallCount == 0);
+
+        manager.addUniversalListener(listener);
+        manager.addUniversalListener(listener);
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, false);
+        assumeTrue(listener.manualSettingChangeCalled);
+        assert listener.manualChangeCallCount == 1;
+    }
+
+    @Test
+    public void resetAllWorks() {
+        SettingsManager manager = new SettingsManager();
+        manager.setSetting("UpdateMoves", true);
+
+        manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
+        manager.setSetting("UpdateMovesToGeneration", 8);
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+
+        boolean boolValue = manager.getSetting(Settings.Names.NO_RANDOM_INTRO_MON);
+        int intValue = manager.getSetting("UpdateMovesToGeneration");
+        Settings.BSTMod enumValue = manager.getSetting("RandomizePokemonBaseStatTotals");
+
+        assumeTrue(boolValue);
+        assumeTrue(intValue == 8);
+        assumeTrue(enumValue == Settings.BSTMod.RANDOM);
+
+        manager.resetAll();
+
+        boolValue = manager.getSetting(Settings.Names.NO_RANDOM_INTRO_MON);
+        intValue = manager.getSetting("UpdateMovesToGeneration");
+        enumValue = manager.getSetting("RandomizePokemonBaseStatTotals");
+
+        assert (boolValue != true);
+        assert (intValue != 8);
+        assert (enumValue != Settings.BSTMod.RANDOM);
+    }
+
+    @Test
+    public void listenersCalledOnReset() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.setSetting("UpdateMoves", true);
+        manager.addUniversalListener(listener);
+
+        manager.resetAll();
+
+        assert listener.manualSettingChangeCalled;
+        assert listener.possibleEnablementChangeCalled;
+
+        manager.removeUniversalListener(listener);
+        listener.reset();
+        manager.setSetting("UpdateMoves", true);
+        manager.addListener("UpdateMoves", listener);
+
+        manager.resetAll();
+
+        assert listener.manualSettingChangeCalled;
+        assert !listener.possibleEnablementChangeCalled;
+    }
+
+    @Test
+    public void automaticChangeListenerNotCalledOnReset() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+
+        manager.setSetting("UpdateMoves", true);
+        manager.addUniversalListener(listener);
+
+        manager.resetAll();
+        assert !listener.automaticSettingChangeCalled;
+
+        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        listener.reset();
+
+        manager.resetAll();
+        assert !listener.automaticSettingChangeCalled;
+
+        manager.removeUniversalListener(listener);
+        listener.reset();
+        manager.setSetting("UpdateMoves", true);
+        manager.addListener("UpdateMoves", listener);
+
+        manager.resetAll();
+
+        assert !listener.automaticSettingChangeCalled;
+    }
+
+    @Test
+    public void listenersNotCalledWhenNotChangingValue() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+        manager.addUniversalListener(listener);
+        manager.setSetting("UpdateMoves", false);
+
+        assert !listener.manualSettingChangeCalled;
+        assert !listener.automaticSettingChangeCalled;
+        assert !listener.possibleEnablementChangeCalled;
+
+        manager.setSetting("UpdateMoves", true);
+        assert !listener.automaticSettingChangeCalled;
+        assumeTrue(listener.manualSettingChangeCalled);
+        assumeTrue(listener.possibleEnablementChangeCalled);
+
+        listener.reset();
+        manager.setSetting("UpdateMoves", true);
+        assert !listener.manualSettingChangeCalled;
+        assert !listener.automaticSettingChangeCalled;
+        assert !listener.possibleEnablementChangeCalled;
+
+        manager.setSetting("UpdateMoves", false);
+        assert !listener.automaticSettingChangeCalled;
+        assumeTrue(listener.manualSettingChangeCalled);
+        assumeTrue(listener.possibleEnablementChangeCalled);
+    }
+
+    @Test
+    public void listenersNotCalledWhenResettingNothing() {
+        SettingsManager manager = new SettingsManager();
+        TestSettingsListener listener = new TestSettingsListener();
+        manager.addUniversalListener(listener);
+
+    }
+
+
 }

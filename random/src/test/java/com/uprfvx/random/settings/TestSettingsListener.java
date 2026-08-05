@@ -5,13 +5,15 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 /**
  * A very simple testing tool for the SettingChangeListener interface.
  */
-class SettingsListenerTestTool implements SettingChangeListener {
+class TestSettingsListener implements SettingChangeListener {
 
     public boolean automaticSettingChangeCalled = false;
     public boolean possibleEnablementChangeCalled = false;
     public boolean manualSettingChangeCalled = false;
     public boolean supportChangeCalled = false;
     public boolean possibleSupportedValuesChangeCalled = false;
+
+    public int manualChangeCallCount = 0;
 
     @Override
     public void onAutomaticSettingChange(String setting, SettingsManager manager) {
@@ -26,6 +28,7 @@ class SettingsListenerTestTool implements SettingChangeListener {
     @Override
     public void onManualSettingChange(String setting, SettingsManager manager) {
         manualSettingChangeCalled = true;
+        manualChangeCallCount++;
     }
 
     @Override
@@ -45,5 +48,6 @@ class SettingsListenerTestTool implements SettingChangeListener {
         manualSettingChangeCalled = false;
         supportChangeCalled = false;
         possibleSupportedValuesChangeCalled = false;
+        manualChangeCallCount = 0;
     }
 }

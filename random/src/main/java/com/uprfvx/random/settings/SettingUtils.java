@@ -104,11 +104,11 @@ public class SettingUtils {
 
     /**
      * Creates a set of minimums (suitable for use with a NumericSettingDefinition) such that each generation given
-     * supports only generations higher than itself.
+     * supports only setting values higher than its generation number.
      * @param generations Each generation that needs such a limit.
      * @return A set of minimums as described.
      */
-    public static List<Pair<Integer, Predicate<RomHandler>>> higherGenerationsThan(int... generations) {
+    public static List<Pair<Integer, Predicate<RomHandler>>> higherValueThanGeneration(int... generations) {
         List<Pair<Integer, Predicate<RomHandler>>> supportMinimums = new ArrayList<>();
         for(int generation : generations){
             supportMinimums.add(new Pair<>(generation + 1, atLeastGeneration(generation)));

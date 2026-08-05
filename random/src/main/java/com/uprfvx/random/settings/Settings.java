@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.uprfvx.random.settings.SettingUtils.*;
-import static com.uprfvx.random.settings.SettingUtils.higherGenerationsThan;
+import static com.uprfvx.random.settings.SettingUtils.higherValueThanGeneration;
 
 //The list of EVERY setting supported by the randomizer.
 
@@ -239,7 +239,7 @@ public class Settings {
                     6, 9,
                     null,
                     null,
-                    higherGenerationsThan(6, 7),
+                    higherValueThanGeneration(6, 7),
                     null
             ),
 
@@ -764,7 +764,7 @@ public class Settings {
                     2, 9,
                     null,
                     null,
-                    higherGenerationsThan(2,3,4,5,6,7),
+                    higherValueThanGeneration(2,3,4,5,6,7),
                     null
             ),
 

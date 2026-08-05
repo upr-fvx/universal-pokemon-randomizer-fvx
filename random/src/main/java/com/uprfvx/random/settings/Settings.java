@@ -1115,7 +1115,7 @@ public class Settings {
                     "SingleStyleForBattles",
                     "TrainerPokemon",
                     BattleStyle.Style.SINGLE_BATTLE,
-                    null,
+                    new EnumMatchRestriction<>("RandomizeBattleStyle", BattleStyle.Modification.SINGLE_STYLE),
                     null,
                     null,
                     Map.of(

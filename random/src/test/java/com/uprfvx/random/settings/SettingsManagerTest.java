@@ -67,6 +67,24 @@ public class SettingsManagerTest {
         assert (value == Settings.BSTMod.RANDOM);
     }
 
+    @Test
+    public void canGetSpeciesIndexValue() {
+        SettingsManager manager = new SettingsManager();
+
+        int value = manager.getSetting("CustomStarter1");
+        assert (value == 0);
+    }
+
+    @Test
+    public void canSetSpeciesIndexValue() {
+        SettingsManager manager = new SettingsManager();
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+
+        manager.setSetting("CustomStarter1", 8);
+        int value = manager.getSetting("CustomStarter1");
+        assert (value == 8);
+    }
+
     //TODO: other data types used (String, Double, ?)
 
     @Test
@@ -133,7 +151,7 @@ public class SettingsManagerTest {
     public void setToDisabledValueFails() {
         SettingsManager manager = new SettingsManager();
 
-        //TODO: replace this (and all disableValues tests) with a simpler case
+        //TODO: replace this (and all disabledValues tests) with a simpler case
 
         manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
         manager.setSetting("CustomStarter1", 15);
@@ -239,6 +257,22 @@ public class SettingsManagerTest {
         assumeFalse(listener.automaticSettingChangeCalled);
 
         manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        assert(listener.automaticSettingChangeCalled);
+    }
+
+    @Test
+    public void automaticChangeListenerIsCalledWhenCurrentValueDisabled() {
+        SettingsManager manager = new SettingsManager();
+        SettingsListenerTestTool listener = new SettingsListenerTestTool();
+
+        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
+
+        manager.addListener("StartersTypeRestriction", listener);
+
+        manager.setSetting("CustomStarter1", 15);
         assert(listener.automaticSettingChangeCalled);
     }
 }

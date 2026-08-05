@@ -149,4 +149,6 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         assertDoesNotThrow(() -> manager.associateGame(romHandler));
     }
+
+    //TODO: listener tests
 }

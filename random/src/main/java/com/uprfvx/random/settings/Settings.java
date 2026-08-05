@@ -49,6 +49,7 @@ import static com.uprfvx.random.settings.SettingUtils.higherValueThanGeneration;
 // human-readable, (b) contain no spaces nor the equals sign.
 //Each setting's name should be listed in Settings.Names so developers don't have to memorize them/type
 // them correctly each time.
+//Setting categories should be the most specific applicable category.
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
@@ -59,11 +60,13 @@ public class Settings {
      * Contains a constant for the name of each setting used in the randomizer.
      */
     public static class Names {
+        /*** GENERAL OPTIONS ***/
         //General options
         public static final String LIMIT_POKEMON = "LimitPokemon";
         public static final String NO_RANDOM_INTRO_MON = "NoRandomIntroMon";
         public static final String RACE_MODE = "RaceMode";
         public static final String NO_IRREGULAR_ALT_FORMES = "NoIrregularAltFormes";
+        //Limit Pokemon
         public static final String ALLOW_GENERATION_1 = "AllowGeneration1";
         public static final String ALLOW_GENERATION_2 = "AllowGeneration2";
         public static final String ALLOW_GENERATION_3 = "AllowGeneration3";
@@ -71,19 +74,53 @@ public class Settings {
         public static final String ALLOW_GENERATION_5 = "AllowGeneration5";
         public static final String ALLOW_GENERATION_6 = "AllowGeneration6";
         public static final String ALLOW_GENERATION_7 = "AllowGeneration7";
+
+        /*** POKEMON TRAITS ***/
+        //Base Stat Totals
+        public static final String RANDOMIZE_BASE_STAT_TOTALS = "RandomizePokemonBaseStatTotals";
+        public static final String BST_BUFF_NERF_PERCENT = "BSTRandomBuffNerfPercentage";
+        public static final String BSTS_FOLLOW_EVOLUTION = "StatTotalsFollowEvolutions";
+        public static final String BST_SHUFFLE_SEPARATE_LEGENDARIES = "BSTShuffleLegendariesSeparately";
+        //Base Stat Distribution
+        public static final String RANDOMIZE_BASE_STAT_DISTRIBUTIONS = "RandomizePokemonBaseStatDistributions";
+        public static final String BSDS_FOLLOW_EVOLUTION = "StatDistributionsFollowEvolutions";
+        public static final String BSDS_FOLLOW_MEGA_EVOS = "StatDistributionsFollowMegaEvolutions";
+        public static final String BSDS_ASSIGN_EVO_STATS_RANDOMLY = "StatDistributionsAssignEvoStatsRandomly";
+        //Update Base Stats
+        public static final String UPDATE_BASE_STATS = "UpdateBaseStats";
+        public static final String UPDATE_STATS_GENERATION = "UpdateBaseStatsToGeneration";
+
     }
+
+    public static class Categories {
+        /*** GENERAL OPTIONS ***/
+        public static final String GENERAL_OPTIONS = "GeneralOptions";
+        public static final String LIMIT_POKEMON = "LimitPokemon";
+
+        /*** POKEMON TRAITS ***/
+        public static final String BASE_STAT_TOTALS = "BaseStatisticTotals";
+        public static final String BASE_STAT_DISTRIBUTION = "BaseStatisticDistribution";
+        public static final String UPDATE_BASE_STATS = "UpdateBaseStatistics";
+
+
+        //Supercategories
+        public static final List<String> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
+        public static final List<String> POKEMON_TRAITS = List.of(BASE_STAT_TOTALS, BASE_STAT_DISTRIBUTION,
+                UPDATE_BASE_STATS);
+    }
+    //region general options
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition<>(
                     Names.LIMIT_POKEMON,
-                    "GeneralOptions",
+                    Categories.GENERAL_OPTIONS,
                     false,
                     null,
                     notOfGeneration(1)
             ), //TODO: might be able to eliminate this setting and just use the "AllowGenerationX" settings (inverted)
             new SimpleSettingDefinition<>(
                     Names.NO_RANDOM_INTRO_MON,
-                    "GeneralOptions",
+                    Categories.GENERAL_OPTIONS, //TODO: move to misc. tweaks?
                     false,
                     null,
                     null
@@ -94,14 +131,14 @@ public class Settings {
                             //TODO investigate this todo i guess
             new SimpleSettingDefinition<>(
                     Names.RACE_MODE,
-                    "GeneralOptions",
+                    Categories.GENERAL_OPTIONS,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.NO_IRREGULAR_ALT_FORMES,
-                    "GeneralOptions",
+                    Categories.GENERAL_OPTIONS,
                     false,
                     null,
                     null
@@ -109,60 +146,64 @@ public class Settings {
 
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_1,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(2)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_2,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(2)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_3,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(3)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_4,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(4)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_5,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(5)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_6,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(6)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_7,
-                    "LimitPokemon",
+                    Categories.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(7)
             )
     );
 
+    //endregion
+
+    //region pokemon traits
+
     public enum BSTMod {
         UNCHANGED, RANDOM_BUFF_NERF, SHUFFLE, RANDOM
     }
 
-    public enum BaseStatisticsMod {
+    public enum BaseStatDistributionsMod {
         UNCHANGED, SHUFFLE, RANDOM
     }
 
@@ -184,77 +225,77 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> POKEMON_TRAITS = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizePokemonBaseStatTotals",
-                    "PokemonBaseStatistics",
+                    Names.RANDOMIZE_BASE_STAT_TOTALS,
+                    Categories.BASE_STAT_TOTALS,
                     BSTMod.UNCHANGED,
                     null,
                     null
             ),
             new NumericSettingDefinition<>(
-                    "BSTRandomBuffNerfPercentage",
-                    "PokemonBaseStatistics",
+                    Names.BST_BUFF_NERF_PERCENT,
+                    Categories.BASE_STAT_TOTALS,
                     0,
-                    new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
                     null,
                     0, 50
             ),
             new SimpleSettingDefinition<>(
-                    "BSTsFollowEvolutions",
-                    "PokemonBaseStatistics",
+                    Names.BSTS_FOLLOW_EVOLUTION,
+                    Categories.BASE_STAT_TOTALS,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.RANDOM_BUFF_NERF),
-                            new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE)),
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BSTShuffleSeparateLegendaries",
-                    "PokemonBaseStatistics",
+                    Names.BST_SHUFFLE_SEPARATE_LEGENDARIES,
+                    Categories.BASE_STAT_TOTALS,
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", BSTMod.SHUFFLE),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizePokemonBaseStatDistributions",
-                    "PokemonBaseStatistics",
-                    BaseStatisticsMod.UNCHANGED,
+                    Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
+                    Categories.BASE_STAT_DISTRIBUTION,
+                    BaseStatDistributionsMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "StatDistributionsFollowEvolutions",
-                    "PokemonBaseStatistics",
+                    Names.BSDS_FOLLOW_EVOLUTION,
+                    Categories.BASE_STAT_DISTRIBUTION,
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS, BaseStatDistributionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "StatDistributionsFollowMegaEvolutions",
-                    "PokemonBaseStatistics",
+                    Names.BSDS_FOLLOW_MEGA_EVOS,
+                    Categories.BASE_STAT_DISTRIBUTION,
                     false,
-                    new SimpleSettingRestriction<>("StatDistributionsFollowEvolutions", isTrue),
+                    new SimpleSettingRestriction<>(Names.BSDS_FOLLOW_EVOLUTION, isTrue),
                     RomHandler::hasMegaEvolutions
             ),
             new SimpleSettingDefinition<>(
-                    "StatDistributionsAssignEvoStatsRandomly",
-                    "PokemonBaseStatistics",
+                    Names.BSDS_ASSIGN_EVO_STATS_RANDOMLY,
+                    Categories.BASE_STAT_DISTRIBUTION,
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonBaseStatDistributions", BaseStatisticsMod.RANDOM),
+                    new SimpleSettingRestriction<>(Names.BSDS_FOLLOW_EVOLUTION, isTrue),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "UpdateBaseStats",
-                    "PokemonBaseStatistics",
+                    Names.UPDATE_BASE_STATS,
+                    Categories.UPDATE_BASE_STATS,
                     false,
                     null,
                     notOfGeneration(1)),
             new NumericSettingDefinition<>(
-                    "UpdateBaseStatsGeneration",
-                    "PokemonBaseStatistics",
+                    Names.UPDATE_STATS_GENERATION,
+                    Categories.UPDATE_BASE_STATS,
                     9,
-                    new SimpleSettingRestriction<>("UpdateBaseStats", isTrue),
+                    new SimpleSettingRestriction<>(Names.UPDATE_BASE_STATS, isTrue),
                     null,
                     6, 9,
                     null,
@@ -477,6 +518,8 @@ public class Settings {
                     null
             )
     );
+
+    //endregion
 
     public enum StartersMod {
         UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC

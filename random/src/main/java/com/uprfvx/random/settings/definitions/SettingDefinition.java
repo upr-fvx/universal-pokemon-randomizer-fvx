@@ -32,6 +32,8 @@ public abstract class SettingDefinition<T extends Serializable> {
     // There is at least one case for this (Starter BST limits) although it's not *extremely* necessary.
     // Two: Custom starters. (That's a bit more important.)
 
+    protected final Class<? extends Serializable> type;
+
     //The prerequisite of other settings' states required for this setting to be applicable.
     //If the prerequisite conditions are false, this setting will be disabled and set to the default value.
     private final SettingRestriction prerequisite;
@@ -66,6 +68,7 @@ public abstract class SettingDefinition<T extends Serializable> {
         this.name = name;
         this.category = category;
         this.defaultValue = defaultValue;
+        type = defaultValue.getClass();
         this.prerequisite = prerequisite;
         this.supported = supported;
         Set<String> restrictors = new HashSet<>();
@@ -96,6 +99,7 @@ public abstract class SettingDefinition<T extends Serializable> {
         this.name = name;
         this.category = category;
         this.defaultValue = defaultValue;
+        type = defaultValue.getClass();
         this.prerequisite = prerequisite;
         this.supported = supported;
 
@@ -218,5 +222,13 @@ public abstract class SettingDefinition<T extends Serializable> {
     public boolean hasValueSupportRestrictions()
     {
         return hasSupportRestrictions;
+    }
+
+    /**
+     * Gets the type of object that this setting stores.
+     * @return The Class of the setting's initial value.
+     */
+    public Class<? extends Serializable> getType() {
+        return type;
     }
 }

@@ -54,7 +54,7 @@ public class SettingsManagerTest {
     public void canGetEnumValue() {
         SettingsManager manager = new SettingsManager();
 
-        Settings.BSTMod value = manager.getSetting("RandomizePokemonBaseStatTotals");
+        Settings.BSTMod value = manager.getSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS);
         assert (value == Settings.BSTMod.UNCHANGED);
     }
 
@@ -62,8 +62,8 @@ public class SettingsManagerTest {
     public void canSetEnumValue() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
-        Settings.BSTMod value = manager.getSetting("RandomizePokemonBaseStatTotals");
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
+        Settings.BSTMod value = manager.getSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS);
         assert (value == Settings.BSTMod.RANDOM);
     }
 
@@ -127,9 +127,9 @@ public class SettingsManagerTest {
     public void setToDisableableSettingWorksWhenEnabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
-        int value = manager.getSetting("BSTRandomBuffNerfPercentage");
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 22);
+        int value = manager.getSetting(Settings.Names.BST_BUFF_NERF_PERCENT);
         assert (value == 22);
     }
 
@@ -137,13 +137,13 @@ public class SettingsManagerTest {
     public void returnsToDefaultValueWhenSettingDisabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
-        int value = manager.getSetting("BSTRandomBuffNerfPercentage");
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 22);
+        int value = manager.getSetting(Settings.Names.BST_BUFF_NERF_PERCENT);
         assumeTrue(value == 22);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
-        value = manager.getSetting("BSTRandomBuffNerfPercentage");
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        value = manager.getSetting(Settings.Names.BST_BUFF_NERF_PERCENT);
         assert (value != 22);
     }
 
@@ -200,8 +200,8 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener("BSTRandomBuffNerfPercentage", listener);
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.addListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
 
         assert(listener.possibleEnablementChangeCalled);
     }
@@ -211,10 +211,10 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
 
-        manager.addListener("BSTRandomBuffNerfPercentage", listener);
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.addListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.possibleEnablementChangeCalled);
     }
 
@@ -250,13 +250,13 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
-        manager.addListener("BSTRandomBuffNerfPercentage", listener);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 22);
+        manager.addListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener);
 
         assumeFalse(listener.automaticSettingChangeCalled);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.automaticSettingChangeCalled);
     }
 
@@ -288,7 +288,7 @@ public class SettingsManagerTest {
         listener.reset();
         assumeFalse(listener.manualSettingChangeCalled);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         assert(listener.manualSettingChangeCalled);
     }
 
@@ -300,13 +300,13 @@ public class SettingsManagerTest {
         manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
 
         manager.addUniversalListener(listener);
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.possibleEnablementChangeCalled);
 
         listener.reset();
@@ -327,8 +327,8 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 22);
         manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
         manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
         Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
@@ -337,7 +337,7 @@ public class SettingsManagerTest {
         manager.addUniversalListener(listener);
         assumeFalse(listener.automaticSettingChangeCalled);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.automaticSettingChangeCalled);
 
         listener.reset();
@@ -381,69 +381,69 @@ public class SettingsManagerTest {
         TestSettingsListener listener1 = new TestSettingsListener();
         TestSettingsListener listener2 = new TestSettingsListener();
 
-        manager.addListener("BSTRandomBuffNerfPercentage", listener1);
-        manager.addListener("BSTRandomBuffNerfPercentage", listener2);
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.addListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener1);
+        manager.addListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener2);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener1.possibleEnablementChangeCalled);
         assert(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("BSTRandomBuffNerfPercentage", 16);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 16);
         assert(listener1.manualSettingChangeCalled);
         assert(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener1.automaticSettingChangeCalled);
         assert(listener2.automaticSettingChangeCalled);
 
-        manager.removeListener("BSTRandomBuffNerfPercentage", listener1);
+        manager.removeListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener1);
         manager.addUniversalListener(listener1);
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener1.possibleEnablementChangeCalled);
         assert(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("BSTRandomBuffNerfPercentage", 16);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 16);
         assert(listener1.manualSettingChangeCalled);
         assert(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener1.automaticSettingChangeCalled);
         assert(listener2.automaticSettingChangeCalled);
 
-        manager.removeListener("BSTRandomBuffNerfPercentage", listener2);
+        manager.removeListener(Settings.Names.BST_BUFF_NERF_PERCENT, listener2);
         manager.addUniversalListener(listener2);
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener1.possibleEnablementChangeCalled);
         assert(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("BSTRandomBuffNerfPercentage", 16);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 16);
         assert(listener1.manualSettingChangeCalled);
         assert(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener1.automaticSettingChangeCalled);
         assert(listener2.automaticSettingChangeCalled);
     }
@@ -478,11 +478,11 @@ public class SettingsManagerTest {
 
         manager.setSetting(Settings.Names.NO_RANDOM_INTRO_MON, true);
         manager.setSetting("UpdateMovesToGeneration", 8);
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
 
         boolean boolValue = manager.getSetting(Settings.Names.NO_RANDOM_INTRO_MON);
         int intValue = manager.getSetting("UpdateMovesToGeneration");
-        Settings.BSTMod enumValue = manager.getSetting("RandomizePokemonBaseStatTotals");
+        Settings.BSTMod enumValue = manager.getSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS);
 
         assumeTrue(boolValue);
         assumeTrue(intValue == 8);
@@ -492,7 +492,7 @@ public class SettingsManagerTest {
 
         boolValue = manager.getSetting(Settings.Names.NO_RANDOM_INTRO_MON);
         intValue = manager.getSetting("UpdateMovesToGeneration");
-        enumValue = manager.getSetting("RandomizePokemonBaseStatTotals");
+        enumValue = manager.getSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS);
 
         assert (boolValue != true);
         assert (intValue != 8);
@@ -534,8 +534,8 @@ public class SettingsManagerTest {
         manager.resetAll();
         assert !listener.automaticSettingChangeCalled;
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting("BSTRandomBuffNerfPercentage", 22);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Settings.Names.BST_BUFF_NERF_PERCENT, 22);
         listener.reset();
 
         manager.resetAll();

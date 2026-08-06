@@ -41,6 +41,9 @@ public class SpeciesIndexSettingDefinition extends SettingDefinition<Integer> {
 
     @Override
     public boolean isValueSupported(Integer value, RomHandler game) {
+        if (value == null) {
+            return false;
+        }
         if (value < 0) {
             return false;
         }

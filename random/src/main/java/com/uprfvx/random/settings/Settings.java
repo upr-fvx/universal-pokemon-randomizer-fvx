@@ -620,16 +620,11 @@ public class Settings {
                     anyStarterIsRandomRestriction,
                     null
             ),
-            new EnumSettingDefinition<Type>( //Compiler is lying, this one needs to be explicit
+            new TypeOrRandomSettingDefinition(
                     "SingleStarterType",
                     "Starters",
-                    null, // TODO: change handling of random to not be null
                     new EnumMatchRestriction<>("StartersTypeRestriction", StartersTypeMod.SINGLE_TYPE),
-                    null,
-                    null,
-                    Arrays.stream(Type.values()).collect(Collectors.toMap(
-                            t -> t, t -> (rh -> rh.getTypeService().typeInGame(t))
-                    ))
+                    null
             ),
 
             new SimpleSettingDefinition<>(

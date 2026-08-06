@@ -48,8 +48,11 @@ import static com.uprfvx.random.settings.SettingUtils.higherValueThanGeneration;
 //Setting names should be unique. They also will (eventually) be used as ini keys, so they should (a) be relatively
 // human-readable, (b) contain no spaces nor the equals sign.
 //Each setting's name should be listed in Settings.Names so developers don't have to memorize them/type
-// them correctly each time.
-//Setting categories should be the most specific applicable category.
+// them correctly each time. Similarly, categories should be in Settings.Category and should be added to the appropriate
+// supercategory.
+//Setting categories should be the most specific applicable category. (E.g., "Base Stat Distributions" rather than
+// "Pokemon Base Stats" or "Pokemon Traits". Supercategories should be the tabs of the GUI. Intermediate categories are
+// skipped.
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
@@ -103,7 +106,7 @@ public class Settings {
         public static final String UPDATE_BASE_STATS = "UpdateBaseStatistics";
 
 
-        //Supercategories
+        /****** Supercategories ******/
         public static final List<String> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
         public static final List<String> POKEMON_TRAITS = List.of(BASE_STAT_TOTALS, BASE_STAT_DISTRIBUTION,
                 UPDATE_BASE_STATS);

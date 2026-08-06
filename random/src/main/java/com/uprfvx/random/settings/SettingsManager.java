@@ -261,7 +261,7 @@ public class SettingsManager {
         }
     }
 
-    //TODO: passthrough functions for isEnabled, isSupported, isValueValid, isValueEnabled, isValueSupported?
+    //TODO: passthrough functions for isEnabled, isSupported, isValueValid, isValueEnabled, isValueSupported
 
     /**
      * Resets all settings to their default values.

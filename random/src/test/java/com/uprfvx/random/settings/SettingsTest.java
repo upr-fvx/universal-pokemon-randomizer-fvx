@@ -1,12 +1,19 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.definitions.SettingDefinition;
 import com.uprfvx.romio.romhandlers.RomHandlerTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.Collection;
+import java.util.*;
 
+import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
+
+/**
+ * A class for tests on the set of SettingDefinitions.
+ * Should test not the code, but the defined values.
+ */
 public class SettingsTest {
 
     @Test
@@ -33,6 +40,22 @@ public class SettingsTest {
             }
         }
         assert(passing);
+    }
+
+    @Test
+    public void EverySettingHasUniqueName() {
+        Map<String, String> namesToCategories = new HashMap<>();
+        boolean passing = true;
+        for (SettingDefinition<?> setting : ALL_SETTINGS) {
+            if(namesToCategories.containsKey(setting.getName())) {
+                passing = false;
+                System.out.println("Duplicate setting name: " + setting.getName());
+                System.out.println("Categories: " + setting.getCategory() + ", " + namesToCategories.get(setting.getName()));
+            }
+            namesToCategories.put(setting.getName(), setting.getCategory());
+        }
+
+        assert passing;
     }
 
     @Test

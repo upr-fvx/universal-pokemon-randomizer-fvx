@@ -15,7 +15,7 @@ import java.util.function.Predicate;
  * that the Randomizer currently has, so it is designed with that in mind.
  * ID=0 is taken to mean "Random".
  */
-public class SpeciesIndexSettingDefinition extends SettingDefinition<Integer> {
+public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Integer> {
 
     public static final int RANDOM_SPECIES = 0;
     private static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
@@ -24,31 +24,34 @@ public class SpeciesIndexSettingDefinition extends SettingDefinition<Integer> {
     public SpeciesIndexSettingDefinition(String name, String category,
                                          SettingRestriction prerequisite,
                                          Predicate<RomHandler> supported) {
-        super(name, category, RANDOM_SPECIES, prerequisite, supported, true, null);
+        super(name, category, RANDOM_SPECIES, prerequisite, supported, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);
     }
 
+    /*
+     * Unless we can check for cosmetic formes here, this does nothing not handled by the super method
+    @Override
     public boolean isValueValid(Integer value) {
         if (value == null)
             return false;
 
-        return value >= 0 && value <= HIGHEST_SPECIES_INDEX;
-    }
+        //If possible, checking here for cosmetic forms would be nice. Unnecessary though.
 
-    @Override
-    public boolean isValueEnabled(Integer value, SettingsManager manager) {
-        return true;
+        return super.isValueValid(value);
     }
+    //*/
 
     @Override
     public boolean isValueSupported(Integer value, RomHandler game) {
-        if (value == null) {
-            return false;
-        }
-        if (value < 0) {
+        if (!isValueValid(value)) {
             return false;
         }
         if (value == RANDOM_SPECIES) {
             return true;
+        }
+        if (game == null) {
+            return true;
+            //Standard is for all (valid) values to be supported when no game is loaded.
+            //(Does mean we'll need special handling for the unloaded case in the GUI.)
         }
         List<Species> allSpecies = game.getSpecies();
         if (value >= allSpecies.size()) {

@@ -16,6 +16,7 @@ import java.util.function.Predicate;
  * @param <T> The type of numeric value to use. Must implement both Number and Comparable<T>.
  */
 public class NumericSettingDefinition<T extends Number & Comparable<T>> extends SettingDefinition<T> {
+    //Actually, not sure that it needs to extend Number?
 
     final T minimum;
     final T maximum;

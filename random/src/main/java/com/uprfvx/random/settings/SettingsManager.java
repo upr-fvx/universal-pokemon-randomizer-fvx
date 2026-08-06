@@ -88,22 +88,7 @@ public class SettingsManager {
         }
     }
 
-    /**
-     * Retrieves the definition of the requested setting. <br>
-     * Note: This method has no way to verify that the correct type is passed for T,
-     * and will return the definition (treated as if it is of type T) regardless.
-     * This may result in unexpected behavior if the wrong value of T is used, but as SettingDefinitions are
-     * not modifiable, should not be a security risk.
-     * @param settingName The setting to retrieve the definition of.
-     * @return The setting's definition.
-     * @param <T> The type of the setting.
-     * @throws IllegalArgumentException if there is no setting of the given name.
-     */
-    public <T extends Serializable> SettingDefinition<T> getSettingDefinition(String settingName) {
-        SettingState<T> state = getTypedState(settingName);
 
-        return state.getDefinition();
-    }
 
     /**
      * Sets the requested setting's state to the given value.
@@ -123,20 +108,15 @@ public class SettingsManager {
         }
 
         SettingState<T> state = getTypedState(settingName);
+        SettingDefinition<T> definition = state.getDefinition();
 
-        if (state.getValue().getClass() != newValue.getClass()) {
-            throw new IllegalArgumentException("Tried to set setting \"" + settingName + "\" to the wrong type!\n" +
-                    "Type given: " + newValue.getClass().getName() + "\n" +
-                    "Type needed: " + state.getValue().getClass().getName());
-
-        }
+        valueTypeCheck(newValue, definition);
 
         T currentValue = state.getValue();
 
         if (currentValue == newValue)
             return true; //if the setting is already set to the relevant value, save us checking dependencies
 
-        SettingDefinition<T> definition = state.getDefinition();
         if(!definition.isValueSettable(newValue, this, game))
             return false;
 
@@ -261,7 +241,98 @@ public class SettingsManager {
         }
     }
 
-    //TODO: passthrough functions for isEnabled, isSupported, isValueValid, isValueEnabled, isValueSupported
+    //TODO: getMinimums, getMaximums
+
+    /**
+     * Checks whether the requested setting as a whole is enabled.
+     * Can still be true if some values of the setting are disabled.
+     * @param settingName The setting to check.
+     * @return True if the setting is enabled, false if it is disabled.
+     * @throws IllegalArgumentException if there is no setting with the given name.
+     */
+    public boolean isEnabled(String settingName) {
+        return getUntypedDefinition(settingName).isEnabled(this);
+    }
+
+    /**
+     * Checks whether the requested setting as a whole is supported.
+     * Can still be true if some values of the setting are unsupported.
+     * @param settingName The setting to check.
+     * @return True if the setting is supported, false if it is unsupported.
+     * @throws IllegalArgumentException if there is no setting with the given name.
+     */
+    public boolean isSupported(String settingName) {
+        SettingDefinition<?> definition = getUntypedDefinition(settingName);
+        //Pulling definition now for the checks performed.
+
+        if(game == null)
+            return true;
+
+        return definition.isSupported(game);
+    }
+
+    /**
+     * Checks whether the value given can ever be a valid value for the requested setting.
+     * Always returns false if the value is null, since null values are never valid for any setting.
+     * @param settingName The setting to check.
+     * @param value The value to check.
+     * @return True if the value is valid, false otherwise.
+     * @param <T> The type of the value given.
+     * @throws IllegalArgumentException if there is no setting with the given name,
+     *                                  or if the given value is the wrong type for the setting.
+     */
+    public <T extends Serializable> boolean isValueValid(String settingName, T value)
+    {
+        if(value == null)
+            return false;
+
+        SettingDefinition<T> definition = getTypedDefinition(settingName);
+
+        valueTypeCheck(value, definition);
+
+        return definition.isValueValid(value);
+    }
+
+    /**
+     * Checks whether the value given is currently enabled, given the state of the SettingsManager.
+     * Also returns false if the value is not valid. Does not check if the setting as a whole is disabled.
+     * @param settingName The setting to check.
+     * @param value The value to check.
+     * @return False if the value is invalid or disabled, true otherwise.
+     * @param <T> The type of the value given.
+     * @throws IllegalArgumentException if there is no setting with the given name,
+     *                                  or if the given value is the wrong type for the setting.
+     */
+    public <T extends Serializable> boolean isValueEnabled(String settingName, T value)
+    {
+        if(!isValueValid(settingName, value))
+            return false;
+        //This also performs the type check for us.
+
+        return getTypedDefinition(settingName).isValueEnabled(value, this);
+    }
+
+    /**
+     * Checks whether the value given is currently supported, given the game currently loaded into the SettingsManager.
+     * Also returns false if the value is not valid. Does not check if the setting as a whole is unsupported.
+     * @param settingName The setting to check.
+     * @param value The value to check.
+     * @return False if the value is invalid or unsupported, true otherwise.
+     * @param <T> The type of the value given.
+     * @throws IllegalArgumentException if there is no setting with the given name,
+     *                                  or if the given value is the wrong type for the setting.
+     */
+    public <T extends Serializable> boolean isValueSupported(String settingName, T value)
+    {
+        if(!isValueValid(settingName, value))
+            return false;
+        //This also performs the type check for us.
+
+        if(game == null)
+            return true;
+
+        return getTypedDefinition(settingName).isValueSupported(value, game);
+    }
 
     /**
      * Resets all settings to their default values.
@@ -276,16 +347,58 @@ public class SettingsManager {
         });
     }
 
+    /**
+     * Resets the given setting to its default value. May change other settings as a result.
+     * @param settingName The setting to reset.
+     * @throws IllegalArgumentException if there is no setting with the given name.
+     */
+    public void reset(String settingName) {
+        SettingState<?> state = getUntypedState(settingName);
+        if (!state.isDefault()) {
+            state.reset();
+            alertListenersToManualChange(settingName);
+
+            Set<String> possiblyChanged = checkDependencies(settingName);
+            alertListenersToPossibleEnablementChanges(possiblyChanged);
+        }
+    }
+
     //endregion
 
     //region private and package-private functions
 
     /**
+     * Gets the setting indicated, or throws if it does not exist.
+     * @param settingName The name of the setting to retrieve.
+     * @return The setting's state.
+     * @throws IllegalArgumentException if there is no setting of the given name.
+     */
+    private SettingState<?> getUntypedState(String settingName) {
+        SettingState<?> state = settingStates.get(settingName);
+        if(state == null)
+        {
+            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist!");
+        }
+
+        return state;
+    }
+
+    /**
+     * Gets the definition of the indicated setting, or throws if the setting does not exist.
+     * @param settingName The name of the setting to retrieve the definition of.
+     * @return The setting's defintion.
+     * @throws IllegalArgumentException if there is no setting with the given name.
+     */
+    private SettingDefinition<?> getUntypedDefinition(String settingName) {
+        return getUntypedState(settingName).getDefinition();
+    }
+
+    /**
      * The unsafe part of the implementation. Given a setting name, retrieves its setting state,
      * then casts it to SettingState<T>.<br>
      * This cast may be improper; as far as I know, the language gives us no way to check.
-     * Therefore, we should make every effort to make
-     * any operations performed with the resulting SettingState are either checked or non-dangerous.
+     * Therefore, we should make every effort to ensure any operations performed
+     * with the resulting SettingState are either checked or non-dangerous.
      * @param settingName The name of the setting to retrieve.
      * @return The setting's state, cast to SettingState<T>.
      * @param <T> The type of the setting.
@@ -293,14 +406,51 @@ public class SettingsManager {
      */
     @SuppressWarnings("unchecked")
     private <T extends Serializable> SettingState<T> getTypedState(String settingName) {
-        SettingState<?> uncastState = settingStates.get(settingName);
-        if(uncastState == null)
-        {
-            throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist!");
-        }
-
-        SettingState<T> state;
+        SettingState<?> uncastState = getUntypedState(settingName);
         return (SettingState<T>) uncastState;
+    }
+
+    /**
+     * Retrieves the definition of the requested setting, cast to SettingDefinition<T>. <br>
+     * Note: Like getTypedState, this cast may be improper. Always make sure any operations performed
+     * with the returned SettingDefinition are type checked as much as possible.
+     * @param settingName The setting to retrieve the definition of.
+     * @return The setting's definition.
+     * @param <T> The type of the setting.
+     * @throws IllegalArgumentException if there is no setting of the given name.
+     */
+    private <T extends Serializable> SettingDefinition<T> getTypedDefinition(String settingName) {
+        SettingState<T> state = getTypedState(settingName);
+
+        return state.getDefinition();
+    }
+
+    /**
+     * Checks that the value given is the appropriate type for the setting given.
+     * Throws an IllegalArgumentException if it is not.
+     * @param value The value to check.
+     * @param state The state of the setting to check against.
+     * @param <T> The type of the value given.
+     * @throws IllegalArgumentException if the type of the value does not match the type for the setting.
+     */
+    private <T extends Serializable> void valueTypeCheck(T value, SettingState<?> state) {
+        valueTypeCheck(value, state.getDefinition());
+    }
+
+    /**
+     * Checks that the value given is the appropriate type for the setting given.
+     * Throws an IllegalArgumentException if it is not.
+     * @param value The value to check.
+     * @param definition The definition of the setting to check against.
+     * @param <T> The type of the value given.
+     * @throws IllegalArgumentException if the type of the value does not match the type for the setting.
+     */
+    private <T extends Serializable> void valueTypeCheck(T value, SettingDefinition<?> definition) {
+        if(value.getClass() != definition.getType()) {
+            throw new IllegalArgumentException("Wrong type given for setting \"" + definition.getName() +
+                    "Type given: " + value.getClass().getName() + "\n" +
+                    "Type needed: " + definition.getType().getName());
+        }
     }
 
     /**
@@ -369,16 +519,27 @@ public class SettingsManager {
         return settingStates.values();
     }
 
+    /**
+     * Gets a Stream of all listeners relevant to the setting given
+     * (universal listeners and listeners for that setting).
+     * @param settingName The setting in question.
+     * @return A stream of every relevant listener.
+     */
+    private Stream<SettingChangeListener> getAllListeners(String settingName) {
+        if(listeners.get(settingName) != null) {
+            return Stream.concat(universalListeners.stream(), listeners.get(settingName).stream());
+        } else {
+            return universalListeners.stream();
+        }
+    }
+
     private void alertListenersToPossibleEnablementChanges(Collection<String> settingNames) {
         if (settingNames == null)
             return;
 
         for (String name : settingNames) {
 
-            Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
-            if(listeners.get(name) != null) {
-                relevantListeners = Stream.concat(relevantListeners, listeners.get(name).stream());
-            }
+            Stream<SettingChangeListener> relevantListeners = getAllListeners(name);
             relevantListeners.forEach(l -> l.onPossibleEnablementChange(name, this));
 
         }
@@ -386,19 +547,13 @@ public class SettingsManager {
 
     private void alertListenersToManualChange(String settingName) {
 
-        Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
-        if(listeners.get(settingName) != null) {
-            relevantListeners = Stream.concat(relevantListeners, listeners.get(settingName).stream());
-        }
+        Stream<SettingChangeListener> relevantListeners = getAllListeners(settingName);
         relevantListeners.forEach(l -> l.onManualSettingChange(settingName, this));
 
     }
 
     private void alertListenersToAutomaticChange(String settingName) {
-        Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
-        if(listeners.get(settingName) != null) {
-            relevantListeners = Stream.concat(relevantListeners, listeners.get(settingName).stream());
-        }
+        Stream<SettingChangeListener> relevantListeners = getAllListeners(settingName);
         relevantListeners.forEach(l -> l.onAutomaticSettingChange(settingName, this));
     }
 
@@ -417,10 +572,7 @@ public class SettingsManager {
         if (!(supportChanged || hasValueRestrictions || automaticallyReset))
             return;
 
-        Stream<SettingChangeListener> relevantListeners =  universalListeners.stream();
-        if(listeners.get(settingName) != null) {
-            relevantListeners = Stream.concat(relevantListeners, listeners.get(settingName).stream());
-        }
+        Stream<SettingChangeListener> relevantListeners = getAllListeners(settingName);
 
         relevantListeners.forEach(l -> {
             if (supportChanged)

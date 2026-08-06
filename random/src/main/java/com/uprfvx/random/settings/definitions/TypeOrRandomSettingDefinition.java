@@ -12,6 +12,10 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
     // Am not suggesting it should become that, just an idle thought
     public static final int RANDOM_TYPE = -1;
 
+    //TODO: generalize to EnumPlusOptionsSettingDefinition?
+    //(Options being "Random", "Unchanged", and anything else that ends up relevant.)
+    //(Saw two settings that could be combined with such a class, but I'd sooner see the first extended TBH)
+
     public TypeOrRandomSettingDefinition(String name, String category, 
                                          SettingRestriction prerequisite, 
                                          Predicate<RomHandler> supported) {

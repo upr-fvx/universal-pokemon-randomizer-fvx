@@ -5,15 +5,12 @@ import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
-import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.uprfvx.random.settings.SettingUtils.*;
-import static com.uprfvx.random.settings.SettingUtils.higherValueThanGeneration;
 
 //The list of EVERY setting supported by the randomizer.
 
@@ -561,6 +558,9 @@ public class Settings {
 
     //endregion
 
+    //region given pokemon [currently Starters, Statics, & Trades]
+    //TODO: move statics => Wild Pokemon supercategory & tab
+
     public enum StartersMod {
         UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
     }
@@ -800,6 +800,10 @@ public class Settings {
             )
     );
 
+    //endregion
+
+    //region moves & movesets
+
     public enum MovesetsMod {
         UNCHANGED, RANDOM_PREFER_SAME_TYPE, COMPLETELY_RANDOM, METRONOME_ONLY
     }
@@ -926,6 +930,13 @@ public class Settings {
                     atLeastGeneration(7)
             )
     );
+
+    //endregion
+
+    //region foe pokemon
+
+    //To consider: should Totem pokemon be here, or in Wild?
+    //(There's more space here, if nothing else.)
 
     public enum TrainersMod {
         UNCHANGED, RANDOM, DISTRIBUTED, MAINPLAYTHROUGH, TYPE_THEMED,
@@ -1291,6 +1302,10 @@ public class Settings {
             )
     );
 
+    //endregion
+
+    //region wild encounters
+
     public enum CatchRateMod {
         // replaces the numeric (but described with names) catch rates of earlier
         // Randomizer versions
@@ -1337,6 +1352,10 @@ public class Settings {
                     -100, 155
             )
     );
+
+    //endregion
+
+    //region move teachers
 
     public enum TMMovesMod {
         UNCHANGED, RANDOM
@@ -1501,6 +1520,12 @@ public class Settings {
             )
     );
 
+    //endregion
+
+    //region items
+
+    //To consider: Should held items (wild and/or trainer) be in this supercategory?
+
     public enum FieldItemsMod {
         UNCHANGED, SHUFFLE, RANDOM, RANDOM_EVEN
     }
@@ -1604,6 +1629,10 @@ public class Settings {
             )
     );
 
+    //endregion
+
+    //region type effectiveness
+
     public enum TypeEffectivenessMod {
         UNCHANGED, RANDOM, RANDOM_BALANCED, KEEP_IDENTITIES, INVERSE
     }
@@ -1632,6 +1661,10 @@ public class Settings {
                             && rh.generationOfPokemon() < TypeEffectivenessUpdater.UPDATE_TO_GEN
                     )
     );
+
+    //endregion
+
+    //region graphics
 
     public enum PokemonPalettesMod {
         UNCHANGED, RANDOM
@@ -1670,9 +1703,15 @@ public class Settings {
             // TODO: what to do with CPGs? Should they be included here?
     );
 
+    //endregion graphics
+
+    //region misc tweaks
+
     public static final List<SettingDefinition<?>> MISC_TWEAKS = List.of(
             // TODO
     );
+
+    //endregion
 
     //TODO: make sure all enum declarations have been moved to this file.
 

@@ -23,7 +23,7 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 // be restricted further based on other settings or RomHandler support.
 //TODO: StringSettingDefinition, for restrictions like charset and string length.
 //TODO: Image settings??
-//TODO: SpeciesSettingDefinition. That one will be real weird.
+//SpeciesSettingDefinition. A decently weird special case for starter selection.
 
 //Support is determined by a simple Predicate(RomHandler).
 //Enabled/Disabled state is determined by SettingRestrictions, which contain two parts:
@@ -367,7 +367,7 @@ public class Settings {
                     null,
                     Map.of(SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS, notEvolveEveryLevelRestriction),
                     null
-            ), // TODO: disable follow evos
+            ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_FORCE_DUAL_TYPES,
                     Categories.SPECIES_TYPES,

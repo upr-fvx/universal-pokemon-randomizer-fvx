@@ -814,6 +814,10 @@ public class Settings {
             new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.COMPLETELY_RANDOM)
     );
 
+    private static final SettingRestriction noMetronomeModeRestriction = new EnumMatchRestriction<>(
+            "RandomizePokemonMovesets", MovesetsMod.METRONOME_ONLY, false
+    );
+
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = List.of(
             new SimpleSettingDefinition<>(
                     "RandomizeMovePower",
@@ -877,7 +881,6 @@ public class Settings {
                     null,
                     null
             ),
-            // TODO: deal with metronome only mode, it should turn off options in other places
             new SimpleSettingDefinition<>(
                     "GuaranteedLevel1Moves",
                     "PokemonMovesets",
@@ -983,21 +986,21 @@ public class Settings {
                     "BetterMovesetsForBossTrainers",
                     "TrainerPokemon",
                     false,
-                    null,
+                    noMetronomeModeRestriction,
                     RomHandler::canGiveCustomMovesetsToBossTrainers
             ),
             new SimpleSettingDefinition<>(
                     "BetterMovesetsForImportantTrainers",
                     "TrainerPokemon",
                     false,
-                    null,
+                    noMetronomeModeRestriction,
                     RomHandler::canGiveCustomMovesetsToImportantTrainers
             ),
             new SimpleSettingDefinition<>(
                     "BetterMovesetsForRegularTrainers",
                     "TrainerPokemon",
                     false,
-                    null,
+                    noMetronomeModeRestriction,
                     RomHandler::canGiveCustomMovesetsToRegularTrainers
             ),
             new SimpleSettingDefinition<>(
@@ -1501,7 +1504,7 @@ public class Settings {
                     "RandomizeTMMoves",
                     "TMsAndHMs",
                     TMMovesMod.UNCHANGED,
-                    null,
+                    noMetronomeModeRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -1577,7 +1580,7 @@ public class Settings {
                     "RandomizeMoveTutorMoves",
                     "MoveTutors",
                     MoveTutorMovesMod.UNCHANGED,
-                    null,
+                    noMetronomeModeRestriction,
                     RomHandler::hasMoveTutors
             ),
             new SimpleSettingDefinition<>(

@@ -14,7 +14,8 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
 
     //TODO: generalize to EnumPlusOptionsSettingDefinition?
     //(Options being "Random", "Unchanged", and anything else that ends up relevant.)
-    //(Saw two settings that could be combined with such a class, but I'd sooner see the first extended TBH)
+    //(Saw a pair of settings (Standardize EXP curves) that could be combined with such a class,
+    // but in this case I'd honestly rather see the enabler extended.)
 
     public TypeOrRandomSettingDefinition(String name, String category, 
                                          SettingRestriction prerequisite, 

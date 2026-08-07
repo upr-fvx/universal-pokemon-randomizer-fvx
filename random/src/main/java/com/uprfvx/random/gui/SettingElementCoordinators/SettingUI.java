@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.SettingsManager;
 
 import javax.swing.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A class which coordinates a single setting with one or multiple GUI elements.
@@ -36,7 +37,7 @@ public abstract class SettingUI<T extends Serializable> implements SettingChange
 
     protected void elementValueChanged() {
         T newValue = getElementValue();
-        if (newValue != displayedValue) {
+        if (!newValue.equals(displayedValue)) {
             settings.setSetting(settingName, newValue);
             displayedValue = newValue;
         }
@@ -46,17 +47,25 @@ public abstract class SettingUI<T extends Serializable> implements SettingChange
 
     @Override
     public void onManualSettingChange(String setting, SettingsManager manager) {
-        if(setting != settingName)
+        if(!Objects.equals(setting, settingName))
             throw new IllegalArgumentException("Received event for non-managed setting!");
 
-        setValue(manager.getSetting(setting));
+        T newValue = manager.getSetting(setting);
+
+        if (!newValue.equals(displayedValue)) {
+            setValue(newValue);
+        }
     }
 
     @Override
     public void onAutomaticSettingChange(String setting, SettingsManager manager) {
-        if(setting != settingName)
+        if(!Objects.equals(setting, settingName))
             throw new IllegalArgumentException("Received event for non-managed setting!");
 
-        setValue(manager.getSetting(setting));
+        T newValue = manager.getSetting(setting);
+
+        if (!newValue.equals(displayedValue)) {
+            setValue(newValue);
+        }
     }
 }

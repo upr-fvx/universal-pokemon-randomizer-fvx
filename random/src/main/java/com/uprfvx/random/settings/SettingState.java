@@ -33,7 +33,7 @@ class SettingState<T extends Serializable> {
      * @return True if the current value is valid, false otherwise.
      */
     public boolean currentValueIsEnabled(SettingsManager manager) {
-        return (definition.isEnabled(manager) || this.value == definition.getDefaultValue())
+        return (definition.isEnabled(manager) || this.value.equals(definition.getDefaultValue()))
                 && definition.isValueEnabled(value, manager);
     }
 
@@ -46,7 +46,7 @@ class SettingState<T extends Serializable> {
         if(game == null)
             return true;
 
-        return (definition.isSupported(game) || this.value == definition.getDefaultValue())
+        return (definition.isSupported(game) || this.value.equals(definition.getDefaultValue()))
                 && definition.isValueSupported(value, game);
     }
 
@@ -55,7 +55,7 @@ class SettingState<T extends Serializable> {
      * @return True if the setting's value is equal to the default value, false otherwise.
      */
     public boolean isDefault() {
-        return value == definition.getDefaultValue();
+        return value.equals(definition.getDefaultValue());
     }
 
     /**

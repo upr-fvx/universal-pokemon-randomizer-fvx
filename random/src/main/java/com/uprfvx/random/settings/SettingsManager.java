@@ -114,7 +114,7 @@ public class SettingsManager {
 
         T currentValue = state.getValue();
 
-        if (currentValue == newValue)
+        if (currentValue.equals(newValue))
             return true; //if the setting is already set to the relevant value, save us checking dependencies
 
         if(!definition.isValueSettable(newValue, this, game))

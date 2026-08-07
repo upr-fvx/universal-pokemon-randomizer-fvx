@@ -147,6 +147,11 @@ public class Settings {
 
     //region general options
 
+    // needs to be up here since general options relies on it
+    public static final SettingRestriction notEvolveEveryLevelRestriction = new EnumMatchRestriction<>(
+            Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM_EVERY_LEVEL, false
+    );
+
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition<>(
                     Names.LIMIT_POKEMON,
@@ -178,6 +183,13 @@ public class Settings {
                     Categories.GENERAL_OPTIONS,
                     false,
                     null,
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "NoPrematureEvolutions",
+                    Categories.GENERAL_OPTIONS,
+                    false,
+                    notEvolveEveryLevelRestriction,
                     null
             ),
 
@@ -280,9 +292,12 @@ public class Settings {
                     Names.BSTS_FOLLOW_EVOLUTION,
                     Categories.BASE_STAT_TOTALS,
                     false,
-                    new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
-                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE)),
+                    new MultiSettingRestriction(false, false,
+                            notEvolveEveryLevelRestriction,
+                            new MultiSettingRestriction(true, false,
+                                new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
+                                new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE))
+                    ),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -304,7 +319,10 @@ public class Settings {
                     Names.BSDS_FOLLOW_EVOLUTION,
                     Categories.BASE_STAT_DISTRIBUTION,
                     false,
-                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS, BaseStatDistributionsMod.UNCHANGED, false),
+                    new MultiSettingRestriction(false, false,
+                            notEvolveEveryLevelRestriction,
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
+                                    BaseStatDistributionsMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -341,11 +359,13 @@ public class Settings {
                     null
             ),
 
-            new SimpleSettingDefinition<>(
+            new EnumSettingDefinition<>(
                     Names.SPECIES_RANDOMIZE_TYPES,
                     Categories.SPECIES_TYPES,
                     SpeciesTypesMod.UNCHANGED,
                     null,
+                    null,
+                    Map.of(SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS, notEvolveEveryLevelRestriction),
                     null
             ), // TODO: disable follow evos
             new SimpleSettingDefinition<>(
@@ -374,7 +394,10 @@ public class Settings {
                     Names.SPECIES_ABILITIES_FOLLOW_EVO,
                     Categories.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new MultiSettingRestriction(false, false,
+                            notEvolveEveryLevelRestriction,
+                            new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES,
+                                    AbilitiesMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -427,14 +450,14 @@ public class Settings {
                     null
             ),
 
-            // TODO: remember that evo randomization should affect a bunch of options
-
-            new SimpleSettingDefinition<>(
+            new EnumSettingDefinition<>(
                     Names.SPECIES_RANDOMIZE_EVOLUTIONS,
                     Categories.SPECIES_EVOLUTIONS,
                     EvolutionsMod.UNCHANGED,
                     null,
-                    null
+                    null,
+                    null,
+                    Map.of(EvolutionsMod.RANDOM_EVERY_LEVEL, RomHandler::canGiveEverySpeciesOneEvolutionEach)
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_SIMILAR_STRENGTH,
@@ -498,14 +521,14 @@ public class Settings {
                     Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE,
                     Categories.SPECIES_EVOLUTIONS,
                     false,
-                    null,
+                    notEvolveEveryLevelRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_MAKE_EASIER,
                     Categories.SPECIES_EVOLUTIONS,
                     false,
-                    null,
+                    notEvolveEveryLevelRestriction,
                     null
             ),
             new NumericSettingDefinition<>(
@@ -529,7 +552,7 @@ public class Settings {
                     Names.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
                     Categories.SPECIES_EVOLUTIONS,
                     false,
-                    null,
+                    notEvolveEveryLevelRestriction,
                     RomHandler::hasTimeBasedEvolutions
             ),
 
@@ -560,6 +583,7 @@ public class Settings {
 
     //region given pokemon [currently Starters, Statics, & Trades]
     //TODO: move statics => Wild Pokemon supercategory & tab
+    // Should statics be moved already, or is that a future project for once we've split off gift mons?
 
     public enum StartersMod {
         UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
@@ -612,11 +636,16 @@ public class Settings {
     }
 
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = List.of(
-            new SimpleSettingDefinition<>(
+            new EnumSettingDefinition<>(
                     "RandomizeStarters",
                     "Starters",
                     StartersMod.UNCHANGED,
                     null,
+                    null,
+                    Map.of(
+                            StartersMod.RANDOM_WITH_TWO_EVOLUTIONS, notEvolveEveryLevelRestriction,
+                            StartersMod.RANDOM_BASIC, notEvolveEveryLevelRestriction
+                    ),
                     null
             ),
             new SpeciesIndexSettingDefinition(
@@ -1189,7 +1218,10 @@ public class Settings {
                     "TrainersEvolveTheirPokemon",
                     "TrainerPokemon",
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.RANDOM_EVERY_LEVEL, false),
+                    new MultiSettingRestriction(false, false,
+                            notEvolveEveryLevelRestriction,
+                            new EnumMatchRestriction<>("RandomizePokemonEvolutions",
+                                    EvolutionsMod.RANDOM_EVERY_LEVEL, false)),
                     null
             ),
             new NumericSettingDefinition<>(
@@ -1562,10 +1594,15 @@ public class Settings {
                     "TMHMCompatibilityFollowEvolutions",
                     "TMsAndHMs",
                     false,
-                    new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
-                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE),
-                            new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue)),
+                    new MultiSettingRestriction(false, false,
+                            notEvolveEveryLevelRestriction,
+                            new MultiSettingRestriction(true, false,
+                                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility",
+                                            TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
+                                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility",
+                                            TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE),
+                                    new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue))
+                    ),
                     null
             ),
             new SimpleSettingDefinition<>(
@@ -1638,10 +1675,15 @@ public class Settings {
                     "MoveTutorCompatibilityFollowEvolutions",
                     "MoveTutors",
                     false,
-                    new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
-                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE),
-                            new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue)),
+                    new MultiSettingRestriction(false, false,
+                            notEvolveEveryLevelRestriction,
+                            new MultiSettingRestriction(true, false,
+                                    new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility",
+                                            MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
+                                    new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility",
+                                            MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE),
+                                    new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue))
+                    ),
                     null
             )
     );

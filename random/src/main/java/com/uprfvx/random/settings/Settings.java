@@ -1306,6 +1306,18 @@ public class Settings {
 
     //region wild encounters
 
+    public enum WildPokemonZoneMod {
+        NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
+    }
+
+    public enum WildPokemonTypeMod {
+        NONE, RANDOM_THEMES, KEEP_PRIMARY
+    }
+
+    public enum WildPokemonEvolutionMod {
+        NONE, BASIC_ONLY, KEEP_STAGE
+    }
+
     public enum CatchRateMod {
         // replaces the numeric (but described with names) catch rates of earlier
         // Randomizer versions
@@ -1313,8 +1325,119 @@ public class Settings {
     }
 
     public static final List<SettingDefinition<?>> WILD_POKEMON = List.of(
-            // TODO: all the wild mon options that have to do with randomizing wild mons
+            new SimpleSettingDefinition<>(
+                    "RandomizeWildPokemon",
+                    "WildPokemon",
+                    false,
+                    null,
+                    null
+            ),
 
+            new EnumSettingDefinition<>(
+                    "WildPokemonZone",
+                    "WildPokemon",
+                    WildPokemonZoneMod.NONE,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    null,
+                    null,
+                    Map.of(
+                            WildPokemonZoneMod.ENCOUNTER_SET, rh -> !rh.hasMapIndices(),
+                            WildPokemonZoneMod.MAP, RomHandler::hasMapIndices,
+                            WildPokemonZoneMod.NAMED_LOCATION, RomHandler::hasEncounterLocations
+                    )
+            ),
+            new SimpleSettingDefinition<>(
+                    "SplitWildZoneByEncounterTypes",
+                    "WildPokemon",
+                    false,
+                    new MultiSettingRestriction(false, false,
+                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.NONE, false),
+                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.ENCOUNTER_SET, false)),
+                    null
+            ),
+            new SimpleSettingDefinition<>( // this setting is definitely zone-y
+                    "UseTimeBasedEncounters",
+                    "WildPokemon",
+                    true,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    RomHandler::hasTimeBasedEncounters
+            ),
+
+            new EnumSettingDefinition<>(
+                    "WildPokemonTypeRestriction",
+                    "WildPokemon",
+                    WildPokemonTypeMod.NONE,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    null,
+                    Map.of(WildPokemonTypeMod.RANDOM_THEMES,
+                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.GAME, false)),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "KeepWildTypeThemes",
+                    "WildPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    null
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "WildPokemonEvolutionRestriction",
+                    "WildPokemon",
+                    WildPokemonEvolutionMod.NONE,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "KeepWildEvolutionFamilies",
+                    "WildPokemon",
+                    false,
+                    new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.NONE, false),
+                    null
+            ),
+
+            new SimpleSettingDefinition<>(
+                    "WildPokemonNoLegendaries",
+                    "WildPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "WildPokemonAllowAltFormes",
+                    "WildPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    RomHandler::hasWildAltFormes
+            ),
+            new SimpleSettingDefinition<>(
+                    "WildPokemonSimilarStrength",
+                    "WildPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "BalanceLowLevelEncounters",
+                    "WildPokemon",
+                    false,
+                    new SimpleSettingRestriction<>("WildPokemonSimilarStrength", isTrue),
+                    null
+            ),
+            new SimpleSettingDefinition<>(
+                    "CatchEmAllMode",
+                    "WildPokemon",
+                    false,
+                    new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                            new MultiSettingRestriction(true, false,
+                                    new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.GAME, false),
+                                    new SimpleSettingRestriction<>("SplitWildZoneByEncounterTypes", isTrue))
+                    ),
+                    null
+            ),
+
+            // Below: "wild pokemon" settings that don't require random wild pokemon
             new SimpleSettingDefinition<>(
                     "WildPokemonCatchRate",
                     "WildPokemon",

@@ -15,9 +15,9 @@ import java.util.function.Predicate;
  * A definition of a setting. Establishes its name, category, default value,
  * how to determine if it is enabled and supported,
  * the possible values and, if applicable, how to determine if values are enabled and supported.
- * @param <T> The type of data the setting holds.
+ * @param <V> The type of value the setting holds.
  */
-public abstract class SettingDefinition<T extends Serializable> {
+public abstract class SettingDefinition<V extends Serializable> {
 
     //The setting's name. Should be a unique identifier. Should be relatively human-readable.
     protected final String name;
@@ -27,7 +27,7 @@ public abstract class SettingDefinition<T extends Serializable> {
     protected final String category;
 
     //The default value.
-    protected final T defaultValue;
+    protected final V defaultValue;
     //TODO: variable default values? (By RomHandler only; changing default by SettingRestriction risks loops.)
     // There is at least one case for this (Starter BST limits) although it's not *extremely* necessary.
     // Two: Custom starters. (That's a bit more important.)
@@ -62,7 +62,7 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @param hasValueSupportRestrictions
      * @param valueRestrictors
      */
-    public SettingDefinition(String name, String category, T defaultValue,
+    public SettingDefinition(String name, String category, V defaultValue,
                              SettingRestriction prerequisite, Predicate<RomHandler> supported,
                              boolean hasValueSupportRestrictions, List<String> valueRestrictors) {
         this.name = name;
@@ -93,7 +93,7 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @param valueRestrictions
      * @param hasValueSupportRestrictions
      */
-    public SettingDefinition(String name, String category, T defaultValue,
+    public SettingDefinition(String name, String category, V defaultValue,
                              SettingRestriction prerequisite, Predicate<RomHandler> supported,
                              Collection<SettingRestriction> valueRestrictions, boolean hasValueSupportRestrictions) {
         this.name = name;
@@ -125,7 +125,7 @@ public abstract class SettingDefinition<T extends Serializable> {
         return category;
     }
 
-    public T getDefaultValue() {
+    public V getDefaultValue() {
         return defaultValue;
     }
 
@@ -163,7 +163,7 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @param value The value to check.
      * @return True if the value is valid, false otherwise.
      */
-    public abstract boolean isValueValid(T value);
+    public abstract boolean isValueValid(V value);
 
     /**
      * Tests to see if the given value is enabled given the current SettingsManager state.
@@ -173,7 +173,7 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @param manager The SettingsManager to test against.
      * @return True if the value is enabled, false otherwise.
      */
-    public abstract boolean isValueEnabled(T value, SettingsManager manager);
+    public abstract boolean isValueEnabled(V value, SettingsManager manager);
 
     /**
      * Tests to see if the given value is supported for the given game.
@@ -182,7 +182,7 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @param game The RomHandler to check for support.
      * @return True if the value is supported, false otherwise.
      */
-    public abstract boolean isValueSupported(T value, RomHandler game);
+    public abstract boolean isValueSupported(V value, RomHandler game);
 
     /**
      * Determines if all conditions are satisfied such that the setting can be set to this value.
@@ -192,7 +192,7 @@ public abstract class SettingDefinition<T extends Serializable> {
      * @param game The RomHandler to test support against, or null to not test support.
      * @return If the setting can be set to this value.
      */
-    public boolean isValueSettable(T value, SettingsManager manager, RomHandler game) {
+    public boolean isValueSettable(V value, SettingsManager manager, RomHandler game) {
         return isEnabled(manager)
                 && (game == null || isSupported(game))
                 && isValueValid(value)

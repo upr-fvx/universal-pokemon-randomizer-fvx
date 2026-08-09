@@ -27,9 +27,11 @@ import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.random.gui.SettingElementCoordinators.SettingCheckBoxCoordinator;
+import com.uprfvx.random.gui.SettingElementCoordinators.SettingUICoordinator;
 import com.uprfvx.random.random.SeedPicker;
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
-import com.uprfvx.random.settings.SettingsUpdater;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RootPath;
@@ -444,6 +446,8 @@ public class RandomizerGUI {
 
     private BatchRandomizationSettings batchRandomizationSettings;
 
+    private SettingsManager settingsManager;
+
     public RandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
@@ -507,6 +511,9 @@ public class RandomizerGUI {
         }).run();
 
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
+
+        settingsManager = new SettingsManager();
+        associateSettingControls();
 
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
                 limitPokemonCheckBox, noIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
@@ -669,6 +676,30 @@ public class RandomizerGUI {
             }
         });
         batchRandomizationMenuItem.addActionListener(_ -> batchRandomizationSettingsDialog());
+    }
+
+    private void associateSettingControls() {
+        //Huh. Interesting. We don't really need to hold on to the SettingUI controls. We just need to *make* them.
+
+        //...Maybe I'll put them all in a List anyway, just in case. Much easier to ignore a created list
+        //than to convert a bunch of freestanding constructors to a list creation, if I'm wrong.
+
+
+        List<SettingUICoordinator<?>> settingUICoordinators = List.of(
+                //General Options
+                associateCheckBox(limitPokemonCheckBox, Settings.Names.LIMIT_POKEMON),
+                associateCheckBox(noRandomIntroMonCheckBox, Settings.Names.NO_RANDOM_INTRO_MON),
+                associateCheckBox(raceModeCheckBox, Settings.Names.RACE_MODE),
+                associateCheckBox(noIrregularAltFormesCheckBox, Settings.Names.NO_IRREGULAR_ALT_FORMES)
+
+
+                //TODO: complete list of settings
+        );
+
+    }
+
+    private SettingCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, String settingName) {
+        return new SettingCheckBoxCoordinator(settingName, settingsManager, checkBox);
     }
 
     private void checkSpMinimumNeedsLower() {

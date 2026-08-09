@@ -154,95 +154,72 @@ public class Settings {
     );
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
-            new SimpleSettingDefinition<>(
-                    Names.LIMIT_POKEMON,
-                    Categories.GENERAL_OPTIONS,
-                    false,
-                    null,
-                    notOfGeneration(1)
-            ), //TODO: might be able to eliminate this setting and just use the "AllowGenerationX" settings (inverted)
-            new SimpleSettingDefinition<>(
+            new SimpleSettingDefinition.BooleanBuilder<>(Names.LIMIT_POKEMON,
+                    Categories.GENERAL_OPTIONS)
+                    .supported(notOfGeneration(1)).build(),
+            //TODO: might be able to eliminate this setting and just use the "AllowGenerationX" settings (inverted)
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.NO_RANDOM_INTRO_MON,
-                    Categories.GENERAL_OPTIONS, //TODO: move to misc. tweaks?
-                    false,
-                    null,
-                    null
-            ),
+                    Categories.GENERAL_OPTIONS) //TODO: move to misc. tweaks?
+                    .build(),
                             //TODO: make this setting actually work?
                             // "this setting" is race mode?
                             // I believe I was referring to "NoRandomIntroMon" but I cannot recall for sure anymore.
                             //TODO investigate this todo i guess
-            new SimpleSettingDefinition<>(
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.RACE_MODE,
-                    Categories.GENERAL_OPTIONS,
-                    false,
-                    null,
-                    null
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.GENERAL_OPTIONS).build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.NO_IRREGULAR_ALT_FORMES,
-                    Categories.GENERAL_OPTIONS,
-                    false,
-                    null,
-                    null
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.GENERAL_OPTIONS).build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     "NoPrematureEvolutions",
-                    Categories.GENERAL_OPTIONS,
-                    false,
-                    notEvolveEveryLevelRestriction,
-                    null
-            ),
+                    Categories.GENERAL_OPTIONS)
+                    .prerequisite(notEvolveEveryLevelRestriction)
+                    .build(),
 
-            new SimpleSettingDefinition<>(
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_1,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(2)
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(2))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_2,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(2)
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(2))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_3,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(3)
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(3))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_4,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(4)
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(4))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_5,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(5)
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(5))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_6,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(6)
-            ),
-            new SimpleSettingDefinition<>(
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(6))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Names.ALLOW_GENERATION_7,
-                    Categories.LIMIT_POKEMON,
-                    false,
-                    new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
-                    atLeastGeneration(7)
-            )
+                    Categories.LIMIT_POKEMON)
+                    .prerequisite(new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue))
+                    .supported(atLeastGeneration(7))
+                    .build()
     );
 
     //endregion

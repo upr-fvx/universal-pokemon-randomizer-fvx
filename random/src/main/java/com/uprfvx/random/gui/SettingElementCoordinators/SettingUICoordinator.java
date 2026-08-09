@@ -10,14 +10,14 @@ import java.util.Objects;
  * A class which coordinates a single setting with one or multiple GUI elements.
  * @param <V> The type of data held by the setting.
  */
-public abstract class SettingUI<V extends Serializable> implements SettingChangeListener {
+public abstract class SettingUICoordinator<V extends Serializable> implements SettingChangeListener {
     private V displayedValue;
     private String settingName;
     private SettingsManager settings;
     //I don't like that I have to keep the settingsManager here...
     //but I don't know how else I'd access it to set the setting.
 
-    public SettingUI(String settingName, SettingsManager settings) {
+    public SettingUICoordinator(String settingName, SettingsManager settings) {
         this.settingName = settingName;
         this.settings = settings;
 

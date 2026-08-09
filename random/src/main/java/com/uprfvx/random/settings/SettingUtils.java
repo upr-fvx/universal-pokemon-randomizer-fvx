@@ -1,5 +1,8 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.definitions.SettingDefinition;
+import com.uprfvx.random.settings.definitions.SimpleSettingDefinition;
+import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import miscutils.Pair;
 
@@ -114,6 +117,27 @@ public class SettingUtils {
             supportMinimums.add(new Pair<>(generation + 1, atLeastGeneration(generation)));
         }
         return Collections.unmodifiableList(supportMinimums);
+    }
+
+    public static Predicate<RomHandler> isTweakAvailable(MiscTweak tweak) {
+        return rom -> (rom.miscTweaksAvailable() & tweak.getValue()) != 0;
+    }
+
+    //endregion
+
+    //region setting definition shorthands
+
+    // Just a shorthand to make the more-or-less identical Misc Tweak definitions take less space
+    // This could also be its own Definition subclass, but since it doesn't do anything special
+    // a method felt sufficient.
+    public static SettingDefinition<Boolean> miscTweakDefinition(String name, MiscTweak tweak) {
+        return new SimpleSettingDefinition<>(
+                name,
+                "MiscTweaks",
+                false,
+                null,
+                isTweakAvailable(tweak)
+        );
     }
 
     //endregion

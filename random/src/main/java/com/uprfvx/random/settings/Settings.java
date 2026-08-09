@@ -3,6 +3,7 @@ package com.uprfvx.random.settings;
 import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
+import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -1876,7 +1877,32 @@ public class Settings {
     //region misc tweaks
 
     public static final List<SettingDefinition<?>> MISC_TWEAKS = List.of(
-            // TODO
+            miscTweakDefinition("BWEXPPatch", MiscTweak.BW_EXP_PATCH),
+            miscTweakDefinition("NerfXAccuracy", MiscTweak.NERF_X_ACCURACY),
+            miscTweakDefinition("FixCritRate", MiscTweak.FIX_CRIT_RATE),
+            miscTweakDefinition("FastestText", MiscTweak.FASTEST_TEXT),
+            miscTweakDefinition("RunningShoesIndoors", MiscTweak.RUNNING_SHOES_INDOORS),
+            miscTweakDefinition("RandomizePCPotion", MiscTweak.RANDOMIZE_PC_POTION),
+            miscTweakDefinition("AllowPikachuEvolution", MiscTweak.ALLOW_PIKACHU_EVOLUTION),
+            miscTweakDefinition("NationalDexAtStart", MiscTweak.NATIONAL_DEX_AT_START),
+            miscTweakDefinition("FastEggHatching", MiscTweak.FAST_EGG_HATCHING),
+            miscTweakDefinition("ForceChallengeMode", MiscTweak.FORCE_CHALLENGE_MODE),
+            miscTweakDefinition("LowerCasePokemonNames", MiscTweak.LOWER_CASE_POKEMON_NAMES),
+            miscTweakDefinition("RandomizeCatchingTutorial", MiscTweak.RANDOMIZE_CATCHING_TUTORIAL),
+            miscTweakDefinition("BanLuckyEgg", MiscTweak.BAN_LUCKY_EGG),
+            miscTweakDefinition("NoFreeLuckyEgg", MiscTweak.NO_FREE_LUCKY_EGG),
+            miscTweakDefinition("BanBigManiacItems", MiscTweak.BAN_BIG_MANIAC_ITEMS),
+            miscTweakDefinition("SOSBattlesForAll", MiscTweak.SOS_BATTLES_FOR_ALL),
+            miscTweakDefinition("BalanceStaticLevels", MiscTweak.BALANCE_STATIC_LEVELS),
+            miscTweakDefinition("RetainAltFormes", MiscTweak.RETAIN_ALT_FORMES),
+            miscTweakDefinition("RunWithoutRunningShoes", MiscTweak.RUN_WITHOUT_RUNNING_SHOES),
+            miscTweakDefinition("FasterHPAndEXPBars", MiscTweak.FASTER_HP_AND_EXP_BARS),
+            miscTweakDefinition("FastDistortionWorld", MiscTweak.FAST_DISTORTION_WORLD),
+            miscTweakDefinition("UpdateRotomFormeTyping", MiscTweak.UPDATE_ROTOM_FORME_TYPING),
+            miscTweakDefinition("DisableLowHPMusic", MiscTweak.DISABLE_LOW_HP_MUSIC),
+            miscTweakDefinition("ReusableTMs", MiscTweak.REUSABLE_TMS),
+            miscTweakDefinition("ForgettableHMs", MiscTweak.FORGETTABLE_HMS),
+            miscTweakDefinition("NoEVYields", MiscTweak.NO_EV_YIELDS)
     );
 
     //endregion

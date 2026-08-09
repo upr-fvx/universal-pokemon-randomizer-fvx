@@ -6,24 +6,24 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import java.io.Serializable;
 
 //Making this class package-private, just in case.
-class SettingState<T extends Serializable> {
-    private final SettingDefinition<T> definition;
-    private T value;
+class SettingState<V extends Serializable> {
+    private final SettingDefinition<V> definition;
+    private V value;
 
-    public SettingState(SettingDefinition<T> definition) {
+    public SettingState(SettingDefinition<V> definition) {
         this.definition = definition;
         value = definition.getDefaultValue();
     }
 
-    public T getValue() {
+    public V getValue() {
         return value;
     }
 
-    public void setValue(T value) {
+    public void setValue(V value) {
         this.value = value;
     }
 
-    public SettingDefinition<T> getDefinition() {
+    public SettingDefinition<V> getDefinition() {
         return definition;
     }
 

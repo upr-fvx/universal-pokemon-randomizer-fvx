@@ -12,10 +12,41 @@ import java.util.function.Predicate;
  * If no such definitions are needed, use SimpleSettingDefinition instead.
  * Assumes that all enum states (except null) are valid at some point.
  */
-public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<T> {
+public class EnumSettingDefinition<V extends Enum<V>> extends SettingDefinition<V> {
 
-    Map<T, SettingRestriction> restrictions;
-    Map<T, Predicate<RomHandler>> support;
+    public static class Builder<B extends Builder<B, V>, V extends Enum<V>>
+            extends SettingDefinition.Builder<B, V> {
+
+        protected Map<V, SettingRestriction> restrictedStates;
+        protected Map<V, Predicate<RomHandler>> supportedStates;
+
+        protected Builder(String name, String category, V defaultValue) {
+            super(name, category, defaultValue);
+        }
+
+        public B restrictedStates(Map<V, SettingRestriction> restrictedStates) {
+            this.restrictedStates = restrictedStates;
+            return self();
+        }
+
+        public B supportedStates(Map<V, Predicate<RomHandler>> supportedStates) {
+            this.supportedStates = supportedStates;
+            return self();
+        }
+
+        @Override
+        public EnumSettingDefinition<V> build() {
+            return new EnumSettingDefinition<>(
+                    name, category,
+                    defaultValue,
+                    prerequisite, supported,
+                    restrictedStates, supportedStates
+            );
+        }
+    }
+
+    Map<V, SettingRestriction> restrictions;
+    Map<V, Predicate<RomHandler>> support;
 
     /**
      * Creates an EnumSettingDefinition, which allows restricting certain enum values based on other settings or
@@ -33,9 +64,9 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
      * @param supportedStates A Map of enum values to Predicate<RomHandler>s that must return true for the value in
      *                         question to be supported, or null if there are no such restrictions.
      */
-    public EnumSettingDefinition(String name, String category, T defaultValue, SettingRestriction prerequisite,
-                                 Predicate<RomHandler> supported, Map<T, SettingRestriction> restrictedStates,
-                                 Map<T, Predicate<RomHandler>> supportedStates) {
+    public EnumSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
+                                 Predicate<RomHandler> supported, Map<V, SettingRestriction> restrictedStates,
+                                 Map<V, Predicate<RomHandler>> supportedStates) {
         super(name, category, defaultValue, prerequisite, supported,
                 restrictedStates != null ? restrictedStates.values() : null,
                 supportedStates != null);
@@ -44,7 +75,7 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
     }
 
     @Override
-    public boolean isValueValid(T value) {
+    public boolean isValueValid(V value) {
         return value != null && value.getClass() == type;
     }
 
@@ -56,7 +87,7 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
      * @return True if the value is enabled, false otherwise.
      */
     @Override
-    public boolean isValueEnabled(T value, SettingsManager manager) {
+    public boolean isValueEnabled(V value, SettingsManager manager) {
         if(restrictions == null) {
             return true;
         }
@@ -68,7 +99,7 @@ public class EnumSettingDefinition<T extends Enum<T>> extends SettingDefinition<
     }
 
     @Override
-    public boolean isValueSupported(T value, RomHandler game) {
+    public boolean isValueSupported(V value, RomHandler game) {
         if(support == null) {
             return true;
         }

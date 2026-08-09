@@ -6,6 +6,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 //TODO: StringSettingDefinition
@@ -18,6 +19,37 @@ import java.util.function.Predicate;
  * @param <V> The type of value the setting holds.
  */
 public abstract class SettingDefinition<V extends Serializable> {
+
+    public abstract static class Builder<B extends Builder<B, V>, V extends Serializable> {
+        // B for "Builder", V for "Value" (as in the outside class)
+        protected final String name;
+        protected final String category;
+        protected final V defaultValue;
+        protected SettingRestriction prerequisite;
+        protected Predicate<RomHandler> supported;
+
+        protected Builder(String name, String category, V defaultValue) {
+            this.name = name;
+            this.category = category;
+            this.defaultValue = defaultValue;
+        }
+
+        protected B self() {
+            return (B) this;
+        }
+
+        public B prerequisite(SettingRestriction prerequisite) {
+            this.prerequisite = prerequisite;
+            return self();
+        }
+
+        public B supported(Predicate<RomHandler> supported) {
+            this.supported = supported;
+            return self();
+        }
+
+        public abstract SettingDefinition<V> build();
+    }
 
     //The setting's name. Should be a unique identifier. Should be relatively human-readable.
     protected final String name;

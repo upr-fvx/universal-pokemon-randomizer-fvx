@@ -3,7 +3,9 @@ package com.uprfvx.random.settings.definitions;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import miscutils.Pair;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -21,6 +23,35 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
     //(Saw a pair of settings (Standardize EXP curves) that could be combined with such a class,
     // but in this case I'd honestly rather see the enabler extended.)
 
+    public static class Builder<B extends Builder<B>> extends NumericSettingDefinition.Builder<B, Integer> {
+
+        public Builder(String name, String category) {
+            super(name, category, RANDOM_TYPE, RANDOM_TYPE, Type.SIZE);
+        }
+
+        @Override
+        public B restrictedMinimums(List<Pair<Integer, SettingRestriction>> restrictedMinimums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B restrictedMaximums(List<Pair<Integer, SettingRestriction>> restrictedMaximums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B supportedMinimums(List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    // With the builder, this constructor is entirely defunct
+    // TODO: remove when no longer used
     public TypeOrRandomSettingDefinition(String name, String category, 
                                          SettingRestriction prerequisite, 
                                          Predicate<RomHandler> supported) {

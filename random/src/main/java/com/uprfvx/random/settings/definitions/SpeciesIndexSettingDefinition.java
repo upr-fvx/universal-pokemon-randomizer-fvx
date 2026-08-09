@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import miscutils.Pair;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -21,6 +22,35 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
     private static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
             Gen7Constants.getFormeCount(Gen7Constants.Type_USUM); //This is clunky and possibly inaccurate. TODO: fix.
 
+    public static class Builder<B extends Builder<B>> extends NumericSettingDefinition.Builder<B, Integer> {
+
+        public Builder(String name, String category) {
+            super(name, category, RANDOM_SPECIES, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);
+        }
+
+        @Override
+        public B restrictedMinimums(List<Pair<Integer, SettingRestriction>> restrictedMinimums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B restrictedMaximums(List<Pair<Integer, SettingRestriction>> restrictedMaximums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B supportedMinimums(List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    // With the builder, this constructor is entirely defunct
+    // TODO: remove when no longer used
     public SpeciesIndexSettingDefinition(String name, String category,
                                          SettingRestriction prerequisite,
                                          Predicate<RomHandler> supported) {

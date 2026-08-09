@@ -1,7 +1,7 @@
 package com.uprfvx.random.settings.definitions;
 
-import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import miscutils.Pair;
 
@@ -13,22 +13,70 @@ import java.util.function.Predicate;
  * A definition for a numeric setting that is bounded to specific ranges.
  * To get the ranges, it is necessary to cast SettingDefinition to this type.
  * All minimums and maximums are INCLUSIVE--They allow values that are equal to themselves.
- * @param <T> The type of numeric value to use. Must implement both Number and Comparable<T>.
+ * @param <V> The type of numeric value to use. Must implement both Number and Comparable<V>.
  */
-public class NumericSettingDefinition<T extends Number & Comparable<T>> extends SettingDefinition<T> {
+public class NumericSettingDefinition<V extends Number & Comparable<V>> extends SettingDefinition<V> {
     //Actually, not sure that it needs to extend Number?
 
-    final T minimum;
-    final T maximum;
+    public static class Builder<B extends Builder<B, V>, V extends Number & Comparable<V>>
+            extends SettingDefinition.Builder<B, V> {
 
-    final List<Pair<T, SettingRestriction>> restrictedMinimums;
-    final List<Pair<T, SettingRestriction>> restrictedMaximums;
-    final List<Pair<T, Predicate<RomHandler>>> supportedMinimums;
-    final List<Pair<T, Predicate<RomHandler>>> supportedMaximums;
+        protected final V minimum;
+        protected final V maximum;
+        protected List<Pair<V, SettingRestriction>> restrictedMinimums;
+        protected List<Pair<V, SettingRestriction>> restrictedMaximums;
+        protected List<Pair<V, Predicate<RomHandler>>> supportedMinimums;
+        protected List<Pair<V, Predicate<RomHandler>>> supportedMaximums;
 
-    public NumericSettingDefinition(String name, String category, T defaultValue,
+        public Builder(String name, String category, V defaultValue, V minimum, V maximum) {
+            super(name, category, defaultValue);
+            this.minimum = minimum;
+            this.maximum = maximum;
+        }
+
+        public B restrictedMinimums(List<Pair<V, SettingRestriction>> restrictedMinimums) {
+            this.restrictedMinimums = restrictedMinimums;
+            return self();
+        }
+
+        public B restrictedMaximums(List<Pair<V, SettingRestriction>> restrictedMaximums) {
+            this.restrictedMaximums = restrictedMaximums;
+            return self();
+        }
+
+        public B supportedMinimums(List<Pair<V, Predicate<RomHandler>>> supportedMinimums) {
+            this.supportedMinimums = supportedMinimums;
+            return self();
+        }
+
+        public B supportedMaximums(List<Pair<V, Predicate<RomHandler>>> supportedMaximums) {
+            this.supportedMaximums = supportedMaximums;
+            return self();
+        }
+
+        @Override
+        public NumericSettingDefinition<V> build() {
+            return new NumericSettingDefinition<>(
+                    name, category, defaultValue,
+                    prerequisite, supported,
+                    minimum, maximum,
+                    restrictedMinimums, restrictedMaximums,
+                    supportedMinimums, supportedMaximums
+            );
+        }
+    }
+
+    final V minimum;
+    final V maximum;
+
+    final List<Pair<V, SettingRestriction>> restrictedMinimums;
+    final List<Pair<V, SettingRestriction>> restrictedMaximums;
+    final List<Pair<V, Predicate<RomHandler>>> supportedMinimums;
+    final List<Pair<V, Predicate<RomHandler>>> supportedMaximums;
+
+    public NumericSettingDefinition(String name, String category, V defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
-                                    T minimum, T maximum) {
+                                    V minimum, V maximum) {
         super(name, category, defaultValue, prerequisite, supported, null, false);
         if (defaultValue.compareTo(minimum) < 0 || defaultValue.compareTo(maximum) > 0) {
             throw new IllegalArgumentException("Default value for " + name + " is not within the valid range!");
@@ -57,13 +105,13 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
      * @param supportedMinimums A set of additional minimums which apply when the associated predicates return TRUE.
      * @param supportedMaximums A set of additional maximums which apply when the associated predicates return TRUE.
      */
-    public NumericSettingDefinition(String name, String category, T defaultValue,
+    public NumericSettingDefinition(String name, String category, V defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
-                                    T minimum, T maximum,
-                                    List<Pair<T, SettingRestriction>> restrictedMinimums,
-                                    List<Pair<T, SettingRestriction>> restrictedMaximums,
-                                    List<Pair<T, Predicate<RomHandler>>> supportedMinimums,
-                                    List<Pair<T, Predicate<RomHandler>>> supportedMaximums) {
+                                    V minimum, V maximum,
+                                    List<Pair<V, SettingRestriction>> restrictedMinimums,
+                                    List<Pair<V, SettingRestriction>> restrictedMaximums,
+                                    List<Pair<V, Predicate<RomHandler>>> supportedMinimums,
+                                    List<Pair<V, Predicate<RomHandler>>> supportedMaximums) {
         super(name, category, defaultValue, prerequisite, supported,
                 composeSeconds(restrictedMinimums, restrictedMaximums),
                 !composeSeconds(supportedMinimums, supportedMaximums).isEmpty()
@@ -87,11 +135,11 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
         this.supportedMaximums = supportedMaximums;
     }
 
-    private <U> void checkIntegrity(List<Pair<T, U>> list, boolean isMinimums)
+    private <U> void checkIntegrity(List<Pair<V, U>> list, boolean isMinimums)
     {
         if (list != null)
         {
-            for(Pair<T, U> pair : list) {
+            for(Pair<V, U> pair : list) {
                 if (isMinimums && pair.getKey().compareTo(defaultValue) > 0) {
                     throw new IllegalArgumentException("Default value for " + name +
                             " is lower than a restricted/supported minimum!");
@@ -128,7 +176,7 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
     }
 
     @Override
-    public boolean isValueValid(T value) {
+    public boolean isValueValid(V value) {
         if (value == null)
             return false;
         if(value.getClass() != type)
@@ -137,26 +185,26 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
     }
 
     @Override
-    public boolean isValueEnabled(T value, SettingsManager manager) {
+    public boolean isValueEnabled(V value, SettingsManager manager) {
         return value.compareTo(minimumEnabled(manager)) >= 0 && value.compareTo(maximumEnabled(manager)) <= 0;
     }
 
     @Override
-    public boolean isValueSupported(T value, RomHandler game) {
+    public boolean isValueSupported(V value, RomHandler game) {
         return value.compareTo(minimumSupported(game)) >= 0 && value.compareTo(maximumSupported(game)) <= 0;
     }
 
     /**
      * The lowest value that can ever be applied to this setting.
      */
-    public T getMinimum() {
+    public V getMinimum() {
         return minimum;
     }
 
     /**
      * The highest value that can ever be applied to this setting.
      */
-    public T getMaximum() {
+    public V getMaximum() {
         return maximum;
     }
 
@@ -167,14 +215,14 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
      * @param manager The SettingsManager to test against.
      * @return The lowest enabled value.
      */
-    public T minimumEnabled(SettingsManager manager)
+    public V minimumEnabled(SettingsManager manager)
     {
         if(restrictedMinimums == null)
             return minimum;
 
-        T rollingMinimum = minimum;
+        V rollingMinimum = minimum;
 
-        for (Pair<T, SettingRestriction> pair : restrictedMinimums) {
+        for (Pair<V, SettingRestriction> pair : restrictedMinimums) {
             if (pair.getValue().test(manager) && pair.getKey().compareTo(rollingMinimum) > 0) {
                 rollingMinimum = pair.getKey();
             }
@@ -190,14 +238,14 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
      * @param manager The SettingsManager to test against.
      * @return The highest enabled value.
      */
-    public T maximumEnabled(SettingsManager manager)
+    public V maximumEnabled(SettingsManager manager)
     {
         if(restrictedMaximums == null)
             return maximum;
 
-        T rollingMaximum = maximum;
+        V rollingMaximum = maximum;
 
-        for (Pair<T, SettingRestriction> pair : restrictedMaximums) {
+        for (Pair<V, SettingRestriction> pair : restrictedMaximums) {
             if (pair.getValue().test(manager) && pair.getKey().compareTo(rollingMaximum) < 0) {
                 rollingMaximum = pair.getKey();
             }
@@ -211,14 +259,14 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
      * @param game The RomHandler to check for support.
      * @return The lowest supported value.
      */
-    public T minimumSupported(RomHandler game)
+    public V minimumSupported(RomHandler game)
     {
         if(supportedMinimums == null)
             return minimum;
 
-        T rollingMinimum = minimum;
+        V rollingMinimum = minimum;
 
-        for (Pair<T, Predicate<RomHandler>> pair : supportedMinimums) {
+        for (Pair<V, Predicate<RomHandler>> pair : supportedMinimums) {
             if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMinimum) > 0) {
                 rollingMinimum = pair.getKey();
             }
@@ -232,14 +280,14 @@ public class NumericSettingDefinition<T extends Number & Comparable<T>> extends 
      * @param game The RomHandler to check for support.
      * @return The highest supported value.
      */
-    public T maximumSupported(RomHandler game)
+    public V maximumSupported(RomHandler game)
     {
         if(supportedMaximums == null)
             return maximum;
 
-        T rollingMaximum = maximum;
+        V rollingMaximum = maximum;
 
-        for (Pair<T, Predicate<RomHandler>> pair : supportedMaximums) {
+        for (Pair<V, Predicate<RomHandler>> pair : supportedMaximums) {
             if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMaximum) < 0) {
                 rollingMaximum = pair.getKey();
             }

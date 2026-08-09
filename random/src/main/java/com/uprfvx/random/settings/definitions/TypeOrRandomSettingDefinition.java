@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -21,8 +22,8 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
     //(Saw a pair of settings (Standardize EXP curves) that could be combined with such a class,
     // but in this case I'd honestly rather see the enabler extended.)
 
-    public TypeOrRandomSettingDefinition(String name, String category, 
-                                         SettingRestriction prerequisite, 
+    public TypeOrRandomSettingDefinition(Settings.Name name, Settings.Category category,
+                                         SettingRestriction prerequisite,
                                          Predicate<RomHandler> supported) {
         super(name, category, RANDOM_TYPE, prerequisite, supported, RANDOM_TYPE, Type.SIZE);
     }

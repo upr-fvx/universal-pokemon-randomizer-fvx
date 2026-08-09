@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -11,8 +12,8 @@ public class SimpleSettingDefinition<V extends Serializable> extends SettingDefi
 
     //A simple SettingDefinition that makes no restrictions on values.
 
-    public SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
-                                   Predicate<RomHandler> supported) {
+    public SimpleSettingDefinition(Settings.Name name, Settings.Category category, V defaultValue,
+                                   SettingRestriction prerequisite, Predicate<RomHandler> supported) {
         super(name, category, defaultValue, prerequisite, supported, null, false);
     }
 

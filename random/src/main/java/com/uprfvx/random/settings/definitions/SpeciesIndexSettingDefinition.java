@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.constants.Gen7Constants;
@@ -21,7 +22,7 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
     private static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
             Gen7Constants.getFormeCount(Gen7Constants.Type_USUM); //This is clunky and possibly inaccurate. TODO: fix.
 
-    public SpeciesIndexSettingDefinition(String name, String category,
+    public SpeciesIndexSettingDefinition(Settings.Name name, Settings.Category category,
                                          SettingRestriction prerequisite,
                                          Predicate<RomHandler> supported) {
         super(name, category, RANDOM_SPECIES, prerequisite, supported, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);

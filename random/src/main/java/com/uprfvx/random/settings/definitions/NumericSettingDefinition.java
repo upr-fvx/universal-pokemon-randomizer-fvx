@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -26,7 +27,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
     final List<Pair<N, Predicate<RomHandler>>> supportedMinimums;
     final List<Pair<N, Predicate<RomHandler>>> supportedMaximums;
 
-    public NumericSettingDefinition(String name, String category, N defaultValue,
+    public NumericSettingDefinition(Settings.Name name, Settings.Category category, N defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                     N minimum, N maximum) {
         super(name, category, defaultValue, prerequisite, supported, null, false);
@@ -57,7 +58,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      * @param supportedMinimums A set of additional minimums which apply when the associated predicates return TRUE.
      * @param supportedMaximums A set of additional maximums which apply when the associated predicates return TRUE.
      */
-    public NumericSettingDefinition(String name, String category, N defaultValue,
+    public NumericSettingDefinition(Settings.Name name, Settings.Category category, N defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                     N minimum, N maximum,
                                     List<Pair<N, SettingRestriction>> restrictedMinimums,

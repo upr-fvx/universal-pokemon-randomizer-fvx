@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -33,8 +34,9 @@ public class EnumSettingDefinition<E extends Enum<E>> extends SettingDefinition<
      * @param supportedStates A Map of enum values to Predicate<RomHandler>s that must return true for the value in
      *                         question to be supported, or null if there are no such restrictions.
      */
-    public EnumSettingDefinition(String name, String category, E defaultValue, SettingRestriction prerequisite,
-                                 Predicate<RomHandler> supported, Map<E, SettingRestriction> restrictedStates,
+    public EnumSettingDefinition(Settings.Name name, Settings.Category category, E defaultValue,
+                                 SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                 Map<E, SettingRestriction> restrictedStates,
                                  Map<E, Predicate<RomHandler>> supportedStates) {
         super(name, category, defaultValue, prerequisite, supported,
                 restrictedStates != null ? restrictedStates.values() : null,

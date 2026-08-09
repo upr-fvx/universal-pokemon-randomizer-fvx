@@ -1,12 +1,16 @@
 package com.uprfvx.random.settings.definitions;
 
-import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.function.Predicate;
 
+/**
+ * A {@link SettingDefinition} for {@link Type}s, through their enum id.
+ * It allows for choosing "Random" in addition to any Type that is present
+ * in the given {@link RomHandler}.
+ */
 public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Integer> {
     // If Species id were an enum, this could share code with that class
     // Am not suggesting it should become that, just an idle thought

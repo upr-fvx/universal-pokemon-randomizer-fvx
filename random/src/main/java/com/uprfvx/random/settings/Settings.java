@@ -1907,8 +1907,6 @@ public class Settings {
 
     //endregion
 
-    //TODO: make sure all enum declarations have been moved to this file.
-
     static {
         List<SettingDefinition<?>> all = new ArrayList<>(GENERAL_OPTIONS);
         all.addAll(SPECIES_TRAITS);

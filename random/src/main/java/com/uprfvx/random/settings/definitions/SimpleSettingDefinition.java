@@ -21,6 +21,14 @@ public class SimpleSettingDefinition<V extends Serializable> extends SettingDefi
         }
     }
 
+    public static class BooleanBuilder<B extends BooleanBuilder<B>>
+            extends Builder<B, Boolean> {
+
+        public BooleanBuilder(String name, String category) {
+            super(name, category, false);
+        }
+    }
+
     //A simple SettingDefinition that makes no restrictions on values.
 
     public SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,

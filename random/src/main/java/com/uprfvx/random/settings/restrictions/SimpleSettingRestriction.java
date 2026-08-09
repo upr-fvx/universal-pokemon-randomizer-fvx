@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.restrictions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
 import java.util.Collections;
@@ -19,7 +20,7 @@ public class SimpleSettingRestriction<T> implements SettingRestriction {
      * @param name The setting to test.
      * @param desiredState A Predicate which returns true for the desired state.
      */
-    public SimpleSettingRestriction(String name, Predicate<T> desiredState) {
+    public SimpleSettingRestriction(Settings.Name name, Predicate<T> desiredState) {
         this.name = name;
         this.desiredState = desiredState;
     }

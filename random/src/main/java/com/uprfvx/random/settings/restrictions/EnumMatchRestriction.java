@@ -1,5 +1,7 @@
 package com.uprfvx.random.settings.restrictions;
 
+import com.uprfvx.random.settings.Settings;
+
 /**
  * A setting restriction which tests whether the state of an enum setting matches the relevant value.
  */
@@ -11,7 +13,7 @@ public class EnumMatchRestriction<E extends Enum<E>> extends SimpleSettingRestri
      * @param name The setting to test.
      * @param desiredValue The desired value for the setting.
      */
-    public EnumMatchRestriction(String name, E desiredValue) {
+    public EnumMatchRestriction(Settings.Name name, E desiredValue) {
         super(name, e -> e == desiredValue);
     }
 
@@ -24,7 +26,7 @@ public class EnumMatchRestriction<E extends Enum<E>> extends SimpleSettingRestri
      * @param shouldMatch Whether to return true if the setting matches the relevant state (true)
      *                    or if it does NOT match the relevant state (false).
      */
-    public EnumMatchRestriction(String name, E relevant, boolean shouldMatch) {
+    public EnumMatchRestriction(Settings.Name name, E relevant, boolean shouldMatch) {
         super(name, shouldMatch ?
                 e -> e == relevant :
                 e -> e != relevant );

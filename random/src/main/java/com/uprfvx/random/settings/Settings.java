@@ -55,115 +55,103 @@ public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
     //When splitting a setting into multiple or changing its type, add the old version to the list of removed settings
-    //so that we can load it in and convert it to the new setting.
+    //so that we can load it in with the correct data type and SettingsUpdater can convert it to the new setting(s).
 
     /**
-     * Contains a constant for the name of each setting used in the randomizer.
+     * Enumerates every setting used in the randomizer.
      */
-    public static class Names {
+    public enum Names {
+        //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
+        //If you must rename a setting, keep the old Name in the list and add it to REMOVED_SETTINGS.
         /*** GENERAL OPTIONS ***/
         //General options
-        public static final String LIMIT_POKEMON = "LimitPokemon";
-        public static final String NO_RANDOM_INTRO_MON = "NoRandomIntroMon";
-        public static final String RACE_MODE = "RaceMode";
-        public static final String NO_IRREGULAR_ALT_FORMES = "NoIrregularAltFormes";
+        LIMIT_POKEMON, NO_IRREGULAR_ALT_FORMES, NO_PREMATURE_EVOLUTIONS, NO_RANDOM_INTRO_MON, RACE_MODE,
         //Limit Pokemon
-        public static final String ALLOW_GENERATION_1 = "AllowGeneration1";
-        public static final String ALLOW_GENERATION_2 = "AllowGeneration2";
-        public static final String ALLOW_GENERATION_3 = "AllowGeneration3";
-        public static final String ALLOW_GENERATION_4 = "AllowGeneration4";
-        public static final String ALLOW_GENERATION_5 = "AllowGeneration5";
-        public static final String ALLOW_GENERATION_6 = "AllowGeneration6";
-        public static final String ALLOW_GENERATION_7 = "AllowGeneration7";
+        ALLOW_GENERATION_1, ALLOW_GENERATION_2, ALLOW_GENERATION_3, ALLOW_GENERATION_4, ALLOW_GENERATION_5,
+        ALLOW_GENERATION_6, ALLOW_GENERATION_7,
 
         /*** SPECIES TRAITS ***/
         //Base Stat Totals
-        public static final String RANDOMIZE_BASE_STAT_TOTALS = "RandomizeSpeciesBaseStatTotals";
-        public static final String BST_BUFF_NERF_PERCENT = "BSTRandomBuffNerfPercentage";
-        public static final String BSTS_FOLLOW_EVOLUTION = "StatTotalsFollowEvolutions";
-        public static final String BST_SHUFFLE_SEPARATE_LEGENDARIES = "BSTShuffleLegendariesSeparately";
+        RANDOMIZE_SPECIES_BASE_STAT_TOTALS, SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, SPECIES_BSTS_FOLLOW_EVOLUTION,
+        SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY,
         //Base Stat Distribution
-        public static final String RANDOMIZE_BASE_STAT_DISTRIBUTIONS = "RandomizeSpeciesBaseStatDistributions";
-        public static final String BSDS_FOLLOW_EVOLUTION = "StatDistributionsFollowEvolutions";
-        public static final String BSDS_FOLLOW_MEGA_EVOS = "StatDistributionsFollowMegaEvolutions";
-        public static final String BSDS_ASSIGN_EVO_STATS_RANDOMLY = "StatDistributionsAssignEvoStatsRandomly";
+        RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS,
+        SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY,
         //Update Base Stats
-        public static final String UPDATE_BASE_STATS = "UpdateBaseStats";
-        public static final String UPDATE_STATS_GENERATION = "UpdateBaseStatsToGeneration";
+        UPDATE_SPECIES_BASE_STATS, SPECIES_UPDATE_BASE_STATS_TO_GENERATION,
         //Species' Types
-        public static final String SPECIES_RANDOMIZE_TYPES = "RandomizeSpeciesTypes";
-        public static final String SPECIES_FORCE_DUAL_TYPES = "SpeciesTypesForceDualTypes";
-        public static final String SPECIES_TYPES_FOLLOW_MEGA_EVO = "SpeciesTypesFollowMegaEvolutions";
+        RANDOMIZE_SPECIES_TYPES, SPECIES_TYPES_FORCE_DUAL_TYPES, SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS,
         //Species' Abilities
-        public static final String SPECIES_RANDOMIZE_ABILITIES = "RandomizeSpeciesAbilities";
-        public static final String SPECIES_ABILITIES_FOLLOW_EVO = "SpeciesAbilitiesFollowEvolutions";
-        public static final String SPECIES_ABILITIES_FOLLOW_MEGA_EVO ="SpeciesAbilitiesFollowMegaEvolutions";
-        public static final String SPECIES_ABILITIES_COMBINE_DUPES = "SpeciesCombineDuplicateAbilities";
-        public static final String SPECIES_FORCE_TWO_ABILITIES = "SpeciesAlwaysHaveTwoAbilities";
-        public static final String SPECIES_BAN_WONDER_GUARD = "SpeciesBanWonderGuard";
-        public static final String SPECIES_BAN_MINOR_ABILITIES = "SpeciesBanMinorAbilities";
-        public static final String SPECIES_BAN_NEGATIVE_ABILITIES = "SpeciesBanNegativeAbilities";
-        public static final String SPECIES_BAN_TRAPPING_ABILITIES = "SpeciesBanTrappingAbilities";
+        RANDOMIZE_SPECIES_ABILITIES, SPECIES_ABILITIES_FOLLOW_EVOLUTIONS, SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS,
+        SPECIES_ABILITIES_COMBINE_DUPLICATES, SPECIES_ALWAYS_HAVE_TWO_ABILITIES, SPECIES_ABILITIES_BAN_WONDER_GUARD,
+        SPECIES_ABILITIES_BAN_MINOR, SPECIES_ABILITIES_BAN_NEGATIVE, SPECIES_ABILITIES_BAN_TRAPPING,
         //Species' Evolutions
-        public static final String SPECIES_RANDOMIZE_EVOLUTIONS = "RandomizeSpeciesEvolutions";
-        public static final String SPECIES_EVOLUTIONS_SIMILAR_STRENGTH = "SpeciesEvolutionsUseSimilarStrength";
-        public static final String SPECIES_EVOLUTIONS_SAME_TYPE = "SpeciesEvolutionsUseSameType"; //TODO: clarify
-        public static final String SPECIES_EVOLUTIONS_MAX_THREE = "SpeciesEvolutionsMaxThreeStages";
-        public static final String SPECIES_EVOLUTIONS_NO_CONVERGENCE = "SpeciesEvolutionsNoConvergence";
-        public static final String SPECIES_EVOLUTIONS_FORCE_CHANGE = "SpeciesEvolutionsForceChange";
-        public static final String SPECIES_EVOLUTIONS_FORCE_GROWTH = "SpeciesEvolutionsForceGrowth";
-        public static final String SPECIES_EVOLUTIONS_ALLOW_ALTS = "SpeciesEvolutionsAllowAltFormes";
-        public static final String SPECIES_EVOLUTIONS_ADJUST_LEVELS = "SpeciesEvolutionsAdjustLevels"; //TODO: clarify
-        public static final String SPECIES_EVOLUTIONS_MAKE_POSSIBLE = "ChangeImpossibleEvolutions";
-        public static final String SPECIES_EVOLUTIONS_MAKE_EASIER = "MakeEvolutionsEasier";
-        public static final String SPECIES_EVOLUTIONS_EASIER_LEVEL = "MakeEvolutionsEasierScalingLevel";
-        public static final String SPECIES_EVOLUTIONS_USE_ESTIMATED_LEVELS = "UseEstimatedEvolutionLevels"; //TODO: clarify
-        public static final String SPECIES_EVOLUTIONS_REMOVE_TIME_BASED = "RemoveTimeBasedEvolutions";
+        RANDOMIZE_SPECIES_EVOLUTIONS, SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE,
+        SPECIES_EVOLUTIONS_MAX_THREE_STAGES, SPECIES_EVOLUTIONS_NO_CONVERGENCE, SPECIES_EVOLUTIONS_FORCE_CHANGE,
+        SPECIES_EVOLUTIONS_FORCE_GROWTH, SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES, SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
+        SPECIES_EVOLUTIONS_MAKE_POSSIBLE, SPECIES_EVOLUTIONS_MAKE_EASIER, SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL,
+        SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
         //Species' EXP Curves
-        public static final String SPECIES_STANDARD_EXP_CURVE = "SpeciesStandardizeEXPCurves";
-        public static final String SPECIES_EXP_CURVE_TO_USE = "SpeciesStandardEXPCurveSelection";
-        public static final String SPECIES_STANDARDIZE_EXP_CURVE_EXTENT = "SpeciesStandardizeEXPCurveExtent";
+        STANDARDIZE_SPECIES_EXP_CURVES, SPECIES_EXP_CURVE_STANDARD_SELECTION, SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
+
+        /*** GIVEN POKEMON ***/
+        //Starters General
+        RANDOMIZE_STARTERS, STARTERS_NO_LEGENDARIES, STARTERS_RANDOMIZE_HELD_ITEMS, STARTERS_BAN_BAD_HELD_ITEMS,
+        STARTERS_ALLOW_ALT_FORMES,
+        //Starters Custom
+        STARTER_CUSTOM_1, STARTER_CUSTOM_2, STARTER_CUSTOM_3,
+        //Starter Types
+        STARTERS_TYPE_RESTRICTION, STARTERS_NO_DUAL_TYPES, STARTERS_SINGLE_TYPE_SELECTION,
+        //Starter BSTs
+        STARTERS_BST_USE_MINIMUM, STARTERS_BST_MINIMUM_SELECTION, STARTERS_BST_USE_MAXIMUM,
+        STARTERS_BST_MAXIMUM_SELECTION,
+        //Statics TODO: move to Wild supercategory
+        RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
+        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC, STATICS_USE_LEVEL_MODIFIER,
+        STATICS_LEVEL_MODIFIER_PERCENT,
+
 
     }
 
-    public static class Categories {
+    public enum Category {
         /*** GENERAL OPTIONS ***/
-        public static final String GENERAL_OPTIONS = "GeneralOptions";
-        public static final String LIMIT_POKEMON = "LimitPokemon";
+        GENERAL_OPTIONS, LIMIT_POKEMON,
 
         /*** SPECIES TRAITS ***/
-        public static final String BASE_STAT_TOTALS = "BaseStatisticTotals";
-        public static final String BASE_STAT_DISTRIBUTION = "BaseStatisticDistribution";
-        public static final String UPDATE_BASE_STATS = "UpdateBaseStatistics";
-        public static final String SPECIES_TYPES = "SpeciesTypes";
-        public static final String SPECIES_ABILITIES = "SpeciesAbilites";
-        public static final String SPECIES_EVOLUTIONS = "SpeciesEvolutions";
-        public static final String SPECIES_EXP_CURVES = "SpeciesExpCurves";
+        SPECIES_BASE_STATISTIC_TOTALS, SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS,
+        SPECIES_TYPES, SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES,
+
+        /*** GIVEN POKEMON ***/
+        STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES, STARTER_BSTS,
+
+        //Statics
+        STATIC_ENCOUNTERS;
 
         /****** Supercategories ******/
-        public static final List<String> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
-        public static final List<String> SPECIES_TRAITS = List.of(BASE_STAT_TOTALS, BASE_STAT_DISTRIBUTION,
-                UPDATE_BASE_STATS, SPECIES_TYPES, SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
+        public static final List<Category> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
+        public static final List<Category> SPECIES_TRAITS = List.of(SPECIES_BASE_STATISTIC_TOTALS,
+                SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS, SPECIES_TYPES,
+                SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
     }
 
     //region general options
 
     // needs to be up here since general options relies on it
     public static final SettingRestriction notEvolveEveryLevelRestriction = new EnumMatchRestriction<>(
-            Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM_EVERY_LEVEL, false
+            Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.RANDOM_EVERY_LEVEL, false
     );
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition<>(
                     Names.LIMIT_POKEMON,
-                    Categories.GENERAL_OPTIONS,
+                    Category.GENERAL_OPTIONS,
                     false,
                     null,
                     notOfGeneration(1)
             ), //TODO: might be able to eliminate this setting and just use the "AllowGenerationX" settings (inverted)
             new SimpleSettingDefinition<>(
                     Names.NO_RANDOM_INTRO_MON,
-                    Categories.GENERAL_OPTIONS, //TODO: move to misc. tweaks?
+                    Category.GENERAL_OPTIONS, //TODO: move to misc. tweaks?
                     false,
                     null,
                     null
@@ -174,21 +162,21 @@ public class Settings {
                             //TODO investigate this todo i guess
             new SimpleSettingDefinition<>(
                     Names.RACE_MODE,
-                    Categories.GENERAL_OPTIONS,
+                    Category.GENERAL_OPTIONS,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.NO_IRREGULAR_ALT_FORMES,
-                    Categories.GENERAL_OPTIONS,
+                    Category.GENERAL_OPTIONS,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
                     "NoPrematureEvolutions",
-                    Categories.GENERAL_OPTIONS,
+                    Category.GENERAL_OPTIONS,
                     false,
                     notEvolveEveryLevelRestriction,
                     null
@@ -196,49 +184,49 @@ public class Settings {
 
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_1,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(2)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_2,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(2)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_3,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(3)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_4,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(4)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_5,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(5)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_6,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(6)
             ),
             new SimpleSettingDefinition<>(
                     Names.ALLOW_GENERATION_7,
-                    Categories.LIMIT_POKEMON,
+                    Category.LIMIT_POKEMON,
                     false,
                     new SimpleSettingRestriction<>(Names.LIMIT_POKEMON, isTrue),
                     atLeastGeneration(7)
@@ -275,83 +263,83 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> SPECIES_TRAITS = List.of(
             new SimpleSettingDefinition<>(
-                    Names.RANDOMIZE_BASE_STAT_TOTALS,
-                    Categories.BASE_STAT_TOTALS,
+                    Names.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
+                    Category.SPECIES_BASE_STATISTIC_TOTALS,
                     BSTMod.UNCHANGED,
                     null,
                     null
             ),
             new NumericSettingDefinition<>(
-                    Names.BST_BUFF_NERF_PERCENT,
-                    Categories.BASE_STAT_TOTALS,
+                    Names.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE,
+                    Category.SPECIES_BASE_STATISTIC_TOTALS,
                     0,
-                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
                     null,
                     0, 50
             ),
             new SimpleSettingDefinition<>(
-                    Names.BSTS_FOLLOW_EVOLUTION,
-                    Categories.BASE_STAT_TOTALS,
+                    Names.SPECIES_BSTS_FOLLOW_EVOLUTION,
+                    Category.SPECIES_BASE_STATISTIC_TOTALS,
                     false,
                     new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
                             new MultiSettingRestriction(true, false,
-                                new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
-                                new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE))
+                                new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
+                                new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, BSTMod.SHUFFLE))
                     ),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.BST_SHUFFLE_SEPARATE_LEGENDARIES,
-                    Categories.BASE_STAT_TOTALS,
+                    Names.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY,
+                    Category.SPECIES_BASE_STATISTIC_TOTALS,
                     false,
-                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, BSTMod.SHUFFLE),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
-                    Categories.BASE_STAT_DISTRIBUTION,
+                    Names.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS,
+                    Category.SPECIES_BASE_STATISTIC_DISTRIBUTION,
                     BaseStatDistributionsMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.BSDS_FOLLOW_EVOLUTION,
-                    Categories.BASE_STAT_DISTRIBUTION,
+                    Names.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS,
+                    Category.SPECIES_BASE_STATISTIC_DISTRIBUTION,
                     false,
                     new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
-                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS,
                                     BaseStatDistributionsMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.BSDS_FOLLOW_MEGA_EVOS,
-                    Categories.BASE_STAT_DISTRIBUTION,
+                    Names.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS
+                    Category.SPECIES_BASE_STATISTIC_DISTRIBUTION,
                     false,
-                    new SimpleSettingRestriction<>(Names.BSDS_FOLLOW_EVOLUTION, isTrue),
+                    new SimpleSettingRestriction<>(Names.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, isTrue),
                     RomHandler::hasMegaEvolutions
             ),
             new SimpleSettingDefinition<>(
-                    Names.BSDS_ASSIGN_EVO_STATS_RANDOMLY,
-                    Categories.BASE_STAT_DISTRIBUTION,
+                    Names.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY,
+                    Category.SPECIES_BASE_STATISTIC_DISTRIBUTION,
                     false,
-                    new SimpleSettingRestriction<>(Names.BSDS_FOLLOW_EVOLUTION, isTrue),
+                    new SimpleSettingRestriction<>(Names.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, isTrue),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    Names.UPDATE_BASE_STATS,
-                    Categories.UPDATE_BASE_STATS,
+                    Names.UPDATE_SPECIES_BASE_STATS,
+                    Category.SPECIES_UPDATE_BASE_STATISTICS,
                     false,
                     null,
                     notOfGeneration(1)),
             new NumericSettingDefinition<>(
-                    Names.UPDATE_STATS_GENERATION,
-                    Categories.UPDATE_BASE_STATS,
+                    Names.SPECIES_UPDATE_BASE_STATS_TO_GENERATION,
+                    Category.SPECIES_UPDATE_BASE_STATISTICS,
                     9,
-                    new SimpleSettingRestriction<>(Names.UPDATE_BASE_STATS, isTrue),
+                    new SimpleSettingRestriction<>(Names.UPDATE_SPECIES_BASE_STATS, isTrue),
                     null,
                     6, 9,
                     null,
@@ -361,8 +349,8 @@ public class Settings {
             ),
 
             new EnumSettingDefinition<>(
-                    Names.SPECIES_RANDOMIZE_TYPES,
-                    Categories.SPECIES_TYPES,
+                    Names.RANDOMIZE_SPECIES_TYPES,
+                    Category.SPECIES_TYPES,
                     SpeciesTypesMod.UNCHANGED,
                     null,
                     null,
@@ -370,90 +358,90 @@ public class Settings {
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_FORCE_DUAL_TYPES,
-                    Categories.SPECIES_TYPES,
+                    Names.SPECIES_TYPES_FORCE_DUAL_TYPES,
+                    Category.SPECIES_TYPES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_TYPES, SpeciesTypesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_TYPES, SpeciesTypesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_TYPES_FOLLOW_MEGA_EVO,
-                    Categories.SPECIES_TYPES,
+                    Names.SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS,
+                    Category.SPECIES_TYPES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_TYPES, SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_TYPES, SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS),
                     RomHandler::hasMegaEvolutions
             ),
 
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_RANDOMIZE_ABILITIES,
-                    Categories.SPECIES_ABILITIES,
+                    Names.RANDOMIZE_SPECIES_ABILITIES,
+                    Category.SPECIES_ABILITIES,
                     AbilitiesMod.UNCHANGED,
                     null,
                     rh -> rh.abilitiesPerSpecies() != 0
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_ABILITIES_FOLLOW_EVO,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_FOLLOW_EVOLUTIONS,
+                    Category.SPECIES_ABILITIES,
                     false,
                     new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
-                            new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES,
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES,
                                     AbilitiesMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_ABILITIES_FOLLOW_MEGA_EVO,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new SimpleSettingRestriction<>(Names.SPECIES_ABILITIES_FOLLOW_EVO, isTrue),
+                    new SimpleSettingRestriction<>(Names.SPECIES_ABILITIES_FOLLOW_EVOLUTIONS, isTrue),
                     RomHandler::hasMegaEvolutions
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_ABILITIES_COMBINE_DUPES,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_COMBINE_DUPLICATES,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES, AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_FORCE_TWO_ABILITIES,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ALWAYS_HAVE_TWO_ABILITIES,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES, AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_BAN_WONDER_GUARD,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_BAN_WONDER_GUARD,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES, AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_BAN_TRAPPING_ABILITIES,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_BAN_TRAPPING,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES, AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_BAN_NEGATIVE_ABILITIES,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_BAN_NEGATIVE,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES, AbilitiesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_BAN_MINOR_ABILITIES,
-                    Categories.SPECIES_ABILITIES,
+                    Names.SPECIES_ABILITIES_BAN_MINOR,
+                    Category.SPECIES_ABILITIES,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_ABILITIES, AbilitiesMod.UNCHANGED, false),
                     null
             ),
 
             new EnumSettingDefinition<>(
-                    Names.SPECIES_RANDOMIZE_EVOLUTIONS,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.RANDOMIZE_SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     EvolutionsMod.UNCHANGED,
                     null,
                     null,
@@ -461,88 +449,88 @@ public class Settings {
                     Map.of(EvolutionsMod.RANDOM_EVERY_LEVEL, RomHandler::canGiveEverySpeciesOneEvolutionEach)
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_SIMILAR_STRENGTH,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_SAME_TYPE,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_MAX_THREE,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_MAX_THREE_STAGES,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_NO_CONVERGENCE,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_FORCE_CHANGE,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_FORCE_GROWTH,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_ALLOW_ALTS,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.UNCHANGED, false),
                     ofGeneration(7)
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_ADJUST_LEVELS,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)),
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, BSTMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>(Names.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
                     notEvolveEveryLevelRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_MAKE_EASIER,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
                     notEvolveEveryLevelRestriction,
                     null
             ),
             new NumericSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_EASIER_LEVEL,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL,
+                    Category.SPECIES_EVOLUTIONS,
                     40,
                     new SimpleSettingRestriction<>(Names.SPECIES_EVOLUTIONS_MAKE_EASIER, isTrue),
                     null,
                     30, 65
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EVOLUTIONS_USE_ESTIMATED_LEVELS,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Names.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
                     new MultiSettingRestriction(true, false,
                             new SimpleSettingRestriction<>(Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE, isTrue),
@@ -551,31 +539,31 @@ public class Settings {
             ),
             new SimpleSettingDefinition<>(
                     Names.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
-                    Categories.SPECIES_EVOLUTIONS,
+                    Category.SPECIES_EVOLUTIONS,
                     false,
                     notEvolveEveryLevelRestriction,
                     RomHandler::hasTimeBasedEvolutions
             ),
 
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_STANDARD_EXP_CURVE,
-                    Categories.SPECIES_EXP_CURVES,
+                    Names.STANDARDIZE_SPECIES_EXP_CURVES,
+                    Category.SPECIES_EXP_CURVES,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_EXP_CURVE_TO_USE,
-                    Categories.SPECIES_EXP_CURVES,
+                    Names.SPECIES_EXP_CURVE_STANDARD_SELECTION,
+                    Category.SPECIES_EXP_CURVES,
                     ExpCurve.MEDIUM_FAST,
-                    new SimpleSettingRestriction<>(Categories.SPECIES_EXP_CURVES, isTrue),
+                    new SimpleSettingRestriction<>(Category.SPECIES_EXP_CURVES, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Names.SPECIES_STANDARDIZE_EXP_CURVE_EXTENT,
-                    Categories.SPECIES_EXP_CURVES,
+                    Names.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
+                    Category.SPECIES_EXP_CURVES,
                     ExpCurveExtentMod.LEGENDARIES,
-                    new SimpleSettingRestriction<>(Categories.SPECIES_EXP_CURVES, isTrue),
+                    new SimpleSettingRestriction<>(Category.SPECIES_EXP_CURVES, isTrue),
                     null
             )
     );
@@ -597,35 +585,35 @@ public class Settings {
     private final static SettingRestriction anyStarterIsRandomRestriction = new MultiSettingRestriction(
             true, false,
             new MultiSettingRestriction(false, false,
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.CUSTOM),
                     new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>("CustomStarter1",
+                            new SimpleSettingRestriction<>(Names.STARTER_CUSTOM_1,
                                     equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
-                            new SimpleSettingRestriction<>("CustomStarter2",
+                            new SimpleSettingRestriction<>(Names.STARTER_CUSTOM_2,
                                     equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
-                            new SimpleSettingRestriction<>("CustomStarter3",
+                            new SimpleSettingRestriction<>(Names.STARTER_CUSTOM_3,
                                     equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
                     )
             ),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
+            new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.COMPLETELY_RANDOM),
+            new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
+            new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.RANDOM_BASIC)
     );
 
     private final static SettingRestriction allStartersAreRandomRestriction = new MultiSettingRestriction(
             true, false,
             new MultiSettingRestriction(false, false,
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
-                    new SimpleSettingRestriction<>("CustomStarter1",
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.CUSTOM),
+                    new SimpleSettingRestriction<>(Names.STARTER_CUSTOM_1,
                             equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
-                    new SimpleSettingRestriction<>("CustomStarter2",
+                    new SimpleSettingRestriction<>(Names.STARTER_CUSTOM_2,
                             equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
-                    new SimpleSettingRestriction<>("CustomStarter3",
+                    new SimpleSettingRestriction<>(Names.STARTER_CUSTOM_3,
                             equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
             ),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
+            new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.COMPLETELY_RANDOM),
+            new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
+            new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.RANDOM_BASIC)
     );
 
     public enum StaticPokemonMod {
@@ -638,8 +626,8 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = List.of(
             new EnumSettingDefinition<>(
-                    "RandomizeStarters",
-                    "Starters",
+                    Names.RANDOMIZE_STARTERS,
+                    Category.STARTERS_GENERAL,
                     StartersMod.UNCHANGED,
                     null,
                     null,
@@ -650,27 +638,27 @@ public class Settings {
                     null
             ),
             new SpeciesIndexSettingDefinition(
-                    "CustomStarter1",
-                    "Starters",
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    Names.STARTER_CUSTOM_1,
+                    Category.STARTERS_CUSTOM,
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.CUSTOM),
                     null
             ),
             new SpeciesIndexSettingDefinition(
-                    "CustomStarter2",
-                    "Starters",
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    Names.STARTER_CUSTOM_2,
+                    Category.STARTERS_CUSTOM,
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.CUSTOM),
                     null
             ),
             new SpeciesIndexSettingDefinition(
-                    "CustomStarter3",
-                    "Starters",
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    Names.STARTER_CUSTOM_3,
+                    Category.STARTERS_CUSTOM,
+                    new EnumMatchRestriction<>(Names.RANDOMIZE_STARTERS, StartersMod.CUSTOM),
                     rh -> rh.getStarters().size() > 2
             ),
 
             new EnumSettingDefinition<>(
-                    "StartersTypeRestriction",
-                    "Starters",
+                    Names.STARTERS_TYPE_RESTRICTION,
+                    Category.STARTER_TYPES,
                     StartersTypeMod.NONE,
                     anyStarterIsRandomRestriction,
                     null,
@@ -684,50 +672,50 @@ public class Settings {
                     )
             ),
             new SimpleSettingDefinition<>(
-                    "NoDualTypeStarters",
-                    "Starters",
+                    Names.STARTERS_NO_DUAL_TYPES,
+                    Category.STARTER_TYPES,
                     false,
                     anyStarterIsRandomRestriction,
                     null
             ),
             new TypeOrRandomSettingDefinition(
-                    "SingleStarterType",
-                    "Starters",
-                    new EnumMatchRestriction<>("StartersTypeRestriction", StartersTypeMod.SINGLE_TYPE),
+                    Names.STARTERS_SINGLE_TYPE_SELECTION,
+                    Category.STARTER_TYPES,
+                    new EnumMatchRestriction<>(Names.STARTERS_TYPE_RESTRICTION, StartersTypeMod.SINGLE_TYPE),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "StartersNoLegendaries",
-                    "Starters",
+                    Names.STARTERS_NO_LEGENDARIES,
+                    Category.STARTERS_GENERAL,
                     false,
                     anyStarterIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeStarterHeldItems",
-                    "Starters",
+                    Names.STARTERS_RANDOMIZE_HELD_ITEMS,
+                    Category.STARTERS_GENERAL,
                     false,
                     null,
                     RomHandler::supportsStarterHeldItems
             ),
             new SimpleSettingDefinition<>(
-                    "BanBadStarterHeldItems",
-                    "Starters",
+                    Names.STARTERS_BAN_BAD_HELD_ITEMS,
+                    Category.STARTERS_GENERAL,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeStarterHeldItems", isTrue),
+                    new SimpleSettingRestriction<>(Names.STARTERS_RANDOMIZE_HELD_ITEMS, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "LimitStartersMinimumBST",
-                    "Starters",
+                    Names.STARTERS_BST_USE_MINIMUM,
+                    Category.STARTER_BSTS,
                     false,
                     anyStarterIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "LimitStartersMaximumBST",
-                    "Starters",
+                    Names.STARTERS_BST_USE_MAXIMUM,
+                    Category.STARTER_BSTS,
                     false,
                     anyStarterIsRandomRestriction,
                     null
@@ -736,6 +724,9 @@ public class Settings {
             //  these need a variable default value depending on RomHandler
             // TODO also: They should ideally have a special enablement constraint, such that Minimum's max is the value
             //  of Maximum, and Maximum's min is the value of Minimum.
+            //  (Not sure how that can interact with defaults though. Maybe they just need to default to 0 and MAX_BST
+            //  instead of their current defaults? That would also allow us to remove the UseMin, UseMax settings.)
+            //  ...Yeah, actually, that suits the standard of default values being expected behavior better.
 
             new SimpleSettingDefinition<>(
                     "RandomizeStaticPokemon",
@@ -750,7 +741,7 @@ public class Settings {
                     false,
                     new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
                     null
-            ),
+            ), //This is such a weirdly specific option...
             new SimpleSettingDefinition<>(
                     "StaticPokemonLimitMainGameLegendaries",
                     "StaticPokemon",

@@ -734,6 +734,8 @@ public class Settings {
             ),
             // TODO: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue;
             //  these need a variable default value depending on RomHandler
+            // TODO also: They should ideally have a special enablement constraint, such that Minimum's max is the value
+            //  of Maximum, and Maximum's min is the value of Minimum.
 
             new SimpleSettingDefinition<>(
                     "RandomizeStaticPokemon",

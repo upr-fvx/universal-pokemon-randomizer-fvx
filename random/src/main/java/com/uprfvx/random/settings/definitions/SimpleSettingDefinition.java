@@ -9,9 +9,21 @@ import java.util.function.Predicate;
 
 public class SimpleSettingDefinition<V extends Serializable> extends SettingDefinition<V>  {
 
+    public static class Builder<B extends Builder<B, V>, V extends Serializable>
+            extends SettingDefinition.Builder<B, V> {
+        public Builder(String name, String category, V defaultValue) {
+            super(name, category, defaultValue);
+        }
+
+        @Override
+        public SimpleSettingDefinition<V> build() {
+            return new SimpleSettingDefinition<>(name, category, defaultValue, prerequisite, supported);
+        }
+    }
+
     //A simple SettingDefinition that makes no restrictions on values.
 
-    public SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
+    protected SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
                                    Predicate<RomHandler> supported) {
         super(name, category, defaultValue, prerequisite, supported, null, false);
     }

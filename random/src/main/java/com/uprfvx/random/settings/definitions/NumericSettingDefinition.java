@@ -1,7 +1,7 @@
 package com.uprfvx.random.settings.definitions;
 
-import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import miscutils.Pair;
 
@@ -18,6 +18,54 @@ import java.util.function.Predicate;
 public class NumericSettingDefinition<N extends Number & Comparable<N>> extends SettingDefinition<N> {
     //Actually, not sure that it needs to extend Number?
 
+    public static class Builder<B extends Builder<B, N>, N extends Number & Comparable<N>>
+            extends SettingDefinition.Builder<B, N> {
+
+        protected final N minimum;
+        protected final N maximum;
+        protected List<Pair<N, SettingRestriction>> restrictedMinimums;
+        protected List<Pair<N, SettingRestriction>> restrictedMaximums;
+        protected List<Pair<N, Predicate<RomHandler>>> supportedMinimums;
+        protected List<Pair<N, Predicate<RomHandler>>> supportedMaximums;
+
+        public Builder(String name, String category, N defaultValue, N minimum, N maximum) {
+            super(name, category, defaultValue);
+            this.minimum = minimum;
+            this.maximum = maximum;
+        }
+
+        public B restrictedMinimums(List<Pair<N, SettingRestriction>> restrictedMinimums) {
+            this.restrictedMinimums = restrictedMinimums;
+            return self();
+        }
+
+        public B restrictedMaximums(List<Pair<N, SettingRestriction>> restrictedMaximums) {
+            this.restrictedMaximums = restrictedMaximums;
+            return self();
+        }
+
+        public B supportedMinimums(List<Pair<N, Predicate<RomHandler>>> supportedMinimums) {
+            this.supportedMinimums = supportedMinimums;
+            return self();
+        }
+
+        public B supportedMaximums(List<Pair<N, Predicate<RomHandler>>> supportedMaximums) {
+            this.supportedMaximums = supportedMaximums;
+            return self();
+        }
+
+        @Override
+        public NumericSettingDefinition<N> build() {
+            return new NumericSettingDefinition<>(
+                    name, category, defaultValue,
+                    prerequisite, supported,
+                    minimum, maximum,
+                    restrictedMinimums, restrictedMaximums,
+                    supportedMinimums, supportedMaximums
+            );
+        }
+    }
+
     final N minimum;
     final N maximum;
 
@@ -25,23 +73,6 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
     final List<Pair<N, SettingRestriction>> restrictedMaximums;
     final List<Pair<N, Predicate<RomHandler>>> supportedMinimums;
     final List<Pair<N, Predicate<RomHandler>>> supportedMaximums;
-
-    public NumericSettingDefinition(String name, String category, N defaultValue,
-                                    SettingRestriction prerequisite, Predicate<RomHandler> supported,
-                                    N minimum, N maximum) {
-        super(name, category, defaultValue, prerequisite, supported, null, false);
-        if (defaultValue.compareTo(minimum) < 0 || defaultValue.compareTo(maximum) > 0) {
-            throw new IllegalArgumentException("Default value for " + name + " is not within the valid range!");
-        }
-
-        this.minimum = minimum;
-        this.maximum = maximum;
-
-        restrictedMinimums = null;
-        restrictedMaximums = null;
-        supportedMinimums = null;
-        supportedMaximums = null;
-    }
 
     /**
      * Creates a new NumericSettingDefinition.

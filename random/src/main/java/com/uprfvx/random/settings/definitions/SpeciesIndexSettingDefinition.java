@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import miscutils.Pair;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -21,10 +22,55 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
     private static final int HIGHEST_SPECIES_INDEX = Gen7Constants.getPokemonCount(Gen7Constants.Type_USUM) +
             Gen7Constants.getFormeCount(Gen7Constants.Type_USUM); //This is clunky and possibly inaccurate. TODO: fix.
 
-    public SpeciesIndexSettingDefinition(String name, String category,
-                                         SettingRestriction prerequisite,
-                                         Predicate<RomHandler> supported) {
-        super(name, category, RANDOM_SPECIES, prerequisite, supported, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);
+    public static class Builder<B extends Builder<B>> extends NumericSettingDefinition.Builder<B, Integer> {
+
+        public Builder(String name, String category) {
+            super(name, category, RANDOM_SPECIES, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);
+        }
+
+        @Override
+        public B restrictedMinimums(List<Pair<Integer, SettingRestriction>> restrictedMinimums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B restrictedMaximums(List<Pair<Integer, SettingRestriction>> restrictedMaximums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B supportedMinimums(List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public SpeciesIndexSettingDefinition build() {
+            return new SpeciesIndexSettingDefinition(
+                    name, category,
+                    defaultValue,
+                    prerequisite, supported,
+                    minimum, maximum,
+                    restrictedMinimums, restrictedMaximums,
+                    supportedMinimums, supportedMaximums
+            );
+        }
+    }
+
+    protected SpeciesIndexSettingDefinition(String name, String category,
+                                            Integer defaultValue,
+                                            SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                            Integer minimum, Integer maximum,
+                                            List<Pair<Integer, SettingRestriction>> restrictedMinimums,
+                                            List<Pair<Integer, SettingRestriction>> restrictedMaximums,
+                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums,
+                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+        super(name, category, defaultValue, prerequisite, supported, minimum, maximum,
+                restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums);
     }
 
     /*

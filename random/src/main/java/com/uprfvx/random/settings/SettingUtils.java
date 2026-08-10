@@ -131,13 +131,12 @@ public class SettingUtils {
     // This could also be its own Definition subclass, but since it doesn't do anything special
     // a method felt sufficient.
     public static SettingDefinition<Boolean> miscTweakDefinition(String name, MiscTweak tweak) {
-        return new SimpleSettingDefinition<>(
+        return new SimpleSettingDefinition.Builder<>(
                 name,
                 "MiscTweaks",
-                false,
-                null,
-                isTweakAvailable(tweak)
-        );
+                false)
+                .supported(isTweakAvailable(tweak))
+                .build();
     }
 
     //endregion

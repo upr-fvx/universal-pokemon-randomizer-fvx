@@ -14,6 +14,37 @@ import java.util.function.Predicate;
  */
 public class EnumSettingDefinition<E extends Enum<E>> extends SettingDefinition<E> {
 
+    public static class Builder<B extends Builder<B, E>, E extends Enum<E>>
+            extends SettingDefinition.Builder<B, E> {
+
+        protected Map<E, SettingRestriction> restrictedStates;
+        protected Map<E, Predicate<RomHandler>> supportedStates;
+
+        public Builder(String name, String category, E defaultValue) {
+            super(name, category, defaultValue);
+        }
+
+        public B restrictedStates(Map<E, SettingRestriction> restrictedStates) {
+            this.restrictedStates = restrictedStates;
+            return self();
+        }
+
+        public B supportedStates(Map<E, Predicate<RomHandler>> supportedStates) {
+            this.supportedStates = supportedStates;
+            return self();
+        }
+
+        @Override
+        public EnumSettingDefinition<E> build() {
+            return new EnumSettingDefinition<>(
+                    name, category,
+                    defaultValue,
+                    prerequisite, supported,
+                    restrictedStates, supportedStates
+            );
+        }
+    }
+
     Map<E, SettingRestriction> restrictions;
     Map<E, Predicate<RomHandler>> support;
 

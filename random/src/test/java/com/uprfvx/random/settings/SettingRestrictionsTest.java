@@ -43,26 +43,26 @@ public class SettingRestrictionsTest {
     public void simpleEnumRestrictionWorks() {
         SettingsManager manager = new SettingsManager();
         SimpleSettingRestriction<Settings.BSTMod> restriction = new SimpleSettingRestriction<>(
-                "RandomizePokemonBaseStatTotals",
+                Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
                 matchesEnumValue(Settings.BSTMod.SHUFFLE));
 
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
-        restriction = new SimpleSettingRestriction<>("RandomizePokemonBaseStatTotals",
+        restriction = new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
                 doesNotMatchEnumValue(Settings.BSTMod.SHUFFLE));
 
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         assert(restriction.test(manager) == true);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.UNCHANGED);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.UNCHANGED);
         assert(restriction.test(manager) == true);
     }
 
@@ -70,26 +70,26 @@ public class SettingRestrictionsTest {
     public void enumMatchRestrictionWorks() {
         SettingsManager manager = new SettingsManager();
         SimpleSettingRestriction<Settings.BSTMod> restriction = new EnumMatchRestriction<>(
-                "RandomizePokemonBaseStatTotals",
+                Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
                 Settings.BSTMod.SHUFFLE);
 
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
-        restriction = new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals",
+        restriction = new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
                 Settings.BSTMod.SHUFFLE, false);
 
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.RANDOM);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         assert(restriction.test(manager) == true);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.UNCHANGED);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.UNCHANGED);
         assert(restriction.test(manager) == true);
     }
 
@@ -100,7 +100,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, false,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE)
+                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
         );
 
         assert(restriction.test(manager) == false);
@@ -111,7 +111,7 @@ public class SettingRestrictionsTest {
         manager.setSetting("UpdateMovesToGeneration", 6);
         assert(restriction.test(manager) == true);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
         manager.setSetting("NoRandomIntroMon", false);
@@ -128,7 +128,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, false,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE)
+                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
         );
 
         assert(restriction.test(manager) == false);
@@ -139,7 +139,7 @@ public class SettingRestrictionsTest {
         manager.setSetting("UpdateMovesToGeneration", 6);
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
         manager.setSetting("NoRandomIntroMon", false);
@@ -156,7 +156,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, true,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE)
+                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
         );
 
         assert(restriction.test(manager) == true);
@@ -167,7 +167,7 @@ public class SettingRestrictionsTest {
         manager.setSetting("UpdateMovesToGeneration", 6);
         assert(restriction.test(manager) == false);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == false);
 
         manager.setSetting("NoRandomIntroMon", false);
@@ -184,7 +184,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, true,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE)
+                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
         );
 
         assert(restriction.test(manager) == true);
@@ -195,7 +195,7 @@ public class SettingRestrictionsTest {
         manager.setSetting("UpdateMovesToGeneration", 6);
         assert(restriction.test(manager) == true);
 
-        manager.setSetting("RandomizePokemonBaseStatTotals", Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == false);
 
         manager.setSetting("NoRandomIntroMon", false);

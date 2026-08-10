@@ -62,15 +62,16 @@ public class Settings {
      */
     public enum Name {
         //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
-        //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.
-        /*** GENERAL OPTIONS ***/
+        //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.\
+
+        // *** GENERAL OPTIONS ***
         //General options
         LIMIT_POKEMON, NO_IRREGULAR_ALT_FORMES, NO_PREMATURE_EVOLUTIONS, NO_RANDOM_INTRO_MON, RACE_MODE,
         //Limit Pokemon
         ALLOW_GENERATION_1, ALLOW_GENERATION_2, ALLOW_GENERATION_3, ALLOW_GENERATION_4, ALLOW_GENERATION_5,
         ALLOW_GENERATION_6, ALLOW_GENERATION_7,
 
-        /*** SPECIES TRAITS ***/
+        // *** SPECIES TRAITS ***
         //Base Stat Totals
         RANDOMIZE_SPECIES_BASE_STAT_TOTALS, SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, SPECIES_BSTS_FOLLOW_EVOLUTION,
         SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY,
@@ -94,7 +95,7 @@ public class Settings {
         //Species' EXP Curves
         STANDARDIZE_SPECIES_EXP_CURVES, SPECIES_EXP_CURVE_STANDARD_SELECTION, SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
 
-        /*** GIVEN POKEMON ***/
+        // *** GIVEN POKEMON ***
         //Starters General
         RANDOMIZE_STARTERS, STARTERS_NO_LEGENDARIES, STARTERS_RANDOMIZE_HELD_ITEMS, STARTERS_BAN_BAD_HELD_ITEMS,
         STARTERS_ALLOW_ALT_FORMES,
@@ -105,33 +106,81 @@ public class Settings {
         //Starter BSTs
         STARTERS_BST_USE_MINIMUM, STARTERS_BST_MINIMUM_SELECTION, STARTERS_BST_USE_MAXIMUM,
         STARTERS_BST_MAXIMUM_SELECTION,
-        //Statics TODO: move to Wild supercategory
+        //Statics
         RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
         STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC, STATICS_USE_LEVEL_MODIFIER,
         STATICS_LEVEL_MODIFIER_PERCENT,
+        //In-Game Trades
+        RANDOMIZE_IN_GAME_TRADES, TRADES_RANDOMIZE_NICKNAMES, TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
+        TRADES_RANDOMIZE_IVS, TRADES_RANDOMIZE_HELD_ITEMS,
 
+        // *** MOVES AND MOVESETS ***
+        //Move Traits
+        MOVES_RANDOMIZE_POWER, MOVES_RANDOMIZE_ACCURACY, MOVES_RANDOMIZE_PP, MOVES_RANDOMIZE_TYPE,
+        MOVES_RANDOMIZE_CATEGORY, MOVES_RANDOMIZE_NAME, UPDATE_MOVES, UPDATE_MOVES_TO_GENERATION,
+        //Species' Movesets
+        RANDOMIZE_SPECIES_MOVESETS, MOVESETS_GUARANTEE_LEVEL_1_MOVES, MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT, //TODO: combine level 1 moves
+        MOVESETS_ORDER_BY_DAMAGE, MOVESETS_BAN_OVERPOWERED, MOVESETS_FORCE_GOOD_DAMAGING, //TODO: combine force good damaging
+        MOVESETS_FORCE_GOOD_DAMAGING_PERCENT, MOVESETS_GUARANTEE_EVOLUTION_MOVES,
 
+        // *** FOE POKEMON ***
+        //Trainers General
+        RANDOMIZE_TRAINER_POKEMON, TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_USE_SIMILAR_STRENGTH,
+        TRAINERS_AVOID_DUPLICATES, TRAINERS_WEIGHT_TYPES, TRAINERS_USE_LOCAL, TRAINERS_NO_LEGENDARIES,
+        TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLE,
+         TRAINERS_POKEMON_LEAGUE_HAVE_UNIQUE, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, //TODO: COMBINE
+        //That's a lot for one category. We should probably organize these more. TODO: that
+        //Trainer Movesets
+        TRAINERS_BETTER_MOVESETS_FOR_BOSSES, TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
+        TRAINERS_BETTER_MOVESETS_FOR_REGULAR,
+        //Trainers Additional Pokemon
+        TRAINERS_ADD_POKEMON_TO_BOSSES, TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
+        TRAINERS_ADD_POKEMON_TO_IMPORTANT, TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
+        TRAINERS_ADD_POKEMON_TO_REGULAR, TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT, //TODO: combine
+        //Trainers Held Items
+        TRAINERS_ADD_HELD_ITEMS_TO_BOSSES, TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT, TRAINERS_ADD_HELD_ITEMS_TO_REGULAR,
+        TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY, TRAINER_HELD_ITEMS_SENSIBLE_ONLY, TRAINERS_HELD_ITEMS_ACES_ONLY,
+        //Trainers Diverse Types
+        TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
+        //Trainers Cosmetic
+        TRAINERS_RANDOM_SHINY_POKEMON,
     }
 
     public enum Category {
-        /*** GENERAL OPTIONS ***/
+        //Unlike Names, there are no limitations on renaming or removing categories.
+
+        // *** GENERAL OPTIONS ***
         GENERAL_OPTIONS, LIMIT_POKEMON,
 
-        /*** SPECIES TRAITS ***/
+        // *** SPECIES TRAITS ***
         SPECIES_BASE_STATISTIC_TOTALS, SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS,
         SPECIES_TYPES, SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES,
 
-        /*** GIVEN POKEMON ***/
-        STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES, STARTER_BSTS,
-
+        // *** GIVEN POKEMON ***
+        STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES, STARTER_BSTS, IN_GAME_TRADES,
         //Statics
-        STATIC_ENCOUNTERS;
+        STATIC_ENCOUNTERS,
 
-        /****** Supercategories ******/
-        public static final List<Category> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
+        // *** MOVES AND MOVESETS ***
+        MOVE_TRAITS, SPECIES_MOVESETS,
+        //It didn't occur to me until naming this category but... should SPECIES_MOVESETS be in SPECIES_TRAITS?
+        //(I mean, there's no room for it, so probably not, but logically... kinda?)
+
+        // *** FOE POKEMON ***
+        TRAINERS_GENERAL, TRAINER_MOVESETS, TRAINERS_ADDITIONAL_POKEMON, TRAINERS_HELD_ITEMS, TRAINERS_DIVERSE_TYPES,
+        TRAINERS_BATTLE_STYLE, TRAINERS_COSMETIC, TOTEM_POKEMON,
+
+        // *** MISC. TWEAKS ***
+        MISC_TWEAKS;
+
+        // ****** Supercategories ******/
+        public static final List<Category> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON, MISC_TWEAKS);
         public static final List<Category> SPECIES_TRAITS = List.of(SPECIES_BASE_STATISTIC_TOTALS,
                 SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS, SPECIES_TYPES,
                 SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
+        public static final List<Category> GIVEN_POKEMON = List.of(STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES,
+                STARTER_BSTS, IN_GAME_TRADES, STATIC_ENCOUNTERS); //TODO: move statics to WILD_POKEMON
+        public static final List<Category> MOVES_AND_MOVESETS = List.of(MOVE_TRAITS, SPECIES_MOVESETS);
     }
 
     //region general options
@@ -175,7 +224,7 @@ public class Settings {
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "NoPrematureEvolutions",
+                    Name.NO_PREMATURE_EVOLUTIONS,
                     Category.GENERAL_OPTIONS,
                     false,
                     notEvolveEveryLevelRestriction,
@@ -315,7 +364,7 @@ public class Settings {
                     null
             ),
             new SimpleSettingDefinition<>(
-                    Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS
+                    Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS,
                     Category.SPECIES_BASE_STATISTIC_DISTRIBUTION,
                     false,
                     new SimpleSettingRestriction<>(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, isTrue),
@@ -556,14 +605,14 @@ public class Settings {
                     Name.SPECIES_EXP_CURVE_STANDARD_SELECTION,
                     Category.SPECIES_EXP_CURVES,
                     ExpCurve.MEDIUM_FAST,
-                    new SimpleSettingRestriction<>(Category.SPECIES_EXP_CURVES, isTrue),
+                    new SimpleSettingRestriction<>(Name.STANDARDIZE_SPECIES_EXP_CURVES, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
                     Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
                     Category.SPECIES_EXP_CURVES,
                     ExpCurveExtentMod.LEGENDARIES,
-                    new SimpleSettingRestriction<>(Category.SPECIES_EXP_CURVES, isTrue),
+                    new SimpleSettingRestriction<>(Name.STANDARDIZE_SPECIES_EXP_CURVES, isTrue),
                     null
             )
     );
@@ -729,96 +778,96 @@ public class Settings {
             //  ...Yeah, actually, that suits the standard of default values being expected behavior better.
 
             new SimpleSettingDefinition<>(
-                    "RandomizeStaticPokemon",
-                    "StaticPokemon",
+                    Name.RANDOMIZE_STATIC_ENCOUNTERS,
+                    Category.STATIC_ENCOUNTERS,
                     StaticPokemonMod.UNCHANGED,
                     null,
                     RomHandler::canChangeStaticPokemon
             ),
             new SimpleSettingDefinition<>(
-                    "StaticPokemonRandomize600PlusBST",
-                    "StaticPokemon",
+                    Name.STATICS_FULL_RANDOM_OVER_600_BST,
+                    Category.STATIC_ENCOUNTERS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_STATIC_ENCOUNTERS, StaticPokemonMod.UNCHANGED, false),
                     null
             ), //This is such a weirdly specific option...
             new SimpleSettingDefinition<>(
-                    "StaticPokemonLimitMainGameLegendaries",
-                    "StaticPokemon",
+                    Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
+                    Category.STATIC_ENCOUNTERS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.SIMILAR_STRENGTH),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_STATIC_ENCOUNTERS, StaticPokemonMod.SIMILAR_STRENGTH),
                     RomHandler::hasMainGameLegendaries
             ),
             new SimpleSettingDefinition<>(
-                    "StaticPokemonAllowAltFormes",
-                    "StaticPokemon",
+                    Name.STATICS_ALLOW_ALT_FORMES,
+                    Category.STATIC_ENCOUNTERS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_STATIC_ENCOUNTERS, StaticPokemonMod.UNCHANGED, false),
                     RomHandler::hasStarterAltFormes
             ),
             new SimpleSettingDefinition<>(
-                    "StaticPokemonSwapMegaEvolvables",
-                    "StaticPokemon",
+                    Name.STATICS_SWAP_MEGA_EVOLVABLES,
+                    Category.STATIC_ENCOUNTERS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_STATIC_ENCOUNTERS, StaticPokemonMod.UNCHANGED, false),
                     RomHandler::hasMegaEvolutions
             ),
             new SimpleSettingDefinition<>(
-                    "StaticPokemonFixMusic",
-                    "StaticPokemon",
+                    Name.STATICS_FIX_MUSIC,
+                    Category.STATIC_ENCOUNTERS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_STATIC_ENCOUNTERS, StaticPokemonMod.UNCHANGED, false),
                     RomHandler::hasStaticMusicFix
             ),
             new SimpleSettingDefinition<>(
-                    "StaticPokemonLevelModifier",
-                    "StaticPokemon",
+                    Name.STATICS_USE_LEVEL_MODIFIER,
+                    Category.STATIC_ENCOUNTERS,
                     false,
                     null,
                     null
-            ),
+            ),  //TODO: remove redundant toggle
             new NumericSettingDefinition<>(
-                    "StaticPokemonLevelModifierPercentage",
-                    "StaticPokemon",
+                    Name.STATICS_LEVEL_MODIFIER_PERCENT,
+                    Category.STATIC_ENCOUNTERS,
                     100,
-                    new SimpleSettingRestriction<>("StaticPokemonLevelModifier", isTrue),
+                    new SimpleSettingRestriction<>(Name.STATICS_USE_LEVEL_MODIFIER, isTrue),
                     null,
                     -100, 155
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeInGameTrades",
-                    "InGameTrades",
+                    Name.RANDOMIZE_IN_GAME_TRADES,
+                    Category.IN_GAME_TRADES,
                     InGameTradesMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "InGameTradesRandomizeNicknames",
-                    "InGameTrades",
+                    Name.TRADES_RANDOMIZE_NICKNAMES,
+                    Category.IN_GAME_TRADES,
                     false,
-                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_IN_GAME_TRADES, InGameTradesMod.UNCHANGED, false),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "InGameTradesRandomizeOTs",
-                    "InGameTrades",
+                    Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
+                    Category.IN_GAME_TRADES,
                     false,
-                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_IN_GAME_TRADES, InGameTradesMod.UNCHANGED, false),
                     notOfGeneration(1)
             ),
             new SimpleSettingDefinition<>(
-                    "InGameTradesRandomizeIVs",
-                    "InGameTrades",
+                    Name.TRADES_RANDOMIZE_IVS,
+                    Category.IN_GAME_TRADES,
                     false,
-                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_IN_GAME_TRADES, InGameTradesMod.UNCHANGED, false),
                     notOfGeneration(1)
             ),
             new SimpleSettingDefinition<>(
-                    "InGameTradesRandomizeHeldItems",
-                    "InGameTrades",
+                    Name.TRADES_RANDOMIZE_HELD_ITEMS,
+                    Category.IN_GAME_TRADES,
                     false,
-                    new EnumMatchRestriction<>("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_IN_GAME_TRADES, InGameTradesMod.UNCHANGED, false),
                     notOfGeneration(1)
             )
     );
@@ -833,62 +882,62 @@ public class Settings {
 
     private static final SettingRestriction randomPokemonMovesetsRestriction = new MultiSettingRestriction(
             true, false,
-            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.RANDOM_PREFER_SAME_TYPE),
-            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.COMPLETELY_RANDOM)
+            new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_MOVESETS, MovesetsMod.RANDOM_PREFER_SAME_TYPE),
+            new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_MOVESETS, MovesetsMod.COMPLETELY_RANDOM)
     );
 
     private static final SettingRestriction noMetronomeModeRestriction = new EnumMatchRestriction<>(
-            "RandomizePokemonMovesets", MovesetsMod.METRONOME_ONLY, false
+            Name.RANDOMIZE_SPECIES_MOVESETS, MovesetsMod.METRONOME_ONLY, false
     );
 
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizeMovePower",
-                    "MoveData",
+                    Name.MOVES_RANDOMIZE_POWER,
+                    Category.MOVE_TRAITS,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeMoveAccuracy",
-                    "MoveData",
+                    Name.MOVES_RANDOMIZE_ACCURACY,
+                    Category.MOVE_TRAITS,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeMovePP",
-                    "MoveData",
+                    Name.MOVES_RANDOMIZE_PP,
+                    Category.MOVE_TRAITS,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeMoveCategory",
-                    "MoveData",
+                    Name.MOVES_RANDOMIZE_CATEGORY,
+                    Category.MOVE_TRAITS,
                     false,
                     null,
                     RomHandler::hasPhysicalSpecialSplit
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeMoveNames",
-                    "MoveData",
+                    Name.MOVES_RANDOMIZE_NAME,
+                    Category.MOVE_TRAITS,
                     false,
                     null,
                     RomHandler::isEnglish
             ),
             new SimpleSettingDefinition<>(
-                    "UpdateMoves",
-                    "MoveData",
+                    Name.UPDATE_MOVES,
+                    Category.MOVE_TRAITS,
                     false,
                     null,
                     null
             ),
             new NumericSettingDefinition<>(
-                    "UpdateMovesToGeneration",
-                    "MoveData",
+                    Name.UPDATE_MOVES_TO_GENERATION,
+                    Category.MOVE_TRAITS,
                     9,
-                    new SimpleSettingRestriction<>("UpdateMoves", isTrue),
+                    new SimpleSettingRestriction<>(Name.UPDATE_MOVES, isTrue),
                     null,
                     2, 9,
                     null,
@@ -898,59 +947,59 @@ public class Settings {
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizePokemonMovesets",
-                    "PokemonMovesets",
+                    Name.RANDOMIZE_SPECIES_MOVESETS,
+                    Category.SPECIES_MOVESETS,
                     MovesetsMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "GuaranteedLevel1Moves",
-                    "PokemonMovesets",
+                    Name.MOVESETS_GUARANTEE_LEVEL_1_MOVES,
+                    Category.SPECIES_MOVESETS,
                     false,
                     randomPokemonMovesetsRestriction,
                     RomHandler::supportsFourStartingMoves
             ),
             new NumericSettingDefinition<>(
-                    "GuaranteedLevel1MovesCount",
-                    "PokemonMovesets",
+                    Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT,
+                    Category.SPECIES_MOVESETS,
                     2,
-                    new SimpleSettingRestriction<>("GuaranteedLevel1Moves", isTrue),
+                    new SimpleSettingRestriction<>(Name.MOVESETS_GUARANTEE_LEVEL_1_MOVES, isTrue),
                     null,
                     2, 4
             ),
             new SimpleSettingDefinition<>(
-                    "MovesetsReorderDamagingMoves",
-                    "PokemonMovesets",
+                    Name.MOVESETS_ORDER_BY_DAMAGE,
+                    Category.SPECIES_MOVESETS,
                     false,
                     randomPokemonMovesetsRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "MovesetsNoGameBreakingMoves",
-                    "PokemonMovesets",
+                    Name.MOVESETS_BAN_OVERPOWERED,
+                    Category.SPECIES_MOVESETS,
                     false,
                     randomPokemonMovesetsRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "MovesetsForceGoodDamagingMoves",
-                    "PokemonMovesets",
+                    Name.MOVESETS_FORCE_GOOD_DAMAGING,
+                    Category.SPECIES_MOVESETS,
                     false,
                     randomPokemonMovesetsRestriction,
                     null
             ),
             new NumericSettingDefinition<>(
-                    "MovesetsForceGoodDamagingMovesPercentage",
-                    "PokemonMovesets",
+                    Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT,
+                    Category.SPECIES_MOVESETS,
                     0,
-                    new SimpleSettingRestriction<>("MovesetsForceGoodDamagingMoves", isTrue),
+                    new SimpleSettingRestriction<>(Name.MOVESETS_FORCE_GOOD_DAMAGING, isTrue),
                     null,
                     0, 100
             ),
             new SimpleSettingDefinition<>(
-                    "EvolutionMovesForAllPokemon",
-                    "PokemonMovesets",
+                    Name.MOVESETS_GUARANTEE_EVOLUTION_MOVES,
+                    Category.SPECIES_MOVESETS,
                     false,
                     randomPokemonMovesetsRestriction,
                     atLeastGeneration(7)
@@ -960,9 +1009,6 @@ public class Settings {
     //endregion
 
     //region foe pokemon
-
-    //To consider: should Totem pokemon be here, or in Wild?
-    //(There's more space here, if nothing else.)
 
     public enum TrainersMod {
         UNCHANGED, RANDOM, DISTRIBUTED, MAINPLAYTHROUGH, TYPE_THEMED,

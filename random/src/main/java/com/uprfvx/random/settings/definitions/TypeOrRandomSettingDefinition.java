@@ -48,14 +48,30 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
         public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public TypeOrRandomSettingDefinition build() {
+            return new TypeOrRandomSettingDefinition(
+                    name, category,
+                    defaultValue,
+                    prerequisite, supported,
+                    minimum, maximum,
+                    restrictedMinimums, restrictedMaximums,
+                    supportedMinimums, supportedMaximums
+            );
+        }
     }
 
-    // With the builder, this constructor is entirely defunct
-    // TODO: remove when no longer used
-    public TypeOrRandomSettingDefinition(String name, String category, 
-                                         SettingRestriction prerequisite, 
-                                         Predicate<RomHandler> supported) {
-        super(name, category, RANDOM_TYPE, prerequisite, supported, RANDOM_TYPE, Type.SIZE);
+    protected TypeOrRandomSettingDefinition(String name, String category,
+                                            Integer defaultValue,
+                                            SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                            Integer minimum, Integer maximum,
+                                            List<Pair<Integer, SettingRestriction>> restrictedMinimums,
+                                            List<Pair<Integer, SettingRestriction>> restrictedMaximums,
+                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums,
+                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+        super(name, category, defaultValue, prerequisite, supported, minimum, maximum,
+                restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums);
     }
 
     @Override

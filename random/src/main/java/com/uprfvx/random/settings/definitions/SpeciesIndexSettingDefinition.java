@@ -47,14 +47,30 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
         public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
             throw new UnsupportedOperationException();
         }
+
+        @Override
+        public SpeciesIndexSettingDefinition build() {
+            return new SpeciesIndexSettingDefinition(
+                    name, category,
+                    defaultValue,
+                    prerequisite, supported,
+                    minimum, maximum,
+                    restrictedMinimums, restrictedMaximums,
+                    supportedMinimums, supportedMaximums
+            );
+        }
     }
 
-    // With the builder, this constructor is entirely defunct
-    // TODO: remove when no longer used
-    public SpeciesIndexSettingDefinition(String name, String category,
-                                         SettingRestriction prerequisite,
-                                         Predicate<RomHandler> supported) {
-        super(name, category, RANDOM_SPECIES, prerequisite, supported, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);
+    protected SpeciesIndexSettingDefinition(String name, String category,
+                                            Integer defaultValue,
+                                            SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                            Integer minimum, Integer maximum,
+                                            List<Pair<Integer, SettingRestriction>> restrictedMinimums,
+                                            List<Pair<Integer, SettingRestriction>> restrictedMaximums,
+                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums,
+                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+        super(name, category, defaultValue, prerequisite, supported, minimum, maximum,
+                restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums);
     }
 
     /*

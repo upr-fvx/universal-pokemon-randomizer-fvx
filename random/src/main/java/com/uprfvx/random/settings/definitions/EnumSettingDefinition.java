@@ -20,7 +20,7 @@ public class EnumSettingDefinition<V extends Enum<V>> extends SettingDefinition<
         protected Map<V, SettingRestriction> restrictedStates;
         protected Map<V, Predicate<RomHandler>> supportedStates;
 
-        protected Builder(String name, String category, V defaultValue) {
+        public Builder(String name, String category, V defaultValue) {
             super(name, category, defaultValue);
         }
 
@@ -64,7 +64,7 @@ public class EnumSettingDefinition<V extends Enum<V>> extends SettingDefinition<
      * @param supportedStates A Map of enum values to Predicate<RomHandler>s that must return true for the value in
      *                         question to be supported, or null if there are no such restrictions.
      */
-    public EnumSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
+    protected EnumSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
                                  Predicate<RomHandler> supported, Map<V, SettingRestriction> restrictedStates,
                                  Map<V, Predicate<RomHandler>> supportedStates) {
         super(name, category, defaultValue, prerequisite, supported,

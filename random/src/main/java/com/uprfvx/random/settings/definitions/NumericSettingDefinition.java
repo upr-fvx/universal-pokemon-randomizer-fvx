@@ -74,23 +74,6 @@ public class NumericSettingDefinition<V extends Number & Comparable<V>> extends 
     final List<Pair<V, Predicate<RomHandler>>> supportedMinimums;
     final List<Pair<V, Predicate<RomHandler>>> supportedMaximums;
 
-    public NumericSettingDefinition(String name, String category, V defaultValue,
-                                    SettingRestriction prerequisite, Predicate<RomHandler> supported,
-                                    V minimum, V maximum) {
-        super(name, category, defaultValue, prerequisite, supported, null, false);
-        if (defaultValue.compareTo(minimum) < 0 || defaultValue.compareTo(maximum) > 0) {
-            throw new IllegalArgumentException("Default value for " + name + " is not within the valid range!");
-        }
-
-        this.minimum = minimum;
-        this.maximum = maximum;
-
-        restrictedMinimums = null;
-        restrictedMaximums = null;
-        supportedMinimums = null;
-        supportedMaximums = null;
-    }
-
     /**
      * Creates a new NumericSettingDefinition.
      * @param name The setting's name. Should be a unique identifier.
@@ -105,7 +88,7 @@ public class NumericSettingDefinition<V extends Number & Comparable<V>> extends 
      * @param supportedMinimums A set of additional minimums which apply when the associated predicates return TRUE.
      * @param supportedMaximums A set of additional maximums which apply when the associated predicates return TRUE.
      */
-    public NumericSettingDefinition(String name, String category, V defaultValue,
+    protected NumericSettingDefinition(String name, String category, V defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                     V minimum, V maximum,
                                     List<Pair<V, SettingRestriction>> restrictedMinimums,

@@ -1,7 +1,9 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.restrictions.EnumMatchRestriction;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
@@ -40,6 +42,39 @@ public abstract class SettingDefinition<V extends Serializable> {
 
         public B prerequisite(SettingRestriction prerequisite) {
             this.prerequisite = prerequisite;
+            return self();
+        }
+
+        /**
+         * Alias of {@link #prerequisite(SettingRestriction) prerequisite}
+         * ({@link SimpleSettingRestriction#SimpleSettingRestriction(String, Predicate)
+         * new SimpleSettingRestriction(String, Predicate)}).
+         */
+        public <V2> B prerequisite(String name, Predicate<V2> desiredState) {
+            this.prerequisite = new SimpleSettingRestriction<>(name, desiredState);
+            return self();
+        }
+
+        // TODO: with this new syntax, using the SettingsUtil matchesEnumValue/doesNotMatchEnumValue might be clearer,
+        //  in which case these two methods below are redundant, and also EnumMatchRestriction.
+        //  (though those could be shortened to matchesEnum() and notMatchesEnum(), arguably)
+        /**
+         * Alias of {@link #prerequisite(SettingRestriction) prerequisite}
+         * ({@link EnumMatchRestriction#EnumMatchRestriction(String, E)
+         * new EnumMatchRestriction(String, E)}).
+         */
+        public <E extends Enum<E>> B prerequisite(String name, E desiredValue) {
+            this.prerequisite = new EnumMatchRestriction<>(name, desiredValue);
+            return self();
+        }
+
+        /**
+         * Alias of {@link #prerequisite(SettingRestriction) prerequisite}
+         * ({@link EnumMatchRestriction#EnumMatchRestriction(String, E, boolean)
+         * new EnumMatchRestriction(String, E, boolean)}).
+         */
+        public <E extends Enum<E>> B prerequisite(String name, E relevant, boolean shouldMatch) {
+            this.prerequisite = new EnumMatchRestriction<>(name, relevant, shouldMatch);
             return self();
         }
 

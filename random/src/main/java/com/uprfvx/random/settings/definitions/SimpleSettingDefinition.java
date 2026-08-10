@@ -23,7 +23,7 @@ public class SimpleSettingDefinition<V extends Serializable> extends SettingDefi
 
     //A simple SettingDefinition that makes no restrictions on values.
 
-    public SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
+    protected SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
                                    Predicate<RomHandler> supported) {
         super(name, category, defaultValue, prerequisite, supported, null, false);
     }

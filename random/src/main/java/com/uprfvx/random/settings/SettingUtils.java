@@ -62,7 +62,9 @@ public class SettingUtils {
 
     //region romhandler predicates
     /**
-     * Determines if the given RomHandler is a game that is any of the given generations.
+     * Determines if the given {@link RomHandler} is a game that is any of the given generations.<br>
+     * This method should be used sparsely. If you want to know whether a game supports a feature,
+     * consider adding a corresponding method to RomHandler instead.
      * @param generations The generations to select.
      * @return True if the game is any of the given generations, false otherwise.
      */
@@ -79,7 +81,9 @@ public class SettingUtils {
     }
 
     /**
-     * Determines if the given RomHandler is a game that is NOT any of the given generations.
+     * Determines if the given {@link RomHandler} is a game that is NOT any of the given generations.<br>
+     * This method should be used sparingly. If you want to know whether a game supports a feature,
+     * consider adding a corresponding method to RomHandler instead.
      * @param generations The generations to avoid.
      * @return False if the game is any of the given generations, true otherwise.
      */
@@ -95,8 +99,13 @@ public class SettingUtils {
         };
     }
 
-
-
+    /**
+     * Determines if the given {@link RomHandler} is a game of at least the given generation.<br>
+     * This method should be used sparingly. If you want to know whether a game supports a feature,
+     * consider adding a corresponding method to RomHandler instead.
+     * @param generation The minimum generation to match.
+     * @return False if the game is of a generation before the given one, true otherwise.
+     */
     public static Predicate<RomHandler> atLeastGeneration(int generation) {
         return rom -> {
             int gameGen = rom.generationOfPokemon();
@@ -104,6 +113,13 @@ public class SettingUtils {
         };
     }
 
+    /**
+     * Determines if the given {@link RomHandler} is a game of at most the given generation.<br>
+     * This method should be used sparingly. If you want to know whether a game supports a feature,
+     * consider adding a corresponding method to RomHandler instead.
+     * @param generation The maximum generation to match.
+     * @return False if the game is of a generation after the given one, true otherwise.
+     */
     public static Predicate<RomHandler> atMostGeneration(int generation) {
         return rom -> {
             int gameGen = rom.generationOfPokemon();

@@ -12,7 +12,7 @@ import java.util.function.Predicate;
  * @param <T> The type of the setting to test.
  */
 public class SimpleSettingRestriction<T> implements SettingRestriction {
-    final String name;
+    final Settings.Name name;
     final Predicate<T> desiredState;
 
     /**
@@ -26,7 +26,7 @@ public class SimpleSettingRestriction<T> implements SettingRestriction {
     }
 
     @Override
-    public List<String> getRelevantSettingNames() {
+    public List<Settings.Name> getRelevantSettingNames() {
         return Collections.singletonList(name);
     }
 

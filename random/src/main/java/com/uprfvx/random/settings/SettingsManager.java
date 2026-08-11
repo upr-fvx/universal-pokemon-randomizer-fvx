@@ -41,6 +41,7 @@ import java.util.stream.Stream;
 import java.util.zip.CRC32;
 
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
+import static com.uprfvx.random.settings.Settings.Name;
 
 public class SettingsManager {
 
@@ -77,7 +78,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting of the given name.
      * @throws ClassCastException if the setting's value cannot be cast to T.
      */
-    public <T extends Serializable> T getSetting(String settingName) {
+    public <T extends Serializable> T getSetting(Name settingName) {
         SettingState<T> state = getTypedState(settingName);
         try {
             return state.getValue();

@@ -3,6 +3,7 @@ package com.uprfvx.random.settings.restrictions;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
@@ -11,7 +12,7 @@ import java.util.function.Predicate;
  * A simple setting restriction which tests the state of a single setting.
  * @param <T> The type of the setting to test.
  */
-public class SimpleSettingRestriction<T> implements SettingRestriction {
+public class SimpleSettingRestriction<T extends Serializable> implements SettingRestriction {
     final Settings.Name name;
     final Predicate<T> desiredState;
 

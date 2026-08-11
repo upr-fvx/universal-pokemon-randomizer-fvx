@@ -51,6 +51,20 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 //Setting categories should be the most specific applicable category. (E.g., "Base Stat Distributions" rather than
 // "Pokemon Base Stats" or "Pokemon Traits". Supercategories should be the tabs of the GUI. Intermediate categories are
 // skipped.
+
+// A Setting in its default state should do NOTHING.
+// In other words, it should not change any aspect of the game going through the Randomizer.
+// Something like "give all Trainer Pokémon a +0% level boost" counts as doing nothing,
+// as long as there are no side effects. Following this is the responsibility of outside classes.
+// (NoRandomIntroMon is possibly an exception to this rule, since the randomized mon
+//  acts as confirmation the Randomizer has been applied) // TODO: should it be?
+// A Setting in any other state should do SOMETHING.
+// An exception to these rules is when a Setting A in a non-default state enables
+// Setting B which has a default state that does something. In this case,
+// it is acceptable that the default state of Setting B does something,
+// and that the non-default state of Setting A does nothing (directly, enabling Setting B not counted).
+// If the default state of A enables B, or the default state of B does nothing,
+// these are bad settings. Change or remove either of them.
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
@@ -155,13 +169,6 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition.Builder<>(
-                    Names.LIMIT_POKEMON,
-                    Categories.GENERAL_OPTIONS,
-                    false)
-                    .supported(notOfGeneration(1))
-                    .build(),
-            //TODO: might be able to eliminate this setting and just use the "AllowGenerationX" settings (inverted)
-            new SimpleSettingDefinition.Builder<>(
                     Names.NO_RANDOM_INTRO_MON,
                     Categories.GENERAL_OPTIONS, //TODO: move to misc. tweaks?
                     false)
@@ -191,50 +198,43 @@ public class Settings {
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_1,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(1))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_2,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(2))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_3,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(3))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_4,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(4))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_5,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(5))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_6,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(6))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.ALLOW_GENERATION_7,
                     Categories.LIMIT_POKEMON,
-                    false)
-                    .prerequisite(Names.LIMIT_POKEMON, isTrue)
+                    true)
                     .supported(atLeastGeneration(7))
                     .build()
     );
@@ -276,8 +276,8 @@ public class Settings {
             new NumericSettingDefinition.Builder<>(
                     Names.BST_BUFF_NERF_PERCENT,
                     Categories.BASE_STAT_TOTALS,
-                    0,
-                    0, 50)
+                    1,
+                    1, 50)
                     .prerequisite(Names.RANDOMIZE_BASE_STAT_TOTALS, matchesEnum(BSTMod.RANDOM_BUFF_NERF))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
@@ -291,8 +291,8 @@ public class Settings {
                                             new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
                                                     matchesEnum(BSTMod.RANDOM_BUFF_NERF)),
                                             new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
-                                                    matchesEnum(BSTMod.SHUFFLE)))
-                            )).build(),
+                                                    matchesEnum(BSTMod.SHUFFLE)))))
+                    .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.BST_SHUFFLE_SEPARATE_LEGENDARIES,
                     Categories.BASE_STAT_TOTALS,
@@ -313,8 +313,8 @@ public class Settings {
                             new MultiSettingRestriction(false, false,
                                     notEvolveEveryLevelRestriction,
                                     new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
-                                            notMatchesEnum(BaseStatDistributionsMod.UNCHANGED)))
-                    ).build(),
+                                            notMatchesEnum(BaseStatDistributionsMod.UNCHANGED))))
+                    .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.BSDS_FOLLOW_MEGA_EVOS,
                     Categories.BASE_STAT_DISTRIBUTION,
@@ -728,17 +728,11 @@ public class Settings {
                     .prerequisite("RandomizeStaticPokemon", notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .supported(RomHandler::hasStaticMusicFix)
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "StaticPokemonLevelModifier",
-                    "StaticPokemon",
-                    false)
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "StaticPokemonLevelModifierPercentage",
                     "StaticPokemon",
-                    100,
+                    0,
                     -100, 155)
-                    .prerequisite("StaticPokemonLevelModifier", isTrue)
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -868,18 +862,12 @@ public class Settings {
                     false)
                     .prerequisite(randomPokemonMovesetsRestriction)
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "MovesetsForceGoodDamagingMoves",
-                    "PokemonMovesets",
-                    false)
-                    .prerequisite(randomPokemonMovesetsRestriction)
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "MovesetsForceGoodDamagingMovesPercentage",
                     "PokemonMovesets",
                     0,
                     0, 100)
-                    .prerequisite("MovesetsForceGoodDamagingMoves", isTrue)
+                    .prerequisite(randomPokemonMovesetsRestriction)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "EvolutionMovesForAllPokemon",
@@ -1120,17 +1108,13 @@ public class Settings {
                     .prerequisite(anyTrainerPokemonIsRandomRestriction)
                     .supported(atLeastGeneration(7))
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "PokemonLeagueHasUniquePokemon",
-                    "TrainerPokemon",
-                    false)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "PokemonLeagueUniquePokemonCount",
                     "TrainerPokemon",
-                    1,
-                    1, 2)
+                    0,
+                    0, 2)
+                    // this prerequisite can't be "anyTrainerPokemonIsRandomRestriction", because that doesn't
+                    // guarantee that the E4+champion get any random mons
                     .prerequisite("RandomizeTrainerPokemon", notMatchesEnum(TrainersMod.UNCHANGED))
                     .build(),
 
@@ -1147,21 +1131,15 @@ public class Settings {
             new NumericSettingDefinition.Builder<>(
                     "TrainersEvolveTheirPokemonPercentage",
                     "TrainerPokemon",
-                    100,
+                    0,
                     -100, 155)
                     .prerequisite("TrainersEvolveTheirPokemon", isTrue)
-                    .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "TrainerPokemonLevelModifier",
-                    "TrainerPokemon",
-                    false)
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     "TrainerPokemonLevelModifierPercentage",
                     "TrainerPokemon",
-                    100,
+                    0,
                     -100, 155)
-                    .prerequisite("TrainerPokemonLevelModifier", isTrue)
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1226,18 +1204,12 @@ public class Settings {
                                     new SimpleSettingRestriction<>("RandomizeAllyPokemon",
                                             notMatchesEnum(AllyPokemonMod.UNCHANGED))))
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "TotemPokemonLevelModifier",
-                    "TotemPokemon",
-                    false)
-                    .supported(RomHandler::hasTotemPokemon)
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "TotemPokemonLevelModifierPercentage",
                     "TotemPokemon",
                     0,
                     -100, 155)
-                    .prerequisite("TotemPokemonLevelModifier", isTrue)
+                    .supported(RomHandler::hasTotemPokemon)
                     .build()
     );
 
@@ -1385,17 +1357,11 @@ public class Settings {
                     false)
                     .prerequisite("RandomizeWildPokemonHeldItems", isTrue)
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "WildPokemonLevelModifier",
-                    "WildPokemon",
-                    false)
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "WildPokemonLevelModifierPercentage",
                     "WildPokemon",
-                    100,
+                    0,
                     -100, 155)
-                    .prerequisite("WildPokemonLevelModifier", isTrue)
                     .build()
     );
 
@@ -1438,18 +1404,12 @@ public class Settings {
                     false)
                     .prerequisite("RandomizeTMMoves", notMatchesEnum(TMMovesMod.UNCHANGED))
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "TMsForceGoodDamagingMoves",
-                    "TMsAndHMs",
-                    false)
-                    .prerequisite("RandomizeTMMoves", notMatchesEnum(TMMovesMod.UNCHANGED))
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "TMsForceGoodDamagingMovesPercentage",
                     "TMsAndHMs",
                     0,
                     0, 100)
-                    .prerequisite("TMsForceGoodDamagingMoves", isTrue)
+                    .prerequisite("RandomizeTMMoves", notMatchesEnum(TMMovesMod.UNCHANGED))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1512,18 +1472,12 @@ public class Settings {
                     false)
                     .prerequisite("RandomizeMoveTutorMoves", notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
-                    "MoveTutorsForceGoodDamagingMoves",
-                    "MoveTutors",
-                    false)
-                    .prerequisite("RandomizeMoveTutorMoves", notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     "MoveTutorsForceGoodDamagingMovesPercentage",
                     "MoveTutors",
                     0,
                     0, 100)
-                    .prerequisite("MoveTutorsForceGoodDamagingMoves", isTrue)
+                    .prerequisite("RandomizeMoveTutorMoves", notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(

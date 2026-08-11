@@ -687,7 +687,6 @@ public class RandomizerGUI {
 
         List<SettingUICoordinator<?>> settingUICoordinators = List.of(
                 //General Options
-                associateCheckBox(limitPokemonCheckBox, Settings.Names.LIMIT_POKEMON),
                 associateCheckBox(noRandomIntroMonCheckBox, Settings.Names.NO_RANDOM_INTRO_MON),
                 associateCheckBox(raceModeCheckBox, Settings.Names.RACE_MODE),
                 associateCheckBox(noIrregularAltFormesCheckBox, Settings.Names.NO_IRREGULAR_ALT_FORMES)

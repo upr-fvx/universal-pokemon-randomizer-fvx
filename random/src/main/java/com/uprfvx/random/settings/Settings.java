@@ -144,6 +144,64 @@ public class Settings {
         TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
         //Trainers Cosmetic
         TRAINERS_RANDOM_SHINY_POKEMON,
+
+        // *** WILD ENCOUNTERS ***
+        //Wild General
+        RANDOMIZE_WILD_ENCOUNTERS, WILD_NO_LEGENDARIES,  WILD_CATCH_EM_ALL, WILD_USE_SIMILAR_STRENGTH,
+        WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, WILD_ALLOW_ALT_FORMES,
+        //Wild Replacement Zone
+        WILD_REPLACEMENT_ZONE, WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES, WILD_REMOVE_TIME_BASED,
+        //Wild Types
+        WILD_TYPE_RESTRICTION, WILD_KEEP_TYPE_THEMES,
+        //Wild Evolutions
+        WILD_EVOLUTION_RESTRICTION, WILD_EVOLUTION_KEEP_RELATIONS,
+        //Wild Post Tweaks
+        WILD_SET_MINIMUM_CATCH_RATE, WILD_MINIMUM_CATCH_RATE_SELECTION, WILD_RANDOMIZE_HELD_ITEMS,
+        WILD_HELD_ITEMS_BAN_MINOR, WILD_USE_LEVEL_MODIFIER, WILD_LEVEL_MODIFIER_PERCENT,
+
+        // *** MOVE TEACHERS ***
+        //TM Moves
+        RANDOMIZE_TM_MOVES, TMS_BAN_OVERPOWERED, TMS_KEEP_FIELD_MOVES, TMS_FORCE_GOOD_DAMAGING,
+        TMS_GOOD_DAMAGING_PERCENT,
+        //TM And HM Compatability
+        RANDOMIZE_TM_AND_HM_COMPATABILITY, TM_COMPATABILITY_LEVEL_UP_SANITY, TM_COMPATABILITY_FOLLOW_EVOLUTIONS,
+        TMS_FULL_HM_COMPATABILITY,
+        //Move Tutor Moves
+        RANDOMIZE_TUTOR_MOVES, TUTORS_BAN_OVERPOWERED, TUTORS_KEEP_FIELD_MOVES, TUTORS_FORCE_GOOD_DAMAGING,
+        TUTORS_GOOD_DAMAGING_PERCENT,
+        //Move Tutor Compatability
+        RANDOMIZE_TUTOR_COMPATABILITY, TUTOR_COMPATABILITY_LEVEL_UP_SANITY, TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS,
+
+        // *** ITEMS ***
+        //Field Items
+        RANDOMIZE_FIELD_ITEMS, FIELD_ITEMS_BAN_MINOR,
+        //Shop Items General
+        SHOP_ITEMS_BALANCE_PRICES, SHOP_ITEMS_ADD_CHEAP_RARE_CANDY,
+        //Special Shop Items
+        RANDOMIZE_SPECIAL_SHOP_ITEMS, SHOP_ITEMS_BAN_MINOR, SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS,
+        SHOP_ITEMS_BAN_OVERPOWERED, SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS, SHOP_ITEMS_GUARANTEE_X_ITEMS,
+        //Pickup Items
+        RANDOMIZE_PICKUP_ITEMS, PICKUP_ITEMS_BAN_MINOR,
+
+        // *** TYPES ***
+        //Type Effectiveness
+        RANDOMIZE_TYPE_EFFECTIVENESS, TYPE_INVERSE_ADD_RANDOM_IMMUNITIES, UPDATE_TYPE_EFFECTIVENESS,
+
+        // *** GRAPHICS ***
+        //Pokemon Palettes
+        RANDOMIZE_SPECIES_PALETTES, PALETTES_FOLLOW_TYPES, PALETTES_FOLLOW_EVOLUTIONS, PALETTES_SHINY_FROM_NORMAL,
+        //Custom Player Graphics
+        //TODO: determine how we're handling these
+
+        // *** MISC ***
+        //Misc Tweaks
+        TWEAK_USE_SCALED_EXPERIENCE, TWEAK_NERF_X_ACCURACY, TWEAK_UPDATE_CRIT_RATE, TWEAK_FASTEST_TEXT,
+        TWEAK_RUN_INDOORS, TWEAK_RANDOMIZE_PC_POTION, TWEAK_ALLOW_PIKACHU_EVOLUTION, TWEAK_NATIONAL_DEX_AT_START,
+        TWEAK_FAST_EGG_HATCHING, TWEAK_FORCE_CHALLENGE_MODE, TWEAK_LOWER_CASE_SPECIES_NAMES,
+        TWEAK_RANDOMIZE_CATCHING_TUTORIAL, TWEAK_BAN_LUCKY_EGG, TWEAK_NO_FREE_LUCKY_EGG, TWEAK_BAN_BIG_MONEY_ITEMS,
+        TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, TWEAK_BALANCE_FOSSIL_LEVELS, TWEAK_RETAIN_TEMPORARY_FORMES,
+        TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
+        TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_GAIN;
     }
 
     public enum Category {
@@ -170,17 +228,41 @@ public class Settings {
         TRAINERS_GENERAL, TRAINER_MOVESETS, TRAINERS_ADDITIONAL_POKEMON, TRAINERS_HELD_ITEMS, TRAINERS_DIVERSE_TYPES,
         TRAINERS_BATTLE_STYLE, TRAINERS_COSMETIC, TOTEM_POKEMON,
 
+        // *** WILD ENCOUNTERS ***
+        WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES, WILD_EVOLUTIONS, WILD_POST_TWEAKS,
+
+        // *** MOVE TEACHERS ***
+        TM_MOVES, TM_AND_HM_COMPATABILITY, MOVE_TUTOR_MOVES, MOVE_TUTOR_COMPATABILITY,
+
+        // *** ITEMS ***
+        FIELD_ITEMS, SHOP_ITEMS_GENERAL, SPECIAL_SHOP_ITEMS, PICKUP_ITEMS,
+
+        // *** TYPES ***
+        TYPE_EFFECTIVENESS,
+
+        // *** GRAPHICS ***
+        SPECIES_PALETTES, CUSTOM_PLAYER_GRAPHICS,
+
         // *** MISC. TWEAKS ***
         MISC_TWEAKS;
 
         // ****** Supercategories ******/
-        public static final List<Category> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON, MISC_TWEAKS);
+        public static final List<Category> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
         public static final List<Category> SPECIES_TRAITS = List.of(SPECIES_BASE_STATISTIC_TOTALS,
                 SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS, SPECIES_TYPES,
                 SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
         public static final List<Category> GIVEN_POKEMON = List.of(STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES,
                 STARTER_BSTS, IN_GAME_TRADES, STATIC_ENCOUNTERS); //TODO: move statics to WILD_POKEMON
         public static final List<Category> MOVES_AND_MOVESETS = List.of(MOVE_TRAITS, SPECIES_MOVESETS);
+        public static final List<Category> WILD_ENCOUNTERS = List.of(WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES,
+                WILD_EVOLUTIONS, WILD_POST_TWEAKS);
+        public static final List<Category> MOVE_TEACHERS = List.of(TM_MOVES, TM_AND_HM_COMPATABILITY, MOVE_TUTOR_MOVES,
+                MOVE_TUTOR_COMPATABILITY);
+        public static final List<Category> ITEMS = List.of(FIELD_ITEMS, SHOP_ITEMS_GENERAL, SPECIAL_SHOP_ITEMS,
+                PICKUP_ITEMS);
+        public static final List<Category> TYPES = List.of(TYPE_EFFECTIVENESS);
+        public static final List<Category> GRAPHICS = List.of(SPECIES_PALETTES, CUSTOM_PLAYER_GRAPHICS);
+        public static final List<Category> MISC = List.of(MISC_TWEAKS);
     }
 
     //region general options
@@ -1382,7 +1464,7 @@ public class Settings {
     //region wild encounters
 
     public enum WildPokemonZoneMod {
-        NONE, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
+        SINGLE_ENCOUNTER, ENCOUNTER_SET, MAP, NAMED_LOCATION, GAME
     }
 
     public enum WildPokemonTypeMod {
@@ -1401,18 +1483,18 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> WILD_POKEMON = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizeWildPokemon",
-                    "WildPokemon",
+                    Name.RANDOMIZE_WILD_ENCOUNTERS,
+                    Category.WILD_GENERAL,
                     false,
                     null,
                     null
             ),
 
             new EnumSettingDefinition<>(
-                    "WildPokemonZone",
-                    "WildPokemon",
-                    WildPokemonZoneMod.NONE,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    Name.WILD_REPLACEMENT_ZONE,
+                    Category.WILD_REPLACEMENT_ZONE,
+                    WildPokemonZoneMod.SINGLE_ENCOUNTER,
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     null,
                     null,
                     Map.of(
@@ -1422,130 +1504,130 @@ public class Settings {
                     )
             ),
             new SimpleSettingDefinition<>(
-                    "SplitWildZoneByEncounterTypes",
-                    "WildPokemon",
+                    Name.WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES,
+                    Category.WILD_REPLACEMENT_ZONE,
                     false,
                     new MultiSettingRestriction(false, false,
-                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.NONE, false),
-                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.ENCOUNTER_SET, false)),
+                            new EnumMatchRestriction<>(Name.WILD_REPLACEMENT_ZONE, WildPokemonZoneMod.SINGLE_ENCOUNTER, false),
+                            new EnumMatchRestriction<>(Name.WILD_REPLACEMENT_ZONE, WildPokemonZoneMod.ENCOUNTER_SET, false)),
                     null
             ),
             new SimpleSettingDefinition<>( // this setting is definitely zone-y
-                    "UseTimeBasedEncounters",
-                    "WildPokemon",
+                    Name.WILD_REMOVE_TIME_BASED,
+                    Category.WILD_REPLACEMENT_ZONE,
                     true,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     RomHandler::hasTimeBasedEncounters
             ),
 
             new EnumSettingDefinition<>(
-                    "WildPokemonTypeRestriction",
-                    "WildPokemon",
+                    Name.WILD_TYPE_RESTRICTION,
+                    Category.WILD_TYPES,
                     WildPokemonTypeMod.NONE,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     null,
                     Map.of(WildPokemonTypeMod.RANDOM_THEMES,
-                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.GAME, false)),
+                            new EnumMatchRestriction<>(Name.WILD_REPLACEMENT_ZONE, WildPokemonZoneMod.GAME, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "KeepWildTypeThemes",
-                    "WildPokemon",
+                    Name.WILD_KEEP_TYPE_THEMES,
+                    Category.WILD_TYPES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "WildPokemonEvolutionRestriction",
-                    "WildPokemon",
+                    Name.WILD_EVOLUTION_RESTRICTION,
+                    Category.WILD_EVOLUTIONS,
                     WildPokemonEvolutionMod.NONE,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "KeepWildEvolutionFamilies",
-                    "WildPokemon",
+                    Name.WILD_EVOLUTION_KEEP_RELATIONS,
+                    Category.WILD_EVOLUTIONS,
                     false,
-                    new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.NONE, false),
+                    new EnumMatchRestriction<>(Name.WILD_REPLACEMENT_ZONE, WildPokemonZoneMod.SINGLE_ENCOUNTER, false),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "WildPokemonNoLegendaries",
-                    "WildPokemon",
+                    Name.WILD_NO_LEGENDARIES,
+                    Category.WILD_GENERAL,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "WildPokemonAllowAltFormes",
-                    "WildPokemon",
+                    Name.WILD_ALLOW_ALT_FORMES,
+                    Category.WILD_GENERAL,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     RomHandler::hasWildAltFormes
             ),
             new SimpleSettingDefinition<>(
-                    "WildPokemonSimilarStrength",
-                    "WildPokemon",
+                    Name.WILD_USE_SIMILAR_STRENGTH,
+                    Category.WILD_GENERAL,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BalanceLowLevelEncounters",
-                    "WildPokemon",
+                    Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL,
+                    Category.WILD_GENERAL,
                     false,
-                    new SimpleSettingRestriction<>("WildPokemonSimilarStrength", isTrue),
+                    new SimpleSettingRestriction<>(Name.WILD_USE_SIMILAR_STRENGTH, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "CatchEmAllMode",
-                    "WildPokemon",
+                    Name.WILD_CATCH_EM_ALL,
+                    Category.WILD_GENERAL,
                     false,
                     new MultiSettingRestriction(false, false,
-                            new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                            new SimpleSettingRestriction<>(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue),
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.GAME, false),
-                                    new SimpleSettingRestriction<>("SplitWildZoneByEncounterTypes", isTrue))
+                                    new EnumMatchRestriction<>(Name.WILD_REPLACEMENT_ZONE, WildPokemonZoneMod.GAME, false),
+                                    new SimpleSettingRestriction<>(Name.WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES, isTrue))
                     ),
                     null
             ),
 
             // Below: "wild pokemon" settings that don't require random wild pokemon
             new SimpleSettingDefinition<>(
-                    "WildPokemonCatchRate",
-                    "WildPokemon",
+                    Name.WILD_MINIMUM_CATCH_RATE_SELECTION,
+                    Category.WILD_POST_TWEAKS,
                     CatchRateMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeWildPokemonHeldItems",
-                    "WildPokemon",
+                    Name.WILD_RANDOMIZE_HELD_ITEMS,
+                    Category.WILD_POST_TWEAKS,
                     false,
                     null,
                     notOfGeneration(1)
             ),
             new SimpleSettingDefinition<>(
-                    "BanBadWildPokemonHeldItems",
-                    "WildPokemon",
+                    Name.WILD_HELD_ITEMS_BAN_MINOR,
+                    Category.WILD_POST_TWEAKS,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeWildPokemonHeldItems", isTrue),
+                    new SimpleSettingRestriction<>(Name.WILD_RANDOMIZE_HELD_ITEMS, isTrue),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "WildPokemonLevelModifier",
-                    "WildPokemon",
+                    Name.WILD_USE_LEVEL_MODIFIER,
+                    Category.WILD_POST_TWEAKS,
                     false,
                     null,
                     null
             ),
             new NumericSettingDefinition<>(
-                    "WildPokemonLevelModifierPercentage",
-                    "WildPokemon",
+                    Name.WILD_LEVEL_MODIFIER_PERCENT,
+                    Category.WILD_POST_TWEAKS,
                     100,
-                    new SimpleSettingRestriction<>("WildPokemonLevelModifier", isTrue),
+                    new SimpleSettingRestriction<>(Name.WILD_USE_LEVEL_MODIFIER, isTrue),
                     null,
                     -100, 155
             )
@@ -1573,156 +1655,156 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> TMS_HMS_AND_TUTORS = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizeTMMoves",
-                    "TMsAndHMs",
+                    Name.RANDOMIZE_TM_MOVES,
+                    Category.TM_MOVES,
                     TMMovesMod.UNCHANGED,
                     noMetronomeModeRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TMsNoGameBreakingMoves",
-                    "TMsAndHMs",
+                    Name.TMS_BAN_OVERPOWERED,
+                    Category.TM_MOVES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TM_MOVES,
                             doesNotMatchEnumValue(TMMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "KeepFieldMoveTMs",
-                    "TMsAndHMs",
+                    Name.TMS_KEEP_FIELD_MOVES,
+                    Category.TM_MOVES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TM_MOVES,
                             doesNotMatchEnumValue(TMMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TMsForceGoodDamagingMoves",
-                    "TMsAndHMs",
+                    Name.TMS_FORCE_GOOD_DAMAGING,
+                    Category.TM_MOVES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TM_MOVES,
                             doesNotMatchEnumValue(TMMovesMod.UNCHANGED)),
                     null
             ),
             new NumericSettingDefinition<>(
-                    "TMsForceGoodDamagingMovesPercentage",
-                    "TMsAndHMs",
+                    Name.TMS_GOOD_DAMAGING_PERCENT,
+                    Category.TM_MOVES,
                     0,
-                    new SimpleSettingRestriction<>("TMsForceGoodDamagingMoves", isTrue),
+                    new SimpleSettingRestriction<>(Name.TMS_FORCE_GOOD_DAMAGING, isTrue),
                     null,
                     0, 100
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeTMHMCompatibility",
-                    "TMsAndHMs",
+                    Name.RANDOMIZE_TM_AND_HM_COMPATABILITY,
+                    Category.TM_AND_HM_COMPATABILITY,
                     TMsHMsCompatibilityMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TMLevelupMoveSanity",
-                    "TMsAndHMs",
+                    Name.TM_COMPATABILITY_LEVEL_UP_SANITY,
+                    Category.TM_AND_HM_COMPATABILITY,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeTMMoves", TMMovesMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
-                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_MOVESETS, MovesetsMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TM_MOVES, TMMovesMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY, TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY, TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TMHMCompatibilityFollowEvolutions",
-                    "TMsAndHMs",
+                    Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS,
+                    Category.TM_AND_HM_COMPATABILITY,
                     false,
                     new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility",
+                                    new EnumMatchRestriction<>(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY,
                                             TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
-                                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility",
+                                    new EnumMatchRestriction<>(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY,
                                             TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE),
-                                    new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue))
+                                    new SimpleSettingRestriction<>(Name.TM_COMPATABILITY_LEVEL_UP_SANITY, isTrue))
                     ),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "FullHMCompatibility",
-                    "TMsAndHMs",
+                    Name.TMS_FULL_HM_COMPATABILITY,
+                    Category.TM_AND_HM_COMPATABILITY,
                     false,
-                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.FULL, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY, TMsHMsCompatibilityMod.FULL, false),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeMoveTutorMoves",
-                    "MoveTutors",
+                    Name.RANDOMIZE_TUTOR_MOVES,
+                    Category.MOVE_TUTOR_MOVES,
                     MoveTutorMovesMod.UNCHANGED,
                     noMetronomeModeRestriction,
                     RomHandler::hasMoveTutors
             ),
             new SimpleSettingDefinition<>(
-                    "MoveTutorsNoGameBreakingMoves",
-                    "MoveTutors",
+                    Name.TUTORS_BAN_OVERPOWERED,
+                    Category.MOVE_TUTOR_MOVES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TUTOR_MOVES,
                             doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "KeepFieldMoveTutors",
-                    "MoveTutors",
+                    Name.TUTORS_KEEP_FIELD_MOVES,
+                    Category.MOVE_TUTOR_MOVES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TUTOR_MOVES,
                             doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "MoveTutorsForceGoodDamagingMoves",
-                    "MoveTutors",
+                    Name.TUTORS_FORCE_GOOD_DAMAGING,
+                    Category.MOVE_TUTOR_MOVES,
                     false,
-                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TUTOR_MOVES,
                             doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED)),
                     null
             ),
             new NumericSettingDefinition<>(
-                    "MoveTutorsForceGoodDamagingMovesPercentage",
-                    "MoveTutors",
+                    Name.TUTORS_GOOD_DAMAGING_PERCENT,
+                    Category.MOVE_TUTOR_MOVES,
                     0,
-                    new SimpleSettingRestriction<>("MoveTutorsForceGoodDamagingMoves", isTrue),
+                    new SimpleSettingRestriction<>(Name.TUTORS_FORCE_GOOD_DAMAGING, isTrue),
                     null,
                     0, 100
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeMoveTutorCompatibility",
-                    "MoveTutors",
+                    Name.RANDOMIZE_TUTOR_COMPATABILITY,
+                    Category.MOVE_TUTOR_COMPATABILITY,
                     MoveTutorsCompatibilityMod.UNCHANGED,
                     null,
                     RomHandler::hasMoveTutors
             ),
             new SimpleSettingDefinition<>(
-                    "MoveTutorLevelupMoveSanity",
-                    "MoveTutors",
+                    Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY,
+                    Category.MOVE_TUTOR_COMPATABILITY,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeMoveTutors", MoveTutorMovesMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
-                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_MOVESETS, MovesetsMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TUTOR_MOVES, MoveTutorMovesMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TUTOR_COMPATABILITY, MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TUTOR_COMPATABILITY, MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "MoveTutorCompatibilityFollowEvolutions",
-                    "MoveTutors",
+                    Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS,
+                    Category.MOVE_TUTOR_COMPATABILITY,
                     false,
                     new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility",
+                                    new EnumMatchRestriction<>(Name.RANDOMIZE_TUTOR_COMPATABILITY,
                                             MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
-                                    new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility",
+                                    new EnumMatchRestriction<>(Name.RANDOMIZE_TUTOR_COMPATABILITY,
                                             MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE),
-                                    new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue))
+                                    new SimpleSettingRestriction<>(Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY, isTrue))
                     ),
                     null
             )
@@ -1748,98 +1830,98 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> ITEMS = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizeFieldItems",
-                    "FieldItems",
+                    Name.RANDOMIZE_FIELD_ITEMS,
+                    Category.FIELD_ITEMS,
                     FieldItemsMod.UNCHANGED,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BanBanFieldItems",
-                    "FieldItems",
+                    Name.FIELD_ITEMS_BAN_MINOR,
+                    Category.FIELD_ITEMS,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeFieldItems", FieldItemsMod.RANDOM),
-                            new EnumMatchRestriction<>("RandomizeFieldItems", FieldItemsMod.RANDOM_EVEN)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_FIELD_ITEMS, FieldItemsMod.RANDOM),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_FIELD_ITEMS, FieldItemsMod.RANDOM_EVEN)),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeSpecialShopItems",
-                    "ShopItems",
+                    Name.RANDOMIZE_SPECIAL_SHOP_ITEMS,
+                    Category.SPECIAL_SHOP_ITEMS,
                     ShopItemsMod.UNCHANGED,
                     null,
                     RomHandler::hasShopSupport
             ),
             new SimpleSettingDefinition<>(
-                    "BanBadShopItems",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_BAN_MINOR,
+                    Category.SPECIAL_SHOP_ITEMS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, ShopItemsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BanRegularShopItems",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS,
+                    Category.SPECIAL_SHOP_ITEMS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, ShopItemsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BanOverpoweredShopItems",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_BAN_OVERPOWERED,
+                    Category.SPECIAL_SHOP_ITEMS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, ShopItemsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "GuaranteeEvolutionItemsInShops",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS,
+                    Category.SPECIAL_SHOP_ITEMS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, ShopItemsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "GuaranteeXItemsInShops",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_GUARANTEE_X_ITEMS,
+                    Category.SPECIAL_SHOP_ITEMS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeSpecialShopItems", ShopItemsMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, ShopItemsMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "BalanceShopItemPrices",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_BALANCE_PRICES,
+                    Category.SHOP_ITEMS_GENERAL,
                     false,
                     null,
                     RomHandler::hasShopSupport
             ),
             new SimpleSettingDefinition<>(
-                    "AddCheapRareCandiesToShops",
-                    "ShopItems",
+                    Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY,
+                    Category.SHOP_ITEMS_GENERAL,
                     false,
                     null,
                     RomHandler::canChangeShopSizes
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizePickupItems",
-                    "PickupItems",
+                    Name.RANDOMIZE_PICKUP_ITEMS,
+                    Category.PICKUP_ITEMS,
                     PickupItemsMod.UNCHANGED,
                     null,
                     rh -> rh.abilitiesPerSpecies() > 0
             ),
             new SimpleSettingDefinition<>(
-                    "BanBadPickupItems",
-                    "PickupItems",
+                    Name.PICKUP_ITEMS_BAN_MINOR,
+                    Category.PICKUP_ITEMS,
                     false,
-                    new EnumMatchRestriction<>("RandomizePickupItems", PickupItemsMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_PICKUP_ITEMS, PickupItemsMod.RANDOM),
                     null
             )
     );
 
     //endregion
 
-    //region type effectiveness
+    //region types
 
     public enum TypeEffectivenessMod {
         UNCHANGED, RANDOM, RANDOM_BALANCED, KEEP_IDENTITIES, INVERSE
@@ -1847,27 +1929,27 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> TYPES = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizeTypeEffectiveness",
-                    "TypeEffectiveness",
+                    Name.RANDOMIZE_TYPE_EFFECTIVENESS,
+                    Category.TYPE_EFFECTIVENESS,
                     TypeEffectivenessMod.UNCHANGED,
                     null,
                     RomHandler::hasTypeEffectivenessSupport
             ),
             new SimpleSettingDefinition<>(
-                    "InverseTypesRandomImmunities",
-                    "TypeEffectiveness",
+                    Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES,
+                    Category.TYPE_EFFECTIVENESS,
                     false,
-                    new EnumMatchRestriction<>("RandomizeTypeEffectiveness", TypeEffectivenessMod.INVERSE),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_TYPE_EFFECTIVENESS, TypeEffectivenessMod.INVERSE),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "UpdateTypeEffectiveness",
-                    "TypeEffectiveness",
+                    Name.UPDATE_TYPE_EFFECTIVENESS,
+                    Category.TYPE_EFFECTIVENESS,
                     false,
                     null,
-                    rh -> rh.hasTypeEffectivenessSupport()
-                            && rh.generationOfPokemon() < TypeEffectivenessUpdater.UPDATE_TO_GEN
-                    )
+                    rh -> (rh.hasTypeEffectivenessSupport()
+                            && rh.generationOfPokemon() < TypeEffectivenessUpdater.UPDATE_TO_GEN)
+            )
     );
 
     //endregion
@@ -1880,31 +1962,31 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> GRAPHICS = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizePokemonPalettes",
-                    "PokemonPalettes",
+                    Name.RANDOMIZE_SPECIES_PALETTES,
+                    Category.SPECIES_PALETTES,
                     PokemonPalettesMod.UNCHANGED,
                     null,
                     RomHandler::hasPokemonPaletteSupport
             ),
             new SimpleSettingDefinition<>(
-                    "PokemonPalettesFollowTypes",
-                    "PokemonPalettes",
+                    Name.PALETTES_FOLLOW_TYPES,
+                    Category.SPECIES_PALETTES,
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_PALETTES, PokemonPalettesMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "PokemonPalettesFollowEvolutions",
-                    "PokemonPalettes",
+                    Name.PALETTES_FOLLOW_EVOLUTIONS,
+                    Category.SPECIES_PALETTES,
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_PALETTES, PokemonPalettesMod.RANDOM),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "PokemonPalettesShinyFromNormal",
-                    "PokemonPalettes",
+                    Name.PALETTES_SHINY_FROM_NORMAL,
+                    Category.SPECIES_PALETTES,
                     false,
-                    new EnumMatchRestriction<>("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_PALETTES, PokemonPalettesMod.RANDOM),
                     notOfGeneration(1)
             )
 
@@ -1916,32 +1998,32 @@ public class Settings {
     //region misc tweaks
 
     public static final List<SettingDefinition<?>> MISC_TWEAKS = List.of(
-            miscTweakDefinition("BWEXPPatch", MiscTweak.BW_EXP_PATCH),
-            miscTweakDefinition("NerfXAccuracy", MiscTweak.NERF_X_ACCURACY),
-            miscTweakDefinition("FixCritRate", MiscTweak.FIX_CRIT_RATE),
-            miscTweakDefinition("FastestText", MiscTweak.FASTEST_TEXT),
-            miscTweakDefinition("RunningShoesIndoors", MiscTweak.RUNNING_SHOES_INDOORS),
-            miscTweakDefinition("RandomizePCPotion", MiscTweak.RANDOMIZE_PC_POTION),
-            miscTweakDefinition("AllowPikachuEvolution", MiscTweak.ALLOW_PIKACHU_EVOLUTION),
-            miscTweakDefinition("NationalDexAtStart", MiscTweak.NATIONAL_DEX_AT_START),
-            miscTweakDefinition("FastEggHatching", MiscTweak.FAST_EGG_HATCHING),
-            miscTweakDefinition("ForceChallengeMode", MiscTweak.FORCE_CHALLENGE_MODE),
-            miscTweakDefinition("LowerCasePokemonNames", MiscTweak.LOWER_CASE_POKEMON_NAMES),
-            miscTweakDefinition("RandomizeCatchingTutorial", MiscTweak.RANDOMIZE_CATCHING_TUTORIAL),
-            miscTweakDefinition("BanLuckyEgg", MiscTweak.BAN_LUCKY_EGG),
-            miscTweakDefinition("NoFreeLuckyEgg", MiscTweak.NO_FREE_LUCKY_EGG),
-            miscTweakDefinition("BanBigManiacItems", MiscTweak.BAN_BIG_MANIAC_ITEMS),
-            miscTweakDefinition("SOSBattlesForAll", MiscTweak.SOS_BATTLES_FOR_ALL),
-            miscTweakDefinition("BalanceStaticLevels", MiscTweak.BALANCE_STATIC_LEVELS),
-            miscTweakDefinition("RetainAltFormes", MiscTweak.RETAIN_ALT_FORMES),
-            miscTweakDefinition("RunWithoutRunningShoes", MiscTweak.RUN_WITHOUT_RUNNING_SHOES),
-            miscTweakDefinition("FasterHPAndEXPBars", MiscTweak.FASTER_HP_AND_EXP_BARS),
-            miscTweakDefinition("FastDistortionWorld", MiscTweak.FAST_DISTORTION_WORLD),
-            miscTweakDefinition("UpdateRotomFormeTyping", MiscTweak.UPDATE_ROTOM_FORME_TYPING),
-            miscTweakDefinition("DisableLowHPMusic", MiscTweak.DISABLE_LOW_HP_MUSIC),
-            miscTweakDefinition("ReusableTMs", MiscTweak.REUSABLE_TMS),
-            miscTweakDefinition("ForgettableHMs", MiscTweak.FORGETTABLE_HMS),
-            miscTweakDefinition("NoEVYields", MiscTweak.NO_EV_YIELDS)
+            miscTweakDefinition(Name.TWEAK_USE_SCALED_EXPERIENCE, MiscTweak.BW_EXP_PATCH),
+            miscTweakDefinition(Name.TWEAK_NERF_X_ACCURACY, MiscTweak.NERF_X_ACCURACY),
+            miscTweakDefinition(Name.TWEAK_UPDATE_CRIT_RATE, MiscTweak.UPDATE_CRIT_RATE),
+            miscTweakDefinition(Name.TWEAK_FASTEST_TEXT, MiscTweak.FASTEST_TEXT),
+            miscTweakDefinition(Name.TWEAK_RUN_INDOORS, MiscTweak.RUNNING_SHOES_INDOORS),
+            miscTweakDefinition(Name.TWEAK_RANDOMIZE_PC_POTION, MiscTweak.RANDOMIZE_PC_POTION),
+            miscTweakDefinition(Name.TWEAK_ALLOW_PIKACHU_EVOLUTION, MiscTweak.ALLOW_PIKACHU_EVOLUTION),
+            miscTweakDefinition(Name.TWEAK_NATIONAL_DEX_AT_START, MiscTweak.NATIONAL_DEX_AT_START),
+            miscTweakDefinition(Name.TWEAK_FAST_EGG_HATCHING, MiscTweak.FAST_EGG_HATCHING),
+            miscTweakDefinition(Name.TWEAK_FORCE_CHALLENGE_MODE, MiscTweak.FORCE_CHALLENGE_MODE),
+            miscTweakDefinition(Name.TWEAK_LOWER_CASE_SPECIES_NAMES, MiscTweak.LOWER_CASE_POKEMON_NAMES),
+            miscTweakDefinition(Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL, MiscTweak.RANDOMIZE_CATCHING_TUTORIAL),
+            miscTweakDefinition(Name.TWEAK_BAN_LUCKY_EGG, MiscTweak.BAN_LUCKY_EGG),
+            miscTweakDefinition(Name.TWEAK_NO_FREE_LUCKY_EGG, MiscTweak.NO_FREE_LUCKY_EGG),
+            miscTweakDefinition(Name.TWEAK_BAN_BIG_MONEY_ITEMS, MiscTweak.BAN_BIG_MANIAC_ITEMS),
+            miscTweakDefinition(Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, MiscTweak.SOS_BATTLES_FOR_ALL),
+            miscTweakDefinition(Name.TWEAK_BALANCE_FOSSIL_LEVELS, MiscTweak.BALANCE_STATIC_LEVELS),
+            miscTweakDefinition(Name.TWEAK_RETAIN_TEMPORARY_FORMES, MiscTweak.RETAIN_ALT_FORMES),
+            miscTweakDefinition(Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES, MiscTweak.RUN_WITHOUT_RUNNING_SHOES),
+            miscTweakDefinition(Name.TWEAK_FASTER_BARS, MiscTweak.FASTER_HP_AND_EXP_BARS),
+            miscTweakDefinition(Name.TWEAK_FAST_DISTORTION_WORLD, MiscTweak.FAST_DISTORTION_WORLD),
+            miscTweakDefinition(Name.TWEAK_UPDATE_ROTOM_TYPING, MiscTweak.UPDATE_ROTOM_FORME_TYPING),
+            miscTweakDefinition(Name.TWEAK_DISABLE_LOW_HP_MUSIC, MiscTweak.DISABLE_LOW_HP_MUSIC),
+            miscTweakDefinition(Name.TWEAK_REUSABLE_TMS, MiscTweak.REUSABLE_TMS),
+            miscTweakDefinition(Name.TWEAK_FORGETTABLE_HMS, MiscTweak.FORGETTABLE_HMS),
+            miscTweakDefinition(Name.TWEAK_NO_EV_GAIN, MiscTweak.NO_EV_YIELDS)
     );
 
     //endregion

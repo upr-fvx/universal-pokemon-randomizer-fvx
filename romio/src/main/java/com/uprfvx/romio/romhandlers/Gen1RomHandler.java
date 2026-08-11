@@ -2204,7 +2204,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             available |= MiscTweak.NERF_X_ACCURACY.getValue();
         }
         if (romEntry.getTweakFile("CritRateTweak") != null) {
-            available |= MiscTweak.FIX_CRIT_RATE.getValue();
+            available |= MiscTweak.UPDATE_CRIT_RATE.getValue();
         }
         if (romEntry.getIntValue("TextDelayFunctionOffset") != 0) {
             available |= MiscTweak.FASTEST_TEXT.getValue();
@@ -2233,7 +2233,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             applyBWEXPPatch();
         } else if (tweak == MiscTweak.NERF_X_ACCURACY) {
             applyXAccNerfPatch();
-        } else if (tweak == MiscTweak.FIX_CRIT_RATE) {
+        } else if (tweak == MiscTweak.UPDATE_CRIT_RATE) {
             applyCritRatePatch();
         } else if (tweak == MiscTweak.FASTEST_TEXT) {
             applyFastestTextPatch();

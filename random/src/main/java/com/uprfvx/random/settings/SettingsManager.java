@@ -155,7 +155,7 @@ public class SettingsManager {
      * @return True if the listener was removed, false if it was not present.
      * @throws IllegalArgumentException If no setting of that name exists.
      */
-    public boolean removeListener(String settingName, SettingChangeListener listener) {
+    public boolean removeListener(Name settingName, SettingChangeListener listener) {
         if (settingStates.get(settingName) == null)
             throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
 

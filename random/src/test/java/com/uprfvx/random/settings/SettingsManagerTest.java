@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.Settings.Name;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -10,14 +11,14 @@ public class SettingsManagerTest {
 
     @Test
     public void canConstruct() {
-        SettingsManager manager = new SettingsManager();
+        new SettingsManager();
     }
 
     @Test
     public void canGetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        boolean value = manager.getSetting(Settings.Name.LIMIT_POKEMON);
+        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
         assert(value == false);
     }
 
@@ -25,8 +26,8 @@ public class SettingsManagerTest {
     public void canSetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
-        boolean value = manager.getSetting(Settings.Name.NO_RANDOM_INTRO_MON);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
+        boolean value = manager.getSetting(Name.NO_RANDOM_INTRO_MON);
         assert(value == true);
     }
 
@@ -34,19 +35,19 @@ public class SettingsManagerTest {
     public void canGetIntValue() {
         SettingsManager manager = new SettingsManager();
 
-        int value = manager.getSetting("UpdateMovesToGeneration");
+        int value = manager.getSetting(Name.UPDATE_MOVES_TO_GENERATION);
         assert (value == 9);
     }
 
     @Test
     public void canSetIntValue() {
         SettingsManager manager = new SettingsManager();
-        manager.setSetting("UpdateMoves", true);
-        boolean parent = manager.getSetting("UpdateMoves");
+        manager.setSetting(Name.UPDATE_MOVES, true);
+        boolean parent = manager.getSetting(Name.UPDATE_MOVES);
         assumeTrue(parent);
 
-        manager.setSetting("UpdateMovesToGeneration", 8);
-        int value = manager.getSetting("UpdateMovesToGeneration");
+        manager.setSetting(Name.UPDATE_MOVES_TO_GENERATION, 8);
+        int value = manager.getSetting(Name.UPDATE_MOVES_TO_GENERATION);
         assert (value == 8);
     }
 
@@ -54,7 +55,7 @@ public class SettingsManagerTest {
     public void canGetEnumValue() {
         SettingsManager manager = new SettingsManager();
 
-        Settings.BSTMod value = manager.getSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS);
+        Settings.BSTMod value = manager.getSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
         assert (value == Settings.BSTMod.UNCHANGED);
     }
 
@@ -62,8 +63,8 @@ public class SettingsManagerTest {
     public void canSetEnumValue() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
-        Settings.BSTMod value = manager.getSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
+        Settings.BSTMod value = manager.getSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
         assert (value == Settings.BSTMod.RANDOM);
     }
 
@@ -71,17 +72,17 @@ public class SettingsManagerTest {
     public void canGetSpeciesIndexValue() {
         SettingsManager manager = new SettingsManager();
 
-        int value = manager.getSetting("CustomStarter1");
+        int value = manager.getSetting(Name.STARTER_CUSTOM_1);
         assert (value == 0);
     }
 
     @Test
     public void canSetSpeciesIndexValue() {
         SettingsManager manager = new SettingsManager();
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
 
-        manager.setSetting("CustomStarter1", 8);
-        int value = manager.getSetting("CustomStarter1");
+        manager.setSetting(Name.STARTER_CUSTOM_1, 8);
+        int value = manager.getSetting(Name.STARTER_CUSTOM_1);
         assert (value == 8);
     }
 
@@ -92,7 +93,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(ClassCastException.class, () -> {
-            int value = manager.getSetting(Settings.Name.LIMIT_POKEMON);
+            int value = manager.getSetting(Name.LIMIT_POKEMON);
         });
     }
 
@@ -101,7 +102,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            manager.setSetting(Settings.Name.LIMIT_POKEMON, 3.0);
+            manager.setSetting(Name.LIMIT_POKEMON, 3.0);
         });
     }
 
@@ -109,8 +110,8 @@ public class SettingsManagerTest {
     public void setToOutOfRangeValueFails() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("UpdateMovesToGeneration", 1);
-        int value = manager.getSetting("UpdateMovesToGeneration");
+        manager.setSetting(Name.UPDATE_MOVES_TO_GENERATION, 1);
+        int value = manager.getSetting(Name.UPDATE_MOVES_TO_GENERATION);
         assert (value != 1);
     }
 
@@ -118,8 +119,8 @@ public class SettingsManagerTest {
     public void setToDisabledSettingFails() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("AllowGeneration1", true);
-        boolean value = manager.getSetting("AllowGeneration1");
+        manager.setSetting(Name.ALLOW_GENERATION_1, true);
+        boolean value = manager.getSetting(Name.ALLOW_GENERATION_1);
         assert (value != true);
     }
 
@@ -127,9 +128,9 @@ public class SettingsManagerTest {
     public void setToDisableableSettingWorksWhenEnabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 22);
-        int value = manager.getSetting(Settings.Name.BST_BUFF_NERF_PERCENT);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
+        int value = manager.getSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
         assert (value == 22);
     }
 
@@ -137,13 +138,13 @@ public class SettingsManagerTest {
     public void returnsToDefaultValueWhenSettingDisabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 22);
-        int value = manager.getSetting(Settings.Name.BST_BUFF_NERF_PERCENT);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
+        int value = manager.getSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
         assumeTrue(value == 22);
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        value = manager.getSetting(Settings.Name.BST_BUFF_NERF_PERCENT);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        value = manager.getSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
         assert (value != 22);
     }
 
@@ -153,11 +154,11 @@ public class SettingsManagerTest {
 
         //TODO: replace this (and all disabledValues tests) with a simpler case
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
-        manager.setSetting("CustomStarter1", 15);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
 
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -165,9 +166,9 @@ public class SettingsManagerTest {
     public void canSetToDisableableValueWhenEnabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert (value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -175,13 +176,13 @@ public class SettingsManagerTest {
     public void returnsToDefaultWhenCurrentValueDisabled() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
 
-        manager.setSetting("CustomStarter1", 15);
-        value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
+        value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -190,8 +191,8 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Settings.Name.NO_RANDOM_INTRO_MON, listener);
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
+        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
         assert(listener.manualSettingChangeCalled);
     }
 
@@ -200,8 +201,8 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener);
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
 
         assert(listener.possibleEnablementChangeCalled);
     }
@@ -211,10 +212,10 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
 
-        manager.addListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener);
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.possibleEnablementChangeCalled);
     }
 
@@ -223,11 +224,11 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
-        manager.setSetting("CustomStarter1", 15);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
 
-        manager.addListener("StartersTypeRestriction", listener);
-        manager.setSetting("CustomStarter1", 0);
+        manager.addListener(Name.STARTERS_TYPE_RESTRICTION, listener);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 0);
 
         assert (listener.possibleEnablementChangeCalled);
     }
@@ -237,10 +238,10 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
 
-        manager.addListener("StartersTypeRestriction", listener);
-        manager.setSetting("CustomStarter1", 15);
+        manager.addListener(Name.STARTERS_TYPE_RESTRICTION, listener);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
 
         assert (listener.possibleEnablementChangeCalled);
     }
@@ -250,13 +251,13 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 22);
-        manager.addListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
+        manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener);
 
         assumeFalse(listener.automaticSettingChangeCalled);
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.automaticSettingChangeCalled);
     }
 
@@ -265,14 +266,14 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
 
-        manager.addListener("StartersTypeRestriction", listener);
+        manager.addListener(Name.STARTERS_TYPE_RESTRICTION, listener);
 
-        manager.setSetting("CustomStarter1", 15);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
         assert(listener.automaticSettingChangeCalled);
     }
 
@@ -282,13 +283,13 @@ public class SettingsManagerTest {
         TestSettingsListener listener = new TestSettingsListener();
 
         manager.addUniversalListener(listener);
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
         assert(listener.manualSettingChangeCalled);
 
         listener.reset();
         assumeFalse(listener.manualSettingChangeCalled);
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         assert(listener.manualSettingChangeCalled);
     }
 
@@ -297,28 +298,28 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
 
         manager.addUniversalListener(listener);
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
-        manager.setSetting("CustomStarter1", 15);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
         assert (listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
-        manager.setSetting("CustomStarter1", 0);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 0);
         assert (listener.possibleEnablementChangeCalled);
     }
 
@@ -327,23 +328,23 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 22);
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.CUSTOM);
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
 
         manager.addUniversalListener(listener);
         assumeFalse(listener.automaticSettingChangeCalled);
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener.automaticSettingChangeCalled);
 
         listener.reset();
         assumeFalse(listener.automaticSettingChangeCalled);
 
-        manager.setSetting("CustomStarter1", 15);
+        manager.setSetting(Name.STARTER_CUSTOM_1, 15);
         assert(listener.automaticSettingChangeCalled);
     }
 
@@ -352,26 +353,26 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Settings.Name.NO_RANDOM_INTRO_MON, listener);
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
+        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
 
         listener.reset();
-        manager.removeListener(Settings.Name.NO_RANDOM_INTRO_MON, listener);
+        manager.removeListener(Name.NO_RANDOM_INTRO_MON, listener);
         assumeFalse(listener.manualSettingChangeCalled);
 
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, false);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, false);
         assert !listener.manualSettingChangeCalled;
 
         manager.addUniversalListener(listener);
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
 
         listener.reset();
         manager.removeUniversalListener(listener);
         assumeFalse(listener.manualSettingChangeCalled);
 
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, false);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, false);
         assert !listener.manualSettingChangeCalled;
     }
 
@@ -381,69 +382,69 @@ public class SettingsManagerTest {
         TestSettingsListener listener1 = new TestSettingsListener();
         TestSettingsListener listener2 = new TestSettingsListener();
 
-        manager.addListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener1);
-        manager.addListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener2);
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener1);
+        manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener2);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener1.possibleEnablementChangeCalled);
         assert(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 16);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 16);
         assert(listener1.manualSettingChangeCalled);
         assert(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener1.automaticSettingChangeCalled);
         assert(listener2.automaticSettingChangeCalled);
 
-        manager.removeListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener1);
+        manager.removeListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener1);
         manager.addUniversalListener(listener1);
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener1.possibleEnablementChangeCalled);
         assert(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 16);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 16);
         assert(listener1.manualSettingChangeCalled);
         assert(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener1.automaticSettingChangeCalled);
         assert(listener2.automaticSettingChangeCalled);
 
-        manager.removeListener(Settings.Name.BST_BUFF_NERF_PERCENT, listener2);
+        manager.removeListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener2);
         manager.addUniversalListener(listener2);
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         assert(listener1.possibleEnablementChangeCalled);
         assert(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 16);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 16);
         assert(listener1.manualSettingChangeCalled);
         assert(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(listener1.automaticSettingChangeCalled);
         assert(listener2.automaticSettingChangeCalled);
     }
@@ -453,20 +454,20 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Settings.Name.NO_RANDOM_INTRO_MON, listener);
-        manager.addListener(Settings.Name.NO_RANDOM_INTRO_MON, listener);
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
+        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
+        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
         assert listener.manualChangeCallCount == 1;
 
         listener.reset();
-        manager.removeListener(Settings.Name.NO_RANDOM_INTRO_MON, listener);
+        manager.removeListener(Name.NO_RANDOM_INTRO_MON, listener);
         assumeFalse(listener.manualSettingChangeCalled);
         assumeTrue(listener.manualChangeCallCount == 0);
 
         manager.addUniversalListener(listener);
         manager.addUniversalListener(listener);
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, false);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, false);
         assumeTrue(listener.manualSettingChangeCalled);
         assert listener.manualChangeCallCount == 1;
     }
@@ -474,15 +475,15 @@ public class SettingsManagerTest {
     @Test
     public void resetAllWorks() {
         SettingsManager manager = new SettingsManager();
-        manager.setSetting("UpdateMoves", true);
+        manager.setSetting(Name.UPDATE_MOVES, true);
 
-        manager.setSetting(Settings.Name.NO_RANDOM_INTRO_MON, true);
-        manager.setSetting("UpdateMovesToGeneration", 8);
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
+        manager.setSetting(Name.NO_RANDOM_INTRO_MON, true);
+        manager.setSetting(Name.UPDATE_MOVES_TO_GENERATION, 8);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
 
-        boolean boolValue = manager.getSetting(Settings.Name.NO_RANDOM_INTRO_MON);
-        int intValue = manager.getSetting("UpdateMovesToGeneration");
-        Settings.BSTMod enumValue = manager.getSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS);
+        boolean boolValue = manager.getSetting(Name.NO_RANDOM_INTRO_MON);
+        int intValue = manager.getSetting(Name.UPDATE_MOVES_TO_GENERATION);
+        Settings.BSTMod enumValue = manager.getSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
 
         assumeTrue(boolValue);
         assumeTrue(intValue == 8);
@@ -490,9 +491,9 @@ public class SettingsManagerTest {
 
         manager.resetAll();
 
-        boolValue = manager.getSetting(Settings.Name.NO_RANDOM_INTRO_MON);
-        intValue = manager.getSetting("UpdateMovesToGeneration");
-        enumValue = manager.getSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS);
+        boolValue = manager.getSetting(Name.NO_RANDOM_INTRO_MON);
+        intValue = manager.getSetting(Name.UPDATE_MOVES_TO_GENERATION);
+        enumValue = manager.getSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
 
         assert (boolValue != true);
         assert (intValue != 8);
@@ -504,7 +505,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("UpdateMoves", true);
+        manager.setSetting(Name.UPDATE_MOVES, true);
         manager.addUniversalListener(listener);
 
         manager.resetAll();
@@ -514,8 +515,8 @@ public class SettingsManagerTest {
 
         manager.removeUniversalListener(listener);
         listener.reset();
-        manager.setSetting("UpdateMoves", true);
-        manager.addListener("UpdateMoves", listener);
+        manager.setSetting(Name.UPDATE_MOVES, true);
+        manager.addListener(Name.UPDATE_MOVES, listener);
 
         manager.resetAll();
 
@@ -528,14 +529,14 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.setSetting("UpdateMoves", true);
+        manager.setSetting(Name.UPDATE_MOVES, true);
         manager.addUniversalListener(listener);
 
         manager.resetAll();
         assert !listener.automaticSettingChangeCalled;
 
-        manager.setSetting(Settings.Name.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        manager.setSetting(Settings.Name.BST_BUFF_NERF_PERCENT, 22);
+        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
+        manager.setSetting(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
         listener.reset();
 
         manager.resetAll();
@@ -543,8 +544,8 @@ public class SettingsManagerTest {
 
         manager.removeUniversalListener(listener);
         listener.reset();
-        manager.setSetting("UpdateMoves", true);
-        manager.addListener("UpdateMoves", listener);
+        manager.setSetting(Name.UPDATE_MOVES, true);
+        manager.addListener(Name.UPDATE_MOVES, listener);
 
         manager.resetAll();
 
@@ -556,24 +557,24 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
         manager.addUniversalListener(listener);
-        manager.setSetting("UpdateMoves", false);
+        manager.setSetting(Name.UPDATE_MOVES, false);
 
         assert !listener.manualSettingChangeCalled;
         assert !listener.automaticSettingChangeCalled;
         assert !listener.possibleEnablementChangeCalled;
 
-        manager.setSetting("UpdateMoves", true);
+        manager.setSetting(Name.UPDATE_MOVES, true);
         assert !listener.automaticSettingChangeCalled;
         assumeTrue(listener.manualSettingChangeCalled);
         assumeTrue(listener.possibleEnablementChangeCalled);
 
         listener.reset();
-        manager.setSetting("UpdateMoves", true);
+        manager.setSetting(Name.UPDATE_MOVES, true);
         assert !listener.manualSettingChangeCalled;
         assert !listener.automaticSettingChangeCalled;
         assert !listener.possibleEnablementChangeCalled;
 
-        manager.setSetting("UpdateMoves", false);
+        manager.setSetting(Name.UPDATE_MOVES, false);
         assert !listener.automaticSettingChangeCalled;
         assumeTrue(listener.manualSettingChangeCalled);
         assumeTrue(listener.possibleEnablementChangeCalled);

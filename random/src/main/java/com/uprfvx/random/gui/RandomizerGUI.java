@@ -513,7 +513,7 @@ public class RandomizerGUI {
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
 
         settingsManager = new SettingsManager();
-        associateSettingControls();
+        //associateSettingControls();
 
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
                 limitPokemonCheckBox, noIrregularAltFormesCheckBox, noPrematureEvosCheckbox,

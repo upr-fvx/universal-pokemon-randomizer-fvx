@@ -1,6 +1,5 @@
 package com.uprfvx.random.settings;
 
-import com.uprfvx.random.settings.restrictions.EnumMatchRestriction;
 import com.uprfvx.random.settings.restrictions.MultiSettingRestriction;
 import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
 import org.junit.jupiter.api.Test;
@@ -69,9 +68,9 @@ public class SettingRestrictionsTest {
     @Test
     public void enumMatchRestrictionWorks() {
         SettingsManager manager = new SettingsManager();
-        SimpleSettingRestriction<Settings.BSTMod> restriction = new EnumMatchRestriction<>(
+        SimpleSettingRestriction<Settings.BSTMod> restriction = new SimpleSettingRestriction<>(
                 Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
-                Settings.BSTMod.SHUFFLE);
+                matchesEnum(Settings.BSTMod.SHUFFLE));
 
         assert(restriction.test(manager) == false);
 
@@ -81,8 +80,8 @@ public class SettingRestrictionsTest {
         manager.setSetting(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
-        restriction = new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
-                Settings.BSTMod.SHUFFLE, false);
+        restriction = new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                notMatchesEnum(Settings.BSTMod.SHUFFLE));
 
         assert(restriction.test(manager) == false);
 
@@ -100,7 +99,8 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, false,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
+                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                        matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
         assert(restriction.test(manager) == false);
@@ -128,7 +128,8 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, false,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
+                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                        matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
         assert(restriction.test(manager) == false);
@@ -156,7 +157,8 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, true,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
+                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                        matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
         assert(restriction.test(manager) == true);
@@ -184,7 +186,8 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, true,
                 new SimpleSettingRestriction<>("NoRandomIntroMon", isTrue),
                 new SimpleSettingRestriction<>("UpdateMovesToGeneration", lessThanValue(8)),
-                new EnumMatchRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE)
+                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                        matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
         assert(restriction.test(manager) == true);

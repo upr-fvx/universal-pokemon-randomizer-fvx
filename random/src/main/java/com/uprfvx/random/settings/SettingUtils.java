@@ -9,6 +9,7 @@ import miscutils.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class SettingUtils {
@@ -127,22 +128,16 @@ public class SettingUtils {
         };
     }
 
-    /**
-     * Creates a set of minimums (suitable for use with a NumericSettingDefinition) such that each generation given
-     * supports only setting values higher than its generation number.
-     * @param generations Each generation that needs such a limit.
-     * @return A set of minimums as described.
-     */
-    public static List<Pair<Integer, Predicate<RomHandler>>> higherValueThanGeneration(int... generations) {
-        List<Pair<Integer, Predicate<RomHandler>>> supportMinimums = new ArrayList<>();
-        for(int generation : generations){
-            supportMinimums.add(new Pair<>(generation + 1, atLeastGeneration(generation)));
-        }
-        return Collections.unmodifiableList(supportMinimums);
-    }
-
     public static Predicate<RomHandler> isTweakAvailable(MiscTweak tweak) {
         return rom -> (rom.miscTweaksAvailable() & tweak.getValue()) != 0;
+    }
+
+    //endregion
+
+    //region romhandler functions
+
+    public static <V> Function<RomHandler, V> overrideForGeneration(int generation, V override) {
+        return rh -> rh.generationOfPokemon() == generation ? override : null;
     }
 
     //endregion

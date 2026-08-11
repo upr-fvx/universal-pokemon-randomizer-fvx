@@ -6,6 +6,7 @@ import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.basestats.BaseStats;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
@@ -341,7 +342,7 @@ public class Settings {
                     9,
                     6, 9)
                     .prerequisite(Names.UPDATE_BASE_STATS, isTrue)
-                    .supportedMinimums(higherValueThanGeneration(6, 7))
+                    .supportedMinimums(rh -> rh.generationOfPokemon() + 1)
                     .build(),
 
             new EnumSettingDefinition.Builder<>(
@@ -603,6 +604,11 @@ public class Settings {
         UNCHANGED, RANDOMIZE_GIVEN, RANDOMIZE_GIVEN_AND_REQUESTED
     }
 
+    private static final int STARTER_MIN_BST = 307;
+    private static final int STARTER_MAX_BST = 320;
+    private static final int STARTER_MIN_BST_GEN_1 = 249;
+    private static final int STARTER_MAX_BST_GEN_1 = 253;
+
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = List.of(
             new EnumSettingDefinition.Builder<>(
                     "RandomizeStarters",
@@ -616,12 +622,14 @@ public class Settings {
                     "CustomStarter1",
                     "Starters")
                     .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
+                    .supportedMaximums(rh -> rh.getSpecies().size() - 1)
                     .variableDefaultValue(rh -> rh.getStarters().get(0).getNumber())
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
                     "CustomStarter2",
                     "Starters")
                     .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
+                    .supportedMaximums(rh -> rh.getSpecies().size() - 1)
                     .variableDefaultValue(rh -> rh.getStarters().get(1).getNumber())
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
@@ -629,6 +637,7 @@ public class Settings {
                     "Starters")
                     .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
                     .supported(rh -> rh.getStarters().size() > 2)
+                    .supportedMaximums(rh -> rh.getSpecies().size() - 1)
                     .variableDefaultValue(rh -> rh.getStarters().get(2).getNumber())
                     .build(),
 
@@ -680,15 +689,32 @@ public class Settings {
                     false)
                     .prerequisite(anyStarterIsRandomRestriction)
                     .build(),
+            new NumericSettingDefinition.Builder<>(
+                    "LimitStartersMinimumBSTValue",
+                    "Starters",
+                    STARTER_MIN_BST,
+                    1, BaseStats.STAT_MAX * 6)
+                    .prerequisite("LimitStartersMinimumBST", isTrue)
+                    .variableDefaultValue(overrideForGeneration(1, STARTER_MIN_BST_GEN_1))
+                    .supportedMaximums(overrideForGeneration(1, BaseStats.STAT_MAX * 5))
+                    .build(),
             new SimpleSettingDefinition.Builder<>(
                     "LimitStartersMaximumBST",
                     "Starters",
                     false)
                     .prerequisite(anyStarterIsRandomRestriction)
                     .build(),
-            // TODO: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue;
-            //  these need a variable default value depending on RomHandler
-            // TODO also: They should ideally have a special enablement constraint, such that Minimum's max is the value
+            new NumericSettingDefinition.Builder<>(
+                    "LimitStartersMaximumBSTValue",
+                    "Starters",
+                    STARTER_MAX_BST,
+                    1, BaseStats.STAT_MAX * 6)
+                    .prerequisite("LimitStartersMaximumBST", isTrue)
+                    .variableDefaultValue(overrideForGeneration(1, STARTER_MAX_BST_GEN_1))
+                    .supportedMaximums(overrideForGeneration(1, BaseStats.STAT_MAX * 5))
+                    .build(),
+            // TODO also: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue
+            //  should ideally have a special enablement constraint, such that Minimum's max is the value
             //  of Maximum, and Maximum's min is the value of Minimum.
 
             new SimpleSettingDefinition.Builder<>(
@@ -831,7 +857,7 @@ public class Settings {
                     9,
                     2, 9)
                     .prerequisite("UpdateMoves", isTrue)
-                    .supportedMinimums(higherValueThanGeneration(2, 3, 4, 5, 6, 7))
+                    .supportedMinimums(rh -> rh.generationOfPokemon() + 1)
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(

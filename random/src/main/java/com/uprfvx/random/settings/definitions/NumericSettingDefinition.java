@@ -26,8 +26,8 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
         protected final N maximum;
         protected List<Pair<N, SettingRestriction>> restrictedMinimums;
         protected List<Pair<N, SettingRestriction>> restrictedMaximums;
-        protected List<Pair<N, Predicate<RomHandler>>> supportedMinimums;
-        protected List<Pair<N, Predicate<RomHandler>>> supportedMaximums;
+        protected Function<RomHandler, N> supportedMinimums;
+        protected Function<RomHandler, N> supportedMaximums;
 
         public Builder(String name, String category, N defaultValue, N minimum, N maximum) {
             super(name, category, defaultValue);
@@ -45,12 +45,12 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
             return self();
         }
 
-        public B supportedMinimums(List<Pair<N, Predicate<RomHandler>>> supportedMinimums) {
+        public B supportedMinimums(Function<RomHandler, N> supportedMinimums) {
             this.supportedMinimums = supportedMinimums;
             return self();
         }
 
-        public B supportedMaximums(List<Pair<N, Predicate<RomHandler>>> supportedMaximums) {
+        public B supportedMaximums(Function<RomHandler, N> supportedMaximums) {
             this.supportedMaximums = supportedMaximums;
             return self();
         }
@@ -73,8 +73,8 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
 
     final List<Pair<N, SettingRestriction>> restrictedMinimums;
     final List<Pair<N, SettingRestriction>> restrictedMaximums;
-    final List<Pair<N, Predicate<RomHandler>>> supportedMinimums;
-    final List<Pair<N, Predicate<RomHandler>>> supportedMaximums;
+    final Function<RomHandler, N> supportedMinimums;
+    final Function<RomHandler, N> supportedMaximums;
 
     /**
      * Creates a new NumericSettingDefinition.
@@ -87,8 +87,12 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      * @param maximum The maximum allowed value.
      * @param restrictedMinimums A set of additional minimums which apply when the associated restrictions return TRUE.
      * @param restrictedMaximums A set of additional maximums which apply when the associated restrictions return TRUE.
-     * @param supportedMinimums A set of additional minimums which apply when the associated predicates return TRUE.
-     * @param supportedMaximums A set of additional maximums which apply when the associated predicates return TRUE.
+     * @param supportedMinimums A function that returns an additional minimum, depending on RomHandler.
+     *                          This minimum must be >= the normal minimum.
+     *                          If the function returns null, the normal minimum is used.
+     * @param supportedMaximums A function that returns an additional maximum, depending on RomHandler.
+     *                          This maximum must be <= the normal maximum.
+     *                          If the function returns null, the normal maximum is used.
      */
     public NumericSettingDefinition(String name, String category, N defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
@@ -96,11 +100,11 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
                                     N minimum, N maximum,
                                     List<Pair<N, SettingRestriction>> restrictedMinimums,
                                     List<Pair<N, SettingRestriction>> restrictedMaximums,
-                                    List<Pair<N, Predicate<RomHandler>>> supportedMinimums,
-                                    List<Pair<N, Predicate<RomHandler>>> supportedMaximums) {
+                                    Function<RomHandler, N> supportedMinimums,
+                                    Function<RomHandler, N> supportedMaximums) {
         super(name, category, defaultValue, prerequisite, supported, variableDefaultValue,
                 composeSeconds(restrictedMinimums, restrictedMaximums),
-                !composeSeconds(supportedMinimums, supportedMaximums).isEmpty()
+                supportedMinimums != null || supportedMaximums != null
         );
 
         if (defaultValue.compareTo(minimum) < 0 || defaultValue.compareTo(maximum) > 0) {
@@ -112,8 +116,6 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
 
         checkIntegrity(restrictedMinimums, true);
         checkIntegrity(restrictedMaximums, false);
-        checkIntegrity(supportedMinimums, true);
-        checkIntegrity(supportedMaximums, false);
 
         this.restrictedMinimums = restrictedMinimums;
         this.restrictedMaximums = restrictedMaximums;
@@ -128,17 +130,17 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
             for(Pair<N, U> pair : list) {
                 if (isMinimums && pair.getKey().compareTo(defaultValue) > 0) {
                     throw new IllegalArgumentException("Default value for " + name +
-                            " is lower than a restricted/supported minimum!");
+                            " is lower than a restricted minimum!");
                 } else if (!isMinimums && pair.getKey().compareTo(defaultValue) < 0) {
                     throw new IllegalArgumentException("Default value for " + name +
-                            " is higher than a restricted/supported maximum!");
+                            " is higher than a restricted maximum!");
                 }
 
                 if (isMinimums && pair.getKey().compareTo(minimum) <= 0) {
-                    throw new IllegalArgumentException("Restricted/supported minimum for " + name +
+                    throw new IllegalArgumentException("Restricted minimum for " + name +
                             " is not higher than the absolute minimum!");
                 } else if (!isMinimums && pair.getKey().compareTo(maximum) >= 0) {
-                    throw new IllegalArgumentException("Restricted/supported maximum for " + name +
+                    throw new IllegalArgumentException("Restricted maximum for " + name +
                             " is not lower than the absolute maximum!");
                 }
             }
@@ -245,20 +247,18 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      * @param game The RomHandler to check for support.
      * @return The lowest supported value.
      */
-    public N minimumSupported(RomHandler game)
-    {
-        if(supportedMinimums == null)
+    public N minimumSupported(RomHandler game) {
+        if (supportedMinimums == null) {
             return minimum;
-
-        N rollingMinimum = minimum;
-
-        for (Pair<N, Predicate<RomHandler>> pair : supportedMinimums) {
-            if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMinimum) > 0) {
-                rollingMinimum = pair.getKey();
-            }
         }
-
-        return rollingMinimum;
+        N supportedMinimum = supportedMinimums.apply(game);
+        if (supportedMinimum == null) {
+            return minimum;
+        }
+        if (supportedMinimum.compareTo(minimum) < 0) {
+            throw new IllegalStateException("supportedMinimum is less than the absolute minimum");
+        }
+        return supportedMinimum;
     }
 
     /**
@@ -266,19 +266,17 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      * @param game The RomHandler to check for support.
      * @return The highest supported value.
      */
-    public N maximumSupported(RomHandler game)
-    {
-        if(supportedMaximums == null)
+    public N maximumSupported(RomHandler game) {
+        if (supportedMaximums == null) {
             return maximum;
-
-        N rollingMaximum = maximum;
-
-        for (Pair<N, Predicate<RomHandler>> pair : supportedMaximums) {
-            if (pair.getValue().test(game) && pair.getKey().compareTo(rollingMaximum) < 0) {
-                rollingMaximum = pair.getKey();
-            }
         }
-
-        return rollingMaximum;
+        N supportedMaximum = supportedMaximums.apply(game);
+        if (supportedMaximum == null) {
+            return maximum;
+        }
+        if (supportedMaximum.compareTo(maximum) < 0) {
+            throw new IllegalStateException("supportedMaximum is less than the absolute maximum");
+        }
+        return supportedMaximum;
     }
 }

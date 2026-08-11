@@ -41,12 +41,12 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
         }
 
         @Override
-        public B supportedMinimums(List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums) {
+        public B supportedMinimums(Function<RomHandler, Integer> supportedMinimums) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+        public B supportedMaximums(Function<RomHandler, Integer> supportedMaximums) {
             throw new UnsupportedOperationException();
         }
 
@@ -71,8 +71,8 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
                                             Integer minimum, Integer maximum,
                                             List<Pair<Integer, SettingRestriction>> restrictedMinimums,
                                             List<Pair<Integer, SettingRestriction>> restrictedMaximums,
-                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums,
-                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+                                            Function<RomHandler, Integer> supportedMinimums,
+                                            Function<RomHandler, Integer> supportedMaximums) {
         super(name, category, defaultValue, prerequisite, supported, variableDefaultValue, minimum, maximum,
                 restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums);
     }

@@ -29,26 +29,6 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
         }
 
         @Override
-        public B restrictedMinimums(List<Pair<Integer, SettingRestriction>> restrictedMinimums) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public B restrictedMaximums(List<Pair<Integer, SettingRestriction>> restrictedMaximums) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public B supportedMinimums(List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public B supportedMaximums(List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public SpeciesIndexSettingDefinition build() {
             return new SpeciesIndexSettingDefinition(
                     name, category,
@@ -69,8 +49,8 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
                                             Integer minimum, Integer maximum,
                                             List<Pair<Integer, SettingRestriction>> restrictedMinimums,
                                             List<Pair<Integer, SettingRestriction>> restrictedMaximums,
-                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums,
-                                            List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
+                                            Function<RomHandler, Integer> supportedMinimums,
+                                            Function<RomHandler, Integer> supportedMaximums) {
         super(name, category, defaultValue, prerequisite, supported, variableDefaultValue, minimum, maximum,
                 restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums);
     }

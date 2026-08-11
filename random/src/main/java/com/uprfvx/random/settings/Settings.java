@@ -128,7 +128,8 @@ public class Settings {
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_USE_SIMILAR_STRENGTH,
         TRAINERS_AVOID_DUPLICATES, TRAINERS_WEIGHT_TYPES, TRAINERS_USE_LOCAL, TRAINERS_NO_LEGENDARIES,
         TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLE,
-         TRAINERS_POKEMON_LEAGUE_HAVE_UNIQUE, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, //TODO: COMBINE
+        TRAINERS_POKEMON_LEAGUE_HAVE_UNIQUE, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, TRAINERS_EVOLVE_POKEMON, //TODO: COMBINE PL unique
+        TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_USE_LEVEL_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
         //That's a lot for one category. We should probably organize these more. TODO: that
         //Trainer Movesets
         TRAINERS_BETTER_MOVESETS_FOR_BOSSES, TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
@@ -143,7 +144,12 @@ public class Settings {
         //Trainers Diverse Types
         TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
         //Trainers Cosmetic
-        TRAINERS_RANDOM_SHINY_POKEMON,
+        TRAINERS_RANDOM_SHINY_POKEMON, TRAINERS_RANDOMIZE_NAMES, TRAINERS_RANDOMIZE_CLASSES,
+        //Trainers Battle Styles
+        TRAINERS_RANDOMIZE_BATTLE_STYLE, TRAINERS_SINGLE_STYLE_SELECTION,
+        //Totem Pokemon
+        RANDOMIZE_TOTEM_POKEMON, TOTEMS_RANDOMIZE_ALLIES, TOTEMS_RANDOMIZE_AURAS, TOTEMS_RANDOMIZE_HELD_ITEMS,
+        TOTEMS_ALLOW_ALT_FORMES, TOTEMS_USE_LEVEL_MODIFIER, TOTEMS_LEVEL_MODIFIER_PERCENT,
 
         // *** WILD ENCOUNTERS ***
         //Wild General
@@ -225,7 +231,7 @@ public class Settings {
         //(I mean, there's no room for it, so probably not, but logically... kinda?)
 
         // *** FOE POKEMON ***
-        TRAINERS_GENERAL, TRAINER_MOVESETS, TRAINERS_ADDITIONAL_POKEMON, TRAINERS_HELD_ITEMS, TRAINERS_DIVERSE_TYPES,
+        TRAINERS_GENERAL, TRAINERS_MOVESETS, TRAINERS_ADDITIONAL_POKEMON, TRAINERS_HELD_ITEMS, TRAINERS_DIVERSE_TYPES,
         TRAINERS_BATTLE_STYLE, TRAINERS_COSMETIC, TOTEM_POKEMON,
 
         // *** WILD ENCOUNTERS ***
@@ -1099,17 +1105,17 @@ public class Settings {
 
     private static final SettingRestriction anyTrainerPokemonIsRandomRestriction = new MultiSettingRestriction(
             true, false,
-            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
-            new SimpleSettingRestriction<>("AddPokemonToBossTrainers", isTrue),
-            new SimpleSettingRestriction<>("AddPokemonToImportantTrainers", isTrue),
-            new SimpleSettingRestriction<>("AddPokemonToRegularTrainers", isTrue)
+            new EnumMatchRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, TrainersMod.UNCHANGED, false),
+            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_BOSSES, isTrue),
+            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_IMPORTANT, isTrue),
+            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_REGULAR, isTrue)
     );
 
     private static final SettingRestriction addItemsToAnyTrainerRestriction = new MultiSettingRestriction(
             true, false,
-            new SimpleSettingRestriction<>("AddHeldItemsToBossTrainers", isTrue),
-            new SimpleSettingRestriction<>("AddHeldItemsToImportantTrainers", isTrue),
-            new SimpleSettingRestriction<>("AddHeldItemsToRegularTrainers", isTrue)
+            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES, isTrue),
+            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT, isTrue),
+            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR, isTrue)
     );
 
     public enum TotemPokemonMod {
@@ -1126,262 +1132,255 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> FOE_POKEMON = List.of(
             new SimpleSettingDefinition<>(
-                    "RandomizeTrainerPokemon",
-                    "TrainerPokemon",
+                    Name.RANDOMIZE_TRAINER_POKEMON,
+                    Category.TRAINERS_GENERAL,
                     TrainersMod.UNCHANGED,
                     null,
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "BetterMovesetsForBossTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES,
+                    Category.TRAINERS_MOVESETS,
                     false,
                     noMetronomeModeRestriction,
                     RomHandler::canGiveCustomMovesetsToBossTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "BetterMovesetsForImportantTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
+                    Category.TRAINERS_MOVESETS,
                     false,
                     noMetronomeModeRestriction,
                     RomHandler::canGiveCustomMovesetsToImportantTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "BetterMovesetsForRegularTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR,
+                    Category.TRAINERS_MOVESETS,
                     false,
                     noMetronomeModeRestriction,
                     RomHandler::canGiveCustomMovesetsToRegularTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "AdditionalPokemonForBossTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ADD_POKEMON_TO_BOSSES,
+                    Category.TRAINERS_ADDITIONAL_POKEMON,
                     false,
                     null,
                     RomHandler::canAddPokemonToBossTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "AdditionalPokemonForImportantTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ADD_POKEMON_TO_IMPORTANT,
+                    Category.TRAINERS_ADDITIONAL_POKEMON,
                     false,
                     null,
                     RomHandler::canAddPokemonToImportantTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "AdditionalPokemonForRegularTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ADD_POKEMON_TO_REGULAR,
+                    Category.TRAINERS_ADDITIONAL_POKEMON,
                     false,
                     null,
                     RomHandler::canAddPokemonToRegularTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "AddHeldItemsToBossTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES,
+                    Category.TRAINERS_HELD_ITEMS,
                     false,
                     null,
                     RomHandler::canAddHeldItemsToBossTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "AddHeldItemsToImportantTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT,
+                    Category.TRAINERS_HELD_ITEMS,
                     false,
                     null,
                     RomHandler::canAddHeldItemsToImportantTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "AddHeldItemsToRegularTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR,
+                    Category.TRAINERS_HELD_ITEMS,
                     false,
                     null,
                     RomHandler::canAddHeldItemsToRegularTrainers
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerHeldItemsConsumableOnly",
-                    "TrainerPokemon",
+                    Name.TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY,
+                    Category.TRAINERS_HELD_ITEMS,
                     false,
                     addItemsToAnyTrainerRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerHeldItemsSensible",
-                    "TrainerPokemon",
+                    Name.TRAINER_HELD_ITEMS_SENSIBLE_ONLY,
+                    Category.TRAINERS_HELD_ITEMS,
                     false,
                     addItemsToAnyTrainerRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerHeldItemsToHighestLevelOnly",
-                    "TrainerPokemon",
+                    Name.TRAINERS_HELD_ITEMS_ACES_ONLY,
+                    Category.TRAINERS_HELD_ITEMS,
                     false,
                     addItemsToAnyTrainerRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "ForceDiverseTypesForBossTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
+                    Category.TRAINERS_DIVERSE_TYPES,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
-                            new SimpleSettingRestriction<>("AddPokemonToBossTrainers", isTrue)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, TrainersMod.UNCHANGED, false),
+                            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_BOSSES, isTrue)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "ForceDiverseTypesForImportantTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES,
+                    Category.TRAINERS_DIVERSE_TYPES,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
-                            new SimpleSettingRestriction<>("AddPokemonToImportantTrainers", isTrue)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, TrainersMod.UNCHANGED, false),
+                            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_IMPORTANT, isTrue)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "ForceDiverseTypesForRegularTrainers",
-                    "TrainerPokemon",
+                    Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES,
+                    Category.TRAINERS_DIVERSE_TYPES,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
-                            new SimpleSettingRestriction<>("AddPokemonToRegularTrainers", isTrue)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, TrainersMod.UNCHANGED, false),
+                            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_REGULAR, isTrue)),
                     null
             ),
 
             new SimpleSettingDefinition<>(
-                    "RivalCarriesStarter",
-                    "TrainerPokemon",
+                    Name.TRAINERS_RIVAL_CARRIES_STARTER,
+                    Category.TRAINERS_GENERAL,
                     false,
                     new MultiSettingRestriction(false, false,
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.UNCHANGED, false),
-                                    new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false)),
-                            new EnumMatchRestriction<>("RandomizePokemonEvolutions", EvolutionsMod.RANDOM_EVERY_LEVEL, false)
-                    ),
+                                    new EnumMatchRestriction<>(Name.RANDOMIZE_STARTERS, StartersMod.UNCHANGED, false),
+                                    new EnumMatchRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, TrainersMod.UNCHANGED, false)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_EVOLUTIONS, EvolutionsMod.RANDOM_EVERY_LEVEL, false)
+                    ), //TODO: add other evolutions?
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonSimilarStrength",
-                    "TrainerPokemon",
+                    Name.TRAINERS_USE_SIMILAR_STRENGTH,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonAvoidDuplicates",
-                    "TrainerPokemon",
+                    Name.TRAINERS_AVOID_DUPLICATES,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonWeighTypes",
-                    "TrainerPokemon",
+                    Name.TRAINERS_WEIGHT_TYPES,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonUseLocal",
-                    "TrainerPokemon",
+                    Name.TRAINERS_USE_LOCAL,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonNoLegendaries",
-                    "TrainerPokemon",
+                    Name.TRAINERS_NO_LEGENDARIES,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonNoEarlyWonderGuard",
-                    "TrainerPokemon",
+                    Name.TRAINERS_NO_EARLY_WONDER_GUARD,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     rh -> rh.abilitiesPerSpecies() != 0
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonAllowAltFormes",
-                    "TrainerPokemon",
+                    Name.TRAINERS_ALLOW_ALT_FORMES,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     RomHandler::hasFunctionalFormes
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonSwapMegaEvolvables",
-                    "TrainerPokemon",
+                    Name.TRAINERS_SWAP_MEGA_EVOLVABLE,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     RomHandler::hasMegaEvolutions
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonRandomShinies",
-                    "TrainerPokemon",
-                    false,
-                    anyTrainerPokemonIsRandomRestriction,
-                    atLeastGeneration(7)
-            ),
-            new SimpleSettingDefinition<>(
-                    "PokemonLeagueHasUniquePokemon",
-                    "TrainerPokemon",
+                    Name.TRAINERS_POKEMON_LEAGUE_HAVE_UNIQUE,
+                    Category.TRAINERS_GENERAL,
                     false,
                     anyTrainerPokemonIsRandomRestriction,
                     null
             ),
             new NumericSettingDefinition<>(
-                    "PokemonLeagueUniquePokemonCount",
-                    "TrainerPokemon",
+                    Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT,
+                    Category.TRAINERS_GENERAL,
                     1,
-                    new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
+                    new EnumMatchRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, TrainersMod.UNCHANGED, false),
                     null,
                     1, 2
             ),
 
             new SimpleSettingDefinition<>(
-                    "TrainersEvolveTheirPokemon",
-                    "TrainerPokemon",
+                    Name.TRAINERS_EVOLVE_POKEMON,
+                    Category.TRAINERS_GENERAL,
                     false,
                     new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
-                            new EnumMatchRestriction<>("RandomizePokemonEvolutions",
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
                                     EvolutionsMod.RANDOM_EVERY_LEVEL, false)),
                     null
             ),
             new NumericSettingDefinition<>(
-                    "TrainersEvolveTheirPokemonPercentage",
-                    "TrainerPokemon",
+                    Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER,
+                    Category.TRAINERS_GENERAL,
                     100,
-                    new SimpleSettingRestriction<>("TrainersEvolveTheirPokemon", isTrue),
+                    new SimpleSettingRestriction<>(Name.TRAINERS_EVOLVE_POKEMON, isTrue),
                     null,
                     -100, 155
             ),
             new SimpleSettingDefinition<>(
-                    "TrainerPokemonLevelModifier",
-                    "TrainerPokemon",
+                    Name.TRAINERS_USE_LEVEL_MODIFIER,
+                    Category.TRAINERS_GENERAL,
                     false,
                     null,
                     null
             ),
             new NumericSettingDefinition<>(
-                    "TrainerPokemonLevelModifierPercentage",
-                    "TrainerPokemon",
+                    Name.TRAINERS_LEVEL_MODIFIER_PERCENT,
+                    Category.TRAINERS_GENERAL,
                     100,
-                    new SimpleSettingRestriction<>("TrainerPokemonLevelModifier", isTrue),
+                    new SimpleSettingRestriction<>(Name.TRAINERS_USE_LEVEL_MODIFIER, isTrue),
                     null,
                     -100, 155
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeBattleStyle",
-                    "TrainerPokemon",
+                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
+                    Category.TRAINERS_BATTLE_STYLE,
                     BattleStyle.Modification.UNCHANGED,
                     null,
                     atLeastGeneration(3)
             ),
             new EnumSettingDefinition<>(
-                    "SingleStyleForBattles",
-                    "TrainerPokemon",
+                    Name.TRAINERS_SINGLE_STYLE_SELECTION,
+                    Category.TRAINERS_BATTLE_STYLE,
                     BattleStyle.Style.SINGLE_BATTLE,
-                    new EnumMatchRestriction<>("RandomizeBattleStyle", BattleStyle.Modification.SINGLE_STYLE),
+                    new EnumMatchRestriction<>(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, BattleStyle.Modification.SINGLE_STYLE),
                     null,
                     null,
                     Map.of(
@@ -1391,69 +1390,76 @@ public class Settings {
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeTrainerNames",
-                    "TrainerPokemon",
+                    Name.TRAINERS_RANDOMIZE_NAMES,
+                    Category.TRAINERS_COSMETIC,
                     false,
                     null,
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeTrainerClassNames",
-                    "TrainerPokemon",
+                    Name.TRAINERS_RANDOMIZE_CLASSES,
+                    Category.TRAINERS_COSMETIC,
                     false,
                     null,
                     null
+            ),
+            new SimpleSettingDefinition<>(
+                    Name.TRAINERS_RANDOM_SHINY_POKEMON,
+                    Category.TRAINERS_COSMETIC,
+                    false,
+                    anyTrainerPokemonIsRandomRestriction,
+                    atLeastGeneration(7)
             ),
 
             new SimpleSettingDefinition<>(
-                    "RandomizeTotemPokemon",
-                    "TotemPokemon",
+                    Name.RANDOMIZE_TOTEM_POKEMON,
+                    Category.TOTEM_POKEMON,
                     TotemPokemonMod.UNCHANGED,
                     null,
                     RomHandler::hasTotemPokemon
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeAllyPokemon",
-                    "TotemPokemon",
+                    Name.TOTEMS_RANDOMIZE_ALLIES,
+                    Category.TOTEM_POKEMON,
                     AllyPokemonMod.UNCHANGED,
                     null,
                     RomHandler::hasTotemPokemon
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeTotemAuras",
-                    "TotemPokemon",
+                    Name.TOTEMS_RANDOMIZE_AURAS,
+                    Category.TOTEM_POKEMON,
                     AuraMod.UNCHANGED,
                     null,
                     RomHandler::hasTotemPokemon
             ),
             new SimpleSettingDefinition<>(
-                    "RandomizeTotemHeldItems",
-                    "TotemPokemon",
+                    Name.TOTEMS_RANDOMIZE_HELD_ITEMS,
+                    Category.TOTEM_POKEMON,
                     false,
                     null,
                     RomHandler::hasTotemPokemon
             ),
             new SimpleSettingDefinition<>(
-                    "TotemPokemonAllowAltFormes",
-                    "TotemPokemon",
+                    Name.TOTEMS_ALLOW_ALT_FORMES,
+                    Category.TOTEM_POKEMON,
                     false,
                     new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTotemPokemon", TotemPokemonMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeAllyPokemon", AllyPokemonMod.UNCHANGED, false)),
+                            new EnumMatchRestriction<>(Name.RANDOMIZE_TOTEM_POKEMON, TotemPokemonMod.UNCHANGED, false),
+                            new EnumMatchRestriction<>(Name.TOTEMS_RANDOMIZE_ALLIES, AllyPokemonMod.UNCHANGED, false)),
                     null
             ),
             new SimpleSettingDefinition<>(
-                    "TotemPokemonLevelModifier",
-                    "TotemPokemon",
+                    Name.TOTEMS_USE_LEVEL_MODIFIER,
+                    Category.TOTEM_POKEMON,
                     false,
                     null,
                     RomHandler::hasTotemPokemon
             ),
             new NumericSettingDefinition<>(
-                    "TotemPokemonLevelModifierPercentage",
-                    "TotemPokemon",
+                    Name.TOTEMS_LEVEL_MODIFIER_PERCENT,
+                    Category.TOTEM_POKEMON,
                     0,
-                    new SimpleSettingRestriction<>("TotemPokemonLevelModifier", isTrue),
+                    new SimpleSettingRestriction<>(Name.TOTEMS_USE_LEVEL_MODIFIER, isTrue),
                     null,
                     -100, 155
             )

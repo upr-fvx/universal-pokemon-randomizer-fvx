@@ -1,10 +1,7 @@
 package com.uprfvx.random.settings;
 
 import com.uprfvx.random.settings.definitions.SettingDefinition;
-import com.uprfvx.romio.romhandlers.RomHandlerTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.*;
 
@@ -17,13 +14,20 @@ import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 public class SettingsTest {
 
     @Test
-    public void canTestEverySettingEnabledWithoutCrash() {
+    public void canTestEverySettingEnabledWithoutException() {
         SettingsManager manager = new SettingsManager();
         Collection<SettingState<?>> allSettings = manager.testGetAllSettings();
 
         for (SettingState<?> setting : allSettings) {
-            System.out.println("Testing: " + setting.getDefinition().getName());
-            setting.currentValueIsEnabled(manager);
+            try {
+                setting.currentValueIsEnabled(manager);
+            } catch (Exception e) {
+                System.out.println("Setting had exception: " + setting.getDefinition().getName());
+                throw e;
+            }
+
+
+
         }
     }
 

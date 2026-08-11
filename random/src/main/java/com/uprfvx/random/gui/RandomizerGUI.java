@@ -698,7 +698,7 @@ public class RandomizerGUI {
 
     }
 
-    private SettingCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, String settingName) {
+    private SettingCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Settings.Name settingName) {
         return new SettingCheckBoxCoordinator(settingName, settingsManager, checkBox);
     }
 

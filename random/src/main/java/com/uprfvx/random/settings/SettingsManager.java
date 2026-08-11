@@ -42,17 +42,18 @@ import java.util.zip.CRC32;
 
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 import static com.uprfvx.random.settings.Settings.Name;
+import com.uprfvx.random.settings.Settings.Category;
 
 public class SettingsManager {
 
     //region private fields
 
-    private Map<String, SettingState<? extends Serializable>> settingStates;
-    private Map<String, Set<String>> dependencies;
+    private Map<Name, SettingState<? extends Serializable>> settingStates;
+    private Map<Name, Set<Name>> dependencies;
     //A reverse lookup of setting restrictions (full setting and value).
     //Needed so that dependent settings can be updated, and listeners alerted, when a setting is changed.
-    private Map<String, List<String>> categorizedNames;
-    private Map<String, Set<SettingChangeListener>> listeners;
+    private Map<Category, List<Name>> categorizedNames;
+    private Map<Name, Set<SettingChangeListener>> listeners;
 
     private Set<SettingChangeListener> universalListeners;
 
@@ -103,7 +104,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting of the given name,
      *                                  or if the type of the setting does not match the type of the value.
      */
-    public <T extends Serializable> boolean setSetting(String settingName, T newValue) {
+    public <T extends Serializable> boolean setSetting(Name settingName, T newValue) {
         if (newValue == null) {
             throw new IllegalArgumentException("Cannot set settings to null!");
         }
@@ -125,7 +126,7 @@ public class SettingsManager {
 
         alertListenersToManualChange(settingName);
 
-        Set<String> possibleChanges = checkDependencies(settingName);
+        Set<Name> possibleChanges = checkDependencies(settingName);
         if(possibleChanges != null)
             alertListenersToPossibleEnablementChanges(possibleChanges);
 
@@ -138,7 +139,7 @@ public class SettingsManager {
      * @param listener The listener to add.
      * @throws IllegalArgumentException If no setting of that name exists.
      */
-    public void addListener(String settingName, SettingChangeListener listener) {
+    public void addListener(Name settingName, SettingChangeListener listener) {
         if (settingStates.get(settingName) == null)
             throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
 
@@ -196,10 +197,10 @@ public class SettingsManager {
 
         this.game = game;
 
-        Set<String> changed = new HashSet<>();
+        Set<Name> changed = new HashSet<>();
 
-        for (Map.Entry<String, SettingState<?>> setting : settingStates.entrySet()) {
-            String name = setting.getKey();
+        for (Map.Entry<Name, SettingState<? extends Serializable>> setting : settingStates.entrySet()) {
+            Name name = setting.getKey();
             SettingState<?> state = setting.getValue();
 
             boolean didReset = false;
@@ -215,9 +216,9 @@ public class SettingsManager {
                     definition.hasValueSupportRestrictions(), didReset, game);
         }
 
-        Set<String> possiblyChanged = new HashSet<>();
-        for(String changedSettingName : changed) {
-            Set<String> changedDependencies = checkDependencies(changedSettingName);
+        Set<Name> possiblyChanged = new HashSet<>();
+        for(Name changedSettingName : changed) {
+            Set<Name> changedDependencies = checkDependencies(changedSettingName);
             if(changedDependencies != null)
                 possiblyChanged.addAll(changedDependencies);
         }
@@ -232,8 +233,8 @@ public class SettingsManager {
         RomHandler oldGame = game;
         game = null;
 
-        for (Map.Entry<String, SettingState<?>> setting : settingStates.entrySet()) {
-            String name = setting.getKey();
+        for (Map.Entry<Name, SettingState<? extends Serializable>> setting : settingStates.entrySet()) {
+            Name name = setting.getKey();
             SettingState<?> state = setting.getValue();
 
             SettingDefinition<?> definition = state.getDefinition();
@@ -251,7 +252,7 @@ public class SettingsManager {
      * @return True if the setting is enabled, false if it is disabled.
      * @throws IllegalArgumentException if there is no setting with the given name.
      */
-    public boolean isEnabled(String settingName) {
+    public boolean isEnabled(Name settingName) {
         return getUntypedDefinition(settingName).isEnabled(this);
     }
 
@@ -262,7 +263,7 @@ public class SettingsManager {
      * @return True if the setting is supported, false if it is unsupported.
      * @throws IllegalArgumentException if there is no setting with the given name.
      */
-    public boolean isSupported(String settingName) {
+    public boolean isSupported(Name settingName) {
         SettingDefinition<?> definition = getUntypedDefinition(settingName);
         //Pulling definition now for the checks performed.
 
@@ -282,7 +283,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting with the given name,
      *                                  or if the given value is the wrong type for the setting.
      */
-    public <T extends Serializable> boolean isValueValid(String settingName, T value)
+    public <T extends Serializable> boolean isValueValid(Name settingName, T value)
     {
         if(value == null)
             return false;
@@ -304,7 +305,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting with the given name,
      *                                  or if the given value is the wrong type for the setting.
      */
-    public <T extends Serializable> boolean isValueEnabled(String settingName, T value)
+    public <T extends Serializable> boolean isValueEnabled(Name settingName, T value)
     {
         if(!isValueValid(settingName, value))
             return false;
@@ -323,7 +324,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting with the given name,
      *                                  or if the given value is the wrong type for the setting.
      */
-    public <T extends Serializable> boolean isValueSupported(String settingName, T value)
+    public <T extends Serializable> boolean isValueSupported(Name settingName, T value)
     {
         if(!isValueValid(settingName, value))
             return false;
@@ -353,13 +354,13 @@ public class SettingsManager {
      * @param settingName The setting to reset.
      * @throws IllegalArgumentException if there is no setting with the given name.
      */
-    public void reset(String settingName) {
+    public void reset(Name settingName) {
         SettingState<?> state = getUntypedState(settingName);
         if (!state.isDefault()) {
             state.reset();
             alertListenersToManualChange(settingName);
 
-            Set<String> possiblyChanged = checkDependencies(settingName);
+            Set<Name> possiblyChanged = checkDependencies(settingName);
             alertListenersToPossibleEnablementChanges(possiblyChanged);
         }
     }
@@ -374,7 +375,7 @@ public class SettingsManager {
      * @return The setting's state.
      * @throws IllegalArgumentException if there is no setting of the given name.
      */
-    private SettingState<?> getUntypedState(String settingName) {
+    private SettingState<?> getUntypedState(Name settingName) {
         SettingState<?> state = settingStates.get(settingName);
         if(state == null)
         {
@@ -390,7 +391,7 @@ public class SettingsManager {
      * @return The setting's defintion.
      * @throws IllegalArgumentException if there is no setting with the given name.
      */
-    private SettingDefinition<?> getUntypedDefinition(String settingName) {
+    private SettingDefinition<?> getUntypedDefinition(Name settingName) {
         return getUntypedState(settingName).getDefinition();
     }
 
@@ -406,7 +407,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting of the given name.
      */
     @SuppressWarnings("unchecked")
-    private <T extends Serializable> SettingState<T> getTypedState(String settingName) {
+    private <T extends Serializable> SettingState<T> getTypedState(Name settingName) {
         SettingState<?> uncastState = getUntypedState(settingName);
         return (SettingState<T>) uncastState;
     }
@@ -420,7 +421,7 @@ public class SettingsManager {
      * @param <T> The type of the setting.
      * @throws IllegalArgumentException if there is no setting of the given name.
      */
-    private <T extends Serializable> SettingDefinition<T> getTypedDefinition(String settingName) {
+    private <T extends Serializable> SettingDefinition<T> getTypedDefinition(Name settingName) {
         SettingState<T> state = getTypedState(settingName);
 
         return state.getDefinition();
@@ -460,19 +461,19 @@ public class SettingsManager {
      * @return All settings which may have been enabled, disabled, partially enabled or disabled, or had their
      *         values change.
      */
-    private Set<String> checkDependencies(String settingName) {
+    private Set<Name> checkDependencies(Name settingName) {
 
-        Set<String> dependents = dependencies.get(settingName);
+        Set<Name> dependents = dependencies.get(settingName);
         if (dependents == null)
             return null;
 
-        Set<String> possiblyChanged = new HashSet<>(dependents);
+        Set<Name> possiblyChanged = new HashSet<>(dependents);
 
-        for (String dependentSetting : dependents) {
+        for (Name dependentSetting : dependents) {
             if (!settingStates.get(dependentSetting).currentValueIsEnabled(this)) {
                 settingStates.get(dependentSetting).reset();
                 alertListenersToAutomaticChange(dependentSetting);
-                Set<String> recursedDependents = checkDependencies(dependentSetting);
+                Set<Name> recursedDependents = checkDependencies(dependentSetting);
                 if (recursedDependents != null)
                     possiblyChanged.addAll(recursedDependents);
             }
@@ -485,28 +486,28 @@ public class SettingsManager {
      * Populates the map of settings (and other related maps) from the setting definitions in Settings.ALL_SETTINGS
      */
     private void initializeSettings() {
-        settingStates = new HashMap<>();
+        settingStates = new HashMap<Name, SettingState<? extends Serializable>>();
         dependencies = new HashMap<>();
         categorizedNames = new HashMap<>();
 
         for (SettingDefinition<?> definition : ALL_SETTINGS)
         {
             //Create an initial state from the definition (with default value)
-            String name = definition.getName();
+            Name name = definition.getName();
             SettingState<?> state = new SettingState<>(definition);
             settingStates.put(name, state);
 
             //Register this setting as dependent on each setting it's dependent on
-            List<String> settingsDependentOn = definition.getSettingsDependentOn();
-            for (String otherSetting : settingsDependentOn) {
-                Set<String> otherSettingDependents = dependencies.computeIfAbsent(otherSetting,
+            List<Name> settingsDependentOn = definition.getSettingsDependentOn();
+            for (Name otherSetting : settingsDependentOn) {
+                Set<Name> otherSettingDependents = dependencies.computeIfAbsent(otherSetting,
                         set -> new HashSet<>());
                 otherSettingDependents.add(name);
             }
 
             //Add the setting to its category, creating the category if needed.
-            List<String> category = categorizedNames.computeIfAbsent(definition.getCategory(),
-                    list -> new ArrayList<>());
+            List<Name> category = categorizedNames.computeIfAbsent(definition.getCategory(),
+                    _ -> new ArrayList<>());
             category.add(name);
         }
     }
@@ -526,7 +527,7 @@ public class SettingsManager {
      * @param settingName The setting in question.
      * @return A stream of every relevant listener.
      */
-    private Stream<SettingChangeListener> getAllListeners(String settingName) {
+    private Stream<SettingChangeListener> getAllListeners(Name settingName) {
         if(listeners.get(settingName) != null) {
             return Stream.concat(universalListeners.stream(), listeners.get(settingName).stream());
         } else {
@@ -534,11 +535,11 @@ public class SettingsManager {
         }
     }
 
-    private void alertListenersToPossibleEnablementChanges(Collection<String> settingNames) {
+    private void alertListenersToPossibleEnablementChanges(Collection<Name> settingNames) {
         if (settingNames == null)
             return;
 
-        for (String name : settingNames) {
+        for (Name name : settingNames) {
 
             Stream<SettingChangeListener> relevantListeners = getAllListeners(name);
             relevantListeners.forEach(l -> l.onPossibleEnablementChange(name, this));
@@ -546,14 +547,14 @@ public class SettingsManager {
         }
     }
 
-    private void alertListenersToManualChange(String settingName) {
+    private void alertListenersToManualChange(Name settingName) {
 
         Stream<SettingChangeListener> relevantListeners = getAllListeners(settingName);
         relevantListeners.forEach(l -> l.onManualSettingChange(settingName, this));
 
     }
 
-    private void alertListenersToAutomaticChange(String settingName) {
+    private void alertListenersToAutomaticChange(Name settingName) {
         Stream<SettingChangeListener> relevantListeners = getAllListeners(settingName);
         relevantListeners.forEach(l -> l.onAutomaticSettingChange(settingName, this));
     }
@@ -567,7 +568,7 @@ public class SettingsManager {
      * @param automaticallyReset If the setting has been automatically reset.
      * @param game The game being loaded, or null if it is being unloaded.
      */
-    private void alertListenersToSupportEvents(String settingName, boolean supportChanged, boolean currentlySupported,
+    private void alertListenersToSupportEvents(Name settingName, boolean supportChanged, boolean currentlySupported,
                                                boolean hasValueRestrictions, boolean automaticallyReset,
                                                RomHandler game) {
         if (!(supportChanged || hasValueRestrictions || automaticallyReset))

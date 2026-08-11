@@ -16,28 +16,28 @@ class TestSettingsListener implements SettingChangeListener {
     public int manualChangeCallCount = 0;
 
     @Override
-    public void onAutomaticSettingChange(String setting, SettingsManager manager) {
+    public void onAutomaticSettingChange(Settings.Name setting, SettingsManager manager) {
         automaticSettingChangeCalled = true;
     }
 
     @Override
-    public void onPossibleEnablementChange(String setting, SettingsManager manager) {
+    public void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager) {
         possibleEnablementChangeCalled = true;
     }
 
     @Override
-    public void onManualSettingChange(String setting, SettingsManager manager) {
+    public void onManualSettingChange(Settings.Name setting, SettingsManager manager) {
         manualSettingChangeCalled = true;
         manualChangeCallCount++;
     }
 
     @Override
-    public void onSupportChange(String setting, SettingsManager manager, boolean isSupported) {
+    public void onSupportChange(Settings.Name setting, SettingsManager manager, boolean isSupported) {
         supportChangeCalled = true;
     }
 
     @Override
-    public void onPossibleSupportedValuesChange(String setting, SettingsManager manager, RomHandler game) {
+    public void onPossibleSupportedValuesChange(Settings.Name setting, SettingsManager manager, RomHandler game) {
         possibleSupportedValuesChangeCalled = true;
     }
 

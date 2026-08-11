@@ -149,8 +149,8 @@ public class Settings {
     //region general options
 
     // needs to be up here since general options relies on it
-    public static final SettingRestriction notEvolveEveryLevelRestriction = new EnumMatchRestriction<>(
-            Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM_EVERY_LEVEL, false
+    public static final SettingRestriction notEvolveEveryLevelRestriction = new SimpleSettingRestriction<>(
+            Names.SPECIES_RANDOMIZE_EVOLUTIONS, notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL)
     );
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
@@ -278,7 +278,7 @@ public class Settings {
                     Categories.BASE_STAT_TOTALS,
                     0,
                     0, 50)
-                    .prerequisite(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF)
+                    .prerequisite(Names.RANDOMIZE_BASE_STAT_TOTALS, matchesEnum(BSTMod.RANDOM_BUFF_NERF))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.BSTS_FOLLOW_EVOLUTION,
@@ -288,14 +288,16 @@ public class Settings {
                             new MultiSettingRestriction(false, false,
                                 notEvolveEveryLevelRestriction,
                                 new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.RANDOM_BUFF_NERF),
-                                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE))
+                                    new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
+                                            matchesEnum(BSTMod.RANDOM_BUFF_NERF)),
+                                    new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
+                                            matchesEnum(BSTMod.SHUFFLE)))
                     )).build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.BST_SHUFFLE_SEPARATE_LEGENDARIES,
                     Categories.BASE_STAT_TOTALS,
                     false)
-                    .prerequisite(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.SHUFFLE)
+                    .prerequisite(Names.RANDOMIZE_BASE_STAT_TOTALS, matchesEnum(BSTMod.SHUFFLE))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -310,8 +312,8 @@ public class Settings {
                     .prerequisite(
                             new MultiSettingRestriction(false, false,
                                     notEvolveEveryLevelRestriction,
-                                    new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
-                                            BaseStatDistributionsMod.UNCHANGED, false))
+                                    new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_DISTRIBUTIONS,
+                                            notMatchesEnum(BaseStatDistributionsMod.UNCHANGED)))
                     ).build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.BSDS_FOLLOW_MEGA_EVOS,
@@ -352,13 +354,13 @@ public class Settings {
                     Names.SPECIES_FORCE_DUAL_TYPES,
                     Categories.SPECIES_TYPES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_TYPES, SpeciesTypesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_TYPES, notMatchesEnum(SpeciesTypesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_TYPES_FOLLOW_MEGA_EVO,
                     Categories.SPECIES_TYPES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_TYPES, SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_TYPES, matchesEnum(SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS))
                     .supported(RomHandler::hasMegaEvolutions)
                     .build(),
 
@@ -375,8 +377,8 @@ public class Settings {
                     .prerequisite(
                         new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
-                            new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES,
-                                    AbilitiesMod.UNCHANGED, false)))
+                            new SimpleSettingRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES,
+                                    notMatchesEnum(AbilitiesMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_ABILITIES_FOLLOW_MEGA_EVO,
@@ -389,37 +391,37 @@ public class Settings {
                     Names.SPECIES_ABILITIES_COMBINE_DUPES,
                     Categories.SPECIES_ABILITIES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_FORCE_TWO_ABILITIES,
                     Categories.SPECIES_ABILITIES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_BAN_WONDER_GUARD,
                     Categories.SPECIES_ABILITIES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_BAN_TRAPPING_ABILITIES,
                     Categories.SPECIES_ABILITIES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_BAN_NEGATIVE_ABILITIES,
                     Categories.SPECIES_ABILITIES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_BAN_MINOR_ABILITIES,
                     Categories.SPECIES_ABILITIES,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, AbilitiesMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
                     .build(),
 
             new EnumSettingDefinition.Builder<>(
@@ -432,43 +434,43 @@ public class Settings {
                     Names.SPECIES_EVOLUTIONS_SIMILAR_STRENGTH,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, matchesEnum(EvolutionsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_SAME_TYPE,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, notMatchesEnum(EvolutionsMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_MAX_THREE,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, matchesEnum(EvolutionsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_NO_CONVERGENCE,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, notMatchesEnum(EvolutionsMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_FORCE_CHANGE,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, notMatchesEnum(EvolutionsMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_FORCE_GROWTH,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.RANDOM)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, matchesEnum(EvolutionsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_ALLOW_ALTS,
                     Categories.SPECIES_EVOLUTIONS,
                     false)
-                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)
+                    .prerequisite(Names.SPECIES_RANDOMIZE_EVOLUTIONS, notMatchesEnum(EvolutionsMod.UNCHANGED))
                     .supported(ofGeneration(7))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
@@ -477,8 +479,10 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS, BSTMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS, EvolutionsMod.UNCHANGED, false)))
+                            new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
+                                    notMatchesEnum(BSTMod.UNCHANGED)),
+                            new SimpleSettingRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS,
+                                    notMatchesEnum(EvolutionsMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE,
@@ -552,7 +556,8 @@ public class Settings {
     private final static SettingRestriction anyStarterIsRandomRestriction = new MultiSettingRestriction(
             true, false,
             new MultiSettingRestriction(false, false,
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    new SimpleSettingRestriction<>("RandomizeStarters",
+                            matchesEnum(StartersMod.CUSTOM)),
                     new MultiSettingRestriction(true, false,
                             new SimpleSettingRestriction<>("CustomStarter1",
                                     equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
@@ -562,15 +567,19 @@ public class Settings {
                                     equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
                     )
             ),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
+            new SimpleSettingRestriction<>("RandomizeStarters",
+                    matchesEnum(StartersMod.COMPLETELY_RANDOM)),
+            new SimpleSettingRestriction<>("RandomizeStarters",
+                    matchesEnum(StartersMod.RANDOM_WITH_TWO_EVOLUTIONS)),
+            new SimpleSettingRestriction<>("RandomizeStarters",
+                    matchesEnum(StartersMod.RANDOM_BASIC))
     );
 
     private final static SettingRestriction allStartersAreRandomRestriction = new MultiSettingRestriction(
             true, false,
             new MultiSettingRestriction(false, false,
-                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.CUSTOM),
+                    new SimpleSettingRestriction<>("RandomizeStarters",
+                            matchesEnum(StartersMod.CUSTOM)),
                     new SimpleSettingRestriction<>("CustomStarter1",
                             equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES)),
                     new SimpleSettingRestriction<>("CustomStarter2",
@@ -578,9 +587,12 @@ public class Settings {
                     new SimpleSettingRestriction<>("CustomStarter3",
                             equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
             ),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.COMPLETELY_RANDOM),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_WITH_TWO_EVOLUTIONS),
-            new EnumMatchRestriction<>("RandomizeStarters", StartersMod.RANDOM_BASIC)
+            new SimpleSettingRestriction<>("RandomizeStarters",
+                    matchesEnum(StartersMod.COMPLETELY_RANDOM)),
+            new SimpleSettingRestriction<>("RandomizeStarters",
+                    matchesEnum(StartersMod.RANDOM_WITH_TWO_EVOLUTIONS)),
+            new SimpleSettingRestriction<>("RandomizeStarters",
+                    matchesEnum(StartersMod.RANDOM_BASIC))
     );
 
     public enum StaticPokemonMod {
@@ -603,17 +615,17 @@ public class Settings {
             new SpeciesIndexSettingDefinition.Builder<>(
                     "CustomStarter1",
                     "Starters")
-                    .prerequisite("RandomizeStarters", StartersMod.CUSTOM)
+                    .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
                     "CustomStarter2",
                     "Starters")
-                    .prerequisite("RandomizeStarters", StartersMod.CUSTOM)
+                    .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
                     "CustomStarter3",
                     "Starters")
-                    .prerequisite("RandomizeStarters", StartersMod.CUSTOM)
+                    .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
                     .supported(rh -> rh.getStarters().size() > 2)
                     .build(),
 
@@ -638,7 +650,7 @@ public class Settings {
             new TypeOrRandomSettingDefinition.Builder<>(
                     "SingleStarterType",
                     "Starters")
-                    .prerequisite("StartersTypeRestriction", StartersTypeMod.SINGLE_TYPE)
+                    .prerequisite("StartersTypeRestriction", matchesEnum(StartersTypeMod.SINGLE_TYPE))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -686,34 +698,34 @@ public class Settings {
                     "StaticPokemonRandomize600PlusBST",
                     "StaticPokemon",
                     false)
-                    .prerequisite("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false)
+                    .prerequisite("RandomizeStaticPokemon", notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "StaticPokemonLimitMainGameLegendaries",
                     "StaticPokemon",
                     false)
-                    .prerequisite("RandomizeStaticPokemon", StaticPokemonMod.SIMILAR_STRENGTH)
+                    .prerequisite("RandomizeStaticPokemon", matchesEnum(StaticPokemonMod.SIMILAR_STRENGTH))
                     .supported(RomHandler::hasMainGameLegendaries)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "StaticPokemonAllowAltFormes",
                     "StaticPokemon",
                     false)
-                    .prerequisite("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false)
+                    .prerequisite("RandomizeStaticPokemon", notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .supported(RomHandler::hasStarterAltFormes)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "StaticPokemonSwapMegaEvolvables",
                     "StaticPokemon",
                     false)
-                    .prerequisite("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false)
+                    .prerequisite("RandomizeStaticPokemon", notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .supported(RomHandler::hasMegaEvolutions)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "StaticPokemonFixMusic",
                     "StaticPokemon",
                     false)
-                    .prerequisite("RandomizeStaticPokemon", StaticPokemonMod.UNCHANGED, false)
+                    .prerequisite("RandomizeStaticPokemon", notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .supported(RomHandler::hasStaticMusicFix)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
@@ -738,27 +750,27 @@ public class Settings {
                     "InGameTradesRandomizeNicknames",
                     "InGameTrades",
                     false)
-                    .prerequisite("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false)
+                    .prerequisite("RandomizeInGameTrades", notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "InGameTradesRandomizeOTs",
                     "InGameTrades",
                     false)
-                    .prerequisite("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false)
+                    .prerequisite("RandomizeInGameTrades", notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "InGameTradesRandomizeIVs",
                     "InGameTrades",
                     false)
-                    .prerequisite("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false)
+                    .prerequisite("RandomizeInGameTrades", notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "InGameTradesRandomizeHeldItems",
                     "InGameTrades",
                     false)
-                    .prerequisite("RandomizeInGameTrades", InGameTradesMod.UNCHANGED, false)
+                    .prerequisite("RandomizeInGameTrades", notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build()
     );
@@ -773,12 +785,14 @@ public class Settings {
 
     private static final SettingRestriction randomPokemonMovesetsRestriction = new MultiSettingRestriction(
             true, false,
-            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.RANDOM_PREFER_SAME_TYPE),
-            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.COMPLETELY_RANDOM)
+            new SimpleSettingRestriction<>("RandomizePokemonMovesets",
+                    matchesEnum(MovesetsMod.RANDOM_PREFER_SAME_TYPE)),
+            new SimpleSettingRestriction<>("RandomizePokemonMovesets",
+                    matchesEnum(MovesetsMod.COMPLETELY_RANDOM))
     );
 
-    private static final SettingRestriction noMetronomeModeRestriction = new EnumMatchRestriction<>(
-            "RandomizePokemonMovesets", MovesetsMod.METRONOME_ONLY, false
+    private static final SettingRestriction noMetronomeModeRestriction = new SimpleSettingRestriction<>(
+            "RandomizePokemonMovesets", notMatchesEnum(MovesetsMod.METRONOME_ONLY)
     );
 
     public static final List<SettingDefinition<?>> MOVES_AND_MOVESETS = List.of(
@@ -890,7 +904,7 @@ public class Settings {
 
     private static final SettingRestriction anyTrainerPokemonIsRandomRestriction = new MultiSettingRestriction(
             true, false,
-            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
+            new SimpleSettingRestriction<>("RandomizeTrainerPokemon", notMatchesEnum(TrainersMod.UNCHANGED)),
             new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers", isTrue),
             new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers", isTrue),
             new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers", isTrue)
@@ -1004,7 +1018,8 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
+                            new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                    notMatchesEnum(TrainersMod.UNCHANGED)),
                             new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers", isTrue)))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
@@ -1013,7 +1028,8 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
+                                new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                        notMatchesEnum(TrainersMod.UNCHANGED)),
                             new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers", isTrue)))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
@@ -1022,7 +1038,8 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false),
+                                new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                        notMatchesEnum(TrainersMod.UNCHANGED)),
                             new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers", isTrue)))
                     .build(),
 
@@ -1033,9 +1050,12 @@ public class Settings {
                     .prerequisite(
                         new MultiSettingRestriction(false, false,
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("RandomizeStarters", StartersMod.UNCHANGED, false),
-                                    new EnumMatchRestriction<>("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false)),
-                            new EnumMatchRestriction<>("RandomizeSpeciesEvolutions", EvolutionsMod.RANDOM_EVERY_LEVEL, false)))
+                                    new SimpleSettingRestriction<>("RandomizeStarters",
+                                            notMatchesEnum(StartersMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                            notMatchesEnum(TrainersMod.UNCHANGED))),
+                            new SimpleSettingRestriction<>("RandomizeSpeciesEvolutions",
+                                    notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TrainerPokemonSimilarStrength",
@@ -1106,7 +1126,7 @@ public class Settings {
                     "TrainerPokemon",
                     1,
                     1, 2)
-                    .prerequisite("RandomizeTrainerPokemon", TrainersMod.UNCHANGED, false)
+                    .prerequisite("RandomizeTrainerPokemon", notMatchesEnum(TrainersMod.UNCHANGED))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1116,8 +1136,8 @@ public class Settings {
                     .prerequisite(
                         new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
-                            new EnumMatchRestriction<>("RandomizeSpeciesEvolutions",
-                                    EvolutionsMod.RANDOM_EVERY_LEVEL, false)))
+                            new SimpleSettingRestriction<>("RandomizeSpeciesEvolutions",
+                                    notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     "TrainersEvolveTheirPokemonPercentage",
@@ -1149,7 +1169,7 @@ public class Settings {
                     "SingleStyleForBattles",
                     "TrainerPokemon",
                     BattleStyle.Style.SINGLE_BATTLE)
-                    .prerequisite("RandomizeBattleStyle", BattleStyle.Modification.SINGLE_STYLE)
+                    .prerequisite("RandomizeBattleStyle", matchesEnum(BattleStyle.Modification.SINGLE_STYLE))
                     .supportedStates(Map.of(
                             BattleStyle.Style.TRIPLE_BATTLE,  ofGeneration(5, 6),
                             BattleStyle.Style.ROTATION_BATTLE,  ofGeneration(5, 6)))
@@ -1194,9 +1214,12 @@ public class Settings {
                     "TotemPokemonAllowAltFormes",
                     "TotemPokemon",
                     false)
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeTotemPokemon", TotemPokemonMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeAllyPokemon", AllyPokemonMod.UNCHANGED, false)))
+                    .prerequisite(
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizeTotemPokemon",
+                                            notMatchesEnum(TotemPokemonMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("RandomizeAllyPokemon",
+                                            notMatchesEnum(AllyPokemonMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TotemPokemonLevelModifier",
@@ -1258,8 +1281,10 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(false, false,
-                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.NONE, false),
-                            new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.ENCOUNTER_SET, false)))
+                            new SimpleSettingRestriction<>("WildPokemonZone",
+                                    notMatchesEnum(WildPokemonZoneMod.NONE)),
+                            new SimpleSettingRestriction<>("WildPokemonZone",
+                                    notMatchesEnum(WildPokemonZoneMod.ENCOUNTER_SET))))
                     .build(),
             new SimpleSettingDefinition.Builder<>( // this setting is definitely zone-y
                     "UseTimeBasedEncounters",
@@ -1274,8 +1299,10 @@ public class Settings {
                     "WildPokemon",
                     WildPokemonTypeMod.NONE)
                     .prerequisite("RandomizeWildPokemon", isTrue)
-                    .restrictedStates(Map.of(WildPokemonTypeMod.RANDOM_THEMES, 
-                        new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.GAME, false)))
+                    .restrictedStates(Map.of(
+                            WildPokemonTypeMod.RANDOM_THEMES,
+                            new SimpleSettingRestriction<>("WildPokemonZone",
+                                    notMatchesEnum(WildPokemonZoneMod.GAME))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "KeepWildTypeThemes",
@@ -1294,7 +1321,7 @@ public class Settings {
                     "KeepWildEvolutionFamilies",
                     "WildPokemon",
                     false)
-                    .prerequisite("WildPokemonZone", WildPokemonZoneMod.NONE, false)
+                    .prerequisite("WildPokemonZone", notMatchesEnum(WildPokemonZoneMod.NONE))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1330,7 +1357,8 @@ public class Settings {
                         new MultiSettingRestriction(false, false,
                             new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("WildPokemonZone", WildPokemonZoneMod.GAME, false),
+                                    new SimpleSettingRestriction<>("WildPokemonZone",
+                                            notMatchesEnum(WildPokemonZoneMod.GAME)),
                                     new SimpleSettingRestriction<>("SplitWildZoneByEncounterTypes", isTrue))))
                     .build(),
 
@@ -1397,19 +1425,19 @@ public class Settings {
                     "TMsNoGameBreakingMoves",
                     "TMsAndHMs",
                     false)
-                    .prerequisite("RandomizeTMMoves", doesNotMatchEnumValue(TMMovesMod.UNCHANGED))
+                    .prerequisite("RandomizeTMMoves", notMatchesEnum(TMMovesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "KeepFieldMoveTMs",
                     "TMsAndHMs",
                     false)
-                    .prerequisite("RandomizeTMMoves", doesNotMatchEnumValue(TMMovesMod.UNCHANGED))
+                    .prerequisite("RandomizeTMMoves", notMatchesEnum(TMMovesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TMsForceGoodDamagingMoves",
                     "TMsAndHMs",
                     false)
-                    .prerequisite("RandomizeTMMoves", doesNotMatchEnumValue(TMMovesMod.UNCHANGED))
+                    .prerequisite("RandomizeTMMoves", notMatchesEnum(TMMovesMod.UNCHANGED))
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     "TMsForceGoodDamagingMovesPercentage",
@@ -1430,10 +1458,14 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeTMMoves", TMMovesMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
-                            new EnumMatchRestriction<>("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)))
+                            new SimpleSettingRestriction<>("RandomizePokemonMovesets",
+                                    notMatchesEnum(MovesetsMod.UNCHANGED)),
+                            new SimpleSettingRestriction<>("RandomizeTMMoves",
+                                    notMatchesEnum(TMMovesMod.UNCHANGED)),
+                            new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                    matchesEnum(TMsHMsCompatibilityMod.COMPLETELY_RANDOM)),
+                            new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                    matchesEnum(TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TMHMCompatibilityFollowEvolutions",
@@ -1443,17 +1475,17 @@ public class Settings {
                         new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility",
-                                            TMsHMsCompatibilityMod.COMPLETELY_RANDOM),
-                                    new EnumMatchRestriction<>("RandomizeTMHMCompatibility",
-                                            TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE),
+                                    new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                            matchesEnum(TMsHMsCompatibilityMod.COMPLETELY_RANDOM)),
+                                    new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                            matchesEnum(TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)),
                                     new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "FullHMCompatibility",
                     "TMsAndHMs",
                     false)
-                    .prerequisite("RandomizeTMHMCompatibility", TMsHMsCompatibilityMod.FULL, false)
+                    .prerequisite("RandomizeTMHMCompatibility", notMatchesEnum(TMsHMsCompatibilityMod.FULL))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1467,19 +1499,19 @@ public class Settings {
                     "MoveTutorsNoGameBreakingMoves",
                     "MoveTutors",
                     false)
-                    .prerequisite("RandomizeMoveTutorMoves", doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED))
+                    .prerequisite("RandomizeMoveTutorMoves", notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "KeepFieldMoveTutors",
                     "MoveTutors",
                     false)
-                    .prerequisite("RandomizeMoveTutorMoves", doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED))
+                    .prerequisite("RandomizeMoveTutorMoves", notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "MoveTutorsForceGoodDamagingMoves",
                     "MoveTutors",
                     false)
-                    .prerequisite("RandomizeMoveTutorMoves", doesNotMatchEnumValue(MoveTutorMovesMod.UNCHANGED))
+                    .prerequisite("RandomizeMoveTutorMoves", notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     "MoveTutorsForceGoodDamagingMovesPercentage",
@@ -1501,10 +1533,14 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizePokemonMovesets", MovesetsMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeMoveTutorMoves", MoveTutorMovesMod.UNCHANGED, false),
-                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
-                            new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility", MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)))
+                            new SimpleSettingRestriction<>("RandomizePokemonMovesets",
+                                    notMatchesEnum(MovesetsMod.UNCHANGED)),
+                            new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                                    notMatchesEnum(MoveTutorMovesMod.UNCHANGED)),
+                            new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                    matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
+                            new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                    matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "MoveTutorCompatibilityFollowEvolutions",
@@ -1514,10 +1550,10 @@ public class Settings {
                         new MultiSettingRestriction(false, false,
                             notEvolveEveryLevelRestriction,
                             new MultiSettingRestriction(true, false,
-                                    new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility",
-                                            MoveTutorsCompatibilityMod.COMPLETELY_RANDOM),
-                                    new EnumMatchRestriction<>("RandomizeMoveTutorCompatibility",
-                                            MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE),
+                                    new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                            matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
+                                    new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                            matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
                                     new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue))))
                     .build()
     );
@@ -1552,8 +1588,10 @@ public class Settings {
                     false)
                     .prerequisite(
                         new MultiSettingRestriction(true, false,
-                            new EnumMatchRestriction<>("RandomizeFieldItems", FieldItemsMod.RANDOM),
-                            new EnumMatchRestriction<>("RandomizeFieldItems", FieldItemsMod.RANDOM_EVEN)))
+                            new SimpleSettingRestriction<>("RandomizeFieldItems",
+                                    matchesEnum(FieldItemsMod.RANDOM)),
+                            new SimpleSettingRestriction<>("RandomizeFieldItems",
+                                    matchesEnum(FieldItemsMod.RANDOM_EVEN))))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1566,31 +1604,31 @@ public class Settings {
                     "BanBadShopItems",
                     "ShopItems",
                     false)
-                    .prerequisite("RandomizeSpecialShopItems", ShopItemsMod.RANDOM)
+                    .prerequisite("RandomizeSpecialShopItems", matchesEnum(ShopItemsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "BanRegularShopItems",
                     "ShopItems",
                     false)
-                    .prerequisite("RandomizeSpecialShopItems", ShopItemsMod.RANDOM)
+                    .prerequisite("RandomizeSpecialShopItems", matchesEnum(ShopItemsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "BanOverpoweredShopItems",
                     "ShopItems",
                     false)
-                    .prerequisite("RandomizeSpecialShopItems", ShopItemsMod.RANDOM)
+                    .prerequisite("RandomizeSpecialShopItems", matchesEnum(ShopItemsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "GuaranteeEvolutionItemsInShops",
                     "ShopItems",
                     false)
-                    .prerequisite("RandomizeSpecialShopItems", ShopItemsMod.RANDOM)
+                    .prerequisite("RandomizeSpecialShopItems", matchesEnum(ShopItemsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "GuaranteeXItemsInShops",
                     "ShopItems",
                     false)
-                    .prerequisite("RandomizeSpecialShopItems", ShopItemsMod.RANDOM)
+                    .prerequisite("RandomizeSpecialShopItems", matchesEnum(ShopItemsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "BalanceShopItemPrices",
@@ -1615,7 +1653,7 @@ public class Settings {
                     "BanBadPickupItems",
                     "PickupItems",
                     false)
-                    .prerequisite("RandomizePickupItems", PickupItemsMod.RANDOM)
+                    .prerequisite("RandomizePickupItems", matchesEnum(PickupItemsMod.RANDOM))
                     .build()
     );
 
@@ -1638,7 +1676,7 @@ public class Settings {
                     "InverseTypesRandomImmunities",
                     "TypeEffectiveness",
                     false)
-                    .prerequisite("RandomizeTypeEffectiveness", TypeEffectivenessMod.INVERSE)
+                    .prerequisite("RandomizeTypeEffectiveness", matchesEnum(TypeEffectivenessMod.INVERSE))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "UpdateTypeEffectiveness",
@@ -1668,19 +1706,19 @@ public class Settings {
                     "PokemonPalettesFollowTypes",
                     "PokemonPalettes",
                     false)
-                    .prerequisite("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM)
+                    .prerequisite("RandomizePokemonPalettes", matchesEnum(PokemonPalettesMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "PokemonPalettesFollowEvolutions",
                     "PokemonPalettes",
                     false)
-                    .prerequisite("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM)
+                    .prerequisite("RandomizePokemonPalettes", matchesEnum(PokemonPalettesMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "PokemonPalettesShinyFromNormal",
                     "PokemonPalettes",
                     false)
-                    .prerequisite("RandomizePokemonPalettes", PokemonPalettesMod.RANDOM)
+                    .prerequisite("RandomizePokemonPalettes", matchesEnum(PokemonPalettesMod.RANDOM))
                     .supported(notOfGeneration(1))
                     .build()
 

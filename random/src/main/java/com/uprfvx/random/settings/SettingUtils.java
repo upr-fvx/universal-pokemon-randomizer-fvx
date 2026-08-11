@@ -42,12 +42,18 @@ public class SettingUtils {
         return c -> c.compareTo(value) >= 0;
     }
 
-    public static <T extends Enum<T>> Predicate<T> matchesEnumValue(T value)
+    /**
+     * Returns a {@link Predicate} that returns true if its argument equals <code>value</code>.
+     */
+    public static <E extends Enum<E>> Predicate<E> matchesEnum(E value)
     {
         return e -> e == value;
     }
 
-    public static <T extends Enum<T>> Predicate<T> doesNotMatchEnumValue(T value)
+    /**
+     * Returns a {@link Predicate} that returns false if its argument equals <code>value</code>.
+     */
+    public static <E extends Enum<E>> Predicate<E> notMatchesEnum(E value)
     {
         return e -> e != value;
     }

@@ -44,7 +44,7 @@ public class SettingRestrictionsTest {
         SettingsManager manager = new SettingsManager();
         SimpleSettingRestriction<Settings.BSTMod> restriction = new SimpleSettingRestriction<>(
                 Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
-                matchesEnumValue(Settings.BSTMod.SHUFFLE));
+                matchesEnum(Settings.BSTMod.SHUFFLE));
 
         assert(restriction.test(manager) == false);
 
@@ -55,7 +55,7 @@ public class SettingRestrictionsTest {
         assert(restriction.test(manager) == true);
 
         restriction = new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
-                doesNotMatchEnumValue(Settings.BSTMod.SHUFFLE));
+                notMatchesEnum(Settings.BSTMod.SHUFFLE));
 
         assert(restriction.test(manager) == false);
 

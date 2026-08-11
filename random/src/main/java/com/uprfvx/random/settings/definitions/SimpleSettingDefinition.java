@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class SimpleSettingDefinition<V extends Serializable> extends SettingDefinition<V>  {
@@ -17,15 +18,22 @@ public class SimpleSettingDefinition<V extends Serializable> extends SettingDefi
 
         @Override
         public SimpleSettingDefinition<V> build() {
-            return new SimpleSettingDefinition<>(name, category, defaultValue, prerequisite, supported);
+            return new SimpleSettingDefinition<>(
+                    name, category,
+                    defaultValue,
+                    prerequisite, supported,
+                    variableDefaultValue
+            );
         }
     }
 
     //A simple SettingDefinition that makes no restrictions on values.
 
-    protected SimpleSettingDefinition(String name, String category, V defaultValue, SettingRestriction prerequisite,
-                                   Predicate<RomHandler> supported) {
-        super(name, category, defaultValue, prerequisite, supported, null, false);
+    protected SimpleSettingDefinition(String name, String category, V defaultValue,
+                                      SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                      Function<RomHandler, V> variableDefaultValue) {
+        super(name, category, defaultValue, prerequisite, supported, variableDefaultValue,
+                null, false);
     }
 
     @Override

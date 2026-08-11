@@ -7,6 +7,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 //TODO: StringSettingDefinition
@@ -27,6 +28,7 @@ public abstract class SettingDefinition<V extends Serializable> {
         protected final V defaultValue;
         protected SettingRestriction prerequisite;
         protected Predicate<RomHandler> supported;
+        protected Function<RomHandler, V> variableDefaultValue;
 
         protected Builder(String name, String category, V defaultValue) {
             this.name = name;
@@ -58,6 +60,11 @@ public abstract class SettingDefinition<V extends Serializable> {
             return self();
         }
 
+        public B variableDefaultValue(Function<RomHandler, V> variableDefaultValue) {
+            this.variableDefaultValue = variableDefaultValue;
+            return self();
+        }
+
         public abstract SettingDefinition<V> build();
     }
 
@@ -84,6 +91,10 @@ public abstract class SettingDefinition<V extends Serializable> {
     //If the conditions are not met, the setting will be hidden and ignored.
     private final Predicate<RomHandler> supported;
 
+    //A function that returns a variable default value depending on RomHandler.
+    //If it returns null, defaultValue will be used.
+    private final Function<RomHandler, V> variableDefaultValue;
+
     //A list of settings that disable or apply restrictions to this setting.
     //Different types of settings apply restrictions differently, so this list can only check if changes MIGHT occur,
     //not determine if they actually do occur or what those changes are.
@@ -93,38 +104,6 @@ public abstract class SettingDefinition<V extends Serializable> {
     // polled when a new game is loaded.
     private final boolean hasSupportRestrictions;
 
-
-    /**
-     *
-     * @param name
-     * @param category
-     * @param defaultValue
-     * @param prerequisite
-     * @param supported
-     * @param hasValueSupportRestrictions
-     * @param valueRestrictors
-     */
-    public SettingDefinition(String name, String category, V defaultValue,
-                             SettingRestriction prerequisite, Predicate<RomHandler> supported,
-                             boolean hasValueSupportRestrictions, List<String> valueRestrictors) {
-        this.name = name;
-        this.category = category;
-        this.defaultValue = defaultValue;
-        type = defaultValue.getClass();
-        this.prerequisite = prerequisite;
-        this.supported = supported;
-        Set<String> restrictors = new HashSet<>();
-        if(valueRestrictors != null) {
-             restrictors.addAll(valueRestrictors);
-        }
-        if (prerequisite != null)
-        {
-            restrictors.addAll(prerequisite.getRelevantSettingNames());
-        }
-        this.dependentOn = Collections.unmodifiableList(new ArrayList<>(restrictors));
-        this.hasSupportRestrictions = hasValueSupportRestrictions;
-    }
-
     /**
      * Creates a new SettingDefinition.
      * @param name The setting's name.
@@ -132,11 +111,13 @@ public abstract class SettingDefinition<V extends Serializable> {
      * @param defaultValue
      * @param prerequisite
      * @param supported
+     * @param variableDefaultValue
      * @param valueRestrictions
      * @param hasValueSupportRestrictions
      */
     public SettingDefinition(String name, String category, V defaultValue,
                              SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                             Function<RomHandler, V> variableDefaultValue,
                              Collection<SettingRestriction> valueRestrictions, boolean hasValueSupportRestrictions) {
         this.name = name;
         this.category = category;
@@ -144,6 +125,9 @@ public abstract class SettingDefinition<V extends Serializable> {
         type = defaultValue.getClass();
         this.prerequisite = prerequisite;
         this.supported = supported;
+        // TODO: make variableDefaultValue be used when relevant
+        this.variableDefaultValue = variableDefaultValue == null ?
+                _ -> null : variableDefaultValue;
 
         Set<String> restrictors = new HashSet<>();
         if (valueRestrictions != null) {

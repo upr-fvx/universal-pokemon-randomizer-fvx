@@ -7,6 +7,7 @@ import miscutils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -59,6 +60,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
             return new NumericSettingDefinition<>(
                     name, category, defaultValue,
                     prerequisite, supported,
+                    variableDefaultValue,
                     minimum, maximum,
                     restrictedMinimums, restrictedMaximums,
                     supportedMinimums, supportedMaximums
@@ -90,12 +92,13 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      */
     public NumericSettingDefinition(String name, String category, N defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                    Function<RomHandler, N> variableDefaultValue,
                                     N minimum, N maximum,
                                     List<Pair<N, SettingRestriction>> restrictedMinimums,
                                     List<Pair<N, SettingRestriction>> restrictedMaximums,
                                     List<Pair<N, Predicate<RomHandler>>> supportedMinimums,
                                     List<Pair<N, Predicate<RomHandler>>> supportedMaximums) {
-        super(name, category, defaultValue, prerequisite, supported,
+        super(name, category, defaultValue, prerequisite, supported, variableDefaultValue,
                 composeSeconds(restrictedMinimums, restrictedMaximums),
                 !composeSeconds(supportedMinimums, supportedMaximums).isEmpty()
         );

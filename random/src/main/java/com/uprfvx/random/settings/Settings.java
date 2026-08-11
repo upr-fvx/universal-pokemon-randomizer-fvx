@@ -616,17 +616,20 @@ public class Settings {
                     "CustomStarter1",
                     "Starters")
                     .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
+                    .variableDefaultValue(rh -> rh.getStarters().get(0).getNumber())
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
                     "CustomStarter2",
                     "Starters")
                     .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
+                    .variableDefaultValue(rh -> rh.getStarters().get(1).getNumber())
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
                     "CustomStarter3",
                     "Starters")
                     .prerequisite("RandomizeStarters", matchesEnum(StartersMod.CUSTOM))
                     .supported(rh -> rh.getStarters().size() > 2)
+                    .variableDefaultValue(rh -> rh.getStarters().get(2).getNumber())
                     .build(),
 
             new EnumSettingDefinition.Builder<>(

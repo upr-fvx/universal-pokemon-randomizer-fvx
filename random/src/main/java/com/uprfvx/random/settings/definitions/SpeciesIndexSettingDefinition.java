@@ -1,6 +1,5 @@
 package com.uprfvx.random.settings.definitions;
 
-import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.Species;
@@ -8,6 +7,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import miscutils.Pair;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
@@ -54,6 +54,7 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
                     name, category,
                     defaultValue,
                     prerequisite, supported,
+                    variableDefaultValue,
                     minimum, maximum,
                     restrictedMinimums, restrictedMaximums,
                     supportedMinimums, supportedMaximums
@@ -64,12 +65,13 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
     protected SpeciesIndexSettingDefinition(String name, String category,
                                             Integer defaultValue,
                                             SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                            Function<RomHandler, Integer> variableDefaultValue,
                                             Integer minimum, Integer maximum,
                                             List<Pair<Integer, SettingRestriction>> restrictedMinimums,
                                             List<Pair<Integer, SettingRestriction>> restrictedMaximums,
                                             List<Pair<Integer, Predicate<RomHandler>>> supportedMinimums,
                                             List<Pair<Integer, Predicate<RomHandler>>> supportedMaximums) {
-        super(name, category, defaultValue, prerequisite, supported, minimum, maximum,
+        super(name, category, defaultValue, prerequisite, supported, variableDefaultValue, minimum, maximum,
                 restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums);
     }
 

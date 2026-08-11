@@ -97,7 +97,7 @@ public class Settings {
         //Species' Abilities
         public static final String SPECIES_RANDOMIZE_ABILITIES = "RandomizeSpeciesAbilities";
         public static final String SPECIES_ABILITIES_FOLLOW_EVO = "SpeciesAbilitiesFollowEvolutions";
-        public static final String SPECIES_ABILITIES_FOLLOW_MEGA_EVO ="SpeciesAbilitiesFollowMegaEvolutions";
+        public static final String SPECIES_ABILITIES_FOLLOW_MEGA_EVO = "SpeciesAbilitiesFollowMegaEvolutions";
         public static final String SPECIES_ABILITIES_COMBINE_DUPES = "SpeciesCombineDuplicateAbilities";
         public static final String SPECIES_FORCE_TWO_ABILITIES = "SpeciesAlwaysHaveTwoAbilities";
         public static final String SPECIES_BAN_WONDER_GUARD = "SpeciesBanWonderGuard";
@@ -167,10 +167,10 @@ public class Settings {
                     false)
                     .build(),
 
-                            //TODO: make this setting actually work?
-                            // "this setting" is race mode?
-                            // I believe I was referring to "NoRandomIntroMon" but I cannot recall for sure anymore.
-                            //TODO investigate this todo i guess
+            //TODO: make this setting actually work?
+            // "this setting" is race mode?
+            // I believe I was referring to "NoRandomIntroMon" but I cannot recall for sure anymore.
+            //TODO investigate this todo i guess
             new SimpleSettingDefinition.Builder<>(
                     Names.RACE_MODE,
                     Categories.GENERAL_OPTIONS,
@@ -286,13 +286,13 @@ public class Settings {
                     false)
                     .prerequisite(
                             new MultiSettingRestriction(false, false,
-                                notEvolveEveryLevelRestriction,
-                                new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
-                                            matchesEnum(BSTMod.RANDOM_BUFF_NERF)),
-                                    new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
-                                            matchesEnum(BSTMod.SHUFFLE)))
-                    )).build(),
+                                    notEvolveEveryLevelRestriction,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
+                                                    matchesEnum(BSTMod.RANDOM_BUFF_NERF)),
+                                            new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
+                                                    matchesEnum(BSTMod.SHUFFLE)))
+                            )).build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.BST_SHUFFLE_SEPARATE_LEGENDARIES,
                     Categories.BASE_STAT_TOTALS,
@@ -375,10 +375,10 @@ public class Settings {
                     Categories.SPECIES_ABILITIES,
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            notEvolveEveryLevelRestriction,
-                            new SimpleSettingRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES,
-                                    notMatchesEnum(AbilitiesMod.UNCHANGED))))
+                            new MultiSettingRestriction(false, false,
+                                    notEvolveEveryLevelRestriction,
+                                    new SimpleSettingRestriction<>(Names.SPECIES_RANDOMIZE_ABILITIES,
+                                            notMatchesEnum(AbilitiesMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_ABILITIES_FOLLOW_MEGA_EVO,
@@ -478,11 +478,11 @@ public class Settings {
                     Categories.SPECIES_EVOLUTIONS,
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
-                                    notMatchesEnum(BSTMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS,
-                                    notMatchesEnum(EvolutionsMod.UNCHANGED))))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>(Names.RANDOMIZE_BASE_STAT_TOTALS,
+                                            notMatchesEnum(BSTMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>(Names.SPECIES_RANDOMIZE_EVOLUTIONS,
+                                            notMatchesEnum(EvolutionsMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE,
@@ -508,9 +508,9 @@ public class Settings {
                     Categories.SPECIES_EVOLUTIONS,
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>(Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE, isTrue),
-                            new SimpleSettingRestriction<>(Names.SPECIES_EVOLUTIONS_MAKE_EASIER, isTrue)))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>(Names.SPECIES_EVOLUTIONS_MAKE_POSSIBLE, isTrue),
+                                    new SimpleSettingRestriction<>(Names.SPECIES_EVOLUTIONS_MAKE_EASIER, isTrue)))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     Names.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
@@ -834,7 +834,7 @@ public class Settings {
                     9,
                     2, 9)
                     .prerequisite("UpdateMoves", isTrue)
-                    .supportedMinimums(higherValueThanGeneration(2,3,4,5,6,7))
+                    .supportedMinimums(higherValueThanGeneration(2, 3, 4, 5, 6, 7))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -905,16 +905,16 @@ public class Settings {
     private static final SettingRestriction anyTrainerPokemonIsRandomRestriction = new MultiSettingRestriction(
             true, false,
             new SimpleSettingRestriction<>("RandomizeTrainerPokemon", notMatchesEnum(TrainersMod.UNCHANGED)),
-            new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers", isTrue),
-            new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers", isTrue),
-            new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers", isTrue)
+            new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers", greaterThanValue(0)),
+            new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers", greaterThanValue(0)),
+            new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers", greaterThanValue(0))
     );
 
-    private static final SettingRestriction addItemsToAnyTrainerRestriction = new MultiSettingRestriction(
+    private static final SettingRestriction addHeldItemsToAnyTrainerRestriction = new MultiSettingRestriction(
             true, false,
-            new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers", isTrue),
-            new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers", isTrue),
-            new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers", isTrue)
+            new SimpleSettingRestriction<>("AddHeldItemsToBossTrainers", isTrue),
+            new SimpleSettingRestriction<>("AddHeldItemsToImportantTrainers", isTrue),
+            new SimpleSettingRestriction<>("AddHeldItemsToRegularTrainers", isTrue)
     );
 
     public enum TotemPokemonMod {
@@ -957,23 +957,25 @@ public class Settings {
                     .prerequisite(noMetronomeModeRestriction)
                     .supported(RomHandler::canGiveCustomMovesetsToRegularTrainers)
                     .build(),
-            // TODO: these should be numeric definitions
-            new SimpleSettingDefinition.Builder<>(
+            new NumericSettingDefinition.Builder<>(
                     "AdditionalPokemonForBossTrainers",
                     "TrainerPokemon",
-                    false)
+                    0,
+                    0, 5)
                     .supported(RomHandler::canAddPokemonToBossTrainers)
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
+            new NumericSettingDefinition.Builder<>(
                     "AdditionalPokemonForImportantTrainers",
                     "TrainerPokemon",
-                    false)
+                    0,
+                    0, 5)
                     .supported(RomHandler::canAddPokemonToImportantTrainers)
                     .build(),
-            new SimpleSettingDefinition.Builder<>(
+            new NumericSettingDefinition.Builder<>(
                     "AdditionalPokemonForRegularTrainers",
                     "TrainerPokemon",
-                    false)
+                    0,
+                    0, 5)
                     .supported(RomHandler::canAddPokemonToRegularTrainers)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
@@ -998,49 +1000,52 @@ public class Settings {
                     "TrainerHeldItemsConsumableOnly",
                     "TrainerPokemon",
                     false)
-                    .prerequisite(addItemsToAnyTrainerRestriction)
+                    .prerequisite(addHeldItemsToAnyTrainerRestriction)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TrainerHeldItemsSensible",
                     "TrainerPokemon",
                     false)
-                    .prerequisite(addItemsToAnyTrainerRestriction)
+                    .prerequisite(addHeldItemsToAnyTrainerRestriction)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TrainerHeldItemsToHighestLevelOnly",
                     "TrainerPokemon",
                     false)
-                    .prerequisite(addItemsToAnyTrainerRestriction)
+                    .prerequisite(addHeldItemsToAnyTrainerRestriction)
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "ForceDiverseTypesForBossTrainers",
                     "TrainerPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
-                                    notMatchesEnum(TrainersMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers", isTrue)))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                            notMatchesEnum(TrainersMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("AdditionalPokemonForBossTrainers",
+                                            greaterThanValue(0))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "ForceDiverseTypesForImportantTrainers",
                     "TrainerPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                                new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
-                                        notMatchesEnum(TrainersMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers", isTrue)))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                            notMatchesEnum(TrainersMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("AdditionalPokemonForImportantTrainers",
+                                            greaterThanValue(0))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "ForceDiverseTypesForRegularTrainers",
                     "TrainerPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                                new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
-                                        notMatchesEnum(TrainersMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers", isTrue)))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                            notMatchesEnum(TrainersMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("AdditionalPokemonForRegularTrainers",
+                                            greaterThanValue(0))))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1048,14 +1053,14 @@ public class Settings {
                     "TrainerPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>("RandomizeStarters",
-                                            notMatchesEnum(StartersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
-                                            notMatchesEnum(TrainersMod.UNCHANGED))),
-                            new SimpleSettingRestriction<>("RandomizeSpeciesEvolutions",
-                                    notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>("RandomizeStarters",
+                                                    notMatchesEnum(StartersMod.UNCHANGED)),
+                                            new SimpleSettingRestriction<>("RandomizeTrainerPokemon",
+                                                    notMatchesEnum(TrainersMod.UNCHANGED))),
+                                    new SimpleSettingRestriction<>("RandomizeSpeciesEvolutions",
+                                            notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TrainerPokemonSimilarStrength",
@@ -1134,10 +1139,10 @@ public class Settings {
                     "TrainerPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            notEvolveEveryLevelRestriction,
-                            new SimpleSettingRestriction<>("RandomizeSpeciesEvolutions",
-                                    notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
+                            new MultiSettingRestriction(false, false,
+                                    notEvolveEveryLevelRestriction,
+                                    new SimpleSettingRestriction<>("RandomizeSpeciesEvolutions",
+                                            notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     "TrainersEvolveTheirPokemonPercentage",
@@ -1171,8 +1176,8 @@ public class Settings {
                     BattleStyle.Style.SINGLE_BATTLE)
                     .prerequisite("RandomizeBattleStyle", matchesEnum(BattleStyle.Modification.SINGLE_STYLE))
                     .supportedStates(Map.of(
-                            BattleStyle.Style.TRIPLE_BATTLE,  ofGeneration(5, 6),
-                            BattleStyle.Style.ROTATION_BATTLE,  ofGeneration(5, 6)))
+                            BattleStyle.Style.TRIPLE_BATTLE, ofGeneration(5, 6),
+                            BattleStyle.Style.ROTATION_BATTLE, ofGeneration(5, 6)))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1280,11 +1285,11 @@ public class Settings {
                     "WildPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            new SimpleSettingRestriction<>("WildPokemonZone",
-                                    notMatchesEnum(WildPokemonZoneMod.NONE)),
-                            new SimpleSettingRestriction<>("WildPokemonZone",
-                                    notMatchesEnum(WildPokemonZoneMod.ENCOUNTER_SET))))
+                            new MultiSettingRestriction(false, false,
+                                    new SimpleSettingRestriction<>("WildPokemonZone",
+                                            notMatchesEnum(WildPokemonZoneMod.NONE)),
+                                    new SimpleSettingRestriction<>("WildPokemonZone",
+                                            notMatchesEnum(WildPokemonZoneMod.ENCOUNTER_SET))))
                     .build(),
             new SimpleSettingDefinition.Builder<>( // this setting is definitely zone-y
                     "UseTimeBasedEncounters",
@@ -1354,12 +1359,12 @@ public class Settings {
                     "WildPokemon",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>("WildPokemonZone",
-                                            notMatchesEnum(WildPokemonZoneMod.GAME)),
-                                    new SimpleSettingRestriction<>("SplitWildZoneByEncounterTypes", isTrue))))
+                            new MultiSettingRestriction(false, false,
+                                    new SimpleSettingRestriction<>("RandomizeWildPokemon", isTrue),
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>("WildPokemonZone",
+                                                    notMatchesEnum(WildPokemonZoneMod.GAME)),
+                                            new SimpleSettingRestriction<>("SplitWildZoneByEncounterTypes", isTrue))))
                     .build(),
 
             // Below: "wild pokemon" settings that don't require random wild pokemon
@@ -1457,29 +1462,29 @@ public class Settings {
                     "TMsAndHMs",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>("RandomizePokemonMovesets",
-                                    notMatchesEnum(MovesetsMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("RandomizeTMMoves",
-                                    notMatchesEnum(TMMovesMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
-                                    matchesEnum(TMsHMsCompatibilityMod.COMPLETELY_RANDOM)),
-                            new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
-                                    matchesEnum(TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE))))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizePokemonMovesets",
+                                            notMatchesEnum(MovesetsMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("RandomizeTMMoves",
+                                            notMatchesEnum(TMMovesMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                            matchesEnum(TMsHMsCompatibilityMod.COMPLETELY_RANDOM)),
+                                    new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                            matchesEnum(TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "TMHMCompatibilityFollowEvolutions",
                     "TMsAndHMs",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            notEvolveEveryLevelRestriction,
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
-                                            matchesEnum(TMsHMsCompatibilityMod.COMPLETELY_RANDOM)),
-                                    new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
-                                            matchesEnum(TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)),
-                                    new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue))))
+                            new MultiSettingRestriction(false, false,
+                                    notEvolveEveryLevelRestriction,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                                    matchesEnum(TMsHMsCompatibilityMod.COMPLETELY_RANDOM)),
+                                            new SimpleSettingRestriction<>("RandomizeTMHMCompatibility",
+                                                    matchesEnum(TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE)),
+                                            new SimpleSettingRestriction<>("TMLevelupMoveSanity", isTrue))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "FullHMCompatibility",
@@ -1532,29 +1537,29 @@ public class Settings {
                     "MoveTutors",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>("RandomizePokemonMovesets",
-                                    notMatchesEnum(MovesetsMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
-                                    notMatchesEnum(MoveTutorMovesMod.UNCHANGED)),
-                            new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
-                                    matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
-                            new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
-                                    matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE))))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizePokemonMovesets",
+                                            notMatchesEnum(MovesetsMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("RandomizeMoveTutorMoves",
+                                            notMatchesEnum(MoveTutorMovesMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                            matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
+                                    new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                            matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE))))
                     .build(),
             new SimpleSettingDefinition.Builder<>(
                     "MoveTutorCompatibilityFollowEvolutions",
                     "MoveTutors",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(false, false,
-                            notEvolveEveryLevelRestriction,
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
-                                            matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
-                                    new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
-                                            matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
-                                    new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue))))
+                            new MultiSettingRestriction(false, false,
+                                    notEvolveEveryLevelRestriction,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                                    matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
+                                            new SimpleSettingRestriction<>("RandomizeMoveTutorCompatibility",
+                                                    matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
+                                            new SimpleSettingRestriction<>("MoveTutorLevelupMoveSanity", isTrue))))
                     .build()
     );
 
@@ -1587,11 +1592,11 @@ public class Settings {
                     "FieldItems",
                     false)
                     .prerequisite(
-                        new MultiSettingRestriction(true, false,
-                            new SimpleSettingRestriction<>("RandomizeFieldItems",
-                                    matchesEnum(FieldItemsMod.RANDOM)),
-                            new SimpleSettingRestriction<>("RandomizeFieldItems",
-                                    matchesEnum(FieldItemsMod.RANDOM_EVEN))))
+                            new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>("RandomizeFieldItems",
+                                            matchesEnum(FieldItemsMod.RANDOM)),
+                                    new SimpleSettingRestriction<>("RandomizeFieldItems",
+                                            matchesEnum(FieldItemsMod.RANDOM_EVEN))))
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(

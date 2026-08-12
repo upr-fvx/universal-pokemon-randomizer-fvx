@@ -27,7 +27,7 @@ import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
-import com.uprfvx.random.gui.SettingElementCoordinators.SettingCheckBoxCoordinator;
+import com.uprfvx.random.gui.SettingElementCoordinators.BooleanCheckBoxCoordinator;
 import com.uprfvx.random.gui.SettingElementCoordinators.SettingUICoordinator;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
@@ -688,10 +688,16 @@ public class RandomizerGUI {
 
 
         List<SettingUICoordinator<?, ?>> settingUICoordinators = List.of(
+                // *** GENERAL ***
                 //General Options
                 associateCheckBox(noRandomIntroMonCheckBox, Settings.Name.NO_RANDOM_INTRO_MON),
+                associateCheckBox(noPrematureEvosCheckbox, Settings.Name.NO_PREMATURE_EVOLUTIONS),
                 associateCheckBox(raceModeCheckBox, Settings.Name.RACE_MODE),
                 associateCheckBox(noIrregularAltFormesCheckBox, Settings.Name.NO_IRREGULAR_ALT_FORMES)
+                //Limit Pokemon
+                //TODO: add to list OR add handling to dialog
+
+
 
 
                 //TODO: complete list of settings
@@ -699,8 +705,8 @@ public class RandomizerGUI {
 
     }
 
-    private SettingCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Settings.Name settingName) {
-        return new SettingCheckBoxCoordinator(settingName, settingsManager, checkBox);
+    private BooleanCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Settings.Name settingName) {
+        return new BooleanCheckBoxCoordinator(settingName, settingsManager, checkBox);
     }
 
     private void checkSpMinimumNeedsLower() {

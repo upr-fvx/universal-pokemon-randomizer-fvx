@@ -7,35 +7,22 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import javax.swing.*;
 
-public class SettingCheckBoxCoordinator extends SettingUICoordinator<Boolean> {
-
-    private JCheckBox checkBox;
+public class SettingCheckBoxCoordinator extends SettingUICoordinator<Boolean, JCheckBox> {
 
     public SettingCheckBoxCoordinator(Settings.Name settingName, SettingsManager settings, JCheckBox checkBox) {
-        super(settingName, settings);
-        this.checkBox = checkBox;
+        super(settingName, settings, checkBox);
 
-        checkBox.addActionListener(_ -> elementValueChanged());
+        checkBox.addActionListener(this::elementValueChanged);
     }
 
     @Override
     protected void displayValue(Boolean newValue) {
-        checkBox.setSelected(newValue);
+        element.setSelected(newValue);
     }
 
     @Override
     protected Boolean getElementValue() {
-        return checkBox.isSelected();
-    }
-
-    @Override
-    public void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager) {
-        checkBox.setEnabled(manager.getSetting(setting));
-    }
-
-    @Override
-    public void onSupportChange(Settings.Name setting, SettingsManager manager, boolean isSupported) {
-        checkBox.setVisible(isSupported);
+        return element.isSelected();
     }
 
     @Override

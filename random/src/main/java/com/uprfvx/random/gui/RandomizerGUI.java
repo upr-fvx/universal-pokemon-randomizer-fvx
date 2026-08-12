@@ -513,7 +513,7 @@ public class RandomizerGUI {
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
 
         settingsManager = new SettingsManager();
-        //associateSettingControls();
+        associateSettingControls();
 
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
                 limitPokemonCheckBox, noIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
@@ -676,6 +676,8 @@ public class RandomizerGUI {
             }
         });
         batchRandomizationMenuItem.addActionListener(_ -> batchRandomizationSettingsDialog());
+
+
     }
 
     private void associateSettingControls() {
@@ -685,7 +687,7 @@ public class RandomizerGUI {
         //than to convert a bunch of freestanding constructors to a list creation, if I'm wrong.
 
 
-        List<SettingUICoordinator<?>> settingUICoordinators = List.of(
+        List<SettingUICoordinator<?, ?>> settingUICoordinators = List.of(
                 //General Options
                 associateCheckBox(noRandomIntroMonCheckBox, Settings.Name.NO_RANDOM_INTRO_MON),
                 associateCheckBox(raceModeCheckBox, Settings.Name.RACE_MODE),

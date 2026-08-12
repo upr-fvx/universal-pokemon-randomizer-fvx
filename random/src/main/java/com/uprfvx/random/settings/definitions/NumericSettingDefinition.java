@@ -275,8 +275,8 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
         if (supportedMaximum == null) {
             return maximum;
         }
-        if (supportedMaximum.compareTo(maximum) < 0) {
-            throw new IllegalStateException("supportedMaximum is less than the absolute maximum");
+        if (supportedMaximum.compareTo(maximum) > 0) {
+            throw new IllegalStateException("supportedMaximum is greater than the absolute maximum");
         }
         return supportedMaximum;
     }

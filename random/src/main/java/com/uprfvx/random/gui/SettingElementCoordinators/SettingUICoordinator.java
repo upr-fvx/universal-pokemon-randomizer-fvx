@@ -7,33 +7,29 @@ import com.uprfvx.random.settings.SettingsManager;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * A class which coordinates a single setting with one or multiple GUI elements.
  * @param <V> The type of data held by the setting.
  */
-public abstract class SettingUICoordinator<V extends Serializable, E extends JComponent>
-        implements SettingChangeListener {
+public abstract class SettingUICoordinator<V extends Serializable> implements SettingChangeListener {
 
-    private final Settings.Name settingName;
-    private final SettingsManager settings;
+    protected final Settings.Name settingName;
+    protected final SettingsManager manager;
     //I don't like that I have to keep the settingsManager here...
     //but I don't know how else I'd access it to set the setting.
     private final JCheckBox latch;
 
     private V displayedValue;
-    protected E element;
     private boolean unlatched;
 
-    public SettingUICoordinator(Settings.Name settingName, SettingsManager settings, E element) {
-        this(settingName, settings, element, null);
+    public SettingUICoordinator(Settings.Name settingName, SettingsManager manager) {
+        this(settingName, manager, null);
     }
 
-    public SettingUICoordinator(Settings.Name settingName, SettingsManager settings, E element, JCheckBox latch) {
+    public SettingUICoordinator(Settings.Name settingName, SettingsManager manager, JCheckBox latch) {
         this.settingName = settingName;
-        this.settings = settings;
-        this.element = element;
+        this.manager = manager;
         this.latch = latch;
 
         if (latch == null) {
@@ -43,10 +39,16 @@ public abstract class SettingUICoordinator<V extends Serializable, E extends JCo
             latch.addActionListener(this::latchValueChanged);
         }
 
-        V initialValue = settings.getSetting(settingName);
+        manager.addListener(settingName, this);
+    }
+
+    protected void setInitialState()
+    {
+        V initialValue = manager.getSetting(settingName);
         setValue(initialValue);
 
-        settings.addListener(settingName, this);
+        setEnabled(unlatched && manager.isEnabled(settingName));
+        setVisible(manager.isSupported(settingName));
     }
 
     private void latchValueChanged(ActionEvent event) {
@@ -63,7 +65,7 @@ public abstract class SettingUICoordinator<V extends Serializable, E extends JCo
     protected void elementValueChanged(ActionEvent event) {
         V newValue = getElementValue();
         if (!newValue.equals(displayedValue)) {
-            settings.setSetting(settingName, newValue);
+            manager.setSetting(settingName, newValue);
             displayedValue = newValue;
         }
     }
@@ -99,14 +101,18 @@ public abstract class SettingUICoordinator<V extends Serializable, E extends JCo
         if (setting != this.settingName)
             throw new IllegalArgumentException("Received event for non-managed setting!");
 
-        element.setEnabled(unlatched && manager.isEnabled(settingName));
+        setEnabled(unlatched && manager.isEnabled(settingName));
     }
+
+    protected abstract void setEnabled(boolean enabled);
 
     @Override
     public void onSupportChange(Settings.Name setting, SettingsManager manager, boolean isSupported) {
         if (setting != this.settingName)
             throw new IllegalArgumentException("Received event for non-managed setting!");
 
-        element.setVisible(isSupported);
+        setVisible(isSupported);
     }
+
+    protected abstract void setVisible(boolean visible);
 }

@@ -7,9 +7,9 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import javax.swing.*;
 
-public class SettingCheckBoxCoordinator extends SettingUICoordinator<Boolean, JCheckBox> {
+public class BooleanCheckBoxCoordinator extends SettingSingleElementCoordinator<Boolean, JCheckBox> {
 
-    public SettingCheckBoxCoordinator(Settings.Name settingName, SettingsManager settings, JCheckBox checkBox) {
+    public BooleanCheckBoxCoordinator(Settings.Name settingName, SettingsManager settings, JCheckBox checkBox) {
         super(settingName, settings, checkBox);
 
         checkBox.addActionListener(this::elementValueChanged);

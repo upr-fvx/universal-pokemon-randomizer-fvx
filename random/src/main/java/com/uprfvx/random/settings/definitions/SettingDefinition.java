@@ -128,7 +128,7 @@ public abstract class SettingDefinition<V extends Serializable> {
         this.supported = supported;
         // TODO: make variableDefaultValue be used when relevant
         this.variableDefaultValue = variableDefaultValue == null ?
-                _ -> null : variableDefaultValue;
+                _ -> defaultValue : variableDefaultValue;
 
         Set<Settings.Name> restrictors = new HashSet<>();
         if (valueRestrictions != null) {

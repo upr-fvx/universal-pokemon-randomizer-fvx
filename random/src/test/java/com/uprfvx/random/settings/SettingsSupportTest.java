@@ -1,6 +1,7 @@
 package com.uprfvx.random.settings;
 
 import com.uprfvx.romio.romhandlers.RomHandlerTest;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -16,8 +17,14 @@ public class SettingsSupportTest extends RomHandlerTest {
         Collection<SettingState<?>> allSettings = manager.testGetAllSettings();
 
         for (SettingState<?> setting : allSettings) {
-            System.out.println("Testing: " + setting.getDefinition().getName());
-            setting.currentValueIsSupported(romHandler);
+            try {
+                setting.currentValueIsSupported(romHandler);
+            } catch (Exception e) {
+                System.out.println("Exception caused by: " + setting.getDefinition().getName());
+                throw e;
+            }
+
+
         }
     }
 

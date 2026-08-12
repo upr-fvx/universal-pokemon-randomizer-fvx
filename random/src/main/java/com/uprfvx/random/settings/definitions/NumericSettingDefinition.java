@@ -7,6 +7,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import miscutils.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -95,16 +96,31 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      *                          This maximum must be <= the normal maximum.
      *                          If the function returns null, the normal maximum is used.
      */
-    public NumericSettingDefinition(Settings.Name name, Settings.Category category, N defaultValue,
-                                    SettingRestriction prerequisite, Predicate<RomHandler> supported,
-                                    Function<RomHandler, N> variableDefaultValue,
-                                    N minimum, N maximum,
-                                    List<Pair<N, SettingRestriction>> restrictedMinimums,
-                                    List<Pair<N, SettingRestriction>> restrictedMaximums,
-                                    Function<RomHandler, N> supportedMinimums,
-                                    Function<RomHandler, N> supportedMaximums) {
+    protected NumericSettingDefinition(Settings.Name name, Settings.Category category, N defaultValue,
+                                       SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                       Function<RomHandler, N> variableDefaultValue,
+                                       N minimum, N maximum,
+                                       List<Pair<N, SettingRestriction>> restrictedMinimums,
+                                       List<Pair<N, SettingRestriction>> restrictedMaximums,
+                                       Function<RomHandler, N> supportedMinimums,
+                                       Function<RomHandler, N> supportedMaximums) {
+        this(name, category, defaultValue, prerequisite, supported, variableDefaultValue,
+                minimum, maximum, restrictedMinimums, restrictedMaximums, supportedMinimums, supportedMaximums,
+                composeSeconds(restrictedMinimums, restrictedMaximums)
+        );
+    }
+
+    protected NumericSettingDefinition(Settings.Name name, Settings.Category category, N defaultValue,
+                                       SettingRestriction prerequisite, Predicate<RomHandler> supported,
+                                       Function<RomHandler, N> variableDefaultValue,
+                                       N minimum, N maximum,
+                                       List<Pair<N, SettingRestriction>> restrictedMinimums,
+                                       List<Pair<N, SettingRestriction>> restrictedMaximums,
+                                       Function<RomHandler, N> supportedMinimums,
+                                       Function<RomHandler, N> supportedMaximums,
+                                       Collection<SettingRestriction> dependencies) {
         super(name, category, defaultValue, prerequisite, supported, variableDefaultValue,
-                composeSeconds(restrictedMinimums, restrictedMaximums),
+                dependencies,
                 supportedMinimums != null || supportedMaximums != null
         );
 

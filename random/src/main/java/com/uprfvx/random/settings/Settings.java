@@ -122,10 +122,6 @@ public class Settings {
         //Starter BSTs
         STARTERS_BST_USE_MINIMUM, STARTERS_BST_MINIMUM_SELECTION, STARTERS_BST_USE_MAXIMUM,
         STARTERS_BST_MAXIMUM_SELECTION,
-        //Statics
-        RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
-        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC, STATICS_USE_LEVEL_MODIFIER,
-        STATICS_LEVEL_MODIFIER_PERCENT,
         //In-Game Trades
         RANDOMIZE_IN_GAME_TRADES, TRADES_RANDOMIZE_NICKNAMES, TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
         TRADES_RANDOMIZE_IVS, TRADES_RANDOMIZE_HELD_ITEMS,
@@ -179,6 +175,10 @@ public class Settings {
         //Wild Post Tweaks
         WILD_SET_MINIMUM_CATCH_RATE, WILD_MINIMUM_CATCH_RATE_SELECTION, WILD_RANDOMIZE_HELD_ITEMS,
         WILD_HELD_ITEMS_BAN_MINOR, WILD_USE_LEVEL_MODIFIER, WILD_LEVEL_MODIFIER_PERCENT,
+        //Static Encounters
+        RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
+        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC, STATICS_USE_LEVEL_MODIFIER,
+        STATICS_LEVEL_MODIFIER_PERCENT,
 
         // *** MOVE TEACHERS ***
         //TM Moves
@@ -237,8 +237,6 @@ public class Settings {
 
         // *** GIVEN POKEMON ***
         STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES, STARTER_BSTS, IN_GAME_TRADES,
-        //Statics
-        STATIC_ENCOUNTERS,
 
         // *** MOVES AND MOVESETS ***
         MOVE_TRAITS, SPECIES_MOVESETS,
@@ -250,7 +248,7 @@ public class Settings {
         TRAINERS_BATTLE_STYLE, TRAINERS_COSMETIC, TOTEM_POKEMON,
 
         // *** WILD ENCOUNTERS ***
-        WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES, WILD_EVOLUTIONS, WILD_POST_TWEAKS,
+        WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES, WILD_EVOLUTIONS, WILD_POST_TWEAKS, STATIC_ENCOUNTERS,
 
         // *** MOVE TEACHERS ***
         TM_MOVES, TM_AND_HM_COMPATABILITY, MOVE_TUTOR_MOVES, MOVE_TUTOR_COMPATABILITY,
@@ -273,10 +271,10 @@ public class Settings {
                 SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS, SPECIES_TYPES,
                 SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
         public static final List<Category> GIVEN_POKEMON = List.of(STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES,
-                STARTER_BSTS, IN_GAME_TRADES, STATIC_ENCOUNTERS); //TODO: move statics to WILD_POKEMON
+                STARTER_BSTS, IN_GAME_TRADES);
         public static final List<Category> MOVES_AND_MOVESETS = List.of(MOVE_TRAITS, SPECIES_MOVESETS);
         public static final List<Category> WILD_ENCOUNTERS = List.of(WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES,
-                WILD_EVOLUTIONS, WILD_POST_TWEAKS);
+                WILD_EVOLUTIONS, WILD_POST_TWEAKS, STATIC_ENCOUNTERS);
         public static final List<Category> MOVE_TEACHERS = List.of(TM_MOVES, TM_AND_HM_COMPATABILITY, MOVE_TUTOR_MOVES,
                 MOVE_TUTOR_COMPATABILITY);
         public static final List<Category> ITEMS = List.of(FIELD_ITEMS, SHOP_ITEMS_GENERAL, SPECIAL_SHOP_ITEMS,
@@ -630,8 +628,6 @@ public class Settings {
     //endregion
 
     //region given pokemon [currently Starters, Statics, & Trades]
-    //TODO: move statics => Wild Pokemon supercategory & tab
-    // Should statics be moved already, or is that a future project for once we've split off gift mons?
 
     public enum StartersMod {
         UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
@@ -696,7 +692,7 @@ public class Settings {
     private static final int STARTER_MIN_BST_GEN_1 = 249;
     private static final int STARTER_MAX_BST_GEN_1 = 253;
 
-    public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = List.of(
+    public static final List<SettingDefinition<?>> STARTERS_AND_TRADES = List.of(
             new EnumSettingDefinition.Builder<>(
                     Name.RANDOMIZE_STARTERS,
                     Category.STARTERS_GENERAL,
@@ -800,48 +796,6 @@ public class Settings {
             //  (Not sure how that can interact with defaults though. Maybe they just need to default to 0 and MAX_BST
             //  instead of their current defaults? That would also allow us to remove the UseMin, UseMax settings.)
             //  ...Yeah, actually, that suits the standard of default values being expected behavior better.
-
-            new SimpleSettingDefinition.Builder<>(
-                    Name.RANDOMIZE_STATIC_ENCOUNTERS,
-                    Category.STATIC_ENCOUNTERS,
-                    StaticPokemonMod.UNCHANGED)
-                    .supported(RomHandler::canChangeStaticPokemon)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_FULL_RANDOM_OVER_600_BST,
-                    Category.STATIC_ENCOUNTERS)
-                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .build(), //This is such a weirdly specific setting...
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
-                    Category.STATIC_ENCOUNTERS)
-                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, matchesEnum(StaticPokemonMod.SIMILAR_STRENGTH))
-                    .supported(RomHandler::hasMainGameLegendaries)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_ALLOW_ALT_FORMES,
-                    Category.STATIC_ENCOUNTERS)
-                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasStarterAltFormes)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_SWAP_MEGA_EVOLVABLES,
-                    Category.STATIC_ENCOUNTERS)
-                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasMegaEvolutions)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_FIX_MUSIC,
-                    Category.STATIC_ENCOUNTERS)
-                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasStaticMusicFix)
-                    .build(),
-            new NumericSettingDefinition.Builder<>(
-                    Name.STATICS_LEVEL_MODIFIER_PERCENT,
-                    Category.STATIC_ENCOUNTERS,
-                    0,
-                    -100, 155)
-                    .build(),
 
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_IN_GAME_TRADES,
@@ -1419,6 +1373,51 @@ public class Settings {
                     Category.WILD_POST_TWEAKS,
                     0,
                     -100, 155)
+                    .build(),
+
+            // Statics are somewhat awkward here since they currently encompass gift mons too,
+            // but once those are broken out this is the right place for them to be settings-wise
+            // TODO: break out gift mon randomization
+            new SimpleSettingDefinition.Builder<>(
+                    Name.RANDOMIZE_STATIC_ENCOUNTERS,
+                    Category.STATIC_ENCOUNTERS,
+                    StaticPokemonMod.UNCHANGED)
+                    .supported(RomHandler::canChangeStaticPokemon)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STATICS_FULL_RANDOM_OVER_600_BST,
+                    Category.STATIC_ENCOUNTERS)
+                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
+                    .build(), //This is such a weirdly specific setting...
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
+                    Category.STATIC_ENCOUNTERS)
+                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, matchesEnum(StaticPokemonMod.SIMILAR_STRENGTH))
+                    .supported(RomHandler::hasMainGameLegendaries)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STATICS_ALLOW_ALT_FORMES,
+                    Category.STATIC_ENCOUNTERS)
+                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
+                    .supported(RomHandler::hasStarterAltFormes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STATICS_SWAP_MEGA_EVOLVABLES,
+                    Category.STATIC_ENCOUNTERS)
+                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
+                    .supported(RomHandler::hasMegaEvolutions)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STATICS_FIX_MUSIC,
+                    Category.STATIC_ENCOUNTERS)
+                    .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
+                    .supported(RomHandler::hasStaticMusicFix)
+                    .build(),
+            new NumericSettingDefinition.Builder<>(
+                    Name.STATICS_LEVEL_MODIFIER_PERCENT,
+                    Category.STATIC_ENCOUNTERS,
+                    0,
+                    -100, 155)
                     .build()
     );
 
@@ -1756,7 +1755,7 @@ public class Settings {
     static {
         List<SettingDefinition<?>> all = new ArrayList<>(GENERAL_OPTIONS);
         all.addAll(SPECIES_TRAITS);
-        all.addAll(STARTERS_STATICS_AND_TRADES);
+        all.addAll(STARTERS_AND_TRADES);
         all.addAll(MOVES_AND_MOVESETS);
         all.addAll(FOE_POKEMON);
         all.addAll(WILD_POKEMON);

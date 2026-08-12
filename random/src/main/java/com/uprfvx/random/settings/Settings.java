@@ -120,8 +120,7 @@ public class Settings {
         //Starter Types
         STARTERS_TYPE_RESTRICTION, STARTERS_NO_DUAL_TYPES, STARTERS_SINGLE_TYPE_SELECTION,
         //Starter BSTs
-        STARTERS_BST_USE_MINIMUM, STARTERS_BST_MINIMUM_SELECTION, STARTERS_BST_USE_MAXIMUM,
-        STARTERS_BST_MAXIMUM_SELECTION,
+        STARTERS_BST_MINIMUM, STARTERS_BST_MAXIMUM,
         //Statics
         RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
         STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC, STATICS_USE_LEVEL_MODIFIER,
@@ -692,11 +691,6 @@ public class Settings {
         UNCHANGED, RANDOMIZE_GIVEN, RANDOMIZE_GIVEN_AND_REQUESTED
     }
 
-    private static final int STARTER_MIN_BST = 307;
-    private static final int STARTER_MAX_BST = 320;
-    private static final int STARTER_MIN_BST_GEN_1 = 249;
-    private static final int STARTER_MAX_BST_GEN_1 = 253;
-
     public static final List<SettingDefinition<?>> STARTERS_STATICS_AND_TRADES = List.of(
             new EnumSettingDefinition.Builder<>(
                     Name.RANDOMIZE_STARTERS,
@@ -767,41 +761,20 @@ public class Settings {
                     Category.STARTERS_GENERAL)
                     .prerequisite(Name.STARTERS_RANDOMIZE_HELD_ITEMS, isTrue)
                     .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STARTERS_BST_USE_MINIMUM,
-                    Category.STARTER_BSTS)
-                    .prerequisite(anyStarterIsRandomRestriction)
-                    .build(),
-            new NumericSettingDefinition.Builder<>(
-                    Name.STARTERS_BST_MINIMUM_SELECTION,
+            new RangeLimitDefinition.LowerLimitBuilder<>(
+                    Name.STARTERS_BST_MINIMUM,
                     Category.STARTER_BSTS,
-                    STARTER_MIN_BST,
+                    Name.STARTERS_BST_MAXIMUM,
                     1, BaseStats.STAT_MAX * 6)
-                    .prerequisite(Name.STARTERS_BST_USE_MINIMUM, isTrue)
-                    .variableDefaultValue(overrideForGeneration(1, STARTER_MIN_BST_GEN_1))
                     .supportedMaximums(overrideForGeneration(1, BaseStats.STAT_MAX * 5))
                     .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STARTERS_BST_USE_MAXIMUM,
-                    Category.STARTER_BSTS)
-                    .prerequisite(anyStarterIsRandomRestriction)
-                    .build(),
-            new NumericSettingDefinition.Builder<>(
-                    Name.STARTERS_BST_MAXIMUM_SELECTION,
+            new RangeLimitDefinition.UpperLimitBuilder<>(
+                    Name.STARTERS_BST_MAXIMUM,
                     Category.STARTER_BSTS,
-                    STARTER_MAX_BST,
+                    Name.STARTERS_BST_MINIMUM,
                     1, BaseStats.STAT_MAX * 6)
-                    .prerequisite(Name.STARTERS_BST_USE_MAXIMUM, isTrue)
-                    .variableDefaultValue(overrideForGeneration(1, STARTER_MAX_BST_GEN_1))
                     .supportedMaximums(overrideForGeneration(1, BaseStats.STAT_MAX * 5))
                     .build(),
-            // TODO also: LimitStartersMinimumBSTValue, LimitStartersMaximumBSTValue
-            //  should ideally have a special enablement constraint, such that Minimum's max is the value
-            //  of Maximum, and Maximum's min is the value of Minimum.
-            //  (Not sure how that can interact with defaults though. Maybe they just need to default to 0 and MAX_BST
-            //  instead of their current defaults? That would also allow us to remove the UseMin, UseMax settings.)
-            //  ...Yeah, actually, that suits the standard of default values being expected behavior better.
-            //  And it allows us to remove the toggle settings!
 
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_STATIC_ENCOUNTERS,

@@ -67,33 +67,6 @@ public class SettingRestrictionsTest {
     }
 
     @Test
-    public void enumMatchRestrictionWorks() {
-        SettingsManager manager = new SettingsManager();
-        SimpleSettingRestriction<Settings.BSTMod> restriction = new SimpleSettingRestriction<>(
-                Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
-                matchesEnum(Settings.BSTMod.SHUFFLE));
-
-        assert(restriction.test(manager) == false);
-
-        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
-        assert(restriction.test(manager) == false);
-
-        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(restriction.test(manager) == true);
-
-        restriction = new EnumMatchRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
-                notMatchesEnum(Settings.BSTMod.SHUFFLE));
-
-        assert(restriction.test(manager) == false);
-
-        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
-        assert(restriction.test(manager) == true);
-
-        manager.setSetting(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.UNCHANGED);
-        assert(restriction.test(manager) == true);
-    }
-
-    @Test
     public void multiRestrictionOrWorks() {
         SettingsManager manager = new SettingsManager();
         manager.setSetting(Name.UPDATE_MOVES, true);

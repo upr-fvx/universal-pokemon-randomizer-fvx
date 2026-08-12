@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
@@ -23,14 +24,14 @@ public abstract class SettingDefinition<V extends Serializable> {
 
     public abstract static class Builder<B extends Builder<B, V>, V extends Serializable> {
         // B for "Builder", V for "Value" (as in the outside class)
-        protected final String name;
-        protected final String category;
+        protected final Settings.Name name;
+        protected final Settings.Category category;
         protected final V defaultValue;
         protected SettingRestriction prerequisite;
         protected Predicate<RomHandler> supported;
         protected Function<RomHandler, V> variableDefaultValue;
 
-        protected Builder(String name, String category, V defaultValue) {
+        protected Builder(Settings.Name name, Settings.Category category, V defaultValue) {
             this.name = name;
             this.category = category;
             this.defaultValue = defaultValue;
@@ -47,10 +48,10 @@ public abstract class SettingDefinition<V extends Serializable> {
 
         /**
          * Alias of {@link #prerequisite(SettingRestriction) prerequisite}
-         * ({@link SimpleSettingRestriction#SimpleSettingRestriction(String, Predicate)
+         * ({@link SimpleSettingRestriction#SimpleSettingRestriction(com.uprfvx.random.settings.Settings.Name, Predicate)
          * new SimpleSettingRestriction(String, Predicate)}).
          */
-        public <V2> B prerequisite(String name, Predicate<V2> desiredState) {
+        public <V2 extends Serializable> B prerequisite(Settings.Name name, Predicate<V2> desiredState) {
             this.prerequisite = new SimpleSettingRestriction<>(name, desiredState);
             return self();
         }
@@ -69,11 +70,11 @@ public abstract class SettingDefinition<V extends Serializable> {
     }
 
     //The setting's name. Should be a unique identifier. Should be relatively human-readable.
-    protected final String name;
+    protected final Settings.Name name;
 
     //The setting's category. Should be the lowest-level category applicable (e.g. "StarterTypeRestrictions"
     //rather than "Starters" or "Starters, Statics, & Trades"
-    protected final String category;
+    protected final Settings.Category category;
 
     //The default value.
     protected final V defaultValue;
@@ -98,7 +99,7 @@ public abstract class SettingDefinition<V extends Serializable> {
     //A list of settings that disable or apply restrictions to this setting.
     //Different types of settings apply restrictions differently, so this list can only check if changes MIGHT occur,
     //not determine if they actually do occur or what those changes are.
-    private final List<String> dependentOn;
+    private final List<Settings.Name> dependentOn;
 
     //Whether the setting has values that are not supported by all games. If true, the possible values will be
     // polled when a new game is loaded.
@@ -115,7 +116,7 @@ public abstract class SettingDefinition<V extends Serializable> {
      * @param valueRestrictions
      * @param hasValueSupportRestrictions
      */
-    public SettingDefinition(String name, String category, V defaultValue,
+    public SettingDefinition(Settings.Name name, Settings.Category category, V defaultValue,
                              SettingRestriction prerequisite, Predicate<RomHandler> supported,
                              Function<RomHandler, V> variableDefaultValue,
                              Collection<SettingRestriction> valueRestrictions, boolean hasValueSupportRestrictions) {
@@ -129,7 +130,7 @@ public abstract class SettingDefinition<V extends Serializable> {
         this.variableDefaultValue = variableDefaultValue == null ?
                 _ -> null : variableDefaultValue;
 
-        Set<String> restrictors = new HashSet<>();
+        Set<Settings.Name> restrictors = new HashSet<>();
         if (valueRestrictions != null) {
             for (SettingRestriction restriction : valueRestrictions) {
                 restrictors.addAll(restriction.getRelevantSettingNames());
@@ -143,11 +144,11 @@ public abstract class SettingDefinition<V extends Serializable> {
         this.hasSupportRestrictions = hasValueSupportRestrictions;
     }
 
-    public String getName() {
+    public Settings.Name getName() {
         return name;
     }
 
-    public String getCategory() {
+    public Settings.Category getCategory() {
         return category;
     }
 
@@ -233,7 +234,7 @@ public abstract class SettingDefinition<V extends Serializable> {
      * If there are none, returns an empty list.
      * @return An unmodifiable List containing the names of all settings which this setting is dependent on.
      */
-    public List<String> getSettingsDependentOn()
+    public List<Settings.Name> getSettingsDependentOn()
     {
         return dependentOn;
     }

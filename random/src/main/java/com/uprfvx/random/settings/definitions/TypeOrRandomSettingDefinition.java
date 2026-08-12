@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -26,7 +27,7 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
 
     public static class Builder<B extends Builder<B>> extends NumericSettingDefinition.Builder<B, Integer> {
 
-        public Builder(String name, String category) {
+        public Builder(Settings.Name name, Settings.Category category) {
             super(name, category, RANDOM_TYPE, RANDOM_TYPE, Type.SIZE);
         }
 
@@ -64,7 +65,7 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
         }
     }
 
-    protected TypeOrRandomSettingDefinition(String name, String category,
+    protected TypeOrRandomSettingDefinition(Settings.Name name, Settings.Category category,
                                             Integer defaultValue,
                                             SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                             Function<RomHandler, Integer> variableDefaultValue,

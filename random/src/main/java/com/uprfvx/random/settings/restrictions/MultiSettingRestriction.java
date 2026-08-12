@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.restrictions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.*;
  */
 public class MultiSettingRestriction implements SettingRestriction {
 
-    private final List<String> settingNames;
+    private final List<Settings.Name> settingNames;
     private final List<SettingRestriction> restrictions;
     private final boolean any;
     private final boolean invert;
@@ -23,7 +24,7 @@ public class MultiSettingRestriction implements SettingRestriction {
      * @param restrictions The restrictions to use.
      */
     public MultiSettingRestriction(boolean any, boolean invert, SettingRestriction... restrictions) {
-        Set<String> names = new HashSet<>();
+        Set<Settings.Name> names = new HashSet<>();
         for(SettingRestriction restriction : restrictions) {
             names.addAll(restriction.getRelevantSettingNames());
         }
@@ -34,7 +35,7 @@ public class MultiSettingRestriction implements SettingRestriction {
     }
 
     @Override
-    public List<String> getRelevantSettingNames() {
+    public List<Settings.Name> getRelevantSettingNames() {
         return settingNames;
     }
 

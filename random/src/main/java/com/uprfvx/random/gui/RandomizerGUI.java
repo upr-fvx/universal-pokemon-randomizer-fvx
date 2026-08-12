@@ -513,7 +513,7 @@ public class RandomizerGUI {
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
 
         settingsManager = new SettingsManager();
-        associateSettingControls();
+        //associateSettingControls();
 
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
                 limitPokemonCheckBox, noIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
@@ -687,9 +687,9 @@ public class RandomizerGUI {
 
         List<SettingUICoordinator<?>> settingUICoordinators = List.of(
                 //General Options
-                associateCheckBox(noRandomIntroMonCheckBox, Settings.Names.NO_RANDOM_INTRO_MON),
-                associateCheckBox(raceModeCheckBox, Settings.Names.RACE_MODE),
-                associateCheckBox(noIrregularAltFormesCheckBox, Settings.Names.NO_IRREGULAR_ALT_FORMES)
+                associateCheckBox(noRandomIntroMonCheckBox, Settings.Name.NO_RANDOM_INTRO_MON),
+                associateCheckBox(raceModeCheckBox, Settings.Name.RACE_MODE),
+                associateCheckBox(noIrregularAltFormesCheckBox, Settings.Name.NO_IRREGULAR_ALT_FORMES)
 
 
                 //TODO: complete list of settings
@@ -697,7 +697,7 @@ public class RandomizerGUI {
 
     }
 
-    private SettingCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, String settingName) {
+    private SettingCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Settings.Name settingName) {
         return new SettingCheckBoxCoordinator(settingName, settingsManager, checkBox);
     }
 

@@ -48,7 +48,7 @@ public class SettingsTest {
 
     @Test
     public void EverySettingHasUniqueName() {
-        Map<String, String> namesToCategories = new HashMap<>();
+        Map<Settings.Name, Settings.Category> namesToCategories = new HashMap<>();
         boolean passing = true;
         for (SettingDefinition<?> setting : ALL_SETTINGS) {
             if(namesToCategories.containsKey(setting.getName())) {

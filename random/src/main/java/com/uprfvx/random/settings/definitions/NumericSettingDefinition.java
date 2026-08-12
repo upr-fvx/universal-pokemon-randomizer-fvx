@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -29,7 +30,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
         protected Function<RomHandler, N> supportedMinimums;
         protected Function<RomHandler, N> supportedMaximums;
 
-        public Builder(String name, String category, N defaultValue, N minimum, N maximum) {
+        public Builder(Settings.Name name, Settings.Category category, N defaultValue, N minimum, N maximum) {
             super(name, category, defaultValue);
             this.minimum = minimum;
             this.maximum = maximum;
@@ -94,7 +95,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      *                          This maximum must be <= the normal maximum.
      *                          If the function returns null, the normal maximum is used.
      */
-    public NumericSettingDefinition(String name, String category, N defaultValue,
+    public NumericSettingDefinition(Settings.Name name, Settings.Category category, N defaultValue,
                                     SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                     Function<RomHandler, N> variableDefaultValue,
                                     N minimum, N maximum,

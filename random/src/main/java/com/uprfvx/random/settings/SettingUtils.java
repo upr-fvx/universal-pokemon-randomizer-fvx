@@ -147,10 +147,10 @@ public class SettingUtils {
     // Just a shorthand to make the more-or-less identical Misc Tweak definitions take less space
     // This could also be its own Definition subclass, but since it doesn't do anything special
     // a method felt sufficient.
-    public static SettingDefinition<Boolean> miscTweakDefinition(String name, MiscTweak tweak) {
+    public static SettingDefinition<Boolean> miscTweakDefinition(Settings.Name name, MiscTweak tweak) {
         return new SimpleSettingDefinition.Builder<>(
                 name,
-                "MiscTweaks",
+                Settings.Category.MISC_TWEAKS,
                 false)
                 .supported(isTweakAvailable(tweak))
                 .build();

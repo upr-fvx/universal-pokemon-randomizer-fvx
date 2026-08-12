@@ -12,7 +12,7 @@ public interface SettingChangeListener {
      * @param setting The setting that had its value reset.
      * @param manager The settings manager handling the setting.
      */
-    void onAutomaticSettingChange(String setting, SettingsManager manager);
+    void onAutomaticSettingChange(Settings.Name setting, SettingsManager manager);
 
 
     /**
@@ -21,7 +21,7 @@ public interface SettingChangeListener {
      * @param setting The setting that may have changed.
      * @param manager The settings manager handling the setting.
      */
-    void onPossibleEnablementChange(String setting, SettingsManager manager);
+    void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager);
 
     /**
      * Alerts the listener to a manual change to the setting's value.
@@ -29,7 +29,7 @@ public interface SettingChangeListener {
      * @param setting The setting that had its value changed.
      * @param manager The settings manager handling the setting.
      */
-    void onManualSettingChange(String setting, SettingsManager manager);
+    void onManualSettingChange(Settings.Name setting, SettingsManager manager);
 
     /**
      * Alerts the listener that the support state of this setting has changed.
@@ -38,7 +38,7 @@ public interface SettingChangeListener {
      * @param manager     The settings manager handling the setting.
      * @param isSupported Whether the setting is now supported.
      */
-    void onSupportChange(String setting, SettingsManager manager, boolean isSupported);
+    void onSupportChange(Settings.Name setting, SettingsManager manager, boolean isSupported);
 
     /**
      * Alerts the listener that the supported values of this setting may have changed.
@@ -47,5 +47,5 @@ public interface SettingChangeListener {
      * @param manager The settings manager handling the setting.
      * @param game    The RomHandler of the game that was loaded, or null if a game was unloaded.
      */
-    void onPossibleSupportedValuesChange(String setting, SettingsManager manager, RomHandler game);
+    void onPossibleSupportedValuesChange(Settings.Name setting, SettingsManager manager, RomHandler game);
 }

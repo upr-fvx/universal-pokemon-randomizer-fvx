@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -12,7 +13,7 @@ public class SimpleSettingDefinition<V extends Serializable> extends SettingDefi
 
     public static class Builder<B extends Builder<B, V>, V extends Serializable>
             extends SettingDefinition.Builder<B, V> {
-        public Builder(String name, String category, V defaultValue) {
+        public Builder(Settings.Name name, Settings.Category category, V defaultValue) {
             super(name, category, defaultValue);
         }
 
@@ -30,15 +31,15 @@ public class SimpleSettingDefinition<V extends Serializable> extends SettingDefi
     public static class BooleanBuilder<B extends BooleanBuilder<B>>
             extends Builder<B, Boolean> {
 
-        public BooleanBuilder(String name, String category) {
+        public BooleanBuilder(Settings.Name name, Settings.Category category) {
             super(name, category, false);
         }
     }
 
     //A simple SettingDefinition that makes no restrictions on values.
 
-    protected SimpleSettingDefinition(String name, String category, V defaultValue,
-                                      SettingRestriction prerequisite, Predicate<RomHandler> supported,
+    protected SimpleSettingDefinition(Settings.Name name, Settings.Category category, V defaultValue,
+                                   SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                       Function<RomHandler, V> variableDefaultValue) {
         super(name, category, defaultValue, prerequisite, supported, variableDefaultValue,
                 null, false);

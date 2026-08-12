@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.restrictions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface SettingRestriction {
      * Gets the names of all settings which affect whether this restriction returns true or false.
      * @return The names of all relevant settings.
      */
-    List<String> getRelevantSettingNames();
+    List<Settings.Name> getRelevantSettingNames();
 
     /**
      * Tests the restriction against the given SettingsManager.

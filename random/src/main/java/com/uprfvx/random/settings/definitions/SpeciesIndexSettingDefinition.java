@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings.definitions;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.Species;
@@ -24,7 +25,7 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
 
     public static class Builder<B extends Builder<B>> extends NumericSettingDefinition.Builder<B, Integer> {
 
-        public Builder(String name, String category) {
+        public Builder(Settings.Name name, Settings.Category category) {
             super(name, category, RANDOM_SPECIES, RANDOM_SPECIES, HIGHEST_SPECIES_INDEX);
         }
 
@@ -42,7 +43,7 @@ public class SpeciesIndexSettingDefinition extends NumericSettingDefinition<Inte
         }
     }
 
-    protected SpeciesIndexSettingDefinition(String name, String category,
+    protected SpeciesIndexSettingDefinition(Settings.Name name, Settings.Category category,
                                             Integer defaultValue,
                                             SettingRestriction prerequisite, Predicate<RomHandler> supported,
                                             Function<RomHandler, Integer> variableDefaultValue,

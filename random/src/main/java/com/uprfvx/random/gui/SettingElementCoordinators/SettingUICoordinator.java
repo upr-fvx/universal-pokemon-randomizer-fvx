@@ -1,6 +1,7 @@
 package com.uprfvx.random.gui.SettingElementCoordinators;
 
 import com.uprfvx.random.settings.SettingChangeListener;
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
 import java.io.Serializable;
@@ -12,12 +13,12 @@ import java.util.Objects;
  */
 public abstract class SettingUICoordinator<V extends Serializable> implements SettingChangeListener {
     private V displayedValue;
-    private String settingName;
+    private Settings.Name settingName;
     private SettingsManager settings;
     //I don't like that I have to keep the settingsManager here...
     //but I don't know how else I'd access it to set the setting.
 
-    public SettingUICoordinator(String settingName, SettingsManager settings) {
+    public SettingUICoordinator(Settings.Name settingName, SettingsManager settings) {
         this.settingName = settingName;
         this.settings = settings;
 
@@ -45,7 +46,7 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
     protected abstract V getElementValue();
 
     @Override
-    public void onManualSettingChange(String setting, SettingsManager manager) {
+    public void onManualSettingChange(Settings.Name setting, SettingsManager manager) {
         if(!Objects.equals(setting, settingName))
             throw new IllegalArgumentException("Received event for non-managed setting!");
 
@@ -57,7 +58,7 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
     }
 
     @Override
-    public void onAutomaticSettingChange(String setting, SettingsManager manager) {
+    public void onAutomaticSettingChange(Settings.Name setting, SettingsManager manager) {
         if(!Objects.equals(setting, settingName))
             throw new IllegalArgumentException("Received event for non-managed setting!");
 

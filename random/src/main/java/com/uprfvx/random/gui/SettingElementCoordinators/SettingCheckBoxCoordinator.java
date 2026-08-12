@@ -1,6 +1,7 @@
 package com.uprfvx.random.gui.SettingElementCoordinators;
 
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -10,7 +11,7 @@ public class SettingCheckBoxCoordinator extends SettingUICoordinator<Boolean> {
 
     private JCheckBox checkBox;
 
-    public SettingCheckBoxCoordinator(String settingName, SettingsManager settings, JCheckBox checkBox) {
+    public SettingCheckBoxCoordinator(Settings.Name settingName, SettingsManager settings, JCheckBox checkBox) {
         super(settingName, settings);
         this.checkBox = checkBox;
 
@@ -28,17 +29,17 @@ public class SettingCheckBoxCoordinator extends SettingUICoordinator<Boolean> {
     }
 
     @Override
-    public void onPossibleEnablementChange(String setting, SettingsManager manager) {
+    public void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager) {
         checkBox.setEnabled(manager.getSetting(setting));
     }
 
     @Override
-    public void onSupportChange(String setting, SettingsManager manager, boolean isSupported) {
+    public void onSupportChange(Settings.Name setting, SettingsManager manager, boolean isSupported) {
         checkBox.setVisible(isSupported);
     }
 
     @Override
-    public void onPossibleSupportedValuesChange(String setting, SettingsManager manager, RomHandler game) {
+    public void onPossibleSupportedValuesChange(Settings.Name setting, SettingsManager manager, RomHandler game) {
         //This should never happen
     }
 }

@@ -41,7 +41,7 @@ public class MiscTweak implements Comparable<MiscTweak> {
     // Higher priority value (third argument) = run first
     public static final MiscTweak BW_EXP_PATCH = new MiscTweak(1, "bwPatch", 0);
     public static final MiscTweak NERF_X_ACCURACY = new MiscTweak(1 << 1, "nerfXAcc", 0);
-    public static final MiscTweak FIX_CRIT_RATE = new MiscTweak(1 << 2, "critRateFix", 0);
+    public static final MiscTweak UPDATE_CRIT_RATE = new MiscTweak(1 << 2, "critRateFix", 0);
     public static final MiscTweak FASTEST_TEXT = new MiscTweak(1 << 3, "fastestText", 0);
     public static final MiscTweak RUNNING_SHOES_INDOORS = new MiscTweak(1 << 4, "runningShoes", 0);
     public static final MiscTweak RANDOMIZE_PC_POTION = new MiscTweak(1 << 5, "pcPotion", 0);

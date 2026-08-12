@@ -1,5 +1,6 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.settings.Settings.Name;
 import com.uprfvx.romio.romhandlers.RomHandlerTest;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +18,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.setSetting("LimitPokemon", true);
+        manager.setSetting(Name.LIMIT_POKEMON, true);
 
-        boolean value = manager.getSetting("LimitPokemon");
+        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
         assert(value == false);
     }
 
@@ -30,9 +31,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.setSetting("LimitPokemon", true);
+        manager.setSetting(Name.LIMIT_POKEMON, true);
 
-        boolean value = manager.getSetting("LimitPokemon");
+        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
         assert(value == true);
     }
 
@@ -43,10 +44,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Yellow (U)");
 
         manager.associateGame(romHandler);
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert(value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -57,10 +58,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Yellow (U)");
 
         manager.associateGame(romHandler);
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.UNIQUE);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.UNIQUE);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert(value == Settings.StartersTypeMod.UNIQUE);
     }
 
@@ -71,10 +72,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Red (U)");
 
         manager.associateGame(romHandler);
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -84,13 +85,13 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Red (U)");
 
-        manager.setSetting("LimitPokemon", true);
-        boolean value = manager.getSetting("LimitPokemon");
+        manager.setSetting(Name.LIMIT_POKEMON, true);
+        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
         assumeTrue(value);
 
         manager.associateGame(romHandler);
 
-        value = manager.getSetting("LimitPokemon");
+        value = manager.getSetting(Name.LIMIT_POKEMON);
         assert(value == false);
     }
 
@@ -100,15 +101,15 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Yellow (U)");
 
-        manager.setSetting("RandomizeStarters", Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting("StartersTypeRestriction", Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting("StartersTypeRestriction");
+        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
 
         manager.associateGame(romHandler);
 
-        value = manager.getSetting("StartersTypeRestriction");
+        value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
         assert(value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -121,9 +122,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.associateGame(romHandler);
         manager.unassociateGame();
 
-        manager.setSetting("LimitPokemon", true);
+        manager.setSetting(Name.LIMIT_POKEMON, true);
 
-        boolean value = manager.getSetting("LimitPokemon");
+        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
         assert(value == true);
     }
 

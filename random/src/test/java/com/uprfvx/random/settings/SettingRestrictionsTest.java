@@ -100,7 +100,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, false,
                 new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
-                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
@@ -129,7 +129,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, false,
                 new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
-                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
@@ -158,7 +158,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, true,
                 new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
-                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 
@@ -187,7 +187,7 @@ public class SettingRestrictionsTest {
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, true,
                 new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
-                new SimpleSettingRestriction<>(Settings.Names.RANDOMIZE_BASE_STAT_TOTALS,
+                new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
         );
 

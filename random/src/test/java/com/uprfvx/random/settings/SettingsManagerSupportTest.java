@@ -18,9 +18,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.setSetting(Name.LIMIT_POKEMON, true);
+        manager.setSetting(Name.BAN_GENERATION_1, true);
 
-        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
+        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
         assert(value == false);
     }
 
@@ -31,9 +31,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.setSetting(Name.LIMIT_POKEMON, true);
+        manager.setSetting(Name.BAN_GENERATION_1, true);
 
-        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
+        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
         assert(value == true);
     }
 
@@ -85,13 +85,13 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Red (U)");
 
-        manager.setSetting(Name.LIMIT_POKEMON, true);
-        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
+        manager.setSetting(Name.BAN_GENERATION_1, true);
+        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
         assumeTrue(value);
 
         manager.associateGame(romHandler);
 
-        value = manager.getSetting(Name.LIMIT_POKEMON);
+        value = manager.getSetting(Name.BAN_GENERATION_1);
         assert(value == false);
     }
 
@@ -122,9 +122,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.associateGame(romHandler);
         manager.unassociateGame();
 
-        manager.setSetting(Name.LIMIT_POKEMON, true);
+        manager.setSetting(Name.BAN_GENERATION_1, true);
 
-        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
+        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
         assert(value == true);
     }
 

@@ -18,7 +18,7 @@ public class SettingsManagerTest {
     public void canGetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        boolean value = manager.getSetting(Name.LIMIT_POKEMON);
+        boolean value = manager.getSetting(Name.NO_RANDOM_INTRO_MON);
         assert(value == false);
     }
 
@@ -93,7 +93,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(ClassCastException.class, () -> {
-            int value = manager.getSetting(Name.LIMIT_POKEMON);
+            int value = manager.getSetting(Name.NO_RANDOM_INTRO_MON);
         });
     }
 
@@ -102,7 +102,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            manager.setSetting(Name.LIMIT_POKEMON, 3.0);
+            manager.setSetting(Name.NO_RANDOM_INTRO_MON, 3.0);
         });
     }
 
@@ -119,10 +119,8 @@ public class SettingsManagerTest {
     public void setToDisabledSettingFails() {
         SettingsManager manager = new SettingsManager();
 
-        //TODO: change to setting that actually starts disabled
-
-        manager.setSetting(Name.BAN_GENERATION_1, true);
-        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
+        manager.setSetting(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, true);
+        boolean value = manager.getSetting(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
         assert (value != true);
     }
 

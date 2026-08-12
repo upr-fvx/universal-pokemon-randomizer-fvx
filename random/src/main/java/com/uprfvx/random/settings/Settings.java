@@ -82,7 +82,7 @@ public class Settings {
 
         // *** GENERAL OPTIONS ***
         //General options
-        LIMIT_POKEMON, NO_IRREGULAR_ALT_FORMES, NO_PREMATURE_EVOLUTIONS, NO_RANDOM_INTRO_MON, RACE_MODE,
+        NO_IRREGULAR_ALT_FORMES, NO_PREMATURE_EVOLUTIONS, NO_RANDOM_INTRO_MON, RACE_MODE,
         //Limit Pokemon
         BAN_GENERATION_1, BAN_GENERATION_2, BAN_GENERATION_3, BAN_GENERATION_4, BAN_GENERATION_5,
         BAN_GENERATION_6, BAN_GENERATION_7,
@@ -453,7 +453,7 @@ public class Settings {
                     9,
                     6, 9)
                     .prerequisite(Name.UPDATE_SPECIES_BASE_STATS, isTrue)
-                    .supportedMinimums(rh -> rh.generationOfPokemon() + 1)
+                    .supportedMinimums(rh -> Math.max(6, rh.generationOfPokemon() + 1))
                     .build(),
 
             new EnumSettingDefinition.Builder<>(

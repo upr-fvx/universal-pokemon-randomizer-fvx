@@ -135,8 +135,8 @@ public class Settings {
         MOVES_RANDOMIZE_POWER, MOVES_RANDOMIZE_ACCURACY, MOVES_RANDOMIZE_PP, MOVES_RANDOMIZE_TYPE,
         MOVES_RANDOMIZE_CATEGORY, MOVES_RANDOMIZE_NAME, UPDATE_MOVES, UPDATE_MOVES_TO_GENERATION,
         //Species' Movesets
-        RANDOMIZE_SPECIES_MOVESETS, MOVESETS_GUARANTEE_LEVEL_1_MOVES, MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT, //TODO: combine level 1 moves
-        MOVESETS_ORDER_BY_DAMAGE, MOVESETS_BAN_OVERPOWERED, MOVESETS_FORCE_GOOD_DAMAGING, //TODO: combine force good damaging
+        RANDOMIZE_SPECIES_MOVESETS, MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT,
+        MOVESETS_ORDER_BY_DAMAGE, MOVESETS_BAN_OVERPOWERED,
         MOVESETS_FORCE_GOOD_DAMAGING_PERCENT, MOVESETS_GUARANTEE_EVOLUTION_MOVES,
 
         // *** FOE POKEMON ***
@@ -144,16 +144,15 @@ public class Settings {
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_USE_SIMILAR_STRENGTH,
         TRAINERS_AVOID_DUPLICATES, TRAINERS_WEIGHT_TYPES, TRAINERS_USE_LOCAL, TRAINERS_NO_LEGENDARIES,
         TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLE,
-        TRAINERS_POKEMON_LEAGUE_HAVE_UNIQUE, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, TRAINERS_EVOLVE_POKEMON, //TODO: COMBINE PL unique
+        TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, TRAINERS_EVOLVE_POKEMON,
         TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_USE_LEVEL_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
         //That's a lot for one category. We should probably organize these more. TODO: that
         //Trainer Movesets
         TRAINERS_BETTER_MOVESETS_FOR_BOSSES, TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
         TRAINERS_BETTER_MOVESETS_FOR_REGULAR,
         //Trainers Additional Pokemon
-        TRAINERS_ADD_POKEMON_TO_BOSSES, TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
-        TRAINERS_ADD_POKEMON_TO_IMPORTANT, TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
-        TRAINERS_ADD_POKEMON_TO_REGULAR, TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT, //TODO: combine
+        TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
+        TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
         //Trainers Held Items
         TRAINERS_ADD_HELD_ITEMS_TO_BOSSES, TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT, TRAINERS_ADD_HELD_ITEMS_TO_REGULAR,
         TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY, TRAINER_HELD_ITEMS_SENSIBLE_ONLY, TRAINERS_HELD_ITEMS_ACES_ONLY,
@@ -223,7 +222,7 @@ public class Settings {
         TWEAK_RANDOMIZE_CATCHING_TUTORIAL, TWEAK_BAN_LUCKY_EGG, TWEAK_NO_FREE_LUCKY_EGG, TWEAK_BAN_BIG_MONEY_ITEMS,
         TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, TWEAK_BALANCE_FOSSIL_LEVELS, TWEAK_RETAIN_TEMPORARY_FORMES,
         TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
-        TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_GAIN;
+        TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_GAIN
     }
 
     public enum Category {
@@ -935,18 +934,13 @@ public class Settings {
                     Category.SPECIES_MOVESETS,
                     MovesetsMod.UNCHANGED)
                     .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.MOVESETS_GUARANTEE_LEVEL_1_MOVES,
-                    Category.SPECIES_MOVESETS)
-                    .prerequisite(randomPokemonMovesetsRestriction)
-                    .supported(RomHandler::supportsFourStartingMoves)
-                    .build(),
             new NumericSettingDefinition.Builder<>(
                     Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT,
                     Category.SPECIES_MOVESETS,
-                    2,
-                    2, 4)
-                    .prerequisite(Name.MOVESETS_GUARANTEE_LEVEL_1_MOVES, isTrue)
+                    1,
+                    1, 4)
+                    .prerequisite(randomPokemonMovesetsRestriction)
+                    .supported(RomHandler::supportsFourStartingMoves)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.MOVESETS_ORDER_BY_DAMAGE,
@@ -985,9 +979,9 @@ public class Settings {
     private static final SettingRestriction anyTrainerPokemonIsRandomRestriction = new MultiSettingRestriction(
             true, false,
             new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, notMatchesEnum(TrainersMod.UNCHANGED)),
-            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_BOSSES, greaterThanValue(0)),
-            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_IMPORTANT, greaterThanValue(0)),
-            new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_REGULAR, greaterThanValue(0))
+            new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, greaterThanValue(0)),
+            new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT, greaterThanValue(0)),
+            new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT, greaterThanValue(0))
     );
 
     private static final SettingRestriction addHeldItemsToAnyTrainerRestriction = new MultiSettingRestriction(
@@ -1035,21 +1029,21 @@ public class Settings {
                     .supported(RomHandler::canGiveCustomMovesetsToRegularTrainers)
                     .build(),
             new NumericSettingDefinition.Builder<>(
-                    Name.TRAINERS_ADD_POKEMON_TO_BOSSES,
+                    Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
                     Category.TRAINERS_ADDITIONAL_POKEMON,
                     0,
                     0, 5)
                     .supported(RomHandler::canAddPokemonToBossTrainers)
                     .build(),
             new NumericSettingDefinition.Builder<>(
-                    Name.TRAINERS_ADD_POKEMON_TO_IMPORTANT,
+                    Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
                     Category.TRAINERS_ADDITIONAL_POKEMON,
                     0,
                     0, 5)
                     .supported(RomHandler::canAddPokemonToImportantTrainers)
                     .build(),
             new NumericSettingDefinition.Builder<>(
-                    Name.TRAINERS_ADD_POKEMON_TO_REGULAR,
+                    Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
                     Category.TRAINERS_ADDITIONAL_POKEMON,
                     0,
                     0, 5)
@@ -1092,7 +1086,7 @@ public class Settings {
                             new MultiSettingRestriction(true, false,
                                     new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
                                             notMatchesEnum(TrainersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_BOSSES,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
                                             greaterThanValue(0))))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -1102,7 +1096,7 @@ public class Settings {
                             new MultiSettingRestriction(true, false,
                                     new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
                                             notMatchesEnum(TrainersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_IMPORTANT,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
                                             greaterThanValue(0))))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -1112,7 +1106,7 @@ public class Settings {
                             new MultiSettingRestriction(true, false,
                                     new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
                                             notMatchesEnum(TrainersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_ADD_POKEMON_TO_REGULAR,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
                                             greaterThanValue(0))))
                     .build(),
 
@@ -1183,9 +1177,13 @@ public class Settings {
                     Category.TRAINERS_GENERAL,
                     0,
                     0, 2)
-                    // this prerequisite can't be "anyTrainerPokemonIsRandomRestriction", because that doesn't
-                    // guarantee that the E4+champion get any random mons
-                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, notMatchesEnum(TrainersMod.UNCHANGED)) //TODO +AddPokemonToBosses
+                    // This prerequisite can't be "anyTrainerPokemonIsRandomRestriction",
+                    // because it requires that the E4+Champion get 2 random mons (to force to be unique).
+                    // TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT might seem like it would do that,
+                    // but in most games the E4 members have 5 mons, and the Champion a full team of 6!
+                    // (and filling up a team beyond 6 is not allowed)
+                    // So that option doesn't give the E4+Champion 2 random mons.
+                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, notMatchesEnum(TrainersMod.UNCHANGED))
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(

@@ -632,6 +632,7 @@ public class Settings {
     //region given pokemon [currently Starters, Statics, & Trades]
     //TODO: move statics => Wild Pokemon supercategory & tab
     // Should statics be moved already, or is that a future project for once we've split off gift mons?
+    // I think yes move them now, while we're doing all this setting stuff.
 
     public enum StartersMod {
         UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
@@ -800,6 +801,7 @@ public class Settings {
             //  (Not sure how that can interact with defaults though. Maybe they just need to default to 0 and MAX_BST
             //  instead of their current defaults? That would also allow us to remove the UseMin, UseMax settings.)
             //  ...Yeah, actually, that suits the standard of default values being expected behavior better.
+            //  And it allows us to remove the toggle settings!
 
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_STATIC_ENCOUNTERS,

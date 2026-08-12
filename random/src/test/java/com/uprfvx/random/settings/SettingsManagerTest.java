@@ -119,8 +119,10 @@ public class SettingsManagerTest {
     public void setToDisabledSettingFails() {
         SettingsManager manager = new SettingsManager();
 
-        manager.setSetting(Name.ALLOW_GENERATION_1, true);
-        boolean value = manager.getSetting(Name.ALLOW_GENERATION_1);
+        //TODO: change to setting that actually starts disabled
+
+        manager.setSetting(Name.BAN_GENERATION_1, true);
+        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
         assert (value != true);
     }
 

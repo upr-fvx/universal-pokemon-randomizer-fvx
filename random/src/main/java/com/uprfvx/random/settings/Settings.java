@@ -80,12 +80,12 @@ public class Settings {
         //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
         //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.\
 
-        // *** GENERAL OPTIONS ***
+        // *** GENERAL ***
         //General options
         NO_IRREGULAR_ALT_FORMES, NO_PREMATURE_EVOLUTIONS, NO_RANDOM_INTRO_MON, RACE_MODE,
         //Limit Pokemon
-        BAN_GENERATION_1, BAN_GENERATION_2, BAN_GENERATION_3, BAN_GENERATION_4, BAN_GENERATION_5,
-        BAN_GENERATION_6, BAN_GENERATION_7,
+        LIMIT_BAN_GENERATION_1, LIMIT_BAN_GENERATION_2, LIMIT_BAN_GENERATION_3, LIMIT_BAN_GENERATION_4,
+        LIMIT_BAN_GENERATION_5, LIMIT_BAN_GENERATION_6, LIMIT_BAN_GENERATION_7, LIMIT_ALLOW_RELATIVES,
 
         // *** SPECIES TRAITS ***
         //Base Stat Totals
@@ -317,39 +317,52 @@ public class Settings {
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_1,
+                    Name.LIMIT_BAN_GENERATION_1,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))  //There's no sense letting a user ban ALL Pokémon
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_2,
+                    Name.LIMIT_BAN_GENERATION_2,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_3,
+                    Name.LIMIT_BAN_GENERATION_3,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(3))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_4,
+                    Name.LIMIT_BAN_GENERATION_4,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(4))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_5,
+                    Name.LIMIT_BAN_GENERATION_5,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(5))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_6,
+                    Name.LIMIT_BAN_GENERATION_6,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(6))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.BAN_GENERATION_7,
+                    Name.LIMIT_BAN_GENERATION_7,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(7))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.LIMIT_ALLOW_RELATIVES,
+                    Category.LIMIT_POKEMON)
+                    .supported(atLeastGeneration(2))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_1, isTrue),
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_2, isTrue),
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_3, isTrue),
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_4, isTrue),
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isTrue),
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_6, isTrue),
+                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_7, isTrue)))
                     .build()
     );
 

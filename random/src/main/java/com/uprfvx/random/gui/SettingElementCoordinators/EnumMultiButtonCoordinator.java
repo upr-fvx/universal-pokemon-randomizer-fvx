@@ -5,8 +5,14 @@ import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.Map;
 
+/**
+ * A class that coordinates an Enum setting with a group of buttons (such as a set of radio buttons or a dropdown menu)
+ * @param <E> The Enum type to use.
+ * @param <J> The type of button to use.
+ */
 public class EnumMultiButtonCoordinator<E extends Enum<E>, J extends AbstractButton>
         extends SettingUICoordinator<E> {
     //Would have an abstract parent, except... I'm pretty sure this is the only case of multiple elements
@@ -23,7 +29,8 @@ public class EnumMultiButtonCoordinator<E extends Enum<E>, J extends AbstractBut
                                       JCheckBox latch) {
         super(settingName, settings, latch);
 
-        //TODO: consider grouping?
+        ButtonGroup group = new ButtonGroup();
+        elements.values().forEach(group::add);
 
         this.elements = elements;
         setInitialState();
@@ -48,7 +55,16 @@ public class EnumMultiButtonCoordinator<E extends Enum<E>, J extends AbstractBut
 
     @Override
     protected E getElementValue() {
-        return null;
+        for (Map.Entry<E, J> element : elements.entrySet()) {
+            if(element.getValue().isSelected()) {
+                return element.getKey();
+            }
+        }
+        //shouldn't reach here unless no button is selected, somehow.
+        Class e = elements.keySet().toArray()[0].getClass(); //awkward ass statement but it should be okay
+
+        throw new IllegalStateException("No button selected in group! Enum: " + e.getName());
+
     }
 
     @Override

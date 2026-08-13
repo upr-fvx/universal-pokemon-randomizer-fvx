@@ -392,7 +392,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeWildHeldItems() {
-        if (settings.isRandomizeWildPokemonHeldItems()) {
+        if (settings.getSetting(Settings.Name.WILD_RANDOMIZE_HELD_ITEMS)) {
             encHeldItemRandomizer.randomizeWildHeldItems();
         }
     }
@@ -437,7 +437,7 @@ public class GameRandomizer {
         // Easier evolutions
         if (settings.isMakeEvolutionsEasier()) {
             romHandler.condenseLevelEvolutions(settings.getMakeEvolutionsEasierLvl());
-            boolean wildsRandomizer = settings.isRandomizeWildPokemon();
+            boolean wildsRandomizer = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
             romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }
 
@@ -592,9 +592,9 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTrainerMovesets() {
-        if (settings.isBetterBossTrainerMovesets()
-                || settings.isBetterImportantTrainerMovesets()
-                || settings.isBetterRegularTrainerMovesets()) {
+        if ((boolean) settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES)
+                || (boolean) settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT)
+                || (boolean) settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR)) {
             trainerMovesetRandomizer.randomizeTrainerMovesets();
         }
     }
@@ -656,11 +656,13 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeWildPokemon() {
-        if (settings.isUseMinimumCatchRate()) {
+        Settings.CatchRateMod catchRateMod = settings.getSetting(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
+        if (catchRateMod != Settings.CatchRateMod.UNCHANGED) {
             wildEncounterRandomizer.changeCatchRates();
         }
 
-        if (settings.isRandomizeWildPokemon() || settings.isWildLevelsModified()) {
+        if ((boolean) settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS)
+                || !settings.isDefault(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT)) {
             wildEncounterRandomizer.randomizeEncounters();
         }
     }

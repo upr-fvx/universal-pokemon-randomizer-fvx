@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.gamedata.*;
@@ -14,30 +15,33 @@ public class WildEncounterRandomizer extends Randomizer {
     }
 
     public void randomizeEncounters() {
-        boolean useTimeOfDay = settings.isUseTimeBasedEncounters();
-        int levelModifier = settings.isWildLevelsModified() ? settings.getWildLevelModifier() : 0;
+        boolean useTimeOfDay = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED);
+        int levelModifier = settings.getSetting(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
 
-        if(!settings.isRandomizeWildPokemon()) {
+        if(!(boolean) settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS)) {
             modifyLevelsOnly(useTimeOfDay, levelModifier);
             return;
         }
 
-        SettingsManager.WildPokemonZoneMod mode = settings.getWildPokemonZoneMod();
-        boolean splitByEncounterType = settings.isSplitWildZoneByEncounterTypes();
-        boolean randomTypeThemes = settings.getWildPokemonTypeMod() == SettingsManager.WildPokemonTypeMod.RANDOM_THEMES;
-        boolean keepTypeThemes = settings.isKeepWildTypeThemes();
-        boolean keepPrimaryType = settings.getWildPokemonTypeMod() == SettingsManager.WildPokemonTypeMod.KEEP_PRIMARY;
-        boolean basicPokemonOnly = settings.getWildPokemonEvolutionMod() == SettingsManager.WildPokemonEvolutionMod.BASIC_ONLY;
-        boolean sameEvoStage = settings.getWildPokemonEvolutionMod() == SettingsManager.WildPokemonEvolutionMod.KEEP_STAGE;
-        boolean keepEvolutions = settings.isKeepWildEvolutionFamilies();
-        boolean catchEmAll = settings.isCatchEmAllEncounters();
-        boolean similarStrength = settings.isSimilarStrengthEncounters();
-        boolean noLegendaries = settings.isBlockWildLegendaries();
-        boolean balanceShakingGrass = settings.isBalanceShakingGrass();
-        boolean allowAltFormes = settings.isAllowWildAltFormes();
-        boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean noPrematureEvolutions = settings.isBanPrematureEvos();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
+        Settings.WildPokemonZoneMod mode = settings.getSetting(Settings.Name.WILD_REPLACEMENT_ZONE);
+        boolean splitByEncounterType = settings.getSetting(Settings.Name.WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES);
+        Settings.WildPokemonTypeMod typeMod = settings.getSetting(Settings.Name.WILD_TYPE_RESTRICTION);
+        boolean randomTypeThemes = typeMod == Settings.WildPokemonTypeMod.RANDOM_THEMES;
+        boolean keepTypeThemes = settings.getSetting(Settings.Name.WILD_KEEP_TYPE_THEMES);
+        boolean keepPrimaryType = typeMod == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
+        Settings.WildPokemonEvolutionMod evolutionMod = settings.getSetting(Settings.Name.WILD_EVOLUTION_RESTRICTION);
+        boolean basicPokemonOnly = evolutionMod == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
+        boolean sameEvoStage = evolutionMod == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
+        boolean keepEvolutions = settings.getSetting(Settings.Name.WILD_EVOLUTION_KEEP_RELATIONS);
+        boolean catchEmAll = settings.getSetting(Settings.Name.WILD_CATCH_EM_ALL);
+        boolean similarStrength = settings.getSetting(Settings.Name.WILD_USE_SIMILAR_STRENGTH);
+        boolean noLegendaries = settings.getSetting(Settings.Name.WILD_NO_LEGENDARIES);
+        boolean balanceShakingGrass = settings.getSetting(Settings.Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL);
+        boolean allowAltFormes = settings.getSetting(Settings.Name.WILD_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean noPrematureEvolutions = settings.getSetting(Settings.Name.NO_PREMATURE_EVOLUTIONS);
+        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
 
         randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
                 randomTypeThemes, keepTypeThemes, keepPrimaryType,
@@ -48,7 +52,7 @@ public class WildEncounterRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private void randomizeEncounters(SettingsManager.WildPokemonZoneMod mode, boolean splitByEncounterType,
+    private void randomizeEncounters(Settings.WildPokemonZoneMod mode, boolean splitByEncounterType,
                                      boolean useTimeOfDay,
                                      boolean randomTypeThemes, boolean keepTypeThemes, boolean keepPrimaryType,
                                      boolean basicPokemonOnly, boolean sameEvoStage, boolean keepEvolutions,
@@ -74,7 +78,7 @@ public class WildEncounterRandomizer extends Randomizer {
                 randomTypeThemes, keepTypeThemes, keepPrimaryType, catchEmAll, similarStrength, balanceShakingGrass,
                 basicPokemonOnly, sameEvoStage, keepEvolutions, noPrematureEvolutions);
         switch (mode) {
-            case NONE:
+            case SINGLE_ENCOUNTER:
                 if(romHandler.isORAS()) {
                     //this mode crashes ORAS and needs special handling to approximate
                     ir.randomEncountersORAS(preppedAreas);
@@ -1274,29 +1278,30 @@ public class WildEncounterRandomizer extends Randomizer {
     }
 
     public void changeCatchRates() {
-        int minimumCatchRateLevel = settings.getMinimumCatchRateLevel();
+        Settings.CatchRateMod mod = settings.getSetting(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
 
-        if (minimumCatchRateLevel == 5) {
+        if (mod == Settings.CatchRateMod.GUARANTEED) {
             romHandler.enableGuaranteedPokemonCatching();
         } else {
             int normalMin, legendaryMin;
-            switch (minimumCatchRateLevel) {
-                case 1:
-                default:
+            switch (mod) {
+                case STANDARDIZED:
                     normalMin = 75;
                     legendaryMin = 37;
                     break;
-                case 2:
+                case BUFFED:
                     normalMin = 128;
                     legendaryMin = 64;
                     break;
-                case 3:
+                case SUPER:
                     normalMin = 200;
                     legendaryMin = 100;
                     break;
-                case 4:
+                case ULTRA:
                     normalMin = legendaryMin = 255;
                     break;
+                default:
+                    throw new IllegalStateException("Should not get here");
             }
             minimumCatchRate(normalMin, legendaryMin);
         }

@@ -1,5 +1,6 @@
 package com.uprfvx.random;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.gamedata.basestats.BaseStats;
@@ -56,8 +57,10 @@ public class CheckValueCalculator {
     }
 
     private void addEncounterInfo() {
-        boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
-                (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
+        boolean randomizeWilds = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
+        boolean changeLevels = !settings.isDefault(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
+        boolean useTimeBasedEncounters = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED)
+                || (!randomizeWilds  && changeLevels);
         for (EncounterArea area : romHandler.getEncounters(useTimeBasedEncounters)) {
             for (Encounter e : area) {
                 addToCV(e.getLevel(), e.getSpecies().getNumber());

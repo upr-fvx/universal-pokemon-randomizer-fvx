@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.MiscTweak;
@@ -60,7 +61,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
         boolean doNotUsePrematureEvos = settings.isBanPrematureEvos();
         boolean swapMegaEvos = settings.isSwapTrainerMegaEvos();
-        boolean shinyChance = settings.isShinyChance();
+        boolean shinyChance = settings.getSetting(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
         boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
         int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
         boolean evolveAsFarAsLegal = settings.isTrainersEvolveTheirPokemon();
@@ -84,8 +85,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
         cachedAll = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
 
         if (useLocalPokemon) {
+            boolean useTimeOfDay = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED);
             SpeciesSet localWithRelatives =
-                    romHandler.getMainGameWildPokemonSpecies(settings.isUseTimeBasedEncounters())
+                    romHandler.getMainGameWildPokemonSpecies(useTimeOfDay)
                     .buildFullFamilies(false);
 
             cachedAll.retainAll(localWithRelatives);

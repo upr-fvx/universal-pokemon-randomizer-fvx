@@ -1187,8 +1187,10 @@ public class RandomizationLogger {
     private void logWildPokemon() {
         printSectionTitle("wp");
 
-        boolean useTimeBasedEncounters = settings.isUseTimeBasedEncounters() ||
-                (!settings.isRandomizeWildPokemon() && settings.isWildLevelsModified());
+        boolean randomizeWilds = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
+        boolean changeLevels = !settings.isDefault(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
+        boolean useTimeBasedEncounters = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED)
+                || (!randomizeWilds  && changeLevels);
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
 
         int i = 0;

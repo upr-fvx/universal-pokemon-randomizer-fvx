@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.GlobalConstants;
@@ -25,18 +26,19 @@ public class TrainerMovesetRandomizer extends Randomizer {
     }
 
     public void randomizeTrainerMovesets() {
-        boolean isCyclicEvolutions = settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL;
+        Settings.EvolutionsMod evolutionsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
+        boolean isCyclicEvolutions = evolutionsMod == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         boolean isOnlyMultiBattles = settings.getBattleStyle().isOnlyMultiBattles();
-        boolean betterBossMovesets = settings.isBetterBossTrainerMovesets();
-        boolean betterImportantMovesets = settings.isBetterImportantTrainerMovesets();
-        boolean betterRegularMovesets = settings.isBetterRegularTrainerMovesets();
+        boolean betterBossMovesets = settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES);
+        boolean betterImportantMovesets = settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT);
+        boolean betterRegularMovesets = settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);
 
         List<Trainer> trainers = romHandler.getTrainers().stream()
                 .filter(t -> (t.isBoss() && betterBossMovesets) ||
                         (t.isImportant() && betterImportantMovesets) ||
                         (t.isRegular() && betterRegularMovesets))
                 .filter(t -> !t.shouldNotGetBuffs())
-                .collect(Collectors.toList());
+                .toList();
 
         for (Trainer t : trainers) {
 

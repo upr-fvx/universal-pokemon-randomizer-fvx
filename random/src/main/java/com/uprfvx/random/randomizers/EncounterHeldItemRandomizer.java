@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.Species;
@@ -22,7 +23,7 @@ public class EncounterHeldItemRandomizer extends Randomizer {
     }
 
     public void randomizeWildHeldItems() {
-        boolean banBadItems = settings.isBanBadRandomWildPokemonHeldItems();
+        boolean banBadItems = settings.getSetting(Settings.Name.WILD_HELD_ITEMS_BAN_MINOR);
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {

@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.*;
@@ -390,7 +391,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setUseTimeBasedEncounters(true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
+        boolean useTimeOfDay = !(boolean) s.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED);
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(useTimeOfDay)
                         .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);
@@ -419,7 +421,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         s.setUseTimeBasedEncounters(true); // should be at least 4 non-local Pokemon in each game
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
-        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(s.isUseTimeBasedEncounters())
+        boolean useTimeOfDay = !(boolean) s.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED);
+        SpeciesSet localWithRelatives = romHandler.getMainGameWildPokemonSpecies(useTimeOfDay)
                 .buildFullFamilies(false);
         SpeciesSet all = romHandler.getSpeciesSet();
         SpeciesSet nonLocal = new SpeciesSet(all);

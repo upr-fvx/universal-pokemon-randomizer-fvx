@@ -2791,48 +2791,24 @@ public class SettingsManager {
         settingBattleStyle.setStyle(getEnum(BattleStyle.Style.class, bools));
     }
 
-    public boolean isShinyChance() {
-        return shinyChance;
-    }
-
     public void setShinyChance(boolean shinyChance) {
         this.shinyChance = shinyChance;
-    }
-
-    public boolean isBetterBossTrainerMovesets() {
-        return betterBossTrainerMovesets;
     }
 
     public void setBetterBossTrainerMovesets(boolean betterBossTrainerMovesets) {
         this.betterBossTrainerMovesets = betterBossTrainerMovesets;
     }
 
-    public boolean isBetterImportantTrainerMovesets() {
-        return betterImportantTrainerMovesets;
-    }
-
     public void setBetterImportantTrainerMovesets(boolean betterImportantTrainerMovesets) {
         this.betterImportantTrainerMovesets = betterImportantTrainerMovesets;
-    }
-
-    public boolean isBetterRegularTrainerMovesets() {
-        return betterRegularTrainerMovesets;
     }
 
     public void setBetterRegularTrainerMovesets(boolean betterRegularTrainerMovesets) {
         this.betterRegularTrainerMovesets = betterRegularTrainerMovesets;
     }
 
-    public boolean isRandomizeWildPokemon() {
-        return randomizeWildPokemon;
-    }
-
     public void setRandomizeWildPokemon(boolean randomizeWildPokemon) {
         this.randomizeWildPokemon = randomizeWildPokemon;
-    }
-
-    public WildPokemonZoneMod getWildPokemonZoneMod() {
-        return wildPokemonZoneMod;
     }
 
     public void setWildPokemonZoneMod(boolean... bools) {
@@ -2847,44 +2823,20 @@ public class SettingsManager {
         this.splitWildZoneByEncounterTypes = splitWildZoneByEncounterTypes;
     }
 
-    public boolean isSplitWildZoneByEncounterTypes() {
-        return splitWildZoneByEncounterTypes;
-    }
-
-    public boolean isKeepWildTypeThemes() {
-        return keepWildTypeThemes;
-    }
-
     public void setKeepWildTypeThemes(boolean keepWildTypeThemes) {
         this.keepWildTypeThemes = keepWildTypeThemes;
-    }
-
-    public boolean isKeepWildEvolutionFamilies() {
-        return keepWildEvolutionFamilies;
     }
 
     public void setKeepWildEvolutionFamilies(boolean keepWildEvolutionFamilies) {
         this.keepWildEvolutionFamilies = keepWildEvolutionFamilies;
     }
 
-    public boolean isSimilarStrengthEncounters() {
-        return similarStrengthEncounters;
-    }
-
     public void setSimilarStrengthEncounters(boolean similarStrengthEncounters) {
         this.similarStrengthEncounters = similarStrengthEncounters;
     }
 
-    public boolean isCatchEmAllEncounters() {
-        return catchEmAllEncounters;
-    }
-
     public void setCatchEmAllEncounters(boolean catchEmAllEncounters) {
         this.catchEmAllEncounters = catchEmAllEncounters;
-    }
-
-    public WildPokemonTypeMod getWildPokemonTypeMod() {
-        return wildPokemonTypeMod;
     }
 
     public void setWildPokemonTypeMod(boolean... bools) {
@@ -2895,10 +2847,6 @@ public class SettingsManager {
         this.wildPokemonTypeMod = wildPokemonTypeMod;
     }
 
-    public WildPokemonEvolutionMod getWildPokemonEvolutionMod() {
-        return wildPokemonEvolutionMod;
-    }
-
     public void setWildPokemonEvolutionMod(boolean... bools) {
         setWildPokemonEvolutionMod(getEnum(WildPokemonEvolutionMod.class, bools));
     }
@@ -2907,80 +2855,40 @@ public class SettingsManager {
         this.wildPokemonEvolutionMod = wildPokemonEvolutionMod;
     }
 
-    public boolean isUseTimeBasedEncounters() {
-        return useTimeBasedEncounters;
-    }
-
     public void setUseTimeBasedEncounters(boolean useTimeBasedEncounters) {
         this.useTimeBasedEncounters = useTimeBasedEncounters;
-    }
-
-    public boolean isBlockWildLegendaries() {
-        return blockWildLegendaries;
     }
 
     public void setBlockWildLegendaries(boolean blockWildLegendaries) {
         this.blockWildLegendaries = blockWildLegendaries;
     }
 
-    public boolean isUseMinimumCatchRate() {
-        return useMinimumCatchRate;
-    }
-
     public void setUseMinimumCatchRate(boolean useMinimumCatchRate) {
         this.useMinimumCatchRate = useMinimumCatchRate;
-    }
-
-    public int getMinimumCatchRateLevel() {
-        return minimumCatchRateLevel;
     }
 
     public void setMinimumCatchRateLevel(int minimumCatchRateLevel) {
         this.minimumCatchRateLevel = minimumCatchRateLevel;
     }
 
-    public boolean isRandomizeWildPokemonHeldItems() {
-        return randomizeWildPokemonHeldItems;
-    }
-
     public void setRandomizeWildPokemonHeldItems(boolean randomizeWildPokemonHeldItems) {
         this.randomizeWildPokemonHeldItems = randomizeWildPokemonHeldItems;
-    }
-
-    public boolean isBanBadRandomWildPokemonHeldItems() {
-        return banBadRandomWildPokemonHeldItems;
     }
 
     public void setBanBadRandomWildPokemonHeldItems(boolean banBadRandomWildPokemonHeldItems) {
         this.banBadRandomWildPokemonHeldItems = banBadRandomWildPokemonHeldItems;
     }
 
-    public boolean isBalanceShakingGrass() {
-        return balanceShakingGrass;
-    }
-
     public void setBalanceShakingGrass(boolean balanceShakingGrass) {
         this.balanceShakingGrass = balanceShakingGrass;
-    }
-
-    public boolean isWildLevelsModified() {
-        return wildLevelsModified;
     }
 
     public void setWildLevelsModified(boolean wildLevelsModified) {
         this.wildLevelsModified = wildLevelsModified;
     }
 
-    public int getWildLevelModifier() {
-        return wildLevelModifier;
-    }
-
     public void setWildLevelModifier(int wildLevelModifier) {
         this.wildLevelModifier = wildLevelModifier;
-    }
-
-    public boolean isAllowWildAltFormes() {
-        return allowWildAltFormes;
     }
 
     public void setAllowWildAltFormes(boolean allowWildAltFormes) {

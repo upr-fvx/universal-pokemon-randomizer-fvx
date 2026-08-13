@@ -33,6 +33,7 @@ import com.uprfvx.random.updaters.SpeciesBaseStatUpdater;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.random.updaters.Updater;
 import com.uprfvx.romio.MiscTweak;
+import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.Gen1RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -277,7 +278,7 @@ public class GameRandomizer {
         maybeRandomizeSpeciesBaseStatTotals();
 
         // Applied after both evo and BST randomization, so the right evos/BSTs are used.
-        if (settings.isAdjustEvolutionLevels()) {
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH)) {
             evoRandomizer.adjustEvolutionLevels();
         }
 
@@ -311,9 +312,7 @@ public class GameRandomizer {
         maybeRandomizeTrainerNames();
 
         // Apply metronome only mode now that trainers have been dealt with
-        if (settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY) {
-            speciesMovesetRandomizer.metronomeOnlyMode();
-        }
+        maybeApplyMetronomeMode();
 
         maybeRandomizeStaticPokemon();
         maybeRandomizeTotemPokemon();
@@ -348,27 +347,28 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeMoveData() {
-        if (settings.isRandomizeMovePowers()) {
+        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_POWER)) {
             moveDataRandomizer.randomizeMovePowers();
         }
 
-        if (settings.isRandomizeMoveAccuracies()) {
+        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_ACCURACY)) {
             moveDataRandomizer.randomizeMoveAccuracies();
         }
 
-        if (settings.isRandomizeMovePPs()) {
+        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_PP)) {
             moveDataRandomizer.randomizeMovePPs();
         }
 
-        if (settings.isRandomizeMoveTypes()) {
+        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_TYPE)) {
             moveDataRandomizer.randomizeMoveTypes();
         }
 
-        if (settings.isRandomizeMoveNames()) {
+        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_NAME)) {
             moveNameRandomizer.randomizeMoveNames();
         }
 
-        if (settings.isRandomizeMoveCategory() && romHandler.hasPhysicalSpecialSplit()) {
+        if ((boolean) settings.getSetting(Settings.Name.MOVES_RANDOMIZE_CATEGORY)
+                && romHandler.hasPhysicalSpecialSplit()) {
             moveDataRandomizer.randomizeMoveCategory();
         }
     }
@@ -398,7 +398,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeEvolutions() {
-        if (settings.getEvolutionsMod() != SettingsManager.EvolutionsMod.UNCHANGED) {
+        Settings.EvolutionsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
+        if (mod != Settings.EvolutionsMod.UNCHANGED) {
             evoRandomizer.randomizeEvolutions();
         }
     }
@@ -430,7 +431,8 @@ public class GameRandomizer {
 
         // Trade evolutions (etc.) removal
         if (settings.isChangeImpossibleEvolutions()) {
-            boolean changeMoveEvos = settings.getMovesetsMod() != SettingsManager.MovesetsMod.UNCHANGED;
+            Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+            boolean changeMoveEvos = movesetsMod != Settings.MovesetsMod.UNCHANGED;
             romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
@@ -462,13 +464,14 @@ public class GameRandomizer {
         // 2. Reorder moves by damage
         // Note: "Metronome only" is handled after trainers instead
 
-        if (settings.getMovesetsMod() != SettingsManager.MovesetsMod.UNCHANGED &&
-                settings.getMovesetsMod() != SettingsManager.MovesetsMod.METRONOME_ONLY) {
+        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        if (mod != Settings.MovesetsMod.UNCHANGED
+                && mod != Settings.MovesetsMod.METRONOME_ONLY) {
             speciesMovesetRandomizer.randomizeMovesLearnt();
             speciesMovesetRandomizer.randomizeEggMoves();
         }
 
-        if (settings.isReorderDamagingMoves()) {
+        if (settings.getSetting(Settings.Name.MOVESETS_ORDER_BY_DAMAGE)) {
             speciesMovesetRandomizer.orderDamagingMovesByDamage();
         }
     }
@@ -563,30 +566,32 @@ public class GameRandomizer {
         // 4. Modify rivals to carry starters
         // 5. Randomize Trainer Pokemon (or evolve if not randomizing, i.e., UNCHANGED and no additional Pkmn)
 
-        if (settings.isTrainersLevelModified()) {
+        if (!settings.isDefault(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT)) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
         }
 
-        boolean additionalPokemonAdded = settings.getAdditionalRegularTrainerPokemon() > 0
-                || settings.getAdditionalImportantTrainerPokemon() > 0
-                || settings.getAdditionalBossTrainerPokemon() > 0;
+        boolean additionalPokemonAdded = !settings.isDefault(Settings.Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT)
+                || !settings.isDefault(Settings.Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT)
+                || !settings.isDefault(Settings.Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT);
         if (additionalPokemonAdded) {
             trainerPokeRandomizer.addTrainerPokemon();
         }
 
-        if (settings.getBattleStyle().isBattleStyleChanged()) {
+        BattleStyle.Modification battleStyleMod = settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+        if (battleStyleMod != BattleStyle.Modification.UNCHANGED) {
             trainerPokeRandomizer.modifyBattleStyle();
         }
 
-        if ((settings.getTrainersMod() != SettingsManager.TrainersMod.UNCHANGED
+        Settings.TrainersMod trainersMod = settings.getSetting(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
+        if ((trainersMod != Settings.TrainersMod.UNCHANGED
                 || settings.getStartersMod() != SettingsManager.StartersMod.UNCHANGED)
-                && settings.isRivalCarriesStarterThroughout()) {
+                && (boolean) settings.getSetting(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER)) {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if(settings.getTrainersMod() != SettingsManager.TrainersMod.UNCHANGED) {
+        if(trainersMod != Settings.TrainersMod.UNCHANGED) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.isTrainersEvolveTheirPokemon()) {
+        } else if (settings.getSetting(Settings.Name.TRAINERS_EVOLVE_POKEMON)) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
         }
     }
@@ -608,22 +613,29 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTrainerHeldItems() {
-        if (settings.isRandomizeHeldItemsForBossTrainerPokemon()
-                || settings.isRandomizeHeldItemsForImportantTrainerPokemon()
-                || settings.isRandomizeHeldItemsForRegularTrainerPokemon()) {
+        if ((boolean) settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES)
+                || (boolean) settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT)
+                || (boolean) settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR)) {
             trainerPokeRandomizer.randomizeTrainerHeldItems();
         }
     }
 
     private void maybeRandomizeTrainerNames() {
         if (romHandler.canChangeTrainerText()) {
-            if (settings.isRandomizeTrainerClassNames()) {
+            if (settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_CLASS_NAMES)) {
                 trainerNameRandomizer.randomizeTrainerClassNames();
             }
 
-            if (settings.isRandomizeTrainerNames()) {
+            if (settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_NAMES)) {
                 trainerNameRandomizer.randomizeTrainerNames();
             }
+        }
+    }
+
+    private void maybeApplyMetronomeMode() {
+        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        if (mod == Settings.MovesetsMod.METRONOME_ONLY) {
+            speciesMovesetRandomizer.metronomeOnlyMode();
         }
     }
 

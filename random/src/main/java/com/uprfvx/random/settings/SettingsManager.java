@@ -2320,9 +2320,7 @@ public class SettingsManager {
         this.typesFollowMegaEvolutions = typesFollowMegaEvolutions;
     }
 
-    public EvolutionsMod getEvolutionsMod() {
-        return evolutionsMod;
-    }
+    // TODO: convert all usages of the remaining is/get[Setting] methods above
 
     public void setEvolutionsMod(boolean... bools) {
         setEvolutionsMod(getEnum(EvolutionsMod.class, bools));
@@ -2332,120 +2330,60 @@ public class SettingsManager {
         this.evolutionsMod = evolutionsMod;
     }
 
-    public boolean isEvosSimilarStrength() {
-        return evosSimilarStrength;
-    }
-
     public void setEvosSimilarStrength(boolean evosSimilarStrength) {
         this.evosSimilarStrength = evosSimilarStrength;
-    }
-
-    public boolean isEvosSameTyping() {
-        return evosSameTyping;
     }
 
     public void setEvosSameTyping(boolean evosSameTyping) {
         this.evosSameTyping = evosSameTyping;
     }
 
-    public boolean isEvosMaxThreeStages() {
-        return evosMaxThreeStages;
-    }
-
     public void setEvosMaxThreeStages(boolean evosMaxThreeStages) {
         this.evosMaxThreeStages = evosMaxThreeStages;
-    }
-
-    public boolean isEvosForceChange() {
-        return evosForceChange;
     }
 
     public void setEvosForceChange(boolean evosForceChange) {
         this.evosForceChange = evosForceChange;
     }
 
-    public boolean isEvosAllowAltFormes() {
-        return evosAllowAltFormes;
-    }
-
     public void setEvosAllowAltFormes(boolean evosAllowAltFormes) {
         this.evosAllowAltFormes = evosAllowAltFormes;
-    }
-
-    public boolean isEvosForceGrowth() {
-        return evosForceGrowth;
     }
 
     public void setEvosForceGrowth(boolean evosForceGrowth) {
         this.evosForceGrowth = evosForceGrowth;
     }
 
-    public boolean isEvosNoConvergence() {
-        return evosNoConvergence;
-    }
-
     public void setEvosNoConvergence(boolean evosNoConvergence) {
         this.evosNoConvergence = evosNoConvergence;
-    }
-
-    public boolean isAdjustEvolutionLevels() {
-        return adjustEvolutionLevels;
     }
 
     public void setAdjustEvolutionLevels(boolean adjustEvolutionLevels) {
         this.adjustEvolutionLevels = adjustEvolutionLevels;
     }
 
-    public boolean isRandomizeMovePowers() {
-        return randomizeMovePowers;
-    }
-
     public void setRandomizeMovePowers(boolean randomizeMovePowers) {
         this.randomizeMovePowers = randomizeMovePowers;
-    }
-
-    public boolean isRandomizeMoveAccuracies() {
-        return randomizeMoveAccuracies;
     }
 
     public void setRandomizeMoveAccuracies(boolean randomizeMoveAccuracies) {
         this.randomizeMoveAccuracies = randomizeMoveAccuracies;
     }
 
-    public boolean isRandomizeMovePPs() {
-        return randomizeMovePPs;
-    }
-
     public void setRandomizeMovePPs(boolean randomizeMovePPs) {
         this.randomizeMovePPs = randomizeMovePPs;
-    }
-
-    public boolean isRandomizeMoveTypes() {
-        return randomizeMoveTypes;
     }
 
     public void setRandomizeMoveTypes(boolean randomizeMoveTypes) {
         this.randomizeMoveTypes = randomizeMoveTypes;
     }
 
-    public boolean isRandomizeMoveNames() {
-        return randomizeMoveNames;
-    }
-
     public void setRandomizeMoveNames(boolean randomizeMoveNames) {
         this.randomizeMoveNames = randomizeMoveNames;
     }
 
-    public boolean isRandomizeMoveCategory() {
-        return randomizeMoveCategory;
-    }
-
     public void setRandomizeMoveCategory(boolean randomizeMoveCategory) {
         this.randomizeMoveCategory = randomizeMoveCategory;
-    }
-
-    public MovesetsMod getMovesetsMod() {
-        return movesetsMod;
     }
 
     public void setMovesetsMod(boolean... bools) {
@@ -2456,64 +2394,32 @@ public class SettingsManager {
         this.movesetsMod = movesetsMod;
     }
 
-    public boolean isStartWithGuaranteedMoves() {
-        return startWithGuaranteedMoves;
-    }
-
     public void setStartWithGuaranteedMoves(boolean startWithGuaranteedMoves) {
         this.startWithGuaranteedMoves = startWithGuaranteedMoves;
-    }
-
-    public int getGuaranteedMoveCount() {
-        return guaranteedMoveCount;
     }
 
     public void setGuaranteedMoveCount(int guaranteedMoveCount) {
         this.guaranteedMoveCount = guaranteedMoveCount;
     }
 
-    public boolean isReorderDamagingMoves() {
-        return reorderDamagingMoves;
-    }
-
     public void setReorderDamagingMoves(boolean reorderDamagingMoves) {
         this.reorderDamagingMoves = reorderDamagingMoves;
-    }
-
-    public boolean isMovesetsForceGoodDamaging() {
-        return movesetsForceGoodDamaging;
     }
 
     public void setMovesetsForceGoodDamaging(boolean movesetsForceGoodDamaging) {
         this.movesetsForceGoodDamaging = movesetsForceGoodDamaging;
     }
 
-    public int getMovesetsGoodDamagingPercent() {
-        return movesetsGoodDamagingPercent;
-    }
-
     public void setMovesetsGoodDamagingPercent(int movesetsGoodDamagingPercent) {
         this.movesetsGoodDamagingPercent = movesetsGoodDamagingPercent;
-    }
-
-    public boolean isBlockBrokenMovesetMoves() {
-        return blockBrokenMovesetMoves;
     }
 
     public void setBlockBrokenMovesetMoves(boolean blockBrokenMovesetMoves) {
         this.blockBrokenMovesetMoves = blockBrokenMovesetMoves;
     }
 
-    public boolean isEvolutionMovesForAll() {
-        return evolutionMovesForAll;
-    }
-
     public void setEvolutionMovesForAll(boolean evolutionMovesForAll) {
         this.evolutionMovesForAll = evolutionMovesForAll;
-    }
-
-    public TrainersMod getTrainersMod() {
-        return trainersMod;
     }
 
     public void setTrainersMod(boolean... bools) {
@@ -2524,259 +2430,130 @@ public class SettingsManager {
         this.trainersMod = trainersMod;
     }
 
-    public boolean isRivalCarriesStarterThroughout() {
-        return rivalCarriesStarterThroughout;
-    }
-
     public void setRivalCarriesStarterThroughout(boolean rivalCarriesStarterThroughout) {
         this.rivalCarriesStarterThroughout = rivalCarriesStarterThroughout;
-    }
-
-    public boolean isTrainersUsePokemonOfSimilarStrength() {
-        return trainersUsePokemonOfSimilarStrength;
     }
 
     public void setTrainersUsePokemonOfSimilarStrength(boolean trainersUsePokemonOfSimilarStrength) {
         this.trainersUsePokemonOfSimilarStrength = trainersUsePokemonOfSimilarStrength;
     }
 
-    public boolean isTrainersAvoidDuplicates() {
-        return trainersAvoidDuplicates;
-    }
-
     public void setTrainersAvoidDuplicates(boolean trainersAvoidDuplicates) {
         this.trainersAvoidDuplicates = trainersAvoidDuplicates;
-    }
-
-    public boolean isBanPrematureEvos() {
-        return banPrematureEvos;
     }
 
     public void setBanPrematureEvos(boolean banPrematureEvos) {
         this.banPrematureEvos = banPrematureEvos;
     }
 
-    public boolean isTrainersMatchTypingDistribution() {
-        return trainersMatchTypingDistribution;
-    }
-
     public void setTrainersMatchTypingDistribution(boolean trainersMatchTypingDistribution) {
         this.trainersMatchTypingDistribution = trainersMatchTypingDistribution;
-    }
-
-    public boolean isTrainersBlockLegendaries() {
-        return trainersBlockLegendaries;
     }
 
     public void setTrainersBlockLegendaries(boolean trainersBlockLegendaries) {
         this.trainersBlockLegendaries = trainersBlockLegendaries;
     }
 
-    public boolean isTrainersUseLocalPokemon() {
-        return trainersUseLocalPokemon;
-    }
-
     public void setTrainersUseLocalPokemon(boolean trainersUseLocalPokemon) {
         this.trainersUseLocalPokemon = trainersUseLocalPokemon;
-    }
-
-    public boolean isTrainersEnforceDistribution() {
-        return trainersEnforceDistribution;
     }
 
     public SettingsManager setTrainersEnforceDistribution(boolean trainersEnforceDistribution) {
         this.trainersEnforceDistribution = trainersEnforceDistribution;
         return this;
     }
-    
-    public boolean isTrainersEnforceMainPlaythrough() {
-        return trainersEnforceMainPlaythrough;
-    }
 
     public SettingsManager setTrainersEnforceMainPlaythrough(boolean trainersEnforceMainPlaythrough) {
         this.trainersEnforceMainPlaythrough = trainersEnforceMainPlaythrough;
         return this;
-    }
-    
-    public boolean isTrainersBlockEarlyWonderGuard() {
-        return trainersBlockEarlyWonderGuard;
     }
 
     public void setTrainersBlockEarlyWonderGuard(boolean trainersBlockEarlyWonderGuard) {
         this.trainersBlockEarlyWonderGuard = trainersBlockEarlyWonderGuard;
     }
 
-    public boolean isRandomizeTrainerNames() {
-        return randomizeTrainerNames;
-    }
-
     public void setRandomizeTrainerNames(boolean randomizeTrainerNames) {
         this.randomizeTrainerNames = randomizeTrainerNames;
-    }
-
-    public boolean isRandomizeTrainerClassNames() {
-        return randomizeTrainerClassNames;
     }
 
     public void setRandomizeTrainerClassNames(boolean randomizeTrainerClassNames) {
         this.randomizeTrainerClassNames = randomizeTrainerClassNames;
     }
 
-    public boolean isTrainersEvolveTheirPokemon() {
-        return trainersEvolveTheirPokemon;
-    }
-
     public void setTrainersEvolveTheirPokemon(boolean trainersEvolveTheirPokemon) {
         this.trainersEvolveTheirPokemon = trainersEvolveTheirPokemon;
-    }
-
-    public int getTrainersEvolutionLevelModifier() {
-        return trainersEvolutionLevelModifier;
     }
 
     public void setTrainersEvolutionLevelModifier(int trainersEvolutionLevelModifier) {
         this.trainersEvolutionLevelModifier = trainersEvolutionLevelModifier;
     }
 
-    public boolean isTrainersLevelModified() {
-        return trainersLevelModified;
-    }
-
     public void setTrainersLevelModified(boolean trainersLevelModified) {
         this.trainersLevelModified = trainersLevelModified;
-    }
-
-    public int getTrainersLevelModifier() {
-        return trainersLevelModifier;
     }
 
     public void setTrainersLevelModifier(int trainersLevelModifier) {
         this.trainersLevelModifier = trainersLevelModifier;
     }
 
-    public int getEliteFourUniquePokemonNumber() {
-        return eliteFourUniquePokemonNumber;
-    }
-
     public void setEliteFourUniquePokemonNumber(int eliteFourUniquePokemonNumber) {
         this.eliteFourUniquePokemonNumber = eliteFourUniquePokemonNumber;
-    }
-
-
-    public boolean isAllowTrainerAlternateFormes() {
-        return allowTrainerAlternateFormes;
     }
 
     public void setAllowTrainerAlternateFormes(boolean allowTrainerAlternateFormes) {
         this.allowTrainerAlternateFormes = allowTrainerAlternateFormes;
     }
 
-    public boolean isSwapTrainerMegaEvos() {
-        return swapTrainerMegaEvos;
-    }
-
     public void setSwapTrainerMegaEvos(boolean swapTrainerMegaEvos) {
         this.swapTrainerMegaEvos = swapTrainerMegaEvos;
-    }
-
-    public int getAdditionalBossTrainerPokemon() {
-        return additionalBossTrainerPokemon;
     }
 
     public void setAdditionalBossTrainerPokemon(int additional) {
         this.additionalBossTrainerPokemon = additional;
     }
 
-    public int getAdditionalImportantTrainerPokemon() {
-        return additionalImportantTrainerPokemon;
-    }
-
     public void setAdditionalImportantTrainerPokemon(int additional) {
         this.additionalImportantTrainerPokemon = additional;
-    }
-
-    public int getAdditionalRegularTrainerPokemon() {
-        return additionalRegularTrainerPokemon;
     }
 
     public void setAdditionalRegularTrainerPokemon(int additional) {
         this.additionalRegularTrainerPokemon = additional;
     }
 
-    public boolean isRandomizeHeldItemsForBossTrainerPokemon() {
-        return randomizeHeldItemsForBossTrainerPokemon;
-    }
-
     public void setRandomizeHeldItemsForBossTrainerPokemon(boolean bossTrainers) {
         this.randomizeHeldItemsForBossTrainerPokemon = bossTrainers;
-    }
-
-    public boolean isRandomizeHeldItemsForImportantTrainerPokemon() {
-        return randomizeHeldItemsForImportantTrainerPokemon;
     }
 
     public void setRandomizeHeldItemsForImportantTrainerPokemon(boolean importantTrainers) {
         this.randomizeHeldItemsForImportantTrainerPokemon = importantTrainers;
     }
 
-    public boolean isRandomizeHeldItemsForRegularTrainerPokemon() {
-        return randomizeHeldItemsForRegularTrainerPokemon;
-    }
-
     public void setRandomizeHeldItemsForRegularTrainerPokemon(boolean regularTrainers) {
         this.randomizeHeldItemsForRegularTrainerPokemon = regularTrainers;
-    }
-
-    public boolean isConsumableItemsOnlyForTrainers() {
-        return consumableItemsOnlyForTrainerPokemon;
     }
 
     public void setConsumableItemsOnlyForTrainers(boolean consumableOnly) {
         this.consumableItemsOnlyForTrainerPokemon = consumableOnly;
     }
 
-    public boolean isSensibleItemsOnlyForTrainers() {
-        return sensibleItemsOnlyForTrainerPokemon;
-    }
-
     public void setSensibleItemsOnlyForTrainers(boolean sensibleOnly) {
         this.sensibleItemsOnlyForTrainerPokemon = sensibleOnly;
-    }
-
-    public boolean isHighestLevelGetsItemsForTrainers() {
-        return highestLevelOnlyGetsItemsForTrainerPokemon;
     }
 
     public void setHighestLevelGetsItemsForTrainers(boolean highestOnly) {
         this.highestLevelOnlyGetsItemsForTrainerPokemon = highestOnly;
     }
 
-    public boolean isDiverseTypesForBossTrainers() {
-        return diverseTypesForBossTrainers;
-    }
-
     public void setDiverseTypesForBossTrainers(boolean isBossDiverse) {
         this.diverseTypesForBossTrainers = isBossDiverse;
-    }
-
-    public boolean isDiverseTypesForImportantTrainers() {
-        return diverseTypesForImportantTrainers;
     }
 
     public void setDiverseTypesForImportantTrainers(boolean isImportantDiverse) {
         this.diverseTypesForImportantTrainers = isImportantDiverse;
     }
 
-    public boolean isDiverseTypesForRegularTrainers() {
-        return diverseTypesForRegularTrainers;
-    }
-
     public void setDiverseTypesForRegularTrainers(boolean isRegularDiverse) {
         this.diverseTypesForRegularTrainers = isRegularDiverse;
-    }
-
-    public BattleStyle getBattleStyle() {
-        return settingBattleStyle;
     }
 
     public void setBattleStyle(BattleStyle style) {
@@ -2895,8 +2672,6 @@ public class SettingsManager {
         this.allowWildAltFormes = allowWildAltFormes;
     }
 
-    // TODO: convert all usages of the is/get[Setting] methods above
-
     public void setStaticPokemonMod(boolean... bools) {
         setStaticPokemonMod(getEnum(StaticPokemonMod.class, bools));
     }
@@ -2921,16 +2696,8 @@ public class SettingsManager {
         this.swapStaticMegaEvos = swapStaticMegaEvos;
     }
 
-    public boolean isStaticLevelModified() {
-        return staticLevelModified;
-    }
-
     public void setStaticLevelModified(boolean staticLevelModified) {
         this.staticLevelModified = staticLevelModified;
-    }
-
-    public int getStaticLevelModifier() {
-        return staticLevelModifier;
     }
 
     public void setStaticLevelModifier(int staticLevelModifier) {

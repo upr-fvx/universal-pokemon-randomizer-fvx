@@ -3,7 +3,6 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.exceptions.RandomizationException;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen7Constants;
 import com.uprfvx.romio.gamedata.*;
@@ -31,7 +30,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void applyTrainerLevelModifier() {
-        int levelModifier = settings.getTrainersLevelModifier();
+        int levelModifier = settings.getSetting(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT);
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
@@ -43,36 +42,39 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
     public void randomizeTrainerPokes() {
         //TODO: this method direly needs a refactor to despaghettify
-        boolean usePowerLevels = settings.isTrainersUsePokemonOfSimilarStrength();
-        boolean avoidDuplicates = settings.isTrainersAvoidDuplicates();
-        boolean weightByFrequency = settings.isTrainersMatchTypingDistribution();
-        boolean useLocalPokemon = settings.isTrainersUseLocalPokemon();
-        boolean noLegendaries = settings.isTrainersBlockLegendaries();
-        boolean noEarlyWonderGuard = settings.isTrainersBlockEarlyWonderGuard();
-        boolean isTypeThemed = settings.getTrainersMod() == SettingsManager.TrainersMod.TYPE_THEMED;
-        boolean isTypeThemedEliteFourGymOnly = settings.getTrainersMod() == SettingsManager.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
-        boolean keepTypeThemes = settings.getTrainersMod() == SettingsManager.TrainersMod.KEEP_THEMED;
-        boolean keepThemeOrPrimaryTypes = settings.getTrainersMod() == SettingsManager.TrainersMod.KEEP_THEME_OR_PRIMARY;
+        Settings.TrainersMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
+        boolean isTypeThemed = mod == Settings.TrainersMod.TYPE_THEMED;
+        boolean isTypeThemedEliteFourGymOnly = mod == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
+        boolean keepTypeThemes = mod == Settings.TrainersMod.KEEP_THEMED;
+        boolean keepThemeOrPrimaryTypes = mod == Settings.TrainersMod.KEEP_THEME_OR_PRIMARY;
         boolean hasAnyTypeTheme = isTypeThemed || isTypeThemedEliteFourGymOnly || keepTypeThemes
                 || keepThemeOrPrimaryTypes;
-        boolean distributionSetting = settings.getTrainersMod() == SettingsManager.TrainersMod.DISTRIBUTED;
-        boolean mainPlaythroughSetting = settings.getTrainersMod() == SettingsManager.TrainersMod.MAINPLAYTHROUGH;
-        boolean includeFormes = settings.isAllowTrainerAlternateFormes();
-        boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean doNotUsePrematureEvos = settings.isBanPrematureEvos();
-        boolean swapMegaEvos = settings.isSwapTrainerMegaEvos();
-        boolean shinyChance = settings.getSetting(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
-        int eliteFourUniquePokemonNumber = settings.getEliteFourUniquePokemonNumber();
-        boolean evolveAsFarAsLegal = settings.isTrainersEvolveTheirPokemon();
-        int percentageEvoLvlModifier = settings.getTrainersEvolutionLevelModifier();
-        boolean forceChallengeMode = (settings.getCurrentMiscTweaks() & MiscTweak.FORCE_CHALLENGE_MODE.getValue()) > 0;
-        boolean rivalCarriesStarter = settings.isRivalCarriesStarterThroughout();
-        boolean bossDiversity = settings.isDiverseTypesForBossTrainers();
-        boolean importantDiversity = settings.isDiverseTypesForImportantTrainers();
-        boolean regularDiversity = settings.isDiverseTypesForRegularTrainers();
+        boolean distributionSetting = mod == Settings.TrainersMod.DISTRIBUTED;
+        boolean mainPlaythroughSetting = mod == Settings.TrainersMod.MAINPLAYTHROUGH;
 
-        boolean skipOriginalTeamMembers = settings.getTrainersMod() == SettingsManager.TrainersMod.UNCHANGED;
+        boolean usePowerLevels = settings.getSetting(Settings.Name.TRAINERS_USE_SIMILAR_STRENGTH);
+        boolean avoidDuplicates = settings.getSetting(Settings.Name.TRAINERS_AVOID_DUPLICATES);
+        boolean weightByFrequency = settings.getSetting(Settings.Name.TRAINERS_WEIGHT_TYPES);
+        boolean useLocalPokemon = settings.getSetting(Settings.Name.TRAINERS_USE_LOCAL);
+        boolean noLegendaries = settings.getSetting(Settings.Name.TRAINERS_NO_LEGENDARIES);
+        boolean noEarlyWonderGuard = settings.getSetting(Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
+        boolean includeFormes = settings.getSetting(Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean doNotUsePrematureEvos = settings.getSetting(Settings.Name.NO_PREMATURE_EVOLUTIONS);
+        boolean swapMegaEvos = settings.getSetting(Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
+        boolean shinyChance = settings.getSetting(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
+        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
+        int eliteFourUniquePokemonNumber = settings.getSetting(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT);
+        boolean evolveAsFarAsLegal = settings.getSetting(Settings.Name.TRAINERS_EVOLVE_POKEMON);
+        int percentageEvoLvlModifier = settings.getSetting(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+        boolean forceChallengeMode = settings.getSetting(Settings.Name.TWEAK_FORCE_CHALLENGE_MODE);
+        boolean rivalCarriesStarter = settings.getSetting(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER);
+        boolean bossDiversity = settings.getSetting(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES);
+        boolean importantDiversity = settings.getSetting(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES);
+        boolean regularDiversity = settings.getSetting(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES);
+
+        boolean skipOriginalTeamMembers = mod == Settings.TrainersMod.UNCHANGED;
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
         // added that are supposed to be randomized according to the following settings
         if (skipOriginalTeamMembers) {
@@ -532,7 +534,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             !bannedTypes.contains(sp.getSecondaryType(false))));
         }
 
-        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
+        int rawModifier = settings.getSetting(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+        double evoLvlModifier = 1 + rawModifier / 100.0;
         if (doNotUsePrematureEvos) {
             pickFrom = pickFrom.filter(p -> p.isLegalEvolutionAtLevel(level, evoLvlModifier));
         }
@@ -884,8 +887,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
      * @return A NavigableMap containing the Pokemon's evolutions by level.
      */
     private NavigableMap<Integer, Species> getEvolutionsByLevel(Species base, int initialLevel, int maxLevel) {
-        boolean forceFullyEvolved = settings.isTrainersEvolveTheirPokemon();
-        int fullyEvolvedLevel = (int) Math.ceil((1 + settings.getTrainersEvolutionLevelModifier() / 100.0) * romHandler.getHighestEvoLvl());
+        boolean forceFullyEvolved = settings.getSetting(Settings.Name.TRAINERS_EVOLVE_POKEMON);
+
+        int rawModifier = settings.getSetting(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+        double evoLvlModifier = 1 + rawModifier / 100.0;
+        int fullyEvolvedLevel = (int) Math.ceil(evoLvlModifier * romHandler.getHighestEvoLvl());
 
         NavigableMap<Integer, Species> evolutions = new TreeMap<>();
         evolutions.put(initialLevel, base);
@@ -919,7 +925,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void evolveTrainerPokemonAsFarAsLegal() {
-        double evoLvlModifier = 1 + settings.getTrainersEvolutionLevelModifier() / 100.0;
+        int rawModifier = settings.getSetting(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+        double evoLvlModifier = 1 + rawModifier / 100.0;
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
             for (TrainerPokemon tp : t.getPokemon()) {
@@ -952,9 +959,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void addTrainerPokemon() {
-        int additionalNormal = settings.getAdditionalRegularTrainerPokemon();
-        int additionalImportant = settings.getAdditionalImportantTrainerPokemon();
-        int additionalBoss = settings.getAdditionalBossTrainerPokemon();
+        int additionalNormal = settings.getSetting(Settings.Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT);
+        int additionalImportant = settings.getSetting(Settings.Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT);
+        int additionalBoss = settings.getSetting(Settings.Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT);
 
         List<Trainer> currentTrainers = romHandler.getTrainers();
         for (Trainer t : currentTrainers) {
@@ -1044,12 +1051,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void modifyBattleStyle() {
-        if (settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED)
+        BattleStyle.Modification mod = settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+        if (mod == BattleStyle.Modification.UNCHANGED)
             return;
+        BattleStyle mandatedStyle = new BattleStyle(
+                mod, settings.getSetting(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
+        );
+
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
             if (!(tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
-                tr.setCurrBattleStyle(createTrainerStyle(settings.getBattleStyle()));
+                tr.setCurrBattleStyle(createTrainerStyle(mandatedStyle));
                 while (tr.getPokemon().size() < tr.getCurrBattleStyle().getRequiredPokemonCount()) {
                     tr.getPokemon().add(new TrainerPokemon(tr.getPokemon().getFirst()));
                 }
@@ -1061,10 +1073,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeTrainerHeldItems() {
-        boolean giveToBossPokemon = settings.isRandomizeHeldItemsForBossTrainerPokemon();
-        boolean giveToImportantPokemon = settings.isRandomizeHeldItemsForImportantTrainerPokemon();
-        boolean giveToRegularPokemon = settings.isRandomizeHeldItemsForRegularTrainerPokemon();
-        boolean highestLevelOnly = settings.isHighestLevelGetsItemsForTrainers();
+        boolean giveToBossPokemon = settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES);
+        boolean giveToImportantPokemon = settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT);
+        boolean giveToRegularPokemon = settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR);
+        boolean highestLevelOnly = settings.getSetting(Settings.Name.TRAINERS_HELD_ITEMS_ACES_ONLY);
 
         List<Move> moves = romHandler.getMoves();
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
@@ -1122,9 +1134,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     private void randomizeHeldItem(TrainerPokemon tp, SettingsManager settings, List<Move> moves, int[] moveset) {
-        boolean sensibleItemsOnly = settings.isSensibleItemsOnlyForTrainers();
-        boolean consumableItemsOnly = settings.isConsumableItemsOnlyForTrainers();
-        boolean swapMegaEvolutions = settings.isSwapTrainerMegaEvos();
+        boolean sensibleItemsOnly = settings.getSetting(Settings.Name.TRAINER_HELD_ITEMS_SENSIBLE_ONLY);
+        boolean consumableItemsOnly = settings.getSetting(Settings.Name.TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY);
+        boolean swapMegaEvolutions = settings.getSetting(Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
         if (tp.hasZCrystal()) {
             return; // Don't overwrite existing Z Crystals.
         }

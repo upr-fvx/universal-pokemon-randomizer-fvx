@@ -33,7 +33,7 @@ public class StaticPokemonRandomizer extends Randomizer {
     }
 
     public void onlyChangeStaticLevels() {
-        int levelModifier = settings.getStaticLevelModifier();
+        int levelModifier = settings.getSetting(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT);
 
         List<StaticEncounter> currentStaticPokemon = romHandler.getStaticPokemon();
         for (StaticEncounter se : currentStaticPokemon) {

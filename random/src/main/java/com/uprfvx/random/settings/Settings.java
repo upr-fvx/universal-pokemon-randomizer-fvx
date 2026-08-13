@@ -138,7 +138,7 @@ public class Settings {
         //Trainers General
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_USE_SIMILAR_STRENGTH,
         TRAINERS_AVOID_DUPLICATES, TRAINERS_WEIGHT_TYPES, TRAINERS_USE_LOCAL, TRAINERS_NO_LEGENDARIES,
-        TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLE,
+        TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLES,
         TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, TRAINERS_EVOLVE_POKEMON,
         TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
         //That's a lot for one category. We should probably organize these more. TODO: that
@@ -154,7 +154,7 @@ public class Settings {
         //Trainers Diverse Types
         TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
         //Trainers Cosmetic
-        TRAINERS_RANDOM_SHINY_POKEMON, TRAINERS_RANDOMIZE_NAMES, TRAINERS_RANDOMIZE_CLASSES,
+        TRAINERS_RANDOM_SHINY_POKEMON, TRAINERS_RANDOMIZE_NAMES, TRAINERS_RANDOMIZE_CLASS_NAMES,
         //Trainers Battle Styles
         TRAINERS_RANDOMIZE_BATTLE_STYLE, TRAINERS_SINGLE_STYLE_SELECTION,
         //Totem Pokemon
@@ -1101,7 +1101,7 @@ public class Settings {
                     .supported(RomHandler::hasFunctionalFormes)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_SWAP_MEGA_EVOLVABLE,
+                    Name.TRAINERS_SWAP_MEGA_EVOLVABLES,
                     Category.TRAINERS_GENERAL)
                     .prerequisite(anyTrainerPokemonIsRandomRestriction)
                     .supported(RomHandler::hasMegaEvolutions)
@@ -1170,7 +1170,7 @@ public class Settings {
                     Category.TRAINERS_COSMETIC)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_RANDOMIZE_CLASSES,
+                    Name.TRAINERS_RANDOMIZE_CLASS_NAMES,
                     Category.TRAINERS_COSMETIC)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(

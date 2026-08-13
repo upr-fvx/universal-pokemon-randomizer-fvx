@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.romio.constants.SpeciesIDs;
@@ -19,17 +20,21 @@ public class EvolutionRandomizer extends Randomizer {
     }
 
     public void randomizeEvolutions() {
-        boolean similarStrength = settings.isEvosSimilarStrength();
-        boolean sameType = settings.isEvosSameTyping();
-        boolean limitToThreeStages = settings.isEvosMaxThreeStages();
-        boolean forceChange = settings.isEvosForceChange();
-        boolean forceGrowth = settings.isEvosForceGrowth();
-        boolean noConvergence = settings.isEvosNoConvergence();
+        // TODO: Investigate what happened to isEvosAllowAltFormes(). Was it ever implemented?
 
-        boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
+        boolean similarStrength = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH);
+        boolean sameType = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE);
+        boolean limitToThreeStages = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES);
+        boolean forceChange = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE);
+        boolean forceGrowth = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_GROWTH);
+        boolean noConvergence = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE);
 
-        boolean evolveEveryLevel = settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL;
+        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
+
+        Settings.EvolutionsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
+        boolean evolveEveryLevel = mod == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         randomizeEvolutions(similarStrength, sameType, limitToThreeStages, forceChange, forceGrowth, noConvergence,
                 banIrregularAltFormes, abilitiesAreRandomized, evolveEveryLevel);
 

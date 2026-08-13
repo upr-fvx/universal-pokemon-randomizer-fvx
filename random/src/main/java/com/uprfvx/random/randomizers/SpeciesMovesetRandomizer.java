@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.constants.MoveIDs;
@@ -16,13 +17,13 @@ public class SpeciesMovesetRandomizer extends Randomizer {
     }
 
     public void randomizeMovesLearnt() {
-        boolean typeThemed = settings.getMovesetsMod() == SettingsManager.MovesetsMod.RANDOM_PREFER_SAME_TYPE;
-        boolean noBroken = settings.isBlockBrokenMovesetMoves();
-        boolean forceStartingMoves = romHandler.supportsFourStartingMoves() && settings.isStartWithGuaranteedMoves();
-        int forceStartingMoveCount = settings.getGuaranteedMoveCount();
+        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        boolean typeThemed = mod == Settings.MovesetsMod.RANDOM_PREFER_SAME_TYPE;
+        boolean noBroken = settings.getSetting(Settings.Name.MOVESETS_BAN_OVERPOWERED);
+        int forceStartingMoveCount = settings.getSetting(Settings.Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT);
         double goodDamagingPercentage =
-                settings.isMovesetsForceGoodDamaging() ? settings.getMovesetsGoodDamagingPercent() / 100.0 : 0;
-        boolean evolutionMovesForAll = settings.isEvolutionMovesForAll();
+                (int) settings.getSetting(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT) / 100.0;
+        boolean evolutionMovesForAll = settings.getSetting(Settings.Name.MOVESETS_GUARANTEE_EVOLUTION_MOVES);
 
         // Get current sets
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
@@ -45,21 +46,7 @@ public class SpeciesMovesetRandomizer extends Randomizer {
 
             double atkSpAtkRatio = pkmn.getBaseStats().getAttackSpecialAttackRatio();
 
-            // 4 starting moves?
-            if (forceStartingMoves) {
-                int lv1count = 0;
-                for (MoveLearnt ml : moves) {
-                    if (ml.level == 1) {
-                        lv1count++;
-                    }
-                }
-                if (lv1count < forceStartingMoveCount) {
-                    for (int i = 0; i < forceStartingMoveCount - lv1count; i++) {
-                        MoveLearnt fakeLv1 = new MoveLearnt(0, 1);
-                        moves.add(0, fakeLv1);
-                    }
-                }
-            }
+            forceStartingMoves(moves, forceStartingMoveCount);
 
             if (evolutionMovesForAll) {
                 if (moves.get(0).level != 0) {
@@ -193,11 +180,30 @@ public class SpeciesMovesetRandomizer extends Randomizer {
         changesMade = true;
     }
 
+    private void forceStartingMoves(List<MoveLearnt> moves, int forceStartingMoveCount) {
+        // Every mon *should* have 1 starting move to begin with, and thus work with the below algorithm...
+        // but until we've confirmed that let's just escape if forceStartingMoveCount == 1.
+        if (forceStartingMoveCount == 1) return;
+        int lv1count = 0;
+        for (MoveLearnt ml : moves) {
+            if (ml.level == 1) {
+                lv1count++;
+            }
+        }
+        if (lv1count < forceStartingMoveCount) {
+            for (int i = 0; i < forceStartingMoveCount - lv1count; i++) {
+                MoveLearnt fakeLv1 = new MoveLearnt(0, 1);
+                moves.addFirst(fakeLv1);
+            }
+        }
+    }
+
     public void randomizeEggMoves() {
-        boolean typeThemed = settings.getMovesetsMod() == SettingsManager.MovesetsMod.RANDOM_PREFER_SAME_TYPE;
-        boolean noBroken = settings.isBlockBrokenMovesetMoves();
+        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        boolean typeThemed = mod == Settings.MovesetsMod.RANDOM_PREFER_SAME_TYPE;
+        boolean noBroken = settings.getSetting(Settings.Name.MOVESETS_BAN_OVERPOWERED);
         double goodDamagingPercentage =
-                settings.isMovesetsForceGoodDamaging() ? settings.getMovesetsGoodDamagingPercent() / 100.0 : 0;
+                (int) settings.getSetting(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT) / 100.0;
 
         // Get current sets
         Map<Integer, List<Integer>> movesets = romHandler.getEggMoves();

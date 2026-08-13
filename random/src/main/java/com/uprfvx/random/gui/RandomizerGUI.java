@@ -698,7 +698,17 @@ public class RandomizerGUI {
                 //Limit Pokemon
                 //TODO: add to list OR add handling to dialog
 
-
+                // *** SPECIES TRAITS ***
+                associateButtonSet(
+                        Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
+                        Map.of(BSTMod.UNCHANGED, pbstUnchangedRadioButton,
+                            BSTMod.RANDOM_BUFF_NERF, pbstRandomBuffNerfRadioButton,
+                            BSTMod.SHUFFLE, pbstShuffleRadioButton,
+                            BSTMod.RANDOM, pbsRandomRadioButton)
+                ),
+                //TODO: buff/nerf percent
+                associateCheckBox(pbstFollowEvolutionsCheckBox, Name.SPECIES_BSTS_FOLLOW_EVOLUTION),
+                associateCheckBox(pbstSwapLegendariesCheckBox, Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY)
 
 
                 //TODO: complete list of settings

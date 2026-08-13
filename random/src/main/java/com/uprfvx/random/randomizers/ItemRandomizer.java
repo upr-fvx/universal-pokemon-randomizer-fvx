@@ -1,7 +1,8 @@
 package com.uprfvx.random.randomizers;
 
-import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.random.settings.Settings;
+import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.ItemIDs;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.PickupItem;
@@ -9,7 +10,6 @@ import com.uprfvx.romio.gamedata.Shop;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ItemRandomizer extends Randomizer {
 
@@ -64,7 +64,8 @@ public class ItemRandomizer extends Randomizer {
             (item.isTM() ? tms : nonTMs).push(item);
         }
 
-        switch (settings.getFieldItemsMod()) {
+        Settings.FieldItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_FIELD_ITEMS);
+        switch (mod) {
             case SHUFFLE:
                 Collections.shuffle(tms, random);
                 Collections.shuffle(nonTMs, random);
@@ -91,7 +92,7 @@ public class ItemRandomizer extends Randomizer {
     private void randomizeTMFieldItems(List<Item> tms) {
         List<Item> allTMs = romHandler.getItems().stream()
                 .filter(Objects::nonNull).filter(Item::isTM)
-                .collect(Collectors.toList());
+                .toList();
         Set<Item> requiredTMs = romHandler.getRequiredFieldTMs();
 
         int neededTMAmount = tms.size();
@@ -113,9 +114,10 @@ public class ItemRandomizer extends Randomizer {
      */
     private void randomizeNonTMFieldItems(List<Item> nonTMs) {
 
-        boolean banBadItems = settings.isBanBadRandomFieldItems();
-        boolean uniqueItems = !settings.isBalanceShopPrices();
-        boolean evenItems = settings.getFieldItemsMod() == SettingsManager.FieldItemsMod.RANDOM_EVEN;
+        boolean banBadItems = settings.getSetting(Settings.Name.FIELD_ITEMS_BAN_MINOR);
+        boolean uniqueItems = !(boolean) settings.getSetting(Settings.Name.SHOP_ITEMS_BALANCE_PRICES);
+        boolean evenItems =
+                settings.getSetting(Settings.Name.RANDOMIZE_FIELD_ITEMS) == Settings.FieldItemsMod.RANDOM_EVEN;
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
@@ -198,13 +200,14 @@ public class ItemRandomizer extends Randomizer {
     }
 
     private Set<Item> setupPossible() {
-        Set<Item> possible = new HashSet<>(settings.isBanBadRandomShopItems() ?
-                romHandler.getNonBadItems() : romHandler.getAllowedItems());
+        boolean banBad = settings.getSetting(Settings.Name.SHOP_ITEMS_BAN_MINOR);
+        Set<Item> possible = new HashSet<>(
+                banBad ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
-        if (settings.isBanRegularShopItems()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS)) {
             possible.removeAll(romHandler.getRegularShopItems());
         }
-        if (settings.isBanOPShopItems()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_BAN_OVERPOWERED)) {
             possible.removeAll(romHandler.getOPShopItems());
         }
 
@@ -213,10 +216,10 @@ public class ItemRandomizer extends Randomizer {
 
     private Set<Item> setupGuaranteed() {
         Set<Item> guaranteed = new HashSet<>();
-        if (settings.isGuaranteeEvolutionItems()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS)) {
             guaranteed.addAll(romHandler.getEvolutionItems());
         }
-        if (settings.isGuaranteeXItems()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_GUARANTEE_X_ITEMS)) {
             guaranteed.addAll(romHandler.getXItems());
         }
         return guaranteed;
@@ -311,7 +314,7 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void randomizePickupItems() {
-        boolean banBadItems = settings.isBanBadRandomPickupItems();
+        boolean banBadItems = settings.getSetting(Settings.Name.PICKUP_ITEMS_BAN_MINOR);
 
         List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         if (!romHandler.canTMsBeHeld() || romHandler.isTMsReusable()) {

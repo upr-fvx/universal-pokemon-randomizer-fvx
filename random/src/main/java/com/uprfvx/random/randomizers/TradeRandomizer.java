@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.romio.gamedata.*;
@@ -16,11 +17,12 @@ public class TradeRandomizer extends Randomizer {
     }
 
     public void randomizeIngameTrades() {
-        boolean randomizeRequest = settings.getInGameTradesMod() == SettingsManager.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED;
-        boolean randomNickname = settings.isRandomizeInGameTradesNicknames();
-        boolean randomOT = settings.isRandomizeInGameTradesOTs();
-        boolean randomStats = settings.isRandomizeInGameTradesIVs();
-        boolean randomItem = settings.isRandomizeInGameTradesItems();
+        Settings.InGameTradesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
+        boolean randomizeRequest = mod == Settings.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED;
+        boolean randomNickname = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_NICKNAMES);
+        boolean randomOT = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
+        boolean randomStats = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_IVS);
+        boolean randomItem = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_HELD_ITEMS);
         CustomNamesSet customNames = getCustomNames();
 
         // Process trainer names

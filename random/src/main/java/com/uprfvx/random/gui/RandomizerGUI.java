@@ -1725,7 +1725,9 @@ public class RandomizerGUI {
     }
 
     private void restoreStateFromSettings(SettingsManager settings) {
-
+        // keeping this block temporarily, to be able to look at it in case it holds some secrets
+        // TODO: clear this whole block.
+        /**
         limitPokemonCheckBox.setSelected(settings.isLimitPokemon());
         currentRestrictions = settings.getCurrentRestrictions();
         if (currentRestrictions != null) {
@@ -2056,6 +2058,7 @@ public class RandomizerGUI {
         }
 
         this.enableOrDisableSubControls();
+        **/
     }
 
     private SettingsManager createSettingsFromState() {

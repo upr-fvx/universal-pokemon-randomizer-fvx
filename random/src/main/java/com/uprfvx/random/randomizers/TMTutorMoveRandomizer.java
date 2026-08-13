@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.gamedata.Move;
@@ -35,9 +36,9 @@ public class TMTutorMoveRandomizer extends Randomizer {
     }
 
     public void randomizeTMMoves() {
-        boolean noBroken = settings.isBlockBrokenTMMoves();
-        boolean preserveField = settings.isKeepFieldMoveTMs();
-        double goodDamagingPercentage = settings.isTmsForceGoodDamaging() ? settings.getTmsGoodDamagingPercent() / 100.0 : 0;
+        boolean noBroken = settings.getSetting(Settings.Name.TMS_BAN_OVERPOWERED);
+        boolean preserveField = settings.getSetting(Settings.Name.TMS_KEEP_FIELD_MOVES);
+        double goodDamagingPercentage = ((int) settings.getSetting(Settings.Name.TMS_GOOD_DAMAGING_PERCENT)) / 100.0;
 
         // Pick some random TM moves.
         int tmCount = romHandler.getTMCount();
@@ -119,9 +120,9 @@ public class TMTutorMoveRandomizer extends Randomizer {
     }
 
     public void randomizeMoveTutorMoves() {
-        boolean noBroken = settings.isBlockBrokenTutorMoves();
-        boolean preserveField = settings.isKeepFieldMoveTutors();
-        double goodDamagingPercentage = settings.isTutorsForceGoodDamaging() ? settings.getTutorsGoodDamagingPercent() / 100.0 : 0;
+        boolean noBroken = settings.getSetting(Settings.Name.TUTORS_BAN_OVERPOWERED);
+        boolean preserveField = settings.getSetting(Settings.Name.TUTORS_KEEP_FIELD_MOVES);
+        double goodDamagingPercentage = ((int) settings.getSetting(Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT)) / 100.0;
 
         if (!romHandler.hasMoveTutors()) {
             return;

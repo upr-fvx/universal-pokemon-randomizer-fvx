@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -49,16 +50,18 @@ public class StaticPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeStaticPokemon() {
-        boolean swapLegendaries = settings.getStaticPokemonMod() == SettingsManager.StaticPokemonMod.RANDOM_MATCHING;
-        boolean similarStrength = settings.getStaticPokemonMod() == SettingsManager.StaticPokemonMod.SIMILAR_STRENGTH;
-        boolean limitMainGameLegendaries = settings.isLimitMainGameLegendaries();
-        boolean limit600 = settings.isLimit600();
-        boolean allowAltFormes = settings.isAllowStaticAltFormes();
-        boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean swapMegaEvos = settings.isSwapStaticMegaEvos();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
-        int levelModifier = settings.isStaticLevelModified() ? settings.getStaticLevelModifier() : 0;
-        boolean correctStaticMusic = settings.isCorrectStaticMusic();
+        Settings.StaticPokemonMod mod = settings.getSetting(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS);
+        boolean swapLegendaries = mod == Settings.StaticPokemonMod.RANDOM_MATCHING;
+        boolean similarStrength = mod == Settings.StaticPokemonMod.SIMILAR_STRENGTH;
+        boolean limitMainGameLegendaries = settings.getSetting(Settings.Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES);
+        boolean limit600 = settings.getSetting(Settings.Name.STATICS_FULL_RANDOM_OVER_600_BST);
+        boolean allowAltFormes = settings.getSetting(Settings.Name.STATICS_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean swapMegaEvos = settings.getSetting(Settings.Name.STATICS_SWAP_MEGA_EVOLVABLES);
+        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
+        int levelModifier = settings.getSetting(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT);
+        boolean correctStaticMusic = settings.getSetting(Settings.Name.STATICS_FIX_MUSIC);
 
         // Load
         List<StaticEncounter> currentStaticPokemon = romHandler.getStaticPokemon();
@@ -313,23 +316,27 @@ public class StaticPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeTotemPokemon() {
+        Settings.TotemPokemonMod totemMod = settings.getSetting(Settings.Name.RANDOMIZE_TOTEM_POKEMON);
+        Settings.AllyPokemonMod allyMod = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_ALLIES);
+        Settings.AuraMod auraMod = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_AURAS);
         boolean randomizeTotem =
-                settings.getTotemPokemonMod() == SettingsManager.TotemPokemonMod.RANDOM ||
-                        settings.getTotemPokemonMod() == SettingsManager.TotemPokemonMod.SIMILAR_STRENGTH;
+                totemMod == Settings.TotemPokemonMod.RANDOM ||
+                totemMod == Settings.TotemPokemonMod.SIMILAR_STRENGTH;
         boolean randomizeAllies =
-                settings.getAllyPokemonMod() == SettingsManager.AllyPokemonMod.RANDOM ||
-                        settings.getAllyPokemonMod() == SettingsManager.AllyPokemonMod.SIMILAR_STRENGTH;
+                allyMod == Settings.AllyPokemonMod.RANDOM ||
+                allyMod == Settings.AllyPokemonMod.SIMILAR_STRENGTH;
         boolean randomizeAuras =
-                settings.getAuraMod() == SettingsManager.AuraMod.RANDOM ||
-                        settings.getAuraMod() == SettingsManager.AuraMod.SAME_STRENGTH;
-        boolean similarStrengthTotem = settings.getTotemPokemonMod() == SettingsManager.TotemPokemonMod.SIMILAR_STRENGTH;
-        boolean similarStrengthAllies = settings.getAllyPokemonMod() == SettingsManager.AllyPokemonMod.SIMILAR_STRENGTH;
-        boolean similarStrengthAuras = settings.getAuraMod() == SettingsManager.AuraMod.SAME_STRENGTH;
-        boolean randomizeHeldItems = settings.isRandomizeTotemHeldItems();
-        int levelModifier = settings.isTotemLevelsModified() ? settings.getTotemLevelModifier() : 0;
-        boolean allowAltFormes = settings.isAllowTotemAltFormes();
-        boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean abilitiesAreRandomized = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE;
+                auraMod == Settings.AuraMod.RANDOM ||
+                auraMod == Settings.AuraMod.SAME_STRENGTH;
+        boolean similarStrengthTotem = totemMod == Settings.TotemPokemonMod.SIMILAR_STRENGTH;
+        boolean similarStrengthAllies = allyMod == Settings.AllyPokemonMod.SIMILAR_STRENGTH;
+        boolean similarStrengthAuras = auraMod == Settings.AuraMod.SAME_STRENGTH;
+        boolean randomizeHeldItems = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS);
+        int levelModifier = settings.getSetting(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT);
+        boolean allowAltFormes = settings.getSetting(Settings.Name.TOTEMS_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
 
         List<TotemPokemon> currentTotemPokemon = romHandler.getTotemPokemon();
         List<TotemPokemon> replacements = new ArrayList<>();

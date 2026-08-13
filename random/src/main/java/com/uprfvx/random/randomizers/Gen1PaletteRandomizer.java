@@ -21,6 +21,7 @@ package com.uprfvx.random.randomizers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
@@ -69,8 +70,8 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 
 	@Override
 	public void randomizePokemonPalettes() {
-		this.typeSanity = settings.isPokemonPalettesFollowTypes();
-		boolean evolutionSanity = settings.isPokemonPalettesFollowEvolutions();
+		this.typeSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_TYPES);
+		boolean evolutionSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
 
 		CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
 				.Builder(new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction())

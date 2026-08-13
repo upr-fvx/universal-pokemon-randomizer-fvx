@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.MoveLearnt;
@@ -39,8 +40,9 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void randomizeTMHMCompatibility() {
-        boolean preferSameType = settings.getTmsHmsCompatibilityMod() == SettingsManager.TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE;
-        boolean followEvolutions = settings.isTmsFollowEvolutions();
+        Settings.TMsHMsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
+        boolean preferSameType = mod == Settings.TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE;
+        boolean followEvolutions = settings.getSetting(Settings.Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS);
 
         // Get current compatibility
         // increase HM chances if required early on
@@ -224,8 +226,9 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void randomizeMoveTutorCompatibility() {
-        boolean preferSameType = settings.getMoveTutorsCompatibilityMod() == SettingsManager.MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE;
-        boolean followEvolutions = settings.isTutorFollowEvolutions();
+        Settings.MoveTutorsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
+        boolean preferSameType = mod == Settings.MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE;
+        boolean followEvolutions = settings.getSetting(Settings.Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS);
 
         if (!romHandler.hasMoveTutors()) {
             return;

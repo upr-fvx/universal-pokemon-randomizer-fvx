@@ -5,6 +5,7 @@ import com.uprfvx.random.Version;
 import com.uprfvx.random.gui.MiscTweakStrings;
 import com.uprfvx.random.random.RandomSource;
 import com.uprfvx.random.randomizers.*;
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.updaters.*;
 import com.uprfvx.romio.MiscTweak;
@@ -879,12 +880,13 @@ public class RandomizationLogger {
 
     private void logTMHMCompatibility() {
         printSectionTitle("tmc");
-        if (settings.isFullHMCompat()) {
+        if (settings.getSetting(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
             log.printf(getBS("Log.tmc.fullHM"));
         }
-        if (settings.getTmsHmsCompatibilityMod() == SettingsManager.TMsHMsCompatibilityMod.FULL) {
+        Settings.TMsHMsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
+        if (mod == Settings.TMsHMsCompatibilityMod.FULL) {
             log.printf(getBS("Log.tmc.full"));
-        } else if (settings.getTmsHmsCompatibilityMod() != SettingsManager.TMsHMsCompatibilityMod.UNCHANGED) {
+        } else if (mod != Settings.TMsHMsCompatibilityMod.UNCHANGED) {
             Map<Species, boolean[]> compat = romHandler.getTMHMCompatibility();
             List<Move> tmHMs = getTMHMs();
 
@@ -899,7 +901,7 @@ public class RandomizationLogger {
         List<Move> tmHMs = romHandler.getTMMoves()
                 .stream().map(moveData::get)
                 .collect(Collectors.toList());
-        if (!settings.isFullHMCompat()) {
+        if (!(boolean) settings.getSetting(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
             romHandler.getHMMoves()
                     .stream().map(moveData::get)
                     .forEach(tmHMs::add);
@@ -997,7 +999,8 @@ public class RandomizationLogger {
 
     private void logMoveTutorCompatibility() {
         printSectionTitle("mtc");
-        if (settings.getMoveTutorsCompatibilityMod() == SettingsManager.MoveTutorsCompatibilityMod.FULL) {
+        Settings.MoveTutorsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
+        if (mod == Settings.MoveTutorsCompatibilityMod.FULL) {
             log.printf(getBS("Log.mtc.full"));
         } else {
             Map<Species, boolean[]> compat = romHandler.getMoveTutorCompatibility();
@@ -1142,10 +1145,11 @@ public class RandomizationLogger {
 
         List<StaticEncounter> newStatics = romHandler.getStaticPokemon();
         Map<String, Integer> seenPokemon = new TreeMap<>();
+        boolean levelsChanged = !settings.isDefault(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT);
         for (int i = 0; i < oldStatics.size(); i++) {
             StaticEncounter oldP = oldStatics.get(i);
             StaticEncounter newP = newStatics.get(i);
-            String oldStaticString = oldP.toString(settings.isStaticLevelModified());
+            String oldStaticString = oldP.toString(levelsChanged);
             log.print(oldStaticString);
             if (seenPokemon.containsKey(oldStaticString)) {
                 int amount = seenPokemon.get(oldStaticString);
@@ -1154,7 +1158,7 @@ public class RandomizationLogger {
             } else {
                 seenPokemon.put(oldStaticString, 1);
             }
-            log.println(" => " + newP.toString(settings.isStaticLevelModified()));
+            log.println(" => " + newP.toString(levelsChanged));
         }
         printSectionSeparator();
     }
@@ -1260,10 +1264,11 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         printSectionTitle("sh");
-        if (settings.isAddCheapRareCandiesToShops()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY)) {
             log.printf(getBS("Log.sh.addedRareCandies"));
         }
-        if (settings.getShopItemsMod() != SettingsManager.ShopItemsMod.UNCHANGED) {
+        Settings.ShopItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS);
+        if (mod != Settings.ShopItemsMod.UNCHANGED) {
             log.printf(getBS("Log.sh.specialShops"));
             List<Shop> shops = romHandler.getShops();
             for (Shop shop : shops) {

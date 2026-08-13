@@ -26,6 +26,7 @@ import com.uprfvx.random.log.RandomizationLogger;
 import com.uprfvx.random.random.RandomSource;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.randomizers.*;
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.updaters.MoveUpdater;
 import com.uprfvx.random.updaters.SpeciesBaseStatUpdater;
@@ -237,7 +238,7 @@ public class GameRandomizer {
     }
 
     private void applyUpdaters() {
-        if (settings.isUpdateTypeEffectiveness()) {
+        if (settings.getSetting(Settings.Name.UPDATE_TYPE_EFFECTIVENESS)) {
             typeEffUpdater.updateTypeEffectiveness();
         }
         if (settings.isUpdateMoves()) {
@@ -329,20 +330,20 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTypeEffectiveness() {
-        if (settings.getTypeEffectivenessMod() != SettingsManager.TypeEffectivenessMod.UNCHANGED) {
-            switch (settings.getTypeEffectivenessMod()) {
-                case RANDOM:
-                    typeEffRandomizer.randomizeTypeEffectiveness(false);
-                    break;
-                case RANDOM_BALANCED:
-                    typeEffRandomizer.randomizeTypeEffectiveness(true);
-                    break;
-                case KEEP_IDENTITIES:
-                    typeEffRandomizer.randomizeTypeEffectivenessKeepIdentities();
-                    break;
-                case INVERSE:
-                    typeEffRandomizer.invertTypeEffectiveness(settings.isInverseTypesRandomImmunities());
-            }
+        Settings.TypeEffectivenessMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TYPE_EFFECTIVENESS);
+        switch (mod) {
+            case RANDOM:
+                typeEffRandomizer.randomizeTypeEffectiveness(false);
+                break;
+            case RANDOM_BALANCED:
+                typeEffRandomizer.randomizeTypeEffectiveness(true);
+                break;
+            case KEEP_IDENTITIES:
+                typeEffRandomizer.randomizeTypeEffectivenessKeepIdentities();
+                break;
+            case INVERSE:
+                boolean addImmunities = settings.getSetting(Settings.Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES);
+                typeEffRandomizer.invertTypeEffectiveness(addImmunities);
         }
     }
 
@@ -473,8 +474,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTMMoves() {
-        if (!(settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY)
-                && settings.getTmsMod() == SettingsManager.TMsMod.RANDOM) {
+        Settings.TMMovesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_MOVES);
+        if (mod == Settings.TMMovesMod.RANDOM) {
             tmtMoveRandomizer.randomizeTMMoves();
         }
     }
@@ -487,7 +488,8 @@ public class GameRandomizer {
         // 4. Full HM compatibility
         // 5. Copy to cosmetic forms
 
-        switch (settings.getTmsHmsCompatibilityMod()) {
+        Settings.TMsHMsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
+        switch (mod) {
             case COMPLETELY_RANDOM:
             case RANDOM_PREFER_TYPE:
                 tmhmtCompRandomizer.randomizeTMHMCompatibility();
@@ -496,14 +498,14 @@ public class GameRandomizer {
                 tmhmtCompRandomizer.fullTMHMCompatibility();
         }
 
-        if (settings.isTmLevelUpMoveSanity()) {
+        if (settings.getSetting(Settings.Name.TM_COMPATABILITY_LEVEL_UP_SANITY)) {
             tmhmtCompRandomizer.ensureTMCompatSanity();
-            if (settings.isTmsFollowEvolutions()) {
+            if (settings.getSetting(Settings.Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS)) {
                 tmhmtCompRandomizer.ensureTMEvolutionSanity();
             }
         }
 
-        if (settings.isFullHMCompat()) {
+        if (settings.getSetting(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
             tmhmtCompRandomizer.fullHMCompatibility();
         }
 
@@ -515,8 +517,8 @@ public class GameRandomizer {
 
     private void maybeRandomizeMoveTutorMoves() {
         if (romHandler.hasMoveTutors()) {
-            if (!(settings.getMovesetsMod() == SettingsManager.MovesetsMod.METRONOME_ONLY)
-                    && settings.getMoveTutorMovesMod() == SettingsManager.MoveTutorMovesMod.RANDOM) {
+            Settings.MoveTutorMovesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_MOVES);
+            if (mod == Settings.MoveTutorMovesMod.RANDOM) {
                 tmtMoveRandomizer.randomizeMoveTutorMoves();
             }
         }
@@ -529,8 +531,8 @@ public class GameRandomizer {
             // 2. Ensure levelup move sanity
             // 3. Follow evolutions
             // 4. Copy to cosmetic forms
-
-            switch (settings.getMoveTutorsCompatibilityMod()) {
+            Settings.MoveTutorsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
+            switch (mod) {
                 case COMPLETELY_RANDOM:
                 case RANDOM_PREFER_TYPE:
                     tmhmtCompRandomizer.randomizeMoveTutorCompatibility();
@@ -539,9 +541,9 @@ public class GameRandomizer {
                     tmhmtCompRandomizer.fullMoveTutorCompatibility();
             }
 
-            if (settings.isTutorLevelUpMoveSanity()) {
+            if (settings.getSetting(Settings.Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY)) {
                 tmhmtCompRandomizer.ensureMoveTutorCompatSanity();
-                if (settings.isTutorFollowEvolutions()) {
+                if (settings.getSetting(Settings.Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS)) {
                     tmhmtCompRandomizer.ensureMoveTutorEvolutionSanity();
                 }
             }
@@ -627,9 +629,10 @@ public class GameRandomizer {
 
     private void maybeRandomizeStaticPokemon() {
         if (romHandler.canChangeStaticPokemon()) {
-            if (settings.getStaticPokemonMod() != SettingsManager.StaticPokemonMod.UNCHANGED) { // Legendary for L
+            Settings.StaticPokemonMod mod = settings.getSetting(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS);
+            if (mod != Settings.StaticPokemonMod.UNCHANGED) {
                 staticPokeRandomizer.randomizeStaticPokemon();
-            } else if (settings.isStaticLevelModified()) {
+            } else if (!settings.isDefault(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT)) {
                 staticPokeRandomizer.onlyChangeStaticLevels();
             }
         }
@@ -637,11 +640,15 @@ public class GameRandomizer {
 
     private void maybeRandomizeTotemPokemon() {
         if (romHandler.hasTotemPokemon()) {
-            if (settings.getTotemPokemonMod() != SettingsManager.TotemPokemonMod.UNCHANGED ||
-                    settings.getAllyPokemonMod() != SettingsManager.AllyPokemonMod.UNCHANGED ||
-                    settings.getAuraMod() != SettingsManager.AuraMod.UNCHANGED ||
-                    settings.isRandomizeTotemHeldItems() ||
-                    settings.isTotemLevelsModified()) {
+            Settings.TotemPokemonMod totemMod = settings.getSetting(Settings.Name.RANDOMIZE_TOTEM_POKEMON);
+            Settings.AllyPokemonMod allyMod = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_ALLIES);
+            Settings.AuraMod auraMod = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_AURAS);
+
+            if (totemMod != Settings.TotemPokemonMod.UNCHANGED ||
+                    allyMod != Settings.AllyPokemonMod.UNCHANGED ||
+                    auraMod != Settings.AuraMod.UNCHANGED ||
+                    (boolean) settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS) ||
+                    !settings.isDefault(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT)) {
 
                 staticPokeRandomizer.randomizeTotemPokemon();
             }
@@ -659,7 +666,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeInGameTrades() {
-        switch (settings.getInGameTradesMod()) {
+        Settings.InGameTradesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
+        switch (mod) {
             case RANDOMIZE_GIVEN:
             case RANDOMIZE_GIVEN_AND_REQUESTED:
                 tradeRandomizer.randomizeIngameTrades();
@@ -667,7 +675,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeFieldItems() {
-        switch (settings.getFieldItemsMod()) {
+        Settings.FieldItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_FIELD_ITEMS);
+        switch (mod) {
             case SHUFFLE:
             case RANDOM:
             case RANDOM_EVEN:
@@ -676,29 +685,32 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeShops() {
-        switch (settings.getShopItemsMod()) {
+        Settings.ShopItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS);
+        switch (mod) {
             case SHUFFLE:
                 itemRandomizer.shuffleShopItems();
                 break;
             case RANDOM:
                 itemRandomizer.randomizeShopItems();
         }
-        if (settings.isBalanceShopPrices()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_BALANCE_PRICES)) {
             romHandler.setBalancedShopPrices();
         }
-        if (settings.isAddCheapRareCandiesToShops()) {
+        if (settings.getSetting(Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY)) {
             itemRandomizer.addCheapRareCandiesToShops();
         }
     }
 
     private void maybeRandomizePickupItems() {
-        if (settings.getPickupItemsMod() == SettingsManager.PickupItemsMod.RANDOM) {
+        Settings.PickupItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_PICKUP_ITEMS);
+        if (mod == Settings.PickupItemsMod.RANDOM) {
             itemRandomizer.randomizePickupItems();
         }
     }
 
     private void maybeRandomizePokemonPalettes() {
-        if (settings.getPokemonPalettesMod() == SettingsManager.PokemonPalettesMod.RANDOM) {
+        Settings.SpeciesPalettesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_PALETTES);
+        if (mod == Settings.SpeciesPalettesMod.RANDOM) {
             paletteRandomizer.randomizePokemonPalettes();
         }
     }

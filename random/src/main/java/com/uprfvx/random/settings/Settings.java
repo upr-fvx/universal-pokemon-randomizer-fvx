@@ -140,7 +140,7 @@ public class Settings {
         TRAINERS_AVOID_DUPLICATES, TRAINERS_WEIGHT_TYPES, TRAINERS_USE_LOCAL, TRAINERS_NO_LEGENDARIES,
         TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLE,
         TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, TRAINERS_EVOLVE_POKEMON,
-        TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_USE_LEVEL_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
+        TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
         //That's a lot for one category. We should probably organize these more. TODO: that
         //Trainer Movesets
         TRAINERS_BETTER_MOVESETS_FOR_BOSSES, TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
@@ -159,7 +159,7 @@ public class Settings {
         TRAINERS_RANDOMIZE_BATTLE_STYLE, TRAINERS_SINGLE_STYLE_SELECTION,
         //Totem Pokemon
         RANDOMIZE_TOTEM_POKEMON, TOTEMS_RANDOMIZE_ALLIES, TOTEMS_RANDOMIZE_AURAS, TOTEMS_RANDOMIZE_HELD_ITEMS,
-        TOTEMS_ALLOW_ALT_FORMES, TOTEMS_USE_LEVEL_MODIFIER, TOTEMS_LEVEL_MODIFIER_PERCENT,
+        TOTEMS_ALLOW_ALT_FORMES, TOTEMS_LEVEL_MODIFIER_PERCENT,
 
         // *** WILD ENCOUNTERS ***
         //Wild General
@@ -173,22 +173,20 @@ public class Settings {
         WILD_EVOLUTION_RESTRICTION, WILD_EVOLUTION_KEEP_RELATIONS,
         //Wild Post Tweaks
         WILD_SET_MINIMUM_CATCH_RATE, WILD_MINIMUM_CATCH_RATE_SELECTION, WILD_RANDOMIZE_HELD_ITEMS,
-        WILD_HELD_ITEMS_BAN_MINOR, WILD_USE_LEVEL_MODIFIER, WILD_LEVEL_MODIFIER_PERCENT,
+        WILD_HELD_ITEMS_BAN_MINOR, WILD_LEVEL_MODIFIER_PERCENT,
         //Static Encounters
         RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
-        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC, STATICS_USE_LEVEL_MODIFIER,
+        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC,
         STATICS_LEVEL_MODIFIER_PERCENT,
 
         // *** MOVE TEACHERS ***
         //TM Moves
-        RANDOMIZE_TM_MOVES, TMS_BAN_OVERPOWERED, TMS_KEEP_FIELD_MOVES, TMS_FORCE_GOOD_DAMAGING,
-        TMS_GOOD_DAMAGING_PERCENT,
+        RANDOMIZE_TM_MOVES, TMS_BAN_OVERPOWERED, TMS_KEEP_FIELD_MOVES, TMS_GOOD_DAMAGING_PERCENT,
         //TM And HM Compatability
         RANDOMIZE_TM_AND_HM_COMPATABILITY, TM_COMPATABILITY_LEVEL_UP_SANITY, TM_COMPATABILITY_FOLLOW_EVOLUTIONS,
         TMS_FULL_HM_COMPATABILITY,
         //Move Tutor Moves
-        RANDOMIZE_TUTOR_MOVES, TUTORS_BAN_OVERPOWERED, TUTORS_KEEP_FIELD_MOVES, TUTORS_FORCE_GOOD_DAMAGING,
-        TUTORS_GOOD_DAMAGING_PERCENT,
+        RANDOMIZE_TUTOR_MOVES, TUTORS_BAN_OVERPOWERED, TUTORS_KEEP_FIELD_MOVES, TUTORS_GOOD_DAMAGING_PERCENT,
         //Move Tutor Compatability
         RANDOMIZE_TUTOR_COMPATABILITY, TUTOR_COMPATABILITY_LEVEL_UP_SANITY, TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS,
 
@@ -1674,7 +1672,7 @@ public class Settings {
 
     //region graphics
 
-    public enum PokemonPalettesMod {
+    public enum SpeciesPalettesMod {
         UNCHANGED, RANDOM
     }
 
@@ -1682,23 +1680,23 @@ public class Settings {
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_SPECIES_PALETTES,
                     Category.SPECIES_PALETTES,
-                    PokemonPalettesMod.UNCHANGED)
+                    SpeciesPalettesMod.UNCHANGED)
                     .supported(RomHandler::hasPokemonPaletteSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.PALETTES_FOLLOW_TYPES,
                     Category.SPECIES_PALETTES)
-                    .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(PokemonPalettesMod.RANDOM))
+                    .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(SpeciesPalettesMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.PALETTES_FOLLOW_EVOLUTIONS,
                     Category.SPECIES_PALETTES)
-                    .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(PokemonPalettesMod.RANDOM))
+                    .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(SpeciesPalettesMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.PALETTES_SHINY_FROM_NORMAL,
                     Category.SPECIES_PALETTES)
-                    .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(PokemonPalettesMod.RANDOM))
+                    .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(SpeciesPalettesMod.RANDOM))
                     .supported(notOfGeneration(1))
                     .build()
 

@@ -697,7 +697,8 @@ public class RandomizationLogger {
 
     private void logStarters() {
         printSectionTitle("sp");
-        String mode = switch (settings.getStartersMod()) {
+        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        String mode = switch (startersMod) {
             case UNCHANGED -> getBS("Log.sp.unchanged"); // should never happen
             case CUSTOM -> getBS("Log.sp.custom");
             case COMPLETELY_RANDOM -> getBS("Log.sp.random");
@@ -1375,7 +1376,8 @@ public class RandomizationLogger {
 
     private void logBaseStatsUpdates() {
         printSectionTitle("bsu");
-        log.printf(getBS("Log.bsu.description"), settings.getUpdateBaseStatsToGeneration());
+        log.printf(getBS("Log.bsu.description"),
+                settings.getSetting(Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION));
 
         Map<Species, Map<BSUpdateType, Update<Integer>>> updates = speciesBSUpdater.getUpdates();
         for (Map.Entry<Species, Map<BSUpdateType, Update<Integer>>> outer : updates.entrySet()) {

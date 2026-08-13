@@ -1,6 +1,7 @@
 package com.uprfvx.random.cli;
 
 import com.uprfvx.random.GameRandomizer;
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.gui.CPGSelection;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
@@ -114,7 +115,8 @@ public class CliRandomizer {
 
     private static void displaySettingsWarnings(SettingsManager settings, RomHandler romHandler) {
         SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(romHandler);
-        if (feedback.isChangedStarter() && settings.getStartersMod() == SettingsManager.StartersMod.CUSTOM) {
+        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
             printWarning(bundle.getString("GUI.starterUnavailable"));
         }
         if (settings.isUpdatedFromOldVersion()) {

@@ -2041,9 +2041,7 @@ public class SettingsManager {
         this.bstShuffleSwapLegendaries = bstShuffleSwapLegendaries;
     }
 
-    public BaseStatisticsMod getBaseStatisticsMod() {
-        return baseStatisticsMod;
-    }
+    // TODO: convert all usages of the remaining is/get[Setting] methods above
 
     public void setBaseStatisticsMod(boolean... bools) {
         setBaseStatisticsMod(getEnum(BaseStatisticsMod.class, bools));
@@ -2053,41 +2051,20 @@ public class SettingsManager {
         this.baseStatisticsMod = baseStatisticsMod;
     }
 
-    public boolean isBaseStatsFollowEvolutions() {
-        return baseStatsFollowEvolutions;
-    }
-
     public void setBaseStatsFollowEvolutions(boolean baseStatsFollowEvolutions) {
         this.baseStatsFollowEvolutions = baseStatsFollowEvolutions;
-    }
-
-    public boolean isBaseStatsFollowMegaEvolutions() {
-        return baseStatsFollowMegaEvolutions;
     }
 
     public void setBaseStatsFollowMegaEvolutions(boolean baseStatsFollowMegaEvolutions) {
         this.baseStatsFollowMegaEvolutions = baseStatsFollowMegaEvolutions;
     }
 
-    public boolean isAssignEvoStatsRandomly() {
-        return assignEvoStatsRandomly;
-    }
-
     public void setAssignEvoStatsRandomly(boolean assignEvoStatsRandomly) {
         this.assignEvoStatsRandomly = assignEvoStatsRandomly;
     }
 
-
-    public boolean isStandardizeEXPCurves() {
-        return standardizeEXPCurves;
-    }
-
     public void setStandardizeEXPCurves(boolean standardizeEXPCurves) {
         this.standardizeEXPCurves = standardizeEXPCurves;
-    }
-
-    public ExpCurveMod getExpCurveMod() {
-        return expCurveMod;
     }
 
     public void setExpCurveMod(boolean... bools) {
@@ -2098,32 +2075,16 @@ public class SettingsManager {
         this.expCurveMod = expCurveMod;
     }
 
-    public ExpCurve getSelectedEXPCurve() {
-        return selectedEXPCurve;
-    }
-
     public void setSelectedEXPCurve(ExpCurve expCurve) {
         this.selectedEXPCurve = expCurve;
-    }
-
-    public boolean isUpdateBaseStats() {
-        return updateBaseStats;
     }
 
     public void setUpdateBaseStats(boolean updateBaseStats) {
         this.updateBaseStats = updateBaseStats;
     }
 
-    public int getUpdateBaseStatsToGeneration() {
-        return updateBaseStatsToGeneration;
-    }
-
     public void setUpdateBaseStatsToGeneration(int generation) {
         this.updateBaseStatsToGeneration = generation;
-    }
-
-    public AbilitiesMod getAbilitiesMod() {
-        return abilitiesMod;
     }
 
     public void setAbilitiesMod(boolean... bools) {
@@ -2134,70 +2095,36 @@ public class SettingsManager {
         this.abilitiesMod = abilitiesMod;
     }
 
-    public boolean isAllowWonderGuard() {
-        return allowWonderGuard;
-    }
-
     public void setAllowWonderGuard(boolean allowWonderGuard) {
         this.allowWonderGuard = allowWonderGuard;
-    }
-
-    public boolean isAbilitiesFollowEvolutions() {
-        return abilitiesFollowEvolutions;
     }
 
     public void setAbilitiesFollowEvolutions(boolean abilitiesFollowEvolutions) {
         this.abilitiesFollowEvolutions = abilitiesFollowEvolutions;
     }
 
-    public boolean isAbilitiesFollowMegaEvolutions() {
-        return abilitiesFollowMegaEvolutions;
-    }
-
     public void setAbilitiesFollowMegaEvolutions(boolean abilitiesFollowMegaEvolutions) {
         this.abilitiesFollowMegaEvolutions = abilitiesFollowMegaEvolutions;
-    }
-
-    public boolean isBanTrappingAbilities() {
-        return banTrappingAbilities;
     }
 
     public void setBanTrappingAbilities(boolean banTrappingAbilities) {
         this.banTrappingAbilities = banTrappingAbilities;
     }
 
-    public boolean isBanNegativeAbilities() {
-        return banNegativeAbilities;
-    }
-
     public void setBanNegativeAbilities(boolean banNegativeAbilities) {
         this.banNegativeAbilities = banNegativeAbilities;
-    }
-
-    public boolean isBanBadAbilities() {
-        return banBadAbilities;
     }
 
     public void setBanBadAbilities(boolean banBadAbilities) {
         this.banBadAbilities = banBadAbilities;
     }
 
-    public boolean isWeighDuplicateAbilitiesTogether() {
-        return weighDuplicateAbilitiesTogether;
-    }
-
     public void setWeighDuplicateAbilitiesTogether(boolean weighDuplicateAbilitiesTogether) {
         this.weighDuplicateAbilitiesTogether = weighDuplicateAbilitiesTogether;
     }
 
-    public boolean isEnsureTwoAbilities() { return ensureTwoAbilities; }
-
     public void setEnsureTwoAbilities(boolean ensureTwoAbilities) {
         this.ensureTwoAbilities = ensureTwoAbilities;
-    }
-
-    public StartersMod getStartersMod() {
-        return startersMod;
     }
 
     public void setStartersMod(boolean... bools) {
@@ -2208,10 +2135,6 @@ public class SettingsManager {
         this.startersMod = startersMod;
     }
 
-    public StartersTypeMod getStartersTypeMod() {
-        return startersTypeMod;
-    }
-
     public void setStartersTypeMod(boolean... bools) {
         setStartersTypeMod(getEnum(StartersTypeMod.class, bools));
     }
@@ -2220,24 +2143,12 @@ public class SettingsManager {
         this.startersTypeMod = startersTypeMod;
     }
 
-    public boolean isStartersNoDualTypes() {
-        return startersNoDualTypes;
-    }
-
     public void setStartersNoDualTypes(boolean startersNoDualTypes) {
         this.startersNoDualTypes = startersNoDualTypes;
     }
 
-    public boolean isStartersNoLegendaries() {
-        return startersNoLegendaries;
-    }
-
     public void setStartersNoLegendaries(boolean startersNoLegendaries) {
         this.startersNoLegendaries = startersNoLegendaries;
-    }
-
-    public Type getStartersSingleType() {
-        return startersSingleType;
     }
 
     private void setStartersSingleType(Type type) {
@@ -2252,56 +2163,28 @@ public class SettingsManager {
         }
     }
 
-    public int[] getCustomStarters() {
-        return customStarters;
-    }
-
     public void setCustomStarters(int[] customStarters) {
         this.customStarters = customStarters;
-    }
-
-    public boolean isRandomizeStartersHeldItems() {
-        return randomizeStartersHeldItems;
     }
 
     public void setRandomizeStartersHeldItems(boolean randomizeStartersHeldItems) {
         this.randomizeStartersHeldItems = randomizeStartersHeldItems;
     }
 
-    public boolean isBanBadRandomStarterHeldItems() {
-        return banBadRandomStarterHeldItems;
-    }
-
     public void setBanBadRandomStarterHeldItems(boolean banBadRandomStarterHeldItems) {
         this.banBadRandomStarterHeldItems = banBadRandomStarterHeldItems;
-    }
-
-    public boolean isAllowStarterAltFormes() {
-        return allowStarterAltFormes;
     }
 
     public void setAllowStarterAltFormes(boolean allowStarterAltFormes) {
         this.allowStarterAltFormes = allowStarterAltFormes;
     }
 
-    public int getStartersBSTMinimum() {
-        return startersBSTMinimum;
-    }
-
     public void setStartersBSTMinimum(int startersBSTMinimum) {
         this.startersBSTMinimum = startersBSTMinimum;
     }
 
-    public int getStartersBSTMaximum() {
-        return startersBSTMaximum;
-    }
-
     public void setStartersBSTMaximum(int startersBSTMaximum) {
         this.startersBSTMaximum = startersBSTMaximum;
-    }
-    
-    public SpeciesTypesMod getSpeciesTypesMod() {
-        return speciesTypesMod;
     }
 
     public void setSpeciesTypesMod(boolean... bools) {
@@ -2312,15 +2195,9 @@ public class SettingsManager {
         this.speciesTypesMod = speciesTypesMod;
     }
 
-    public boolean isTypesFollowMegaEvolutions() {
-        return typesFollowMegaEvolutions;
-    }
-
     public void setTypesFollowMegaEvolutions(boolean typesFollowMegaEvolutions) {
         this.typesFollowMegaEvolutions = typesFollowMegaEvolutions;
     }
-
-    // TODO: convert all usages of the remaining is/get[Setting] methods above
 
     public void setEvolutionsMod(boolean... bools) {
         setEvolutionsMod(getEnum(EvolutionsMod.class, bools));

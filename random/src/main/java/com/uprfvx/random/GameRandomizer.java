@@ -35,7 +35,6 @@ import com.uprfvx.random.updaters.Updater;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
-import com.uprfvx.romio.romhandlers.Gen1RomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.IOException;
@@ -242,11 +241,13 @@ public class GameRandomizer {
         if (settings.getSetting(Settings.Name.UPDATE_TYPE_EFFECTIVENESS)) {
             typeEffUpdater.updateTypeEffectiveness();
         }
-        if (settings.isUpdateMoves()) {
-            moveUpdater.updateMoves(settings.getUpdateMovesToGeneration());
+        if (settings.getSetting(Settings.Name.UPDATE_MOVES)) {
+            int generation = settings.getSetting(Settings.Name.UPDATE_MOVES_TO_GENERATION);
+            moveUpdater.updateMoves(generation);
         }
-        if (settings.isUpdateBaseStats()) {
-            speciesBSUpdater.updateSpeciesStats(settings.getUpdateBaseStatsToGeneration());
+        if (settings.getSetting(Settings.Name.UPDATE_SPECIES_BASE_STATS)) {
+            int generation = settings.getSetting(Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION);
+            speciesBSUpdater.updateSpeciesStats(generation);
         }
     }
 
@@ -380,13 +381,14 @@ public class GameRandomizer {
     }
 
     private void maybeStandardizeEXPCurves() {
-        if (settings.isStandardizeEXPCurves()) {
+        if (settings.getSetting(Settings.Name.STANDARDIZE_SPECIES_EXP_CURVES)) {
             speciesBSRandomizer.standardizeEXPCurves();
         }
     }
 
     private void maybeRandomizeSpeciesTypes() {
-        if (settings.getSpeciesTypesMod() != SettingsManager.SpeciesTypesMod.UNCHANGED) {
+        Settings.SpeciesTypesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_TYPES);
+        if (mod != Settings.SpeciesTypesMod.UNCHANGED) {
             speciesTypeRandomizer.randomizeSpeciesTypes();
         }
     }
@@ -411,7 +413,9 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeSpeciesBaseStats() {
-        switch (settings.getBaseStatisticsMod()) {
+        Settings.BaseStatDistributionsMod mod =
+                settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS);
+        switch (mod) {
             case SHUFFLE:
                 speciesBSRandomizer.shuffleSpeciesStats();
                 break;
@@ -421,7 +425,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeSpeciesAbilities() {
-        if (settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE) {
+        Settings.AbilitiesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        if (mod == Settings.AbilitiesMod.RANDOMIZE) {
             speciesAbilityRandomizer.randomizeAbilities();
         }
     }
@@ -450,10 +455,11 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeStarters() {
-        if(settings.getStartersMod() != SettingsManager.StartersMod.UNCHANGED) {
+        Settings.StartersMod mod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        if (mod != Settings.StartersMod.UNCHANGED) {
             starterRandomizer.randomizeStarters();
         }
-        if (settings.isRandomizeStartersHeldItems() && !(romHandler instanceof Gen1RomHandler)) {
+        if (settings.getSetting(Settings.Name.STARTERS_RANDOMIZE_HELD_ITEMS)) {
             starterRandomizer.randomizeStarterHeldItems();
         }
     }
@@ -583,8 +589,9 @@ public class GameRandomizer {
         }
 
         Settings.TrainersMod trainersMod = settings.getSetting(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
+        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
         if ((trainersMod != Settings.TrainersMod.UNCHANGED
-                || settings.getStartersMod() != SettingsManager.StartersMod.UNCHANGED)
+                || startersMod != Settings.StartersMod.UNCHANGED)
                 && (boolean) settings.getSetting(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER)) {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }

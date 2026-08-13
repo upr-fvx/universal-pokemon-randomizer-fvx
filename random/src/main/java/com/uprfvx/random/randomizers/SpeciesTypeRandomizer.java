@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
@@ -24,9 +25,10 @@ public class SpeciesTypeRandomizer extends Randomizer {
     }
 
     public void randomizeSpeciesTypes() {
-        boolean evolutionSanity = settings.getSpeciesTypesMod() == SettingsManager.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS;
-        boolean megaEvolutionSanity = settings.isTypesFollowMegaEvolutions();
-        boolean dualTypeOnly = settings.isDualTypeOnly();
+        Settings.SpeciesTypesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_TYPES);
+        boolean evolutionSanity = mod == Settings.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS;
+        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS);
+        boolean dualTypeOnly = settings.getSetting(Settings.Name.SPECIES_TYPES_FORCE_DUAL_TYPES);
 
         BasicSpeciesAction basicAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));

@@ -1,7 +1,9 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.random.settings.definitions.TypeOrRandomSettingDefinition;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -14,14 +16,16 @@ public class StarterRandomizer extends Randomizer {
     }
 
     public void randomizeStarters() {
-        boolean useCustomStarters = settings.getStartersMod() == SettingsManager.StartersMod.CUSTOM;
-        boolean typeFwg = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.FIRE_WATER_GRASS;
-        boolean typeUnique = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.UNIQUE;
-        boolean typeTriangle = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.TRIANGLE;
-        boolean typeSingle = settings.getStartersTypeMod() == SettingsManager.StartersTypeMod.SINGLE_TYPE;
+        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        boolean useCustomStarters = startersMod == Settings.StartersMod.CUSTOM;
+        Settings.StartersTypeMod typeMod = settings.getSetting(Settings.Name.STARTERS_TYPE_RESTRICTION);
+        boolean typeFwg = typeMod == Settings.StartersTypeMod.FIRE_WATER_GRASS;
+        boolean typeUnique = typeMod == Settings.StartersTypeMod.UNIQUE;
+        boolean typeTriangle = typeMod == Settings.StartersTypeMod.TRIANGLE;
+        boolean typeSingle = typeMod == Settings.StartersTypeMod.SINGLE_TYPE;
         boolean hasTypeRestriction = typeFwg || typeUnique || typeTriangle || typeSingle;
-        Type singleType = settings.getStartersSingleType();
-        int[] customStarters = settings.getCustomStarters();
+        Type singleType = getSingleTypeFromSettings();
+        int[] customStarters = getCustomStartersFromSettings();
         int starterCount = romHandler.starterCount();
 
         List<Species> pickedStarters = new ArrayList<>();
@@ -105,6 +109,32 @@ public class StarterRandomizer extends Randomizer {
 
         romHandler.setStarters(pickedStarters);
         changesMade = true;
+    }
+
+    public Type getSingleTypeFromSettings() {
+        int index = settings.getSetting(Settings.Name.STARTERS_SINGLE_TYPE_SELECTION);
+        Type singleType;
+        if (index == TypeOrRandomSettingDefinition.RANDOM_TYPE) {
+            singleType = null;
+        } else {
+            singleType = Type.fromInt(index);
+        }
+        return singleType;
+    }
+
+    public int[] getCustomStartersFromSettings() {
+        if (settings.isEnabled(Settings.Name.STARTER_CUSTOM_3)) {
+            return new int[] {
+                    settings.getSetting(Settings.Name.STARTER_CUSTOM_1),
+                    settings.getSetting(Settings.Name.STARTER_CUSTOM_2),
+                    settings.getSetting(Settings.Name.STARTER_CUSTOM_3)
+            };
+        } else {
+            return new int[] {
+                    settings.getSetting(Settings.Name.STARTER_CUSTOM_1),
+                    settings.getSetting(Settings.Name.STARTER_CUSTOM_2)
+            };
+        }
     }
 
     /**
@@ -282,15 +312,17 @@ public class StarterRandomizer extends Randomizer {
      * @return A new SpeciesSet containing all Species which are valid starters, except the already chosen ones.
      */
     private SpeciesSet getAvailableSet(List<Species> alreadyChosen) {
-        boolean abilitiesUnchanged = settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.UNCHANGED;
-        boolean allowAltFormes = settings.isAllowStarterAltFormes();
-        boolean banIrregularAltFormes = settings.isBanIrregularAltFormes();
-        boolean noLegendaries = settings.isStartersNoLegendaries();
-        boolean noDualTypes = settings.isStartersNoDualTypes();
-        boolean triStageOnly = settings.getStartersMod() == SettingsManager.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
-        boolean basicOnly = triStageOnly || settings.getStartersMod() == SettingsManager.StartersMod.RANDOM_BASIC;
-        int bstMin = settings.getStartersBSTMinimum();
-        int bstMax = settings.getStartersBSTMaximum() == 0 ? 1530 : settings.getStartersBSTMaximum();
+        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesUnchanged = abilitiesMod == Settings.AbilitiesMod.UNCHANGED;
+        boolean allowAltFormes = settings.getSetting(Settings.Name.STARTERS_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean noLegendaries = settings.getSetting(Settings.Name.STARTERS_NO_LEGENDARIES);
+        boolean noDualTypes = settings.getSetting(Settings.Name.STARTERS_NO_DUAL_TYPES);
+        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        boolean triStageOnly = startersMod == Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
+        boolean basicOnly = triStageOnly || startersMod == Settings.StartersMod.RANDOM_BASIC;
+        int bstMin = settings.getSetting(Settings.Name.STARTERS_BST_MINIMUM);
+        int bstMax = settings.getSetting(Settings.Name.STARTERS_BST_MAXIMUM);
 
         SpeciesSet available;
 
@@ -387,7 +419,7 @@ public class StarterRandomizer extends Randomizer {
     }
 
     public void randomizeStarterHeldItems() {
-        boolean banBadItems = settings.isBanBadRandomStarterHeldItems();
+        boolean banBadItems = settings.getSetting(Settings.Name.STARTERS_BAN_BAD_HELD_ITEMS);
 
         List<Item> oldHeldItems = romHandler.getStarterHeldItems();
         List<Item> newHeldItems = new ArrayList<>();

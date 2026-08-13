@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.ExpCurve;
@@ -256,8 +257,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     Map<Species, List<Integer>> shuffledStatsOrders;
 
     public void shuffleSpeciesStats() {
-        boolean evolutionSanity = settings.isBaseStatsFollowEvolutions();
-        boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
+        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS);
+        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS);
 
         shuffledStatsOrders = new HashMap<>();
 
@@ -335,9 +336,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void randomizeSpeciesStats() {
-        boolean evolutionSanity = settings.isBaseStatsFollowEvolutions();
-        boolean megaEvolutionSanity = settings.isBaseStatsFollowMegaEvolutions();
-        boolean assignEvoStatsRandomly = settings.isAssignEvoStatsRandomly();
+        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS);
+        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS);
+        boolean assignEvoStatsRandomly = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY);
 
         BasicSpeciesAction bsAction = this::randomizeStatsWithinBST;
         EvolvedSpeciesAction randomEsAction = (evFrom, evTo, _) ->
@@ -483,8 +484,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void standardizeEXPCurves() {
-        SettingsManager.ExpCurveMod mod = settings.getExpCurveMod();
-        ExpCurve expCurve = settings.getSelectedEXPCurve();
+        Settings.ExpCurveExtentMod mod = settings.getSetting(Settings.Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT);
+        ExpCurve expCurve = settings.getSetting(Settings.Name.SPECIES_EXP_CURVE_STANDARD_SELECTION);
 
         SpeciesSet pokes = romHandler.getSpeciesSetInclFormes();
         for (Species pk : pokes) {

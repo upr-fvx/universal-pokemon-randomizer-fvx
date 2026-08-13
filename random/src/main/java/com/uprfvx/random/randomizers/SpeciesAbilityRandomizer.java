@@ -22,14 +22,14 @@ public class SpeciesAbilityRandomizer extends Randomizer {
     }
 
     public void randomizeAbilities() {
-        boolean evolutionSanity = settings.isAbilitiesFollowEvolutions();
-        boolean allowWonderGuard = settings.isAllowWonderGuard();
-        boolean banTrappingAbilities = settings.isBanTrappingAbilities();
-        boolean banNegativeAbilities = settings.isBanNegativeAbilities();
-        boolean banBadAbilities = settings.isBanBadAbilities();
-        boolean megaEvolutionSanity = settings.isAbilitiesFollowMegaEvolutions();
-        boolean weighDuplicatesTogether = settings.isWeighDuplicateAbilitiesTogether();
-        boolean ensureTwoAbilities = settings.isEnsureTwoAbilities();
+        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_ABILITIES_FOLLOW_EVOLUTIONS);
+        boolean allowWonderGuard = !(boolean) settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_WONDER_GUARD);
+        boolean banTrappingAbilities = settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_TRAPPING);
+        boolean banNegativeAbilities = settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_NEGATIVE);
+        boolean banBadAbilities = settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_MINOR);
+        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS);
+        boolean weighDuplicatesTogether = settings.getSetting(Settings.Name.SPECIES_ABILITIES_COMBINE_DUPLICATES);
+        boolean ensureTwoAbilities = settings.getSetting(Settings.Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES);
         BattleStyle battleStyle = new BattleStyle(
                 settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
                 settings.getSetting(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)

@@ -1246,7 +1246,8 @@ public class RandomizerGUI {
                     initialState();
                     romLoaded();
                     SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(this.romHandler);
-                    if (feedback.isChangedStarter() && settings.getStartersMod() == SettingsManager.StartersMod.CUSTOM) {
+                    Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+                    if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
                         JOptionPane.showMessageDialog(frame, bundle.getString("GUI.starterUnavailable"));
                     }
                     this.restoreStateFromSettings(settings);

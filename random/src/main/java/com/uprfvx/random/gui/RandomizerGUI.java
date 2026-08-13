@@ -28,9 +28,11 @@ import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.gui.SettingElementCoordinators.BooleanCheckBoxCoordinator;
+import com.uprfvx.random.gui.SettingElementCoordinators.EnumMultiButtonCoordinator;
 import com.uprfvx.random.gui.SettingElementCoordinators.SettingUICoordinator;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
+import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.MiscTweak;
@@ -686,14 +688,13 @@ public class RandomizerGUI {
         //...Maybe I'll put them all in a List anyway, just in case. Much easier to ignore a created list
         //than to convert a bunch of freestanding constructors to a list creation, if I'm wrong.
 
-
-        List<SettingUICoordinator<?, ?>> settingUICoordinators = List.of(
+        List<SettingUICoordinator<?>> settingUICoordinators = List.of(
                 // *** GENERAL ***
                 //General Options
-                associateCheckBox(noRandomIntroMonCheckBox, Settings.Name.NO_RANDOM_INTRO_MON),
-                associateCheckBox(noPrematureEvosCheckbox, Settings.Name.NO_PREMATURE_EVOLUTIONS),
-                associateCheckBox(raceModeCheckBox, Settings.Name.RACE_MODE),
-                associateCheckBox(noIrregularAltFormesCheckBox, Settings.Name.NO_IRREGULAR_ALT_FORMES)
+                associateCheckBox(noRandomIntroMonCheckBox, Name.NO_RANDOM_INTRO_MON),
+                associateCheckBox(noPrematureEvosCheckbox, Name.NO_PREMATURE_EVOLUTIONS),
+                associateCheckBox(raceModeCheckBox, Name.RACE_MODE),
+                associateCheckBox(noIrregularAltFormesCheckBox, Name.NO_IRREGULAR_ALT_FORMES),
                 //Limit Pokemon
                 //TODO: add to list OR add handling to dialog
 
@@ -705,8 +706,13 @@ public class RandomizerGUI {
 
     }
 
-    private BooleanCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Settings.Name settingName) {
+    private BooleanCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Name settingName) {
         return new BooleanCheckBoxCoordinator(settingName, settingsManager, checkBox);
+    }
+
+    private <E extends Enum<E>, J extends AbstractButton> EnumMultiButtonCoordinator<E, J> associateButtonSet(
+            Name settingName, Map<E, J> map) {
+        return new EnumMultiButtonCoordinator<E, J>(settingName, settingsManager, map);
     }
 
     private void checkSpMinimumNeedsLower() {
@@ -1246,7 +1252,7 @@ public class RandomizerGUI {
                     initialState();
                     romLoaded();
                     SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(this.romHandler);
-                    Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+                    Settings.StartersMod startersMod = settings.getSetting(Name.RANDOMIZE_STARTERS);
                     if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
                         JOptionPane.showMessageDialog(frame, bundle.getString("GUI.starterUnavailable"));
                     }

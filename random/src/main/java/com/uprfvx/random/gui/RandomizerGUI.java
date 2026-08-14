@@ -29,6 +29,7 @@ import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.gui.SettingElementCoordinators.BooleanCheckBoxCoordinator;
 import com.uprfvx.random.gui.SettingElementCoordinators.EnumMultiButtonCoordinator;
+import com.uprfvx.random.gui.SettingElementCoordinators.IntegerSpinSliderCoordinator;
 import com.uprfvx.random.gui.SettingElementCoordinators.SettingUICoordinator;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
@@ -387,6 +388,7 @@ public class RandomizerGUI {
     private JCheckBox pbstFollowEvolutionsCheckBox;
     private JCheckBox pbstSwapLegendariesCheckBox;
     private SpinSlider pbstRandomBuffNerfSpinSlider;
+    private JSpinner pbsUpdateGenerationChoiceSpinner;
 
     private static final Random RND = new Random();
 
@@ -691,38 +693,55 @@ public class RandomizerGUI {
         List<SettingUICoordinator<?>> settingUICoordinators = List.of(
                 // *** GENERAL ***
                 //General Options
-                associateCheckBox(noRandomIntroMonCheckBox, Name.NO_RANDOM_INTRO_MON),
-                associateCheckBox(noPrematureEvosCheckbox, Name.NO_PREMATURE_EVOLUTIONS),
-                associateCheckBox(raceModeCheckBox, Name.RACE_MODE),
-                associateCheckBox(noIrregularAltFormesCheckBox, Name.NO_IRREGULAR_ALT_FORMES),
+                associateCheckBox(Name.NO_RANDOM_INTRO_MON, noRandomIntroMonCheckBox),
+                associateCheckBox(Name.NO_PREMATURE_EVOLUTIONS, noPrematureEvosCheckbox),
+                associateCheckBox(Name.RACE_MODE, raceModeCheckBox),
+                associateCheckBox(Name.NO_IRREGULAR_ALT_FORMES, noIrregularAltFormesCheckBox),
                 //Limit Pokemon
                 //TODO: add to list OR add handling to dialog
 
                 // *** SPECIES TRAITS ***
-                associateButtonSet(
-                        Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
-                        Map.of(BSTMod.UNCHANGED, pbstUnchangedRadioButton,
-                            BSTMod.RANDOM_BUFF_NERF, pbstRandomBuffNerfRadioButton,
-                            BSTMod.SHUFFLE, pbstShuffleRadioButton,
-                            BSTMod.RANDOM, pbsRandomRadioButton)
-                ),
-                //TODO: buff/nerf percent
-                associateCheckBox(pbstFollowEvolutionsCheckBox, Name.SPECIES_BSTS_FOLLOW_EVOLUTION),
-                associateCheckBox(pbstSwapLegendariesCheckBox, Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY)
-
+                //Species BSTs
+                associateButtonSet(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
+                        Map.of(
+                                BSTMod.UNCHANGED, pbstUnchangedRadioButton,
+                                BSTMod.RANDOM_BUFF_NERF, pbstRandomBuffNerfRadioButton,
+                                BSTMod.SHUFFLE, pbstShuffleRadioButton,
+                                BSTMod.RANDOM, pbsRandomRadioButton
+                        )),
+                associateSpinSlider(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, pbstRandomBuffNerfSpinSlider),
+                associateCheckBox(Name.SPECIES_BSTS_FOLLOW_EVOLUTION, pbstFollowEvolutionsCheckBox),
+                associateCheckBox(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, pbstSwapLegendariesCheckBox),
+                //Species Base Stat Distributions
+                associateButtonSet(Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS,
+                        Map.of(
+                                BaseStatDistributionsMod.UNCHANGED, pbsUnchangedRadioButton,
+                                BaseStatDistributionsMod.SHUFFLE, pbsShuffleRadioButton,
+                                BaseStatDistributionsMod.RANDOM, pbsRandomRadioButton
+                        )),
+                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, pbsFollowEvolutionsCheckBox),
+                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, pbsFollowMegaEvosCheckBox),
+                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, pbsAssignEvoStatsRandomlyCheckBox),
+                //Update Base Stats
+                associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, pbsUpdateBaseStatsCheckBox),
+                //associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, pbsUpdateGenerationChoiceSpinner),
 
                 //TODO: complete list of settings
         );
 
     }
 
-    private BooleanCheckBoxCoordinator associateCheckBox(JCheckBox checkBox, Name settingName) {
+    private BooleanCheckBoxCoordinator associateCheckBox(Name settingName, JCheckBox checkBox) {
         return new BooleanCheckBoxCoordinator(settingName, settingsManager, checkBox);
     }
 
     private <E extends Enum<E>, J extends AbstractButton> EnumMultiButtonCoordinator<E, J> associateButtonSet(
             Name settingName, Map<E, J> map) {
         return new EnumMultiButtonCoordinator<E, J>(settingName, settingsManager, map);
+    }
+
+    private IntegerSpinSliderCoordinator associateSpinSlider(Name settingName, SpinSlider spinSlider) {
+        return new IntegerSpinSliderCoordinator(settingName, settingsManager, spinSlider);
     }
 
     private void checkSpMinimumNeedsLower() {

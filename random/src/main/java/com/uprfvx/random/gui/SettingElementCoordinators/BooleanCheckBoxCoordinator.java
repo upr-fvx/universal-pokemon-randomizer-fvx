@@ -12,7 +12,7 @@ public class BooleanCheckBoxCoordinator extends SettingSingleElementCoordinator<
     public BooleanCheckBoxCoordinator(Settings.Name settingName, SettingsManager settings, JCheckBox checkBox) {
         super(settingName, settings, checkBox);
 
-        checkBox.addActionListener(this::elementValueChanged);
+        checkBox.addActionListener(event -> elementValueChanged());
     }
 
     @Override

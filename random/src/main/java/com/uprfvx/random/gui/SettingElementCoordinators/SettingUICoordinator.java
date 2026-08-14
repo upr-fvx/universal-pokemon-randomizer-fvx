@@ -62,7 +62,7 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
 
     protected abstract void displayValue(V newValue);
 
-    protected void elementValueChanged(ActionEvent event) {
+    protected void elementValueChanged() {
         V newValue = getElementValue();
         if (!newValue.equals(displayedValue)) {
             manager.setSetting(settingName, newValue);

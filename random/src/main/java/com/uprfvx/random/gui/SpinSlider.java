@@ -32,6 +32,7 @@ public class SpinSlider extends JPanel {
         spinner.setEditor(editor);
         spinner.addChangeListener(e -> slider.setValue((Integer) spinner.getValue()));
         spinner.setPreferredSize(new Dimension(80, 30));
+        spinner.setModel(new SpinnerNumberModel(0, null, null, 1));
 
         // Assemble SpinSlider
         this.setLayout(new java.awt.BorderLayout(5, 0));
@@ -56,6 +57,14 @@ public class SpinSlider extends JPanel {
 
     public int getValue() {
         return slider.getValue();
+    }
+
+    public void setExtents(int minimum, int maximum) {
+        SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
+        model.setMinimum(minimum);
+        slider.setMinimum(minimum);
+        model.setMaximum(maximum);
+        slider.setMaximum(maximum);
     }
 
     public int getMinimum() {

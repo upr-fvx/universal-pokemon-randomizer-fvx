@@ -265,7 +265,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      * @return The lowest supported value.
      */
     public N minimumSupported(RomHandler game) {
-        if (supportedMinimums == null) {
+        if (supportedMinimums == null  || game == null) {
             return minimum;
         }
         N supportedMinimum = supportedMinimums.apply(game);
@@ -284,7 +284,7 @@ public class NumericSettingDefinition<N extends Number & Comparable<N>> extends 
      * @return The highest supported value.
      */
     public N maximumSupported(RomHandler game) {
-        if (supportedMaximums == null) {
+        if (supportedMaximums == null || game == null) {
             return maximum;
         }
         N supportedMaximum = supportedMaximums.apply(game);

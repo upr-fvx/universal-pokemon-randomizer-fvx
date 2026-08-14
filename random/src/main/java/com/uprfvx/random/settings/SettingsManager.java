@@ -27,6 +27,7 @@ package com.uprfvx.random.settings;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.random.Version;
+import com.uprfvx.random.settings.definitions.NumericSettingDefinition;
 import com.uprfvx.random.settings.definitions.SettingDefinition;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.*;
@@ -243,7 +244,109 @@ public class SettingsManager {
         }
     }
 
-    //TODO: getMinimums, getMaximums
+    /**
+     * Finds the minimum value currently settable to the setting requested.
+     * @param settingName The setting to find the minimum for.
+     * @return The minimum settable value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getCurrentMinimum(Name settingName) {
+        N validMinimum = getValidMinimum(settingName);
+        N enabledMinimum = getEnabledMinimum(settingName);
+        N supportedMinimum = getSupportedMinimum(settingName);
+
+        return max(validMinimum, enabledMinimum, supportedMinimum);
+    }
+
+    /**
+     * Finds the minimum value that is ever valid for the setting requested.
+     * @param settingName The setting to find the minimum for.
+     * @return The minimum valid value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getValidMinimum(Name settingName) {
+        NumericSettingDefinition<N> definition = getTypedNumericDefinition(settingName);
+        return definition.getMinimum();
+    }
+
+    /**
+     * Finds the minimum value currently enabled for the setting requested.
+     * For most cases, getCurrentMinimum is preferred.
+     * @param settingName The setting to find the minimum for.
+     * @return The minimum enabled value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getEnabledMinimum(Name settingName) {
+        NumericSettingDefinition<N> definition = getTypedNumericDefinition(settingName);
+        return definition.minimumEnabled(this);
+    }
+
+    /**
+     * Finds the minimum value currently supported for the setting requested.
+     * For most cases, getCurrentMinimum is preferred.
+     * @param settingName The setting to find the minimum for.
+     * @return The minimum supported value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getSupportedMinimum(Name settingName) {
+        NumericSettingDefinition<N> definition = getTypedNumericDefinition(settingName);
+        return definition.minimumSupported(game);
+    }
+
+    /**
+     * Finds the maximum value currently settable to the setting requested.
+     * @param settingName The setting to find the maximum for.
+     * @return The maximum settable value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getCurrentMaximum(Name settingName) {
+        N validMaximum = getValidMaximum(settingName);
+        N enabledMaximum = getEnabledMaximum(settingName);
+        N supportedMaximum = getSupportedMaximum(settingName);
+
+        return min(validMaximum, enabledMaximum, supportedMaximum);
+    }
+
+    /**
+     * Finds the maximum value that is ever valid for the setting requested.
+     * @param settingName The setting to find the maximum for.
+     * @return The maximum valid value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getValidMaximum(Name settingName) {
+        NumericSettingDefinition<N> definition = getTypedNumericDefinition(settingName);
+        return definition.getMaximum();
+    }
+
+    /**
+     * Finds the maximum value currently enabled for the setting requested.
+     * @param settingName The setting to find the maximum for.
+     * @return The maximum enabled value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getEnabledMaximum(Name settingName) {
+        NumericSettingDefinition<N> definition = getTypedNumericDefinition(settingName);
+        return definition.maximumEnabled(this);
+    }
+
+    /**
+     * Finds the maximum value currently supported for the setting requested.
+     * @param settingName The setting to find the maximum for.
+     * @return The maximum supported value for the setting.
+     * @param <N> The type of number stored in the setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    public <N extends Number & Comparable<N>> N getSupportedMaximum(Name settingName) {
+        NumericSettingDefinition<N> definition = getTypedNumericDefinition(settingName);
+        return definition.maximumSupported(game);
+    }
 
     /**
      * Checks whether the requested setting as a whole is enabled.
@@ -438,6 +541,21 @@ public class SettingsManager {
     }
 
     /**
+     * Retrieves the definition of the requested setting, cast to NumericSettingDefinition<N>. <br>
+     * Note: This cast may be improper. Always make sure any operations performed
+     * with the returned SettingDefinition are type checked as much as possible.
+     * @param settingName The setting's name.
+     * @return The setting's definition, cast to NumericSettingDefinition<N>.
+     * @param <N> The type of number stored in the Setting.
+     * @throws ClassCastException if the setting given is not defined with a NumericSettingDefinition
+     */
+    private <N extends Number & Comparable<N>> NumericSettingDefinition<N> getTypedNumericDefinition(Name settingName) {
+        SettingDefinition<N> definition = getTypedDefinition(settingName);
+
+        return (NumericSettingDefinition<N>) definition;
+    }
+
+    /**
      * Checks that the value given is the appropriate type for the setting given.
      * Throws an IllegalArgumentException if it is not.
      * @param value The value to check.
@@ -594,6 +712,33 @@ public class SettingsManager {
             if (automaticallyReset)
                 l.onAutomaticSettingChange(settingName, this);
         });
+    }
+
+    //Can't believe these aren't utility functions built into the language... anyway.
+    //Maybe because they're non-deterministic if the comparators are equal
+    // (but different in some non-comparison-affecting way)?
+    @SafeVarargs
+    private <N extends Comparable<N>> N min(N... comparators) {
+        N currentMin = comparators[0];
+
+        //this compares the first comparator to itself but whatever
+        for (N comparator : comparators) {
+            if (currentMin.compareTo(comparator) < 0)
+                currentMin = comparator;
+        }
+        return currentMin;
+    }
+
+    @SafeVarargs
+    private <N extends Comparable<N>> N max(N... comparators) {
+        N currentMax = comparators[0];
+
+        //this compares the first comparator to itself but whatever
+        for (N comparator : comparators) {
+            if (currentMax.compareTo(comparator) > 0)
+                currentMax = comparator;
+        }
+        return currentMax;
     }
 
     //endregion

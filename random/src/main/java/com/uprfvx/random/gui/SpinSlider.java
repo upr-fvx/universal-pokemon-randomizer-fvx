@@ -59,12 +59,21 @@ public class SpinSlider extends JPanel {
         return slider.getValue();
     }
 
-    public void setExtents(int minimum, int maximum) {
+    public void setMinimum(int minimum) {
         SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
         model.setMinimum(minimum);
         slider.setMinimum(minimum);
+    }
+
+    public void setMaximum(int maximum) {
+        SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
         model.setMaximum(maximum);
         slider.setMaximum(maximum);
+    }
+
+    public void setExtents(int minimum, int maximum) {
+        setMinimum(minimum);
+        setMaximum(maximum);
     }
 
     public int getMinimum() {

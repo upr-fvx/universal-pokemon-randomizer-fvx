@@ -6,21 +6,20 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import javax.swing.*;
 
-public abstract class NumericSingleElementCoordinator<N extends Number & Comparable<N>, J extends JComponent>
-        extends SettingSingleElementCoordinator<N, J> {
+public class NumericSettingCoordinator<N extends Number & Comparable<N>, U extends NumericUIManager<N>>
+        extends SettingCoordinator<N, U> {
 
     protected N currentMin;
     protected N currentMax;
 
-    public NumericSingleElementCoordinator(Settings.Name settingName, SettingsManager settings, J element) {
+    public NumericSettingCoordinator(Settings.Name settingName, SettingsManager settings, U element) {
         this(settingName, settings, element, null);
     }
 
-    public NumericSingleElementCoordinator(Settings.Name settingName, SettingsManager settings, J element, JCheckBox latch) {
+    public NumericSettingCoordinator(Settings.Name settingName, SettingsManager settings, U element, JCheckBox latch) {
         super(settingName, settings, element, latch);
 
-        currentMin = settings.getCurrentMinimum(settingName);
-        currentMax = settings.getCurrentMaximum(settingName);
+        checkExtents();
     }
 
     @Override
@@ -39,16 +38,15 @@ public abstract class NumericSingleElementCoordinator<N extends Number & Compara
 
     private void checkExtents() {
         N newMin = manager.getCurrentMinimum(settingName);
-        N newMax = manager.getCurrentMaximum(settingName);
-
-        if (!currentMin.equals(newMin) || !currentMax.equals(newMax)) {
-            setExtents(newMin, newMax);
+        if (!currentMin.equals(newMin)) {
+            element.setMinimum(newMin);
             currentMin = newMin;
+        }
+
+        N newMax = manager.getCurrentMaximum(settingName);
+        if (!currentMax.equals(newMax)) {
+            element.setMaximum(newMax);
             currentMax = newMax;
         }
     }
-
-    //This is a single method instead of two because two out of three numeric elements must set both at once, so
-    // it would be silly to call two separate methods.
-    protected abstract void setExtents(N newMin, N newMax);
 }

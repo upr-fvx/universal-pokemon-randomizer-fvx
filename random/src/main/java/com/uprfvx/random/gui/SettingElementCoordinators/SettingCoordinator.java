@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
 
@@ -12,24 +13,25 @@ import java.io.Serializable;
  * A class which coordinates a single setting with one or multiple GUI elements.
  * @param <V> The type of data held by the setting.
  */
-public abstract class SettingUICoordinator<V extends Serializable> implements SettingChangeListener {
+public abstract class SettingCoordinator<V extends Serializable, U extends UIManager<V>>
+        implements SettingChangeListener {
 
     protected final Settings.Name settingName;
     protected final SettingsManager manager;
-    //I don't like that I have to keep the settingsManager here...
-    //but I don't know how else I'd access it to set the setting.
-    private final JCheckBox latch;
+    protected U element;
 
+    private final JCheckBox latch;
     private V displayedValue;
     private boolean unlatched;
 
-    public SettingUICoordinator(Settings.Name settingName, SettingsManager manager) {
-        this(settingName, manager, null);
+    public SettingCoordinator(Settings.Name settingName, SettingsManager manager, U element) {
+        this(settingName, manager, element, null);
     }
 
-    public SettingUICoordinator(Settings.Name settingName, SettingsManager manager, JCheckBox latch) {
+    public SettingCoordinator(Settings.Name settingName, SettingsManager manager, U element, JCheckBox latch) {
         this.settingName = settingName;
         this.manager = manager;
+        this.element = element;
         this.latch = latch;
 
         if (latch == null) {
@@ -40,6 +42,9 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
         }
 
         manager.addListener(settingName, this);
+        element.addListener(this::elementValueChanged);
+
+        setInitialState();
     }
 
     protected void setInitialState()
@@ -47,8 +52,8 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
         V initialValue = manager.getSetting(settingName);
         setValue(initialValue);
 
-        setEnabled(unlatched && manager.isEnabled(settingName));
-        setVisible(manager.isSupported(settingName));
+        element.setEnabled(unlatched && manager.isEnabled(settingName));
+        element.setVisible(manager.isSupported(settingName));
     }
 
     private void latchValueChanged(ActionEvent event) {
@@ -56,26 +61,21 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
     }
 
     public void setValue(V newValue) {
-        displayValue(newValue);
+        element.displayValue(newValue);
         displayedValue = newValue;
     }
 
-    protected abstract void displayValue(V newValue);
-
-    protected void elementValueChanged() {
-        V newValue = getElementValue();
+    protected void elementValueChanged(ChangeEvent e) {
+        V newValue = element.getElementValue();
         if (!newValue.equals(displayedValue)) {
             manager.setSetting(settingName, newValue);
             displayedValue = newValue;
         }
     }
 
-    protected abstract V getElementValue();
-
     @Override
     public void onManualSettingChange(Settings.Name setting, SettingsManager manager) {
-        if(setting != this.settingName)
-            throw new IllegalArgumentException("Received event for non-managed setting!");
+        settingMatchCheck(setting);
 
         V newValue = manager.getSetting(setting);
 
@@ -86,8 +86,7 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
 
     @Override
     public void onAutomaticSettingChange(Settings.Name setting, SettingsManager manager) {
-        if(setting != this.settingName)
-            throw new IllegalArgumentException("Received event for non-managed setting!");
+        settingMatchCheck(setting);
 
         V newValue = manager.getSetting(setting);
 
@@ -98,21 +97,20 @@ public abstract class SettingUICoordinator<V extends Serializable> implements Se
 
     @Override
     public void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager) {
-        if (setting != this.settingName)
-            throw new IllegalArgumentException("Received event for non-managed setting!");
+        settingMatchCheck(setting);
 
-        setEnabled(unlatched && manager.isEnabled(settingName));
+        element.setEnabled(unlatched && manager.isEnabled(settingName));
     }
-
-    protected abstract void setEnabled(boolean enabled);
 
     @Override
     public void onSupportChange(Settings.Name setting, SettingsManager manager, boolean isSupported) {
-        if (setting != this.settingName)
-            throw new IllegalArgumentException("Received event for non-managed setting!");
+        settingMatchCheck(setting);
 
-        setVisible(isSupported);
+        element.setVisible(isSupported);
     }
 
-    protected abstract void setVisible(boolean visible);
+    protected void settingMatchCheck(Settings.Name nameGiven) {
+        if(nameGiven != this.settingName)
+            throw new IllegalArgumentException("Received event for non-managed setting!");
+    }
 }

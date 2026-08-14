@@ -34,6 +34,7 @@ import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.random.updaters.Updater;
 import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.BattleStyle;
+import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -231,7 +232,18 @@ public class GameRandomizer {
     }
 
     private void setupSpeciesRestrictions() {
-        romHandler.getRestrictedSpeciesService().setRestrictions(settings.getCurrentRestrictions());
+        GenRestrictions restrictions = new GenRestrictions();
+
+        restrictions.setGenAllowed(1, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_1));
+        restrictions.setGenAllowed(2, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_2));
+        restrictions.setGenAllowed(3, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_3));
+        restrictions.setGenAllowed(4, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_4));
+        restrictions.setGenAllowed(5, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_5));
+        restrictions.setGenAllowed(6, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_6));
+        restrictions.setGenAllowed(7, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_7));
+        restrictions.setAllowEvolutionaryRelatives(settings.getSetting(Settings.Name.LIMIT_ALLOW_RELATIVES));
+
+        romHandler.getRestrictedSpeciesService().setRestrictions(restrictions);
         romHandler.removeEvosForPokemonPool();
     }
 

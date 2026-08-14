@@ -1885,11 +1885,6 @@ public class SettingsManager {
         this.updatedFromOldVersion = updatedFromOldVersion;
     }
 
-    // TODO: deal with gen restrictions / convert to new syntax
-    public GenRestrictions getCurrentRestrictions() {
-        return currentRestrictions;
-    }
-
     public void setCurrentRestrictions(GenRestrictions currentRestrictions) {
         this.currentRestrictions = currentRestrictions;
     }

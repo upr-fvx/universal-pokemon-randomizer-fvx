@@ -27,10 +27,7 @@ import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
-import com.uprfvx.random.gui.SettingElementCoordinators.BooleanCheckBoxCoordinator;
-import com.uprfvx.random.gui.SettingElementCoordinators.EnumMultiButtonCoordinator;
-import com.uprfvx.random.gui.SettingElementCoordinators.IntegerSpinSliderCoordinator;
-import com.uprfvx.random.gui.SettingElementCoordinators.SettingUICoordinator;
+import com.uprfvx.random.gui.SettingElementCoordinators.*;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
@@ -690,7 +687,7 @@ public class RandomizerGUI {
         //...Maybe I'll put them all in a List anyway, just in case. Much easier to ignore a created list
         //than to convert a bunch of freestanding constructors to a list creation, if I'm wrong.
 
-        List<SettingUICoordinator<?>> settingUICoordinators = List.of(
+        List<SettingCoordinator<?, ?>> settingUICoordinators = List.of(
                 // *** GENERAL ***
                 //General Options
                 associateCheckBox(Name.NO_RANDOM_INTRO_MON, noRandomIntroMonCheckBox),
@@ -724,24 +721,29 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, pbsAssignEvoStatsRandomlyCheckBox),
                 //Update Base Stats
                 associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, pbsUpdateBaseStatsCheckBox),
-                //associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, pbsUpdateGenerationChoiceSpinner),
+                associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, pbsUpdateGenerationChoiceSpinner),
 
                 //TODO: complete list of settings
         );
 
     }
 
-    private BooleanCheckBoxCoordinator associateCheckBox(Name settingName, JCheckBox checkBox) {
-        return new BooleanCheckBoxCoordinator(settingName, settingsManager, checkBox);
+    private BooleanSettingCoordinator<CheckBoxManager> associateCheckBox(Name settingName, JCheckBox checkBox) {
+        return new BooleanSettingCoordinator<>(settingName, settingsManager, new CheckBoxManager(checkBox));
     }
 
-    private <E extends Enum<E>, J extends AbstractButton> EnumMultiButtonCoordinator<E, J> associateButtonSet(
+    private <E extends Enum<E>, J extends AbstractButton> EnumSettingCoordinator<E> associateButtonSet(
             Name settingName, Map<E, J> map) {
-        return new EnumMultiButtonCoordinator<E, J>(settingName, settingsManager, map);
+        return new EnumSettingCoordinator<>(settingName, settingsManager, new ButtonGroupManager<>(map));
     }
 
-    private IntegerSpinSliderCoordinator associateSpinSlider(Name settingName, SpinSlider spinSlider) {
-        return new IntegerSpinSliderCoordinator(settingName, settingsManager, spinSlider);
+    private NumericSettingCoordinator<Integer, SpinSliderManager> associateSpinSlider(
+            Name settingName, SpinSlider spinSlider) {
+        return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinSliderManager(spinSlider));
+    }
+
+    private NumericSettingCoordinator<Integer, SpinnerManager> associateSpinner(Name settingName, JSpinner spinner) {
+        return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinnerManager(spinner));
     }
 
     private void checkSpMinimumNeedsLower() {

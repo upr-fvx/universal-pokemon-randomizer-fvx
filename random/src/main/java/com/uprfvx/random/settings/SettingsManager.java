@@ -1885,6 +1885,7 @@ public class SettingsManager {
         this.updatedFromOldVersion = updatedFromOldVersion;
     }
 
+    // TODO: deal with gen restrictions / convert to new syntax
     public GenRestrictions getCurrentRestrictions() {
         return currentRestrictions;
     }
@@ -1893,6 +1894,7 @@ public class SettingsManager {
         this.currentRestrictions = currentRestrictions;
     }
 
+    // TODO: deal with misc tweaks / convert to new syntax
     public int getCurrentMiscTweaks() {
         return currentMiscTweaks;
     }
@@ -1901,15 +1903,12 @@ public class SettingsManager {
         this.currentMiscTweaks = currentMiscTweaks;
     }
 
-    public boolean isUpdateMoves() {
-        return updateMoves;
-    }
-
     public void setUpdateMoves(boolean updateMoves) {
         this.updateMoves = updateMoves;
     }
 
     public boolean isUpdateMovesLegacy() {
+        // TODO: updateMovesLegacy -> update moves to Gen 5
         return updateMovesLegacy;
     }
 
@@ -1917,24 +1916,8 @@ public class SettingsManager {
         this.updateMovesLegacy = updateMovesLegacy;
     }
 
-    public int getUpdateMovesToGeneration() {
-        return updateMovesToGeneration;
-    }
-
     public void setUpdateMovesToGeneration(int generation) {
         updateMovesToGeneration = generation;
-    }
-
-    public boolean isChangeImpossibleEvolutions() {
-        return changeImpossibleEvolutions;
-    }
-
-    public boolean useEstimatedLevelsForEvolutionImprovements() {
-        return estimateLevelForEvolutionImprovements;
-    }
-
-    public boolean isDualTypeOnly(){
-        return dualTypeOnly;
     }
 
     public void setDualTypeOnly(boolean dualTypeOnly){
@@ -1949,64 +1932,32 @@ public class SettingsManager {
         this.estimateLevelForEvolutionImprovements = estimateLevelForEvolutionImprovements;
     }
 
-    public boolean isMakeEvolutionsEasier() {
-        return makeEvolutionsEasier;
-    }
-
     public void setMakeEvolutionsEasier(boolean makeEvolutionsEasier) {
         this.makeEvolutionsEasier = makeEvolutionsEasier;
-    }
-
-    public int getMakeEvolutionsEasierLvl() {
-        return makeEvolutionsEasierLvl;
     }
 
     public void setMakeEvolutionsEasierLvl(int makeEvolutionsEasierLvl) {
         this.makeEvolutionsEasierLvl = makeEvolutionsEasierLvl;
     }
 
-    public boolean isRemoveTimeBasedEvolutions() {
-        return removeTimeBasedEvolutions;
-    }
-
     public void setRemoveTimeBasedEvolutions(boolean removeTimeBasedEvolutions) {
         this.removeTimeBasedEvolutions = removeTimeBasedEvolutions;
-    }
-
-    public boolean isRaceMode() {
-        return raceMode;
     }
 
     public void setRaceMode(boolean raceMode) {
         this.raceMode = raceMode;
     }
 
-    public boolean isBanIrregularAltFormes() {
-        return banIrregularAltFormes;
-    }
-
     public void setBanIrregularAltFormes(boolean banIrregularAltFormes) {
         this.banIrregularAltFormes = banIrregularAltFormes;
-    }
-
-    public boolean isRandomizeIntroMon() {
-        return randomizeIntroMon;
     }
 
     public void setRandomizeIntroMon(boolean randomizeIntroMon) {
         this.randomizeIntroMon = randomizeIntroMon;
     }
 
-    public boolean isLimitPokemon() {
-        return limitPokemon;
-    }
-
     public void setLimitPokemon(boolean limitPokemon) {
         this.limitPokemon = limitPokemon;
-    }
-
-    public BSTMod getBSTMod() {
-        return bstMod;
     }
 
     public void setBSTMod(boolean... bools) {
@@ -2017,31 +1968,17 @@ public class SettingsManager {
         this.bstMod = bstMod;
     }
 
-    public boolean isBSTFollowEvolutions() {
-        return bstFollowEvolutions;
-    }
-
     public void setBSTFollowEvolutions(boolean bstFollowEvolutions) {
         this.bstFollowEvolutions = bstFollowEvolutions;
-    }
-
-    public int getBSTBuffNerfMaxPercentage() {
-        return bstBuffNerfMaxPercentage;
     }
 
     public void setBSTBuffNerfMaxPercentage(int bstBuffNerfMaxPercentage) {
         this.bstBuffNerfMaxPercentage = bstBuffNerfMaxPercentage;
     }
 
-    public boolean isBSTShuffleSwapLegendaries() {
-        return bstShuffleSwapLegendaries;
-    }
-
     public void setBSTShuffleSwapLegendaries(boolean bstShuffleSwapLegendaries) {
         this.bstShuffleSwapLegendaries = bstShuffleSwapLegendaries;
     }
-
-    // TODO: convert all usages of the remaining is/get[Setting] methods above
 
     public void setBaseStatisticsMod(boolean... bools) {
         setBaseStatisticsMod(getEnum(BaseStatisticsMod.class, bools));

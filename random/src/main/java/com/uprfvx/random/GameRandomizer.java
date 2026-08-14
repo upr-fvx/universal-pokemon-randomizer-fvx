@@ -232,9 +232,7 @@ public class GameRandomizer {
 
     private void setupSpeciesRestrictions() {
         romHandler.getRestrictedSpeciesService().setRestrictions(settings.getCurrentRestrictions());
-        if (settings.isLimitPokemon()) {
-            romHandler.removeEvosForPokemonPool();
-        }
+        romHandler.removeEvosForPokemonPool();
     }
 
     private void applyUpdaters() {
@@ -407,7 +405,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeSpeciesBaseStatTotals() {
-        if (settings.getBSTMod() != SettingsManager.BSTMod.UNCHANGED) {
+        Settings.BSTMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
+        if (mod != Settings.BSTMod.UNCHANGED) {
             speciesBSRandomizer.randomizeBSTs();
         }
     }
@@ -432,24 +431,26 @@ public class GameRandomizer {
     }
 
     private void maybeApplyEvolutionImprovements() {
-        boolean useEstimatedLevels = settings.useEstimatedLevelsForEvolutionImprovements();
+        boolean useEstimatedLevels = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS);
 
         // Trade evolutions (etc.) removal
-        if (settings.isChangeImpossibleEvolutions()) {
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE)) {
             Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
             boolean changeMoveEvos = movesetsMod != Settings.MovesetsMod.UNCHANGED;
             romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
         // Easier evolutions
-        if (settings.isMakeEvolutionsEasier()) {
-            romHandler.condenseLevelEvolutions(settings.getMakeEvolutionsEasierLvl());
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)) {
+            int easierLevel = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL);
+            romHandler.condenseLevelEvolutions(easierLevel);
+
             boolean wildsRandomizer = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
             romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }
 
         // Remove time-based evolutions
-        if (settings.isRemoveTimeBasedEvolutions()) {
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED)) {
             romHandler.removeTimeBasedEvolutions();
         }
     }
@@ -737,7 +738,8 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeIntroPokemon() {
-        if (settings.isRandomizeIntroMon()) {
+        // TODO: move to live with the misc tweaks?
+        if (!(boolean) settings.getSetting(Settings.Name.NO_RANDOM_INTRO_MON)) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

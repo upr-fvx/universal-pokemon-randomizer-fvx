@@ -469,17 +469,18 @@ public class RandomizationLogger {
         printSectionTitle("pei");
 
         log.printf(getBS("Log.pei.listHead"));
-        if (settings.isChangeImpossibleEvolutions()) {
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE)) {
             log.printf(getBS("Log.pei.listImpossible"));
         }
-        if (settings.isMakeEvolutionsEasier()) {
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)) {
             log.printf(getBS("Log.pei.listEasier"));
         }
-        if (settings.isRemoveTimeBasedEvolutions()) {
+        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED)) {
             log.printf(getBS("Log.pei.listTimeBased"));
         }
         log.println();
-        if (settings.isMakeEvolutionsEasier() && romHandler.generationOfPokemon() != 1) {
+        if ((boolean) settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)
+                && romHandler.generationOfPokemon() != 1) {
             log.printf(getBS("Log.pei.happiness"));
         }
         log.println();
@@ -1339,7 +1340,7 @@ public class RandomizationLogger {
 
     private void logMoveUpdates() {
         printSectionTitle("mu");
-        log.printf(getBS("Log.mu.description"), settings.getUpdateMovesToGeneration());
+        log.printf(getBS("Log.mu.description"), settings.getSetting(Settings.Name.UPDATE_MOVES_TO_GENERATION));
 
         Map<Move, Map<MoveUpdateType, Update<Object>>> updates = moveUpdater.getUpdates();
         for (Map.Entry<Move, Map<MoveUpdateType, Update<Object>>> outer : updates.entrySet()) {

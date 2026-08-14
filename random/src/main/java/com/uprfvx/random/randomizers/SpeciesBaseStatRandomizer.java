@@ -33,7 +33,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void randomizeBSTs() {
-        switch (settings.getBSTMod()) {
+        Settings.BSTMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
+        switch (mod) {
             case RANDOM_BUFF_NERF -> randomlyModifyBSTsByPercentage();
             case SHUFFLE -> shuffleBSTs();
             case RANDOM -> fullyRandomizeBSTs();
@@ -53,8 +54,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     private Map<Species, Double> modifiersBySpecies;
 
     private void randomlyModifyBSTsByPercentage() {
-        boolean evolutionSanity = settings.isBSTFollowEvolutions();
-        double maxModifier = (double) settings.getBSTBuffNerfMaxPercentage() / 100;
+        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
+        double maxModifier = ((int) settings.getSetting(Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE)) / 100.0;
 
         modifiersBySpecies = new HashMap<>();
 
@@ -109,8 +110,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         // but Gen 8+ will be annoying, sorry. Good luck adding support to e.g. Perrserker or Obstagoon ^^.
         // -- voliol 2026-07-24
 
-        boolean evolutionSanity = settings.isBSTFollowEvolutions();
-        boolean swapLegendaries = settings.isBSTShuffleSwapLegendaries();
+        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
+        boolean swapLegendaries = settings.getSetting(Settings.Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
 
         List<SpeciesSet> shuffleGroups = prepareBSTShuffleGroups(evolutionSanity, swapLegendaries);
 

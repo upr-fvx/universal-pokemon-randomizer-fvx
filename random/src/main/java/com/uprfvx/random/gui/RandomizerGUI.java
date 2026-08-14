@@ -1314,7 +1314,7 @@ public class RandomizerGUI {
                                       CustomPlayerGraphics cpg,
                                       boolean saveAsDirectory) {
         final SettingsManager settings = createSettingsFromState();
-        final boolean raceMode = settings.isRaceMode();
+        final boolean raceMode = settings.getSetting(Name.RACE_MODE);
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
         // Setup log
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

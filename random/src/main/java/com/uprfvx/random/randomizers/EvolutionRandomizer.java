@@ -114,7 +114,7 @@ public class EvolutionRandomizer extends Randomizer {
                 tries++;
             }
             if (tries == MAX_TRIES) {
-                if (settings.isStandardizeEXPCurves()) {
+                if (settings.getSetting(Settings.Name.STANDARDIZE_SPECIES_EXP_CURVES)) {
                     throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries.");
                 } else {
                     throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries." +

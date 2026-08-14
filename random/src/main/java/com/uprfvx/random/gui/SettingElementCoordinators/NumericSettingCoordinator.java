@@ -19,7 +19,11 @@ public class NumericSettingCoordinator<N extends Number & Comparable<N>, U exten
     public NumericSettingCoordinator(Settings.Name settingName, SettingsManager settings, U element, JCheckBox latch) {
         super(settingName, settings, element, latch);
 
-        checkExtents();
+        currentMin = manager.getCurrentMinimum(settingName);
+        element.setMinimum(currentMin);
+
+        currentMax = manager.getCurrentMaximum(settingName);
+        element.setMaximum(currentMax);
     }
 
     @Override

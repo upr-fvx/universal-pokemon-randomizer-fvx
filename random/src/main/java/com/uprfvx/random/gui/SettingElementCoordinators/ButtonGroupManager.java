@@ -19,6 +19,7 @@ public class ButtonGroupManager<E extends Enum<E>, J extends AbstractButton>
         implements EnumeratedUIManager<E> {
 
     protected final Map<E, J> elements;
+    private E lastKnownValue;
 
     public ButtonGroupManager(Map<E, J> elements) {
         ButtonGroup group = new ButtonGroup();
@@ -46,20 +47,20 @@ public class ButtonGroupManager<E extends Enum<E>, J extends AbstractButton>
     @Override
     public void displayValue(E newValue) {
         elements.get(newValue).setSelected(true);
+        lastKnownValue = newValue;
     }
 
     @Override
     public E getElementValue() {
         for (Map.Entry<E, J> element : elements.entrySet()) {
             if(element.getValue().isSelected()) {
+                lastKnownValue = element.getKey();
                 return element.getKey();
             }
         }
 
-        //shouldn't reach here unless no button is selected, somehow.
-        Class e = elements.keySet().toArray()[0].getClass(); //awkward ass statement but it should be okay
-
-        throw new IllegalStateException("No button selected in group! Enum: " + e.getName());
+        //when switching buttons, all are briefly deselected. Therefore we need to report a value in that case.
+        return lastKnownValue;
     }
 
     @Override

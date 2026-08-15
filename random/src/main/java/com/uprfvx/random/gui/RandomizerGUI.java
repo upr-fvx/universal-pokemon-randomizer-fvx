@@ -64,8 +64,9 @@ import java.util.List;
  * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
  */
 public class RandomizerGUI {
+
+    //Header/Main
     private JTabbedPane tabbedPane1;
-    private JCheckBox raceModeCheckBox;
     private JButton openROMButton;
     private JButton randomizeSaveButton;
     private JButton premadeSeedButton;
@@ -73,6 +74,14 @@ public class RandomizerGUI {
     private JButton loadSettingsButton;
     private JButton saveSettingsButton;
     private JPanel mainPanel;
+
+    //General tab
+    private JCheckBox raceModeCheckBox;
+    private JCheckBox lsBanGeneration1CheckBox;
+    private JCheckBox lsBanGeneration2CheckBox;
+    private JCheckBox lsAllowRelativesCheckBox;
+    private JCheckBox lsBanGeneration3CheckBox;
+
     private JRadioButton pbsUnchangedRadioButton;
     private JRadioButton pbsShuffleRadioButton;
     private JRadioButton pbsRandomRadioButton;
@@ -244,8 +253,6 @@ public class RandomizerGUI {
     private JLabel websiteLinkLabel;
     private JCheckBox tmNoGameBreakingMovesCheckBox;
     private JCheckBox mtNoGameBreakingMovesCheckBox;
-    private JCheckBox limitPokemonCheckBox;
-    private JButton limitPokemonButton;
     private JCheckBox tpAllowAlternateFormesCheckBox;
     private JLabel versionLabel;
     private JCheckBox pbsFollowMegaEvosCheckBox;
@@ -288,7 +295,6 @@ public class RandomizerGUI {
     private JCheckBox totpAllowAltFormesCheckBox;
     private JPanel totpPanel;
     private JCheckBox pmsEvolutionMovesCheckBox;
-    private JComboBox<String> pbsUpdateComboBox;
     private JComboBox<String> mdUpdateComboBox;
     private JLabel wikiLinkLabel;
     private JCheckBox paWeighDuplicatesTogetherCheckBox;
@@ -316,7 +322,7 @@ public class RandomizerGUI {
     private JCheckBox puBanBadItemsCheckBox;
     private JCheckBox miscForceChallengeModeCheckBox;
     private JCheckBox pbsAssignEvoStatsRandomlyCheckBox;
-    private JCheckBox noIrregularAltFormesCheckBox;
+    private JCheckBox lsNoIrregularAltFormesCheckBox;
     private JCheckBox noPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox miscFastDistortionWorldCheckBox;
@@ -387,6 +393,11 @@ public class RandomizerGUI {
     private SpinSlider pbstRandomBuffNerfSpinSlider;
     private JSpinner pbsUpdateGenerationChoiceSpinner;
     private JPanel speciesBanAbilitiesPanel;
+    private JCheckBox lsBanGeneration4CheckBox;
+    private JCheckBox lsBanGeneration5CheckBox;
+    private JCheckBox lsBanGeneration6CheckBox;
+    private JCheckBox lsBanGeneration7CheckBox;
+
 
     private static final Random RND = new Random();
 
@@ -517,8 +528,9 @@ public class RandomizerGUI {
         settingsManager = new SettingsManager();
         associateSettingControls();
 
+
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
-                limitPokemonCheckBox, noIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
+                lsNoIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
 
                 pbstUnchangedRadioButton, pbstRandomBuffNerfRadioButton, pbstShuffleRadioButton, pbstRandomRadioButton,
 
@@ -638,6 +650,7 @@ public class RandomizerGUI {
         removeGameUpdateMenuItem.addActionListener(_ -> removeGameUpdateMenuItemActionPerformed());
         loadGetSettingsMenuItem.addActionListener(_ -> loadGetSettingsMenuItemActionPerformed());
         keepOrUnloadGameAfterRandomizingMenuItem.addActionListener(_ -> keepOrUnloadGameAfterRandomizingMenuItemActionPerformed());
+        /*
         limitPokemonButton.addActionListener(_ -> {
             GenerationLimitDialog gld = new GenerationLimitDialog(frame, currentRestrictions,
                     romHandler.generationOfPokemon(), romHandler.forceSwapStaticMegaEvos());
@@ -651,6 +664,8 @@ public class RandomizerGUI {
                 }
             }
         });
+         */
+
         frame.addComponentListener(new ComponentListener() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -694,7 +709,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.NO_RANDOM_INTRO_MON, noRandomIntroMonCheckBox),
                 associateCheckBox(Name.NO_PREMATURE_EVOLUTIONS, noPrematureEvosCheckbox),
                 associateCheckBox(Name.RACE_MODE, raceModeCheckBox),
-                associateCheckBox(Name.NO_IRREGULAR_ALT_FORMES, noIrregularAltFormesCheckBox),
+                associateCheckBox(Name.NO_IRREGULAR_ALT_FORMES, lsNoIrregularAltFormesCheckBox),
                 //Limit Pokemon
                 //TODO: add to list OR add handling to dialog
 
@@ -705,7 +720,7 @@ public class RandomizerGUI {
                                 BSTMod.UNCHANGED, pbstUnchangedRadioButton,
                                 BSTMod.RANDOM_BUFF_NERF, pbstRandomBuffNerfRadioButton,
                                 BSTMod.SHUFFLE, pbstShuffleRadioButton,
-                                BSTMod.RANDOM, pbsRandomRadioButton
+                                BSTMod.RANDOM, pbstRandomRadioButton
                         )),
                 associateSpinSlider(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, pbstRandomBuffNerfSpinSlider),
                 associateCheckBox(Name.SPECIES_BSTS_FOLLOW_EVOLUTION, pbstFollowEvolutionsCheckBox),
@@ -745,8 +760,14 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_ABILITIES_BAN_WONDER_GUARD, paBanWonderGuardCheckBox),
                 associateCheckBox(Name.SPECIES_ABILITIES_BAN_TRAPPING, paTrappingAbilitiesCheckBox),
                 associateCheckBox(Name.SPECIES_ABILITIES_BAN_MINOR, paMinorAbilitiesCheckBox),
-                associateCheckBox(Name.SPECIES_ABILITIES_BAN_NEGATIVE, paNegativeAbilitiesCheckBox)
-
+                associateCheckBox(Name.SPECIES_ABILITIES_BAN_NEGATIVE, paNegativeAbilitiesCheckBox),
+                //Species evolutions
+                associateButtonSet(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
+                        Map.of(
+                                EvolutionsMod.UNCHANGED, peUnchangedRadioButton,
+                                EvolutionsMod.RANDOM, peRandomRadioButton,
+                                EvolutionsMod.RANDOM_EVERY_LEVEL, peRandomEveryLevelRadioButton
+                        ))
 
 
                 //TODO: complete list of settings
@@ -880,7 +901,7 @@ public class RandomizerGUI {
 
     private void initExplicit() {
 
-        versionLabel.setText(String.format(bundle.getString("GUI.versionLabel.text"), Version.LATEST.name));
+        versionLabel.setText(String.format(bundle.getString("GUI.header.versionLabel.text"), Version.LATEST.name));
         mtNoExistLabel.setVisible(false);
         mtNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
@@ -1151,11 +1172,14 @@ public class RandomizerGUI {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.raceModeRequirements"));
             return;
         }
+        /*
         if (limitPokemonCheckBox.isSelected()
                 && (this.currentRestrictions == null || this.currentRestrictions.nothingSelected())) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.pokeLimitNotChosen"));
             return;
         }
+         */
+
         SaveType outputType = askForSaveType();
         romSaveChooser.setSelectedFile(null);
         boolean allowed = false;
@@ -2126,6 +2150,9 @@ public class RandomizerGUI {
     }
 
     private SettingsManager createSettingsFromState() {
+        //Keeping this one as well, just in case it's useful.
+        //TODO: remove this entire block
+        /**
         SettingsManager settings = new SettingsManager();
         settings.setRomName(this.romHandler.getROMName());
 
@@ -2375,6 +2402,8 @@ public class RandomizerGUI {
         settings.setCurrentMiscTweaks(currentMiscTweaks);
 
         return settings;
+         */
+        return null;
     }
 
     private SettingsManager getCurrentSettings() {
@@ -2450,8 +2479,8 @@ public class RandomizerGUI {
 
         gameMascotLabel.setIcon(emptyIcon);
 
-        setInitialButtonState(limitPokemonCheckBox, limitPokemonButton,
-                noIrregularAltFormesCheckBox, noPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
+        setInitialButtonState(
+                lsNoIrregularAltFormesCheckBox, noPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
 
         currentRestrictions = null;
 
@@ -2475,10 +2504,6 @@ public class RandomizerGUI {
 		pbsEXPCurveComboBox.setEnabled(false);
 		pbsEXPCurveComboBox.setSelectedIndex(0);
 		pbsEXPCurveComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Medium Fast" }));
-		pbsUpdateComboBox.setVisible(true);
-		pbsUpdateComboBox.setEnabled(false);
-		pbsUpdateComboBox.setSelectedIndex(0);
-		pbsUpdateComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
 
         setInitialButtonState(ptUnchangedRadioButton, ptRandomFollowEvolutionsRadioButton, ptRandomCompletelyRadioButton,
 				ptFollowMegaEvosCheckBox, ptIsDualTypeCheckBox);
@@ -2788,12 +2813,8 @@ public class RandomizerGUI {
                 romSupportLabel.setForeground(Color.BLACK);
             }
 
-            limitPokemonCheckBox.setVisible(true);
-            limitPokemonCheckBox.setEnabled(true);
-            limitPokemonButton.setVisible(true);
-
-            noIrregularAltFormesCheckBox.setVisible(pokemonGeneration >= 4);
-            noIrregularAltFormesCheckBox.setEnabled(pokemonGeneration >= 4);
+            lsNoIrregularAltFormesCheckBox.setVisible(pokemonGeneration >= 4);
+            lsNoIrregularAltFormesCheckBox.setEnabled(pokemonGeneration >= 4);
 
             noRandomIntroMonCheckBox.setVisible(romHandler.canSetIntroPokemon());
             noRandomIntroMonCheckBox.setEnabled(romHandler.canSetIntroPokemon());
@@ -2825,7 +2846,6 @@ public class RandomizerGUI {
             pbsLegendariesSlowRadioButton.setSelected(true);
             pbsUpdateBaseStatsCheckBox.setEnabled(pokemonGeneration < GlobalConstants.HIGHEST_POKEMON_GEN);
             pbsFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
-            pbsUpdateComboBox.setVisible(pokemonGeneration < 8);
             ExpCurve[] expCurves = romHandler.getExpCurves();
             String[] expCurveNames = new String[expCurves.length];
             for (int i = 0; i < expCurves.length; i++) {
@@ -3296,21 +3316,22 @@ public class RandomizerGUI {
     }
 
     private void enableOrDisableSubControls() {
-        //TODO: split this into smaller listeners for each tab or so
-
+        //TODO: Check that current SettingRestrictions match these, then remove this entire block
         if(romHandler == null) {
             //shouldn't be in this method right now
             return;
         }
 
+        /*
         if (limitPokemonCheckBox.isSelected()) {
             limitPokemonButton.setEnabled(true);
         } else {
             limitPokemonButton.setEnabled(false);
         }
+         */
 
         boolean followEvolutionControlsEnabled = !peRandomEveryLevelRadioButton.isSelected();
-        boolean followMegaEvolutionControlsEnabled = !(peRandomEveryLevelRadioButton.isSelected() && !noIrregularAltFormesCheckBox.isSelected() && peAllowAltFormesCheckBox.isSelected());
+        boolean followMegaEvolutionControlsEnabled = !(peRandomEveryLevelRadioButton.isSelected() && !lsNoIrregularAltFormesCheckBox.isSelected() && peAllowAltFormesCheckBox.isSelected());
 
         if (peRandomEveryLevelRadioButton.isSelected()) {
             // If Evolve Every Level is enabled, unselect all "Follow Evolutions" controls
@@ -3427,11 +3448,13 @@ public class RandomizerGUI {
             pbsEXPCurveComboBox.setEnabled(false);
         }
 
+        /* Commenting this so it can compile again
         if (pbsUpdateBaseStatsCheckBox.isSelected()) {
             pbsUpdateComboBox.setEnabled(true);
         } else {
             pbsUpdateComboBox.setEnabled(false);
         }
+        */
 
         if (ptUnchangedRadioButton.isSelected()) {
             disableAndDeselectButtons(ptFollowMegaEvosCheckBox, ptIsDualTypeCheckBox);
@@ -3921,6 +3944,7 @@ public class RandomizerGUI {
 
         cpgSelection.setEnabled(cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible()
                 && cpgCustomRadioButton.isEnabled());
+        //*/
     }
 
     private void initTweaksPanel() {
@@ -4015,7 +4039,6 @@ public class RandomizerGUI {
             baseStatGenerationNumbers[i] = String.valueOf(j);
             j++;
         }
-        pbsUpdateComboBox.setModel(new DefaultComboBoxModel<>(baseStatGenerationNumbers));
 
         String[] moveGenerationNumbers = new String[GlobalConstants.HIGHEST_POKEMON_GEN - romHandler.generationOfPokemon()];
         j = romHandler.generationOfPokemon() + 1;

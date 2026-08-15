@@ -88,11 +88,11 @@ public class RandomizerGUI {
     private JRadioButton ptRandomCompletelyRadioButton;
     private JRadioButton paUnchangedRadioButton;
     private JRadioButton paRandomRadioButton;
-    private JCheckBox paAllowWonderGuardCheckBox;
+    private JCheckBox paBanWonderGuardCheckBox;
     private JCheckBox paFollowEvolutionsCheckBox;
     private JCheckBox paTrappingAbilitiesCheckBox;
     private JCheckBox paNegativeAbilitiesCheckBox;
-    private JCheckBox paBadAbilitiesCheckBox;
+    private JCheckBox paMinorAbilitiesCheckBox;
     private JRadioButton peUnchangedRadioButton;
     private JRadioButton peRandomRadioButton;
     private JCheckBox peSimilarStrengthCheckBox;
@@ -386,6 +386,7 @@ public class RandomizerGUI {
     private JCheckBox pbstSwapLegendariesCheckBox;
     private SpinSlider pbstRandomBuffNerfSpinSlider;
     private JSpinner pbsUpdateGenerationChoiceSpinner;
+    private JPanel speciesBanAbilitiesPanel;
 
     private static final Random RND = new Random();
 
@@ -722,6 +723,31 @@ public class RandomizerGUI {
                 //Update Base Stats
                 associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, pbsUpdateBaseStatsCheckBox),
                 associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, pbsUpdateGenerationChoiceSpinner),
+                //Species Types
+                associateButtonSet(Name.RANDOMIZE_SPECIES_TYPES,
+                        Map.of(
+                                SpeciesTypesMod.UNCHANGED, ptUnchangedRadioButton,
+                                SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS, ptRandomFollowEvolutionsRadioButton,
+                                SpeciesTypesMod.COMPLETELY_RANDOM, ptRandomCompletelyRadioButton
+                        )),
+                associateCheckBox(Name.SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS, ptFollowMegaEvosCheckBox),
+                associateCheckBox(Name.SPECIES_TYPES_FORCE_DUAL_TYPES, ptIsDualTypeCheckBox),
+                //Species Abilities
+                associateButtonSet(Name.RANDOMIZE_SPECIES_ABILITIES,
+                        Map.of(
+                                AbilitiesMod.UNCHANGED, paUnchangedRadioButton,
+                                AbilitiesMod.RANDOMIZE, paRandomRadioButton
+                        )),
+                associateCheckBox(Name.SPECIES_ABILITIES_FOLLOW_EVOLUTIONS, paFollowEvolutionsCheckBox),
+                associateCheckBox(Name.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS, paFollowMegaEvosCheckBox),
+                associateCheckBox(Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES, paEnsureTwoAbilitiesCheckbox),
+                associateCheckBox(Name.SPECIES_ABILITIES_COMBINE_DUPLICATES, paWeighDuplicatesTogetherCheckBox),
+                associateCheckBox(Name.SPECIES_ABILITIES_BAN_WONDER_GUARD, paBanWonderGuardCheckBox),
+                associateCheckBox(Name.SPECIES_ABILITIES_BAN_TRAPPING, paTrappingAbilitiesCheckBox),
+                associateCheckBox(Name.SPECIES_ABILITIES_BAN_MINOR, paMinorAbilitiesCheckBox),
+                associateCheckBox(Name.SPECIES_ABILITIES_BAN_NEGATIVE, paNegativeAbilitiesCheckBox)
+
+
 
                 //TODO: complete list of settings
         );
@@ -2137,11 +2163,11 @@ public class RandomizerGUI {
         settings.setAssignEvoStatsRandomly(pbsAssignEvoStatsRandomlyCheckBox.isSelected() && pbsAssignEvoStatsRandomlyCheckBox.isVisible());
 
         settings.setAbilitiesMod(paUnchangedRadioButton.isSelected(), paRandomRadioButton.isSelected());
-        settings.setAllowWonderGuard(paAllowWonderGuardCheckBox.isSelected());
+        settings.setAllowWonderGuard(paBanWonderGuardCheckBox.isSelected());
         settings.setAbilitiesFollowEvolutions(paFollowEvolutionsCheckBox.isSelected());
         settings.setBanTrappingAbilities(paTrappingAbilitiesCheckBox.isSelected());
         settings.setBanNegativeAbilities(paNegativeAbilitiesCheckBox.isSelected());
-        settings.setBanBadAbilities(paBadAbilitiesCheckBox.isSelected());
+        settings.setBanBadAbilities(paMinorAbilitiesCheckBox.isSelected());
         settings.setAbilitiesFollowMegaEvolutions(paFollowMegaEvosCheckBox.isSelected());
         settings.setWeighDuplicateAbilitiesTogether(paWeighDuplicatesTogetherCheckBox.isSelected());
         settings.setEnsureTwoAbilities(paEnsureTwoAbilitiesCheckbox.isSelected());
@@ -2458,9 +2484,9 @@ public class RandomizerGUI {
 				ptFollowMegaEvosCheckBox, ptIsDualTypeCheckBox);
 
 		pokemonAbilitiesPanel.setVisible(true);
-        setInitialButtonState(paUnchangedRadioButton, paRandomRadioButton, paAllowWonderGuardCheckBox,
+        setInitialButtonState(paUnchangedRadioButton, paRandomRadioButton, paBanWonderGuardCheckBox,
 				paFollowEvolutionsCheckBox, paTrappingAbilitiesCheckBox, paNegativeAbilitiesCheckBox,
-				paBadAbilitiesCheckBox, paFollowMegaEvosCheckBox, paWeighDuplicatesTogetherCheckBox,
+                paMinorAbilitiesCheckBox, paFollowMegaEvosCheckBox, paWeighDuplicatesTogetherCheckBox,
 				paEnsureTwoAbilitiesCheckbox);
 
         setInitialButtonState(peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
@@ -2822,11 +2848,11 @@ public class RandomizerGUI {
                 paUnchangedRadioButton.setSelected(true);
                 paRandomRadioButton.setEnabled(true);
 
-                paAllowWonderGuardCheckBox.setEnabled(false);
+                paBanWonderGuardCheckBox.setEnabled(false);
                 paFollowEvolutionsCheckBox.setEnabled(false);
                 paTrappingAbilitiesCheckBox.setEnabled(false);
                 paNegativeAbilitiesCheckBox.setEnabled(false);
-                paBadAbilitiesCheckBox.setEnabled(false);
+                paMinorAbilitiesCheckBox.setEnabled(false);
                 paFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
                 paWeighDuplicatesTogetherCheckBox.setEnabled(false);
                 paEnsureTwoAbilitiesCheckbox.setEnabled(false);
@@ -3415,12 +3441,12 @@ public class RandomizerGUI {
         }
 
         if (paRandomRadioButton.isSelected()) {
-            enableButtons(paAllowWonderGuardCheckBox, paFollowEvolutionsCheckBox,
-                    paTrappingAbilitiesCheckBox, paNegativeAbilitiesCheckBox, paBadAbilitiesCheckBox,
+            enableButtons(paBanWonderGuardCheckBox, paFollowEvolutionsCheckBox,
+                    paTrappingAbilitiesCheckBox, paNegativeAbilitiesCheckBox, paMinorAbilitiesCheckBox,
                     paFollowMegaEvosCheckBox, paWeighDuplicatesTogetherCheckBox, paEnsureTwoAbilitiesCheckbox);
         } else {
-            disableAndDeselectButtons(paAllowWonderGuardCheckBox, paFollowEvolutionsCheckBox,
-                    paTrappingAbilitiesCheckBox, paNegativeAbilitiesCheckBox, paBadAbilitiesCheckBox,
+            disableAndDeselectButtons(paBanWonderGuardCheckBox, paFollowEvolutionsCheckBox,
+                    paTrappingAbilitiesCheckBox, paNegativeAbilitiesCheckBox, paMinorAbilitiesCheckBox,
                     paFollowMegaEvosCheckBox, paWeighDuplicatesTogetherCheckBox, paEnsureTwoAbilitiesCheckbox);
         }
 

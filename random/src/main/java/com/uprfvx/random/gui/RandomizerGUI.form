@@ -569,15 +569,98 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paRandomRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="97cb8" class="javax.swing.JCheckBox" binding="paAllowWonderGuardCheckBox">
+                      <component id="652d7" class="javax.swing.JCheckBox" binding="paWeighDuplicatesTogetherCheckBox">
+                        <constraints>
+                          <grid row="1" column="3" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paWeighDuplicatesTogetherCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paWeighDuplicatesTogetherCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <grid id="e6b5b" binding="speciesBanAbilitiesPanel" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="3" column="1" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.paBanLabel.text"/>
+                        <children>
+                          <component id="97cb8" class="javax.swing.JCheckBox" binding="paBanWonderGuardCheckBox">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBanWonderGuardCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBanWonderGuardCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <vspacer id="190fc">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </vspacer>
+                          <component id="76ea8" class="javax.swing.JCheckBox" binding="paNegativeAbilitiesCheckBox">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <selected value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paNegativeAbilitiesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paNegativeAbilitiesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="5afb0" class="javax.swing.JCheckBox" binding="paTrappingAbilitiesCheckBox">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paTrappingAbilitiesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paTrappingAbilitiesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="4ac30" class="javax.swing.JCheckBox" binding="paMinorAbilitiesCheckBox">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBadAbilitiesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBadAbilitiesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <component id="b3439" class="javax.swing.JCheckBox" binding="paFollowMegaEvosCheckBox">
+                        <constraints>
+                          <grid row="2" column="3" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paFollowMegaEvosCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paFollowMegaEvosCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="bae4a" class="javax.swing.JCheckBox" binding="paEnsureTwoAbilitiesCheckbox">
                         <constraints>
                           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paAllowWonderGuardCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paAllowWonderGuardCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paEnsureTwoAbilitiesCheckbox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paEnsureTwoAbilitiesCheckbox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="18744" class="javax.swing.JCheckBox" binding="paFollowEvolutionsCheckBox" default-binding="true">
@@ -591,82 +674,12 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paFollowEvolutionsCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="5694" class="javax.swing.JLabel">
+                      <hspacer id="7894">
                         <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBanLabel.text"/>
-                        </properties>
-                      </component>
-                      <component id="5afb0" class="javax.swing.JCheckBox" binding="paTrappingAbilitiesCheckBox">
-                        <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paTrappingAbilitiesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paTrappingAbilitiesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="76ea8" class="javax.swing.JCheckBox" binding="paNegativeAbilitiesCheckBox">
-                        <constraints>
-                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <selected value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paNegativeAbilitiesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paNegativeAbilitiesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="4ac30" class="javax.swing.JCheckBox" binding="paBadAbilitiesCheckBox">
-                        <constraints>
-                          <grid row="3" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBadAbilitiesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paBadAbilitiesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="652d7" class="javax.swing.JCheckBox" binding="paWeighDuplicatesTogetherCheckBox">
-                        <constraints>
-                          <grid row="1" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paWeighDuplicatesTogetherCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paWeighDuplicatesTogetherCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="bae4a" class="javax.swing.JCheckBox" binding="paEnsureTwoAbilitiesCheckbox">
-                        <constraints>
-                          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paEnsureTwoAbilitiesCheckbox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paEnsureTwoAbilitiesCheckbox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="b3439" class="javax.swing.JCheckBox" binding="paFollowMegaEvosCheckBox">
-                        <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paFollowMegaEvosCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.paFollowMegaEvosCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
+                      </hspacer>
                     </children>
                   </grid>
                   <grid id="b4a80" layout-manager="GridBagLayout">

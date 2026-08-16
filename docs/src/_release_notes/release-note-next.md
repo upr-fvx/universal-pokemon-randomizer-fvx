@@ -40,6 +40,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - (Gen 3) [The description of a changed feature here.]
 
 ### Misc. Tweaks
+- (Gen 5) made "No Free Lucky Egg" replace the free Lucky Egg with a random mulch instead of always Gooey Mulch.
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->

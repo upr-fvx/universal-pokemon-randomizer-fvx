@@ -3,7 +3,6 @@ package com.uprfvx.random.settings;
 import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
@@ -218,7 +217,7 @@ public class Settings {
         //Misc Tweaks
         TWEAK_USE_SCALED_EXPERIENCE, TWEAK_NERF_X_ACCURACY, TWEAK_UPDATE_CRIT_RATE, TWEAK_FASTEST_TEXT,
         TWEAK_RUN_INDOORS, TWEAK_RANDOMIZE_PC_POTION, TWEAK_ALLOW_PIKACHU_EVOLUTION, TWEAK_NATIONAL_DEX_AT_START,
-        TWEAK_FAST_EGG_HATCHING, TWEAK_FORCE_CHALLENGE_MODE, TWEAK_LOWER_CASE_SPECIES_NAMES,
+        TWEAK_FAST_EGG_HATCHING, TWEAK_FORCE_CHALLENGE_MODE, TWEAK_CAPITAL_CASE_SPECIES_NAMES,
         TWEAK_RANDOMIZE_CATCHING_TUTORIAL, TWEAK_BAN_LUCKY_EGG, TWEAK_NO_FREE_LUCKY_EGG, TWEAK_BAN_BIG_MONEY_ITEMS,
         TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, TWEAK_BALANCE_FOSSIL_LEVELS, TWEAK_RETAIN_TEMPORARY_FORMES,
         TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_HP_AND_EXP_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
@@ -1744,7 +1743,7 @@ public class Settings {
                     .supported(RomHandler::canUpdateCritRate)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_NERF_X_ACCURACY,
+                    Name.TWEAK_FASTEST_TEXT,
                     Category.MISC_TWEAKS)
                     .supported(RomHandler::canForceFastestText)
                     .build(),
@@ -1769,7 +1768,7 @@ public class Settings {
                     .supported(RomHandler::canAllowPikachuEvolution)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_ALLOW_PIKACHU_EVOLUTION,
+                    Name.TWEAK_NATIONAL_DEX_AT_START,
                     Category.MISC_TWEAKS)
                     .supported(RomHandler::canGiveNationalDexAtStart)
                     .build(),
@@ -1784,7 +1783,7 @@ public class Settings {
                     .supported(RomHandler::canForceChallengeMode)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_LOWER_CASE_SPECIES_NAMES,
+                    Name.TWEAK_CAPITAL_CASE_SPECIES_NAMES,
                     Category.MISC_TWEAKS)
                     .supported(atMostGeneration(4))
                     .build(),
@@ -1834,7 +1833,7 @@ public class Settings {
                     .supported(RomHandler::canMakeDistortionWorldShorter)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_BAN_BIG_MONEY_ITEMS,
+                    Name.TWEAK_UPDATE_ROTOM_TYPING,
                     Category.MISC_TWEAKS)
                     .supported(Settings::hasOldRotomFormeTypes)
                     .build(),

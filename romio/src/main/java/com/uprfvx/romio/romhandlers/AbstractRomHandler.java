@@ -637,7 +637,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     protected void applyCamelCaseNames() {
-        getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.camelCase(pk.getName())));
+        getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.capitalCase(pk.getName())));
     }
 
     /**

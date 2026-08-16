@@ -978,7 +978,7 @@ public interface RomHandler {
 
     /**
      * Disables the low HP music.
-     * @throws UnsupportedOperationException if not possible, see {@link #disableLowHPMusic()}
+     * @throws UnsupportedOperationException if not possible, see {@link #canDisableLowHPMusic()}
      */
     void disableLowHPMusic();
 

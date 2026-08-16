@@ -74,7 +74,7 @@ public class Aura {
 
     @Override
     public String toString() {
-        String ret = RomFunctions.camelCase(stat.toString()).replace("_"," ");
+        String ret = RomFunctions.capitalCase(stat.toString()).replace("_"," ");
         return stat == AuraStat.NONE ? ret : ret + " +" + stages;
     }
 }

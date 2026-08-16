@@ -85,7 +85,7 @@ public enum Type {
     }
 
     public String camelCase() {
-        return RomFunctions.camelCase(this.toString());
+        return RomFunctions.capitalCase(this.toString());
     }
 
 }

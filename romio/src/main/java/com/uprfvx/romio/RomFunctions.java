@@ -45,7 +45,7 @@ public class RomFunctions {
         PatchFunctions.applyPatch(rom, PATCHES_PATH + "/" + patchName + ".ips");
     }
 
-    public static String camelCase(String original) {
+    public static String capitalCase(String original) {
         char[] string = original.toLowerCase().toCharArray();
         boolean docap = true;
         for (int j = 0; j < string.length; j++) {

@@ -659,6 +659,216 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public boolean canMakeExperienceScaled() {
+        return false;
+    }
+
+    @Override
+    public void makeExperienceScaled() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canNerfXAccuracy() {
+        return false;
+    }
+
+    @Override
+    public void nerfXAccuracy() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canUpdateCritRate() {
+        return false;
+    }
+
+    @Override
+    public void updateCritRate() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canForceFastestText() {
+        return false;
+    }
+
+    @Override
+    public void forceFastestText() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canAllowRunningIndoors() {
+        return false;
+    }
+
+    @Override
+    public void allowRunningIndoors() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasPCPotionItem() {
+        return false;
+    }
+
+    @Override
+    public void setPCPotionItem(Item item) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasFreeLuckyEggItem() {
+        return false;
+    }
+
+    @Override
+    public void setFreeLuckyEggItem(Item item) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canAllowPikachuEvolution() {
+        return false;
+    }
+
+    @Override
+    public void allowPikachuEvolution() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canGiveNationalDexAtStart() {
+        return false;
+    }
+
+    @Override
+    public void giveNationalDexAtStart() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canMakeEggsHatchFast() {
+        return false;
+    }
+
+    @Override
+    public void makeEggsHatchFast() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canForceChallengeMode() {
+        return false;
+    }
+
+    @Override
+    public void forceChallengeMode() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasCatchingTutorialSupport() {
+        return false;
+    }
+
+    @Override
+    public boolean setCatchingTutorial(Species opponent, Species player) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasSOSBattles() {
+        return false;
+    }
+
+    @Override
+    public boolean hasFossilPokemonLevelSupport() {
+        return false;
+    }
+
+    @Override
+    public void setFossilPokemonLevel(int level) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canForceRetainTemporaryFormes() {
+        return false;
+    }
+
+    @Override
+    public void forceRetainTemporaryFormes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canAllowRunningWithoutRunningShoes() {
+        return false;
+    }
+
+    @Override
+    public void allowRunningWithoutRunningShoes() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canMakeHPAndEXPBarsFaster() {
+        return false;
+    }
+
+    @Override
+    public void makeHPAndEXPBarsFaster() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canMakeDistortionWorldShorter() {
+        return false;
+    }
+
+    @Override
+    public void makeDistortionWorldShorter() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canDisableLowHPMusic() {
+        return false;
+    }
+
+    @Override
+    public void disableLowHPMusic() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canMakeTMsReusable() {
+        return false;
+    }
+
+    @Override
+    public void makeTMsReusable() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean canMakeHMsForgettable() {
+        return false;
+    }
+
+    @Override
+    public void makeHMsForgettable() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean hasEVs() {
+        return true;
+    }
+
+    @Override
     public ResourceLifetime getResourceLifetime() {
         return ResourceLifetime.NONE;
     }
@@ -911,16 +1121,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
         // default: do nothing
-    }
-
-    @Override
-    public boolean setCatchingTutorial(Species opponent, Species player) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setPCPotionItem(Item item) {
-        throw new UnsupportedOperationException();
     }
 
     protected Set<Item> itemIdsToSet(Collection<Integer> ids) {

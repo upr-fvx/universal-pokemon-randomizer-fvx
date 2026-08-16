@@ -2236,7 +2236,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         } else if (tweak == MiscTweak.FORCE_CHALLENGE_MODE) {
             forceChallengeMode();
         } else if (tweak == MiscTweak.DISABLE_LOW_HP_MUSIC) {
-            disableLowHpMusic();
+            disableLowHPMusic();
         } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
             applyForgettableHMsPatch();
         } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
@@ -2390,7 +2390,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
-    private void forceChallengeMode() {
+    @Override
+    public void forceChallengeMode() {
         int offset = find(arm9, Gen5Constants.forceChallengeModeLocator);
         if (offset > 0) {
             // offset is now pointing at the start of sub_2010528, which is the function that
@@ -2403,10 +2404,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             arm9[offset + 1] = 0x20;
             arm9[offset + 2] = 0x70;
             arm9[offset + 3] = 0x47;
+        } else {
+            throw new UnsupportedOperationException("can not force challenge mode");
         }
     }
 
-    private void disableLowHpMusic() {
+    public void disableLowHPMusic() {
         try {
             byte[] lowHealthMusicOverlay = readOverlay(romEntry.getIntValue("LowHealthMusicOvlNumber"));
             int offset = find(lowHealthMusicOverlay, Gen5Constants.lowHealthMusicLocator);
@@ -2420,6 +2423,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 // branch, the game will never think the player's Pokemon has low HP (for the purposes of changing the music).
                 lowHealthMusicOverlay[offset + 1] = (byte)0xE0;
                 writeOverlay(romEntry.getIntValue("LowHealthMusicOvlNumber"), lowHealthMusicOverlay);
+            } else {
+                throw new UnsupportedOperationException("can not disable low HP music");
             }
         } catch (IOException e) {
             throw new RomIOException(e);

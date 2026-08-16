@@ -754,16 +754,269 @@ public interface RomHandler {
     // code tweaks
     // ===========
 
-    int miscTweaksAvailable();
+    // TODO: some of the below fit better elsewhere in this file, move them there once implemented
 
-    void applyMiscTweak(MiscTweak tweak);
+    /**
+     * Returns true if this game uses a flat experience formula
+     * (one where exp gained does NOT depend on level difference, used in vanilla Gen 1-4 & 6),
+     * and this RomHandler can make it use a scaled formula.
+     */
+    boolean canMakeExperienceScaled();
+
+    /**
+     * Makes the game use a scaled experience formula.
+     * @throws UnsupportedOperationException if not possible, see {@link #canMakeExperienceScaled()}.
+     */
+    void makeExperienceScaled();
+
+    /**
+     * Returns true if the game has the unbalanced X Accuracy of Gen 1,
+     * and this RomHandler can nerf it.
+     */
+    boolean canNerfXAccuracy();
+
+    /**
+     * Nerfs the unbalanced X Accuracy item.
+     * @throws UnsupportedOperationException if not possible, see {@link #canNerfXAccuracy()}
+     */
+    void nerfXAccuracy();
+
+    /**
+     * Returns true if the game uses the Gen 1 crit rate formula,
+     * and this RomHandler can make it use the Gen 2+ one.
+     */
+    boolean canUpdateCritRate();
+
+    /**
+     * Updates the crit rate formulata to that of Gen 2+.
+     * @throws UnsupportedOperationException if not possible, see {@link #canUpdateCritRate()}
+     */
+    void updateCritRate();
+
+    /**
+     * Returns true if this RomHandler can force the game to display
+     * text as fast as possible
+     */
+    boolean canForceFastestText();
+
+    /**
+     * Forces this game to display text as fast as possible.
+     * @throws UnsupportedOperationException if not possible, see {@link #canForceFastestText()}
+     */
+    void forceFastestText();
+
+    /**
+     * Returns true if this game does not allow for running indoors,
+     * and this RomHandler can make it allowed.
+     */
+    boolean canAllowRunningIndoors();
+
+    /**
+     * Makes it possible to run indoors.
+     * @throws UnsupportedOperationException if not possible, see {@link #canAllowRunningIndoors()}
+     */
+    void allowRunningIndoors();
+
+    /**
+     * Returns true if this game has an item stored in your PC at the start of the game.
+     */
+    boolean hasPCPotionItem();
+
+    /**
+     * Sets the {@link Item} to appear in the PC at the start of the game.
+     * @param item The Item to appear in the PC.
+     * @throws UnsupportedOperationException if the game has no such item, see {@link #hasPCPotionItem()};
+     */
+    void setPCPotionItem(Item item);
+
+    /**
+     * Returns true if the game has a free Lucky Egg,
+     * and the RomHandler knows how to replace it.
+     */
+    boolean hasFreeLuckyEggItem();
+
+    /**
+     * Sets the {@link Item} to be given out instead of the Lucky Egg.
+     * @param item The Item to be given out instead of the Lucky Egg.
+     * @throws UnsupportedOperationException if not possible, see {@link #hasFreeLuckyEggItem()}
+     */
+    void setFreeLuckyEggItem(Item item);
+
+    /**
+     * Returns true if the game prevents Pikachu from evolving,
+     * and this RomHandler can allow it.
+     */
+    boolean canAllowPikachuEvolution();
+
+    /**
+     * Makes it possible for Pikachu to evolve in a game that normally prevents it.
+     * @throws UnsupportedOperationException if not possible, see {@link #canAllowPikachuEvolution()}
+     */
+    void allowPikachuEvolution();
+
+    /**
+     * Returns true if this RomHandler can make the game give you the National Dex
+     * at the start of it.
+     */
+    boolean canGiveNationalDexAtStart();
+
+    /**
+     * Makes the game give you the National Dex at the start of it.
+     * @throws UnsupportedOperationException if not possible, see {@link #canGiveNationalDexAtStart()}
+     */
+    void giveNationalDexAtStart();
+
+    /**
+     * Returns true if the game has eggs,
+     * and the RomHandler can make them hatch "fast" (within some egg cycle).
+     */
+    boolean canMakeEggsHatchFast();
+
+    /**
+     * Makes all eggs in the game hatch "fast" (within some egg cycle)
+     * @throws UnsupportedOperationException if not possible, see {@link #canMakeEggsHatchFast()}
+     */
+    // This might seem like a trivial change to do outside RomHandler,
+    // but ORAS only complicates it by having hard-coded slow-hatching eggs
+    // This inclusion as a RomHandler method(s) is intentional.
+    void makeEggsHatchFast();
+
+    /**
+     * Returns true if the game has a challenge mode,
+     * and the RomHandler can make it be always active.
+     */
+    boolean canForceChallengeMode();
+
+    /**
+     * Makes challenge mode be always active.
+     * @throws UnsupportedOperationException if not possible, see {@link #canForceChallengeMode()}
+     */
+    void forceChallengeMode();
+
+    /**
+     * Returns true if the Species shown in the catching tutorial can be changed
+     * (using {@link #setCatchingTutorial(Species, Species)}).
+     */
+    boolean hasCatchingTutorialSupport();
 
     /**
      * Sets the Species shown in the catching tutorial. Returns false if the Species are not valid catching tutorial Species.
+     * @throws UnsupportedOperationException if not possible, see {@link #hasCatchingTutorialSupport()}
      */
     boolean setCatchingTutorial(Species opponent, Species player);
 
-    void setPCPotionItem(Item item);
+    /**
+     * Returns true if the game has SOS battles.
+     */
+    boolean hasSOSBattles();
+
+    // TODO: investigate; are these levels not the levels of the relevant StaticPokemon?
+    /**
+     * Returns true if the game has Pokémon that can be revived from fossils,
+     * and the levels of these fossils is settable (with {@link #setFossilPokemonLevel(int)}).
+     */
+    boolean hasFossilPokemonLevelSupport();
+
+    /**
+     * Sets the level that Pokémon are revived at from fossils.
+     * @throws UnsupportedOperationException if not possible, see {@link #hasFossilPokemonLevelSupport()}
+     */
+    void setFossilPokemonLevel(int level);
+
+    /**
+     * Returns true if the RomHandler can force temporary formes to
+     * not revert under certain circumstances.
+     */
+    boolean canForceRetainTemporaryFormes();
+
+    /**
+     * Forces temporary formes to not revert under certain circumstances.
+     * @throws UnsupportedOperationException if not possible, see {@link #canForceRetainTemporaryFormes()}
+     */
+    void forceRetainTemporaryFormes();
+
+    /**
+     * Returns true if the game requires Running Shoes to run,
+     * and this RomHandler can allow you to run without.
+     */
+    boolean canAllowRunningWithoutRunningShoes();
+
+    /**
+     * Allows for running without Running Shoes.
+     * @throws UnsupportedOperationException if not possible, see {@link #canAllowRunningWithoutRunningShoes()}
+     */
+    void allowRunningWithoutRunningShoes();
+
+    /**
+     * Returns true if this RomHandler can make HP and EXP bars change faster.
+     */
+    boolean canMakeHPAndEXPBarsFaster();
+
+    /**
+     * Makes HP and EXP bars change faster.
+     * @throws UnsupportedOperationException if not possible, see {@link #canMakeHPAndEXPBarsFaster()}
+     */
+    void makeHPAndEXPBarsFaster();
+
+    /**
+     * Returns true if this game has the Distortion World,
+     * and this RomHandler allows for shortening it.
+     */
+    boolean canMakeDistortionWorldShorter();
+
+    /**
+     * Makes the Distortion World shorter.
+     * @throws UnsupportedOperationException if not possible, see {@link #canMakeDistortionWorldShorter()}
+     */
+    void makeDistortionWorldShorter();
+
+    /**
+     * Returns true if the game has low HP music,
+     * and this RomHandler can disable it.
+     */
+    boolean canDisableLowHPMusic();
+
+    /**
+     * Disables the low HP music.
+     * @throws UnsupportedOperationException if not possible, see {@link #disableLowHPMusic()}
+     */
+    void disableLowHPMusic();
+
+    /**
+     * Returns true if the game has single-use TMs,
+     * and this RomHandler can make them reusable.
+     */
+    boolean canMakeTMsReusable();
+
+    /**
+     * Makes TMs reusable.
+     * @throws UnsupportedOperationException if not possible, see {@link #canMakeTMsReusable()}
+     */
+    void makeTMsReusable();
+
+    /**
+     * Returns true if the game prevents HMs from being forgotten,
+     * and this RomHandler can make them forgettable at any time, like any other move.
+     */
+    boolean canMakeHMsForgettable();
+
+    /**
+     * Makes HMs forgettable at any time, like any other move.
+     * @throws UnsupportedOperationException if not possible, see {@link #canMakeHMsForgettable()}
+     */
+    void makeHMsForgettable();
+
+    /**
+     * Returns true if this game has Effort Values.
+     */
+    boolean hasEVs();
+
+    @Deprecated
+    int miscTweaksAvailable();
+
+    @Deprecated
+    void applyMiscTweak(MiscTweak tweak);
+
 
     // ==========================
     // Misc forme-related methods

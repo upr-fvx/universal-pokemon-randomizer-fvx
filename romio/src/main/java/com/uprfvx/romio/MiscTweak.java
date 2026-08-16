@@ -31,6 +31,17 @@ import java.util.List;
  */
 public class MiscTweak implements Comparable<MiscTweak> {
 
+    // TODO: remove this class
+    // TODO: make most of these have their own methods in RomHandler,
+    //  for checking whether possible, and applying the tweak
+    // TODO: move some functionality to the random layer:
+    //  - capital case names
+    //  - ban lucky egg
+    //  - ban big money items (the RomHandler should say what is a big money item??)
+    //  - sos battles for all
+    //  - remove EV yields
+    //  - update rotom forme types
+
     // Note that Java ints are 32 bits, so with the current implementation
     // there can be no more than 32 different MiscTweaks.
     public static final int NO_MISC_TWEAKS = 0;

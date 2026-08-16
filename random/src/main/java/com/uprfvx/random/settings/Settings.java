@@ -4,8 +4,11 @@ import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.MiscTweak;
+import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.Species;
+import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.gamedata.basestats.BaseStats;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -218,7 +221,7 @@ public class Settings {
         TWEAK_FAST_EGG_HATCHING, TWEAK_FORCE_CHALLENGE_MODE, TWEAK_LOWER_CASE_SPECIES_NAMES,
         TWEAK_RANDOMIZE_CATCHING_TUTORIAL, TWEAK_BAN_LUCKY_EGG, TWEAK_NO_FREE_LUCKY_EGG, TWEAK_BAN_BIG_MONEY_ITEMS,
         TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, TWEAK_BALANCE_FOSSIL_LEVELS, TWEAK_RETAIN_TEMPORARY_FORMES,
-        TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
+        TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_HP_AND_EXP_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
         TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_GAIN
     }
 
@@ -1707,33 +1710,154 @@ public class Settings {
 
     //region misc tweaks
 
+    public static boolean hasOldRotomFormeTypes(RomHandler rh) {
+        // Am aware this could just check for platinum more easily ^^.
+        // Just having fun with it, and voilà free ROM hack support.
+        // -- voliol 12026-08-16
+        List<Species> allSpecs = rh.getSpecies();
+        if (allSpecs.size() <= SpeciesIDs.rotom) {
+            return false;
+        }
+        Species rotom = allSpecs.get(SpeciesIDs.rotom);
+        if (rotom.isValidFormeNumber(1)) {
+            return false;
+        }
+        Species altRotom = rotom.getForme(1);
+        return (altRotom.getPrimaryType(true) == Type.ELECTRIC
+                && altRotom.getSecondaryType(true) == Type.GHOST);
+    }
+
     public static final List<SettingDefinition<?>> MISC_TWEAKS = List.of(
-            miscTweakDefinition(Name.TWEAK_USE_SCALED_EXPERIENCE, MiscTweak.BW_EXP_PATCH),
-            miscTweakDefinition(Name.TWEAK_NERF_X_ACCURACY, MiscTweak.NERF_X_ACCURACY),
-            miscTweakDefinition(Name.TWEAK_UPDATE_CRIT_RATE, MiscTweak.UPDATE_CRIT_RATE),
-            miscTweakDefinition(Name.TWEAK_FASTEST_TEXT, MiscTweak.FASTEST_TEXT),
-            miscTweakDefinition(Name.TWEAK_RUN_INDOORS, MiscTweak.RUNNING_SHOES_INDOORS),
-            miscTweakDefinition(Name.TWEAK_RANDOMIZE_PC_POTION, MiscTweak.RANDOMIZE_PC_POTION),
-            miscTweakDefinition(Name.TWEAK_ALLOW_PIKACHU_EVOLUTION, MiscTweak.ALLOW_PIKACHU_EVOLUTION),
-            miscTweakDefinition(Name.TWEAK_NATIONAL_DEX_AT_START, MiscTweak.NATIONAL_DEX_AT_START),
-            miscTweakDefinition(Name.TWEAK_FAST_EGG_HATCHING, MiscTweak.FAST_EGG_HATCHING),
-            miscTweakDefinition(Name.TWEAK_FORCE_CHALLENGE_MODE, MiscTweak.FORCE_CHALLENGE_MODE),
-            miscTweakDefinition(Name.TWEAK_LOWER_CASE_SPECIES_NAMES, MiscTweak.LOWER_CASE_POKEMON_NAMES),
-            miscTweakDefinition(Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL, MiscTweak.RANDOMIZE_CATCHING_TUTORIAL),
-            miscTweakDefinition(Name.TWEAK_BAN_LUCKY_EGG, MiscTweak.BAN_LUCKY_EGG),
-            miscTweakDefinition(Name.TWEAK_NO_FREE_LUCKY_EGG, MiscTweak.NO_FREE_LUCKY_EGG),
-            miscTweakDefinition(Name.TWEAK_BAN_BIG_MONEY_ITEMS, MiscTweak.BAN_BIG_MANIAC_ITEMS),
-            miscTweakDefinition(Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, MiscTweak.SOS_BATTLES_FOR_ALL),
-            miscTweakDefinition(Name.TWEAK_BALANCE_FOSSIL_LEVELS, MiscTweak.BALANCE_STATIC_LEVELS),
-            miscTweakDefinition(Name.TWEAK_RETAIN_TEMPORARY_FORMES, MiscTweak.RETAIN_ALT_FORMES),
-            miscTweakDefinition(Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES, MiscTweak.RUN_WITHOUT_RUNNING_SHOES),
-            miscTweakDefinition(Name.TWEAK_FASTER_BARS, MiscTweak.FASTER_HP_AND_EXP_BARS),
-            miscTweakDefinition(Name.TWEAK_FAST_DISTORTION_WORLD, MiscTweak.FAST_DISTORTION_WORLD),
-            miscTweakDefinition(Name.TWEAK_UPDATE_ROTOM_TYPING, MiscTweak.UPDATE_ROTOM_FORME_TYPING),
-            miscTweakDefinition(Name.TWEAK_DISABLE_LOW_HP_MUSIC, MiscTweak.DISABLE_LOW_HP_MUSIC),
-            miscTweakDefinition(Name.TWEAK_REUSABLE_TMS, MiscTweak.REUSABLE_TMS),
-            miscTweakDefinition(Name.TWEAK_FORGETTABLE_HMS, MiscTweak.FORGETTABLE_HMS),
-            miscTweakDefinition(Name.TWEAK_NO_EV_GAIN, MiscTweak.NO_EV_YIELDS)
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_USE_SCALED_EXPERIENCE,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canMakeExperienceScaled)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_NERF_X_ACCURACY,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canNerfXAccuracy)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_UPDATE_CRIT_RATE,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canUpdateCritRate)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_NERF_X_ACCURACY,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canForceFastestText)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_RUN_INDOORS,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canAllowRunningIndoors)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canAllowRunningWithoutRunningShoes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_RANDOMIZE_PC_POTION,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::hasPCPotionItem)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_ALLOW_PIKACHU_EVOLUTION,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canAllowPikachuEvolution)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_ALLOW_PIKACHU_EVOLUTION,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canGiveNationalDexAtStart)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_FAST_EGG_HATCHING,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canMakeEggsHatchFast)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_FORCE_CHALLENGE_MODE,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canForceChallengeMode)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_LOWER_CASE_SPECIES_NAMES,
+                    Category.MISC_TWEAKS)
+                    .supported(atMostGeneration(4))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::hasCatchingTutorialSupport)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_BAN_LUCKY_EGG,
+                    Category.MISC_TWEAKS)
+                    .supported(atLeastGeneration(2))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_NO_FREE_LUCKY_EGG,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::hasFreeLuckyEggItem)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_BAN_BIG_MONEY_ITEMS,
+                    Category.MISC_TWEAKS)
+                    .supported(ofGeneration(5))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::hasSOSBattles)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_BALANCE_FOSSIL_LEVELS,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::hasFossilPokemonLevelSupport)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_RETAIN_TEMPORARY_FORMES,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canForceRetainTemporaryFormes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_FASTER_HP_AND_EXP_BARS,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canMakeHPAndEXPBarsFaster)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_FAST_DISTORTION_WORLD,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canMakeDistortionWorldShorter)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_BAN_BIG_MONEY_ITEMS,
+                    Category.MISC_TWEAKS)
+                    .supported(Settings::hasOldRotomFormeTypes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_DISABLE_LOW_HP_MUSIC,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canDisableLowHPMusic)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_REUSABLE_TMS,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canMakeTMsReusable)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_FORGETTABLE_HMS,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::canMakeHMsForgettable)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TWEAK_NO_EV_GAIN,
+                    Category.MISC_TWEAKS)
+                    .supported(RomHandler::hasEVs)
+                    .build()
     );
 
     //endregion

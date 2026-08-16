@@ -818,6 +818,18 @@ public interface RomHandler {
     void allowRunningIndoors();
 
     /**
+     * Returns true if the game requires Running Shoes to run,
+     * and this RomHandler can allow you to run without.
+     */
+    boolean canAllowRunningWithoutRunningShoes();
+
+    /**
+     * Allows for running without Running Shoes.
+     * @throws UnsupportedOperationException if not possible, see {@link #canAllowRunningWithoutRunningShoes()}
+     */
+    void allowRunningWithoutRunningShoes();
+
+    /**
      * Returns true if this game has an item stored in your PC at the start of the game.
      */
     boolean hasPCPotionItem();
@@ -934,18 +946,6 @@ public interface RomHandler {
      * @throws UnsupportedOperationException if not possible, see {@link #canForceRetainTemporaryFormes()}
      */
     void forceRetainTemporaryFormes();
-
-    /**
-     * Returns true if the game requires Running Shoes to run,
-     * and this RomHandler can allow you to run without.
-     */
-    boolean canAllowRunningWithoutRunningShoes();
-
-    /**
-     * Allows for running without Running Shoes.
-     * @throws UnsupportedOperationException if not possible, see {@link #canAllowRunningWithoutRunningShoes()}
-     */
-    void allowRunningWithoutRunningShoes();
 
     /**
      * Returns true if this RomHandler can make HP and EXP bars change faster.

@@ -29,6 +29,7 @@ import java.util.List;
  * Represents a miscellaneous tweak that can be applied
  * to some or all games that the Randomizer supports.
  */
+@Deprecated
 public class MiscTweak implements Comparable<MiscTweak> {
 
     // TODO: remove this class

@@ -128,32 +128,12 @@ public class SettingUtils {
         };
     }
 
-    public static Predicate<RomHandler> isTweakAvailable(MiscTweak tweak) {
-        return rom -> (rom.miscTweaksAvailable() & tweak.getValue()) != 0;
-    }
-
     //endregion
 
     //region romhandler functions
 
     public static <V> Function<RomHandler, V> overrideForGeneration(int generation, V override) {
         return rh -> rh.generationOfPokemon() == generation ? override : null;
-    }
-
-    //endregion
-
-    //region setting definition shorthands
-
-    // Just a shorthand to make the more-or-less identical Misc Tweak definitions take less space
-    // This could also be its own Definition subclass, but since it doesn't do anything special
-    // a method felt sufficient.
-    public static SettingDefinition<Boolean> miscTweakDefinition(Settings.Name name, MiscTweak tweak) {
-        return new SimpleSettingDefinition.Builder<>(
-                name,
-                Settings.Category.MISC_TWEAKS,
-                false)
-                .supported(isTweakAvailable(tweak))
-                .build();
     }
 
     //endregion

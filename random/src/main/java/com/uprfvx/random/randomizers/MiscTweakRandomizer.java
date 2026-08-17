@@ -17,6 +17,8 @@ import java.util.Random;
 
 public class MiscTweakRandomizer extends Randomizer {
 
+    // TODO: write new test cases for these methods
+
     private static final int MAX_CATCHING_TUTORIAL_TRIES = 1000;
     private static final int DEFAULT_CALL_RATE = 5;
 

@@ -3884,8 +3884,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             applyRunningShoesIndoorsPatch();
         } else if (tweak == MiscTweak.FASTEST_TEXT) {
             applyFastestTextPatch();
-        } else if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
-            applyCamelCaseNames();
         } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
             patchForNationalDex();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {

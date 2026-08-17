@@ -2240,6 +2240,11 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean hasEVs() {
+        return false;
+    }
+
+    @Override
     public boolean hasMegaEvolutions() {
         return false;
     }
@@ -2251,50 +2256,23 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
-        if (romEntry.hasTweakFile("BWXPTweak")) {
-            available |= MiscTweak.BW_EXP_PATCH.getValue();
-        }
-        if (romEntry.getIntValue("TextDelayFunctionOffset") != 0) {
-            available |= MiscTweak.FASTEST_TEXT.getValue();
-        }
-        if (romEntry.getArrayValue("CatchingTutorialOffsets").length != 0) {
-            available |= MiscTweak.RANDOMIZE_CATCHING_TUTORIAL.getValue();
-        }
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0
-                && romEntry.getIntValue("TMMovesReusableFunctionJumpLength") != 0) {
-            available |= MiscTweak.REUSABLE_TMS.getValue();
-        }
-        if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
-            available |= MiscTweak.FORGETTABLE_HMS.getValue();
-        }
-        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
-        return available;
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.BW_EXP_PATCH) {
-            applyBWEXPPatch();
-        } else if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestTextPatch();
-        } else if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
-            applyCamelCaseNames();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.REUSABLE_TMS) {
-            applyReusableTMsPatch();
-        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
-            applyForgettableHMsPatch();
-        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSet().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
-        }
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
-    private void applyBWEXPPatch() {
+    @Override
+    public boolean canMakeExperienceScaled() {
+        return romEntry.hasTweakFile("BWXPTweak");
+    }
+
+    @Override
+    public void makeExperienceScaled() {
         if (!romEntry.hasTweakFile("BWXPTweak")) {
-            return;
+            throw new UnsupportedOperationException("can not make experience scaled");
         }
         String patchName = romEntry.getTweakFile("BWXPTweak");
         try {
@@ -2304,19 +2282,33 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         }
     }
 
-    private void applyFastestTextPatch() {
-        if (romEntry.getIntValue("TextDelayFunctionOffset") != 0) {
-            writeByte(romEntry.getIntValue("TextDelayFunctionOffset"), GBConstants.gbZ80Ret);
-        }
+    @Override
+    public boolean canForceFastestText() {
+        return romEntry.getIntValue("TextDelayFunctionOffset") != 0;
     }
 
-    private void applyReusableTMsPatch() {
+    @Override
+    public void forceFastestText() {
+        if (romEntry.getIntValue("TextDelayFunctionOffset") == 0) {
+            throw new UnsupportedOperationException("can not force fastest text");
+        }
+        writeByte(romEntry.getIntValue("TextDelayFunctionOffset"), GBConstants.gbZ80Ret);
+    }
+
+    @Override
+    public boolean canMakeTMsReusable() {
+        return romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0
+                && romEntry.getIntValue("TMMovesReusableFunctionJumpLength") != 0;
+    }
+
+    @Override
+    public void makeTMsReusable() {
         // Overwrites the call to the code that consumes the TM, with a jump to the next part.
         // Since the TM is not consumed, it becomes infinitely reusable.
         int offset = romEntry.getIntValue("TMMovesReusableFunctionOffset");
         int jumpLength = romEntry.getIntValue("TMMovesReusableFunctionJumpLength");
         if (offset == 0 || jumpLength == 0) {
-            return;
+            throw new UnsupportedOperationException("can not make TMs reusable");
         }
         if (rom[offset] != GBConstants.gbZ80Call
                 || rom[offset + GBConstants.gbZ80CallSize] != GBConstants.gbZ80JumpRelative) {
@@ -2328,12 +2320,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         tmsReusable = true;
     }
 
-    private void applyForgettableHMsPatch() {
+    @Override
+    public boolean canMakeHMsForgettable() {
+        return romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0;
+    }
+
+    @Override
+    public void makeHMsForgettable() {
         // Changes a jump ("JR C, e8") to two NOPs,
         // and thus ignores the special handling for HMs when forgetting moves.
         int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
         if (offset == 0) {
-            return;
+            throw new UnsupportedOperationException("can not make HMs forgettable");
         }
         if (rom[offset] != GBConstants.gbZ80JumpRelativeC) {
             throw new RuntimeException("Unexpected byte found for the ROM's move forgetting function, " +
@@ -2344,12 +2342,18 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean hasCatchingTutorialSupport() {
+        return romEntry.getArrayValue("CatchingTutorialOffsets").length != 0;
+    }
+
+    @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
-        if (romEntry.getArrayValue("CatchingTutorialOffsets").length != 0) {
-            int[] offsets = romEntry.getArrayValue("CatchingTutorialOffsets");
-            for (int offset : offsets) {
-                writeByte(offset, (byte) opponent.getNumber());
-            }
+        if (romEntry.getArrayValue("CatchingTutorialOffsets").length == 0) {
+            throw new UnsupportedOperationException("can not set catching tutorial");
+        }
+        int[] offsets = romEntry.getArrayValue("CatchingTutorialOffsets");
+        for (int offset : offsets) {
+            writeByte(offset, (byte) opponent.getNumber());
         }
         return true;
     }

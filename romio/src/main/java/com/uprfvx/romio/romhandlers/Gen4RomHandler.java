@@ -5291,9 +5291,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
-            applyCamelCaseNames();
-        } else if (tweak == MiscTweak.FASTEST_TEXT) {
+        if (tweak == MiscTweak.FASTEST_TEXT) {
             applyFastestText();
         } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
 			items.get(ItemIDs.luckyEgg).setAllowed(false);

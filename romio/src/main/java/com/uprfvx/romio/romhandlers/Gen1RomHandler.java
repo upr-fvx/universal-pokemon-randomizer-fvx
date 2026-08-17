@@ -2184,6 +2184,11 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean hasEVs() {
+        return false;
+    }
+
+    @Override
     public boolean hasMegaEvolutions() {
         return false;
     }
@@ -2195,89 +2200,87 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
-
-        if (romEntry.getTweakFile("BWXPTweak") != null) {
-            available |= MiscTweak.BW_EXP_PATCH.getValue();
-        }
-        if (romEntry.getTweakFile("XAccNerfTweak") != null) {
-            available |= MiscTweak.NERF_X_ACCURACY.getValue();
-        }
-        if (romEntry.getTweakFile("CritRateTweak") != null) {
-            available |= MiscTweak.UPDATE_CRIT_RATE.getValue();
-        }
-        if (romEntry.getIntValue("TextDelayFunctionOffset") != 0) {
-            available |= MiscTweak.FASTEST_TEXT.getValue();
-        }
-        if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            available |= MiscTweak.RANDOMIZE_PC_POTION.getValue();
-        }
-        if (romEntry.getIntValue("PikachuEvoJumpOffset") != 0) {
-            available |= MiscTweak.ALLOW_PIKACHU_EVOLUTION.getValue();
-        }
-        if (romEntry.getIntValue("CatchingTutorialMonOffset") != 0) {
-            available |= MiscTweak.RANDOMIZE_CATCHING_TUTORIAL.getValue();
-        }
-        if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
-            available |= MiscTweak.REUSABLE_TMS.getValue();
-        }
-        if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
-            available |= MiscTweak.FORGETTABLE_HMS.getValue();
-        }
-        return available;
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.BW_EXP_PATCH) {
-            applyBWEXPPatch();
-        } else if (tweak == MiscTweak.NERF_X_ACCURACY) {
-            applyXAccNerfPatch();
-        } else if (tweak == MiscTweak.UPDATE_CRIT_RATE) {
-            applyCritRatePatch();
-        } else if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestTextPatch();
-        } else if (tweak == MiscTweak.ALLOW_PIKACHU_EVOLUTION) {
-            applyPikachuEvoPatch();
-        } else if (tweak == MiscTweak.LOWER_CASE_POKEMON_NAMES) {
-            applyCamelCaseNames();
-        } else if (tweak == MiscTweak.REUSABLE_TMS) {
-            applyReusableTMsPatch();
-        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
-            applyForgettableHMsPatch();
-        }
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
-    private void applyBWEXPPatch() {
+    @Override
+    public boolean canMakeExperienceScaled() {
+        return romEntry.getTweakFile("BWXPTweak") != null;
+    }
+
+    @Override
+    public boolean canMakeEggsHatchFast() {
+        return false; // no eggs
+    }
+
+    @Override
+    public void makeExperienceScaled() {
         genericIPSPatch("BWXPTweak");
     }
 
-    private void applyXAccNerfPatch() {
+    @Override
+    public boolean canNerfXAccuracy() {
+        return romEntry.getTweakFile("XAccNerfTweak") != null;
+    }
+
+    @Override
+    public void nerfXAccuracy() {
         xAccNerfed = genericIPSPatch("XAccNerfTweak");
     }
 
-    private void applyCritRatePatch() {
+    @Override
+    public boolean canUpdateCritRate() {
+        return romEntry.getTweakFile("CritRateTweak") != null;
+    }
+
+    @Override
+    public void updateCritRate() {
         genericIPSPatch("CritRateTweak");
     }
 
-    private void applyFastestTextPatch() {
-        if (romEntry.getIntValue("TextDelayFunctionOffset") != 0) {
-            writeByte(romEntry.getIntValue("TextDelayFunctionOffset"), GBConstants.gbZ80Ret);
-        }
+    @Override
+    public boolean canForceFastestText() {
+        return romEntry.getIntValue("TextDelayFunctionOffset") != 0;
     }
 
-    private void applyPikachuEvoPatch() {
-        if (romEntry.getIntValue("PikachuEvoJumpOffset") != 0) {
-            writeByte(romEntry.getIntValue("PikachuEvoJumpOffset"), GBConstants.gbZ80JumpRelative);
+    @Override
+    public void forceFastestText() {
+        if (romEntry.getIntValue("TextDelayFunctionOffset") == 0) {
+            throw new UnsupportedOperationException("can not force fastest text");
         }
+        writeByte(romEntry.getIntValue("TextDelayFunctionOffset"), GBConstants.gbZ80Ret);
     }
 
-    private void applyReusableTMsPatch() {
+    @Override
+    public boolean canAllowPikachuEvolution() {
+        return romEntry.getIntValue("PikachuEvoJumpOffset") != 0;
+    }
+
+    @Override
+    public void allowPikachuEvolution() {
+        if (romEntry.getIntValue("PikachuEvoJumpOffset") == 0) {
+            throw new UnsupportedOperationException("can not allow Pikachu evolution");
+        }
+        writeByte(romEntry.getIntValue("PikachuEvoJumpOffset"), GBConstants.gbZ80JumpRelative);
+    }
+
+    @Override
+    public boolean canMakeTMsReusable() {
+        return romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0;
+    }
+
+    @Override
+    public void makeTMsReusable() {
         // Changes a conditional "Ret C" to an unconditional "Ret",
         // and thus skips the consumption/removal of the TM.
         int offset = romEntry.getIntValue("TMMovesReusableFunctionOffset");
         if (offset == 0) {
-            return;
+            throw new UnsupportedOperationException("can not make TMs reusable");
         }
         if (rom[offset] != GBConstants.gbZ80RetC) {
             throw new RuntimeException("Unexpected byte found for the ROM's TM teaching function, " +
@@ -2287,12 +2290,18 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         tmsReusable = true;
     }
 
-    private void applyForgettableHMsPatch() {
+    @Override
+    public boolean canMakeHMsForgettable() {
+        return romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0;
+    }
+
+    @Override
+    public void makeHMsForgettable() {
         // Changes a jump ("JR C, e8") to two NOPs,
         // and thus ignores the special handling for HMs when forgetting moves.
         int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
         if (offset == 0) {
-            return;
+            throw new UnsupportedOperationException("can not make HMs forgettable");
         }
         if (rom[offset] != GBConstants.gbZ80JumpRelativeC) {
             throw new RuntimeException("Unexpected byte found for the ROM's move forgetting function, " +
@@ -2339,23 +2348,35 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean hasCatchingTutorialSupport() {
+        return romEntry.getIntValue("CatchingTutorialMonOffset") != 0;
+    }
+
+    @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
-        if (romEntry.getIntValue("CatchingTutorialMonOffset") != 0) {
-            writeByte(romEntry.getIntValue("CatchingTutorialMonOffset"),
-                    (byte) pokeNumToRBYTable[opponent.getNumber()]);
+        if (romEntry.getIntValue("CatchingTutorialMonOffset") == 0) {
+            throw new UnsupportedOperationException("can not set catching tutorial");
         }
+        writeByte(romEntry.getIntValue("CatchingTutorialMonOffset"),
+                    (byte) pokeNumToRBYTable[opponent.getNumber()]);
         return true;
     }
 
     @Override
+    public boolean hasPCPotionItem() {
+        return romEntry.getIntValue("PCPotionOffset") != 0;
+    }
+
+    @Override
     public void setPCPotionItem(Item item) {
-        if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (!item.isAllowed()) {
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
-            }
-            byte internalID = (byte) Gen1Constants.itemIDToInternal(item.getId() & 0xFF);
-            writeByte(romEntry.getIntValue("PCPotionOffset"), internalID);
+        if (romEntry.getIntValue("PCPotionOffset") == 0) {
+            throw new UnsupportedOperationException("can not set PC Potion item");
         }
+        if (!item.isAllowed()) {
+            throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
+        }
+        byte internalID = (byte) Gen1Constants.itemIDToInternal(item.getId() & 0xFF);
+        writeByte(romEntry.getIntValue("PCPotionOffset"), internalID);
     }
 
     @Override

@@ -1011,6 +1011,7 @@ public interface RomHandler {
      */
     boolean hasEVs();
 
+    // TODO: remove these methods once refactored away
     @Deprecated
     int miscTweaksAvailable();
 

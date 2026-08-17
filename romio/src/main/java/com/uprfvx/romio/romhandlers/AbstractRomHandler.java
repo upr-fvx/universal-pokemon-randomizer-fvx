@@ -636,10 +636,6 @@ public abstract class AbstractRomHandler implements RomHandler {
         }
     }
 
-    protected void applyCamelCaseNames() {
-        getSpeciesSet().forEach(pk -> pk.setName(RomFunctions.capitalCase(pk.getName())));
-    }
-
     /**
      * Sets all alt formes to be "banned" for an {@link EncounterArea},
      * if any of its encounter slots can't hold alt formes.
@@ -750,12 +746,12 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public boolean canMakeEggsHatchFast() {
-        return false;
+        return true;
     }
 
     @Override
     public void makeEggsHatchFast() {
-        throw new UnsupportedOperationException();
+        getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
     }
 
     @Override

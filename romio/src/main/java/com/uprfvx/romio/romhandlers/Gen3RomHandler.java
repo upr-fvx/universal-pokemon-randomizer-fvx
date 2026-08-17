@@ -1812,7 +1812,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // after
             int pokemonPointerOffset = trOffset + (entryLen - 4);
             new DataRewriter<Trainer>().rewriteData(pokemonPointerOffset, tr, this::trainerPokemonToBytes,
-                    (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
+                    (_) -> readTrainerPokemonDataLength(trOffset));
 
             writeByte(trOffset, (byte) tr.getPoketype());
             writeFixedLengthString(tr.getName(), trOffset + 4, nameLen);
@@ -2768,7 +2768,17 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         }
     }
 
-    private void patchForNationalDex() {
+    @Override
+    public boolean canGiveNationalDexAtStart() {
+        return romEntry.getIntValue("NationalDexTweakPossible") != 0;
+    }
+
+    @Override
+    public void giveNationalDexAtStart() {
+        if (!canGiveNationalDexAtStart()) {
+            throw new UnsupportedOperationException("can not give National Dex at start");
+        }
+
         if (romEntry.getRomType() == Gen3Constants.RomType_Ruby || romEntry.getRomType() == Gen3Constants.RomType_Sapp) {
             // Find the original pokedex script
             int pkDexOffset = find(Gen3Constants.rsPokedexScriptIdentifier);
@@ -3845,75 +3855,50 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
-        if (romEntry.getIntValue("NationalDexTweakPossible") != 0) {
-            available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
-        }
-        if (romEntry.getIntValue("RunIndoorsTweakOffset") > 0) {
-            available |= MiscTweak.RUNNING_SHOES_INDOORS.getValue();
-        }
-        if (romEntry.getIntValue("TextSpeedValuesOffset") > 0 || romEntry.hasTweakFile("InstantTextTweak")) {
-            available |= MiscTweak.FASTEST_TEXT.getValue();
-        }
-        if (romEntry.getIntValue("CatchingTutorialOpponentMonOffset") > 0
-                || romEntry.getIntValue("CatchingTutorialPlayerMonOffset") > 0) {
-            available |= MiscTweak.RANDOMIZE_CATCHING_TUTORIAL.getValue();
-        }
-        if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            available |= MiscTweak.RANDOMIZE_PC_POTION.getValue();
-        }
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
-        if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
-            available |= MiscTweak.BALANCE_STATIC_LEVELS.getValue();
-        }
-        if (romEntry.getArrayValue("TMMovesReusableFunctionOffsets").length != 0) {
-            available |= MiscTweak.REUSABLE_TMS.getValue();
-        }
-        if (romEntry.getArrayValue("HMMovesForgettableFunctionOffsets").length != 0) {
-            available |= MiscTweak.FORGETTABLE_HMS.getValue();
-        }
-        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
-        available |= MiscTweak.NO_EV_YIELDS.getValue();
-        return available;
+        throw new RuntimeException("Old method soon-to-be removed");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.RUNNING_SHOES_INDOORS) {
-            applyRunningShoesIndoorsPatch();
-        } else if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestTextPatch();
-        } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
-            patchForNationalDex();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
-            applyRunWithoutRunningShoesPatch();
-        } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
-            int[] fossilLevelOffsets = romEntry.getArrayValue("FossilLevelOffsets");
-            for (int fossilLevelOffset : fossilLevelOffsets) {
-                writeWord(rom, fossilLevelOffset, 30);
-            }
-        } else if (tweak == MiscTweak.REUSABLE_TMS) {
-            applyReusableTMsPatch();
-        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
-            applyForgettableHMsPatch();
-        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSet().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
-        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
-            EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
-            getSpeciesSet().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
+        throw new RuntimeException("Old method soon-to-be removed");
+    }
+
+    @Override
+    public boolean hasFossilPokemonLevelSupport() {
+        return romEntry.getArrayValue("FossilLevelOffsets").length != 0;
+    }
+
+    @Override
+    public void setFossilPokemonLevel(int level) {
+        if (romEntry.getArrayValue("FossilLevelOffsets").length == 0) {
+            throw new UnsupportedOperationException("can not set Fossil Pokémon level");
+        }
+        int[] fossilLevelOffsets = romEntry.getArrayValue("FossilLevelOffsets");
+        for (int fossilLevelOffset : fossilLevelOffsets) {
+            writeWord(rom, fossilLevelOffset, 30);
         }
     }
 
-    private void applyRunningShoesIndoorsPatch() {
-        if (romEntry.getIntValue("RunIndoorsTweakOffset") != 0) {
-            writeByte(romEntry.getIntValue("RunIndoorsTweakOffset"), (byte) 0x00);
-        }
+    @Override
+    public boolean canAllowRunningIndoors() {
+        return romEntry.getIntValue("RunIndoorsTweakOffset") > 0;
     }
 
-    private void applyFastestTextPatch() {
+    @Override
+    public void allowRunningIndoors() {
+        if (romEntry.getIntValue("RunIndoorsTweakOffset") == 0) {
+            throw new UnsupportedOperationException("can not allow running indoors");
+        }
+        writeByte(romEntry.getIntValue("RunIndoorsTweakOffset"), (byte) 0x00);
+    }
+
+    @Override
+    public boolean canForceFastestText() {
+        return romEntry.getIntValue("TextSpeedValuesOffset") > 0 || romEntry.hasTweakFile("InstantTextTweak");
+    }
+
+    @Override
+    public void forceFastestText() {
         if(romEntry.hasTweakFile("InstantTextTweak")) {
             try {
                 RomFunctions.applyPatch(rom, romEntry.getTweakFile("InstantTextTweak"));
@@ -3926,32 +3911,53 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                     1, // medium = fast
                     0}; // fast = instant
             writeBytes(tsvOffset, newTextSpeedValues);
+        } else {
+            throw new UnsupportedOperationException("can not force fastest text");
         }
     }
 
-    private void applyRunWithoutRunningShoesPatch() {
+    @Override
+    public boolean canAllowRunningWithoutRunningShoes() {
         String prefix = Gen3Constants.getRunningShoesCheckPrefix(romEntry.getRomType());
         int offset = find(prefix);
-        if (offset != 0) {
-            // The prefix starts 0x12 bytes from what we want to patch because what comes
-            // between is region and revision dependent. To start running, the game checks:
-            // 1. That you're not underwater (RSE only)
-            // 2. That you're holding the B button
-            // 3. That the FLAG_SYS_B_DASH flag is set (aka, you've acquired Running Shoes)
-            // 4. That you're allowed to run in this location
-            // For #3, if the flag is unset, it jumps to a different part of the
-            // code to make you walk instead. This simply nops out this jump so the
-            // game stops caring about the FLAG_SYS_B_DASH flag entirely.
-            writeWord(offset + 0x12, 0);
-        }
+        return offset != 0;
     }
 
-    private void applyReusableTMsPatch() {
+    @Override
+    public void allowRunningWithoutRunningShoes() {
+        String prefix = Gen3Constants.getRunningShoesCheckPrefix(romEntry.getRomType());
+        int offset = find(prefix);
+        if (offset == 0) {
+            throw new UnsupportedOperationException("can not allow running without running shoes");
+        }
+        // The prefix starts 0x12 bytes from what we want to patch because what comes
+        // between is region and revision dependent. To start running, the game checks:
+        // 1. That you're not underwater (RSE only)
+        // 2. That you're holding the B button
+        // 3. That the FLAG_SYS_B_DASH flag is set (aka, you've acquired Running Shoes)
+        // 4. That you're allowed to run in this location
+        // For #3, if the flag is unset, it jumps to a different part of the
+        // code to make you walk instead. This simply nops out this jump so the
+        // game stops caring about the FLAG_SYS_B_DASH flag entirely.
+        writeWord(offset + 0x12, 0);
+    }
+
+    @Override
+    public boolean canMakeTMsReusable() {
+        return romEntry.getArrayValue("TMMovesReusableFunctionOffsets").length != 0;
+    }
+
+    @Override
+    public void makeTMsReusable() {
         // When a TM/HM has just been used, the game compares its item ID to HM01_Cut's,
         // and only removes the item if the ID is smaller.
         // To make all TMs reusable, change this from HM01_Cut => 0.
         // FRLG has multiple comparisons like this to change, so we deal with offsets instead of singular offset.
         int[] offsets = romEntry.getArrayValue("TMMovesReusableFunctionOffsets");
+        if (offsets.length == 0) {
+            throw new UnsupportedOperationException("can not make TMs reusable");
+        }
+
         byte hmCompareVal = (byte) (Gen3Constants.itemIDToInternal(ItemIDs.hm01) / 2);
         for (int offset : offsets) {
             if (rom[offset] != hmCompareVal) {
@@ -3963,12 +3969,21 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         tmsReusable = true;
     }
 
-    private void applyForgettableHMsPatch() {
+    @Override
+    public boolean canMakeHMsForgettable() {
+        return romEntry.getArrayValue("HMMovesForgettableFunctionOffsets").length != 0;
+    }
+
+    @Override
+    public void makeHMsForgettable() {
         // There are multiple locations where the game checks whether a Move is in a
         // "banned from forgetting" list. If this was always the same list we could blank out that,
         // but it is not. Instead, we force the checks themselves to misreport, to return "0" rather
         // than "1" when an HM is found.
         int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+        if (offsets.length == 0) {
+            throw new UnsupportedOperationException("can not make HMs forgettable");
+        }
         for (int offset : offsets) {
             if (rom[offset] != 1) {
                 throw new RuntimeException("Expected 0x01, was 0x"
@@ -3979,7 +3994,27 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
+    public boolean canMakeEggsHatchFast() {
+        return true;
+    }
+
+    @Override
+    public void makeEggsHatchFast() {
+        getSpeciesSet().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
+    }
+
+    @Override
+    public boolean hasCatchingTutorialSupport() {
+        return romEntry.getIntValue("CatchingTutorialOpponentMonOffset") > 0
+                || romEntry.getIntValue("CatchingTutorialPlayerMonOffset") > 0;
+    }
+
+    @Override
     public boolean setCatchingTutorial(Species opponent, Species player) {
+        if (!hasCatchingTutorialSupport()) {
+            throw new UnsupportedOperationException("can not set catching tutorial");
+        }
+
         if (romEntry.getIntValue("CatchingTutorialOpponentMonOffset") > 0) {
             // only Pokemon that can be males are allowed (not sure why, taken from uncommented older code)
             if (opponent.getGenderRatio() > 0xFD) {
@@ -4036,13 +4071,19 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
+    public boolean hasPCPotionItem() {
+        return romEntry.getIntValue("PCPotionOffset") != 0;
+    }
+
+    @Override
     public void setPCPotionItem(Item item) {
-        if (romEntry.getIntValue("PCPotionOffset") != 0) {
-            if (!item.isAllowed()) {
-                throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
-            }
-            writeWord(romEntry.getIntValue("PCPotionOffset"), Gen3Constants.itemIDToInternal(item.getId()));
+        if (romEntry.getIntValue("PCPotionOffset") == 0) {
+            throw new UnsupportedOperationException("can not set PC Potion item");
         }
+        if (!item.isAllowed()) {
+            throw new IllegalArgumentException("item not allowed for PC Potion: " + item.getName());
+        }
+        writeWord(romEntry.getIntValue("PCPotionOffset"), Gen3Constants.itemIDToInternal(item.getId()));
     }
 
     @Override

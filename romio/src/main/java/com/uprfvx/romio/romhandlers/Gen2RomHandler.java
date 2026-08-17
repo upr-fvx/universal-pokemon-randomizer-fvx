@@ -2342,6 +2342,16 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public boolean canMakeEggsHatchFast() {
+        return true;
+    }
+
+    @Override
+    public void makeEggsHatchFast() {
+        getSpeciesSet().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+    }
+
+    @Override
     public boolean hasCatchingTutorialSupport() {
         return romEntry.getArrayValue("CatchingTutorialOffsets").length != 0;
     }

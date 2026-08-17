@@ -746,12 +746,12 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     @Override
     public boolean canMakeEggsHatchFast() {
-        return true;
+        return false;
     }
 
     @Override
     public void makeEggsHatchFast() {
-        getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+        throw new UnsupportedOperationException();
     }
 
     @Override

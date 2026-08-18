@@ -3877,7 +3877,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		setStrings(textOffset, strings);
 	}
 
-	private static RomFunctions.StringSizeDeterminer ssd = new RomFunctions.StringLengthSD();
+	private static final RomFunctions.StringSizeDeterminer ssd = new RomFunctions.StringLengthSD();
 
 	@Override
 	public int getTMCount() {
@@ -4737,7 +4737,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				newTNames.set(i, newTNames.get(i).replace("&", "\\and"));
 			}
 		}
-		newTNames.add(0, oldTNames.get(0)); // the 0-entry, preserve it
+		newTNames.addFirst(oldTNames.getFirst()); // the 0-entry, preserve it
 
 		// rewrite, only compressed if they were compressed before
 		setStrings(romEntry.getIntValue("TrainerNamesTextOffset"), newTNames, lastStringsCompressed);
@@ -5164,9 +5164,8 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 	private void replaceAllStringsInEntry(int entry, Map<String, String> replacements) {
 		// This function currently only replaces move and Pokemon names, and we don't
-		// want them
-		// split across multiple lines if there is a space.
-		replacements.replaceAll((key, oldValue) -> oldValue.replace(' ', '_'));
+		// want them split across multiple lines if there is a space.
+		replacements.replaceAll((_, oldValue) -> oldValue.replace(' ', '_'));
 		int lineLength = Gen4Constants.getTextCharsPerLine(romEntry.getRomType());
 		List<String> strings = this.getStrings(entry);
 		for (int strNum = 0; strNum < strings.size(); strNum++) {
@@ -5261,76 +5260,54 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
-        available |= MiscTweak.RANDOMIZE_CATCHING_TUTORIAL.getValue();
-        if (romEntry.hasTweakFile("FastestTextTweak")) {
-            available |= MiscTweak.FASTEST_TEXT.getValue();
-        }
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        if (romEntry.hasTweakFile("NationalDexAtStartTweak")) {
-            available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
-        }
-        available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
-        available |= MiscTweak.FASTER_HP_AND_EXP_BARS.getValue();
-        if (romEntry.hasTweakFile("FastDistortionWorldTweak")) {
-            available |= MiscTweak.FAST_DISTORTION_WORLD.getValue();
-        }
-        if (romEntry.getRomType() == Gen4Constants.Type_Plat || romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-            available |= MiscTweak.UPDATE_ROTOM_FORME_TYPING.getValue();
-        }
-		if (romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0) {
-			available |= MiscTweak.REUSABLE_TMS.getValue();
-		}
-       // if (romEntry.getArrayValue("HMMovesReusableFunctionOffsets").length != 0) {
-            available |= MiscTweak.FORGETTABLE_HMS.getValue();
-        //}
-        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
-		available |= MiscTweak.NO_EV_YIELDS.getValue();
-        return available;
+		throw new RuntimeException("Old method soon-to-be removed.");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestText();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-			items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
-            patchForNationalDex();
-        } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
-            applyRunWithoutRunningShoesPatch();
-        } else if (tweak == MiscTweak.FASTER_HP_AND_EXP_BARS) {
-            patchFasterBars();
-        } else if (tweak == MiscTweak.FAST_DISTORTION_WORLD) {
-            applyFastDistortionWorld();
-        } else if (tweak == MiscTweak.UPDATE_ROTOM_FORME_TYPING) {
-            updateRotomFormeTyping();
-        } else if (tweak == MiscTweak.REUSABLE_TMS) {
-			applyReusableTMsPatch();
-		} else if (tweak == MiscTweak.FORGETTABLE_HMS) {
-            applyForgettableHMsPatch();
-        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
-        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
-			EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
-			getSpeciesSetInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
-		}
+		throw new RuntimeException("Old method soon-to-be removed.");
     }
 
-	private void applyFastestText() {
+	@Override
+	public boolean canMakeEggsHatchFast() {
+		return true;
+	}
+
+	@Override
+	public void makeEggsHatchFast() {
+		getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(0));
+	}
+
+	@Override
+	public boolean canForceFastestText() {
+		return romEntry.hasTweakFile("FastestTextTweak");
+	}
+
+	@Override
+	public void forceFastestText() {
+		if (!romEntry.hasTweakFile("FastestTextTweak")) {
+			throw new UnsupportedOperationException();
+		}
 		genericIPSPatch(arm9, "FastestTextTweak");
 	}
 
-	private void patchForNationalDex() {
+	@Override
+	public boolean canGiveNationalDexAtStart() {
+		return romEntry.hasTweakFile("NationalDexAtStartTweak");
+	}
+
+	@Override
+	public void giveNationalDexAtStart() {
+		if (!romEntry.hasTweakFile("NationalDexAtStartTweak")) {
+			throw new UnsupportedOperationException();
+		}
+
 		byte[] pokedexScript = scriptNarc.files.get(romEntry.getIntValue("NationalDexScriptOffset"));
 
 		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
-			// Our patcher breaks if the output file is larger than the input file. For
-			// HGSS, we want
-			// to expand the script by four bytes to add an instruction to enable the
-			// national dex. Thus,
-			// the IPS patch was created with us adding four 0x00 bytes to the end of the
-			// script in mind.
+			// Our patcher breaks if the output file is larger than the input file. For HGSS, we want
+			// to expand the script by four bytes to add an instruction to enable the national dex. Thus,
+			// the IPS patch was created with us adding four 0x00 bytes to the end of the script in mind.
 			byte[] expandedPokedexScript = new byte[pokedexScript.length + 4];
 			System.arraycopy(pokedexScript, 0, expandedPokedexScript, 0, pokedexScript.length);
 			pokedexScript = expandedPokedexScript;
@@ -5339,22 +5316,50 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		scriptNarc.files.set(romEntry.getIntValue("NationalDexScriptOffset"), pokedexScript);
 	}
 
-	private void applyRunWithoutRunningShoesPatch() {
+	@Override
+	public boolean canAllowRunningWithoutRunningShoes() {
 		String prefix = Gen4Constants.getRunWithoutRunningShoesPrefix(romEntry.getRomType());
 		int offset = find(arm9, prefix);
-		if (offset != 0) {
-			// The prefix starts 0xE bytes from what we want to patch because what comes
-			// between is region and revision dependent. To start running, the game checks:
-			// 1. That you're holding the B button
-			// 2. That the FLAG_SYS_B_DASH flag is set (aka, you've acquired Running Shoes)
-			// For #2, if the flag is unset, it jumps to a different part of the
-			// code to make you walk instead. This simply nops out this jump so the
-			// game stops caring about the FLAG_SYS_B_DASH flag entirely.
-			writeWord(arm9, offset + 0xE, 0);
+		return offset != 0;
+	}
+
+	@Override
+	public void allowRunningWithoutRunningShoes() {
+		String prefix = Gen4Constants.getRunWithoutRunningShoesPrefix(romEntry.getRomType());
+		int offset = find(arm9, prefix);
+		if (offset == 0) {
+			throw new UnsupportedOperationException();
+		}
+		// The prefix starts 0xE bytes from what we want to patch because what comes
+		// between is region and revision dependent. To start running, the game checks:
+		// 1. That you're holding the B button
+		// 2. That the FLAG_SYS_B_DASH flag is set (aka, you've acquired Running Shoes)
+		// For #2, if the flag is unset, it jumps to a different part of the
+		// code to make you walk instead. This simply nops out this jump so the
+		// game stops caring about the FLAG_SYS_B_DASH flag entirely.
+		writeWord(arm9, offset + 0xE, 0);
+	}
+
+	@Override
+	public boolean canMakeHPAndEXPBarsFaster() {
+		try {
+			byte[] battleOverlay = readOverlay(romEntry.getIntValue("BattleOvlNumber"));
+			int offset1 = find(battleOverlay, Gen4Constants.hpBarSpeedPrefix);
+			int offset2 = find(battleOverlay, Gen4Constants.expBarSpeedPrefix);
+			int offset3 = find(battleOverlay, Gen4Constants.bothBarsSpeedPrefix);
+			return offset1 > 0 && offset2 > 0 && offset3 > 0;
+
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 
-	private void patchFasterBars() {
+	@Override
+	public void makeHPAndEXPBarsFaster() {
+		if (!canMakeHPAndEXPBarsFaster()) {
+			throw new UnsupportedOperationException();
+		}
+
 		// To understand what this code is patching, take a look at the CalcNewBarValue
 		// and MoveBattleBar functions in this file from the Emerald decompilation:
 		// https://github.com/pret/pokeemerald/blob/master/src/battle_interface.c
@@ -5365,8 +5370,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			int offset = find(battleOverlay, Gen4Constants.hpBarSpeedPrefix);
 			if (offset > 0) {
 				offset += Gen4Constants.hpBarSpeedPrefix.length() / 2; // because it was a prefix
-				// For the HP bar, the original game passes 1 for the toAdd parameter of
-				// CalcNewBarValue.
+				// For the HP bar, the original game passes 1 for the toAdd parameter of CalcNewBarValue.
 				// We want to pass 2 instead, so we simply change the mov instruction at offset.
 				battleOverlay[offset] = 0x02;
 			}
@@ -5374,16 +5378,12 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			offset = find(battleOverlay, Gen4Constants.expBarSpeedPrefix);
 			if (offset > 0) {
 				offset += Gen4Constants.expBarSpeedPrefix.length() / 2; // because it was a prefix
-				// For the EXP bar, the original game passes expFraction for the toAdd
-				// parameter. The
-				// game calculates expFraction by doing a division, and to do *that*, it has to
-				// load
-				// receivedValue into r0 so it can call the division function with it as the
-				// first
-				// parameter. It gets the value from r6 like so:
+				// For the EXP bar, the original game passes expFraction for the toAdd parameter.
+				// The game calculates expFraction by doing a division, and to do *that*, it has to load
+				// receivedValue into r0 so it can call the division function with it as the first parameter.
+				// It gets the value from r6 like so:
 				// add r0, r6, #0
-				// Since we ultimately want toAdd (and thus expFraction) to be doubled, we can
-				// double
+				// Since we ultimately want toAdd (and thus expFraction) to be doubled, we can double
 				// receivedValue when it gets loaded into r0 by tweaking the add to be:
 				// add r0, r6, r6
 				battleOverlay[offset] = (byte) 0xB0;
@@ -5393,12 +5393,10 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			offset = find(battleOverlay, Gen4Constants.bothBarsSpeedPrefix);
 			if (offset > 0) {
 				offset += Gen4Constants.bothBarsSpeedPrefix.length() / 2; // because it was a prefix
-				// For both HP and EXP bars, a different set of logic is used when the maxValue
-				// has
-				// fewer pixels than the whole bar; this logic ignores the toAdd parameter
-				// entirely and
-				// calculates its *own* toAdd by doing maxValue << 8 / scale. If we instead do
-				// maxValue << 9, the new toAdd becomes doubled as well.
+				// For both HP and EXP bars, a different set of logic is used when the maxValue has
+				// fewer pixels than the whole bar; this logic ignores the toAdd parameter entirely and
+				// calculates its *own* toAdd by doing maxValue << 8 / scale.
+				// If we instead do maxValue << 9, the new toAdd becomes doubled as well.
 				battleOverlay[offset] = 0x40;
 			}
 
@@ -5555,7 +5553,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				Gen4Constants.typeTableTerminator, (byte) 0x00});
 	}
 
-	private void applyFastDistortionWorld() {
+	@Override
+	public boolean canMakeDistortionWorldShorter() {
+		return romEntry.hasTweakFile("FastDistortionWorldTweak");
+	}
+
+	@Override
+	public void makeDistortionWorldShorter() {
 		byte[] spearPillarPortalScript = scriptNarc.files.get(Gen4Constants.ptSpearPillarPortalScriptFile);
 		byte[] expandedSpearPillarPortalScript = new byte[spearPillarPortalScript.length + 12];
 		System.arraycopy(spearPillarPortalScript, 0, expandedSpearPillarPortalScript, 0,
@@ -5565,20 +5569,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		scriptNarc.files.set(Gen4Constants.ptSpearPillarPortalScriptFile, spearPillarPortalScript);
 	}
 
-    private void updateRotomFormeTyping() {
-        pokes[SpeciesIDs.Gen4Formes.rotomH].setSecondaryType(Type.FIRE);
-        pokes[SpeciesIDs.Gen4Formes.rotomW].setSecondaryType(Type.WATER);
-        pokes[SpeciesIDs.Gen4Formes.rotomFr].setSecondaryType(Type.ICE);
-        pokes[SpeciesIDs.Gen4Formes.rotomFa].setSecondaryType(Type.FLYING);
-        pokes[SpeciesIDs.Gen4Formes.rotomM].setSecondaryType(Type.GRASS);
-    }
+	@Override
+	public boolean canMakeTMsReusable() {
+		return romEntry.getIntValue("TMMovesReusableFunctionOffset") != 0;
+	}
 
-	private void applyReusableTMsPatch() {
+	@Override
+	public void makeTMsReusable() {
 		// don't know exactly how this works, but it does
 		// credits to Mikelan98 for finding the method/locations to change
 		int offset = romEntry.getIntValue("TMMovesReusableFunctionOffset");
 		if (offset == 0) {
-			return;
+			throw new UnsupportedOperationException();
 		}
 		if (arm9[offset] != Gen4Constants.tmsReusableByteBefore) {
 			throw new RuntimeException("Expected 0x" + Integer.toHexString(Gen4Constants.tmsReusableByteBefore)
@@ -5588,7 +5590,18 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		tmsReusable = true;
 	}
 
-    private void applyForgettableHMsPatch() {
+	@Override
+	public boolean canMakeHMsForgettable() {
+		int[] offsets = romEntry.getArrayValue("HMMovesForgettableFunctionOffsets");
+		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+			return offsets.length == 3;
+		} else {
+			return offsets.length == 2;
+		}
+	}
+
+	@Override
+    public void makeHMsForgettable() {
 		// To see whether a move is a HM, a method is called which puts 0 (false) or 1 (true) into r0.
 		// This method call is followed by a comparison; with special handling if r0==1.
 		// This special handling is what makes HMs unforgettable, so we want to disable this.

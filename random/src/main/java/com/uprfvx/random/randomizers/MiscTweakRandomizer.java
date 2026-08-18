@@ -28,6 +28,8 @@ public class MiscTweakRandomizer extends Randomizer {
 
     public void applyMiscTweaks() {
 
+        // TODO: reorder these according to misc tweak priority
+
         if (settings.getSetting(Settings.Name.TWEAK_USE_SCALED_EXPERIENCE)) {
             romHandler.makeExperienceScaled();
         }

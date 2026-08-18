@@ -11,7 +11,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] for your code contributions,
-[Every person who submitted a solved issue] for reporting Issues,
+[Every person who submitted a solved issue] @Zander251 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -38,6 +38,9 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ### Static Pokemon
 - (Gen 3) [The description of a changed feature here.]
+
+### Trainer Pokemon
+- "Add Held Items to Trainers" options can now be used without randomizing Trainer Pokémon. (Issue #250) 
 
 ### Misc. Tweaks
 - (Gen 5) made "No Free Lucky Egg" replace the free Lucky Egg with a random mulch instead of always Gooey Mulch.

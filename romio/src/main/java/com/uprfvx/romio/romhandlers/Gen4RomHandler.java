@@ -5320,7 +5320,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	public boolean canAllowRunningWithoutRunningShoes() {
 		String prefix = Gen4Constants.getRunWithoutRunningShoesPrefix(romEntry.getRomType());
 		int offset = find(arm9, prefix);
-		return offset != 0;
+		return offset > 0;
 	}
 
 	@Override
@@ -5350,7 +5350,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			return offset1 > 0 && offset2 > 0 && offset3 > 0;
 
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RomIOException(e);
 		}
 	}
 
@@ -5408,7 +5408,31 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
+	public boolean hasCatchingTutorialSupport() {
+		int opponentOffset = romEntry.getIntValue("CatchingTutorialOpponentMonOffset");
+		if (opponentOffset == 0) {
+			return false;
+		}
+		if (romEntry.hasTweakFile("NewCatchingTutorialSubroutineTweak")) {
+			String prefix = romEntry.getStringValue("CatchingTutorialMonTablePrefix");
+			int offset = find(arm9, prefix);
+			return offset > 0;
+		}
+		if (romEntry.getRomType() == Gen4Constants.Type_HGSS) {
+			int playerOffset = romEntry.getIntValue("CatchingTutorialPlayerMonOffset");
+			int levelOffset = romEntry.getIntValue("CatchingTutorialPlayerLevelOffset");
+			return playerOffset != 0 && levelOffset != 0;
+		}
+
+		return true;
+	}
+
+	@Override
 	public boolean setCatchingTutorial(Species opponent, Species player) {
+		if (!hasCatchingTutorialSupport()) {
+			throw new UnsupportedOperationException();
+		}
+
 		int opponentOffset = romEntry.getIntValue("CatchingTutorialOpponentMonOffset");
 
 		if (romEntry.hasTweakFile("NewCatchingTutorialSubroutineTweak")) {

@@ -947,7 +947,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    private void patchFormeReversion() throws IOException {
+    @Override
+    public boolean canForceRetainTemporaryFormes() {
+        try {
+            String saveLoadFormeReversionPrefix = Gen7Constants.getSaveLoadFormeReversionPrefix(romEntry.getRomType());
+            int offset1 = find(code, saveLoadFormeReversionPrefix);
+            byte[] battleCRO = readFile(romEntry.getFile("Battle"));
+            int offset2 = find(battleCRO, Gen7Constants.afterBattleFormeReversionPrefix);
+            return offset1 > 0 && offset2 > 0;
+
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public void forceRetainTemporaryFormes() {
         // Upon loading a save, all Mega Pokemon, all Primal Reversions,
         // all Greninja-A, all Zygarde-C, and all Necrozma-U in the player's
         // party are set back to their base forme. This patches .code such
@@ -985,36 +1000,40 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         // and Wishiwashi-S are forcibly returned to their base forme.
         // Minior is also forcibly set to the "correct" Core forme.
         // This patches the Battle CRO to prevent this from happening.
-        byte[] battleCRO = readFile(romEntry.getFile("Battle"));
-        offset = find(battleCRO, Gen7Constants.afterBattleFormeReversionPrefix);
-        if (offset > 0) {
-            offset += Gen7Constants.afterBattleFormeReversionPrefix.length() / 2; // because it was a prefix
+        try {
+            byte[] battleCRO = readFile(romEntry.getFile("Battle"));
+            offset = find(battleCRO, Gen7Constants.afterBattleFormeReversionPrefix);
+            if (offset > 0) {
+                offset += Gen7Constants.afterBattleFormeReversionPrefix.length() / 2; // because it was a prefix
 
-            // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Kyogre
-            battleCRO[offset] = 0x00;
-            battleCRO[offset + 1] = 0x00;
-            battleCRO[offset + 2] = 0x00;
-            battleCRO[offset + 3] = 0x00;
+                // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Kyogre
+                battleCRO[offset] = 0x00;
+                battleCRO[offset + 1] = 0x00;
+                battleCRO[offset + 2] = 0x00;
+                battleCRO[offset + 3] = 0x00;
 
-            // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Groudon
-            battleCRO[offset + 60] = 0x00;
-            battleCRO[offset + 61] = 0x00;
-            battleCRO[offset + 62] = 0x00;
-            battleCRO[offset + 63] = 0x00;
+                // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Groudon
+                battleCRO[offset + 60] = 0x00;
+                battleCRO[offset + 61] = 0x00;
+                battleCRO[offset + 62] = 0x00;
+                battleCRO[offset + 63] = 0x00;
 
-            // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Wishiwashi
-            battleCRO[offset + 92] = 0x00;
-            battleCRO[offset + 93] = 0x00;
-            battleCRO[offset + 94] = 0x00;
-            battleCRO[offset + 95] = 0x00;
+                // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Wishiwashi
+                battleCRO[offset + 92] = 0x00;
+                battleCRO[offset + 93] = 0x00;
+                battleCRO[offset + 94] = 0x00;
+                battleCRO[offset + 95] = 0x00;
 
-            // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Minior
-            battleCRO[offset + 148] = 0x00;
-            battleCRO[offset + 149] = 0x00;
-            battleCRO[offset + 150] = 0x00;
-            battleCRO[offset + 151] = 0x00;
+                // Stubs the call to pml::pokepara::CoreParam::ChangeFormNo for Minior
+                battleCRO[offset + 148] = 0x00;
+                battleCRO[offset + 149] = 0x00;
+                battleCRO[offset + 150] = 0x00;
+                battleCRO[offset + 151] = 0x00;
 
-            writeFile(romEntry.getFile("Battle"), battleCRO);
+                writeFile(romEntry.getFile("Battle"), battleCRO);
+            }
+        } catch (IOException e) {
+            throw new RomIOException(e);
         }
     }
 
@@ -2335,39 +2354,31 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = 0;
-        available |= MiscTweak.FASTEST_TEXT.getValue();
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        available |= MiscTweak.SOS_BATTLES_FOR_ALL.getValue();
-        available |= MiscTweak.RETAIN_ALT_FORMES.getValue();
-        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
-        available |= MiscTweak.NO_EV_YIELDS.getValue();
-        return available;
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestText();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.SOS_BATTLES_FOR_ALL) {
-            positiveCallRates();
-        } else if (tweak == MiscTweak.RETAIN_ALT_FORMES) {
-            try {
-                patchFormeReversion();
-            } catch (IOException e) {
-                throw new RomIOException(e);
-            }
-        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
-        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
-            EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
-            getSpeciesSetInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
-        }
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
-    private void applyFastestText() {
+    @Override
+    public boolean canMakeEggsHatchFast() {
+        return true;
+    }
+
+    @Override
+    public void makeEggsHatchFast() {
+        getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+    }
+
+    @Override
+    public boolean canForceFastestText() {
+        return true;
+    }
+
+    @Override
+    public void forceFastestText() {
         int offset = find(code, Gen7Constants.fastestTextPrefixes[0]);
         if (offset > 0) {
             offset += Gen7Constants.fastestTextPrefixes[0].length() / 2; // because it was a prefix
@@ -2383,15 +2394,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             code[offset + 1] = 0x50;
             code[offset + 2] = (byte) 0xA0;
             code[offset + 3] = (byte) 0xE3;
-        }
-    }
-
-    private void positiveCallRates() {
-        for (Species pk: pokes) {
-            if (pk == null) continue;
-            if (pk.getCallRate() <= 0) {
-                pk.setCallRate(5);
-            }
         }
     }
 

@@ -223,19 +223,19 @@ public class RandomizerGUI {
     private JCheckBox shBalanceShopItemPricesCheckBox;
     private JCheckBox shGuaranteeEvolutionItemsCheckBox;
     private JCheckBox shGuaranteeXItemsCheckBox;
-    private JCheckBox miscBWExpPatchCheckBox;
-    private JCheckBox miscNerfXAccuracyCheckBox;
-    private JCheckBox miscFixCritRateCheckBox;
-    private JCheckBox miscFastestTextCheckBox;
-    private JCheckBox miscRunningShoesIndoorsCheckBox;
+    private JCheckBox btScalingEXPCheckBox;
+    private JCheckBox btNerfXAccuracyCheckBox;
+    private JCheckBox btUpdateCritRateCheckBox;
+    private JCheckBox qoltFastestTextCheckBox;
+    private JCheckBox qoltRunIndoorsCheckBox;
     private JCheckBox miscRandomizePCPotionCheckBox;
     private JCheckBox miscAllowPikachuEvolutionCheckBox;
-    private JCheckBox miscGiveNationalDexAtCheckBox;
+    private JCheckBox qoltNationalDexCheckBox;
     private JCheckBox miscUpdateTypeEffectivenessCheckBox;
-    private JCheckBox miscLowerCasePokemonNamesCheckBox;
+    private JCheckBox qoltLowerCasePokemonNamesCheckBox;
     private JCheckBox miscRandomizeCatchingTutorialCheckBox;
-    private JCheckBox miscBanLuckyEggCheckBox;
-    private JCheckBox miscNoFreeLuckyEggCheckBox;
+    private JCheckBox btBanLuckyEggCheckBox;
+    private JCheckBox btNoFreeLuckyEggCheckBox;
     private JCheckBox miscBanBigMoneyManiacCheckBox;
     private JPanel pokemonAbilitiesPanel;
     private JPanel moveTutorPanel;
@@ -243,7 +243,7 @@ public class RandomizerGUI {
     private JPanel mtCompatPanel;
     private JLabel mtNoExistLabel;
     private JPanel shopItemsPanel;
-    private JLabel mtNoneAvailableLabel;
+    private JLabel qolNoneAvailableLabel;
     private JPanel miscTweaksPanel;
     private JLabel gameMascotLabel;
     private JPanel baseTweaksPanel;
@@ -276,7 +276,6 @@ public class RandomizerGUI {
     private JSpinner tpRegularTrainersSpinner;
     private JLabel tpAdditionalPokemonForLabel;
     private JCheckBox peAllowAltFormesCheckBox;
-    private JCheckBox miscSOSBattlesCheckBox;
     private JCheckBox tpRandomShinyTrainerPokemonCheckBox;
     private JRadioButton totpUnchangedRadioButton;
     private JRadioButton totpRandomRadioButton;
@@ -298,17 +297,13 @@ public class RandomizerGUI {
     private JComboBox<String> mdUpdateComboBox;
     private JLabel wikiLinkLabel;
     private JCheckBox paWeighDuplicatesTogetherCheckBox;
-    private JCheckBox miscBalanceStaticLevelsCheckBox;
-    private JCheckBox miscRetainAltFormesCheckBox;
     private JComboBox<String> pbsEXPCurveComboBox;
-    private JCheckBox miscRunWithoutRunningShoesCheckBox;
     private JCheckBox peRemoveTimeBasedEvolutionsCheckBox;
     private JCheckBox tmFollowEvolutionsCheckBox;
     private JCheckBox mtFollowEvolutionsCheckBox;
     private JCheckBox stpPercentageLevelModifierCheckBox;
     private SpinSlider stpPercentageLevelModifierSpinSlider;
     private JCheckBox stpFixMusicCheckBox;
-    private JCheckBox miscFasterHPAndEXPBarsCheckBox;
     private JCheckBox tpBossTrainersItemsCheckBox;
     private JCheckBox tpImportantTrainersItemsCheckBox;
     private JCheckBox tpRegularTrainersItemsCheckBox;
@@ -320,12 +315,10 @@ public class RandomizerGUI {
     private JRadioButton puUnchangedRadioButton;
     private JRadioButton puRandomRadioButton;
     private JCheckBox puBanBadItemsCheckBox;
-    private JCheckBox miscForceChallengeModeCheckBox;
     private JCheckBox pbsAssignEvoStatsRandomlyCheckBox;
     private JCheckBox lsNoIrregularAltFormesCheckBox;
     private JCheckBox noPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
-    private JCheckBox miscFastDistortionWorldCheckBox;
     private JComboBox<String> tpComboBox;
     private JCheckBox paEnsureTwoAbilitiesCheckbox;
     private JRadioButton ppalUnchangedRadioButton;
@@ -340,8 +333,6 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
-    private JCheckBox miscUpdateRotomFormeTypingCheckBox;
-    private JCheckBox miscDisableLowHPMusicCheckBox;
     private JCheckBox tpUseLocalPokemonCheckBox;
     private JRadioButton spTypeTriangleRadioButton;
     private JRadioButton spTypeNoneRadioButton;
@@ -397,6 +388,19 @@ public class RandomizerGUI {
     private JCheckBox lsBanGeneration5CheckBox;
     private JCheckBox lsBanGeneration6CheckBox;
     private JCheckBox lsBanGeneration7CheckBox;
+    private JCheckBox miscForceChallengeModeCheckBox;
+    private JCheckBox miscBalanceStaticLevelsCheckBox;
+    private JCheckBox miscRetainAltFormesCheckBox;
+    private JCheckBox miscRunWithoutRunningShoesCheckBox;
+    private JCheckBox miscFasterHPAndEXPBarsCheckBox;
+    private JCheckBox miscFastDistortionWorldCheckBox;
+    private JCheckBox miscDisableLowHPMusicCheckBox;
+    private JPanel balanceTweaksPanel;
+    private JCheckBox miscSOSBattlesCheckBox;
+    private JCheckBox miscUpdateRotomFormeTypingCheckBox;
+    private JPanel cosmeticPanel;
+    private JLabel balanceNoneAvailableLabel;
+    private JPanel generalItemsPanel;
 
 
     private static final Random RND = new Random();
@@ -903,11 +907,11 @@ public class RandomizerGUI {
 
         versionLabel.setText(String.format(bundle.getString("GUI.header.versionLabel.text"), Version.LATEST.name));
         mtNoExistLabel.setVisible(false);
-        mtNoneAvailableLabel.setVisible(false);
+        qolNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
         cpgNotExistLabel.setVisible(false);
-        baseTweaksPanel.add(liveTweaksPanel);
+        //baseTweaksPanel.add(liveTweaksPanel);
         liveTweaksPanel.setVisible(false);
         websiteLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         wikiLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
@@ -2692,14 +2696,15 @@ public class RandomizerGUI {
 
         // TODO: why do these checkboxes exist? can't they just be generated from the MiscTweak objects?
         //Well, this lets them be named variables, which helps for code readability if nothing else...
-        setInitialButtonState(miscBWExpPatchCheckBox, miscNerfXAccuracyCheckBox, miscFixCritRateCheckBox,
-				miscFastestTextCheckBox, miscRunningShoesIndoorsCheckBox, miscRandomizePCPotionCheckBox,
-				miscAllowPikachuEvolutionCheckBox, miscGiveNationalDexAtCheckBox,
-				miscLowerCasePokemonNamesCheckBox, miscRandomizeCatchingTutorialCheckBox, miscBanLuckyEggCheckBox,
-				miscNoFreeLuckyEggCheckBox, miscBanBigMoneyManiacCheckBox);
+        setInitialButtonState(btScalingEXPCheckBox, btNerfXAccuracyCheckBox, btUpdateCritRateCheckBox,
+                qoltFastestTextCheckBox, qoltRunIndoorsCheckBox, miscRandomizePCPotionCheckBox,
+				miscAllowPikachuEvolutionCheckBox, qoltNationalDexCheckBox,
+                qoltLowerCasePokemonNamesCheckBox, miscRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
+                btNoFreeLuckyEggCheckBox, miscBanBigMoneyManiacCheckBox);
 
         mtNoExistLabel.setVisible(false);
-        mtNoneAvailableLabel.setVisible(false);
+        qolNoneAvailableLabel.setVisible(false);
+        balanceNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
 
@@ -3251,7 +3256,7 @@ public class RandomizerGUI {
                 //tabbedPane1.setComponentAt(7,makeTweaksLayout(usableCheckBoxes));
                 //miscTweaksPanel.setLayout(makeTweaksLayout(usableCheckBoxes));
             } else {
-                mtNoneAvailableLabel.setVisible(true);
+                qolNoneAvailableLabel.setVisible(true);
                 liveTweaksPanel.setVisible(false);
                 miscTweaksPanel.setVisible(true);
                 //miscTweaksPanel.setLayout(noTweaksLayout);
@@ -3301,7 +3306,7 @@ public class RandomizerGUI {
     }
 
     private void setTweaksPanel(List<JCheckBox> usableCheckBoxes) {
-        mtNoneAvailableLabel.setVisible(false);
+        qolNoneAvailableLabel.setVisible(false);
         miscTweaksPanel.setVisible(false);
         baseTweaksPanel.remove(liveTweaksPanel);
         makeTweaksLayout(usableCheckBoxes);

@@ -233,7 +233,7 @@ public class RandomizerGUI {
     private JCheckBox qoltNationalDexCheckBox;
     private JCheckBox miscUpdateTypeEffectivenessCheckBox;
     private JCheckBox qoltLowerCasePokemonNamesCheckBox;
-    private JCheckBox miscRandomizeCatchingTutorialCheckBox;
+    private JCheckBox coRandomizeCatchingTutorialCheckBox;
     private JCheckBox btBanLuckyEggCheckBox;
     private JCheckBox btNoFreeLuckyEggCheckBox;
     private JCheckBox miscBanBigMoneyManiacCheckBox;
@@ -317,7 +317,7 @@ public class RandomizerGUI {
     private JCheckBox puBanBadItemsCheckBox;
     private JCheckBox pbsAssignEvoStatsRandomlyCheckBox;
     private JCheckBox lsNoIrregularAltFormesCheckBox;
-    private JCheckBox noPrematureEvosCheckbox;
+    private JCheckBox lsNoPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JComboBox<String> tpComboBox;
     private JCheckBox paEnsureTwoAbilitiesCheckbox;
@@ -370,7 +370,7 @@ public class RandomizerGUI {
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
     private JPanel specialShopsPanel;
     private JCheckBox shAddRareCandyCheckBox;
-    private JCheckBox noRandomIntroMonCheckBox;
+    private JCheckBox coRandomIntroMonCheckBox;
     private JLabel tpBetterMovesetsLabel;
     private JCheckBox tpBetterMovesetsBossTrainersCheckBox;
     private JCheckBox tpBetterMovesetsImportantTrainersCheckBox;
@@ -390,8 +390,8 @@ public class RandomizerGUI {
     private JCheckBox lsBanGeneration7CheckBox;
     private JCheckBox miscForceChallengeModeCheckBox;
     private JCheckBox miscBalanceStaticLevelsCheckBox;
-    private JCheckBox miscRetainAltFormesCheckBox;
-    private JCheckBox miscRunWithoutRunningShoesCheckBox;
+    private JCheckBox lsRetainAltFormesCheckBox;
+    private JCheckBox qoltRunWithoutRunningShoesCheckBox;
     private JCheckBox miscFasterHPAndEXPBarsCheckBox;
     private JCheckBox miscFastDistortionWorldCheckBox;
     private JCheckBox miscDisableLowHPMusicCheckBox;
@@ -399,8 +399,12 @@ public class RandomizerGUI {
     private JCheckBox miscSOSBattlesCheckBox;
     private JCheckBox miscUpdateRotomFormeTypingCheckBox;
     private JPanel cosmeticPanel;
-    private JLabel balanceNoneAvailableLabel;
+    private JLabel btNoneAvailableLabel;
     private JPanel generalItemsPanel;
+    private JCheckBox qoltReusableTMsCheckBox;
+    private JCheckBox qoltForgettableHMsCheckBox;
+    private JCheckBox qoltFastEggsCheckBox;
+    private JCheckBox btNoEVYieldsCheckBox;
 
 
     private static final Random RND = new Random();
@@ -478,7 +482,7 @@ public class RandomizerGUI {
         haveCheckedCustomNames = false;
         attemptReadConfig();
         initExplicit();
-        initTweaksPanel();
+        //initTweaksPanel();
         initFileChooserDirectories();
 
         boolean canWrite = attemptWriteConfig();
@@ -524,7 +528,7 @@ public class RandomizerGUI {
             }
             String finalLatestVersionString = latestVersionString;
             SwingUtilities.invokeLater(() -> websiteLinkLabel.setText(
-                    String.format(bundle.getString("GUI.websiteLinkLabel.text"), finalLatestVersionString)));
+                    String.format(bundle.getString("GUI.header.websiteLinkLabel.text"), finalLatestVersionString)));
         }).run();
 
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
@@ -534,7 +538,7 @@ public class RandomizerGUI {
 
 
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
-                lsNoIrregularAltFormesCheckBox, noPrematureEvosCheckbox,
+                lsNoIrregularAltFormesCheckBox, lsNoPrematureEvosCheckbox,
 
                 pbstUnchangedRadioButton, pbstRandomBuffNerfRadioButton, pbstShuffleRadioButton, pbstRandomRadioButton,
 
@@ -710,8 +714,8 @@ public class RandomizerGUI {
         List<SettingCoordinator<?, ?>> settingUICoordinators = List.of(
                 // *** GENERAL ***
                 //General Options
-                associateCheckBox(Name.NO_RANDOM_INTRO_MON, noRandomIntroMonCheckBox),
-                associateCheckBox(Name.NO_PREMATURE_EVOLUTIONS, noPrematureEvosCheckbox),
+                associateCheckBox(Name.NO_RANDOM_INTRO_MON, coRandomIntroMonCheckBox),
+                associateCheckBox(Name.NO_PREMATURE_EVOLUTIONS, lsNoPrematureEvosCheckbox),
                 associateCheckBox(Name.RACE_MODE, raceModeCheckBox),
                 associateCheckBox(Name.NO_IRREGULAR_ALT_FORMES, lsNoIrregularAltFormesCheckBox),
                 //Limit Pokemon
@@ -1828,7 +1832,7 @@ public class RandomizerGUI {
         noIrregularAltFormesCheckBox.setSelected(settings.isBanIrregularAltFormes());
         noPrematureEvosCheckbox.setSelected(settings.isBanPrematureEvos());
         raceModeCheckBox.setSelected(settings.isRaceMode());
-        noRandomIntroMonCheckBox.setSelected(!settings.isRandomizeIntroMon());
+        coRandomIntroMonCheckBox.setSelected(!settings.isRandomizeIntroMon());
 
         peChangeImpossibleEvosCheckBox.setSelected(settings.isChangeImpossibleEvolutions());
         peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForEvolutionImprovements());
@@ -2164,7 +2168,7 @@ public class RandomizerGUI {
         settings.setCurrentRestrictions(currentRestrictions);
         settings.setBanIrregularAltFormes(noIrregularAltFormesCheckBox.isSelected() && noIrregularAltFormesCheckBox.isVisible());
         settings.setBanPrematureEvos(noPrematureEvosCheckbox.isSelected());
-        settings.setRandomizeIntroMon(!noRandomIntroMonCheckBox.isSelected() && noRandomIntroMonCheckBox.isVisible());
+        settings.setRandomizeIntroMon(!coRandomIntroMonCheckBox.isSelected() && coRandomIntroMonCheckBox.isVisible());
         settings.setRaceMode(raceModeCheckBox.isSelected());
 
         settings.setChangeImpossibleEvolutions(peChangeImpossibleEvosCheckBox.isSelected() && peChangeImpossibleEvosCheckBox.isVisible());
@@ -2477,14 +2481,14 @@ public class RandomizerGUI {
 
     private void initialState() {
 
-        romNameLabel.setText(bundle.getString("GUI.noRomLoaded"));
+        romNameLabel.setText(bundle.getString("GUI.header.noRomLoaded"));
         romCodeLabel.setText("");
         romSupportLabel.setText("");
 
         gameMascotLabel.setIcon(emptyIcon);
 
         setInitialButtonState(
-                lsNoIrregularAltFormesCheckBox, noPrematureEvosCheckbox, raceModeCheckBox, noRandomIntroMonCheckBox);
+                lsNoIrregularAltFormesCheckBox, lsNoPrematureEvosCheckbox, raceModeCheckBox, coRandomIntroMonCheckBox);
 
         currentRestrictions = null;
 
@@ -2699,12 +2703,12 @@ public class RandomizerGUI {
         setInitialButtonState(btScalingEXPCheckBox, btNerfXAccuracyCheckBox, btUpdateCritRateCheckBox,
                 qoltFastestTextCheckBox, qoltRunIndoorsCheckBox, miscRandomizePCPotionCheckBox,
 				miscAllowPikachuEvolutionCheckBox, qoltNationalDexCheckBox,
-                qoltLowerCasePokemonNamesCheckBox, miscRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
+                qoltLowerCasePokemonNamesCheckBox, coRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
                 btNoFreeLuckyEggCheckBox, miscBanBigMoneyManiacCheckBox);
 
         mtNoExistLabel.setVisible(false);
         qolNoneAvailableLabel.setVisible(false);
-        balanceNoneAvailableLabel.setVisible(false);
+        btNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
 
@@ -2821,8 +2825,8 @@ public class RandomizerGUI {
             lsNoIrregularAltFormesCheckBox.setVisible(pokemonGeneration >= 4);
             lsNoIrregularAltFormesCheckBox.setEnabled(pokemonGeneration >= 4);
 
-            noRandomIntroMonCheckBox.setVisible(romHandler.canSetIntroPokemon());
-            noRandomIntroMonCheckBox.setEnabled(romHandler.canSetIntroPokemon());
+            coRandomIntroMonCheckBox.setVisible(romHandler.canSetIntroPokemon());
+            coRandomIntroMonCheckBox.setEnabled(romHandler.canSetIntroPokemon());
 
             raceModeCheckBox.setEnabled(true);
 
@@ -3376,7 +3380,7 @@ public class RandomizerGUI {
             peMakeEvolutionsEasierLvlSlider.setValue(SettingsManager.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
             // Disable "Trainers Evolve their Pokemon" as well as "No Premature Evolutions"
-            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, noPrematureEvosCheckbox);
+            disableAndDeselectButtons(tpTrainersEvolveTheirPokemonCheckbox, lsNoPrematureEvosCheckbox);
         } else {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
@@ -3399,7 +3403,7 @@ public class RandomizerGUI {
 
             // Re-enable "Trainers Evolve their Pokemon" as well as "No Premature Evolutions"
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
-            noPrematureEvosCheckbox.setEnabled(true);
+            lsNoPrematureEvosCheckbox.setEnabled(true);
         }
 
         // shuffle BST+follow evolutions does not make sense if the evos are random

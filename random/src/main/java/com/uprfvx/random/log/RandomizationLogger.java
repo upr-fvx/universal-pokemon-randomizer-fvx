@@ -264,12 +264,12 @@ public class RandomizationLogger {
     private void logOverview() {
         printSectionTitle("overview");
         // The overview lines intentionally (mostly) map to panels in the UI, thus they share their bundle strings.
-        logOverviewLine(getBS("GUI.pbsPanel.title"),
+        logOverviewLine(getBS("GUI.traitsTab.statsPanel.title"),
                 speciesBSRandomizer.isChangesMade() || speciesBSUpdater.isUpdated(), true);
-        logOverviewLine(getBS("GUI.ptPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.paPanel.title"), speciesAbilityRandomizer.isChangesMade(),
+        logOverviewLine(getBS("GUI.traitsTab.typesPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.traitsTab.abilitiesPanel.title"), speciesAbilityRandomizer.isChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
-        logOverviewLine(getBS("GUI.pePanel.title"), evoRandomizer.isChangesMade()
+        logOverviewLine(getBS("GUI.traitsTab.evolutionPanel.title"), evoRandomizer.isChangesMade()
                 || shouldLogEvolutionImprovements(), true);
         logOverviewLine(getBS("GUI.spPanel.title"), starterRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.stpPanel.title"), staticPokeRandomizer.isStaticChangesMade(),

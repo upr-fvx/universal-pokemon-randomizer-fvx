@@ -33,7 +33,6 @@ import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
@@ -46,7 +45,6 @@ import com.uprfvx.romio.romio.RomOpener;
 import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -82,15 +80,15 @@ public class RandomizerGUI {
     private JCheckBox lsAllowRelativesCheckBox;
     private JCheckBox lsBanGeneration3CheckBox;
 
-    private JRadioButton pbsUnchangedRadioButton;
-    private JRadioButton pbsShuffleRadioButton;
-    private JRadioButton pbsRandomRadioButton;
+    private JRadioButton sbsdUnchangedRadioButton;
+    private JRadioButton sbsdShuffleRadioButton;
+    private JRadioButton sbsdRandomRadioButton;
     private JRadioButton pbsLegendariesSlowRadioButton;
     private JRadioButton pbsStrongLegendariesSlowRadioButton;
     private JRadioButton pbsAllMediumFastRadioButton;
     private JCheckBox pbsStandardizeEXPCurvesCheckBox;
-    private JCheckBox pbsFollowEvolutionsCheckBox;
-    private JCheckBox pbsUpdateBaseStatsCheckBox;
+    private JCheckBox sbsdFollowEvolutionsCheckBox;
+    private JCheckBox sbsUpdateBaseStatsCheckBox;
     private JCheckBox ptIsDualTypeCheckBox;
     private JRadioButton ptUnchangedRadioButton;
     private JRadioButton ptRandomFollowEvolutionsRadioButton;
@@ -243,7 +241,7 @@ public class RandomizerGUI {
     private JPanel mtCompatPanel;
     private JLabel mtNoExistLabel;
     private JPanel shopItemsPanel;
-    private JLabel qolNoneAvailableLabel;
+    private JLabel qoltNoneAvailableLabel;
     private JPanel miscTweaksPanel;
     private JLabel gameMascotLabel;
     private JPanel baseTweaksPanel;
@@ -255,7 +253,7 @@ public class RandomizerGUI {
     private JCheckBox mtNoGameBreakingMovesCheckBox;
     private JCheckBox tpAllowAlternateFormesCheckBox;
     private JLabel versionLabel;
-    private JCheckBox pbsFollowMegaEvosCheckBox;
+    private JCheckBox sbsdFollowMegaEvosCheckBox;
     private JCheckBox paFollowMegaEvosCheckBox;
     private JCheckBox ptFollowMegaEvosCheckBox;
     private JCheckBox spAllowAltFormesCheckBox;
@@ -315,7 +313,7 @@ public class RandomizerGUI {
     private JRadioButton puUnchangedRadioButton;
     private JRadioButton puRandomRadioButton;
     private JCheckBox puBanBadItemsCheckBox;
-    private JCheckBox pbsAssignEvoStatsRandomlyCheckBox;
+    private JCheckBox sbsdAssignEvoStatsRandomlyCheckBox;
     private JCheckBox lsNoIrregularAltFormesCheckBox;
     private JCheckBox lsNoPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
@@ -375,14 +373,14 @@ public class RandomizerGUI {
     private JCheckBox tpBetterMovesetsBossTrainersCheckBox;
     private JCheckBox tpBetterMovesetsImportantTrainersCheckBox;
     private JCheckBox tpBetterMovesetsRegularTrainersCheckBox;
-    private JRadioButton pbstUnchangedRadioButton;
-    private JRadioButton pbstRandomBuffNerfRadioButton;
-    private JRadioButton pbstShuffleRadioButton;
-    private JRadioButton pbstRandomRadioButton;
-    private JCheckBox pbstFollowEvolutionsCheckBox;
-    private JCheckBox pbstSwapLegendariesCheckBox;
-    private SpinSlider pbstRandomBuffNerfSpinSlider;
-    private JSpinner pbsUpdateGenerationChoiceSpinner;
+    private JRadioButton sbstUnchangedRadioButton;
+    private JRadioButton sbstRandomBuffNerfRadioButton;
+    private JRadioButton sbstShuffleRadioButton;
+    private JRadioButton sbstRandomRadioButton;
+    private JCheckBox sbstFollowEvolutionsCheckBox;
+    private JCheckBox sbstSwapLegendariesCheckBox;
+    private SpinSlider sbstRandomBuffNerfSpinSlider;
+    private JSpinner sbsUpdateGenerationChoiceSpinner;
     private JPanel speciesBanAbilitiesPanel;
     private JCheckBox lsBanGeneration4CheckBox;
     private JCheckBox lsBanGeneration5CheckBox;
@@ -537,10 +535,10 @@ public class RandomizerGUI {
         List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
                 lsNoIrregularAltFormesCheckBox, lsNoPrematureEvosCheckbox,
 
-                pbstUnchangedRadioButton, pbstRandomBuffNerfRadioButton, pbstShuffleRadioButton, pbstRandomRadioButton,
+                sbstUnchangedRadioButton, sbstRandomBuffNerfRadioButton, sbstShuffleRadioButton, sbstRandomRadioButton,
 
-                pbsUnchangedRadioButton, pbsShuffleRadioButton, pbsRandomRadioButton, pbsFollowMegaEvosCheckBox,
-                pbsFollowEvolutionsCheckBox, pbsStandardizeEXPCurvesCheckBox, pbsUpdateBaseStatsCheckBox,
+                sbsdUnchangedRadioButton, sbsdShuffleRadioButton, sbsdRandomRadioButton, sbsdFollowMegaEvosCheckBox,
+                sbsdFollowEvolutionsCheckBox, pbsStandardizeEXPCurvesCheckBox, sbsUpdateBaseStatsCheckBox,
 
                 ptUnchangedRadioButton, ptRandomFollowEvolutionsRadioButton, ptRandomCompletelyRadioButton,
                 ptIsDualTypeCheckBox,
@@ -722,27 +720,27 @@ public class RandomizerGUI {
                 //Species BSTs
                 associateButtonSet(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         Map.of(
-                                BSTMod.UNCHANGED, pbstUnchangedRadioButton,
-                                BSTMod.RANDOM_BUFF_NERF, pbstRandomBuffNerfRadioButton,
-                                BSTMod.SHUFFLE, pbstShuffleRadioButton,
-                                BSTMod.RANDOM, pbstRandomRadioButton
+                                BSTMod.UNCHANGED, sbstUnchangedRadioButton,
+                                BSTMod.RANDOM_BUFF_NERF, sbstRandomBuffNerfRadioButton,
+                                BSTMod.SHUFFLE, sbstShuffleRadioButton,
+                                BSTMod.RANDOM, sbstRandomRadioButton
                         )),
-                associateSpinSlider(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, pbstRandomBuffNerfSpinSlider),
-                associateCheckBox(Name.SPECIES_BSTS_FOLLOW_EVOLUTION, pbstFollowEvolutionsCheckBox),
-                associateCheckBox(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, pbstSwapLegendariesCheckBox),
+                associateSpinSlider(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, sbstRandomBuffNerfSpinSlider),
+                associateCheckBox(Name.SPECIES_BSTS_FOLLOW_EVOLUTION, sbstFollowEvolutionsCheckBox),
+                associateCheckBox(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, sbstSwapLegendariesCheckBox),
                 //Species Base Stat Distributions
                 associateButtonSet(Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS,
                         Map.of(
-                                BaseStatDistributionsMod.UNCHANGED, pbsUnchangedRadioButton,
-                                BaseStatDistributionsMod.SHUFFLE, pbsShuffleRadioButton,
-                                BaseStatDistributionsMod.RANDOM, pbsRandomRadioButton
+                                BaseStatDistributionsMod.UNCHANGED, sbsdUnchangedRadioButton,
+                                BaseStatDistributionsMod.SHUFFLE, sbsdShuffleRadioButton,
+                                BaseStatDistributionsMod.RANDOM, sbsdRandomRadioButton
                         )),
-                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, pbsFollowEvolutionsCheckBox),
-                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, pbsFollowMegaEvosCheckBox),
-                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, pbsAssignEvoStatsRandomlyCheckBox),
+                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, sbsdFollowEvolutionsCheckBox),
+                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, sbsdFollowMegaEvosCheckBox),
+                associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, sbsdAssignEvoStatsRandomlyCheckBox),
                 //Update Base Stats
-                associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, pbsUpdateBaseStatsCheckBox),
-                associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, pbsUpdateGenerationChoiceSpinner),
+                associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, sbsUpdateBaseStatsCheckBox),
+                associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, sbsUpdateGenerationChoiceSpinner),
                 //Species Types
                 associateButtonSet(Name.RANDOMIZE_SPECIES_TYPES,
                         Map.of(
@@ -908,7 +906,7 @@ public class RandomizerGUI {
 
         versionLabel.setText(String.format(bundle.getString("GUI.header.versionLabel.text"), Version.LATEST.name));
         mtNoExistLabel.setVisible(false);
-        qolNoneAvailableLabel.setVisible(false);
+        qoltNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
         cpgNotExistLabel.setVisible(false);
@@ -955,7 +953,7 @@ public class RandomizerGUI {
                 1
         );
 
-        pbstRandomBuffNerfSpinSlider.setModel(new SpinnerNumberModel(
+        sbstRandomBuffNerfSpinSlider.setModel(new SpinnerNumberModel(
                 0,
                 0,
                 50,
@@ -1837,18 +1835,18 @@ public class RandomizerGUI {
         tpRandomizeTrainerClassNamesCheckBox.setSelected(settings.isRandomizeTrainerClassNames());
         ptIsDualTypeCheckBox.setSelected(settings.isDualTypeOnly());
 
-        pbstRandomBuffNerfRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.RANDOM_BUFF_NERF);
-        pbstShuffleRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.SHUFFLE);
-        pbstRandomRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.RANDOM);
-        pbstFollowEvolutionsCheckBox.setSelected(settings.isBSTFollowEvolutions());
-        pbstSwapLegendariesCheckBox.setSelected(settings.isBSTShuffleSwapLegendaries());
-        pbstRandomBuffNerfSpinSlider.setValue(settings.getBSTBuffNerfMaxPercentage());
+        sbstRandomBuffNerfRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.RANDOM_BUFF_NERF);
+        sbstShuffleRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.SHUFFLE);
+        sbstRandomRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.RANDOM);
+        sbstFollowEvolutionsCheckBox.setSelected(settings.isBSTFollowEvolutions());
+        sbstSwapLegendariesCheckBox.setSelected(settings.isBSTShuffleSwapLegendaries());
+        sbstRandomBuffNerfSpinSlider.setValue(settings.getBSTBuffNerfMaxPercentage());
 
-        pbsRandomRadioButton.setSelected(settings.getBaseStatisticsMod() == SettingsManager.BaseStatisticsMod.RANDOM);
-        pbsShuffleRadioButton.setSelected(settings.getBaseStatisticsMod() == SettingsManager.BaseStatisticsMod.SHUFFLE);
-        pbsUnchangedRadioButton.setSelected(settings.getBaseStatisticsMod() == SettingsManager.BaseStatisticsMod.UNCHANGED);
-        pbsFollowEvolutionsCheckBox.setSelected(settings.isBaseStatsFollowEvolutions());
-        pbsUpdateBaseStatsCheckBox.setSelected(settings.isUpdateBaseStats());
+        sbsdRandomRadioButton.setSelected(settings.getBaseStatisticsMod() == SettingsManager.BaseStatisticsMod.RANDOM);
+        sbsdShuffleRadioButton.setSelected(settings.getBaseStatisticsMod() == SettingsManager.BaseStatisticsMod.SHUFFLE);
+        sbsdUnchangedRadioButton.setSelected(settings.getBaseStatisticsMod() == SettingsManager.BaseStatisticsMod.UNCHANGED);
+        sbsdFollowEvolutionsCheckBox.setSelected(settings.isBaseStatsFollowEvolutions());
+        sbsUpdateBaseStatsCheckBox.setSelected(settings.isUpdateBaseStats());
         pbsUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateBaseStatsToGeneration() - (Math.max(6,romHandler.generationOfPokemon()+1))));
         pbsStandardizeEXPCurvesCheckBox.setSelected(settings.isStandardizeEXPCurves());
         pbsLegendariesSlowRadioButton.setSelected(settings.getExpCurveMod() == SettingsManager.ExpCurveMod.LEGENDARIES);
@@ -1862,8 +1860,8 @@ public class RandomizerGUI {
             }
         }
         pbsEXPCurveComboBox.setSelectedIndex(index);
-        pbsFollowMegaEvosCheckBox.setSelected(settings.isBaseStatsFollowMegaEvolutions());
-        pbsAssignEvoStatsRandomlyCheckBox.setSelected(settings.isAssignEvoStatsRandomly());
+        sbsdFollowMegaEvosCheckBox.setSelected(settings.isBaseStatsFollowMegaEvolutions());
+        sbsdAssignEvoStatsRandomlyCheckBox.setSelected(settings.isAssignEvoStatsRandomly());
 
         paUnchangedRadioButton.setSelected(settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.UNCHANGED);
         paRandomRadioButton.setSelected(settings.getAbilitiesMod() == SettingsManager.AbilitiesMod.RANDOMIZE);
@@ -2173,24 +2171,24 @@ public class RandomizerGUI {
         settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());
         settings.setRandomizeTrainerClassNames(tpRandomizeTrainerClassNamesCheckBox.isSelected());
 
-        settings.setBSTMod(pbstUnchangedRadioButton.isSelected(), pbstRandomBuffNerfRadioButton.isSelected(),
-                pbstShuffleRadioButton.isSelected(), pbstRandomRadioButton.isSelected());
-        settings.setBSTFollowEvolutions(pbstFollowEvolutionsCheckBox.isSelected());
-        settings.setBSTShuffleSwapLegendaries(pbstSwapLegendariesCheckBox.isSelected());
-        settings.setBSTBuffNerfMaxPercentage(pbstRandomBuffNerfSpinSlider.getValue());
+        settings.setBSTMod(sbstUnchangedRadioButton.isSelected(), sbstRandomBuffNerfRadioButton.isSelected(),
+                sbstShuffleRadioButton.isSelected(), sbstRandomRadioButton.isSelected());
+        settings.setBSTFollowEvolutions(sbstFollowEvolutionsCheckBox.isSelected());
+        settings.setBSTShuffleSwapLegendaries(sbstSwapLegendariesCheckBox.isSelected());
+        settings.setBSTBuffNerfMaxPercentage(sbstRandomBuffNerfSpinSlider.getValue());
 
-        settings.setBaseStatisticsMod(pbsUnchangedRadioButton.isSelected(), pbsShuffleRadioButton.isSelected(),
-                pbsRandomRadioButton.isSelected());
-        settings.setBaseStatsFollowEvolutions(pbsFollowEvolutionsCheckBox.isSelected());
-        settings.setUpdateBaseStats(pbsUpdateBaseStatsCheckBox.isSelected() && pbsUpdateBaseStatsCheckBox.isVisible());
+        settings.setBaseStatisticsMod(sbsdUnchangedRadioButton.isSelected(), sbsdShuffleRadioButton.isSelected(),
+                sbsdRandomRadioButton.isSelected());
+        settings.setBaseStatsFollowEvolutions(sbsdFollowEvolutionsCheckBox.isSelected());
+        settings.setUpdateBaseStats(sbsUpdateBaseStatsCheckBox.isSelected() && sbsUpdateBaseStatsCheckBox.isVisible());
         settings.setUpdateBaseStatsToGeneration(pbsUpdateComboBox.getSelectedIndex() + (Math.max(6,romHandler.generationOfPokemon()+1)));
         settings.setStandardizeEXPCurves(pbsStandardizeEXPCurvesCheckBox.isSelected());
         settings.setExpCurveMod(pbsLegendariesSlowRadioButton.isSelected(), pbsStrongLegendariesSlowRadioButton.isSelected(),
                 pbsAllMediumFastRadioButton.isSelected());
         ExpCurve[] expCurves = romHandler.getExpCurves();
         settings.setSelectedEXPCurve(expCurves[pbsEXPCurveComboBox.getSelectedIndex()]);
-        settings.setBaseStatsFollowMegaEvolutions(pbsFollowMegaEvosCheckBox.isSelected() && pbsFollowMegaEvosCheckBox.isVisible());
-        settings.setAssignEvoStatsRandomly(pbsAssignEvoStatsRandomlyCheckBox.isSelected() && pbsAssignEvoStatsRandomlyCheckBox.isVisible());
+        settings.setBaseStatsFollowMegaEvolutions(sbsdFollowMegaEvosCheckBox.isSelected() && sbsdFollowMegaEvosCheckBox.isVisible());
+        settings.setAssignEvoStatsRandomly(sbsdAssignEvoStatsRandomlyCheckBox.isSelected() && sbsdAssignEvoStatsRandomlyCheckBox.isVisible());
 
         settings.setAbilitiesMod(paUnchangedRadioButton.isSelected(), paRandomRadioButton.isSelected());
         settings.setAllowWonderGuard(paBanWonderGuardCheckBox.isSelected());
@@ -2493,16 +2491,16 @@ public class RandomizerGUI {
 
         // the buttons in the main part of the gui (randomization options):
 
-        setInitialButtonState(pbstUnchangedRadioButton, pbstRandomBuffNerfRadioButton, pbstShuffleRadioButton,
-                pbstRandomRadioButton, pbstFollowEvolutionsCheckBox, pbstSwapLegendariesCheckBox);
+        setInitialButtonState(sbstUnchangedRadioButton, sbstRandomBuffNerfRadioButton, sbstShuffleRadioButton,
+                sbstRandomRadioButton, sbstFollowEvolutionsCheckBox, sbstSwapLegendariesCheckBox);
         spComboBox1.setEnabled(false);
-        pbstRandomBuffNerfSpinSlider.setEnabled(false);
-        pbstRandomBuffNerfSpinSlider.setValue(0);
+        sbstRandomBuffNerfSpinSlider.setEnabled(false);
+        sbstRandomBuffNerfSpinSlider.setValue(0);
 
-        setInitialButtonState(pbsUnchangedRadioButton, pbsShuffleRadioButton, pbsRandomRadioButton,
+        setInitialButtonState(sbsdUnchangedRadioButton, sbsdShuffleRadioButton, sbsdRandomRadioButton,
 				pbsLegendariesSlowRadioButton, pbsStrongLegendariesSlowRadioButton, pbsAllMediumFastRadioButton,
-				pbsStandardizeEXPCurvesCheckBox, pbsFollowEvolutionsCheckBox, pbsUpdateBaseStatsCheckBox,
-				pbsFollowMegaEvosCheckBox, pbsAssignEvoStatsRandomlyCheckBox);
+				pbsStandardizeEXPCurvesCheckBox, sbsdFollowEvolutionsCheckBox, sbsUpdateBaseStatsCheckBox,
+                sbsdFollowMegaEvosCheckBox, sbsdAssignEvoStatsRandomlyCheckBox);
 		pbsEXPCurveComboBox.setVisible(true);
 		pbsEXPCurveComboBox.setEnabled(false);
 		pbsEXPCurveComboBox.setSelectedIndex(0);
@@ -2702,7 +2700,7 @@ public class RandomizerGUI {
                 btNoFreeLuckyEggCheckBox, miscBanBigMoneyManiacCheckBox);
 
         mtNoExistLabel.setVisible(false);
-        qolNoneAvailableLabel.setVisible(false);
+        qoltNoneAvailableLabel.setVisible(false);
         btNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
@@ -2828,25 +2826,25 @@ public class RandomizerGUI {
             // Pokemon Traits
 
             // Pokemon Base Stat Totals
-            pbstUnchangedRadioButton.setEnabled(true);
-            pbstUnchangedRadioButton.setSelected(true);
-            pbstRandomBuffNerfRadioButton.setEnabled(true);
-            pbstShuffleRadioButton.setEnabled(true);
-            pbstRandomRadioButton.setEnabled(true);
+            sbstUnchangedRadioButton.setEnabled(true);
+            sbstUnchangedRadioButton.setSelected(true);
+            sbstRandomBuffNerfRadioButton.setEnabled(true);
+            sbstShuffleRadioButton.setEnabled(true);
+            sbstRandomRadioButton.setEnabled(true);
 
-            pbstFollowEvolutionsCheckBox.setEnabled(false);
-            pbstSwapLegendariesCheckBox.setEnabled(false);
+            sbstFollowEvolutionsCheckBox.setEnabled(false);
+            sbstSwapLegendariesCheckBox.setEnabled(false);
 
             // Pokemon Base Statistics
-            pbsUnchangedRadioButton.setEnabled(true);
-            pbsUnchangedRadioButton.setSelected(true);
-            pbsShuffleRadioButton.setEnabled(true);
-            pbsRandomRadioButton.setEnabled(true);
+            sbsdUnchangedRadioButton.setEnabled(true);
+            sbsdUnchangedRadioButton.setSelected(true);
+            sbsdShuffleRadioButton.setEnabled(true);
+            sbsdRandomRadioButton.setEnabled(true);
 
             pbsStandardizeEXPCurvesCheckBox.setEnabled(true);
             pbsLegendariesSlowRadioButton.setSelected(true);
-            pbsUpdateBaseStatsCheckBox.setEnabled(pokemonGeneration < GlobalConstants.HIGHEST_POKEMON_GEN);
-            pbsFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
+            sbsUpdateBaseStatsCheckBox.setEnabled(pokemonGeneration < GlobalConstants.HIGHEST_POKEMON_GEN);
+            sbsdFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
             ExpCurve[] expCurves = romHandler.getExpCurves();
             String[] expCurveNames = new String[expCurves.length];
             for (int i = 0; i < expCurves.length; i++) {
@@ -3291,8 +3289,8 @@ public class RandomizerGUI {
 
         if (peRandomEveryLevelRadioButton.isSelected()) {
             // If Evolve Every Level is enabled, unselect all "Follow Evolutions" controls
-            pbstFollowEvolutionsCheckBox.setSelected(false);
-            pbsFollowEvolutionsCheckBox.setSelected(false);
+            sbstFollowEvolutionsCheckBox.setSelected(false);
+            sbsdFollowEvolutionsCheckBox.setSelected(false);
             ptRandomFollowEvolutionsRadioButton.setEnabled(false);
             if (ptRandomFollowEvolutionsRadioButton.isSelected()) {
                 ptRandomFollowEvolutionsRadioButton.setSelected(false);
@@ -3314,7 +3312,7 @@ public class RandomizerGUI {
 
             // If the Follow Mega Evolution controls should be disabled, deselect them here too
             if (!followMegaEvolutionControlsEnabled) {
-                pbsFollowMegaEvosCheckBox.setSelected(false);
+                sbsdFollowMegaEvosCheckBox.setSelected(false);
                 ptFollowMegaEvosCheckBox.setSelected(false);
                 paFollowMegaEvosCheckBox.setSelected(false);
             }
@@ -3354,41 +3352,41 @@ public class RandomizerGUI {
         }
 
         // shuffle BST+follow evolutions does not make sense if the evos are random
-        if ((pbstRandomBuffNerfRadioButton.isSelected()
-                || (pbstShuffleRadioButton.isSelected() && !peRandomRadioButton.isSelected()))
+        if ((sbstRandomBuffNerfRadioButton.isSelected()
+                || (sbstShuffleRadioButton.isSelected() && !peRandomRadioButton.isSelected()))
                 && !peRandomEveryLevelRadioButton.isSelected()) {
-            enableButtons(pbstFollowEvolutionsCheckBox);
+            enableButtons(sbstFollowEvolutionsCheckBox);
         } else {
-            disableAndDeselectButtons(pbstFollowEvolutionsCheckBox);
+            disableAndDeselectButtons(sbstFollowEvolutionsCheckBox);
         }
 
-        if (pbstRandomBuffNerfRadioButton.isSelected()) {
-            pbstRandomBuffNerfSpinSlider.setEnabled(true);
+        if (sbstRandomBuffNerfRadioButton.isSelected()) {
+            sbstRandomBuffNerfSpinSlider.setEnabled(true);
         } else {
-            pbstRandomBuffNerfSpinSlider.setEnabled(false);
-            pbstRandomBuffNerfSpinSlider.setValue(0);
+            sbstRandomBuffNerfSpinSlider.setEnabled(false);
+            sbstRandomBuffNerfSpinSlider.setValue(0);
         }
 
-        if (pbstShuffleRadioButton.isSelected()) {
-            enableButtons(pbstSwapLegendariesCheckBox);
+        if (sbstShuffleRadioButton.isSelected()) {
+            enableButtons(sbstSwapLegendariesCheckBox);
         } else {
-            disableAndDeselectButtons(pbstSwapLegendariesCheckBox);
+            disableAndDeselectButtons(sbstSwapLegendariesCheckBox);
         }
 
-        if (pbsUnchangedRadioButton.isSelected()) {
-            disableAndDeselectButtons(pbsFollowEvolutionsCheckBox, pbsFollowMegaEvosCheckBox);
+        if (sbsdUnchangedRadioButton.isSelected()) {
+            disableAndDeselectButtons(sbsdFollowEvolutionsCheckBox, sbsdFollowMegaEvosCheckBox);
         } else {
-            enableButtons(pbsFollowEvolutionsCheckBox, pbsFollowMegaEvosCheckBox);
+            enableButtons(sbsdFollowEvolutionsCheckBox, sbsdFollowMegaEvosCheckBox);
         }
 
-        if (pbsRandomRadioButton.isSelected()) {
-            if (pbsFollowEvolutionsCheckBox.isSelected() || pbsFollowMegaEvosCheckBox.isSelected()) {
-                enableButtons(pbsAssignEvoStatsRandomlyCheckBox);
+        if (sbsdRandomRadioButton.isSelected()) {
+            if (sbsdFollowEvolutionsCheckBox.isSelected() || sbsdFollowMegaEvosCheckBox.isSelected()) {
+                enableButtons(sbsdAssignEvoStatsRandomlyCheckBox);
             } else {
-                disableAndDeselectButtons(pbsAssignEvoStatsRandomlyCheckBox);
+                disableAndDeselectButtons(sbsdAssignEvoStatsRandomlyCheckBox);
             }
         } else {
-            disableAndDeselectButtons(pbsAssignEvoStatsRandomlyCheckBox);
+            disableAndDeselectButtons(sbsdAssignEvoStatsRandomlyCheckBox);
         }
 
         if (pbsStandardizeEXPCurvesCheckBox.isSelected()) {
@@ -3405,7 +3403,7 @@ public class RandomizerGUI {
         }
 
         /* Commenting this so it can compile again
-        if (pbsUpdateBaseStatsCheckBox.isSelected()) {
+        if (sbsUpdateBaseStatsCheckBox.isSelected()) {
             pbsUpdateComboBox.setEnabled(true);
         } else {
             pbsUpdateComboBox.setEnabled(false);
@@ -3442,7 +3440,7 @@ public class RandomizerGUI {
                     peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
         }
 
-        if (peRandomRadioButton.isSelected() || !pbstUnchangedRadioButton.isSelected()) {
+        if (peRandomRadioButton.isSelected() || !sbstUnchangedRadioButton.isSelected()) {
             enableButtons(peAdjustLevelsCheckBox);
         } else {
             disableAndDeselectButtons(peAdjustLevelsCheckBox);

@@ -630,7 +630,7 @@ public class Settings {
             new SimpleSettingDefinition.Builder<>(
                     Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
                     Category.SPECIES_EXP_CURVES,
-                    ExpCurveExtentMod.LEGENDARIES)
+                    ExpCurveExtentMod.ALL)
                     .prerequisite(Name.STANDARDIZE_SPECIES_EXP_CURVES, isTrue)
                     .build()
     );

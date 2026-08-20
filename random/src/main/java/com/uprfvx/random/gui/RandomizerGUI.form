@@ -78,15 +78,9 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.banGenerationXCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <hspacer id="1d960">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                          </hspacer>
                           <vspacer id="49759">
                             <constraints>
-                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </vspacer>
@@ -110,6 +104,28 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.banGenerationXCheckBox.toolTipText"/>
                             </properties>
                           </component>
+                          <component id="94ba8" class="javax.swing.JCheckBox" binding="lsAllowRelativesCheckBox">
+                            <constraints>
+                              <grid row="4" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag top="0" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.allowRelativesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.allowRelativesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <hspacer id="ef09e">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <hspacer id="2477a">
+                            <constraints>
+                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
                           <component id="99edb" class="javax.swing.JCheckBox" binding="lsBanGeneration4CheckBox">
                             <constraints>
                               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -122,7 +138,7 @@
                           </component>
                           <component id="78143" class="javax.swing.JCheckBox" binding="lsBanGeneration5CheckBox">
                             <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -133,7 +149,7 @@
                           </component>
                           <component id="1c36b" class="javax.swing.JCheckBox" binding="lsBanGeneration6CheckBox">
                             <constraints>
-                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -143,22 +159,12 @@
                           </component>
                           <component id="8646d" class="javax.swing.JCheckBox" binding="lsBanGeneration7CheckBox">
                             <constraints>
-                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.banGeneration7CheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.banGenerationXCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="94ba8" class="javax.swing.JCheckBox" binding="lsAllowRelativesCheckBox">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag top="0" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.allowRelativesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.limitPanel.allowRelativesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -236,7 +242,7 @@
                   </vspacer>
                   <grid id="bac4f" binding="miscTweaksPanel" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.1"/>
                     </constraints>
                     <properties/>
@@ -393,7 +399,7 @@
                   </grid>
                   <grid id="4dc88" binding="balanceTweaksPanel" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="2" column="3" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -502,7 +508,7 @@
                   </vspacer>
                   <grid id="e12f9" binding="cosmeticPanel" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -510,7 +516,7 @@
                     <children>
                       <component id="cb8f5" class="javax.swing.JCheckBox" binding="coRandomIntroMonCheckBox">
                         <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -521,19 +527,19 @@
                       </component>
                       <hspacer id="4414b">
                         <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.2" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <vspacer id="80831">
                         <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.1"/>
                         </constraints>
                       </vspacer>
                       <component id="3cdec" class="javax.swing.JCheckBox" binding="coRandomizeCatchingTutorialCheckBox">
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -542,6 +548,18 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.cosmeticPanel.randomizeCatchingTutorialCheckBox.toolTipText"/>
                         </properties>
                       </component>
+                      <vspacer id="67c8d">
+                        <constraints>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <hspacer id="64bb6">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
                     </children>
                   </grid>
                 </children>

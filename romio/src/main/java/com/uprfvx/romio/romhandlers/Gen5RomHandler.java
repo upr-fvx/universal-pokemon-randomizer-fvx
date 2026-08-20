@@ -2181,26 +2181,12 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = 0;
-        available |= MiscTweak.BAN_BIG_MANIAC_ITEMS.getValue();
-        return available;
+        throw new RuntimeException("Old method soon-to-be-removed.");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        // TODO: the dastardly big money maniac items
-        if (tweak == MiscTweak.BAN_BIG_MANIAC_ITEMS) {
-            for (int i = 0; i < 4; i++) {
-                // BalmMushroom, Big Nugget, Pearl String, Comet Shard
-                items.get(ItemIDs.balmMushroom + i).setAllowed(false);
-                // Relics
-                items.get(ItemIDs.relicVase + i).setAllowed(false);
-            }
-            for (int i = 0; i < 7; i++) {
-                // Rare berries
-                items.get(ItemIDs.lansatBerry + i).setAllowed(false);
-            }
-        }
+        throw new RuntimeException("Old method soon-to-be-removed.");
     }
 
     @Override
@@ -3270,6 +3256,11 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     public Set<Item> getOPShopItems() {
         return itemIdsToSet(Gen5Constants.opShopItems);
+    }
+
+    @Override
+    public Set<Item> getBigMoneyManiacItems() {
+        return itemIdsToSet(Gen5Constants.bigMoneyManiacItems);
     }
 
     @Override

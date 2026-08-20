@@ -766,6 +766,7 @@ public class Gen5Constants {
     private static final Set<Integer> badItemsBW2 = setupBadItemsBW2();
     private static final Set<Integer> badItemsBW1 = setupBadItemsBW1();
     public static final Set<Integer> opShopItems = setupOPShopItems();
+    public static final Set<Integer> bigMoneyManiacItems = setupBigMoneyManiacItems();
 
     private static Set<Integer> setupBannedItems() {
         Set<Integer> set = new HashSet<>(Arrays.asList(ItemIDs.libertyPass, ItemIDs.propCase, ItemIDs.dragonSkull,
@@ -817,6 +818,14 @@ public class Gen5Constants {
         set.add(ItemIDs.luckyEgg);
         set.add(ItemIDs.prettyFeather);
         addBetween(set, ItemIDs.balmMushroom, ItemIDs.casteliacone);
+        return Collections.unmodifiableSet(set);
+    }
+
+    private static Set<Integer> setupBigMoneyManiacItems() {
+        Set<Integer> set = new HashSet<>();
+        addBetween(set, ItemIDs.balmMushroom, ItemIDs.cometShard);
+        addBetween(set, ItemIDs.relicVase, ItemIDs.relicCrown);
+        addBetween(set, ItemIDs.lansatBerry, ItemIDs.rowapBerry);
         return Collections.unmodifiableSet(set);
     }
 

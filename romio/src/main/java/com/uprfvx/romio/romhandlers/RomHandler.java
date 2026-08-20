@@ -577,6 +577,11 @@ public interface RomHandler {
 
     Set<Item> getOPShopItems();
 
+    /**
+     * Returns an unmodifiable {@link Set} of {@link Item}s that can be sold to an item maniac for >10,000¥.
+     */
+    Set<Item> getBigMoneyManiacItems();
+
     // ===========
     // Field Items
     // ===========

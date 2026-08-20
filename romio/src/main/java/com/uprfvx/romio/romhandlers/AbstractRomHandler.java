@@ -1149,6 +1149,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
+    public Set<Item> getBigMoneyManiacItems() {
+        return Collections.emptySet();
+    }
+
+    @Override
     public Set<Item> getMegaStones() {
         return Collections.emptySet();
     }

@@ -69,13 +69,15 @@ public class MiscTweakRandomizer extends Randomizer {
         if (settings.getSetting(Settings.Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL)) {
             randomizeCatchingTutorial();
         }
+        if (settings.getSetting(Settings.Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS)) {
+            banBigMoneyManiacItems();
+        }
         if (settings.getSetting(Settings.Name.TWEAK_BAN_LUCKY_EGG)) {
             banLuckyEgg();
         }
         if (settings.getSetting(Settings.Name.TWEAK_NO_FREE_LUCKY_EGG)) {
             replaceFreeLuckyEgg();
         }
-        // TODO BAN_BIG_MONEY_ITEMS
         if (settings.getSetting(Settings.Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES)) {
             makeAllSpeciesCallAllies();
         }
@@ -130,6 +132,10 @@ public class MiscTweakRandomizer extends Randomizer {
 
     private void makeSpeciesNamesCapitalCase() {
         romHandler.getSpeciesSetInclFormes().forEach(pk -> pk.setName(RomFunctions.capitalCase(pk.getName())));
+    }
+
+    private void banBigMoneyManiacItems() {
+        romHandler.getBigMoneyManiacItems().forEach(item -> item.setAllowed(false));
     }
 
     private void banLuckyEgg() {

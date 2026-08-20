@@ -877,7 +877,27 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    private void patchFormeReversion() throws IOException {
+    @Override
+    public boolean canForceRetainTemporaryFormes() {
+        try {
+            String saveLoadFormeReversionPrefix = Gen6Constants.getSaveLoadFormeReversionPrefix(romEntry.getRomType());
+            int offset1 = find(code, saveLoadFormeReversionPrefix);
+
+            byte[] battleCRO = readFile(romEntry.getFile("Battle"));
+            int offset2 = find(battleCRO, Gen6Constants.afterBattleFormeReversionPrefix);
+
+            return offset1 > 0 && offset2 > 0;
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public void forceRetainTemporaryFormes() {
+        if (!canForceRetainTemporaryFormes()) {
+            throw new UnsupportedOperationException();
+        }
+
         // Upon loading a save, all Mega Pokemon and all Primal Reversions
         // in the player's party are set back to their base forme. This
         // patches .code such that this reversion does not happen.
@@ -902,20 +922,24 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         // In ORAS, the game also has hardcoded checks to revert Primal Groudon and Primal Kyogre
         // immediately after catching them.
         if (romEntry.getRomType() == Gen6Constants.Type_ORAS) {
-            byte[] battleCRO = readFile(romEntry.getFile("Battle"));
-            offset = find(battleCRO, Gen6Constants.afterBattleFormeReversionPrefix);
-            if (offset > 0) {
-                offset += Gen6Constants.afterBattleFormeReversionPrefix.length() / 2; // because it was a prefix
+            try {
+                byte[] battleCRO = readFile(romEntry.getFile("Battle"));
+                offset = find(battleCRO, Gen6Constants.afterBattleFormeReversionPrefix);
+                if (offset > 0) {
+                    offset += Gen6Constants.afterBattleFormeReversionPrefix.length() / 2; // because it was a prefix
 
-                // The game checks for Primal Kyogre and Primal Groudon by pc-relative loading 0x17E,
-                // which is Kyogre's species ID. The call to pml::pokepara::CoreParam::ChangeFormNo
-                // is used by other species which we probably don't want to break, so instead of
-                // stubbing the call to the function, just break the hardcoded species ID check by
-                // making the game pc-relative load a total nonsense ID.
-                battleCRO[offset] = (byte) 0xFF;
-                battleCRO[offset + 1] = (byte) 0xFF;
+                    // The game checks for Primal Kyogre and Primal Groudon by pc-relative loading 0x17E,
+                    // which is Kyogre's species ID. The call to pml::pokepara::CoreParam::ChangeFormNo
+                    // is used by other species which we probably don't want to break, so instead of
+                    // stubbing the call to the function, just break the hardcoded species ID check by
+                    // making the game pc-relative load a total nonsense ID.
+                    battleCRO[offset] = (byte) 0xFF;
+                    battleCRO[offset + 1] = (byte) 0xFF;
 
-                writeFile(romEntry.getFile("Battle"), battleCRO);
+                    writeFile(romEntry.getFile("Battle"), battleCRO);
+                }
+            } catch (IOException e) {
+                throw new RomIOException(e);
             }
         }
     }
@@ -2018,13 +2042,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                         case DOUBLE_BATTLE:
                             if (trainer[offset + 2] != 1) {
                                 trainer[offset + 2] = 1;
-                                trainer[offset + 12] |= (byte)0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                                trainer[offset + 12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                             }
                             break;
                         case TRIPLE_BATTLE:
                             if (trainer[offset + 2] != 2) {
                                 trainer[offset + 2] = 2;
-                                trainer[offset + 12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                                trainer[offset + 12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                             }
                             break;
                         case ROTATION_BATTLE:
@@ -2598,44 +2622,40 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
     @Override
     public int miscTweaksAvailable() {
-        int available = 0;
-        available |= MiscTweak.FASTEST_TEXT.getValue();
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        available |= MiscTweak.RETAIN_ALT_FORMES.getValue();
-        available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
-        if (romEntry.getRomType() != Gen6Constants.Type_ORAS) {
-            // because the wynaut+togepi eggs in ORAS are allegedly hardcoded to take long to hatch
-            // until we can change those too with the tweak, it shouldn't be falsely advertising itself for ORAS
-            // TODO
-            available |= MiscTweak.FAST_EGG_HATCHING.getValue();
-        }
-        available |= MiscTweak.NO_EV_YIELDS.getValue();
-        return available;
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestText();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.RETAIN_ALT_FORMES) {
-            try {
-                patchFormeReversion();
-            } catch (IOException e) {
-                throw new RomIOException(e);
-            }
-        } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
-            patchForNationalDex();
-        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
-        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
-            EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
-            getSpeciesSetInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
-        }
+        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
-    private void applyFastestText() {
+    @Override
+    public boolean canMakeEggsHatchFast() {
+        // because the wynaut+togepi eggs in ORAS are allegedly hardcoded to take long to hatch
+        // until we can change those too with the tweak, it shouldn't be falsely advertising itself for ORAS
+        // TODO
+        return romEntry.getRomType() != Gen6Constants.Type_ORAS;
+    }
+
+    @Override
+    public void makeEggsHatchFast() {
+        getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+    }
+
+    @Override
+    public boolean canForceFastestText() {
+        int offset1 = find(code, Gen6Constants.fastestTextPrefixes[0]);
+        int offset2 = find(code, Gen6Constants.fastestTextPrefixes[1]);
+        return offset1 > 0 && offset2 > 0;
+    }
+
+    @Override
+    public void forceFastestText() {
+        if (!canForceFastestText()) {
+            throw new UnsupportedOperationException();
+        }
+
         int offset = find(code, Gen6Constants.fastestTextPrefixes[0]);
         if (offset > 0) {
             offset += Gen6Constants.fastestTextPrefixes[0].length() / 2; // because it was a prefix
@@ -2654,7 +2674,21 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         }
     }
 
-    private void patchForNationalDex() {
+    @Override
+    public boolean canGiveNationalDexAtStart() {
+        int offset1 = find(code, Gen6Constants.nationalDexFunctionLocator);
+        int offset2 = romEntry.getRomType() == Gen6Constants.Type_XY ?
+                find(code, Gen6Constants.xyGetDexFlagFunctionLocator) :
+                find(code, Gen6Constants.orasGetHoennDexCaughtFunctionPrefix);
+        return offset1 > 0 && offset2 > 0;
+    }
+
+    @Override
+    public void giveNationalDexAtStart() {
+        if (!canGiveNationalDexAtStart()) {
+            throw new UnsupportedOperationException();
+        }
+
         int offset = find(code, Gen6Constants.nationalDexFunctionLocator);
         if (offset > 0) {
             // In Savedata::ZukanData::GetZenkokuZukanFlag, we load a flag into r0 and

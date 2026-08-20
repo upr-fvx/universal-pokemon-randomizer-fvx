@@ -4,9 +4,6 @@
 // -- voliol 2026-03-04
 import de.undercouch.gradle.tasks.download.Download
 import java.io.ByteArrayOutputStream
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
 
 plugins {
     id("io.github.file5.guidesigner") version "1.0.2"
@@ -40,6 +37,10 @@ tasks.jar {
     ) {
         exclude("META-INF/LICENSE")
     }
+
+    // Makes the jar task run also when only RandomizerGUI.form has changed
+    val formPath = "src/main/java/com/uprfvx/random/gui/RandomizerGUI.form"
+    inputs.file(formPath)
 }
 
 tasks.register<Delete>("clearReleaseDir") {

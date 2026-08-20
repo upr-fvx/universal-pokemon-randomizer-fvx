@@ -28,7 +28,14 @@ public class MiscTweakRandomizer extends Randomizer {
 
     public void applyMiscTweaks() {
 
-        // TODO: reorder these according to misc tweak priority
+        // Banning items has to happen before any other settings that may place items
+        if (settings.getSetting(Settings.Name.TWEAK_BAN_LUCKY_EGG)) {
+            banLuckyEgg();
+        }
+        if (settings.getSetting(Settings.Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS)) {
+            banBigMoneyManiacItems();
+        }
+
 
         if (settings.getSetting(Settings.Name.TWEAK_USE_SCALED_EXPERIENCE)) {
             romHandler.makeExperienceScaled();
@@ -68,12 +75,6 @@ public class MiscTweakRandomizer extends Randomizer {
         }
         if (settings.getSetting(Settings.Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL)) {
             randomizeCatchingTutorial();
-        }
-        if (settings.getSetting(Settings.Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS)) {
-            banBigMoneyManiacItems();
-        }
-        if (settings.getSetting(Settings.Name.TWEAK_BAN_LUCKY_EGG)) {
-            banLuckyEgg();
         }
         if (settings.getSetting(Settings.Name.TWEAK_NO_FREE_LUCKY_EGG)) {
             replaceFreeLuckyEgg();

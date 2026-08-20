@@ -429,9 +429,6 @@ public class RandomizerGUI {
     private String saveDirectory = RootPath.path;
     private final Map<String, String> lastUsedCPGConfigs = new TreeMap<>();
 
-    private List<JCheckBox> tweakCheckBoxes;
-    private JPanel liveTweaksPanel = new JPanel();
-
     private final RomOpener romOpener = new RomOpener();
 
     private final JFileChooser romOpenChooser = new JFileChooser();
@@ -915,8 +912,6 @@ public class RandomizerGUI {
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
         cpgNotExistLabel.setVisible(false);
-        //baseTweaksPanel.add(liveTweaksPanel);
-        liveTweaksPanel.setVisible(false);
         websiteLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         wikiLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
 
@@ -2711,9 +2706,6 @@ public class RandomizerGUI {
         btNoneAvailableLabel.setVisible(false);
         ppalNotExistLabel.setVisible(false);
         ppalPartiallyImplementedLabel.setVisible(false);
-
-        liveTweaksPanel.setVisible(false);
-        miscTweaksPanel.setVisible(true);
     }
 
     /**
@@ -3236,36 +3228,6 @@ public class RandomizerGUI {
 
             tabbedPane1.setEnabledAt(8, ppalSupport || cpgSupport);
 
-            // Misc. Tweaks
-            int mtsAvailable = romHandler.miscTweaksAvailable();
-            int mtCount = MiscTweak.allTweaks.size();
-            List<JCheckBox> usableCheckBoxes = new ArrayList<>();
-
-            for (int mti = 0; mti < mtCount; mti++) {
-                MiscTweak mt = MiscTweak.allTweaks.get(mti);
-                JCheckBox mtCB = tweakCheckBoxes.get(mti);
-                mtCB.setSelected(false);
-                if ((mtsAvailable & mt.getValue()) != 0) {
-                    mtCB.setVisible(true);
-                    mtCB.setEnabled(true);
-                    usableCheckBoxes.add(mtCB);
-                } else {
-                    mtCB.setVisible(false);
-                    mtCB.setEnabled(false);
-                }
-            }
-
-            if (!usableCheckBoxes.isEmpty()) {
-                setTweaksPanel(usableCheckBoxes);
-                //tabbedPane1.setComponentAt(7,makeTweaksLayout(usableCheckBoxes));
-                //miscTweaksPanel.setLayout(makeTweaksLayout(usableCheckBoxes));
-            } else {
-                qolNoneAvailableLabel.setVisible(true);
-                liveTweaksPanel.setVisible(false);
-                miscTweaksPanel.setVisible(true);
-                //miscTweaksPanel.setLayout(noTweaksLayout);
-            }
-
             if (romHandler.generationOfPokemon() < 6) {
                 applyGameUpdateMenuItem.setVisible(false);
             } else {
@@ -3307,21 +3269,6 @@ public class RandomizerGUI {
         } else {
             romNameLabel.setText(romHandler.getROMName());
         }
-    }
-
-    private void setTweaksPanel(List<JCheckBox> usableCheckBoxes) {
-        qolNoneAvailableLabel.setVisible(false);
-        miscTweaksPanel.setVisible(false);
-        baseTweaksPanel.remove(liveTweaksPanel);
-        makeTweaksLayout(usableCheckBoxes);
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 0.1;
-        c.weighty = 0.1;
-        c.gridx = 1;
-        c.gridy = 1;
-        baseTweaksPanel.add(liveTweaksPanel,c);
-        liveTweaksPanel.setVisible(true);
     }
 
     private void enableOrDisableSubControls() {
@@ -3954,59 +3901,6 @@ public class RandomizerGUI {
         cpgSelection.setEnabled(cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible()
                 && cpgCustomRadioButton.isEnabled());
         //*/
-    }
-
-    private void initTweaksPanel() {
-        tweakCheckBoxes = new ArrayList<>();
-        int numTweaks = MiscTweak.allTweaks.size();
-        for (int i = 0; i < numTweaks; i++) {
-            MiscTweak ct = MiscTweak.allTweaks.get(i);
-            JCheckBox tweakBox = new JCheckBox();
-            tweakBox.setText(MiscTweakStrings.getName(ct, bundle));
-            tweakBox.setToolTipText(MiscTweakStrings.getToolTipText(ct, bundle));
-            tweakCheckBoxes.add(tweakBox);
-        }
-    }
-
-    private void makeTweaksLayout(List<JCheckBox> tweaks) {
-        liveTweaksPanel = new JPanel(new GridBagLayout());
-        TitledBorder border = BorderFactory.createTitledBorder("Misc. Tweaks");
-        border.setTitleFont(border.getTitleFont().deriveFont(Font.BOLD));
-        liveTweaksPanel.setBorder(border);
-
-        int numTweaks = tweaks.size();
-        Iterator<JCheckBox> tweaksIterator = tweaks.iterator();
-
-        GridBagConstraints c = new GridBagConstraints();
-        c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets(5,5,0,5);
-
-        int TWEAK_COLS = 4;
-        int numCols = Math.min(TWEAK_COLS, numTweaks);
-
-        for (int row = 0; row <= numTweaks / numCols; row++) {
-            for (int col = 0; col < numCols; col++) {
-                if (!tweaksIterator.hasNext()) break;
-                c.gridx = col;
-                c.gridy = row;
-                liveTweaksPanel.add(tweaksIterator.next(),c);
-            }
-        }
-
-        // Pack the checkboxes together
-
-        GridBagConstraints horizontalC = new GridBagConstraints();
-        horizontalC.gridx = numCols;
-        horizontalC.gridy = 0;
-        horizontalC.weightx = 0.1;
-
-        GridBagConstraints verticalC = new GridBagConstraints();
-        verticalC.gridx = 0;
-        verticalC.gridy = (numTweaks / numCols) + 1;
-        verticalC.weighty = 0.1;
-
-        liveTweaksPanel.add(new JSeparator(SwingConstants.HORIZONTAL),horizontalC);
-        liveTweaksPanel.add(new JSeparator(SwingConstants.VERTICAL),verticalC);
     }
 
     private void populateDropdowns() {

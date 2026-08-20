@@ -2182,40 +2182,14 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     @Override
     public int miscTweaksAvailable() {
         int available = 0;
-        if (romEntry.hasTweakFile("FastestTextTweak")) {
-            available |= MiscTweak.FASTEST_TEXT.getValue();
-        }
-        available |= MiscTweak.BAN_LUCKY_EGG.getValue();
-        available |= MiscTweak.NO_FREE_LUCKY_EGG.getValue();
         available |= MiscTweak.BAN_BIG_MANIAC_ITEMS.getValue();
-        if (romEntry.getRomType() == Gen5Constants.Type_BW) {
-            available |= MiscTweak.BALANCE_STATIC_LEVELS.getValue();
-        }
-        if (romEntry.hasTweakFile("NationalDexAtStartTweak")) {
-            available |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
-        }
-        available |= MiscTweak.RUN_WITHOUT_RUNNING_SHOES.getValue();
-        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-            available |= MiscTweak.FORCE_CHALLENGE_MODE.getValue();
-        }
-        available |= MiscTweak.DISABLE_LOW_HP_MUSIC.getValue();
-        if (romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0) {
-            available |= MiscTweak.FORGETTABLE_HMS.getValue();
-        }
-        available |= MiscTweak.FAST_EGG_HATCHING.getValue();
-        available |= MiscTweak.NO_EV_YIELDS.getValue();
         return available;
     }
 
     @Override
     public void applyMiscTweak(MiscTweak tweak) {
-        if (tweak == MiscTweak.FASTEST_TEXT) {
-            applyFastestText();
-        } else if (tweak == MiscTweak.BAN_LUCKY_EGG) {
-            items.get(ItemIDs.luckyEgg).setAllowed(false);
-        } else if (tweak == MiscTweak.NO_FREE_LUCKY_EGG) {
-            removeFreeLuckyEgg();
-        } else if (tweak == MiscTweak.BAN_BIG_MANIAC_ITEMS) {
+        // TODO: the dastardly big money maniac items
+        if (tweak == MiscTweak.BAN_BIG_MANIAC_ITEMS) {
             for (int i = 0; i < 4; i++) {
                 // BalmMushroom, Big Nugget, Pearl String, Comet Shard
                 items.get(ItemIDs.balmMushroom + i).setAllowed(false);
@@ -2226,29 +2200,40 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 // Rare berries
                 items.get(ItemIDs.lansatBerry + i).setAllowed(false);
             }
-        } else if (tweak == MiscTweak.BALANCE_STATIC_LEVELS) {
-            byte[] fossilFile = scriptNarc.files.get(Gen5Constants.fossilPokemonFile);
-            writeWord(fossilFile,Gen5Constants.fossilPokemonLevelOffset,20);
-        } else if (tweak == MiscTweak.NATIONAL_DEX_AT_START) {
-            patchForNationalDex();
-        } else if (tweak == MiscTweak.RUN_WITHOUT_RUNNING_SHOES) {
-            applyRunWithoutRunningShoesPatch();
-        } else if (tweak == MiscTweak.FORCE_CHALLENGE_MODE) {
-            forceChallengeMode();
-        } else if (tweak == MiscTweak.DISABLE_LOW_HP_MUSIC) {
-            disableLowHPMusic();
-        } else if (tweak == MiscTweak.FORGETTABLE_HMS) {
-            applyForgettableHMsPatch();
-        } else if (tweak == MiscTweak.FAST_EGG_HATCHING) {
-            getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
-        } else if (tweak == MiscTweak.NO_EV_YIELDS) {
-            EVYield allZero = new EVYield(0, 0, 0, 0, 0, 0);
-            getSpeciesSetInclFormes().forEach(pk -> pk.setEVYield(new EVYield(allZero)));
         }
     }
 
-    // Removes the free lucky egg you receive from Professor Juniper and replaces it with a gooey mulch.
-    private void removeFreeLuckyEgg() {
+    @Override
+    public boolean hasFossilPokemonLevelSupport() {
+        return romEntry.getRomType() == Gen5Constants.Type_BW;
+    }
+
+    @Override
+    public void setFossilPokemonLevel(int level) {
+        if (!hasFossilPokemonLevelSupport()) {
+            throw new UnsupportedOperationException();
+        }
+        byte[] fossilFile = scriptNarc.files.get(Gen5Constants.fossilPokemonFile);
+        writeWord(fossilFile,Gen5Constants.fossilPokemonLevelOffset,level);
+    }
+
+    @Override
+    public boolean canMakeEggsHatchFast() {
+        return true;
+    }
+
+    @Override
+    public void makeEggsHatchFast() {
+        getSpeciesSetInclFormes().forEach(pk -> pk.getBreedingInfo().setEggCycles(1));
+    }
+
+    @Override
+    public boolean hasFreeLuckyEggItem() {
+        return true;
+    }
+
+    @Override
+    public void setFreeLuckyEggItem(Item item) {
         int scriptFileGifts = romEntry.getIntValue("LuckyEggScriptOffset");
         int setVarGift = Gen5Constants.hiddenItemSetVarCommand;
 
@@ -2273,10 +2258,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 if (b == setVarGift) {
                     int command = readWord(itemScripts, offsetInFile);
                     int variable = readWord(itemScripts,offsetInFile + 2);
-                    int item = readWord(itemScripts, offsetInFile + 4);
-                    if (command == setVarGift && variable == Gen5Constants.hiddenItemVarSet && item == ItemIDs.luckyEgg) {
+                    int oldID = readWord(itemScripts, offsetInFile + 4);
+                    if (command == setVarGift && variable == Gen5Constants.hiddenItemVarSet && oldID == ItemIDs.luckyEgg) {
 
-                        writeWord(itemScripts, offsetInFile + 4, ItemIDs.gooeyMulch);
+                        writeWord(itemScripts, offsetInFile + 4, item.getId());
                         lookingForEggs--;
                     }
                 }
@@ -2287,11 +2272,23 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         }
     }
 
-    private void applyFastestText() {
+    @Override
+    public boolean canForceFastestText() {
+        return romEntry.hasTweakFile("FastestTextTweak");
+    }
+
+    @Override
+    public void forceFastestText() {
         genericIPSPatch(arm9, "FastestTextTweak");
     }
 
-    private void patchForNationalDex() {
+    @Override
+    public boolean canGiveNationalDexAtStart() {
+        return romEntry.hasTweakFile("NationalDexAtStartTweak");
+    }
+
+    @Override
+    public void giveNationalDexAtStart() {
         byte[] pokedexScript = scriptNarc.files.get(romEntry.getIntValue("NationalDexScriptOffset"));
 
         // Our patcher breaks if the output file is larger than the input file. In our case, we want
@@ -2303,7 +2300,24 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         scriptNarc.files.set(romEntry.getIntValue("NationalDexScriptOffset"), expandedPokedexScript);
     }
 
-    private void applyRunWithoutRunningShoesPatch() {
+    @Override
+    public boolean canAllowRunningWithoutRunningShoes() {
+        try {
+            byte[] fieldOverlay = readOverlay(romEntry.getIntValue("FieldOvlNumber"));
+            String prefix = Gen5Constants.runningShoesPrefix;
+            int offset = find(fieldOverlay, prefix);
+            return offset > 0;
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
+    public void allowRunningWithoutRunningShoes() {
+        if (!canAllowRunningWithoutRunningShoes()) {
+            throw new UnsupportedOperationException();
+        }
+
         try {
             // In the overlay that handles field movement, there's a very simple function
             // that checks if the player has the Running Shoes by checking if flag 2403 is
@@ -2313,7 +2327,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             byte[] fieldOverlay = readOverlay(romEntry.getIntValue("FieldOvlNumber"));
             String prefix = Gen5Constants.runningShoesPrefix;
             int offset = find(fieldOverlay, prefix);
-            if (offset != 0) {
+            if (offset > 0) {
                 writeWord(fieldOverlay, offset, 0);
                 writeOverlay(romEntry.getIntValue("FieldOvlNumber"), fieldOverlay);
             }
@@ -2391,7 +2405,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
+    public boolean canForceChallengeMode() {
+        int offset = find(arm9, Gen5Constants.forceChallengeModeLocator);
+        return romEntry.getRomType() == Gen5Constants.Type_BW2 && offset > 0;
+    }
+
+    @Override
     public void forceChallengeMode() {
+        if (!canForceChallengeMode()) {
+            throw new UnsupportedOperationException("can not force challenge mode");
+        }
+
         int offset = find(arm9, Gen5Constants.forceChallengeModeLocator);
         if (offset > 0) {
             // offset is now pointing at the start of sub_2010528, which is the function that
@@ -2404,12 +2428,26 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             arm9[offset + 1] = 0x20;
             arm9[offset + 2] = 0x70;
             arm9[offset + 3] = 0x47;
-        } else {
-            throw new UnsupportedOperationException("can not force challenge mode");
         }
     }
 
+    @Override
+    public boolean canDisableLowHPMusic() {
+        try {
+            byte[] lowHealthMusicOverlay = readOverlay(romEntry.getIntValue("LowHealthMusicOvlNumber"));
+            int offset = find(lowHealthMusicOverlay, Gen5Constants.lowHealthMusicLocator);
+            return offset > 0;
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
     public void disableLowHPMusic() {
+        if (!canDisableLowHPMusic()) {
+            throw new UnsupportedOperationException("can not disable low HP music");
+        }
+
         try {
             byte[] lowHealthMusicOverlay = readOverlay(romEntry.getIntValue("LowHealthMusicOvlNumber"));
             int offset = find(lowHealthMusicOverlay, Gen5Constants.lowHealthMusicLocator);
@@ -2423,19 +2461,22 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 // branch, the game will never think the player's Pokemon has low HP (for the purposes of changing the music).
                 lowHealthMusicOverlay[offset + 1] = (byte)0xE0;
                 writeOverlay(romEntry.getIntValue("LowHealthMusicOvlNumber"), lowHealthMusicOverlay);
-            } else {
-                throw new UnsupportedOperationException("can not disable low HP music");
             }
         } catch (IOException e) {
             throw new RomIOException(e);
         }
     }
 
+    @Override
+    public boolean canMakeHMsForgettable() {
+        return romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0;
+    }
+
     private void applyForgettableHMsPatch() {
         // thanks to totally_anonymous and drayano60
         int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
         if (offset == 0) {
-            return;
+            throw new UnsupportedOperationException();
         }
 
         byte[] bytesBefore = RomFunctions.hexToBytes(Gen5Constants.hmsForgettableBefore);

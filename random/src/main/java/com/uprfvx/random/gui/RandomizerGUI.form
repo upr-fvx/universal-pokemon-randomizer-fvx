@@ -615,12 +615,6 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <hspacer id="f556c">
-                        <constraints>
-                          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.6" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                       <grid id="c93fe" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="1" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -705,7 +699,7 @@
                           </component>
                           <component id="74e8b" class="com.uprfvx.random.gui.SpinSlider" binding="sbstRandomBuffNerfSpinSlider">
                             <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -845,6 +839,12 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
+                      <hspacer id="f556c">
+                        <constraints>
+                          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.6" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
                     </children>
                   </grid>
                   <hspacer id="17e6a">
@@ -1421,7 +1421,7 @@
                     <children>
                       <hspacer id="64ebf">
                         <constraints>
-                          <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -1443,9 +1443,9 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="70484" class="javax.swing.JCheckBox" binding="pbsStandardizeEXPCurvesCheckBox">
+                      <component id="70484" class="javax.swing.JCheckBox" binding="secStandardizeEXPCurvesCheckBox">
                         <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1454,9 +1454,9 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.standardizeEXPCurvesCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="8a99d" class="javax.swing.JComboBox" binding="pbsEXPCurveComboBox">
+                      <component id="8a99d" class="javax.swing.JComboBox" binding="secEXPCurveComboBox">
                         <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="20" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1466,20 +1466,32 @@
                           </model>
                         </properties>
                       </component>
-                      <component id="3be85" class="javax.swing.JRadioButton" binding="pbsLegendariesSlowRadioButton">
+                      <component id="39b31" class="javax.swing.JRadioButton" binding="secAllSpeciesRadioButton">
                         <constraints>
-                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.6" weighty="0.0"/>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.legendariesSlowRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.legendariesSlowRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.allRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.allRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="4a527" class="javax.swing.JRadioButton" binding="pbsStrongLegendariesSlowRadioButton">
+                      <vspacer id="2c730">
                         <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <hspacer id="3273">
+                        <constraints>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <component id="4a527" class="javax.swing.JRadioButton" binding="secStrongLegendariesSlowRadioButton">
+                        <constraints>
+                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1488,15 +1500,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.strongLegendariesSlowRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="39b31" class="javax.swing.JRadioButton" binding="pbsAllMediumFastRadioButton">
+                      <component id="3be85" class="javax.swing.JRadioButton" binding="secLegendariesSlowRadioButton">
                         <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
+                          <grid row="3" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.6" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.allRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.allRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.legendariesSlowRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.EXPCurvesPanel.legendariesSlowRadioButton.toolTipText"/>
                         </properties>
                       </component>
                     </children>

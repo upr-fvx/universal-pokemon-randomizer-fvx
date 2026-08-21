@@ -115,21 +115,18 @@ public class RandomizerGUI {
     private JCheckBox peAdjustLevelsCheckBox;
     private JRadioButton spUnchangedRadioButton;
     private JRadioButton spCustomRadioButton;
-    private JRadioButton spRandomCompletelyRadioButton;
-    private JComboBox<String> spComboBox1;
-    private JComboBox<String> spComboBox2;
-    private JComboBox<String> spComboBox3;
+    private JRadioButton spRandomRadioButton;
+    private JComboBox<String> spCustom1ComboBox;
+    private JComboBox<String> spCustom2ComboBox;
+    private JComboBox<String> spCustom3ComboBox;
     private JCheckBox spRandomizeStarterHeldItemsCheckBox;
-    private JCheckBox spBanBadItemsCheckBox;
+    private JCheckBox spBanMinorItemsCheckBox;
     private JRadioButton stpUnchangedRadioButton;
     private JRadioButton stpSwapLegendariesSwapStandardsRadioButton;
     private JRadioButton stpRandomCompletelyRadioButton;
     private JRadioButton stpRandomSimilarStrengthRadioButton;
     private JCheckBox stpLimitMainGameLegendariesCheckBox;
     private JCheckBox stpRandomize600BSTCheckBox;
-    private JRadioButton igtUnchangedRadioButton;
-    private JRadioButton igtRandomizeGivenPokemonOnlyRadioButton;
-    private JRadioButton igtRandomizeBothRequestedGivenRadioButton;
     private JCheckBox igtRandomizeNicknamesCheckBox;
     private JCheckBox igtRandomizeOTsCheckBox;
     private JCheckBox igtRandomizeIVsCheckBox;
@@ -404,6 +401,8 @@ public class RandomizerGUI {
     private JCheckBox spHasEvolutionsCheckBox;
     private JSpinner spHasEvolutionCountSpinner;
     private JLabel spBSTLimitsLabel;
+    private JCheckBox igtRandomizeGivenSpeciesCheckBox;
+    private JCheckBox igtRandomizeRequestedSpeciesCheckBox;
 
 
     private static final Random RND = new Random();
@@ -549,16 +548,13 @@ public class RandomizerGUI {
                 peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
                 peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox, peAllowAltFormesCheckBox,
 
-                spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
+                spUnchangedRadioButton, spCustomRadioButton, spRandomRadioButton,
                 spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton, spTypeSingleRadioButton,
                 spTypeNoDualCheckbox,
                 spBSTMinimumCheckbox, spBSTMaximumCheckbox, spRandomizeStarterHeldItemsCheckBox,
 
                 stpUnchangedRadioButton, stpSwapLegendariesSwapStandardsRadioButton, stpRandomCompletelyRadioButton,
                 stpRandomSimilarStrengthRadioButton, stpPercentageLevelModifierCheckBox,
-
-                igtUnchangedRadioButton, igtRandomizeGivenPokemonOnlyRadioButton,
-                igtRandomizeBothRequestedGivenRadioButton,
 
                 mdUpdateMovesCheckBox,
 
@@ -611,9 +607,9 @@ public class RandomizerGUI {
         openROMButton.addActionListener(_ -> selectAndOpenRom());
         peMakeEvolutionsEasierLvlSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
 
-        spComboBox1.addActionListener(_ -> enableOrDisableSubControls());
-        spComboBox2.addActionListener(_ -> enableOrDisableSubControls());
-        spComboBox3.addActionListener(_ -> enableOrDisableSubControls());
+        spCustom1ComboBox.addActionListener(_ -> enableOrDisableSubControls());
+        spCustom2ComboBox.addActionListener(_ -> enableOrDisableSubControls());
+        spCustom3ComboBox.addActionListener(_ -> enableOrDisableSubControls());
 
         spBSTMinimumSpinner.addChangeListener(_ -> checkSpMaximumNeedsRaise());
         spBSTMaximumSpinner.addChangeListener(_ -> checkSpMinimumNeedsLower());
@@ -1885,7 +1881,7 @@ public class RandomizerGUI {
         peRemoveTimeBasedEvolutionsCheckBox.setSelected(settings.isRemoveTimeBasedEvolutions());
 
         spCustomRadioButton.setSelected(settings.getStartersMod() == SettingsManager.StartersMod.CUSTOM);
-        spRandomCompletelyRadioButton.setSelected(settings.getStartersMod() == SettingsManager.StartersMod.COMPLETELY_RANDOM);
+        spRandomRadioButton.setSelected(settings.getStartersMod() == SettingsManager.StartersMod.COMPLETELY_RANDOM);
         spUnchangedRadioButton.setSelected(settings.getStartersMod() == SettingsManager.StartersMod.UNCHANGED);
         spRandomTwoEvosRadioButton.setSelected(settings.getStartersMod() == SettingsManager.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
         spRandomBasicRadioButton.setSelected(settings.getStartersMod() == SettingsManager.StartersMod.RANDOM_BASIC);
@@ -1901,7 +1897,7 @@ public class RandomizerGUI {
         }
         spTypeNoDualCheckbox.setSelected(settings.isStartersNoDualTypes());
         spRandomizeStarterHeldItemsCheckBox.setSelected(settings.isRandomizeStartersHeldItems());
-        spBanBadItemsCheckBox.setSelected(settings.isBanBadRandomStarterHeldItems());
+        spBanMinorItemsCheckBox.setSelected(settings.isBanBadRandomStarterHeldItems());
         spAllowAltFormesCheckBox.setSelected(settings.isAllowStarterAltFormes());
         spNoLegendariesCheckBox.setSelected(settings.isStartersNoLegendaries());
         if(settings.getStartersBSTMinimum() != 0) {
@@ -1918,10 +1914,10 @@ public class RandomizerGUI {
         }
 
         int[] customStarters = settings.getCustomStarters();
-        spComboBox1.setSelectedIndex(customStarters[0]);
-        spComboBox2.setSelectedIndex(customStarters[1]);
+        spCustom1ComboBox.setSelectedIndex(customStarters[0]);
+        spCustom2ComboBox.setSelectedIndex(customStarters[1]);
         if (!this.romHandler.isYellow()) { // Yellow only has two starters
-            spComboBox3.setSelectedIndex(customStarters[2]);
+            spCustom3ComboBox.setSelectedIndex(customStarters[2]);
         }
 
         peUnchangedRadioButton.setSelected(settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.UNCHANGED);
@@ -2093,9 +2089,9 @@ public class RandomizerGUI {
         mtNoGameBreakingMovesCheckBox.setSelected(settings.isBlockBrokenTutorMoves());
         mtFollowEvolutionsCheckBox.setSelected(settings.isTutorFollowEvolutions());
 
-        igtRandomizeBothRequestedGivenRadioButton
+        igtRandomizeBothRadioButton
                 .setSelected(settings.getInGameTradesMod() == SettingsManager.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED);
-        igtRandomizeGivenPokemonOnlyRadioButton.setSelected(settings.getInGameTradesMod() == SettingsManager.InGameTradesMod.RANDOMIZE_GIVEN);
+        igtRandomizeGivenRadioButton.setSelected(settings.getInGameTradesMod() == SettingsManager.InGameTradesMod.RANDOMIZE_GIVEN);
         igtRandomizeItemsCheckBox.setSelected(settings.isRandomizeInGameTradesItems());
         igtRandomizeIVsCheckBox.setSelected(settings.isRandomizeInGameTradesIVs());
         igtRandomizeNicknamesCheckBox.setSelected(settings.isRandomizeInGameTradesNicknames());
@@ -2210,22 +2206,22 @@ public class RandomizerGUI {
         settings.setMakeEvolutionsEasierLvl(peMakeEvolutionsEasierLvlSlider.getValue());
         settings.setRemoveTimeBasedEvolutions(peRemoveTimeBasedEvolutionsCheckBox.isSelected());
 
-        settings.setStartersMod(spUnchangedRadioButton.isSelected(), spCustomRadioButton.isSelected(), spRandomCompletelyRadioButton.isSelected(),
+        settings.setStartersMod(spUnchangedRadioButton.isSelected(), spCustomRadioButton.isSelected(), spRandomRadioButton.isSelected(),
                 spRandomTwoEvosRadioButton.isSelected(), spRandomBasicRadioButton.isSelected());
         settings.setStartersTypeMod(spTypeNoneRadioButton.isSelected(), spTypeFwgRadioButton.isSelected(), spTypeTriangleRadioButton.isSelected(),
                 spTypeUniqueRadioButton.isSelected(), spTypeSingleRadioButton.isSelected());
         settings.setStartersSingleType(spTypeSingleComboBox.getSelectedIndex());
         settings.setStartersNoDualTypes(spTypeNoDualCheckbox.isSelected());
         settings.setRandomizeStartersHeldItems(spRandomizeStarterHeldItemsCheckBox.isSelected() && spRandomizeStarterHeldItemsCheckBox.isVisible());
-        settings.setBanBadRandomStarterHeldItems(spBanBadItemsCheckBox.isSelected() && spBanBadItemsCheckBox.isVisible());
+        settings.setBanBadRandomStarterHeldItems(spBanMinorItemsCheckBox.isSelected() && spBanMinorItemsCheckBox.isVisible());
         settings.setAllowStarterAltFormes(spAllowAltFormesCheckBox.isSelected() && spAllowAltFormesCheckBox.isVisible());
         settings.setStartersNoLegendaries(spNoLegendariesCheckBox.isSelected());
         settings.setStartersBSTMinimum(spBSTMinimumCheckbox.isSelected() ? (int)spBSTMinimumSpinner.getValue() : 0);
         settings.setStartersBSTMaximum(spBSTMaximumCheckbox.isSelected() ? (int)spBSTMaximumSpinner.getValue() : 0);
 
 
-        int[] customStarters = new int[] { spComboBox1.getSelectedIndex(),
-                spComboBox2.getSelectedIndex(), spComboBox3.getSelectedIndex()};
+        int[] customStarters = new int[] { spCustom1ComboBox.getSelectedIndex(),
+                spCustom2ComboBox.getSelectedIndex(), spCustom3ComboBox.getSelectedIndex()};
         settings.setCustomStarters(customStarters);
 
         settings.setEvolutionsMod(peUnchangedRadioButton.isSelected(), peRandomRadioButton.isSelected(), peRandomEveryLevelRadioButton.isSelected());
@@ -2358,7 +2354,7 @@ public class RandomizerGUI {
         settings.setBlockBrokenTutorMoves(mtNoGameBreakingMovesCheckBox.isSelected());
         settings.setTutorFollowEvolutions(mtFollowEvolutionsCheckBox.isSelected());
 
-        settings.setInGameTradesMod(igtUnchangedRadioButton.isSelected(), igtRandomizeGivenPokemonOnlyRadioButton.isSelected(), igtRandomizeBothRequestedGivenRadioButton.isSelected());
+        settings.setInGameTradesMod(igtUnchangedRadioButton.isSelected(), igtRandomizeGivenRadioButton.isSelected(), igtRandomizeBothRadioButton.isSelected());
         settings.setRandomizeInGameTradesItems(igtRandomizeItemsCheckBox.isSelected());
         settings.setRandomizeInGameTradesIVs(igtRandomizeIVsCheckBox.isSelected());
         settings.setRandomizeInGameTradesNicknames(igtRandomizeNicknamesCheckBox.isSelected());
@@ -2493,7 +2489,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(sbstUnchangedRadioButton, sbstRandomBuffNerfRadioButton, sbstShuffleRadioButton,
                 sbstRandomRadioButton, sbstFollowEvolutionsCheckBox, sbstSwapLegendariesCheckBox);
-        spComboBox1.setEnabled(false);
+        spCustom1ComboBox.setEnabled(false);
         sbstRandomBuffNerfSpinSlider.setEnabled(false);
         sbstRandomBuffNerfSpinSlider.setValue(0);
 
@@ -2524,24 +2520,24 @@ public class RandomizerGUI {
         peMakeEvolutionsEasierLvlSlider.setEnabled(false);
         peMakeEvolutionsEasierLvlSlider.setValue(SettingsManager.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
-        setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
+        setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomRadioButton,
                 spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
 				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox,
                 spNoLegendariesCheckBox,
-				spRandomizeStarterHeldItemsCheckBox, spBanBadItemsCheckBox, spAllowAltFormesCheckBox,
+				spRandomizeStarterHeldItemsCheckBox, spBanMinorItemsCheckBox, spAllowAltFormesCheckBox,
                 spBSTMinimumCheckbox, spBSTMaximumCheckbox);
-		spComboBox1.setVisible(true);
-		spComboBox1.setEnabled(false);
-		spComboBox1.setSelectedIndex(0);
-		spComboBox1.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
-		spComboBox2.setVisible(true);
-		spComboBox2.setEnabled(false);
-		spComboBox2.setSelectedIndex(0);
-		spComboBox2.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
-		spComboBox3.setVisible(true);
-		spComboBox3.setEnabled(false);
-		spComboBox3.setSelectedIndex(0);
-		spComboBox3.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
+		spCustom1ComboBox.setVisible(true);
+		spCustom1ComboBox.setEnabled(false);
+		spCustom1ComboBox.setSelectedIndex(0);
+		spCustom1ComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
+		spCustom2ComboBox.setVisible(true);
+		spCustom2ComboBox.setEnabled(false);
+		spCustom2ComboBox.setSelectedIndex(0);
+		spCustom2ComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
+		spCustom3ComboBox.setVisible(true);
+		spCustom3ComboBox.setEnabled(false);
+		spCustom3ComboBox.setSelectedIndex(0);
+		spCustom3ComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
         spBSTMinimumSpinner.setVisible(true);
         spBSTMinimumSpinner.setEnabled(false);
         spBSTMinimumSpinner.setValue(0);
@@ -2557,8 +2553,7 @@ public class RandomizerGUI {
 		stpPercentageLevelModifierSpinSlider.setEnabled(false);
 		stpPercentageLevelModifierSpinSlider.setValue(0);
 
-        setInitialButtonState(igtUnchangedRadioButton, igtRandomizeGivenPokemonOnlyRadioButton,
-				igtRandomizeBothRequestedGivenRadioButton, igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox,
+        setInitialButtonState(igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox,
 				igtRandomizeIVsCheckBox, igtRandomizeItemsCheckBox);
 
         setInitialButtonState(mdRandomizeMovePowerCheckBox, mdRandomizeMoveAccuracyCheckBox, mdRandomizeMovePPCheckBox,
@@ -2900,9 +2895,9 @@ public class RandomizerGUI {
             spUnchangedRadioButton.setSelected(true);
 
             spCustomRadioButton.setEnabled(true);
-            spRandomCompletelyRadioButton.setEnabled(true);
+            spRandomRadioButton.setEnabled(true);
             if (romHandler.isYellow()) {
-                spComboBox3.setVisible(false);
+                spCustom3ComboBox.setVisible(false);
             }
             populateDropdowns();
 
@@ -2914,8 +2909,8 @@ public class RandomizerGUI {
             boolean supportsStarterHeldItems = romHandler.supportsStarterHeldItems();
             spRandomizeStarterHeldItemsCheckBox.setEnabled(supportsStarterHeldItems);
             spRandomizeStarterHeldItemsCheckBox.setVisible(supportsStarterHeldItems);
-            spBanBadItemsCheckBox.setEnabled(false);
-            spBanBadItemsCheckBox.setVisible(supportsStarterHeldItems);
+            spBanMinorItemsCheckBox.setEnabled(false);
+            spBanMinorItemsCheckBox.setVisible(supportsStarterHeldItems);
             //TODO: pull these numbers from the romHandler rather than nowhere
             if(romHandler.generationOfPokemon() == 1) {
                 spBSTMinimumSpinner.setModel(new SpinnerNumberModel(249, 1, 1275, 1));
@@ -2951,11 +2946,6 @@ public class RandomizerGUI {
                 stpPercentageLevelModifierSpinSlider.setVisible(false);
                 stpFixMusicCheckBox.setVisible(false);
             }
-
-            igtUnchangedRadioButton.setEnabled(true);
-            igtUnchangedRadioButton.setSelected(true);
-            igtRandomizeGivenPokemonOnlyRadioButton.setEnabled(true);
-            igtRandomizeBothRequestedGivenRadioButton.setEnabled(true);
 
             igtRandomizeNicknamesCheckBox.setEnabled(false);
             igtRandomizeOTsCheckBox.setEnabled(false);
@@ -3297,12 +3287,12 @@ public class RandomizerGUI {
             spRandomTwoEvosRadioButton.setEnabled(false);
             if (spRandomTwoEvosRadioButton.isSelected()) {
                 spRandomTwoEvosRadioButton.setSelected(false);
-                spRandomCompletelyRadioButton.setSelected(true);
+                spRandomRadioButton.setSelected(true);
             }
             spRandomBasicRadioButton.setEnabled(false);
             if (spRandomBasicRadioButton.isSelected()) {
                 spRandomBasicRadioButton.setSelected(false);
-                spRandomCompletelyRadioButton.setSelected(true);
+                spRandomRadioButton.setSelected(true);
             }
             */
             saFollowEvolutionsCheckBox.setSelected(false);
@@ -3455,18 +3445,18 @@ public class RandomizerGUI {
         }
 
         boolean spCustomStatus = spCustomRadioButton.isSelected();
-        spComboBox1.setEnabled(spCustomStatus);
-        spComboBox2.setEnabled(spCustomStatus);
-        spComboBox3.setEnabled(spCustomStatus);
+        spCustom1ComboBox.setEnabled(spCustomStatus);
+        spCustom2ComboBox.setEnabled(spCustomStatus);
+        spCustom3ComboBox.setEnabled(spCustomStatus);
 
         if (spRandomizeStarterHeldItemsCheckBox.isSelected()) {
-            enableButtons(spBanBadItemsCheckBox);
+            enableButtons(spBanMinorItemsCheckBox);
         } else {
-            disableAndDeselectButtons(spBanBadItemsCheckBox);
+            disableAndDeselectButtons(spBanMinorItemsCheckBox);
         }
 
-        boolean isCustomRandom = (spComboBox1.getSelectedIndex() == 0 || spComboBox2.getSelectedIndex() == 0
-                || spComboBox3.getSelectedIndex() == 0) && spCustomRadioButton.isSelected();
+        boolean isCustomRandom = (spCustom1ComboBox.getSelectedIndex() == 0 || spCustom2ComboBox.getSelectedIndex() == 0
+                || spCustom3ComboBox.getSelectedIndex() == 0) && spCustomRadioButton.isSelected();
 
         if (spUnchangedRadioButton.isSelected() || (spCustomRadioButton.isSelected() && !isCustomRandom)) {
             disableButtonsWithDefault(spTypeNoneRadioButton,
@@ -3518,6 +3508,7 @@ public class RandomizerGUI {
             stpPercentageLevelModifierSpinSlider.setValue(0);
         }
 
+        /*
         if (igtUnchangedRadioButton.isSelected()) {
             disableAndDeselectButtons(igtRandomizeItemsCheckBox, igtRandomizeIVsCheckBox,
                     igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox);
@@ -3525,6 +3516,7 @@ public class RandomizerGUI {
             enableButtons(igtRandomizeItemsCheckBox, igtRandomizeIVsCheckBox,
                     igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox);
         }
+         */
 
         if (mdUpdateMovesCheckBox.isSelected()) {
             mdUpdateComboBox.setEnabled(true);
@@ -3918,13 +3910,13 @@ public class RandomizerGUI {
 
         }
 
-        spComboBox1.setModel(new DefaultComboBoxModel<>(pokeNames));
-        spComboBox1.setSelectedIndex(allPokes.indexOf(currentStarters.get(0)));
-        spComboBox2.setModel(new DefaultComboBoxModel<>(pokeNames));
-        spComboBox2.setSelectedIndex(allPokes.indexOf(currentStarters.get(1)));
+        spCustom1ComboBox.setModel(new DefaultComboBoxModel<>(pokeNames));
+        spCustom1ComboBox.setSelectedIndex(allPokes.indexOf(currentStarters.get(0)));
+        spCustom2ComboBox.setModel(new DefaultComboBoxModel<>(pokeNames));
+        spCustom2ComboBox.setSelectedIndex(allPokes.indexOf(currentStarters.get(1)));
         if (!romHandler.isYellow()) {
-            spComboBox3.setModel(new DefaultComboBoxModel<>(pokeNames));
-            spComboBox3.setSelectedIndex(allPokes.indexOf(currentStarters.get(2)));
+            spCustom3ComboBox.setModel(new DefaultComboBoxModel<>(pokeNames));
+            spCustom3ComboBox.setSelectedIndex(allPokes.indexOf(currentStarters.get(2)));
         }
 
         int numTypes = romHandler.getTypeTable().getTypes().size();

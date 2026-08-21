@@ -1519,7 +1519,7 @@
           </scrollpane>
           <scrollpane id="d1aee">
             <constraints>
-              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.startersStaticsTradesPanel"/>
+              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.givenTab.title"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -1531,31 +1531,25 @@
                 <children>
                   <grid id="bb7c7" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.1"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.spPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.givenTab.startersPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
                       <component id="124c" class="javax.swing.JRadioButton" binding="spUnchangedRadioButton" default-binding="true">
                         <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spUnchangedRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spUnchangedRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.unchangedRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <hspacer id="8b022">
-                        <constraints>
-                          <grid row="1" column="14" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.1" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                       <hspacer id="1b3c2">
                         <constraints>
                           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -1575,86 +1569,28 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spCustomRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spCustomRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.customRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.customRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="c1c80" class="javax.swing.JRadioButton" binding="spRandomCompletelyRadioButton" default-binding="true">
                         <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomCompletelyRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomCompletelyRadioButton.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="12184" class="javax.swing.JRadioButton" binding="spRandomTwoEvosRadioButton">
-                        <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomTwoEvosRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomTwoEvosRadioButton.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="83a64" class="javax.swing.JComboBox" binding="spComboBox1">
-                        <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <model>
-                            <item value="--"/>
-                          </model>
-                        </properties>
-                      </component>
-                      <component id="36c27" class="javax.swing.JComboBox" binding="spComboBox2">
-                        <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="5" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <model>
-                            <item value="--"/>
-                          </model>
-                        </properties>
-                      </component>
-                      <component id="3169c" class="javax.swing.JComboBox" binding="spComboBox3">
-                        <constraints>
-                          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="5" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <model>
-                            <item value="--"/>
-                          </model>
-                        </properties>
-                      </component>
-                      <component id="4b2ef" class="javax.swing.JRadioButton" binding="spRandomBasicRadioButton">
-                        <constraints>
-                          <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomBasicRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomBasicRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <grid id="33c18" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="1" column="6" row-span="7" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="11" row-span="8" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.spTypeRestrictionPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.givenTab.startersPanel.typesPanel.title"/>
                         <children>
                           <component id="7222b" class="javax.swing.JRadioButton" binding="spTypeNoneRadioButton">
                             <constraints>
@@ -1663,7 +1599,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeNoneRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.noneRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.noneRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="76f59" class="javax.swing.JRadioButton" binding="spTypeFwgRadioButton">
@@ -1673,7 +1610,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeFwgRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.fireWaterGrassRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.fireWaterGrassRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="85fd7" class="javax.swing.JRadioButton" binding="spTypeTriangleRadioButton">
@@ -1683,8 +1621,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeTriangleRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeTriangleRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.typeTriangleRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.typeTriangleRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="28ca" class="javax.swing.JRadioButton" binding="spTypeSingleRadioButton">
@@ -1694,8 +1632,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeSingleRadioButton"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeSingleRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.singleTypeRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.singleTypeRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="24890" class="javax.swing.JComboBox" binding="spTypeSingleComboBox">
@@ -1724,8 +1662,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeUniqueRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeUniqueRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.uniqueTypeRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.uniqueTypeRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="edb45" class="javax.swing.JCheckBox" binding="spTypeNoDualCheckbox">
@@ -1735,8 +1673,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeNoDualCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spTypeNoDualCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.noDualTypesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.typesPanel.noDualTypesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <hspacer id="5513f">
@@ -1753,42 +1691,110 @@
                           </vspacer>
                         </children>
                       </grid>
-                      <hspacer id="1193a">
-                        <constraints>
-                          <grid row="3" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                       <hspacer id="edffc">
                         <constraints>
-                          <grid row="3" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="12" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <component id="cad77" class="javax.swing.JCheckBox" binding="spAllowAltFormesCheckBox">
                         <constraints>
-                          <grid row="4" column="8" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="13" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spAllowAltFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spAllowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.allowAltFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d05d5" class="javax.swing.JCheckBox" binding="spNoLegendariesCheckBox">
                         <constraints>
-                          <grid row="1" column="8" row-span="1" col-span="5" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="13" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spNoLegendariesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.noLegendariesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.noLegendariesCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="20e0d" class="javax.swing.JLabel" binding="spBstLimitsLabel">
+                      <component id="9ddd3" class="javax.swing.JCheckBox" binding="spRandomizeStarterHeldItemsCheckBox">
                         <constraints>
-                          <grid row="5" column="8" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="13" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomizeHeldItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomizeHeldItemsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="a1ea2" class="javax.swing.JCheckBox" binding="spBanBadItemsCheckBox" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.banMinorItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.banMinorItemsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <grid id="b12f8" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="4" column="1" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.givenTab.startersPanel.evolutionPanel"/>
+                        <children>
+                          <component id="f6cc6" class="javax.swing.JCheckBox" binding="spBasicOnlyCheckBox">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.evolutionPanel.basicOnlyCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.evolutionPanel.basicOnlyCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <hspacer id="5e79">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <vspacer id="cdb97">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </vspacer>
+                          <component id="a1012" class="javax.swing.JCheckBox" binding="spHasEvolutionsCheckBox">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.evolutionPanel.hasEvolutionsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.evolutionPanel.hasEvolutionsCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="7a805" class="javax.swing.JSpinner" binding="spHasEvolutionCountSpinner">
+                            <constraints>
+                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.evolutionPanel.hasEvolutionCountSpinner.toolTipText"/>
+                            </properties>
+                          </component>
+                        </children>
+                      </grid>
+                      <component id="20e0d" class="javax.swing.JLabel" binding="spBSTLimitsLabel">
+                        <constraints>
+                          <grid row="4" column="4" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1798,7 +1804,7 @@
                       </component>
                       <component id="82349" class="javax.swing.JCheckBox" binding="spBSTMinimumCheckbox">
                         <constraints>
-                          <grid row="6" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1807,9 +1813,25 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBSTMinimumCheckbox.toolTipText"/>
                         </properties>
                       </component>
+                      <component id="51e00" class="javax.swing.JSpinner" binding="spBSTMinimumSpinner">
+                        <constraints>
+                          <grid row="6" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBSTMinimumSpinner.toolTipText"/>
+                        </properties>
+                      </component>
+                      <hspacer id="24ca2">
+                        <constraints>
+                          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
                       <component id="99766" class="javax.swing.JCheckBox" binding="spBSTMaximumCheckbox">
                         <constraints>
-                          <grid row="6" column="11" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1818,42 +1840,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBSTMaximumCheckbox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="9ddd3" class="javax.swing.JCheckBox" binding="spRandomizeStarterHeldItemsCheckBox">
+                      <hspacer id="ea0d3">
                         <constraints>
-                          <grid row="2" column="8" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomizeStarterHeldItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spRandomizeStarterHeldItemsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <hspacer id="3b78f">
-                        <constraints>
-                          <grid row="6" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <component id="51e00" class="javax.swing.JSpinner" binding="spBSTMinimumSpinner">
-                        <constraints>
-                          <grid row="7" column="9" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBSTMinimumSpinner.toolTipText"/>
-                        </properties>
-                      </component>
-                      <hspacer id="12bbb">
-                        <constraints>
-                          <grid row="7" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <component id="9b528" class="javax.swing.JSpinner" binding="spBSTMaximumSpinner">
                         <constraints>
-                          <grid row="7" column="12" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -1861,59 +1856,142 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBSTMaximumSpinner.toolTipText"/>
                         </properties>
                       </component>
-                      <hspacer id="24ca2">
-                        <constraints>
-                          <grid row="7" column="11" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <vspacer id="ea50e">
-                        <constraints>
-                          <grid row="8" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <vspacer id="157d3">
+                      <vspacer id="98c67">
                         <constraints>
                           <grid row="8" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <hspacer id="eb5e7">
-                        <constraints>
-                          <grid row="6" column="13" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                       <vspacer id="71dca">
                         <constraints>
-                          <grid row="9" column="6" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="11" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="a1ea2" class="javax.swing.JCheckBox" binding="spBanBadItemsCheckBox" default-binding="true">
+                      <hspacer id="af5f8">
                         <constraints>
-                          <grid row="3" column="9" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="13" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBanBadItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.spBanBadItemsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
+                      </hspacer>
+                      <vspacer id="a5d99">
+                        <constraints>
+                          <grid row="7" column="5" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <hspacer id="d8d45">
+                        <constraints>
+                          <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <grid id="1c961" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="2" column="2" row-span="1" col-span="8" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none"/>
+                        <children>
+                          <component id="83a64" class="javax.swing.JComboBox" binding="spComboBox1">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <model>
+                                <item value="--"/>
+                              </model>
+                            </properties>
+                          </component>
+                          <component id="36c27" class="javax.swing.JComboBox" binding="spComboBox2">
+                            <constraints>
+                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <model>
+                                <item value="--"/>
+                              </model>
+                            </properties>
+                          </component>
+                          <component id="3169c" class="javax.swing.JComboBox" binding="spComboBox3">
+                            <constraints>
+                              <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <model>
+                                <item value="--"/>
+                              </model>
+                            </properties>
+                          </component>
+                          <hspacer id="6158c">
+                            <constraints>
+                              <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.1" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <hspacer id="ae0cf">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <hspacer id="10d51">
+                            <constraints>
+                              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <hspacer id="960c7">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                        </children>
+                      </grid>
+                      <hspacer id="8b022">
+                        <constraints>
+                          <grid row="1" column="15" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.9" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <hspacer id="3b78f">
+                        <constraints>
+                          <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <hspacer id="1193a">
+                        <constraints>
+                          <grid row="2" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <hspacer id="ede28">
+                        <constraints>
+                          <grid row="4" column="9" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
                     </children>
                   </grid>
                   <hspacer id="48447">
                     <constraints>
-                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </hspacer>
                   <vspacer id="2cb29">
                     <constraints>
-                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
+                      <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.9"/>
                     </constraints>
                   </vspacer>
                   <hspacer id="78e2">
@@ -1924,168 +2002,13 @@
                   </hspacer>
                   <vspacer id="797e9">
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="cb778" layout-manager="GridBagLayout">
-                    <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.1"/>
-                    </constraints>
-                    <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.stpPanel.title">
-                      <font style="1"/>
-                    </border>
-                    <children>
-                      <component id="a28a1" class="javax.swing.JRadioButton" binding="stpUnchangedRadioButton" default-binding="true">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.1" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpUnchangedRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpUnchangedRadioButton.toolTipText"/>
-                        </properties>
-                      </component>
-                      <hspacer id="c4003">
-                        <constraints>
-                          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="6.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <vspacer id="ec4fb">
-                        <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="4" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <hspacer id="a5bb0">
-                        <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <vspacer id="9076e">
-                        <constraints>
-                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <component id="66089" class="javax.swing.JRadioButton" binding="stpSwapLegendariesSwapStandardsRadioButton">
-                        <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapLegendariesSwapStandardsRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapLegendariesSwapStandardsRadioButton.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="17456" class="javax.swing.JRadioButton" binding="stpRandomCompletelyRadioButton" default-binding="true">
-                        <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomCompletelyRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomCompletelyRadioButton.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="282a5" class="javax.swing.JRadioButton" binding="stpRandomSimilarStrengthRadioButton">
-                        <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomSimilarStrengthRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomSimilarStrengthRadioButton.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="c441c" class="javax.swing.JCheckBox" binding="stpSwapMegaEvosCheckBox">
-                        <constraints>
-                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapMegaEvosCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapMegaEvosCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="84b86" class="javax.swing.JCheckBox" binding="stpPercentageLevelModifierCheckBox">
-                        <constraints>
-                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="6.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.tooltipText"/>
-                        </properties>
-                      </component>
-                      <component id="f3518" class="com.uprfvx.random.gui.SpinSlider" binding="stpPercentageLevelModifierSpinSlider">
-                        <constraints>
-                          <grid row="2" column="4" row-span="3" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="true"/>
-                        </properties>
-                      </component>
-                      <component id="ae826" class="javax.swing.JCheckBox" binding="stpRandomize600BSTCheckBox">
-                        <constraints>
-                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.8" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomize600BSTCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomize600BSTCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="69057" class="javax.swing.JCheckBox" binding="stpAllowAltFormesCheckBox">
-                        <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpAllowAltFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpAllowAltFormesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="cde9e" class="javax.swing.JCheckBox" binding="stpLimitMainGameLegendariesCheckBox">
-                        <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="1.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpLimitMainGameLegendariesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpLimitMainGameLegendariesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="4f53f" class="javax.swing.JCheckBox" binding="stpFixMusicCheckBox">
-                        <constraints>
-                          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpFixMusicAllCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpFixMusicAllCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                    </children>
-                  </grid>
                   <grid id="f2cab" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.1"/>
                     </constraints>
                     <properties/>
@@ -2196,6 +2119,12 @@
                       </component>
                     </children>
                   </grid>
+                  <vspacer id="8fbc1">
+                    <constraints>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </vspacer>
                 </children>
               </grid>
             </children>
@@ -3763,7 +3692,7 @@
                   </hspacer>
                   <vspacer id="f6a73">
                     <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.1"/>
                     </constraints>
                   </vspacer>
@@ -3779,6 +3708,161 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
+                  <grid id="1d5c8" layout-manager="GridBagLayout">
+                    <constraints>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.1"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.stpPanel.title">
+                      <font style="1"/>
+                    </border>
+                    <children>
+                      <component id="a9da2" class="javax.swing.JRadioButton" binding="stpUnchangedRadioButton" default-binding="true">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.1" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpUnchangedRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpUnchangedRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                      <hspacer id="7c238">
+                        <constraints>
+                          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="6.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <vspacer id="8b140">
+                        <constraints>
+                          <grid row="6" column="1" row-span="1" col-span="4" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <hspacer id="e1da8">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <vspacer id="40672">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <component id="142ac" class="javax.swing.JRadioButton" binding="stpSwapLegendariesSwapStandardsRadioButton">
+                        <constraints>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapLegendariesSwapStandardsRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapLegendariesSwapStandardsRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="8b8cf" class="javax.swing.JRadioButton" binding="stpRandomCompletelyRadioButton" default-binding="true">
+                        <constraints>
+                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomCompletelyRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomCompletelyRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="8f5fc" class="javax.swing.JRadioButton" binding="stpRandomSimilarStrengthRadioButton">
+                        <constraints>
+                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomSimilarStrengthRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomSimilarStrengthRadioButton.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="e8807" class="javax.swing.JCheckBox" binding="stpSwapMegaEvosCheckBox">
+                        <constraints>
+                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapMegaEvosCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapMegaEvosCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="30e1b" class="javax.swing.JCheckBox" binding="stpPercentageLevelModifierCheckBox">
+                        <constraints>
+                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="6.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.tooltipText"/>
+                        </properties>
+                      </component>
+                      <component id="dbc7e" class="com.uprfvx.random.gui.SpinSlider" binding="stpPercentageLevelModifierSpinSlider">
+                        <constraints>
+                          <grid row="2" column="4" row-span="3" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="true"/>
+                        </properties>
+                      </component>
+                      <component id="285be" class="javax.swing.JCheckBox" binding="stpRandomize600BSTCheckBox">
+                        <constraints>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.8" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomize600BSTCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomize600BSTCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="d9fc" class="javax.swing.JCheckBox" binding="stpAllowAltFormesCheckBox">
+                        <constraints>
+                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpAllowAltFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpAllowAltFormesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="9c5fc" class="javax.swing.JCheckBox" binding="stpLimitMainGameLegendariesCheckBox">
+                        <constraints>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="1.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpLimitMainGameLegendariesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpLimitMainGameLegendariesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="761c9" class="javax.swing.JCheckBox" binding="stpFixMusicCheckBox">
+                        <constraints>
+                          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpFixMusicAllCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpFixMusicAllCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
             </children>

@@ -271,7 +271,7 @@ public class RandomizationLogger {
                 romHandler.abilitiesPerSpecies() != 0);
         logOverviewLine(getBS("GUI.traitsTab.evolutionPanel.title"), evoRandomizer.isChangesMade()
                 || shouldLogEvolutionImprovements(), true);
-        logOverviewLine(getBS("GUI.spPanel.title"), starterRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.givenTab.startersPanel.title"), starterRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.stpPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
                 romHandler.canChangeStaticPokemon());
         logOverviewLine(getBS("GUI.igtPanel.title"), tradeRandomizer.isChangesMade(), true);

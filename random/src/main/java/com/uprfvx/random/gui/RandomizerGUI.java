@@ -116,7 +116,6 @@ public class RandomizerGUI {
     private JRadioButton spUnchangedRadioButton;
     private JRadioButton spCustomRadioButton;
     private JRadioButton spRandomCompletelyRadioButton;
-    private JRadioButton spRandomTwoEvosRadioButton;
     private JComboBox<String> spComboBox1;
     private JComboBox<String> spComboBox2;
     private JComboBox<String> spComboBox3;
@@ -334,7 +333,6 @@ public class RandomizerGUI {
     private JCheckBox tpUseLocalPokemonCheckBox;
     private JRadioButton spTypeTriangleRadioButton;
     private JRadioButton spTypeNoneRadioButton;
-    private JRadioButton spRandomBasicRadioButton;
     private JRadioButton spTypeFwgRadioButton;
     private JRadioButton spTypeSingleRadioButton;
     private JComboBox<String> spTypeSingleComboBox;
@@ -350,7 +348,6 @@ public class RandomizerGUI {
     private JRadioButton teInverseRadioButton;
     private JCheckBox teAddRandomImmunitiesCheckBox;
     private JCheckBox teUpdateCheckbox;
-    private JLabel spBstLimitsLabel;
     private JCheckBox spBSTMinimumCheckbox;
     private JCheckBox spBSTMaximumCheckbox;
     private JSpinner spBSTMinimumSpinner;
@@ -403,6 +400,10 @@ public class RandomizerGUI {
     private JCheckBox qoltForgettableHMsCheckBox;
     private JCheckBox qoltFastEggsCheckBox;
     private JCheckBox btNoEVYieldsCheckBox;
+    private JCheckBox spBasicOnlyCheckBox;
+    private JCheckBox spHasEvolutionsCheckBox;
+    private JSpinner spHasEvolutionCountSpinner;
+    private JLabel spBSTLimitsLabel;
 
 
     private static final Random RND = new Random();
@@ -548,8 +549,7 @@ public class RandomizerGUI {
                 peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
                 peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox, peAllowAltFormesCheckBox,
 
-                spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton, spRandomTwoEvosRadioButton,
-                spRandomBasicRadioButton,
+                spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
                 spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton, spTypeSingleRadioButton,
                 spTypeNoDualCheckbox,
                 spBSTMinimumCheckbox, spBSTMaximumCheckbox, spRandomizeStarterHeldItemsCheckBox,
@@ -2525,7 +2525,6 @@ public class RandomizerGUI {
         peMakeEvolutionsEasierLvlSlider.setValue(SettingsManager.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
 
         setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomCompletelyRadioButton,
-				spRandomTwoEvosRadioButton, spRandomBasicRadioButton,
                 spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
 				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox,
                 spNoLegendariesCheckBox,
@@ -2902,8 +2901,6 @@ public class RandomizerGUI {
 
             spCustomRadioButton.setEnabled(true);
             spRandomCompletelyRadioButton.setEnabled(true);
-            spRandomTwoEvosRadioButton.setEnabled(true);
-            spRandomBasicRadioButton.setEnabled(true);
             if (romHandler.isYellow()) {
                 spComboBox3.setVisible(false);
             }
@@ -3296,6 +3293,7 @@ public class RandomizerGUI {
                 stRandomFollowEvolutionsRadioButton.setSelected(false);
                 stRandomCompletelyRadioButton.setSelected(true);
             }
+            /*
             spRandomTwoEvosRadioButton.setEnabled(false);
             if (spRandomTwoEvosRadioButton.isSelected()) {
                 spRandomTwoEvosRadioButton.setSelected(false);
@@ -3306,6 +3304,7 @@ public class RandomizerGUI {
                 spRandomBasicRadioButton.setSelected(false);
                 spRandomCompletelyRadioButton.setSelected(true);
             }
+            */
             saFollowEvolutionsCheckBox.setSelected(false);
             tmFollowEvolutionsCheckBox.setSelected(false);
             mtFollowEvolutionsCheckBox.setSelected(false);
@@ -3330,8 +3329,10 @@ public class RandomizerGUI {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
             stRandomFollowEvolutionsRadioButton.setEnabled(true);
+            /*
             spRandomTwoEvosRadioButton.setEnabled(true);
             spRandomBasicRadioButton.setEnabled(true);
+             */
 
             // The controls that make evolutions easier/possible, however,
             // need to all be manually re-enabled.

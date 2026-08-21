@@ -1,6 +1,9 @@
 package com.uprfvx.random.settings.settingstring;
 
 // TODO: what is the version?
+
+import com.uprfvx.random.settings.SettingsUpdater;
+
 /**
  * Used to convert settings from the "settings string" format
  * used in FVX v1.6.0 into the modern format used in FVX v[VERSION].

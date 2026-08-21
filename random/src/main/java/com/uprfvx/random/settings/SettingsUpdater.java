@@ -14,7 +14,7 @@ import com.uprfvx.random.settings.settingstring.SettingsStringUpdater;
 public class SettingsUpdater {
 
     /**
-     * Takes a {@link SettingsManager} which has loaded settings (from a file).
+     * Takes a {@link SettingsManager} which has loaded settings.
      * If the settings are old and there are any {@link SettingDefinition}s that
      * have since changed*, this method will update the settings accordingly.<br>
      * *E.g. been split, removed, renamed, or had their type changed.

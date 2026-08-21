@@ -29,6 +29,7 @@ package com.uprfvx.random.settings;
 import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.definitions.NumericSettingDefinition;
 import com.uprfvx.random.settings.definitions.SettingDefinition;
+import com.uprfvx.random.settings.settingstring.SettingsStringUpdater;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.*;
 import filefunctions.FileFunctions;
@@ -1146,7 +1147,7 @@ public class SettingsManager {
         boolean updated = false;
         if (version < VERSION) {
             updated = true;
-            s = new SettingsUpdater().update(version, s);
+            s = new SettingsStringUpdater().update(version, s);
         }
         SettingsManager settings = fromStringWithoutVersion(s);
         settings.setUpdatedFromOldVersion(updated);

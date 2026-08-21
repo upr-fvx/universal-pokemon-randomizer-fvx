@@ -43,6 +43,8 @@ public class MiscTweak implements Comparable<MiscTweak> {
     //  - remove EV yields
     //  - update rotom forme types
 
+    // TODO: before moving misc tweaks we should write the new settings updater
+
     // Note that Java ints are 32 bits, so with the current implementation
     // there can be no more than 32 different MiscTweaks.
     public static final int NO_MISC_TWEAKS = 0;

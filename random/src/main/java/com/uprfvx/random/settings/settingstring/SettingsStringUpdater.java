@@ -1,4 +1,4 @@
-package com.uprfvx.random.settings;
+package com.uprfvx.random.settings.settingstring;
 
 /*----------------------------------------------------------------------------*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
@@ -31,20 +31,17 @@ import java.util.Base64;
 import java.util.zip.CRC32;
 
 /**
- * Handles the process of updating a Settings file from an old Randomizer version
- * to use the correct binary format so it can be loaded by the current version.
+ * Updates settings strings (see {@link SettingsStringConverter})
+ * that were created in even older versions of the Randomizer, to the format
+ * used in FVX v1.6.0. For updating modern settings to match the current
+ * version, see {@link SettingsUpdater}.
  * <br><br>
- * For ease of use, the location for adding update code for a new version,
- * is at the bottom of this class.
- * <br><br>
- * The code in this class hasn't been refactored to be standardized much,
- * because it is tricky to test and thus very easy to accidentally break.<br>
- * For new code, some combination of the mostly static methods at the top
- * of this class are recommended.
+ * This class is for keeping compatibility with legacy versions.
+ * It should NOT be touched much. This includes refactorization.
+ * This class is tricky to test, and thus very easy to accidentally break.
  */
-public class SettingsUpdater {
+public class SettingsStringUpdater {
 
-    // TODO: temp copy from Settings; reconcile these to be in one place
     private static int makeByteSelected(boolean... bools) {
         if (bools.length > 8) {
             throw new IllegalArgumentException("Can't set more than 8 bits in a byte!");
@@ -59,7 +56,6 @@ public class SettingsUpdater {
         return initial;
     }
     
-    // TODO: temp copy from Settings; reconcile these to be in one place
     private static boolean restoreState(byte b, int index) {
         if (index >= 8) {
             throw new IllegalArgumentException("Can't read more than 8 bits from a byte!");
@@ -250,7 +246,7 @@ public class SettingsUpdater {
         insertExtraByte(56, (byte) 0x1);
         // move the former Update Type Effectiveness misctweak to a proper setting
         int miscTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 34);
-        boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
+        boolean updateTypeEffectiveness = (MiscTweakValues.UPDATE_TYPE_EFFECTIVENESS & miscTweaks) != 0;
         if (updateTypeEffectiveness) {
             dataBlock[56] |= 0x40;
         }
@@ -291,7 +287,7 @@ public class SettingsUpdater {
             insertExtraByte(55, (byte) 0x1);
             // move the former Update Type Effectiveness misctweak to a proper setting
             int miscTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 32);
-            boolean updateTypeEffectiveness = (MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue() | miscTweaks) != 0;
+            boolean updateTypeEffectiveness = (MiscTweakValues.UPDATE_TYPE_EFFECTIVENESS & miscTweaks) != 0;
             if (updateTypeEffectiveness) {
                 dataBlock[55] |= 0x40;
             }
@@ -485,16 +481,16 @@ public class SettingsUpdater {
             // Move some bits from general options to misc tweaks
             int oldTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 27);
             if ((dataBlock[0] & 1) != 0) {
-                oldTweaks |= MiscTweak.LOWER_CASE_POKEMON_NAMES.getValue();
+                oldTweaks |= MiscTweakValues.LOWER_CASE_POKEMON_NAMES;
             }
             if ((dataBlock[0] & (1 << 1)) != 0) {
-                oldTweaks |= MiscTweak.NATIONAL_DEX_AT_START.getValue();
+                oldTweaks |= MiscTweakValues.NATIONAL_DEX_AT_START;
             }
             if ((dataBlock[0] & (1 << 5)) != 0) {
-                oldTweaks |= MiscTweak.OLD_UPDATE_TYPE_EFFECTIVENESS.getValue();
+                oldTweaks |= MiscTweakValues.UPDATE_TYPE_EFFECTIVENESS;
             }
             if ((dataBlock[2] & (1 << 5)) != 0) {
-                oldTweaks |= MiscTweak.FORCE_CHALLENGE_MODE.getValue();
+                oldTweaks |= MiscTweakValues.FORCE_CHALLENGE_MODE;
             }
             IOFunctions.writeFullIntBigEndian(dataBlock, 27, oldTweaks);
 
@@ -591,7 +587,7 @@ public class SettingsUpdater {
             // randomization, so the misc tweak became unused in this version. It eventually *was*
             // used in a future version for something else, but don't get confused by the new name.
             int oldTweaks = IOFunctions.readFullIntBigEndian(dataBlock, 32);
-            oldTweaks &= ~MiscTweak.FORCE_CHALLENGE_MODE.getValue();
+            oldTweaks &= ~MiscTweakValues.FORCE_CHALLENGE_MODE;
             IOFunctions.writeFullIntBigEndian(dataBlock, 32, oldTweaks);
 
             // Trainer Pokemon held items
@@ -776,8 +772,6 @@ public class SettingsUpdater {
             // add byte to hold BST random buff/nerf %
             insertExtraByte(68, (byte) 0);
         }
-
-        // ^ Insert update for new version above!! ^
 
         // fix checksum
         CRC32 checksum = new CRC32();

@@ -313,7 +313,6 @@ public class RandomizerGUI {
     private JCheckBox lsNoIrregularAltFormesCheckBox;
     private JCheckBox lsNoPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
-    private JComboBox<String> tpComboBox;
     private JCheckBox saForceTwoAbilitiesCheckbox;
     private JRadioButton ppalUnchangedRadioButton;
     private JRadioButton ppalRandomRadioButton;
@@ -694,11 +693,6 @@ public class RandomizerGUI {
 
             }
         });
-        tpComboBox.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                enableOrDisableSubControls();
-            }
-        });
         batchRandomizationMenuItem.addActionListener(_ -> batchRandomizationSettingsDialog());
 
 
@@ -818,7 +812,7 @@ public class RandomizerGUI {
                     ? peMakeEvolutionsEasierLvlSlider.getValue() : romHandler.getHighestEvoLvl();
             int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + tpPercentageEvolutionLevelModifierSpinSlider.getValue() / 100.0));
             tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
-                    bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"),
+                    bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"),
                     Math.max(1, Math.min(100, modifiedLevel))));
         }
     }
@@ -2581,9 +2575,6 @@ public class RandomizerGUI {
 		pmsForceGoodDamagingSpinSlider.setEnabled(false);
 		pmsForceGoodDamagingSpinSlider.setValue(pmsForceGoodDamagingSpinSlider.getMinimum());
 
-		tpComboBox.setVisible(true);
-		tpComboBox.setEnabled(false);
-		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
         setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox,
                 tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
 				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, coRandomizeTrainerNamesCheckBox,
@@ -2603,7 +2594,7 @@ public class RandomizerGUI {
 		tpPercentageEvolutionLevelModifierSpinSlider.setValue(0);
         tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
         tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
-        tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
+        tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"), "--"));
 		tpPercentageLevelModifierSpinSlider.setVisible(true);
 		tpPercentageLevelModifierSpinSlider.setEnabled(false);
         tpPercentageLevelModifierSpinSlider.setValue(0);
@@ -2990,7 +2981,6 @@ public class RandomizerGUI {
             pmsGuaranteedLevel1MovesSlider.setVisible(romHandler.supportsFourStartingMoves());
             pmsEvolutionMovesCheckBox.setVisible(pokemonGeneration >= 7);
 
-            tpComboBox.setEnabled(true);
             tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
             tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
             tpPercentageLevelModifierCheckBox.setEnabled(true);
@@ -3629,7 +3619,7 @@ public class RandomizerGUI {
         if (tpCalculatedFullyEvolvedLvlLabel.isEnabled()) {
             updateFullyEvolvedAtLvlLabel();
         } else {
-            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.tpCalculatedFullyEvolvedLvlLabel.text"), "--"));
+            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"), "--"));
         }
 
         if (tpPercentageLevelModifierCheckBox.isSelected()) {
@@ -3950,21 +3940,6 @@ public class RandomizerGUI {
         }
         mdUpdateComboBox.setModel(new DefaultComboBoxModel<>(moveGenerationNumbers));
 
-
-        tpComboBox.setModel(new DefaultComboBoxModel<>(getTrainerSettingsForGeneration(romHandler.generationOfPokemon())));
-        tpComboBox.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                JComponent comp = (JComponent) super.getListCellRendererComponent(list,
-                        value, index, isSelected, cellHasFocus);
-
-                if (index >= 0 && value != null) {
-                    list.setToolTipText(bundle.getString(trainerSettingToolTips.get(trainerSettings.indexOf(value))));
-                }
-                return comp;
-            }
-        });
-
         tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(getBattleStylesForGeneration(romHandler.generationOfPokemon())));
         tpBattleStyleCombobox.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -4174,7 +4149,8 @@ public class RandomizerGUI {
     }
 
     private boolean isTrainerSetting(int setting) {
-        return trainerSettings.indexOf(tpComboBox.getSelectedItem()) == setting;
+        //return trainerSettings.indexOf(tpComboBox.getSelectedItem()) == setting;
+        return true;
     }
 
     private boolean isBattleStyle(int setting) {

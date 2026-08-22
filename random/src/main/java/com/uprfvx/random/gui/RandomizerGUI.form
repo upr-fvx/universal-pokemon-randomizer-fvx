@@ -2666,7 +2666,7 @@
                               <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpAddMorePokemonForLabel.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addMorePokemonForLabel.text"/>
                             </properties>
                           </component>
                           <component id="2c834" class="javax.swing.JLabel" binding="tpBetterMovesetsLabel">
@@ -2675,7 +2675,7 @@
                               <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsLabel"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsLabel"/>
                             </properties>
                           </component>
                           <component id="a6529" class="javax.swing.JCheckBox" binding="tpBetterMovesetsBossTrainersCheckBox">
@@ -2685,8 +2685,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsBossTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsBossTrainersCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsBossTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="b025e" class="javax.swing.JCheckBox" binding="tpBetterMovesetsImportantTrainersCheckBox">
@@ -2696,8 +2696,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsImportantTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsImportantTrainersCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsImportantTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="d3f6d" class="javax.swing.JCheckBox" binding="tpBetterMovesetsRegularTrainersCheckBox">
@@ -2707,8 +2707,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsRegularTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBetterMovesetsRegularTrainersCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsRegularTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="6a9bc" class="javax.swing.JCheckBox" binding="tpBossTrainersCheckBox">
@@ -2718,8 +2718,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBossTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBossTrainersCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToBossTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="5c82a" class="javax.swing.JCheckBox" binding="tpImportantTrainersCheckBox">
@@ -2729,8 +2729,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpImportantTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpImportantTrainersCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToImportantTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="389b6" class="javax.swing.JCheckBox" binding="tpRegularTrainersCheckBox">
@@ -2740,8 +2740,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRegularTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRegularTrainersCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToRegularTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="cec13" class="javax.swing.JSpinner" binding="tpRegularTrainersSpinner">
@@ -2777,7 +2777,7 @@
                               <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpHeldItemsLabel.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsLabel.text"/>
                             </properties>
                           </component>
                           <component id="b14d7" class="javax.swing.JCheckBox" binding="tpBossTrainersItemsCheckBox">
@@ -2787,8 +2787,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBossTrainersItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBossTrainersItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsBossTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="fe420" class="javax.swing.JCheckBox" binding="tpConsumableItemsOnlyCheckBox">
@@ -2798,8 +2798,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpConsumableItemsOnlyCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpConsumableItemsOnlyCheckBox.tooltip"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsConsumableOnlyCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsConsumableOnlyCheckBox.tooltip"/>
                             </properties>
                           </component>
                           <component id="17c97" class="javax.swing.JCheckBox" binding="tpImportantTrainersItemsCheckBox">
@@ -2809,8 +2809,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpImportantTrainersItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpImportantTrainersItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsImportantTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="f68ea" class="javax.swing.JCheckBox" binding="tpSensibleItemsCheckBox">
@@ -2820,8 +2820,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSensibleItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSensibleItemsCheckBox.tooltip"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsSensibleCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsSensibleCheckBox.tooltip"/>
                             </properties>
                           </component>
                           <component id="fd710" class="javax.swing.JCheckBox" binding="tpRegularTrainersItemsCheckBox">
@@ -2831,8 +2831,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRegularTrainersItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRegularTrainersItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsRegularTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="b9016" class="javax.swing.JCheckBox" binding="tpHighestLevelGetsItemCheckBox">
@@ -2842,8 +2842,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpHighestLevelGetsItemCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpHighestLevelGetsItemCheckBox.tooltip"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsAceOnlyCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsAceOnlyCheckBox.tooltip"/>
                             </properties>
                           </component>
                           <component id="f6301" class="javax.swing.JLabel" binding="tpTypeDiversityLabel">
@@ -2852,7 +2852,7 @@
                               <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpTypeDiversityLabel.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityLabel.text"/>
                             </properties>
                           </component>
                           <component id="a8dcf" class="javax.swing.JCheckBox" binding="tpBossTrainersTypeDiversityCheckBox">
@@ -2862,8 +2862,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBossTrainersTypeDiversityCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpBossTrainersTypeDiversityCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityBossTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="1e59a" class="javax.swing.JCheckBox" binding="tpImportantTrainersTypeDiversityCheckBox">
@@ -2874,8 +2874,8 @@
                             <properties>
                               <enabled value="false"/>
                               <selected value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpImportantTrainersTypeDiversityCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpImportantTrainersTypeDiversityCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityImportantTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <grid id="6ff4f" binding="tpBattleStylePanel" layout-manager="GridBagLayout">
@@ -2884,7 +2884,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
-                            <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.tpBattleStyle.title">
+                            <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.foeTab.trainersPanel.battleStylePanel.title">
                               <font style="1"/>
                             </border>
                             <children>
@@ -2895,8 +2895,8 @@
                                 </constraints>
                                 <properties>
                                   <enabled value="false"/>
-                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpUnchangedBattleStyleRadioButton.text"/>
-                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpUnchangedBattleStyleRadioButton.toolTipText"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.unchangedRadioButton.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.unchangedRadioButton.toolTipText"/>
                                 </properties>
                               </component>
                               <component id="db1cc" class="javax.swing.JRadioButton" binding="tpRandomBattleStyleRadioButton">
@@ -2906,8 +2906,8 @@
                                 </constraints>
                                 <properties>
                                   <enabled value="false"/>
-                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomBattleStyleRadioButton.text"/>
-                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRandomBattleStyleRadioButton.toolTipText"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.randomRadioButton.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.randomRadioButton.toolTipText"/>
                                 </properties>
                               </component>
                               <component id="1a233" class="javax.swing.JRadioButton" binding="tpSingleStyleRadioButton">
@@ -2917,8 +2917,8 @@
                                 </constraints>
                                 <properties>
                                   <enabled value="false"/>
-                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSingleStyleBattleStyleRadioButton.text"/>
-                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpSingleStyleBattleStyleRadioButton.toolTipText"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.singleStyleRadioButton.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.singleStyleRadioButton.toolTipText"/>
                                 </properties>
                               </component>
                               <component id="edcc" class="javax.swing.JComboBox" binding="tpBattleStyleCombobox">
@@ -2951,8 +2951,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRegularTrainersTypeDiversityCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpRegularTrainersTypeDiversityCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityRegularTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="12855">
@@ -2989,8 +2989,8 @@
                         <properties>
                           <enabled value="false"/>
                           <selected value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpEliteFourUniquePokemonCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpEliteFourUniquePokemonCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.eliteFourUniquePokemonCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.eliteFourUniquePokemonCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
@@ -3015,8 +3015,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpCalculatedFullyEvolvedLvlLabel.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpCalculatedFullyEvolvedLvlLabel.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.toolTipText"/>
                         </properties>
                       </component>
                       <component id="63823" class="com.uprfvx.random.gui.SpinSlider" binding="tpPercentageEvolutionLevelModifierSpinSlider" default-binding="true">
@@ -3026,7 +3026,7 @@
                         </constraints>
                         <properties>
                           <enabled value="true"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageEvolutionLevelModifierSpinSlider.toolTipText"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.PercentageEvolutionLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpTrainersEvolveTheirPokemonCheckbox">
@@ -3036,8 +3036,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpTrainersEvolveTheirPokemonCheckbox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpTrainersEvolveTheirPokemonCheckbox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.trainersEvolveTheirPokemonCheckbox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.trainersEvolveTheirPokemonCheckbox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="670de" class="com.uprfvx.random.gui.SpinSlider" binding="tpPercentageLevelModifierSpinSlider" default-binding="true">
@@ -3047,7 +3047,7 @@
                         </constraints>
                         <properties>
                           <enabled value="true"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageLevelModifierSpinSlider.toolTipText"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <component id="8428b" class="javax.swing.JCheckBox" binding="tpPercentageLevelModifierCheckBox" default-binding="true">
@@ -3057,8 +3057,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tpPercentageLevelModifierCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <vspacer id="55f50">

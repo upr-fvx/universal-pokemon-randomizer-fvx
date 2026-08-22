@@ -399,10 +399,10 @@ public class RandomizerGUI {
     private JCheckBox btNoEVYieldsCheckBox;
     private JCheckBox spBasicOnlyCheckBox;
     private JCheckBox spHasEvolutionsCheckBox;
-    private JSpinner spHasEvolutionCountSpinner;
     private JLabel spBSTLimitsLabel;
     private JCheckBox igtRandomizeGivenSpeciesCheckBox;
     private JCheckBox igtRandomizeRequestedSpeciesCheckBox;
+    private JSlider spHasEvolutionCountSlider;
 
 
     private static final Random RND = new Random();

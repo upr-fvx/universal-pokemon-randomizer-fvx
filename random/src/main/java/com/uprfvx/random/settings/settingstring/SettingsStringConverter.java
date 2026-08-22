@@ -6,6 +6,9 @@ import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.SettingsUpdater;
+import com.uprfvx.romio.gamedata.BattleStyle;
+import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.GenRestrictions;
 import filefunctions.IOFunctions;
 
 import java.util.Base64;
@@ -146,7 +149,7 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 4, 6, Settings.Name.STARTERS_ALLOW_ALT_FORMES);
 
 
-        // Bytes 5-10: Custom Starters
+        // Bytes 5--10: Custom Starters
         load2ByteInt(m, d, 5, Settings.Name.STARTER_CUSTOM_1);
         load2ByteInt(m, d, 7, Settings.Name.STARTER_CUSTOM_1);
         load2ByteInt(m, d, 9, Settings.Name.STARTER_CUSTOM_1);
@@ -165,7 +168,7 @@ public class SettingsStringConverter {
 
 
         // Byte 12: Movesets Force Good Damaging
-        loadNybble(m, d, 12, 0, Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT);
+        loadBits(m, d, 12, 0, 7, Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT);
         // (12, 7) is a boolean that can entirely disable the option
         if (restoreState(d[12], 7)) {
             m.setSetting(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT, 0);
@@ -231,7 +234,7 @@ public class SettingsStringConverter {
 
         // Byte 18: Wild Pokémon (continued #3)
         loadBoolean(m, d, 18, 0, Settings.Name.WILD_REMOVE_TIME_BASED, true);
-        // TODO: minimum catch rate
+        boolean unchangedCatchRate = restoreState(d[18], 1);
         loadBoolean(m, d, 18, 2, Settings.Name.WILD_NO_LEGENDARIES);
         loadBoolean(m, d, 18, 3, Settings.Name.WILD_RANDOMIZE_HELD_ITEMS);
         loadBoolean(m, d, 18, 4, Settings.Name.WILD_HELD_ITEMS_BAN_MINOR);
@@ -278,7 +281,7 @@ public class SettingsStringConverter {
 
 
         // Byte 22: TM Force Good Damaging
-        loadNybble(m, d, 22, 0, Settings.Name.TMS_GOOD_DAMAGING_PERCENT);
+        loadBits(m, d, 22, 0, 7, Settings.Name.TMS_GOOD_DAMAGING_PERCENT);
         // (22, 7) is a boolean that can entirely disable the option
         if (restoreState(d[22], 7)) {
             m.setSetting(Settings.Name.TMS_GOOD_DAMAGING_PERCENT, 0);
@@ -303,7 +306,7 @@ public class SettingsStringConverter {
 
 
         // Byte 24: Tutor Force Good Damaging
-        loadNybble(m, d, 24, 0, Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT);
+        loadBits(m, d, 24, 0, 7, Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT);
         // (24, 7) is a boolean that can entirely disable the option
         if (restoreState(d[24], 7)) {
             m.setSetting(Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT, 0);
@@ -323,41 +326,391 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 25, 5, Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
         // (25, 7) unused
 
-        // TODO: fill in rest (up to byte 68)
+
+        // Byte 26: Field items
+        loadEnum(m, d, 26, Settings.Name.RANDOMIZE_FIELD_ITEMS,
+                Map.of(
+                        0, Settings.FieldItemsMod.RANDOM,
+                        1, Settings.FieldItemsMod.SHUFFLE,
+                        2, Settings.FieldItemsMod.UNCHANGED,
+                        4, Settings.FieldItemsMod.RANDOM_EVEN
+                ));
+        loadBoolean(m, d, 26, 3, Settings.Name.FIELD_ITEMS_BAN_MINOR);
+        // (26, 5--7) unused
+
+
+        // Byte 27: Move Data
+        loadBoolean(m, d, 27, 0, Settings.Name.MOVES_RANDOMIZE_POWER);
+        loadBoolean(m, d, 27, 1, Settings.Name.MOVES_RANDOMIZE_ACCURACY);
+        loadBoolean(m, d, 27, 2, Settings.Name.MOVES_RANDOMIZE_PP);
+        loadBoolean(m, d, 27, 3, Settings.Name.MOVES_RANDOMIZE_TYPE);
+        loadBoolean(m, d, 27, 4, Settings.Name.MOVES_RANDOMIZE_CATEGORY);
+        loadBoolean(m, d, 27, 5, Settings.Name.STATICS_FIX_MUSIC);
+        loadBoolean(m, d, 27, 6, Settings.Name.MOVES_RANDOMIZE_NAME);
+        // (27, 7) unused
+
+
+        // Byte 28: Evolutions
+        loadEnum(m, d, 28, Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS,
+                Map.of(
+                        0, Settings.EvolutionsMod.UNCHANGED,
+                        1, Settings.EvolutionsMod.RANDOM,
+                        7, Settings.EvolutionsMod.RANDOM_EVERY_LEVEL
+                ));
+        loadBoolean(m, d, 28, 2, Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH);
+        loadBoolean(m, d, 28, 3, Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE);
+        loadBoolean(m, d, 28, 4, Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES);
+        loadBoolean(m, d, 28, 5, Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE);
+        loadBoolean(m, d, 28, 6, Settings.Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES);
+
+
+        // Byte 29: Trainer Pokémon
+        loadBoolean(m, d, 29, 0, Settings.Name.TRAINERS_USE_SIMILAR_STRENGTH);
+        loadBoolean(m, d, 29, 1, Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER);
+        loadBoolean(m, d, 29, 2, Settings.Name.TRAINERS_WEIGHT_TYPES);
+        loadBoolean(m, d, 29, 3, Settings.Name.TRAINERS_NO_LEGENDARIES);
+        loadBoolean(m, d, 29, 4, Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
+        loadBoolean(m, d, 29, 5, Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
+        loadBoolean(m, d, 29, 6, Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
+        loadBoolean(m, d, 29, 7, Settings.Name.TRAINERS_AVOID_DUPLICATES);
+
+
+        // Bytes 30--33: Pokémon Generation Restrictions
+        // TODO: load
+
+
+        // Bytes 34--37: Misc Tweaks
+        // TODO: load
+
+
+        // Byte 38: Trainer Pokémon level modifier
+        // Shift from int8 range: [-128, 127] --> [-100, 155]
+        loadByte(m, d, 38, Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, 28);
+
+
+        // Byte 39: Shop items
+        loadEnum(m, d, 39, Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS,
+                Map.of(
+                        0, Settings.ShopItemsMod.RANDOM,
+                        1, Settings.ShopItemsMod.SHUFFLE,
+                        2, Settings.ShopItemsMod.UNCHANGED
+                ));
+        loadBoolean(m, d, 39, 3, Settings.Name.SHOP_ITEMS_BAN_MINOR);
+        loadBoolean(m, d, 39, 4, Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS);
+        loadBoolean(m, d, 39, 5, Settings.Name.SHOP_ITEMS_BAN_OVERPOWERED);
+        // (39, 6) unused
+        loadBoolean(m, d, 39, 7, Settings.Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS);
+
+
+        // Byte 40: Wild Pokémon level modifier
+        // Shift from int8 range: [-128, 127] --> [-100, 155]
+        loadByte(m, d, 40, Settings.Name.WILD_LEVEL_MODIFIER_PERCENT, 28);
+
+
+        // Byte 41: EXP curves, OP moves, and alt formes
+        loadEnum(m, d, 41, Settings.Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
+                Map.of(
+                        0, Settings.ExpCurveExtentMod.LEGENDARIES,
+                        1, Settings.ExpCurveExtentMod.STRONG_LEGENDARIES,
+                        2, Settings.ExpCurveExtentMod.ALL
+                ));
+        loadBoolean(m, d, 41, 3, Settings.Name.MOVESETS_BAN_OVERPOWERED);
+        loadBoolean(m, d, 41, 4, Settings.Name.TMS_BAN_OVERPOWERED);
+        loadBoolean(m, d, 41, 5, Settings.Name.TUTORS_BAN_OVERPOWERED);
+        loadBoolean(m, d, 41, 6, Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 41, 7, Settings.Name.WILD_ALLOW_ALT_FORMES);
+
+
+        // Byte 42: Additional Trainer Pokémon
+        // (42, 0) unused
+        // TODO: additional trainer mons for boss/important
+        loadBoolean(m, d, 42, 7, Settings.Name.SPECIES_ABILITIES_COMBINE_DUPLICATES);
+
+
+        // Byte 43: Misc.
+        // TODO: additional trainer mons for regular
+        loadEnum(m, d, 43, Settings.Name.TOTEMS_RANDOMIZE_AURAS,
+                Map.of(
+                        3, Settings.AuraMod.UNCHANGED,
+                        4, Settings.AuraMod.RANDOM,
+                        5, Settings.AuraMod.SAME_STRENGTH
+                ));
+        loadBoolean(m, d, 43, 6, Settings.Name.MOVESETS_GUARANTEE_EVOLUTION_MOVES);
+        loadBoolean(m, d, 43, 7, Settings.Name.SHOP_ITEMS_GUARANTEE_X_ITEMS);
+
+
+        // Byte 44: Totem Pokémon
+        loadEnum(m, d, 44, Settings.Name.RANDOMIZE_TOTEM_POKEMON,
+                Map.of(
+                        0, Settings.TotemPokemonMod.UNCHANGED,
+                        1, Settings.TotemPokemonMod.RANDOM,
+                        2, Settings.TotemPokemonMod.SIMILAR_STRENGTH
+                ));
+        loadEnum(m, d, 44, Settings.Name.TOTEMS_RANDOMIZE_ALLIES,
+                Map.of(
+                        3, Settings.AllyPokemonMod.UNCHANGED,
+                        4, Settings.AllyPokemonMod.RANDOM,
+                        5, Settings.AllyPokemonMod.SIMILAR_STRENGTH
+                ));
+        loadBoolean(m, d, 44, 6, Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS);
+        loadBoolean(m, d, 44, 7, Settings.Name.TOTEMS_ALLOW_ALT_FORMES);
+
+
+        // Byte 45: Totem Pokémon level modifier
+        // Shift from int8 range: [-128, 127] --> [-100, 155]
+        loadByte(m, d, 45, Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT, 28);
+
+
+        // Byte 46: Base stat update generation
+        loadByte(m, d, 46, Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION);
+
+
+        // Byte 47: Move update generation
+        loadByte(m, d, 47, Settings.Name.UPDATE_MOVES_TO_GENERATION);
+
+
+        // Byte 48: Standard EXP curve
+        // TODO: this enum is written in an entirely different way, for some reason
+        //  (maybe in a *better* way, but still)
+
+
+        // Byte 49: Static Pokémon level modifier
+        // Shift from int8 range: [-128, 127] --> [-100, 155]
+        loadByte(m, d, 49, Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT, 28);
+
+
+        // Byte 50: Trainer Pokémon held items + misc.
+        loadBoolean(m, d, 50, 0, Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES);
+        loadBoolean(m, d, 50, 1, Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT);
+        loadBoolean(m, d, 50, 2, Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR);
+        loadBoolean(m, d, 50, 3, Settings.Name.TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY);
+        loadBoolean(m, d, 50, 4, Settings.Name.TRAINER_HELD_ITEMS_SENSIBLE_ONLY);
+        loadBoolean(m, d, 50, 5, Settings.Name.TRAINERS_HELD_ITEMS_ACES_ONLY);
+        loadBoolean(m, d, 50, 6, Settings.Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES);
+        loadBoolean(m, d, 50, 7, Settings.Name.TRAINERS_USE_LOCAL);
+
+        // Byte 51: Pickup items
+        loadEnum(m, d, 51, Settings.Name.RANDOMIZE_PICKUP_ITEMS,
+                Map.of(
+                        0, Settings.PickupItemsMod.RANDOM,
+                        1, Settings.PickupItemsMod.UNCHANGED
+                ));
+        loadBoolean(m, d, 51, 2, Settings.Name.PICKUP_ITEMS_BAN_MINOR);
+        loadBoolean(m, d, 51, 3, Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        // (51, 4--7) unused
+
+
+        // Byte 52: Elite Four uniqueness and minimum catch rate
+        loadBits(m, d, 52, 0, 3, Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT);
+        int minCatchRateIndex = readBits(d, 0, 3, 3);
+        Settings.CatchRateMod minCatchRate = switch (minCatchRateIndex) {
+            case 0 -> Settings.CatchRateMod.STANDARDIZED;
+            case 1 -> Settings.CatchRateMod.BUFFED;
+            case 2 -> Settings.CatchRateMod.SUPER;
+            case 3 -> Settings.CatchRateMod.ULTRA;
+            case 4 -> Settings.CatchRateMod.GUARANTEED;
+            default -> throw new IllegalStateException("Invalid minimal catch rate index: " + minCatchRateIndex);
+        };
+        m.setSetting(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION, minCatchRate);
+        if (unchangedCatchRate) {
+            m.setSetting(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION, Settings.CatchRateMod.UNCHANGED);
+        }
+        // (52, 6--7) unused
+
+
+        // Byte 53: Starter type restrictions
+        loadEnum(m, d, 53, Settings.Name.STARTERS_TYPE_RESTRICTION,
+                Map.of(
+                        0, Settings.StartersTypeMod.NONE,
+                        1, Settings.StartersTypeMod.FIRE_WATER_GRASS,
+                        2, Settings.StartersTypeMod.TRIANGLE,
+                        3, Settings.StartersTypeMod.UNIQUE,
+                        4, Settings.StartersTypeMod.SINGLE_TYPE
+                ));
+        // (53, 5) unused
+        loadBoolean(m, d, 53, 6, Settings.Name.STARTERS_NO_LEGENDARIES);
+        loadBoolean(m, d, 53, 7, Settings.Name.STARTERS_NO_DUAL_TYPES);
+
+
+        // Byte 54: Starter single type
+        // Shift from [Random=0 ... Highest Type Value + 1] -> [Random=-1 ... Highest Type Value]
+        loadByte(m, d, 54, Settings.Name.STARTERS_SINGLE_TYPE_SELECTION, -1);
+
+
+        // Byte 55: Pokémon palettes
+        loadEnum(m, d, 55, Settings.Name.RANDOMIZE_SPECIES_PALETTES,
+                Map.of(
+                        0, Settings.SpeciesPalettesMod.UNCHANGED,
+                        1, Settings.SpeciesPalettesMod.RANDOM
+                ));
+        loadBoolean(m, d, 55, 2, Settings.Name.PALETTES_FOLLOW_TYPES);
+        loadBoolean(m, d, 55, 3, Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
+        loadBoolean(m, d, 55, 4, Settings.Name.PALETTES_SHINY_FROM_NORMAL);
+        // (55, 5--7) unused
+
+        // Byte 56: Type effectiveness
+        loadEnum(m, d, 56, Settings.Name.RANDOMIZE_TYPE_EFFECTIVENESS,
+                Map.of(
+                        0, Settings.TypeEffectivenessMod.UNCHANGED,
+                        1, Settings.TypeEffectivenessMod.RANDOM,
+                        2, Settings.TypeEffectivenessMod.RANDOM_BALANCED,
+                        3, Settings.TypeEffectivenessMod.KEEP_IDENTITIES,
+                        4, Settings.TypeEffectivenessMod.INVERSE
+                ));
+        loadBoolean(m, d, 56, 5, Settings.Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES);
+        loadBoolean(m, d, 56, 6, Settings.Name.UPDATE_TYPE_EFFECTIVENESS);
+        // (56, 7) unused
+
+
+        // Byte 57: Pokémon Evolutions
+        loadBoolean(m, d, 57, 0, Settings.Name.SPECIES_EVOLUTIONS_FORCE_GROWTH);
+        loadBoolean(m, d, 57, 1, Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE);
+        loadBoolean(m, d, 57, 2, Settings.Name.SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH);
+        // (57, 3--7) unused
+
+
+        // Bytes 58--60: Starter BST limits
+        // TODO: what is even up with these
+        loadPackedBytePair(m, d, 58, 59, 0x0F, 8, Settings.Name.STARTERS_BST_MINIMUM);
+        loadPackedBytePair(m, d, 58, 60, 0xF0, 4, Settings.Name.STARTERS_BST_MAXIMUM);
+
+
+        // Byte 61: Trainer type diversity and better movesets
+        loadBoolean(m, d, 61, 0, Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES);
+        loadBoolean(m, d, 61, 1, Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES);
+        loadBoolean(m, d, 61, 2, Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES);
+        loadBoolean(m, d, 61, 3, Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES);
+        loadBoolean(m, d, 61, 4, Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT);
+        loadBoolean(m, d, 61, 5, Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);
+        // (61, 6--7) unused
+
+        
+        // Byte 62: Battle style
+        loadEnum(m, d, 62, Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
+                Map.of(
+                        0, BattleStyle.Modification.UNCHANGED,
+                        1, BattleStyle.Modification.RANDOM,
+                        2, BattleStyle.Modification.SINGLE_STYLE
+                ));
+        loadEnum(m, d, 62, Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION,
+                Map.of(
+                        3, BattleStyle.Style.SINGLE_BATTLE,
+                        4, BattleStyle.Style.DOUBLE_BATTLE,
+                        5, BattleStyle.Style.TRIPLE_BATTLE,
+                        6, BattleStyle.Style.ROTATION_BATTLE
+                ));
+        // (62, 7) unused
+
+
+        // Byte 63: Evolution Stuff + level-modifier activation
+        loadBoolean(m, d, 63, 0, Settings.Name.TRAINERS_EVOLVE_POKEMON);
+        loadBoolean(m, d, 63, 1, Settings.Name.NO_PREMATURE_EVOLUTIONS);
+        // TODO: allow the toggles in (63, 2--5) to zero out respective percentages
+        // (63, 6--7) unused
+
+
+        // Byte 64: Shop Items
+        loadBoolean(m, d, 64, 0, Settings.Name.SHOP_ITEMS_BALANCE_PRICES);
+        loadBoolean(m, d, 64, 1, Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY);
+        // (64, 2--7) unused
+
+
+        // Byte 65: General Options
+        loadBoolean(m, d, 65, 0, Settings.Name.NO_RANDOM_INTRO_MON, true);
+        loadBoolean(m, d, 65, 1, Settings.Name.RACE_MODE);
+        // (65, 2) unused
+        if (restoreState(d[65], 3)) {
+            // TODO: lift generation restrictions/disable generational bans
+        }
+        // (65, 4--7) unused
+
+
+        // Byte 66: Easier Evolution Level
+        loadByte(m, d, 66, Settings.Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL);
+
+
+        // Byte 67: Base Stat Totals
+        loadEnum(m, d, 67, Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
+                Map.of(
+                        0, Settings.BSTMod.UNCHANGED,
+                        1, Settings.BSTMod.RANDOM_BUFF_NERF,
+                        2, Settings.BSTMod.SHUFFLE,
+                        3, Settings.BSTMod.RANDOM
+                ));
+        loadBoolean(m, d, 67, 4, Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
+        loadBoolean(m, d, 67, 5, Settings.Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
+        // (67, 6--7) unused
+
+
+        // Byte 68: BST Random Buff/Nerf Max Percentage
+        loadByte(m, d, 68, Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
+
+        // TODO: loading the ROM name?
     }
 
-    public void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {
+    private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {
         manager.setSetting(name, restoreState(data[byteNum], bitNum));
     }
 
-    public void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum,
+    private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum,
                             Settings.Name name, boolean invert) {
         boolean state = restoreState(data[byteNum], bitNum);
         if (invert) {state = !state;}
         manager.setSetting(name, state);
     }
 
-    public void loadNybble(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {
-        int fullByte = data[byteNum] & 0xFF;
-        int nybble = fullByte >> bitNum & 0x0F;
-        manager.setSetting(name, nybble);
+    /**
+     * Loads an unsigned integer <code>bitLength</code> bits long.
+     */
+    private void loadBits(SettingsManager manager, byte[] data, int byteNum, int bitNum, int bitLength,
+                         Settings.Name name) {
+        int value = readBits(data, byteNum, bitNum, bitLength);
+        manager.setSetting(name, value);
+    }
+
+    /**
+     * Reads an unsigned integer <code>bitLength</code> bits long.
+     */
+    private int readBits(byte[] data, int byteNum, int bitNum, int bitLength) {
+        return (data[byteNum] & 0xFF) >> bitNum & ((1 << bitLength) - 1);
+    }
+
+    /**
+     * Loads a signed byte.
+     */
+    private void loadByte(SettingsManager manager, byte[] data, int byteNum, Settings.Name name) {
+        manager.setSetting(name, data[byteNum]);
     }
 
     /**
      * Loads a signed byte, shifted by a constant.
      */
-    public void loadByte(SettingsManager manager, byte[] data, int byteNum, Settings.Name name, int shift) {
+    private void loadByte(SettingsManager manager, byte[] data, int byteNum, Settings.Name name, int shift) {
         manager.setSetting(name, data[byteNum] + shift);
+    }
+
+    /**
+     * Loads a value whose high bits are packed into one byte and whose low byte
+     * is stored separately.
+     */
+    private void loadPackedBytePair(SettingsManager manager, byte[] data, int highByteNum, int lowByteNum,
+                                    int highMask, int highShift, Settings.Name name) {
+        int value = ((data[highByteNum] & highMask) << highShift) | (data[lowByteNum] & 0xFF);
+        manager.setSetting(name, value);
     }
 
     /**
      * Loads a signed 2-byte small-endian int.
      */
-    public void load2ByteInt(SettingsManager manager, byte[] data, int byteNum, Settings.Name name) {
+    private void load2ByteInt(SettingsManager manager, byte[] data, int byteNum, Settings.Name name) {
         manager.setSetting(name, IOFunctions.read2ByteInt(data, byteNum));
     }
 
-    public <E extends Enum<E>> void loadEnum(SettingsManager manager, byte[] data, int byteNum, Settings.Name name, Map<Integer, E> map) {
+    /**
+     * Loads an Enum using a number of bits that each correspond to an Enum value.
+     * @throws IllegalStateException if [#bits that are 1/on] != 1.
+     */
+    private <E extends Enum<E>> void loadEnum(SettingsManager manager, byte[] data, int byteNum, Settings.Name name, Map<Integer, E> map) {
         List<E> enabledValues = map.keySet().stream()
                 .filter(key -> restoreState(data[byteNum], key))
                 .map(map::get)

@@ -155,8 +155,8 @@ public class RandomizerGUI {
     private JCheckBox tpWeightTypesCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
-    private JCheckBox tpRandomizeTrainerNamesCheckBox;
-    private JCheckBox tpRandomizeTrainerClassNamesCheckBox;
+    private JCheckBox coRandomizeTrainerNamesCheckBox;
+    private JCheckBox coRandomizeTrainerClassNamesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private SpinSlider tpPercentageEvolutionLevelModifierSpinSlider;
     private SpinSlider tpPercentageLevelModifierSpinSlider;
@@ -226,7 +226,7 @@ public class RandomizerGUI {
     private JCheckBox miscAllowPikachuEvolutionCheckBox;
     private JCheckBox qoltNationalDexCheckBox;
     private JCheckBox miscUpdateTypeEffectivenessCheckBox;
-    private JCheckBox qoltLowerCasePokemonNamesCheckBox;
+    private JCheckBox coLowerCasePokemonNamesCheckBox;
     private JCheckBox coRandomizeCatchingTutorialCheckBox;
     private JCheckBox btBanLuckyEggCheckBox;
     private JCheckBox btNoFreeLuckyEggCheckBox;
@@ -356,7 +356,6 @@ public class RandomizerGUI {
     private JRadioButton wpERNoneRadioButton;
     private JRadioButton wpERBasicOnlyRadioButton;
     private JRadioButton wpERSameEvolutionStageRadioButton;
-    private JLabel tpTypeDiversityLabel;
     private JCheckBox tpBossTrainersTypeDiversityCheckBox;
     private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
@@ -403,6 +402,15 @@ public class RandomizerGUI {
     private JCheckBox igtRandomizeGivenSpeciesCheckBox;
     private JCheckBox igtRandomizeRequestedSpeciesCheckBox;
     private JSlider spHasEvolutionCountSlider;
+    private JCheckBox tpRandomizeTrainerPokemonCheckBox;
+    private JRadioButton tpTypesUnrestrictedRadioButton;
+    private JRadioButton tpRandomTypeThemesRadioButton;
+    private JRadioButton tpKeepTypeThemesRadioButton;
+    private JCheckBox tpTypeGymsAndElitesOnlyCheckBox;
+    private JRadioButton tpKeepThemesOrPrimaryRadioButton;
+    private JLabel tpTypeDiversityLabel;
+    private JCheckBox tpDistributeSpeciesCheckBox;
+    private JCheckBox tpDistributeInMainGameOnly;
 
 
     private static final Random RND = new Random();
@@ -1827,8 +1835,8 @@ public class RandomizerGUI {
         peUseEstimatedInsteadOfHardcodedLevelsCheckBox.setSelected(settings.useEstimatedLevelsForEvolutionImprovements());
         mdUpdateMovesCheckBox.setSelected(settings.isUpdateMoves());
         mdUpdateComboBox.setSelectedIndex(Math.max(0,settings.getUpdateMovesToGeneration() - (romHandler.generationOfPokemon()+1)));
-        tpRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
-        tpRandomizeTrainerClassNamesCheckBox.setSelected(settings.isRandomizeTrainerClassNames());
+        coRandomizeTrainerNamesCheckBox.setSelected(settings.isRandomizeTrainerNames());
+        coRandomizeTrainerClassNamesCheckBox.setSelected(settings.isRandomizeTrainerClassNames());
         stForceDualTypeCheckBox.setSelected(settings.isDualTypeOnly());
 
         sbstRandomBuffNerfRadioButton.setSelected(settings.getBSTMod() == SettingsManager.BSTMod.RANDOM_BUFF_NERF);
@@ -2164,8 +2172,8 @@ public class RandomizerGUI {
         settings.setEstimateLevelForEvolutionImprovements(peUseEstimatedInsteadOfHardcodedLevelsCheckBox.isSelected());
         settings.setUpdateMoves(mdUpdateMovesCheckBox.isSelected() && mdUpdateMovesCheckBox.isVisible());
         settings.setUpdateMovesToGeneration(mdUpdateComboBox.getSelectedIndex() + (romHandler.generationOfPokemon()+1));
-        settings.setRandomizeTrainerNames(tpRandomizeTrainerNamesCheckBox.isSelected());
-        settings.setRandomizeTrainerClassNames(tpRandomizeTrainerClassNamesCheckBox.isSelected());
+        settings.setRandomizeTrainerNames(coRandomizeTrainerNamesCheckBox.isSelected());
+        settings.setRandomizeTrainerClassNames(coRandomizeTrainerClassNamesCheckBox.isSelected());
 
         settings.setBSTMod(sbstUnchangedRadioButton.isSelected(), sbstRandomBuffNerfRadioButton.isSelected(),
                 sbstShuffleRadioButton.isSelected(), sbstRandomRadioButton.isSelected());
@@ -2578,8 +2586,8 @@ public class RandomizerGUI {
 		tpComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Unchanged" }));
         setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox,
                 tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
-				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, tpRandomizeTrainerNamesCheckBox,
-				tpRandomizeTrainerClassNamesCheckBox,
+				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, coRandomizeTrainerNamesCheckBox,
+                coRandomizeTrainerClassNamesCheckBox,
                 tpTrainersEvolveTheirPokemonCheckbox, tpPercentageLevelModifierCheckBox,
 				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
 				tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
@@ -2690,7 +2698,7 @@ public class RandomizerGUI {
         setInitialButtonState(btScalingEXPCheckBox, btNerfXAccuracyCheckBox, btUpdateCritRateCheckBox,
                 qoltFastestTextCheckBox, qoltRunIndoorsCheckBox, miscRandomizePCPotionCheckBox,
 				miscAllowPikachuEvolutionCheckBox, qoltNationalDexCheckBox,
-                qoltLowerCasePokemonNamesCheckBox, coRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
+                coLowerCasePokemonNamesCheckBox, coRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
                 btNoFreeLuckyEggCheckBox, miscBanBigMoneyManiacCheckBox);
 
         mtNoExistLabel.setVisible(false);
@@ -3043,7 +3051,7 @@ public class RandomizerGUI {
             disableAndDeselectButtons(tpRegularTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
                     tpBossTrainersTypeDiversityCheckBox);
 
-            enableButtons(tpRandomizeTrainerNamesCheckBox, tpRandomizeTrainerClassNamesCheckBox);
+            enableButtons(coRandomizeTrainerNamesCheckBox, coRandomizeTrainerClassNamesCheckBox);
 
             tpNoEarlyWonderGuardCheckBox.setVisible(romHandler.abilitiesPerSpecies() != 0);
             tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);

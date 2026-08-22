@@ -162,7 +162,12 @@ public class SettingsStringConverter {
                         3, Settings.MovesetsMod.METRONOME_ONLY
                 ));
         loadBoolean(m, d, 11, 5, Settings.Name.MOVESETS_ORDER_BY_DAMAGE);
-        // TODO: guaranteed move count
+        boolean hasGuaranteedMoves = restoreState(d[11], 4);
+        int guaranteedMoveCount = readBits(d, 11, 6, 2) + 2;
+        if (!hasGuaranteedMoves) {
+            guaranteedMoveCount = 1;
+        }
+        m.setSetting(Settings.Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT, guaranteedMoveCount);
 
 
         // Byte 12: Movesets Force Good Damaging
@@ -447,12 +452,13 @@ public class SettingsStringConverter {
 
         // Byte 42: Additional Trainer Pokémon
         // (42, 0) unused
-        // TODO: additional trainer mons for boss/important
+        loadBits(m, d, 42, 1, 3, Settings.Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT);
+        loadBits(m, d, 42, 4, 3, Settings.Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT);
         loadBoolean(m, d, 42, 7, Settings.Name.SPECIES_ABILITIES_COMBINE_DUPLICATES);
 
 
         // Byte 43: Misc.
-        // TODO: additional trainer mons for regular
+        loadBits(m, d, 42, 0, 3, Settings.Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT);
         loadEnum(m, d, 43, Settings.Name.TOTEMS_RANDOMIZE_AURAS,
                 Map.of(
                         3, Settings.AuraMod.UNCHANGED,
@@ -629,7 +635,19 @@ public class SettingsStringConverter {
         // Byte 63: Evolution Stuff + level-modifier activation
         loadBoolean(m, d, 63, 0, Settings.Name.TRAINERS_EVOLVE_POKEMON);
         loadBoolean(m, d, 63, 1, Settings.Name.NO_PREMATURE_EVOLUTIONS);
-        // TODO: allow the toggles in (63, 2--5) to zero out respective percentages
+        // (63, 2--5) are booleans that can entirely disable other level percentage options
+        if (!restoreState(d[63], 2)) {
+            m.setSetting(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, 0);
+        }
+        if (!restoreState(d[63], 3)) {
+            m.setSetting(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT, 0);
+        }
+        if (!restoreState(d[63], 4)) {
+            m.setSetting(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT, 0);
+        }
+        if (!restoreState(d[63], 5)) {
+            m.setSetting(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT, 0);
+        }
         // (63, 6--7) unused
 
 
@@ -643,8 +661,15 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 65, 0, Settings.Name.NO_RANDOM_INTRO_MON, true);
         loadBoolean(m, d, 65, 1, Settings.Name.RACE_MODE);
         // (65, 2) unused
+        // (65, 3) is a generation restriction override
         if (restoreState(d[65], 3)) {
-            // TODO: lift generation restrictions/disable generational bans
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_1, false);
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_2, false);
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_3, false);
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_4, false);
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_5, false);
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_6, false);
+            m.setSetting(Settings.Name.LIMIT_BAN_GENERATION_7, false);
         }
         // (65, 4--7) unused
 

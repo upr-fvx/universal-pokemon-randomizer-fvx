@@ -221,7 +221,7 @@ public class Settings {
         TWEAK_RANDOMIZE_CATCHING_TUTORIAL, TWEAK_BAN_LUCKY_EGG, TWEAK_NO_FREE_LUCKY_EGG, TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS,
         TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, TWEAK_BALANCE_FOSSIL_LEVELS, TWEAK_RETAIN_TEMPORARY_FORMES,
         TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_HP_AND_EXP_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
-        TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_GAIN
+        TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_YIELDS
     }
 
     public enum Category {
@@ -1853,7 +1853,7 @@ public class Settings {
                     .supported(RomHandler::canMakeHMsForgettable)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_NO_EV_GAIN,
+                    Name.TWEAK_NO_EV_YIELDS,
                     Category.MISC_TWEAKS)
                     .supported(RomHandler::hasEVs)
                     .build()

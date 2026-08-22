@@ -7,8 +7,6 @@ import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.SettingsUpdater;
 import com.uprfvx.romio.gamedata.BattleStyle;
-import com.uprfvx.romio.gamedata.ExpCurve;
-import com.uprfvx.romio.gamedata.GenRestrictions;
 import filefunctions.IOFunctions;
 
 import java.util.Base64;
@@ -380,7 +378,33 @@ public class SettingsStringConverter {
 
 
         // Bytes 34--37: Misc Tweaks
-        // TODO: load
+        int mt = IOFunctions.readFullIntBigEndian(d, 34);
+        loadMiscTweak(m, mt, MiscTweakValues.BW_EXP_PATCH, Settings.Name.TWEAK_USE_SCALED_EXPERIENCE);
+        loadMiscTweak(m, mt, MiscTweakValues.NERF_X_ACCURACY, Settings.Name.TWEAK_NERF_X_ACCURACY);
+        loadMiscTweak(m, mt, MiscTweakValues.UPDATE_CRIT_RATE, Settings.Name.TWEAK_UPDATE_CRIT_RATE);
+        loadMiscTweak(m, mt, MiscTweakValues.FASTEST_TEXT, Settings.Name.TWEAK_FASTEST_TEXT);
+        loadMiscTweak(m, mt, MiscTweakValues.RUNNING_SHOES_INDOORS, Settings.Name.TWEAK_RUN_INDOORS);
+        loadMiscTweak(m, mt, MiscTweakValues.RANDOMIZE_PC_POTION, Settings.Name.TWEAK_RANDOMIZE_PC_POTION);
+        loadMiscTweak(m, mt, MiscTweakValues.ALLOW_PIKACHU_EVOLUTION, Settings.Name.TWEAK_ALLOW_PIKACHU_EVOLUTION);
+        loadMiscTweak(m, mt, MiscTweakValues.NATIONAL_DEX_AT_START, Settings.Name.TWEAK_NATIONAL_DEX_AT_START);
+        loadMiscTweak(m, mt, MiscTweakValues.FAST_EGG_HATCHING, Settings.Name.TWEAK_FAST_EGG_HATCHING);
+        loadMiscTweak(m, mt, MiscTweakValues.FORCE_CHALLENGE_MODE, Settings.Name.TWEAK_FORCE_CHALLENGE_MODE);
+        loadMiscTweak(m, mt, MiscTweakValues.LOWER_CASE_POKEMON_NAMES, Settings.Name.TWEAK_CAPITAL_CASE_SPECIES_NAMES);
+        loadMiscTweak(m, mt, MiscTweakValues.RANDOMIZE_CATCHING_TUTORIAL, Settings.Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL);
+        loadMiscTweak(m, mt, MiscTweakValues.BAN_LUCKY_EGG, Settings.Name.TWEAK_BAN_LUCKY_EGG);
+        loadMiscTweak(m, mt, MiscTweakValues.NO_FREE_LUCKY_EGG, Settings.Name.TWEAK_NO_FREE_LUCKY_EGG);
+        loadMiscTweak(m, mt, MiscTweakValues.BAN_BIG_MANIAC_ITEMS, Settings.Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS);
+        loadMiscTweak(m, mt, MiscTweakValues.SOS_BATTLES_FOR_ALL, Settings.Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES);
+        loadMiscTweak(m, mt, MiscTweakValues.BALANCE_STATIC_LEVELS, Settings.Name.TWEAK_BALANCE_FOSSIL_LEVELS);
+        loadMiscTweak(m, mt, MiscTweakValues.RETAIN_ALT_FORMES, Settings.Name.TWEAK_RETAIN_TEMPORARY_FORMES);
+        loadMiscTweak(m, mt, MiscTweakValues.RUN_WITHOUT_RUNNING_SHOES, Settings.Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES);
+        loadMiscTweak(m, mt, MiscTweakValues.FASTER_HP_AND_EXP_BARS, Settings.Name.TWEAK_FASTER_HP_AND_EXP_BARS);
+        loadMiscTweak(m, mt, MiscTweakValues.FAST_DISTORTION_WORLD, Settings.Name.TWEAK_FAST_DISTORTION_WORLD);
+        loadMiscTweak(m, mt, MiscTweakValues.UPDATE_ROTOM_FORME_TYPING, Settings.Name.TWEAK_UPDATE_ROTOM_TYPING);
+        loadMiscTweak(m, mt, MiscTweakValues.DISABLE_LOW_HP_MUSIC, Settings.Name.TWEAK_DISABLE_LOW_HP_MUSIC);
+        loadMiscTweak(m, mt, MiscTweakValues.REUSABLE_TMS, Settings.Name.TWEAK_REUSABLE_TMS);
+        loadMiscTweak(m, mt, MiscTweakValues.FORGETTABLE_HMS, Settings.Name.TWEAK_FORGETTABLE_HMS);
+        loadMiscTweak(m, mt, MiscTweakValues.NO_EV_YIELDS, Settings.Name.TWEAK_NO_EV_YIELDS);
 
 
         // Byte 38: Trainer Pokémon level modifier
@@ -723,6 +747,10 @@ public class SettingsStringConverter {
 
         E value = enabledValues.getFirst();
         manager.setSetting(name, value);
+    }
+
+    private void loadMiscTweak(SettingsManager manager, int allTweaks, int bitMask, Settings.Name name) {
+        manager.setSetting(name, (allTweaks & bitMask) != 0);
     }
 
 }

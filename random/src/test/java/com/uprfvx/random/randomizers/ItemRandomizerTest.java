@@ -1,7 +1,6 @@
 package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.settings.SettingsManager;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.Item;
 import com.uprfvx.romio.gamedata.PickupItem;
 import com.uprfvx.romio.gamedata.Shop;
@@ -336,7 +335,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
 
         if (!romHandler.isTMsReusable()) {
-            romHandler.applyMiscTweak(MiscTweak.REUSABLE_TMS);
+            romHandler.makeTMsReusable();
         }
 
         new ItemRandomizer(romHandler, new SettingsManager(), RND).randomizePickupItems();

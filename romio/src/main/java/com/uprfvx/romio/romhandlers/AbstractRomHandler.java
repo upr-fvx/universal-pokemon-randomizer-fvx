@@ -28,8 +28,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.MiscTweak;
-import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.constants.ItemIDs;
@@ -1106,17 +1104,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public boolean hasMultiplePlayerCharacters() {
         return true;
-    }
-
-    @Override
-    public int miscTweaksAvailable() {
-        // default: none
-        return 0;
-    }
-
-    @Override
-    public void applyMiscTweak(MiscTweak tweak) {
-        // default: do nothing
     }
 
     protected Set<Item> itemIdsToSet(Collection<Integer> ids) {

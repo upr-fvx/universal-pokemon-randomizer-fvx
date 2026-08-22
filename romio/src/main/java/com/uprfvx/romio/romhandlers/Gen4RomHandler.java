@@ -24,7 +24,6 @@ package com.uprfvx.romio.romhandlers;
 
 import com.uprfvx.romio.ARMThumbCode;
 import com.uprfvx.romio.GFXFunctions;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.constants.enctaggers.Gen4EncounterAreaTagger;
@@ -5257,16 +5256,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 			return Gen4Constants.dpptEarlyRequiredHMMoves;
 		}
 	}
-
-    @Override
-    public int miscTweaksAvailable() {
-		throw new RuntimeException("Old method soon-to-be removed.");
-    }
-
-    @Override
-    public void applyMiscTweak(MiscTweak tweak) {
-		throw new RuntimeException("Old method soon-to-be removed.");
-    }
 
 	@Override
 	public boolean canMakeEggsHatchFast() {

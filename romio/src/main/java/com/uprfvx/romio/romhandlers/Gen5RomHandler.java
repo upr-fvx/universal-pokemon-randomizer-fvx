@@ -23,7 +23,6 @@ package com.uprfvx.romio.romhandlers;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.romio.GFXFunctions;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.constants.enctaggers.Gen5EncounterAreaTagger;
@@ -2177,16 +2176,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         overlay[offset + 6] = 0x03;
         overlay[offset + 7] = 0x49;
         writeOverlay(romEntry.getIntValue("RoamerOvlNumber"), overlay);
-    }
-
-    @Override
-    public int miscTweaksAvailable() {
-        throw new RuntimeException("Old method soon-to-be-removed.");
-    }
-
-    @Override
-    public void applyMiscTweak(MiscTweak tweak) {
-        throw new RuntimeException("Old method soon-to-be-removed.");
     }
 
     @Override

@@ -33,7 +33,6 @@ import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
@@ -2362,15 +2361,15 @@ public class RandomizerGUI {
         settings.setPokemonPalettesShinyFromNormal(ppalShinyFromNormalCheckBox.isSelected());
 
         int currentMiscTweaks = 0;
-        int mtCount = MiscTweak.allTweaks.size();
-
-        for (int mti = 0; mti < mtCount; mti++) {
-            MiscTweak mt = MiscTweak.allTweaks.get(mti);
-            JCheckBox mtCB = tweakCheckBoxes.get(mti);
-            if (mtCB.isSelected()) {
-                currentMiscTweaks |= mt.getValue();
-            }
-        }
+//        int mtCount = MiscTweak.allTweaks.size();
+//
+//        for (int mti = 0; mti < mtCount; mti++) {
+//            MiscTweak mt = MiscTweak.allTweaks.get(mti);
+//            JCheckBox mtCB = tweakCheckBoxes.get(mti);
+//            if (mtCB.isSelected()) {
+//                currentMiscTweaks |= mt.getValue();
+//            }
+//        }
 
         settings.setCurrentMiscTweaks(currentMiscTweaks);
 
@@ -3208,23 +3207,23 @@ public class RandomizerGUI {
             tabbedPane1.setEnabledAt(8, ppalSupport || cpgSupport);
 
             // Misc. Tweaks
-            int mtsAvailable = romHandler.miscTweaksAvailable();
-            int mtCount = MiscTweak.allTweaks.size();
+//            int mtsAvailable = romHandler.miscTweaksAvailable();
+//            int mtCount = MiscTweak.allTweaks.size();
             List<JCheckBox> usableCheckBoxes = new ArrayList<>();
-
-            for (int mti = 0; mti < mtCount; mti++) {
-                MiscTweak mt = MiscTweak.allTweaks.get(mti);
-                JCheckBox mtCB = tweakCheckBoxes.get(mti);
-                mtCB.setSelected(false);
-                if ((mtsAvailable & mt.getValue()) != 0) {
-                    mtCB.setVisible(true);
-                    mtCB.setEnabled(true);
-                    usableCheckBoxes.add(mtCB);
-                } else {
-                    mtCB.setVisible(false);
-                    mtCB.setEnabled(false);
-                }
-            }
+//
+//            for (int mti = 0; mti < mtCount; mti++) {
+//                MiscTweak mt = MiscTweak.allTweaks.get(mti);
+//                JCheckBox mtCB = tweakCheckBoxes.get(mti);
+//                mtCB.setSelected(false);
+//                if ((mtsAvailable & mt.getValue()) != 0) {
+//                    mtCB.setVisible(true);
+//                    mtCB.setEnabled(true);
+//                    usableCheckBoxes.add(mtCB);
+//                } else {
+//                    mtCB.setVisible(false);
+//                    mtCB.setEnabled(false);
+//                }
+//            }
 
             if (!usableCheckBoxes.isEmpty()) {
                 setTweaksPanel(usableCheckBoxes);
@@ -3925,14 +3924,14 @@ public class RandomizerGUI {
 
     private void initTweaksPanel() {
         tweakCheckBoxes = new ArrayList<>();
-        int numTweaks = MiscTweak.allTweaks.size();
-        for (int i = 0; i < numTweaks; i++) {
-            MiscTweak ct = MiscTweak.allTweaks.get(i);
-            JCheckBox tweakBox = new JCheckBox();
-            tweakBox.setText(MiscTweakStrings.getName(ct, bundle));
-            tweakBox.setToolTipText(MiscTweakStrings.getToolTipText(ct, bundle));
-            tweakCheckBoxes.add(tweakBox);
-        }
+//        int numTweaks = MiscTweak.allTweaks.size();
+//        for (int i = 0; i < numTweaks; i++) {
+//            MiscTweak ct = MiscTweak.allTweaks.get(i);
+//            JCheckBox tweakBox = new JCheckBox();
+//            tweakBox.setText(MiscTweakStrings.getName(ct, bundle));
+//            tweakBox.setToolTipText(MiscTweakStrings.getToolTipText(ct, bundle));
+//            tweakCheckBoxes.add(tweakBox);
+//        }
     }
 
     private void makeTweaksLayout(List<JCheckBox> tweaks) {

@@ -1,6 +1,5 @@
 package com.uprfvx.romio.romhandlers;
 
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.gamedata.Species;
@@ -279,21 +278,7 @@ public class RomHandlerMiscTest extends RomHandlerTest {
     public void canApplyAllLegalTweaksWithoutThrowing(String romName) {
         loadROM(romName);
 
-        int codeTweaksAvailable = romHandler.miscTweaksAvailable();
-        List<MiscTweak> tweaksToApply = new ArrayList<>();
-        for (MiscTweak mt : MiscTweak.allTweaks) {
-            if ((codeTweaksAvailable & mt.getValue()) > 0) {
-                tweaksToApply.add(mt);
-            }
-        }
-
-        // Sort so priority is respected in tweak ordering.
-        Collections.sort(tweaksToApply);
-
-        // Now apply in order.
-        for (MiscTweak mt : tweaksToApply) {
-            romHandler.applyMiscTweak(mt);
-        }
+        // TODO: new test(s) that capture the spirit of this
     }
 
     @ParameterizedTest

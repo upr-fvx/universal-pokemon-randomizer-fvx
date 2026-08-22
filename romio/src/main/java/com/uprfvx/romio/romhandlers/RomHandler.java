@@ -22,7 +22,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.ItemIDs;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -1015,13 +1014,6 @@ public interface RomHandler {
      * Returns true if this game has Effort Values.
      */
     boolean hasEVs();
-
-    // TODO: remove these methods once refactored away
-    @Deprecated
-    int miscTweaksAvailable();
-
-    @Deprecated
-    void applyMiscTweak(MiscTweak tweak);
 
 
     // ==========================

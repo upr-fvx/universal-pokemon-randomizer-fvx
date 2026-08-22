@@ -24,7 +24,6 @@ package com.uprfvx.random.settings.settingstring;
 
 import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.SettingsUpdater;
-import com.uprfvx.romio.MiscTweak;
 import filefunctions.IOFunctions;
 
 import java.nio.ByteBuffer;

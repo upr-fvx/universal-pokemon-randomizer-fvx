@@ -2,13 +2,11 @@ package com.uprfvx.random.log;
 
 import com.uprfvx.random.SysConstants;
 import com.uprfvx.random.Version;
-import com.uprfvx.random.gui.MiscTweakStrings;
 import com.uprfvx.random.random.RandomSource;
 import com.uprfvx.random.randomizers.*;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.updaters.*;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.Gen5Constants;
 import com.uprfvx.romio.constants.Gen6Constants;
@@ -26,6 +24,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RandomizationLogger {
+
+    // TODO: include full (non-default) settings
 
     private static final int TM_COMP_ROW_WIDTH = 5;
     private static final int TYPE_NAME_LEN = 8;
@@ -305,12 +305,7 @@ public class RandomizationLogger {
 
         if (miscTweakRandomizer.isChangesMade()) {
             log.printf(getBS("Log.overview.miscTweaks"));
-            int miscTweaks = settings.getCurrentMiscTweaks();
-            for (MiscTweak mt : MiscTweak.allTweaks) {
-                if ((miscTweaks & mt.getValue()) != 0) {
-                    log.println(MiscTweakStrings.getName(mt, bundle));
-                }
-            }
+            // TODO: new misc tweak logging (if any)
         } else {
             log.printf(getBS("Log.overview.noMiscTweaks"));
         }

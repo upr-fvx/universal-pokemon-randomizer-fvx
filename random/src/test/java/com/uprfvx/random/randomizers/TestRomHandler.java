@@ -1,6 +1,5 @@
 package com.uprfvx.random.randomizers;
 
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.AbstractRomHandler;
@@ -1433,20 +1432,14 @@ public class TestRomHandler extends AbstractRomHandler {
         return generation;
     }
 
-    @Override
-    public int miscTweaksAvailable() {
-        return miscTweaksAvailable;
-    }
+    // TODO: put rest of misc tweak methods in here as not implemented
 
     @Override
-    public void applyMiscTweak(MiscTweak tweak) {
-        if ((miscTweaksAvailable & tweak.getValue()) > 0) {
-            if (tweak == MiscTweak.REUSABLE_TMS) {
-                testIsTMsReusable = true;
-            } else {
-                throw new UnsupportedOperationException("unimplemented");
-            }
+    public void makeTMsReusable() {
+        if (!canMakeTMsReusable()) {
+            throw new UnsupportedOperationException();
         }
+        testIsTMsReusable = true;
     }
 
     @Override

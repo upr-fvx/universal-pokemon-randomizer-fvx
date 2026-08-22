@@ -32,7 +32,6 @@ import com.uprfvx.random.updaters.MoveUpdater;
 import com.uprfvx.random.updaters.SpeciesBaseStatUpdater;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.random.updaters.Updater;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -385,9 +384,7 @@ public class GameRandomizer {
     }
 
     private void maybeApplyMiscTweaks() {
-        if (settings.getCurrentMiscTweaks() != MiscTweak.NO_MISC_TWEAKS) {
-            miscTweakRandomizer.applyMiscTweaks();
-        }
+        miscTweakRandomizer.applyMiscTweaks();
     }
 
     private void maybeStandardizeEXPCurves() {

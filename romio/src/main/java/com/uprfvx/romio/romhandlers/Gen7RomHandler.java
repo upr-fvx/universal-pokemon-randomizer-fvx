@@ -21,7 +21,6 @@ package com.uprfvx.romio.romhandlers;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.RomFunctions;
 import com.uprfvx.romio.constants.*;
 import com.uprfvx.romio.constants.enctaggers.Gen7EncounterAreaTagger;
@@ -2350,16 +2349,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             code[formeOffset + 2] = (byte) 0xA0;
             code[formeOffset + 3] = (byte) 0xE3;
         }
-    }
-
-    @Override
-    public int miscTweaksAvailable() {
-        throw new RuntimeException("Old method soon-to-be removed.");
-    }
-
-    @Override
-    public void applyMiscTweak(MiscTweak tweak) {
-        throw new RuntimeException("Old method soon-to-be removed.");
     }
 
     @Override

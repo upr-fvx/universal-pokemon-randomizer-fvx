@@ -1,14 +1,7 @@
 package com.uprfvx.random.settings;
 
-import com.uprfvx.random.settings.definitions.SettingDefinition;
-import com.uprfvx.random.settings.definitions.SimpleSettingDefinition;
-import com.uprfvx.romio.MiscTweak;
 import com.uprfvx.romio.romhandlers.RomHandler;
-import miscutils.Pair;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 

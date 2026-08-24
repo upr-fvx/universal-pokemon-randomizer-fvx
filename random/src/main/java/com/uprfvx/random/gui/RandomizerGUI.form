@@ -1553,7 +1553,7 @@
                 <children>
                   <grid id="bb7c7" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -2017,18 +2017,6 @@
                       </hspacer>
                     </children>
                   </grid>
-                  <hspacer id="48447">
-                    <constraints>
-                      <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.0"/>
-                    </constraints>
-                  </hspacer>
-                  <vspacer id="2cb29">
-                    <constraints>
-                      <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                      <gridbag weightx="0.0" weighty="0.9"/>
-                    </constraints>
-                  </vspacer>
                   <hspacer id="78e2">
                     <constraints>
                       <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -2037,13 +2025,13 @@
                   </hspacer>
                   <vspacer id="797e9">
                     <constraints>
-                      <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
                   <grid id="f2cab" layout-manager="GridBagLayout">
                     <constraints>
-                      <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                      <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
@@ -2141,12 +2129,33 @@
                       </hspacer>
                     </children>
                   </grid>
-                  <vspacer id="8fbc1">
+                  <component id="1f364" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenPanel.giftsInStaticsLabel.text"/>
+                    </properties>
+                  </component>
+                  <vspacer id="9e639">
                     <constraints>
                       <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
+                  <vspacer id="2cb29">
+                    <constraints>
+                      <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.9"/>
+                    </constraints>
+                  </vspacer>
+                  <hspacer id="48447">
+                    <constraints>
+                      <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                  </hspacer>
                 </children>
               </grid>
             </children>
@@ -3810,7 +3819,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="3b201" class="javax.swing.JCheckBox" binding="wpUseTimeBasedEncountersCheckBox">
+                      <component id="3b201" class="javax.swing.JCheckBox" binding="wpRemoveTimeBasedEncountersCheckBox">
                         <constraints>
                           <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -3957,7 +3966,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.stpPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildTab.staticsPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -3968,8 +3977,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpUnchangedRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpUnchangedRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.unchangedRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="7c238">
@@ -4003,8 +4012,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapLegendariesSwapStandardsRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapLegendariesSwapStandardsRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.swapLegendariesSwapStandardsRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.swapLegendariesSwapStandardsRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="8b8cf" class="javax.swing.JRadioButton" binding="stpRandomCompletelyRadioButton" default-binding="true">
@@ -4014,8 +4023,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomCompletelyRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomCompletelyRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomCompletelyRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomCompletelyRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="8f5fc" class="javax.swing.JRadioButton" binding="stpRandomSimilarStrengthRadioButton">
@@ -4025,8 +4034,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomSimilarStrengthRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomSimilarStrengthRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomSimilarStrengthRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomSimilarStrengthRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="e8807" class="javax.swing.JCheckBox" binding="stpSwapMegaEvosCheckBox">
@@ -4036,8 +4045,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapMegaEvosCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpSwapMegaEvosCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.swapMegaEvosCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.swapMegaEvosCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="30e1b" class="javax.swing.JCheckBox" binding="stpPercentageLevelModifierCheckBox">
@@ -4047,8 +4056,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpPercentageLevelModifierCheckBox.tooltipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.percentageLevelModifierCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.percentageLevelModifierCheckBox.tooltipText"/>
                         </properties>
                       </component>
                       <component id="dbc7e" class="com.uprfvx.random.gui.SpinSlider" binding="stpPercentageLevelModifierSpinSlider">
@@ -4067,8 +4076,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomize600BSTCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpRandomize600BSTCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomize600BSTCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomize600BSTCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d9fc" class="javax.swing.JCheckBox" binding="stpAllowAltFormesCheckBox">
@@ -4078,8 +4087,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpAllowAltFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpAllowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="9c5fc" class="javax.swing.JCheckBox" binding="stpLimitMainGameLegendariesCheckBox">
@@ -4089,8 +4098,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpLimitMainGameLegendariesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpLimitMainGameLegendariesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.limitMainGameLegendariesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.limitMainGameLegendariesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="761c9" class="javax.swing.JCheckBox" binding="stpFixMusicCheckBox">
@@ -4100,8 +4109,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpFixMusicAllCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.stpFixMusicAllCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.fixMusicCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.fixMusicCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="e04ec">

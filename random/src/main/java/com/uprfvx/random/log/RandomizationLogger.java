@@ -272,7 +272,7 @@ public class RandomizationLogger {
         logOverviewLine(getBS("GUI.traitsTab.evolutionPanel.title"), evoRandomizer.isChangesMade()
                 || shouldLogEvolutionImprovements(), true);
         logOverviewLine(getBS("GUI.givenTab.startersPanel.title"), starterRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.stpPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
+        logOverviewLine(getBS("GUI.wildTab.staticsPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
                 romHandler.canChangeStaticPokemon());
         logOverviewLine(getBS("GUI.givenTab.tradesPanel.title"), tradeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.movesTab.traitsPanel.title"),

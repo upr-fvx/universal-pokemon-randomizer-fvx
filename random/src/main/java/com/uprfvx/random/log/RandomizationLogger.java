@@ -291,10 +291,10 @@ public class RandomizationLogger {
         logOverviewLine(getBS("GUI.teachingTab.tutorsPanel.compatibilityPanel.title"), tmhmtCompRandomizer.isTutorChangesMade(),
                 romHandler.hasMoveTutors());
         // field items aren't logged properly, but still important to show *whether* they were randomized
-        logOverviewLine(getBS("GUI.fiPanel.title"), itemRandomizer.isFieldChangesMade(), true);
-        logOverviewLine(getBS("GUI.shPanel.title"), itemRandomizer.isShopChangesMade(),
+        logOverviewLine(getBS("GUI.itemsTab.fieldPanel.title"), itemRandomizer.isFieldChangesMade(), true);
+        logOverviewLine(getBS("GUI.itemsTab.shopPanel.title"), itemRandomizer.isShopChangesMade(),
                 romHandler.hasShopSupport());
-        logOverviewLine(getBS("GUI.puPanel.title"), itemRandomizer.isPickupChangesMade(),
+        logOverviewLine(getBS("GUI.itemsTab.shopPanel.pickupPanel.title"), itemRandomizer.isPickupChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
         logOverviewLine(getBS("GUI.tePanel.title"),
                 typeEffRandomizer.isChangesMade() || typeEffUpdater.isUpdated(),

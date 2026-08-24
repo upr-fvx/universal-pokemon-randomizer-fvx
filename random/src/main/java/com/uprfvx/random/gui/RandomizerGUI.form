@@ -2135,7 +2135,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties>
-                      <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenPanel.giftsInStaticsLabel.text"/>
+                      <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.giftsInStaticsLabel.text"/>
                     </properties>
                   </component>
                   <vspacer id="9e639">
@@ -4658,7 +4658,7 @@
           </scrollpane>
           <scrollpane id="6ecce">
             <constraints>
-              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.itemsPanel.title"/>
+              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.itemsTab.title"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -4676,7 +4676,7 @@
                       <gridbag weightx="0.1" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.fiPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.itemsTab.fieldPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -4687,8 +4687,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiUnchangedRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiUnchangedRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.unchangedRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="365a6">
@@ -4722,8 +4722,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiShuffleRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiShuffleRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.shuffleRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.shuffleRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="74283" class="javax.swing.JRadioButton" binding="fiRandomRadioButton" default-binding="true">
@@ -4733,8 +4733,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiRandomRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiRandomRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.randomRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="b0d01" class="javax.swing.JRadioButton" binding="fiRandomEvenDistributionRadioButton" default-binding="true">
@@ -4744,8 +4744,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiRandomEvenDistributionRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiRandomEvenDistributionRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.randomEvenDistributionRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.randomEvenDistributionRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d9fbb" class="javax.swing.JCheckBox" binding="fiBanBadItemsCheckBox" default-binding="true">
@@ -4755,8 +4755,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiBanBadItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiBanBadItemsCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.banMinorItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
                     </children>
@@ -4791,7 +4791,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.shPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.itemsTab.shopPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -4819,98 +4819,111 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <grid id="f36eb" binding="specialShopsPanel" layout-manager="GridLayoutManager" row-count="5" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                        <margin top="0" left="0" bottom="0" right="0"/>
+                      <grid id="f36eb" binding="specialShopsPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="1" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.shSpecialPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.itemsTab.shopPanel.specialPanel.title"/>
                         <children>
                           <component id="85c80" class="javax.swing.JRadioButton" binding="shUnchangedRadioButton" default-binding="true">
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="30ba3" class="javax.swing.JRadioButton" binding="shShuffleRadioButton" default-binding="true">
                             <constraints>
                               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shShuffleRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shShuffleRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.shuffleRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.shuffleRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="c8590" class="javax.swing.JCheckBox" binding="shBanBadItemsCheckBox" default-binding="true">
                             <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBanBadItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBanBadItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banMinorItemsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banMinorItemsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="65395" class="javax.swing.JCheckBox" binding="shBanRegularShopItemsCheckBox">
                             <constraints>
-                              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBanRegularShopItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBanRegularShopItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banRegularShopItemsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banRegularShopItemsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="5bba5" class="javax.swing.JCheckBox" binding="shGuaranteeEvolutionItemsCheckBox">
                             <constraints>
-                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
                                 <preferred-size width="194" height="22"/>
                               </grid>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shGuaranteeEvolutionItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shGuaranteeEvolutionItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.guaranteeEvolutionItemsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.guaranteeEvolutionItemsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="4324" class="javax.swing.JRadioButton" binding="shRandomRadioButton" default-binding="true">
                             <constraints>
                               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shRandomRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shRandomRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.randomRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="f7f02" class="javax.swing.JCheckBox" binding="shGuaranteeXItemsCheckBox">
                             <constraints>
-                              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
                               <selected value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shGuaranteeXItemsCheckbox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shGuaranteeXItemsCheckbox.tooltipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.guaranteeXItemsCheckbox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.guaranteeXItemsCheckbox.tooltipText"/>
                             </properties>
                           </component>
                           <component id="2d537" class="javax.swing.JCheckBox" binding="shBanOverpoweredShopItemsCheckBox">
                             <constraints>
-                              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="1.0" weighty="1.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBanOverpoweredShopItemsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBanOverpoweredShopItemsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banOverpoweredItemsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banOverpoweredItemsCheckBox.toolTipText"/>
                             </properties>
                           </component>
+                          <hspacer id="54143">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
                         </children>
                       </grid>
                       <component id="9e484" class="javax.swing.JCheckBox" binding="shBalanceShopItemPricesCheckBox">
@@ -4920,8 +4933,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBalanceShopItemPricesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shBalanceShopItemPricesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.balancePricesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.balancePricesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="fdc32" class="javax.swing.JCheckBox" binding="shAddRareCandyCheckBox">
@@ -4931,8 +4944,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shAddRareCandyCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.shAddRareCandyCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.addRareCandyCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.addRareCandyCheckBox.toolTipText"/>
                         </properties>
                       </component>
                     </children>
@@ -4943,7 +4956,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.puPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.itemsTab.shopPanel.pickupPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -4954,8 +4967,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.puUnchangedRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.puUnchangedRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.unchangedRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="5bf93">
@@ -4989,8 +5002,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.puRandomRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.puRandomRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.randomRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="45bbb" class="javax.swing.JCheckBox" binding="puBanBadItemsCheckBox">
@@ -5000,8 +5013,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.puBanBadItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.puBanBadItemsCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.banMinorItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
                     </children>
@@ -5021,8 +5034,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.banLuckyEggCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.banLuckyEggCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.banLuckyEggCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.banLuckyEggCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="2278d">
@@ -5044,8 +5057,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.miscBanBigMoneyManiacCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.miscBanBigMoneyManiacCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.banBigMoneyManiacCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.banBigMoneyManiacCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="2a40d" class="javax.swing.JCheckBox" binding="btNoFreeLuckyEggCheckBox">
@@ -5055,8 +5068,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.noFreeLuckyEggCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.noFreeLuckyEggCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.noFreeLuckyEggCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.noFreeLuckyEggCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="54c98" class="javax.swing.JCheckBox" binding="miscRandomizePCPotionCheckBox">
@@ -5066,8 +5079,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.miscRandomizePCPotionCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.miscRandomizePCPotionCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.randomizePCPotionCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.generalPanel.randomizePCPotionCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="489b8">
@@ -5417,7 +5430,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.fiUnchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.cpgUnchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>

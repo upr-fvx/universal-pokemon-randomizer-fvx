@@ -284,11 +284,11 @@ public class RandomizationLogger {
         logOverviewLine(getBS("GUI.foeTab.totemPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
         logOverviewLine(getBS("GUI.wildTab.randomPanel.title"), wildEncounterRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.tmMovesPanel.title"), tmtMoveRandomizer.isTMChangesMade(), true);
-        logOverviewLine(getBS("GUI.thcPanel.title"), tmhmtCompRandomizer.isTMHMChangesMade(), true);
-        logOverviewLine(getBS("GUI.mtMovesPanel.title"), tmtMoveRandomizer.isTutorChangesMade(),
+        logOverviewLine(getBS("GUI.teachingTab.TMsPanel.movesPanel.title"), tmtMoveRandomizer.isTMChangesMade(), true);
+        logOverviewLine(getBS("GUI.teachingTab.TMsPanel.compatibilityPanel.title"), tmhmtCompRandomizer.isTMHMChangesMade(), true);
+        logOverviewLine(getBS("GUI.teachingTab.tutorsPanel.movesPanel.title"), tmtMoveRandomizer.isTutorChangesMade(),
                 romHandler.hasMoveTutors());
-        logOverviewLine(getBS("GUI.mtcPanel.title"), tmhmtCompRandomizer.isTutorChangesMade(),
+        logOverviewLine(getBS("GUI.teachingTab.tutorsPanel.compatibilityPanel.title"), tmhmtCompRandomizer.isTutorChangesMade(),
                 romHandler.hasMoveTutors());
         // field items aren't logged properly, but still important to show *whether* they were randomized
         logOverviewLine(getBS("GUI.fiPanel.title"), itemRandomizer.isFieldChangesMade(), true);

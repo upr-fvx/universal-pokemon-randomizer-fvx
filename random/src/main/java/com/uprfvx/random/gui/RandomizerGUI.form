@@ -4133,7 +4133,7 @@
           </scrollpane>
           <scrollpane id="b5bfe">
             <constraints>
-              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.tmsHMsTutorsPanel.title"/>
+              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.title"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -4151,7 +4151,7 @@
                       <gridbag weightx="0.1" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.tmPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.TMsPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -4161,7 +4161,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.tmMovesPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.TMsPanel.movesPanel.title"/>
                         <children>
                           <component id="77153" class="javax.swing.JRadioButton" binding="tmUnchangedRadioButton" default-binding="true">
                             <constraints>
@@ -4170,8 +4170,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="c775">
@@ -4199,8 +4199,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmRandomRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmRandomRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.randomRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="e94bb" class="javax.swing.JCheckBox" binding="tmNoGameBreakingMovesCheckBox">
@@ -4210,8 +4210,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmNoGameBreakingMovesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmNoGameBreakingMovesCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.noGameBreakingMovesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="e66ed" class="javax.swing.JCheckBox" binding="tmKeepFieldMoveTMsCheckBox">
@@ -4221,8 +4221,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmKeepFieldMoveTMsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmKeepFieldMoveTMsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.keepFieldMoveTMsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.keepFieldMoveTMsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="39544" class="javax.swing.JCheckBox" binding="tmForceGoodDamagingCheckBox" default-binding="true">
@@ -4232,8 +4232,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmForceGoodDamagingCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmForceGoodDamagingCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.forceGoodDamagingCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.forceGoodDamagingCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="60c91" class="com.uprfvx.random.gui.SpinSlider" binding="tmForceGoodDamagingSpinSlider" default-binding="true">
@@ -4243,7 +4243,7 @@
                             </constraints>
                             <properties>
                               <enabled value="true"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmForceGoodDamagingSpinSlider.toolTipText"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.forceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -4278,7 +4278,7 @@
                           <gridbag top="0" left="20" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.thcPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.TMsPanel.compatibilityPanel.title"/>
                         <children>
                           <component id="eb901" class="javax.swing.JRadioButton" binding="thcUnchangedRadioButton" default-binding="true">
                             <constraints>
@@ -4287,8 +4287,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="f28aa">
@@ -4316,8 +4316,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcRandomPreferSameTypeRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcRandomPreferSameTypeRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.randomPreferSameTypeRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.randomPreferSameTypeRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="bdcf8" class="javax.swing.JRadioButton" binding="thcRandomCompletelyRadioButton">
@@ -4327,8 +4327,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcRandomCompletelyRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcRandomCompletelyRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.randomCompletelyRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.randomCompletelyRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="1bb6c" class="javax.swing.JRadioButton" binding="thcFullCompatibilityRadioButton" default-binding="true">
@@ -4338,8 +4338,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcFullCompatibilityRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.thcFullCompatibilityRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.fullCompatibilityRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.fullCompatibilityRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="65e15" class="javax.swing.JCheckBox" binding="tmFollowEvolutionsCheckBox">
@@ -4349,8 +4349,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmFollowEvolutionsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmFollowEvolutionsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.followEvolutionsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="7ba73" class="javax.swing.JCheckBox" binding="tmLevelupMoveSanityCheckBox" default-binding="true">
@@ -4360,8 +4360,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmLevelupMoveSanityCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmLevelupMoveSanityCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.levelupMoveSanityCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.levelupMoveSanityCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="b7d85" class="javax.swing.JCheckBox" binding="tmFullHMCompatibilityCheckBox">
@@ -4371,8 +4371,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmFullHMCompatibilityCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.tmFullHMCompatibilityCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.fullHMCompatibilityCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.fullHMCompatibilityCheckBox.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -4409,7 +4409,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.mtPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.tutorsPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -4419,7 +4419,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.mtMovesPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.tutorsPanel.movesPanel.title"/>
                         <children>
                           <component id="c71e0" class="javax.swing.JRadioButton" binding="mtUnchangedRadioButton" default-binding="true">
                             <constraints>
@@ -4428,8 +4428,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="e8b9">
@@ -4457,8 +4457,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtRandomRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtRandomRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.randomRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="108c3" class="com.uprfvx.random.gui.SpinSlider" binding="mtForceGoodDamagingSpinSlider">
@@ -4468,7 +4468,7 @@
                             </constraints>
                             <properties>
                               <enabled value="true"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtForceGoodDamagingSpinSlider.toolTipText"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.forceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
                           <component id="3c7ba" class="javax.swing.JCheckBox" binding="mtNoGameBreakingMovesCheckBox">
@@ -4478,8 +4478,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtNoGameBreakingMovesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtNoGameBreakingMovesCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noGameBreakingMovesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="d8aa" class="javax.swing.JCheckBox" binding="mtKeepFieldMoveTutorsCheckBox">
@@ -4489,8 +4489,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtKeepFieldMoveTutorsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtKeepFieldMoveTutorsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.keepFieldMoveTutorsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.keepFieldMoveTutorsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="5a253" class="javax.swing.JCheckBox" binding="mtForceGoodDamagingCheckBox">
@@ -4500,8 +4500,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtForceGoodDamagingCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtForceGoodDamagingCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.forceGoodDamagingCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.forceGoodDamagingCheckBox.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -4536,7 +4536,7 @@
                           <gridbag top="0" left="20" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.mtcPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.tutorsPanel.compatibilityPanel.title"/>
                         <children>
                           <component id="909ae" class="javax.swing.JRadioButton" binding="mtcUnchangedRadioButton" default-binding="true">
                             <constraints>
@@ -4545,8 +4545,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="993c4">
@@ -4574,8 +4574,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcRandomPreferSameTypeRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcRandomPreferSameTypeRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.randomPreferSameTypeRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.randomPreferSameTypeRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="e0f5e" class="javax.swing.JRadioButton" binding="mtcRandomCompletelyRadioButton">
@@ -4585,8 +4585,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcRandomCompletelyRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcRandomCompletelyRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.randomCompletelyRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.randomCompletelyRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="6ffa1" class="javax.swing.JRadioButton" binding="mtcFullCompatibilityRadioButton" default-binding="true">
@@ -4596,8 +4596,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcFullCompatibilityRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtcFullCompatibilityRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.fullCompatibilityRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.fullCompatibilityRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="e4773" class="javax.swing.JCheckBox" binding="mtFollowEvolutionsCheckBox">
@@ -4607,8 +4607,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtFollowEvolutionsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtFollowEvolutionsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.followEvolutionsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="801a1" class="javax.swing.JCheckBox" binding="mtLevelupMoveSanityCheckBox">
@@ -4618,8 +4618,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtLevelupMoveSanityCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtLevelupMoveSanityCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.levelupMoveSanityCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.levelupMoveSanityCheckBox.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -4631,7 +4631,7 @@
                         </constraints>
                         <properties>
                           <enabled value="true"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.mtNoExistLabel.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noExistLabel.text"/>
                         </properties>
                       </component>
                     </children>

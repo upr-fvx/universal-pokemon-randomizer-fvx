@@ -283,7 +283,7 @@ public class RandomizationLogger {
         logOverviewLine(getBS("Log.overview.trainerNames"), trainerNameRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.foeTab.totemPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
-        logOverviewLine(getBS("GUI.wpPanel.title"), wildEncounterRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.wildTab.randomPanel.title"), wildEncounterRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("GUI.tmMovesPanel.title"), tmtMoveRandomizer.isTMChangesMade(), true);
         logOverviewLine(getBS("GUI.thcPanel.title"), tmhmtCompRandomizer.isTMHMChangesMade(), true);
         logOverviewLine(getBS("GUI.mtMovesPanel.title"), tmtMoveRandomizer.isTutorChangesMade(),

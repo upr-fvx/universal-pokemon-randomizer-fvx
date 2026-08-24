@@ -3488,7 +3488,7 @@
           </scrollpane>
           <scrollpane id="179ae">
             <constraints>
-              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildPokemonPanel.title"/>
+              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildTab.title"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -3506,7 +3506,7 @@
                       <gridbag weightx="0.1" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wpPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildTab.randomPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -3588,7 +3588,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title="Replacements Per Species"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildTab.randomPanel.replacementsPanel.title"/>
                         <children>
                           <component id="17061" class="javax.swing.JRadioButton" binding="wpZoneNoneRadioButton">
                             <constraints>
@@ -3597,8 +3597,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneNoneRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneNoneRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.maximumRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.maximumRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="44917" class="javax.swing.JRadioButton" binding="wpZoneGameRadioButton">
@@ -3609,8 +3609,8 @@
                             <properties>
                               <enabled value="false"/>
                               <selected value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneGlobalRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneGlobalRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.wholeGameRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.wholeGameRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="19fb8" class="javax.swing.JRadioButton" binding="wpZoneNamedLocationRadioButton">
@@ -3620,8 +3620,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneLocationRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneLocationRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.locationRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.locationRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="14a70" class="javax.swing.JRadioButton" binding="wpZoneMapRadioButton">
@@ -3631,8 +3631,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneMapRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneMapRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.mapRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.mapRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="c529d" class="javax.swing.JCheckBox" binding="wpSplitByEncounterTypesCheckBox">
@@ -3653,8 +3653,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneEncounterSetRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpZoneEncounterSetRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.encounterSetRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.encounterSetRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <hspacer id="6c243">
@@ -3678,8 +3678,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpRandomizeWildPokemonCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpRandomizeWildPokemonCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.randomizeCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.randomizeCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="3f0df">

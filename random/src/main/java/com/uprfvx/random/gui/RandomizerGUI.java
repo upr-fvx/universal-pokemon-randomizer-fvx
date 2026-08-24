@@ -258,10 +258,8 @@ public class RandomizerGUI {
     private JCheckBox tpSwapMegaEvosCheckBox;
     private JCheckBox wpAllowAltFormesCheckBox;
     private JPanel tpBattleStylePanel;
-    private JRadioButton tpUnchangedBattleStyleRadioButton;
-    private JRadioButton tpRandomBattleStyleRadioButton;
-    private JRadioButton tpSingleStyleRadioButton;
-    private JComboBox<String> tpBattleStyleCombobox;
+    private JRadioButton tbsUnchangedStyleRadioButton;
+    private JRadioButton tbsRandomStyleRadioButton;
     private JCheckBox tpBossTrainersCheckBox;
     private JCheckBox tpImportantTrainersCheckBox;
     private JCheckBox tpRegularTrainersCheckBox;
@@ -410,6 +408,11 @@ public class RandomizerGUI {
     private JLabel tpTypeDiversityLabel;
     private JCheckBox tpDistributeSpeciesCheckBox;
     private JCheckBox tpDistributeInMainGameOnly;
+    private JCheckBox tbsExcludeSingleBattlesCheckBox;
+    private JCheckBox tbsExcludeDoubleBattlesCheckBox;
+    private JCheckBox tbsExcludeTripleBattlesCheckBox;
+    private JCheckBox tbsExtendTeamsCheckBox;
+    private JCheckBox tbsExcludeRotationBattlesCheckBox;
 
 
     private static final Random RND = new Random();
@@ -569,8 +572,7 @@ public class RandomizerGUI {
                 pmsMetronomeOnlyModeRadioButton, pmsGuaranteedLevel1MovesCheckBox, pmsForceGoodDamagingCheckBox,
 
                 tpTrainersEvolveTheirPokemonCheckbox, tpPercentageLevelModifierCheckBox,
-                tpEliteFourUniquePokemonCheckBox, tpUnchangedBattleStyleRadioButton, tpRandomBattleStyleRadioButton,
-                tpSingleStyleRadioButton,
+                tpEliteFourUniquePokemonCheckBox, tbsUnchangedStyleRadioButton, tbsRandomStyleRadioButton,
                 tpAllowAlternateFormesCheckBox, tpBossTrainersCheckBox, tpImportantTrainersCheckBox,
                 tpRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
                 tpRegularTrainersItemsCheckBox,
@@ -1969,8 +1971,8 @@ public class RandomizerGUI {
         tpEliteFourUniquePokemonSpinner.setValue(settings.getEliteFourUniquePokemonNumber() > 0 ? settings.getEliteFourUniquePokemonNumber() : 1);
         tpAllowAlternateFormesCheckBox.setSelected(settings.isAllowTrainerAlternateFormes());
         tpSwapMegaEvosCheckBox.setSelected(settings.isSwapTrainerMegaEvos());
-        tpUnchangedBattleStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED);
-        tpRandomBattleStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.RANDOM);
+        tbsUnchangedStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.UNCHANGED);
+        tbsRandomStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.RANDOM);
         tpSingleStyleRadioButton.setSelected(settings.getBattleStyle().getModification() == BattleStyle.Modification.SINGLE_STYLE);
         tpBattleStyleCombobox.setSelectedItem(selectableBattleStyles.get(settings.getBattleStyle().getStyle().ordinal()));
         tpBossTrainersCheckBox.setSelected(settings.getAdditionalBossTrainerPokemon() > 0);
@@ -2273,7 +2275,7 @@ public class RandomizerGUI {
         settings.setEliteFourUniquePokemonNumber(tpEliteFourUniquePokemonCheckBox.isVisible() && tpEliteFourUniquePokemonCheckBox.isSelected() ? (int)tpEliteFourUniquePokemonSpinner.getValue() : 0);
         settings.setAllowTrainerAlternateFormes(tpAllowAlternateFormesCheckBox.isSelected() && tpAllowAlternateFormesCheckBox.isVisible());
         settings.setSwapTrainerMegaEvos(tpSwapMegaEvosCheckBox.isSelected() && tpSwapMegaEvosCheckBox.isVisible());
-        settings.setBattleStyleMod(tpUnchangedBattleStyleRadioButton.isSelected(), tpRandomBattleStyleRadioButton.isSelected(), tpSingleStyleRadioButton.isSelected());
+        settings.setBattleStyleMod(tbsUnchangedStyleRadioButton.isSelected(), tbsRandomStyleRadioButton.isSelected(), tpSingleStyleRadioButton.isSelected());
         settings.setSingleStyleSelection(isBattleStyle(SINGLE_BATTLE), isBattleStyle(DOUBLE_BATTLE), isBattleStyle(TRIPLE_BATTLE), isBattleStyle(ROTATION_BATTLE));
         settings.setAdditionalBossTrainerPokemon(tpBossTrainersCheckBox.isVisible() && tpBossTrainersCheckBox.isSelected() ? (int)tpBossTrainersSpinner.getValue() : 0);
         settings.setAdditionalImportantTrainerPokemon(tpImportantTrainersCheckBox.isVisible() && tpImportantTrainersCheckBox.isSelected() ? (int)tpImportantTrainersSpinner.getValue() : 0);
@@ -2613,18 +2615,12 @@ public class RandomizerGUI {
 		tpAdditionalPokemonForLabel.setVisible(true);
 		tpHeldItemsLabel.setVisible(true);
 
-        tpUnchangedBattleStyleRadioButton.setVisible(true);
-        tpUnchangedBattleStyleRadioButton.setEnabled(false);
-        tpUnchangedBattleStyleRadioButton.setSelected(true);
-        tpRandomBattleStyleRadioButton.setVisible(true);
-        tpRandomBattleStyleRadioButton.setEnabled(false);
-        tpRandomBattleStyleRadioButton.setSelected(false);
-        tpSingleStyleRadioButton.setVisible(true);
-        tpSingleStyleRadioButton.setEnabled(false);
-        tpSingleStyleRadioButton.setSelected(false);
-        tpBattleStyleCombobox.setVisible(true);
-        tpBattleStyleCombobox.setEnabled(false);
-        tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(new String[] { "Single Battles" }));
+        tbsUnchangedStyleRadioButton.setVisible(true);
+        tbsUnchangedStyleRadioButton.setEnabled(false);
+        tbsUnchangedStyleRadioButton.setSelected(true);
+        tbsRandomStyleRadioButton.setVisible(true);
+        tbsRandomStyleRadioButton.setEnabled(false);
+        tbsRandomStyleRadioButton.setSelected(false);
 
 		totpPanel.setVisible(true);
         setInitialButtonState(totpUnchangedRadioButton, totpRandomRadioButton, totpRandomSimilarStrengthRadioButton,
@@ -2987,20 +2983,13 @@ public class RandomizerGUI {
             tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
             tpBattleStylePanel.setVisible(pokemonGeneration >= 3);
             if (tpBattleStylePanel.isVisible()) {
-                tpUnchangedBattleStyleRadioButton.setVisible(pokemonGeneration >= 3);
-                tpUnchangedBattleStyleRadioButton.setEnabled(true);
-                tpUnchangedBattleStyleRadioButton.setSelected(true);
+                tbsUnchangedStyleRadioButton.setVisible(pokemonGeneration >= 3);
+                tbsUnchangedStyleRadioButton.setEnabled(true);
+                tbsUnchangedStyleRadioButton.setSelected(true);
 
-                tpRandomBattleStyleRadioButton.setVisible(pokemonGeneration >= 3);
-                tpRandomBattleStyleRadioButton.setEnabled(true);
-                tpRandomBattleStyleRadioButton.setSelected(false);
-
-                tpSingleStyleRadioButton.setVisible(pokemonGeneration >= 3);
-                tpSingleStyleRadioButton.setEnabled(true);
-                tpSingleStyleRadioButton.setSelected(false);
-
-                tpBattleStyleCombobox.setVisible(pokemonGeneration >= 3);
-                tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
+                tbsRandomStyleRadioButton.setVisible(pokemonGeneration >= 3);
+                tbsRandomStyleRadioButton.setEnabled(true);
+                tbsRandomStyleRadioButton.setSelected(false);
             }
 
             boolean canAddPokesToBoss = romHandler.canAddPokemonToBossTrainers();
@@ -3604,7 +3593,7 @@ public class RandomizerGUI {
             }
         }
 
-        tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
+        //tpBattleStyleCombobox.setEnabled(tpSingleStyleRadioButton.isSelected());
 
         if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
             tpPercentageEvolutionLevelModifierSpinSlider.setEnabled(true);
@@ -3939,20 +3928,6 @@ public class RandomizerGUI {
             j++;
         }
         mdUpdateComboBox.setModel(new DefaultComboBoxModel<>(moveGenerationNumbers));
-
-        tpBattleStyleCombobox.setModel(new DefaultComboBoxModel<>(getBattleStylesForGeneration(romHandler.generationOfPokemon())));
-        tpBattleStyleCombobox.setRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                JComponent comp = (JComponent) super.getListCellRendererComponent(list,
-                        value, index, isSelected, cellHasFocus);
-
-                if (index >= 0 && value != null) {
-                    list.setToolTipText(bundle.getString(selectableBattleStylesTooltips.get(selectableBattleStyles.indexOf(value))));
-                }
-                return comp;
-            }
-        });
     }
 
     private ImageIcon makeMascotIcon() {
@@ -4142,19 +4117,21 @@ public class RandomizerGUI {
     private String[] getBattleStylesForGeneration(int generation) {
         List<String> result = new ArrayList<>(selectableBattleStyles);
         if (generation <= 4 || generation >= 7) {
-            result.remove(bundle.getString("GUI.tpBattleStyle3Triple.text"));
-            result.remove(bundle.getString("GUI.tpBattleStyle4Rotation.text"));
+            result.remove(bundle.getString("GUI.foeTab.trainersPanel.battleStylePanel.excludeTripleCheckBox.text"));
+            result.remove(bundle.getString("GUI.foeTab.trainersPanel.battleStylePanel.excludeRotationCheckBox.text"));
         }
         return result.toArray(new String[0]);
     }
 
+    //TODO: remove these functions
     private boolean isTrainerSetting(int setting) {
         //return trainerSettings.indexOf(tpComboBox.getSelectedItem()) == setting;
         return true;
     }
 
     private boolean isBattleStyle(int setting) {
-        return selectableBattleStyles.indexOf(tpBattleStyleCombobox.getSelectedItem()) == setting;
+        //return selectableBattleStyles.indexOf(tpBattleStyleCombobox.getSelectedItem()) == setting;
+        return true;
     }
 
     public static void main(String[] args) {

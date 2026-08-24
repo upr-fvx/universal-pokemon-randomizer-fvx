@@ -3291,7 +3291,7 @@
                       <gridbag weightx="0.1" weighty="0.0"/>
                     </constraints>
                     <properties/>
-                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.totpPanel.title">
+                    <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.foeTab.totemPanel.title">
                       <font style="1"/>
                     </border>
                     <children>
@@ -3302,8 +3302,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpUnchangedRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpUnchangedRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.unchangedRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="d7892">
@@ -3336,7 +3336,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.totpAllyPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.foeTab.totemPanel.allyPanel.title"/>
                         <children>
                           <component id="315a6" class="javax.swing.JRadioButton" binding="totpAllyUnchangedRadioButton">
                             <constraints>
@@ -3345,8 +3345,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllyUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllyUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="68af" class="javax.swing.JRadioButton" binding="totpAllyRandomRadioButton">
@@ -3356,8 +3356,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllyRandomRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllyRandomRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.randomRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="3b30" class="javax.swing.JRadioButton" binding="totpAllyRandomSimilarStrengthRadioButton">
@@ -3367,8 +3367,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllyRandomSimilarStrengthRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllyRandomSimilarStrengthRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.randomSimilarStrengthRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.randomSimilarStrengthRadioButton.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -3379,7 +3379,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.totpAuraPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.foeTab.totemPanel.auraPanel.title"/>
                         <children>
                           <component id="f6c3b" class="javax.swing.JRadioButton" binding="totpAuraUnchangedRadioButton">
                             <constraints>
@@ -3388,8 +3388,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAuraUnchangedRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAuraUnchangedRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.unchangedRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="b512" class="javax.swing.JRadioButton" binding="totpAuraRandomRadioButton">
@@ -3399,8 +3399,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAuraRandomRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAuraRandomRadioButton.toolTipText."/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.randomRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.randomRadioButton.toolTipText."/>
                             </properties>
                           </component>
                           <component id="d3f0a" class="javax.swing.JRadioButton" binding="totpAuraRandomSameStrengthRadioButton">
@@ -3410,8 +3410,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAuraRandomSameStrengthRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAuraRandomSameStrengthRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.randomSameStrengthRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.randomSameStrengthRadioButton.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -3432,8 +3432,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpPercentageLevelModifierCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpPercentageLevelModifierCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.percentageLevelModifierCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="94ffc" class="javax.swing.JCheckBox" binding="totpRandomizeHeldItemsCheckBox">
@@ -3443,8 +3443,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpRandomizeHeldItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpRandomizeHeldItemsCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomizeHeldItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomizeHeldItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="555b9" class="javax.swing.JCheckBox" binding="totpAllowAltFormesCheckBox">
@@ -3454,8 +3454,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllowAltFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpAllowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allowAltFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="ddde3" class="javax.swing.JRadioButton" binding="totpRandomRadioButton">
@@ -3465,8 +3465,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpRandomRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpRandomRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
                       <component id="148f2" class="javax.swing.JRadioButton" binding="totpRandomSimilarStrengthRadioButton">
@@ -3476,8 +3476,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpRandomSimilarStrengthRadioButton.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.totpRandomSimilarStrengthRadioButton.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomSimilarStrengthRadioButton.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomSimilarStrengthRadioButton.toolTipText"/>
                         </properties>
                       </component>
                     </children>

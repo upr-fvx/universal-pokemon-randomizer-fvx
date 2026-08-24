@@ -3528,7 +3528,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wpTRPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildTab.randomPanel.typesPanel.title"/>
                         <children>
                           <component id="17eaa" class="javax.swing.JRadioButton" binding="wpTRNoneRadioButton">
                             <constraints>
@@ -3537,8 +3537,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRNoneRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRNoneRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.noneRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.noneRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="dfc4a" class="javax.swing.JRadioButton" binding="wpTRKeepPrimaryRadioButton">
@@ -3548,8 +3548,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRKeepPrimaryTypeRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRKeepPrimaryTypeRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.keepPrimaryTypeRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.keepPrimaryTypeRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="2f702" class="javax.swing.JRadioButton" binding="wpTRThemedAreasRadioButton">
@@ -3559,8 +3559,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRThemedAreasRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRThemedAreasRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.randomThemesRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.randomThemesRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="19485" class="javax.swing.JCheckBox" binding="wpTRKeepThemesCheckBox">
@@ -3570,8 +3570,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRKeepThemesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpTRKeepThemesCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.keepThemesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.typesPanel.keepThemesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <hspacer id="6b4c2">
@@ -3642,8 +3642,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSplitByEncounterTypesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSplitByEncounterTypesCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.splitByTypesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.replacementsPanel.splitByTypesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="4abec" class="javax.swing.JRadioButton" binding="wpZoneEncounterSetRadioButton">
@@ -3700,7 +3700,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wpERPanel.title"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.wildTab.randomPanel.evolutionPanel.title"/>
                         <children>
                           <component id="3475a" class="javax.swing.JRadioButton" binding="wpERNoneRadioButton">
                             <constraints>
@@ -3709,8 +3709,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpERNoneRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpERNoneRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.noneRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.noneRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="43488" class="javax.swing.JCheckBox" binding="wpERKeepEvolutionsCheckBox">
@@ -3720,8 +3720,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpKeepEvolutionsCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpKeepEvolutionsCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.keepEvolutionsCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.keepEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <hspacer id="3d008">
@@ -3743,8 +3743,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpERBasicOnlyRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpERBasicOnlyRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.basicOnlyRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.basicOnlyRadioButton.toolTipText"/>
                             </properties>
                           </component>
                           <component id="ad075" class="javax.swing.JRadioButton" binding="wpERSameEvolutionStageRadioButton">
@@ -3754,8 +3754,8 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpERSameEvolutionStageRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpERSameEvolutionStageRadioButton.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.sameEvolutionStageRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.evolutionPanel.sameEvolutionStageRadioButton.toolTipText"/>
                             </properties>
                           </component>
                         </children>
@@ -3767,7 +3767,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpDontUseLegendariesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.noLegendariesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.noLegendariesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="b4cf6" class="javax.swing.JCheckBox" binding="wpCatchEmAllModeCheckBox">
@@ -3777,8 +3778,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpCatchEmAllModeCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpCatchEmAllModeCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.catchEmAllModeCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.catchEmAllModeCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="6baa2" class="javax.swing.JCheckBox" binding="wpSimilarStrengthCheckBox">
@@ -3788,8 +3789,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSimilarStrengthCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSimilarStrengthCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.similarStrengthCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.similarStrengthCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="eb1c6" class="javax.swing.JCheckBox" binding="wpBalanceShakingGrassPokemonCheckBox">
@@ -3799,8 +3800,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpBalanceShakingGrassPokemonCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpBalanceShakingGrassPokemonCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.balanceLowLevelPokemonCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.balanceLowLevelPokemonCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="31220">
@@ -3816,8 +3817,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpUseTimeBasedEncountersCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpUseTimeBasedEncountersCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.removeTimeBasedEncountersCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.removeTimeBasedEncountersCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="fc590" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">
@@ -3850,8 +3851,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpRandomizeHeldItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpRandomizeHeldItemsCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.randomizeHeldItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.randomizeHeldItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="7e552" class="javax.swing.JCheckBox" binding="wpBanBadItemsCheckBox" default-binding="true">
@@ -3861,8 +3862,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpBanBadItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpBanBadItemsCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.banMinorItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="90234" class="javax.swing.JCheckBox" binding="wpSetMinimumCatchRateCheckBox">
@@ -3872,8 +3873,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSetMinimumCatchRateCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSetMinimumCatchRateCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="7580b" class="javax.swing.JSlider" binding="wpSetMinimumCatchRateSlider">
@@ -3888,7 +3889,7 @@
                           <minimum value="1"/>
                           <paintLabels value="true"/>
                           <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpSetMinimumCatchRateSlider.toolTipText"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateSlider.toolTipText"/>
                           <value value="1"/>
                         </properties>
                       </component>
@@ -3899,8 +3900,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpPercentageLevelModifierCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpPercentageLevelModifierCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.percentageLevelModifierCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="7b0ac" class="com.uprfvx.random.gui.SpinSlider" binding="wpPercentageLevelModifierSpinSlider" default-binding="true">
@@ -3910,7 +3911,7 @@
                         </constraints>
                         <properties>
                           <enabled value="true"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpPercentageLevelModifierSpinSlider.toolTipText"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.percentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <component id="3d9a" class="javax.swing.JCheckBox" binding="miscSOSBattlesCheckBox">
@@ -3920,8 +3921,8 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="CodeTweaks.sosBattles.name"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="CodeTweaks.sosBattles.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.sosForAll.name"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.sosForAll.toolTipText"/>
                         </properties>
                       </component>
                     </children>

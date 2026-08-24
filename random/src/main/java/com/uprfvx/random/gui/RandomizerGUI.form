@@ -4179,7 +4179,7 @@
                         <properties/>
                         <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.TMsPanel.movesPanel.title"/>
                         <children>
-                          <component id="77153" class="javax.swing.JRadioButton" binding="tmUnchangedRadioButton" default-binding="true">
+                          <component id="77153" class="javax.swing.JRadioButton" binding="tmmUnchangedRadioButton">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag top="0" left="0" bottom="0" right="70" weightx="0.0" weighty="0.0"/>
@@ -4208,7 +4208,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </vspacer>
-                          <component id="1bf95" class="javax.swing.JRadioButton" binding="tmRandomRadioButton" default-binding="true">
+                          <component id="1bf95" class="javax.swing.JRadioButton" binding="tmmRandomRadioButton">
                             <constraints>
                               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4219,7 +4219,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="e94bb" class="javax.swing.JCheckBox" binding="tmNoGameBreakingMovesCheckBox">
+                          <component id="e94bb" class="javax.swing.JCheckBox" binding="tmmNoGameBreakingMovesCheckBox">
                             <constraints>
                               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4230,7 +4230,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="e66ed" class="javax.swing.JCheckBox" binding="tmKeepFieldMoveTMsCheckBox">
+                          <component id="e66ed" class="javax.swing.JCheckBox" binding="tmmKeepFieldMoveTMsCheckBox">
                             <constraints>
                               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4241,7 +4241,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.keepFieldMoveTMsCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="39544" class="javax.swing.JCheckBox" binding="tmForceGoodDamagingCheckBox" default-binding="true">
+                          <component id="39544" class="javax.swing.JCheckBox" binding="tmmForceGoodDamagingCheckBox">
                             <constraints>
                               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4252,7 +4252,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.forceGoodDamagingCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="60c91" class="com.uprfvx.random.gui.SpinSlider" binding="tmForceGoodDamagingSpinSlider" default-binding="true">
+                          <component id="60c91" class="com.uprfvx.random.gui.SpinSlider" binding="tmmForceGoodDamagingSpinSlider">
                             <constraints>
                               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4296,7 +4296,7 @@
                         <properties/>
                         <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.TMsPanel.compatibilityPanel.title"/>
                         <children>
-                          <component id="eb901" class="javax.swing.JRadioButton" binding="thcUnchangedRadioButton" default-binding="true">
+                          <component id="eb901" class="javax.swing.JRadioButton" binding="thcUnchangedRadioButton">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4358,7 +4358,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.fullCompatibilityRadioButton.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="65e15" class="javax.swing.JCheckBox" binding="tmFollowEvolutionsCheckBox">
+                          <component id="65e15" class="javax.swing.JCheckBox" binding="thcFollowEvolutionsCheckBox">
                             <constraints>
                               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4369,7 +4369,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="7ba73" class="javax.swing.JCheckBox" binding="tmLevelupMoveSanityCheckBox" default-binding="true">
+                          <component id="7ba73" class="javax.swing.JCheckBox" binding="thcLevelupMoveSanityCheckBox">
                             <constraints>
                               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4380,7 +4380,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.levelupMoveSanityCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="b7d85" class="javax.swing.JCheckBox" binding="tmFullHMCompatibilityCheckBox">
+                          <component id="b7d85" class="javax.swing.JCheckBox" binding="thcFullHMCompatibilityCheckBox">
                             <constraints>
                               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4437,7 +4437,7 @@
                         <properties/>
                         <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.teachingTab.tutorsPanel.movesPanel.title"/>
                         <children>
-                          <component id="c71e0" class="javax.swing.JRadioButton" binding="mtUnchangedRadioButton" default-binding="true">
+                          <component id="c71e0" class="javax.swing.JRadioButton" binding="mtmUnchangedRadioButton">
                             <constraints>
                               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag top="0" left="0" bottom="0" right="70" weightx="0.0" weighty="0.0"/>
@@ -4466,7 +4466,7 @@
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </vspacer>
-                          <component id="7a3f2" class="javax.swing.JRadioButton" binding="mtRandomRadioButton" default-binding="true">
+                          <component id="7a3f2" class="javax.swing.JRadioButton" binding="mtmRandomRadioButton">
                             <constraints>
                               <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4477,7 +4477,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="108c3" class="com.uprfvx.random.gui.SpinSlider" binding="mtForceGoodDamagingSpinSlider">
+                          <component id="108c3" class="com.uprfvx.random.gui.SpinSlider" binding="mtmForceGoodDamagingSpinSlider">
                             <constraints>
                               <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4487,7 +4487,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.forceGoodDamagingSpinSlider.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="3c7ba" class="javax.swing.JCheckBox" binding="mtNoGameBreakingMovesCheckBox">
+                          <component id="3c7ba" class="javax.swing.JCheckBox" binding="mtmNoGameBreakingMovesCheckBox">
                             <constraints>
                               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4498,7 +4498,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="d8aa" class="javax.swing.JCheckBox" binding="mtKeepFieldMoveTutorsCheckBox">
+                          <component id="d8aa" class="javax.swing.JCheckBox" binding="mtmKeepFieldMoveTutorsCheckBox">
                             <constraints>
                               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4509,7 +4509,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.keepFieldMoveTutorsCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="5a253" class="javax.swing.JCheckBox" binding="mtForceGoodDamagingCheckBox">
+                          <component id="5a253" class="javax.swing.JCheckBox" binding="mtmForceGoodDamagingCheckBox">
                             <constraints>
                               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4616,7 +4616,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.fullCompatibilityRadioButton.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="e4773" class="javax.swing.JCheckBox" binding="mtFollowEvolutionsCheckBox">
+                          <component id="e4773" class="javax.swing.JCheckBox" binding="mtcFollowEvolutionsCheckBox">
                             <constraints>
                               <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
@@ -4627,7 +4627,7 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="801a1" class="javax.swing.JCheckBox" binding="mtLevelupMoveSanityCheckBox">
+                          <component id="801a1" class="javax.swing.JCheckBox" binding="mtcLevelupMoveSanityCheckBox">
                             <constraints>
                               <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>

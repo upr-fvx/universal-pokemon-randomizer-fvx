@@ -3068,6 +3068,7 @@
                         </constraints>
                         <properties>
                           <enabled value="true"/>
+                          <preferredSize width="225" height="47"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.PercentageEvolutionLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -3265,6 +3266,7 @@
                         </constraints>
                         <properties>
                           <enabled value="true"/>
+                          <preferredSize width="225" height="47"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
@@ -3533,7 +3535,7 @@
                       </vspacer>
                       <grid id="af326" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="1" column="3" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="3" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -3593,7 +3595,7 @@
                       </grid>
                       <grid id="e032f" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="3" column="1" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="1" row-span="7" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -3676,13 +3678,13 @@
                       </grid>
                       <hspacer id="36bc8">
                         <constraints>
-                          <grid row="7" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <component id="244aa" class="javax.swing.JCheckBox" binding="wpRandomizeWildPokemonCheckBox">
                         <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3705,7 +3707,7 @@
                       </hspacer>
                       <grid id="fc6a6" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="6" column="3" row-span="3" col-span="2" vsize-policy="3" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="7" column="3" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -3830,17 +3832,6 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.removeTimeBasedEncountersCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="fc590" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">
-                        <constraints>
-                          <grid row="6" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpAllowAltFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpAllowAltFormesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
                       <hspacer id="eb14">
                         <constraints>
                           <grid row="4" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -3849,7 +3840,7 @@
                       </hspacer>
                       <vspacer id="8490a">
                         <constraints>
-                          <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
@@ -3897,14 +3888,27 @@
                           <maximum value="5"/>
                           <minimum value="1"/>
                           <paintLabels value="true"/>
+                          <preferredSize width="200" height="40"/>
                           <snapToTicks value="true"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateSlider.toolTipText"/>
                           <value value="1"/>
                         </properties>
                       </component>
+                      <vspacer id="8844c">
+                        <constraints>
+                          <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <vspacer id="e1649">
+                        <constraints>
+                          <grid row="10" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
                       <component id="7c5b4" class="javax.swing.JCheckBox" binding="wpPercentageLevelModifierCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="6" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="8" row-span="2" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3915,23 +3919,35 @@
                       </component>
                       <component id="7b0ac" class="com.uprfvx.random.gui.SpinSlider" binding="wpPercentageLevelModifierSpinSlider" default-binding="true">
                         <constraints>
-                          <grid row="7" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="8" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0" ipadx="30"/>
                         </constraints>
                         <properties>
                           <enabled value="true"/>
+                          <preferredSize width="250" height="47"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.percentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <component id="3d9a" class="javax.swing.JCheckBox" binding="miscSOSBattlesCheckBox">
                         <constraints>
-                          <grid row="8" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.sosForAll.name"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.sosForAll.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="fc590" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">
+                        <constraints>
+                          <grid row="6" column="5" row-span="2" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpAllowAltFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wpAllowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                     </children>

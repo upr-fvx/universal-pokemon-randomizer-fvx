@@ -30,7 +30,6 @@ import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.definitions.NumericSettingDefinition;
 import com.uprfvx.random.settings.definitions.SettingDefinition;
 import com.uprfvx.random.settings.settingstring.SettingsStringUpdater;
-import com.uprfvx.romio.gamedata.*;
 import com.uprfvx.romio.romhandlers.*;
 import filefunctions.FileFunctions;
 import filefunctions.IOFunctions;
@@ -81,7 +80,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting of the given name.
      * @throws ClassCastException if the setting's value cannot be cast to T.
      */
-    public <T extends Serializable> T getSetting(Name settingName) {
+    public <T extends Serializable> T get(Name settingName) {
         SettingState<T> state = getTypedState(settingName);
         try {
             return state.getValue();
@@ -106,7 +105,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException if there is no setting of the given name,
      *                                  or if the type of the setting does not match the type of the value.
      */
-    public <T extends Serializable> boolean setSetting(Name settingName, T newValue) {
+    public <T extends Serializable> boolean set(Name settingName, T newValue) {
         if (newValue == null) {
             throw new IllegalArgumentException("Cannot set settings to null!");
         }

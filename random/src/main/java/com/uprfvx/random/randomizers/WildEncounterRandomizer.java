@@ -15,32 +15,32 @@ public class WildEncounterRandomizer extends Randomizer {
     }
 
     public void randomizeEncounters() {
-        boolean useTimeOfDay = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED);
-        int levelModifier = settings.getSetting(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
+        boolean useTimeOfDay = !(boolean) settings.get(Settings.Name.WILD_REMOVE_TIME_BASED);
+        int levelModifier = settings.get(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
 
-        if(!(boolean) settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS)) {
+        if(!(boolean) settings.get(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS)) {
             modifyLevelsOnly(useTimeOfDay, levelModifier);
             return;
         }
 
-        Settings.WildPokemonZoneMod mode = settings.getSetting(Settings.Name.WILD_REPLACEMENT_ZONE);
-        boolean splitByEncounterType = settings.getSetting(Settings.Name.WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES);
-        Settings.WildPokemonTypeMod typeMod = settings.getSetting(Settings.Name.WILD_TYPE_RESTRICTION);
+        Settings.WildPokemonZoneMod mode = settings.get(Settings.Name.WILD_REPLACEMENT_ZONE);
+        boolean splitByEncounterType = settings.get(Settings.Name.WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES);
+        Settings.WildPokemonTypeMod typeMod = settings.get(Settings.Name.WILD_TYPE_RESTRICTION);
         boolean randomTypeThemes = typeMod == Settings.WildPokemonTypeMod.RANDOM_THEMES;
-        boolean keepTypeThemes = settings.getSetting(Settings.Name.WILD_KEEP_TYPE_THEMES);
+        boolean keepTypeThemes = settings.get(Settings.Name.WILD_KEEP_TYPE_THEMES);
         boolean keepPrimaryType = typeMod == Settings.WildPokemonTypeMod.KEEP_PRIMARY;
-        Settings.WildPokemonEvolutionMod evolutionMod = settings.getSetting(Settings.Name.WILD_EVOLUTION_RESTRICTION);
+        Settings.WildPokemonEvolutionMod evolutionMod = settings.get(Settings.Name.WILD_EVOLUTION_RESTRICTION);
         boolean basicPokemonOnly = evolutionMod == Settings.WildPokemonEvolutionMod.BASIC_ONLY;
         boolean sameEvoStage = evolutionMod == Settings.WildPokemonEvolutionMod.KEEP_STAGE;
-        boolean keepEvolutions = settings.getSetting(Settings.Name.WILD_EVOLUTION_KEEP_RELATIONS);
-        boolean catchEmAll = settings.getSetting(Settings.Name.WILD_CATCH_EM_ALL);
-        boolean similarStrength = settings.getSetting(Settings.Name.WILD_USE_SIMILAR_STRENGTH);
-        boolean noLegendaries = settings.getSetting(Settings.Name.WILD_NO_LEGENDARIES);
-        boolean balanceShakingGrass = settings.getSetting(Settings.Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL);
-        boolean allowAltFormes = settings.getSetting(Settings.Name.WILD_ALLOW_ALT_FORMES);
-        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
-        boolean noPrematureEvolutions = settings.getSetting(Settings.Name.NO_PREMATURE_EVOLUTIONS);
-        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean keepEvolutions = settings.get(Settings.Name.WILD_EVOLUTION_KEEP_RELATIONS);
+        boolean catchEmAll = settings.get(Settings.Name.WILD_CATCH_EM_ALL);
+        boolean similarStrength = settings.get(Settings.Name.WILD_USE_SIMILAR_STRENGTH);
+        boolean noLegendaries = settings.get(Settings.Name.WILD_NO_LEGENDARIES);
+        boolean balanceShakingGrass = settings.get(Settings.Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL);
+        boolean allowAltFormes = settings.get(Settings.Name.WILD_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean noPrematureEvolutions = settings.get(Settings.Name.NO_PREMATURE_EVOLUTIONS);
+        Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
 
         randomizeEncounters(mode, splitByEncounterType, useTimeOfDay,
@@ -1278,7 +1278,7 @@ public class WildEncounterRandomizer extends Randomizer {
     }
 
     public void changeCatchRates() {
-        Settings.CatchRateMod mod = settings.getSetting(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
+        Settings.CatchRateMod mod = settings.get(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
 
         if (mod == Settings.CatchRateMod.GUARANTEED) {
             romHandler.enableGuaranteedPokemonCatching();

@@ -49,7 +49,7 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
 
     protected void setInitialState()
     {
-        V initialValue = manager.getSetting(settingName);
+        V initialValue = manager.get(settingName);
         setValue(initialValue);
 
         element.setEnabled(unlatched && manager.isEnabled(settingName));
@@ -68,7 +68,7 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
     protected void elementValueChanged(ChangeEvent e) {
         V newValue = element.getElementValue();
         if (!newValue.equals(displayedValue)) {
-            manager.setSetting(settingName, newValue);
+            manager.set(settingName, newValue);
             displayedValue = newValue;
         }
     }
@@ -77,7 +77,7 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
     public void onManualSettingChange(Settings.Name setting, SettingsManager manager) {
         settingMatchCheck(setting);
 
-        V newValue = manager.getSetting(setting);
+        V newValue = manager.get(setting);
 
         if (!newValue.equals(displayedValue)) {
             setValue(newValue);
@@ -88,7 +88,7 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
     public void onAutomaticSettingChange(Settings.Name setting, SettingsManager manager) {
         settingMatchCheck(setting);
 
-        V newValue = manager.getSetting(setting);
+        V newValue = manager.get(setting);
 
         if (!newValue.equals(displayedValue)) {
             setValue(newValue);

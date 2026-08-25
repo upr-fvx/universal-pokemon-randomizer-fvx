@@ -130,8 +130,8 @@ public class RangeLimitDefinition<N extends Number & Comparable<N>> extends Nume
 
         @Override
         public boolean test(SettingsManager manager) {
-            N primaryValue = manager.getSetting(primary);
-            N otherValue = manager.getSetting(primary);
+            N primaryValue = manager.get(primary);
+            N otherValue = manager.get(primary);
             return primaryLower ? primaryValue.compareTo(otherValue) <= 0 : primaryValue.compareTo(otherValue) >= 0;
         }
     }
@@ -179,18 +179,18 @@ public class RangeLimitDefinition<N extends Number & Comparable<N>> extends Nume
 
     @Override
     public boolean isValueEnabled(N value, SettingsManager manager) {
-        N otherValue = manager.getSetting(other);
+        N otherValue = manager.get(other);
 
         return isLowerLimit ? value.compareTo(otherValue) <= 0 : value.compareTo(otherValue) >= 0;
     }
 
     @Override
     public N minimumEnabled(SettingsManager manager) {
-        return isLowerLimit ? minimum : manager.getSetting(other);
+        return isLowerLimit ? minimum : manager.get(other);
     }
 
     @Override
     public N maximumEnabled(SettingsManager manager) {
-        return isLowerLimit ? manager.getSetting(other) : maximum;
+        return isLowerLimit ? manager.get(other) : maximum;
     }
 }

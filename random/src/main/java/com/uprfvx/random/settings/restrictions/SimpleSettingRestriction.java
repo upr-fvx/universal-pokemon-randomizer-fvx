@@ -33,6 +33,6 @@ public class SimpleSettingRestriction<T extends Serializable> implements Setting
 
     @Override
     public boolean test(SettingsManager manager) {
-        return desiredState.test(manager.getSetting(name));
+        return desiredState.test(manager.get(name));
     }
 }

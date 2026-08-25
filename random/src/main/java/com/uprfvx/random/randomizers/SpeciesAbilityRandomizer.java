@@ -22,17 +22,17 @@ public class SpeciesAbilityRandomizer extends Randomizer {
     }
 
     public void randomizeAbilities() {
-        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_ABILITIES_FOLLOW_EVOLUTIONS);
-        boolean allowWonderGuard = !(boolean) settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_WONDER_GUARD);
-        boolean banTrappingAbilities = settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_TRAPPING);
-        boolean banNegativeAbilities = settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_NEGATIVE);
-        boolean banBadAbilities = settings.getSetting(Settings.Name.SPECIES_ABILITIES_BAN_MINOR);
-        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS);
-        boolean weighDuplicatesTogether = settings.getSetting(Settings.Name.SPECIES_ABILITIES_COMBINE_DUPLICATES);
-        boolean ensureTwoAbilities = settings.getSetting(Settings.Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES);
+        boolean evolutionSanity = settings.get(Settings.Name.SPECIES_ABILITIES_FOLLOW_EVOLUTIONS);
+        boolean allowWonderGuard = !(boolean) settings.get(Settings.Name.SPECIES_ABILITIES_BAN_WONDER_GUARD);
+        boolean banTrappingAbilities = settings.get(Settings.Name.SPECIES_ABILITIES_BAN_TRAPPING);
+        boolean banNegativeAbilities = settings.get(Settings.Name.SPECIES_ABILITIES_BAN_NEGATIVE);
+        boolean banBadAbilities = settings.get(Settings.Name.SPECIES_ABILITIES_BAN_MINOR);
+        boolean megaEvolutionSanity = settings.get(Settings.Name.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS);
+        boolean weighDuplicatesTogether = settings.get(Settings.Name.SPECIES_ABILITIES_COMBINE_DUPLICATES);
+        boolean ensureTwoAbilities = settings.get(Settings.Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES);
         BattleStyle battleStyle = new BattleStyle(
-                settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
-                settings.getSetting(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
+                settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
+                settings.get(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
         );
         boolean isMultiBattleOnly = battleStyle.isOnlyMultiBattles();
 

@@ -64,7 +64,7 @@ public class ItemRandomizer extends Randomizer {
             (item.isTM() ? tms : nonTMs).push(item);
         }
 
-        Settings.FieldItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_FIELD_ITEMS);
+        Settings.FieldItemsMod mod = settings.get(Settings.Name.RANDOMIZE_FIELD_ITEMS);
         switch (mod) {
             case SHUFFLE:
                 Collections.shuffle(tms, random);
@@ -114,10 +114,10 @@ public class ItemRandomizer extends Randomizer {
      */
     private void randomizeNonTMFieldItems(List<Item> nonTMs) {
 
-        boolean banBadItems = settings.getSetting(Settings.Name.FIELD_ITEMS_BAN_MINOR);
-        boolean uniqueItems = !(boolean) settings.getSetting(Settings.Name.SHOP_ITEMS_BALANCE_PRICES);
+        boolean banBadItems = settings.get(Settings.Name.FIELD_ITEMS_BAN_MINOR);
+        boolean uniqueItems = !(boolean) settings.get(Settings.Name.SHOP_ITEMS_BALANCE_PRICES);
         boolean evenItems =
-                settings.getSetting(Settings.Name.RANDOMIZE_FIELD_ITEMS) == Settings.FieldItemsMod.RANDOM_EVEN;
+                settings.get(Settings.Name.RANDOMIZE_FIELD_ITEMS) == Settings.FieldItemsMod.RANDOM_EVEN;
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
@@ -200,14 +200,14 @@ public class ItemRandomizer extends Randomizer {
     }
 
     private Set<Item> setupPossible() {
-        boolean banBad = settings.getSetting(Settings.Name.SHOP_ITEMS_BAN_MINOR);
+        boolean banBad = settings.get(Settings.Name.SHOP_ITEMS_BAN_MINOR);
         Set<Item> possible = new HashSet<>(
                 banBad ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         possible.removeIf(Item::isTM);
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS)) {
             possible.removeAll(romHandler.getRegularShopItems());
         }
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_BAN_OVERPOWERED)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_BAN_OVERPOWERED)) {
             possible.removeAll(romHandler.getOPShopItems());
         }
 
@@ -216,10 +216,10 @@ public class ItemRandomizer extends Randomizer {
 
     private Set<Item> setupGuaranteed() {
         Set<Item> guaranteed = new HashSet<>();
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS)) {
             guaranteed.addAll(romHandler.getEvolutionItems());
         }
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_GUARANTEE_X_ITEMS)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_GUARANTEE_X_ITEMS)) {
             guaranteed.addAll(romHandler.getXItems());
         }
         return guaranteed;
@@ -314,7 +314,7 @@ public class ItemRandomizer extends Randomizer {
     }
 
     public void randomizePickupItems() {
-        boolean banBadItems = settings.getSetting(Settings.Name.PICKUP_ITEMS_BAN_MINOR);
+        boolean banBadItems = settings.get(Settings.Name.PICKUP_ITEMS_BAN_MINOR);
 
         List<Item> possibleItems = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         if (!romHandler.canTMsBeHeld() || romHandler.isTMsReusable()) {

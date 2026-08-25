@@ -23,7 +23,7 @@ public class EncounterHeldItemRandomizer extends Randomizer {
     }
 
     public void randomizeWildHeldItems() {
-        boolean banBadItems = settings.getSetting(Settings.Name.WILD_HELD_ITEMS_BAN_MINOR);
+        boolean banBadItems = settings.get(Settings.Name.WILD_HELD_ITEMS_BAN_MINOR);
 
         List<Item> possible = new ArrayList<>(banBadItems ? romHandler.getNonBadItems() : romHandler.getAllowedItems());
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {

@@ -40,9 +40,9 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void randomizeTMHMCompatibility() {
-        Settings.TMsHMsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
+        Settings.TMsHMsCompatibilityMod mod = settings.get(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
         boolean preferSameType = mod == Settings.TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE;
-        boolean followEvolutions = settings.getSetting(Settings.Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS);
+        boolean followEvolutions = settings.get(Settings.Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS);
 
         // Get current compatibility
         // increase HM chances if required early on
@@ -226,9 +226,9 @@ public class TMHMTutorCompatibilityRandomizer extends Randomizer {
     }
 
     public void randomizeMoveTutorCompatibility() {
-        Settings.MoveTutorsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
+        Settings.MoveTutorsCompatibilityMod mod = settings.get(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
         boolean preferSameType = mod == Settings.MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE;
-        boolean followEvolutions = settings.getSetting(Settings.Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS);
+        boolean followEvolutions = settings.get(Settings.Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS);
 
         if (!romHandler.hasMoveTutors()) {
             return;

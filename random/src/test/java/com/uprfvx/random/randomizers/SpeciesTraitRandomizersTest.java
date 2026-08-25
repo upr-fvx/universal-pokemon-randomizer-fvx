@@ -17,7 +17,7 @@ public class SpeciesTraitRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager();
-        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_TYPES, Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_TYPES, Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
 
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
 

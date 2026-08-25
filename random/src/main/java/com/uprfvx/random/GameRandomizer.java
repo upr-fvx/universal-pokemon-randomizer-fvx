@@ -233,29 +233,29 @@ public class GameRandomizer {
     private void setupSpeciesRestrictions() {
         GenRestrictions restrictions = new GenRestrictions();
 
-        restrictions.setGenAllowed(1, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_1));
-        restrictions.setGenAllowed(2, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_2));
-        restrictions.setGenAllowed(3, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_3));
-        restrictions.setGenAllowed(4, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_4));
-        restrictions.setGenAllowed(5, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_5));
-        restrictions.setGenAllowed(6, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_6));
-        restrictions.setGenAllowed(7, !(boolean) settings.getSetting(Settings.Name.LIMIT_BAN_GENERATION_7));
-        restrictions.setAllowEvolutionaryRelatives(settings.getSetting(Settings.Name.LIMIT_ALLOW_RELATIVES));
+        restrictions.setGenAllowed(1, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_1));
+        restrictions.setGenAllowed(2, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_2));
+        restrictions.setGenAllowed(3, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_3));
+        restrictions.setGenAllowed(4, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_4));
+        restrictions.setGenAllowed(5, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_5));
+        restrictions.setGenAllowed(6, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_6));
+        restrictions.setGenAllowed(7, !(boolean) settings.get(Settings.Name.LIMIT_BAN_GENERATION_7));
+        restrictions.setAllowEvolutionaryRelatives(settings.get(Settings.Name.LIMIT_ALLOW_RELATIVES));
 
         romHandler.getRestrictedSpeciesService().setRestrictions(restrictions);
         romHandler.removeEvosForPokemonPool();
     }
 
     private void applyUpdaters() {
-        if (settings.getSetting(Settings.Name.UPDATE_TYPE_EFFECTIVENESS)) {
+        if (settings.get(Settings.Name.UPDATE_TYPE_EFFECTIVENESS)) {
             typeEffUpdater.updateTypeEffectiveness();
         }
-        if (settings.getSetting(Settings.Name.UPDATE_MOVES)) {
-            int generation = settings.getSetting(Settings.Name.UPDATE_MOVES_TO_GENERATION);
+        if (settings.get(Settings.Name.UPDATE_MOVES)) {
+            int generation = settings.get(Settings.Name.UPDATE_MOVES_TO_GENERATION);
             moveUpdater.updateMoves(generation);
         }
-        if (settings.getSetting(Settings.Name.UPDATE_SPECIES_BASE_STATS)) {
-            int generation = settings.getSetting(Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION);
+        if (settings.get(Settings.Name.UPDATE_SPECIES_BASE_STATS)) {
+            int generation = settings.get(Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION);
             speciesBSUpdater.updateSpeciesStats(generation);
         }
     }
@@ -288,7 +288,7 @@ public class GameRandomizer {
         maybeRandomizeSpeciesBaseStatTotals();
 
         // Applied after both evo and BST randomization, so the right evos/BSTs are used.
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH)) {
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH)) {
             evoRandomizer.adjustEvolutionLevels();
         }
 
@@ -339,7 +339,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTypeEffectiveness() {
-        Settings.TypeEffectivenessMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TYPE_EFFECTIVENESS);
+        Settings.TypeEffectivenessMod mod = settings.get(Settings.Name.RANDOMIZE_TYPE_EFFECTIVENESS);
         switch (mod) {
             case RANDOM:
                 typeEffRandomizer.randomizeTypeEffectiveness(false);
@@ -351,33 +351,33 @@ public class GameRandomizer {
                 typeEffRandomizer.randomizeTypeEffectivenessKeepIdentities();
                 break;
             case INVERSE:
-                boolean addImmunities = settings.getSetting(Settings.Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES);
+                boolean addImmunities = settings.get(Settings.Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES);
                 typeEffRandomizer.invertTypeEffectiveness(addImmunities);
         }
     }
 
     private void maybeRandomizeMoveData() {
-        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_POWER)) {
+        if (settings.get(Settings.Name.MOVES_RANDOMIZE_POWER)) {
             moveDataRandomizer.randomizeMovePowers();
         }
 
-        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_ACCURACY)) {
+        if (settings.get(Settings.Name.MOVES_RANDOMIZE_ACCURACY)) {
             moveDataRandomizer.randomizeMoveAccuracies();
         }
 
-        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_PP)) {
+        if (settings.get(Settings.Name.MOVES_RANDOMIZE_PP)) {
             moveDataRandomizer.randomizeMovePPs();
         }
 
-        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_TYPE)) {
+        if (settings.get(Settings.Name.MOVES_RANDOMIZE_TYPE)) {
             moveDataRandomizer.randomizeMoveTypes();
         }
 
-        if (settings.getSetting(Settings.Name.MOVES_RANDOMIZE_NAME)) {
+        if (settings.get(Settings.Name.MOVES_RANDOMIZE_NAME)) {
             moveNameRandomizer.randomizeMoveNames();
         }
 
-        if ((boolean) settings.getSetting(Settings.Name.MOVES_RANDOMIZE_CATEGORY)
+        if ((boolean) settings.get(Settings.Name.MOVES_RANDOMIZE_CATEGORY)
                 && romHandler.hasPhysicalSpecialSplit()) {
             moveDataRandomizer.randomizeMoveCategory();
         }
@@ -388,33 +388,33 @@ public class GameRandomizer {
     }
 
     private void maybeStandardizeEXPCurves() {
-        if (settings.getSetting(Settings.Name.STANDARDIZE_SPECIES_EXP_CURVES)) {
+        if (settings.get(Settings.Name.STANDARDIZE_SPECIES_EXP_CURVES)) {
             speciesBSRandomizer.standardizeEXPCurves();
         }
     }
 
     private void maybeRandomizeSpeciesTypes() {
-        Settings.SpeciesTypesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_TYPES);
+        Settings.SpeciesTypesMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_TYPES);
         if (mod != Settings.SpeciesTypesMod.UNCHANGED) {
             speciesTypeRandomizer.randomizeSpeciesTypes();
         }
     }
 
     private void maybeRandomizeWildHeldItems() {
-        if (settings.getSetting(Settings.Name.WILD_RANDOMIZE_HELD_ITEMS)) {
+        if (settings.get(Settings.Name.WILD_RANDOMIZE_HELD_ITEMS)) {
             encHeldItemRandomizer.randomizeWildHeldItems();
         }
     }
 
     private void maybeRandomizeEvolutions() {
-        Settings.EvolutionsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
+        Settings.EvolutionsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
         if (mod != Settings.EvolutionsMod.UNCHANGED) {
             evoRandomizer.randomizeEvolutions();
         }
     }
 
     private void maybeRandomizeSpeciesBaseStatTotals() {
-        Settings.BSTMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
+        Settings.BSTMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
         if (mod != Settings.BSTMod.UNCHANGED) {
             speciesBSRandomizer.randomizeBSTs();
         }
@@ -422,7 +422,7 @@ public class GameRandomizer {
 
     private void maybeRandomizeSpeciesBaseStats() {
         Settings.BaseStatDistributionsMod mod =
-                settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS);
+                settings.get(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS);
         switch (mod) {
             case SHUFFLE:
                 speciesBSRandomizer.shuffleSpeciesStats();
@@ -433,43 +433,43 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeSpeciesAbilities() {
-        Settings.AbilitiesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        Settings.AbilitiesMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         if (mod == Settings.AbilitiesMod.RANDOMIZE) {
             speciesAbilityRandomizer.randomizeAbilities();
         }
     }
 
     private void maybeApplyEvolutionImprovements() {
-        boolean useEstimatedLevels = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS);
+        boolean useEstimatedLevels = settings.get(Settings.Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS);
 
         // Trade evolutions (etc.) removal
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE)) {
-            Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE)) {
+            Settings.MovesetsMod movesetsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
             boolean changeMoveEvos = movesetsMod != Settings.MovesetsMod.UNCHANGED;
             romHandler.removeImpossibleEvolutions(changeMoveEvos, useEstimatedLevels);
         }
 
         // Easier evolutions
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)) {
-            int easierLevel = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL);
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)) {
+            int easierLevel = settings.get(Settings.Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL);
             romHandler.condenseLevelEvolutions(easierLevel);
 
-            boolean wildsRandomizer = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
+            boolean wildsRandomizer = settings.get(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
             romHandler.makeEvolutionsEasier(wildsRandomizer, useEstimatedLevels);
         }
 
         // Remove time-based evolutions
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED)) {
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED)) {
             romHandler.removeTimeBasedEvolutions();
         }
     }
 
     private void maybeRandomizeStarters() {
-        Settings.StartersMod mod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        Settings.StartersMod mod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         if (mod != Settings.StartersMod.UNCHANGED) {
             starterRandomizer.randomizeStarters();
         }
-        if (settings.getSetting(Settings.Name.STARTERS_RANDOMIZE_HELD_ITEMS)) {
+        if (settings.get(Settings.Name.STARTERS_RANDOMIZE_HELD_ITEMS)) {
             starterRandomizer.randomizeStarterHeldItems();
         }
     }
@@ -480,20 +480,20 @@ public class GameRandomizer {
         // 2. Reorder moves by damage
         // Note: "Metronome only" is handled after trainers instead
 
-        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         if (mod != Settings.MovesetsMod.UNCHANGED
                 && mod != Settings.MovesetsMod.METRONOME_ONLY) {
             speciesMovesetRandomizer.randomizeMovesLearnt();
             speciesMovesetRandomizer.randomizeEggMoves();
         }
 
-        if (settings.getSetting(Settings.Name.MOVESETS_ORDER_BY_DAMAGE)) {
+        if (settings.get(Settings.Name.MOVESETS_ORDER_BY_DAMAGE)) {
             speciesMovesetRandomizer.orderDamagingMovesByDamage();
         }
     }
 
     private void maybeRandomizeTMMoves() {
-        Settings.TMMovesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_MOVES);
+        Settings.TMMovesMod mod = settings.get(Settings.Name.RANDOMIZE_TM_MOVES);
         if (mod == Settings.TMMovesMod.RANDOM) {
             tmtMoveRandomizer.randomizeTMMoves();
         }
@@ -507,7 +507,7 @@ public class GameRandomizer {
         // 4. Full HM compatibility
         // 5. Copy to cosmetic forms
 
-        Settings.TMsHMsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
+        Settings.TMsHMsCompatibilityMod mod = settings.get(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
         switch (mod) {
             case COMPLETELY_RANDOM:
             case RANDOM_PREFER_TYPE:
@@ -517,14 +517,14 @@ public class GameRandomizer {
                 tmhmtCompRandomizer.fullTMHMCompatibility();
         }
 
-        if (settings.getSetting(Settings.Name.TM_COMPATABILITY_LEVEL_UP_SANITY)) {
+        if (settings.get(Settings.Name.TM_COMPATABILITY_LEVEL_UP_SANITY)) {
             tmhmtCompRandomizer.ensureTMCompatSanity();
-            if (settings.getSetting(Settings.Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS)) {
+            if (settings.get(Settings.Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS)) {
                 tmhmtCompRandomizer.ensureTMEvolutionSanity();
             }
         }
 
-        if (settings.getSetting(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
+        if (settings.get(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
             tmhmtCompRandomizer.fullHMCompatibility();
         }
 
@@ -536,7 +536,7 @@ public class GameRandomizer {
 
     private void maybeRandomizeMoveTutorMoves() {
         if (romHandler.hasMoveTutors()) {
-            Settings.MoveTutorMovesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_MOVES);
+            Settings.MoveTutorMovesMod mod = settings.get(Settings.Name.RANDOMIZE_TUTOR_MOVES);
             if (mod == Settings.MoveTutorMovesMod.RANDOM) {
                 tmtMoveRandomizer.randomizeMoveTutorMoves();
             }
@@ -550,7 +550,7 @@ public class GameRandomizer {
             // 2. Ensure levelup move sanity
             // 3. Follow evolutions
             // 4. Copy to cosmetic forms
-            Settings.MoveTutorsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
+            Settings.MoveTutorsCompatibilityMod mod = settings.get(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
             switch (mod) {
                 case COMPLETELY_RANDOM:
                 case RANDOM_PREFER_TYPE:
@@ -560,9 +560,9 @@ public class GameRandomizer {
                     tmhmtCompRandomizer.fullMoveTutorCompatibility();
             }
 
-            if (settings.getSetting(Settings.Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY)) {
+            if (settings.get(Settings.Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY)) {
                 tmhmtCompRandomizer.ensureMoveTutorCompatSanity();
-                if (settings.getSetting(Settings.Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS)) {
+                if (settings.get(Settings.Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS)) {
                     tmhmtCompRandomizer.ensureMoveTutorEvolutionSanity();
                 }
             }
@@ -593,30 +593,30 @@ public class GameRandomizer {
             trainerPokeRandomizer.addTrainerPokemon();
         }
 
-        BattleStyle.Modification battleStyleMod = settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+        BattleStyle.Modification battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
         if (battleStyleMod != BattleStyle.Modification.UNCHANGED) {
             trainerPokeRandomizer.modifyBattleStyle();
         }
 
-        Settings.TrainersMod trainersMod = settings.getSetting(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
-        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        Settings.TrainersMod trainersMod = settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
+        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         if ((trainersMod != Settings.TrainersMod.UNCHANGED
                 || startersMod != Settings.StartersMod.UNCHANGED)
-                && (boolean) settings.getSetting(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER)) {
+                && (boolean) settings.get(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER)) {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
         if(trainersMod != Settings.TrainersMod.UNCHANGED) {
             trainerPokeRandomizer.randomizeTrainerPokes();
-        } else if (settings.getSetting(Settings.Name.TRAINERS_EVOLVE_POKEMON)) {
+        } else if (settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON)) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
         }
     }
 
     private void maybeRandomizeTrainerMovesets() {
-        if ((boolean) settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES)
-                || (boolean) settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT)
-                || (boolean) settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR)) {
+        if ((boolean) settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES)
+                || (boolean) settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT)
+                || (boolean) settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR)) {
             trainerMovesetRandomizer.randomizeTrainerMovesets();
         }
     }
@@ -630,27 +630,27 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeTrainerHeldItems() {
-        if ((boolean) settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES)
-                || (boolean) settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT)
-                || (boolean) settings.getSetting(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR)) {
+        if ((boolean) settings.get(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES)
+                || (boolean) settings.get(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT)
+                || (boolean) settings.get(Settings.Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR)) {
             trainerPokeRandomizer.randomizeTrainerHeldItems();
         }
     }
 
     private void maybeRandomizeTrainerNames() {
         if (romHandler.canChangeTrainerText()) {
-            if (settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_CLASS_NAMES)) {
+            if (settings.get(Settings.Name.TRAINERS_RANDOMIZE_CLASS_NAMES)) {
                 trainerNameRandomizer.randomizeTrainerClassNames();
             }
 
-            if (settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_NAMES)) {
+            if (settings.get(Settings.Name.TRAINERS_RANDOMIZE_NAMES)) {
                 trainerNameRandomizer.randomizeTrainerNames();
             }
         }
     }
 
     private void maybeApplyMetronomeMode() {
-        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         if (mod == Settings.MovesetsMod.METRONOME_ONLY) {
             speciesMovesetRandomizer.metronomeOnlyMode();
         }
@@ -658,7 +658,7 @@ public class GameRandomizer {
 
     private void maybeRandomizeStaticPokemon() {
         if (romHandler.canChangeStaticPokemon()) {
-            Settings.StaticPokemonMod mod = settings.getSetting(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS);
+            Settings.StaticPokemonMod mod = settings.get(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS);
             if (mod != Settings.StaticPokemonMod.UNCHANGED) {
                 staticPokeRandomizer.randomizeStaticPokemon();
             } else if (!settings.isDefault(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT)) {
@@ -669,14 +669,14 @@ public class GameRandomizer {
 
     private void maybeRandomizeTotemPokemon() {
         if (romHandler.hasTotemPokemon()) {
-            Settings.TotemPokemonMod totemMod = settings.getSetting(Settings.Name.RANDOMIZE_TOTEM_POKEMON);
-            Settings.AllyPokemonMod allyMod = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_ALLIES);
-            Settings.AuraMod auraMod = settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_AURAS);
+            Settings.TotemPokemonMod totemMod = settings.get(Settings.Name.RANDOMIZE_TOTEM_POKEMON);
+            Settings.AllyPokemonMod allyMod = settings.get(Settings.Name.TOTEMS_RANDOMIZE_ALLIES);
+            Settings.AuraMod auraMod = settings.get(Settings.Name.TOTEMS_RANDOMIZE_AURAS);
 
             if (totemMod != Settings.TotemPokemonMod.UNCHANGED ||
                     allyMod != Settings.AllyPokemonMod.UNCHANGED ||
                     auraMod != Settings.AuraMod.UNCHANGED ||
-                    (boolean) settings.getSetting(Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS) ||
+                    (boolean) settings.get(Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS) ||
                     !settings.isDefault(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT)) {
 
                 staticPokeRandomizer.randomizeTotemPokemon();
@@ -685,19 +685,19 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeWildPokemon() {
-        Settings.CatchRateMod catchRateMod = settings.getSetting(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
+        Settings.CatchRateMod catchRateMod = settings.get(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
         if (catchRateMod != Settings.CatchRateMod.UNCHANGED) {
             wildEncounterRandomizer.changeCatchRates();
         }
 
-        if ((boolean) settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS)
+        if ((boolean) settings.get(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS)
                 || !settings.isDefault(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT)) {
             wildEncounterRandomizer.randomizeEncounters();
         }
     }
 
     private void maybeRandomizeInGameTrades() {
-        Settings.InGameTradesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
+        Settings.InGameTradesMod mod = settings.get(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
         switch (mod) {
             case RANDOMIZE_GIVEN:
             case RANDOMIZE_GIVEN_AND_REQUESTED:
@@ -706,7 +706,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeFieldItems() {
-        Settings.FieldItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_FIELD_ITEMS);
+        Settings.FieldItemsMod mod = settings.get(Settings.Name.RANDOMIZE_FIELD_ITEMS);
         switch (mod) {
             case SHUFFLE:
             case RANDOM:
@@ -716,7 +716,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeShops() {
-        Settings.ShopItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS);
+        Settings.ShopItemsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS);
         switch (mod) {
             case SHUFFLE:
                 itemRandomizer.shuffleShopItems();
@@ -724,23 +724,23 @@ public class GameRandomizer {
             case RANDOM:
                 itemRandomizer.randomizeShopItems();
         }
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_BALANCE_PRICES)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_BALANCE_PRICES)) {
             romHandler.setBalancedShopPrices();
         }
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY)) {
             itemRandomizer.addCheapRareCandiesToShops();
         }
     }
 
     private void maybeRandomizePickupItems() {
-        Settings.PickupItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_PICKUP_ITEMS);
+        Settings.PickupItemsMod mod = settings.get(Settings.Name.RANDOMIZE_PICKUP_ITEMS);
         if (mod == Settings.PickupItemsMod.RANDOM) {
             itemRandomizer.randomizePickupItems();
         }
     }
 
     private void maybeRandomizePokemonPalettes() {
-        Settings.SpeciesPalettesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_PALETTES);
+        Settings.SpeciesPalettesMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_PALETTES);
         if (mod == Settings.SpeciesPalettesMod.RANDOM) {
             paletteRandomizer.randomizePokemonPalettes();
         }
@@ -748,7 +748,7 @@ public class GameRandomizer {
 
     private void maybeRandomizeIntroPokemon() {
         // TODO: move to live with the misc tweaks?
-        if (!(boolean) settings.getSetting(Settings.Name.NO_RANDOM_INTRO_MON)) {
+        if (!(boolean) settings.get(Settings.Name.NO_RANDOM_INTRO_MON)) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

@@ -57,9 +57,9 @@ public class CheckValueCalculator {
     }
 
     private void addEncounterInfo() {
-        boolean randomizeWilds = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
+        boolean randomizeWilds = settings.get(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
         boolean changeLevels = !settings.isDefault(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
-        boolean useTimeBasedEncounters = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED)
+        boolean useTimeBasedEncounters = !(boolean) settings.get(Settings.Name.WILD_REMOVE_TIME_BASED)
                 || (!randomizeWilds  && changeLevels);
         for (EncounterArea area : romHandler.getEncounters(useTimeBasedEncounters)) {
             for (Encounter e : area) {

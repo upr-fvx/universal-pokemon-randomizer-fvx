@@ -36,9 +36,9 @@ public class TMTutorMoveRandomizer extends Randomizer {
     }
 
     public void randomizeTMMoves() {
-        boolean noBroken = settings.getSetting(Settings.Name.TMS_BAN_OVERPOWERED);
-        boolean preserveField = settings.getSetting(Settings.Name.TMS_KEEP_FIELD_MOVES);
-        double goodDamagingPercentage = ((int) settings.getSetting(Settings.Name.TMS_GOOD_DAMAGING_PERCENT)) / 100.0;
+        boolean noBroken = settings.get(Settings.Name.TMS_BAN_OVERPOWERED);
+        boolean preserveField = settings.get(Settings.Name.TMS_KEEP_FIELD_MOVES);
+        double goodDamagingPercentage = ((int) settings.get(Settings.Name.TMS_GOOD_DAMAGING_PERCENT)) / 100.0;
 
         // Pick some random TM moves.
         int tmCount = romHandler.getTMCount();
@@ -120,9 +120,9 @@ public class TMTutorMoveRandomizer extends Randomizer {
     }
 
     public void randomizeMoveTutorMoves() {
-        boolean noBroken = settings.getSetting(Settings.Name.TUTORS_BAN_OVERPOWERED);
-        boolean preserveField = settings.getSetting(Settings.Name.TUTORS_KEEP_FIELD_MOVES);
-        double goodDamagingPercentage = ((int) settings.getSetting(Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT)) / 100.0;
+        boolean noBroken = settings.get(Settings.Name.TUTORS_BAN_OVERPOWERED);
+        boolean preserveField = settings.get(Settings.Name.TUTORS_KEEP_FIELD_MOVES);
+        double goodDamagingPercentage = ((int) settings.get(Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT)) / 100.0;
 
         if (!romHandler.hasMoveTutors()) {
             return;

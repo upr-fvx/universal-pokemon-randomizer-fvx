@@ -25,7 +25,7 @@ public class PaletteRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasPokemonPaletteSupport());
 
         SettingsManager s = new SettingsManager();
-        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
 
         createPaletteRandomizer(romHandler, s).randomizePokemonPalettes();
     }
@@ -37,8 +37,8 @@ public class PaletteRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasPokemonPaletteSupport());
 
         SettingsManager s = new SettingsManager();
-        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
-        s.setSetting(Settings.Name.PALETTES_FOLLOW_TYPES, true);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
+        s.set(Settings.Name.PALETTES_FOLLOW_TYPES, true);
 
         createPaletteRandomizer(romHandler, s).randomizePokemonPalettes();
     }
@@ -50,8 +50,8 @@ public class PaletteRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasPokemonPaletteSupport());
 
         SettingsManager s = new SettingsManager();
-        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
-        s.setSetting(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS, true);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
+        s.set(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS, true);
 
         createPaletteRandomizer(romHandler, s).randomizePokemonPalettes();
     }
@@ -70,8 +70,8 @@ public class PaletteRandomizerTest extends RandomizerTest {
         );
 
         SettingsManager s = new SettingsManager();
-        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
-        s.setSetting(Settings.Name.PALETTES_SHINY_FROM_NORMAL, true);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
+        s.set(Settings.Name.PALETTES_SHINY_FROM_NORMAL, true);
 
         createPaletteRandomizer(romHandler, s).randomizePokemonPalettes();
 

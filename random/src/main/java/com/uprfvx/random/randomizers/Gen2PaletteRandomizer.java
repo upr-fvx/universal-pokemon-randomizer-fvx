@@ -51,9 +51,9 @@ public class Gen2PaletteRandomizer extends PaletteRandomizer {
 
 	@Override
 	public void randomizePokemonPalettes() {
-		this.typeSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_TYPES);
-		this.shinyFromNormal = settings.getSetting(Settings.Name.PALETTES_SHINY_FROM_NORMAL);
-		boolean evolutionSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
+		this.typeSanity = settings.get(Settings.Name.PALETTES_FOLLOW_TYPES);
+		this.shinyFromNormal = settings.get(Settings.Name.PALETTES_SHINY_FROM_NORMAL);
+		boolean evolutionSanity = settings.get(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
 
 		CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
 				.Builder(new BasicSpeciesPaletteAction(), new EvolvedSpeciesPaletteAction())

@@ -18,9 +18,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.setSetting(Name.BAN_GENERATION_1, true);
+        manager.set(Name.BAN_GENERATION_1, true);
 
-        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
+        boolean value = manager.get(Name.BAN_GENERATION_1);
         assert(value == false);
     }
 
@@ -31,9 +31,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.setSetting(Name.BAN_GENERATION_1, true);
+        manager.set(Name.BAN_GENERATION_1, true);
 
-        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
+        boolean value = manager.get(Name.BAN_GENERATION_1);
         assert(value == true);
     }
 
@@ -44,10 +44,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Yellow (U)");
 
         manager.associateGame(romHandler);
-        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
+        manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
         assert(value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -58,10 +58,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Yellow (U)");
 
         manager.associateGame(romHandler);
-        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.UNIQUE);
-        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
+        manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.UNIQUE);
+        Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
         assert(value == Settings.StartersTypeMod.UNIQUE);
     }
 
@@ -72,10 +72,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Red (U)");
 
         manager.associateGame(romHandler);
-        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
+        manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
         assert(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -85,13 +85,13 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Red (U)");
 
-        manager.setSetting(Name.BAN_GENERATION_1, true);
-        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
+        manager.set(Name.BAN_GENERATION_1, true);
+        boolean value = manager.get(Name.BAN_GENERATION_1);
         assumeTrue(value);
 
         manager.associateGame(romHandler);
 
-        value = manager.getSetting(Name.BAN_GENERATION_1);
+        value = manager.get(Name.BAN_GENERATION_1);
         assert(value == false);
     }
 
@@ -101,15 +101,15 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Yellow (U)");
 
-        manager.setSetting(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
 
-        manager.setSetting(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
-        Settings.StartersTypeMod value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
+        manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
         assumeTrue(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
 
         manager.associateGame(romHandler);
 
-        value = manager.getSetting(Name.STARTERS_TYPE_RESTRICTION);
+        value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
         assert(value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
 
@@ -122,9 +122,9 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.associateGame(romHandler);
         manager.unassociateGame();
 
-        manager.setSetting(Name.BAN_GENERATION_1, true);
+        manager.set(Name.BAN_GENERATION_1, true);
 
-        boolean value = manager.getSetting(Name.BAN_GENERATION_1);
+        boolean value = manager.get(Name.BAN_GENERATION_1);
         assert(value == true);
     }
 

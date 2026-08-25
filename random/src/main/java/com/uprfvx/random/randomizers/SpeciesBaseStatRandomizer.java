@@ -33,7 +33,7 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void randomizeBSTs() {
-        Settings.BSTMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
+        Settings.BSTMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
         switch (mod) {
             case RANDOM_BUFF_NERF -> randomlyModifyBSTsByPercentage();
             case SHUFFLE -> shuffleBSTs();
@@ -54,8 +54,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     private Map<Species, Double> modifiersBySpecies;
 
     private void randomlyModifyBSTsByPercentage() {
-        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
-        double maxModifier = ((int) settings.getSetting(Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE)) / 100.0;
+        boolean evolutionSanity = settings.get(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
+        double maxModifier = ((int) settings.get(Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE)) / 100.0;
 
         modifiersBySpecies = new HashMap<>();
 
@@ -110,8 +110,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
         // but Gen 8+ will be annoying, sorry. Good luck adding support to e.g. Perrserker or Obstagoon ^^.
         // -- voliol 2026-07-24
 
-        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
-        boolean swapLegendaries = settings.getSetting(Settings.Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
+        boolean evolutionSanity = settings.get(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION);
+        boolean swapLegendaries = settings.get(Settings.Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
 
         List<SpeciesSet> shuffleGroups = prepareBSTShuffleGroups(evolutionSanity, swapLegendaries);
 
@@ -258,8 +258,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     Map<Species, List<Integer>> shuffledStatsOrders;
 
     public void shuffleSpeciesStats() {
-        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS);
-        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS);
+        boolean evolutionSanity = settings.get(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS);
+        boolean megaEvolutionSanity = settings.get(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS);
 
         shuffledStatsOrders = new HashMap<>();
 
@@ -337,9 +337,9 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void randomizeSpeciesStats() {
-        boolean evolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS);
-        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS);
-        boolean assignEvoStatsRandomly = settings.getSetting(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY);
+        boolean evolutionSanity = settings.get(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS);
+        boolean megaEvolutionSanity = settings.get(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS);
+        boolean assignEvoStatsRandomly = settings.get(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY);
 
         BasicSpeciesAction bsAction = this::randomizeStatsWithinBST;
         EvolvedSpeciesAction randomEsAction = (evFrom, evTo, _) ->
@@ -485,8 +485,8 @@ public class SpeciesBaseStatRandomizer extends Randomizer {
     }
 
     public void standardizeEXPCurves() {
-        Settings.ExpCurveExtentMod mod = settings.getSetting(Settings.Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT);
-        ExpCurve expCurve = settings.getSetting(Settings.Name.SPECIES_EXP_CURVE_STANDARD_SELECTION);
+        Settings.ExpCurveExtentMod mod = settings.get(Settings.Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT);
+        ExpCurve expCurve = settings.get(Settings.Name.SPECIES_EXP_CURVE_STANDARD_SELECTION);
 
         SpeciesSet pokes = romHandler.getSpeciesSetInclFormes();
         for (Species pk : pokes) {

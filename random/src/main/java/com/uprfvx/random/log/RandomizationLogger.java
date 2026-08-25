@@ -464,17 +464,17 @@ public class RandomizationLogger {
         printSectionTitle("pei");
 
         log.printf(getBS("Log.pei.listHead"));
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE)) {
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE)) {
             log.printf(getBS("Log.pei.listImpossible"));
         }
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)) {
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)) {
             log.printf(getBS("Log.pei.listEasier"));
         }
-        if (settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED)) {
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED)) {
             log.printf(getBS("Log.pei.listTimeBased"));
         }
         log.println();
-        if ((boolean) settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)
+        if ((boolean) settings.get(Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER)
                 && romHandler.generationOfPokemon() != 1) {
             log.printf(getBS("Log.pei.happiness"));
         }
@@ -693,7 +693,7 @@ public class RandomizationLogger {
 
     private void logStarters() {
         printSectionTitle("sp");
-        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         String mode = switch (startersMod) {
             case UNCHANGED -> getBS("Log.sp.unchanged"); // should never happen
             case CUSTOM -> getBS("Log.sp.custom");
@@ -776,13 +776,13 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMovesets() {
-        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         return speciesMovesetRandomizer.isChangesMade() || mod == Settings.MovesetsMod.METRONOME_ONLY;
     }
 
     private void logMovesets() {
         printSectionTitle("pms");
-        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         if (mod == Settings.MovesetsMod.METRONOME_ONLY) {
             log.println("Metronome only mode - every Pokémon learns only Metronome.");
             printSectionSeparator();
@@ -855,14 +855,14 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogTMMoves() {
-        Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod movesetsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         return tmtMoveRandomizer.isTMChangesMade() || movesetsMod == Settings.MovesetsMod.METRONOME_ONLY;
     }
 
     private void logTMMoves() {
         printSectionTitle("tm");
 
-        Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod movesetsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         if (movesetsMod == Settings.MovesetsMod.METRONOME_ONLY) {
             log.printf(getBS("Log.tm.metronomeMode"));
         } else {
@@ -881,10 +881,10 @@ public class RandomizationLogger {
 
     private void logTMHMCompatibility() {
         printSectionTitle("tmc");
-        if (settings.getSetting(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
+        if (settings.get(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
             log.printf(getBS("Log.tmc.fullHM"));
         }
-        Settings.TMsHMsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
+        Settings.TMsHMsCompatibilityMod mod = settings.get(Settings.Name.RANDOMIZE_TM_AND_HM_COMPATABILITY);
         if (mod == Settings.TMsHMsCompatibilityMod.FULL) {
             log.printf(getBS("Log.tmc.full"));
         } else if (mod != Settings.TMsHMsCompatibilityMod.UNCHANGED) {
@@ -902,7 +902,7 @@ public class RandomizationLogger {
         List<Move> tmHMs = romHandler.getTMMoves()
                 .stream().map(moveData::get)
                 .collect(Collectors.toList());
-        if (!(boolean) settings.getSetting(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
+        if (!(boolean) settings.get(Settings.Name.TMS_FULL_HM_COMPATABILITY)) {
             romHandler.getHMMoves()
                     .stream().map(moveData::get)
                     .forEach(tmHMs::add);
@@ -974,7 +974,7 @@ public class RandomizationLogger {
     }
 
     private boolean shouldLogMoveTutorMoves() {
-        Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod movesetsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         return romHandler.hasMoveTutors() && (tmtMoveRandomizer.isTutorChangesMade() ||
                 movesetsMod == Settings.MovesetsMod.METRONOME_ONLY);
     }
@@ -982,7 +982,7 @@ public class RandomizationLogger {
     private void logMoveTutorMoves(List<Integer> oldMtMoves) {
         printSectionTitle("mt");
 
-        Settings.MovesetsMod movesetsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod movesetsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         if (movesetsMod == Settings.MovesetsMod.METRONOME_ONLY) {
             log.printf(getBS("Log.mt.metronomeMode"));
         } else {
@@ -1002,7 +1002,7 @@ public class RandomizationLogger {
 
     private void logMoveTutorCompatibility() {
         printSectionTitle("mtc");
-        Settings.MoveTutorsCompatibilityMod mod = settings.getSetting(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
+        Settings.MoveTutorsCompatibilityMod mod = settings.get(Settings.Name.RANDOMIZE_TUTOR_COMPATABILITY);
         if (mod == Settings.MoveTutorsCompatibilityMod.FULL) {
             log.printf(getBS("Log.mtc.full"));
         } else {
@@ -1119,7 +1119,7 @@ public class RandomizationLogger {
                     first = false;
                 }
             }
-            BattleStyle.Modification battleStyleMod = settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+            BattleStyle.Modification battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
             if (battleStyleMod != BattleStyle.Modification.UNCHANGED) {
                 log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
             }
@@ -1191,9 +1191,9 @@ public class RandomizationLogger {
     private void logWildPokemon() {
         printSectionTitle("wp");
 
-        boolean randomizeWilds = settings.getSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
+        boolean randomizeWilds = settings.get(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS);
         boolean changeLevels = !settings.isDefault(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT);
-        boolean useTimeBasedEncounters = !(boolean) settings.getSetting(Settings.Name.WILD_REMOVE_TIME_BASED)
+        boolean useTimeBasedEncounters = !(boolean) settings.get(Settings.Name.WILD_REMOVE_TIME_BASED)
                 || (!randomizeWilds  && changeLevels);
         List<EncounterArea> encounterAreas = romHandler.getSortedEncounters(useTimeBasedEncounters);
 
@@ -1270,10 +1270,10 @@ public class RandomizationLogger {
 
     private void logShopItems() {
         printSectionTitle("sh");
-        if (settings.getSetting(Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY)) {
+        if (settings.get(Settings.Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY)) {
             log.printf(getBS("Log.sh.addedRareCandies"));
         }
-        Settings.ShopItemsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS);
+        Settings.ShopItemsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS);
         if (mod != Settings.ShopItemsMod.UNCHANGED) {
             log.printf(getBS("Log.sh.specialShops"));
             List<Shop> shops = romHandler.getShops();
@@ -1335,7 +1335,7 @@ public class RandomizationLogger {
 
     private void logMoveUpdates() {
         printSectionTitle("mu");
-        log.printf(getBS("Log.mu.description"), settings.getSetting(Settings.Name.UPDATE_MOVES_TO_GENERATION));
+        log.printf(getBS("Log.mu.description"), settings.get(Settings.Name.UPDATE_MOVES_TO_GENERATION));
 
         Map<Move, Map<MoveUpdateType, Update<Object>>> updates = moveUpdater.getUpdates();
         for (Map.Entry<Move, Map<MoveUpdateType, Update<Object>>> outer : updates.entrySet()) {
@@ -1373,7 +1373,7 @@ public class RandomizationLogger {
     private void logBaseStatsUpdates() {
         printSectionTitle("bsu");
         log.printf(getBS("Log.bsu.description"),
-                settings.getSetting(Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION));
+                settings.get(Settings.Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION));
 
         Map<Species, Map<BSUpdateType, Update<Integer>>> updates = speciesBSUpdater.getUpdates();
         for (Map.Entry<Species, Map<BSUpdateType, Update<Integer>>> outer : updates.entrySet()) {

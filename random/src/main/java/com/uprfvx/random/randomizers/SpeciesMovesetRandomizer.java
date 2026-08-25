@@ -17,13 +17,13 @@ public class SpeciesMovesetRandomizer extends Randomizer {
     }
 
     public void randomizeMovesLearnt() {
-        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         boolean typeThemed = mod == Settings.MovesetsMod.RANDOM_PREFER_SAME_TYPE;
-        boolean noBroken = settings.getSetting(Settings.Name.MOVESETS_BAN_OVERPOWERED);
-        int forceStartingMoveCount = settings.getSetting(Settings.Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT);
+        boolean noBroken = settings.get(Settings.Name.MOVESETS_BAN_OVERPOWERED);
+        int forceStartingMoveCount = settings.get(Settings.Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT);
         double goodDamagingPercentage =
-                (int) settings.getSetting(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT) / 100.0;
-        boolean evolutionMovesForAll = settings.getSetting(Settings.Name.MOVESETS_GUARANTEE_EVOLUTION_MOVES);
+                (int) settings.get(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT) / 100.0;
+        boolean evolutionMovesForAll = settings.get(Settings.Name.MOVESETS_GUARANTEE_EVOLUTION_MOVES);
 
         // Get current sets
         Map<Integer, List<MoveLearnt>> movesets = romHandler.getMovesLearnt();
@@ -199,11 +199,11 @@ public class SpeciesMovesetRandomizer extends Randomizer {
     }
 
     public void randomizeEggMoves() {
-        Settings.MovesetsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
+        Settings.MovesetsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_MOVESETS);
         boolean typeThemed = mod == Settings.MovesetsMod.RANDOM_PREFER_SAME_TYPE;
-        boolean noBroken = settings.getSetting(Settings.Name.MOVESETS_BAN_OVERPOWERED);
+        boolean noBroken = settings.get(Settings.Name.MOVESETS_BAN_OVERPOWERED);
         double goodDamagingPercentage =
-                (int) settings.getSetting(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT) / 100.0;
+                (int) settings.get(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT) / 100.0;
 
         // Get current sets
         Map<Integer, List<Integer>> movesets = romHandler.getEggMoves();

@@ -17,12 +17,12 @@ public class TradeRandomizer extends Randomizer {
     }
 
     public void randomizeIngameTrades() {
-        Settings.InGameTradesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
+        Settings.InGameTradesMod mod = settings.get(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
         boolean randomizeRequest = mod == Settings.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED;
-        boolean randomNickname = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_NICKNAMES);
-        boolean randomOT = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
-        boolean randomStats = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_IVS);
-        boolean randomItem = settings.getSetting(Settings.Name.TRADES_RANDOMIZE_HELD_ITEMS);
+        boolean randomNickname = settings.get(Settings.Name.TRADES_RANDOMIZE_NICKNAMES);
+        boolean randomOT = settings.get(Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
+        boolean randomStats = settings.get(Settings.Name.TRADES_RANDOMIZE_IVS);
+        boolean randomItem = settings.get(Settings.Name.TRADES_RANDOMIZE_HELD_ITEMS);
         CustomNamesSet customNames = getCustomNames();
 
         // Process trainer names

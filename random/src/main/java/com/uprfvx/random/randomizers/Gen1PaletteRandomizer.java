@@ -70,8 +70,8 @@ public class Gen1PaletteRandomizer extends PaletteRandomizer {
 
 	@Override
 	public void randomizePokemonPalettes() {
-		this.typeSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_TYPES);
-		boolean evolutionSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
+		this.typeSanity = settings.get(Settings.Name.PALETTES_FOLLOW_TYPES);
+		boolean evolutionSanity = settings.get(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
 
 		CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
 				.Builder(new BaseSpeciesIDAction(), new EvolvedSpeciesIDAction())

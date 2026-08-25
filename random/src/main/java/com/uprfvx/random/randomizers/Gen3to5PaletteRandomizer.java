@@ -72,9 +72,9 @@ public class Gen3to5PaletteRandomizer extends PaletteRandomizer {
 		// TODO: Figure out what to do with forms, with different palettes and with the same.
 		// TODO: figure out genders in gen V, if anything needs to be done at all
 
-		this.typeSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_TYPES);
-		this.shinyFromNormal = settings.getSetting(Settings.Name.PALETTES_SHINY_FROM_NORMAL);
-		boolean evolutionSanity = settings.getSetting(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
+		this.typeSanity = settings.get(Settings.Name.PALETTES_FOLLOW_TYPES);
+		this.shinyFromNormal = settings.get(Settings.Name.PALETTES_SHINY_FROM_NORMAL);
+		boolean evolutionSanity = settings.get(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS);
 
 		this.typeBaseColorLists = new HashMap<>();
 

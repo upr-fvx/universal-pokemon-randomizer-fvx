@@ -25,10 +25,10 @@ public class SpeciesTypeRandomizer extends Randomizer {
     }
 
     public void randomizeSpeciesTypes() {
-        Settings.SpeciesTypesMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_TYPES);
+        Settings.SpeciesTypesMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_TYPES);
         boolean evolutionSanity = mod == Settings.SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS;
-        boolean megaEvolutionSanity = settings.getSetting(Settings.Name.SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS);
-        boolean dualTypeOnly = settings.getSetting(Settings.Name.SPECIES_TYPES_FORCE_DUAL_TYPES);
+        boolean megaEvolutionSanity = settings.get(Settings.Name.SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS);
+        boolean dualTypeOnly = settings.get(Settings.Name.SPECIES_TYPES_FORCE_DUAL_TYPES);
 
         BasicSpeciesAction basicAction = pk -> {
             pk.setPrimaryType(typeService.randomType(random));

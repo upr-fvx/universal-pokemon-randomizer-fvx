@@ -22,18 +22,18 @@ public class EvolutionRandomizer extends Randomizer {
     public void randomizeEvolutions() {
         // TODO: Investigate what happened to isEvosAllowAltFormes(). Was it ever implemented?
 
-        boolean similarStrength = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH);
-        boolean sameType = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE);
-        boolean limitToThreeStages = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES);
-        boolean forceChange = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE);
-        boolean forceGrowth = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_GROWTH);
-        boolean noConvergence = settings.getSetting(Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE);
+        boolean similarStrength = settings.get(Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH);
+        boolean sameType = settings.get(Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE);
+        boolean limitToThreeStages = settings.get(Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES);
+        boolean forceChange = settings.get(Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE);
+        boolean forceGrowth = settings.get(Settings.Name.SPECIES_EVOLUTIONS_FORCE_GROWTH);
+        boolean noConvergence = settings.get(Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE);
 
-        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
-        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
 
-        Settings.EvolutionsMod mod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
+        Settings.EvolutionsMod mod = settings.get(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
         boolean evolveEveryLevel = mod == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         randomizeEvolutions(similarStrength, sameType, limitToThreeStages, forceChange, forceGrowth, noConvergence,
                 banIrregularAltFormes, abilitiesAreRandomized, evolveEveryLevel);
@@ -114,7 +114,7 @@ public class EvolutionRandomizer extends Randomizer {
                 tries++;
             }
             if (tries == MAX_TRIES) {
-                if (settings.getSetting(Settings.Name.STANDARDIZE_SPECIES_EXP_CURVES)) {
+                if (settings.get(Settings.Name.STANDARDIZE_SPECIES_EXP_CURVES)) {
                     throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries.");
                 } else {
                     throw new RandomizationException("Could not randomize Evolutions in " + MAX_TRIES + " tries." +

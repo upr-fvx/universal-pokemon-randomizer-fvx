@@ -26,16 +26,16 @@ public class TrainerMovesetRandomizer extends Randomizer {
     }
 
     public void randomizeTrainerMovesets() {
-        Settings.EvolutionsMod evolutionsMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
+        Settings.EvolutionsMod evolutionsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
         boolean isCyclicEvolutions = evolutionsMod == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
         BattleStyle battleStyle = new BattleStyle(
-                settings.getSetting(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
-                settings.getSetting(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
+                settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
+                settings.get(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
         );
         boolean isOnlyMultiBattles = battleStyle.isOnlyMultiBattles();
-        boolean betterBossMovesets = settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES);
-        boolean betterImportantMovesets = settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT);
-        boolean betterRegularMovesets = settings.getSetting(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);
+        boolean betterBossMovesets = settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES);
+        boolean betterImportantMovesets = settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT);
+        boolean betterRegularMovesets = settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);
 
         List<Trainer> trainers = romHandler.getTrainers().stream()
                 .filter(t -> (t.isBoss() && betterBossMovesets) ||

@@ -16,9 +16,9 @@ public class StarterRandomizer extends Randomizer {
     }
 
     public void randomizeStarters() {
-        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         boolean useCustomStarters = startersMod == Settings.StartersMod.CUSTOM;
-        Settings.StartersTypeMod typeMod = settings.getSetting(Settings.Name.STARTERS_TYPE_RESTRICTION);
+        Settings.StartersTypeMod typeMod = settings.get(Settings.Name.STARTERS_TYPE_RESTRICTION);
         boolean typeFwg = typeMod == Settings.StartersTypeMod.FIRE_WATER_GRASS;
         boolean typeUnique = typeMod == Settings.StartersTypeMod.UNIQUE;
         boolean typeTriangle = typeMod == Settings.StartersTypeMod.TRIANGLE;
@@ -112,7 +112,7 @@ public class StarterRandomizer extends Randomizer {
     }
 
     public Type getSingleTypeFromSettings() {
-        int index = settings.getSetting(Settings.Name.STARTERS_SINGLE_TYPE_SELECTION);
+        int index = settings.get(Settings.Name.STARTERS_SINGLE_TYPE_SELECTION);
         Type singleType;
         if (index == TypeOrRandomSettingDefinition.RANDOM_TYPE) {
             singleType = null;
@@ -125,14 +125,14 @@ public class StarterRandomizer extends Randomizer {
     public int[] getCustomStartersFromSettings() {
         if (settings.isEnabled(Settings.Name.STARTER_CUSTOM_3)) {
             return new int[] {
-                    settings.getSetting(Settings.Name.STARTER_CUSTOM_1),
-                    settings.getSetting(Settings.Name.STARTER_CUSTOM_2),
-                    settings.getSetting(Settings.Name.STARTER_CUSTOM_3)
+                    settings.get(Settings.Name.STARTER_CUSTOM_1),
+                    settings.get(Settings.Name.STARTER_CUSTOM_2),
+                    settings.get(Settings.Name.STARTER_CUSTOM_3)
             };
         } else {
             return new int[] {
-                    settings.getSetting(Settings.Name.STARTER_CUSTOM_1),
-                    settings.getSetting(Settings.Name.STARTER_CUSTOM_2)
+                    settings.get(Settings.Name.STARTER_CUSTOM_1),
+                    settings.get(Settings.Name.STARTER_CUSTOM_2)
             };
         }
     }
@@ -312,17 +312,17 @@ public class StarterRandomizer extends Randomizer {
      * @return A new SpeciesSet containing all Species which are valid starters, except the already chosen ones.
      */
     private SpeciesSet getAvailableSet(List<Species> alreadyChosen) {
-        Settings.AbilitiesMod abilitiesMod = settings.getSetting(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesUnchanged = abilitiesMod == Settings.AbilitiesMod.UNCHANGED;
-        boolean allowAltFormes = settings.getSetting(Settings.Name.STARTERS_ALLOW_ALT_FORMES);
-        boolean banIrregularAltFormes = settings.getSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES);
-        boolean noLegendaries = settings.getSetting(Settings.Name.STARTERS_NO_LEGENDARIES);
-        boolean noDualTypes = settings.getSetting(Settings.Name.STARTERS_NO_DUAL_TYPES);
-        Settings.StartersMod startersMod = settings.getSetting(Settings.Name.RANDOMIZE_STARTERS);
+        boolean allowAltFormes = settings.get(Settings.Name.STARTERS_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean noLegendaries = settings.get(Settings.Name.STARTERS_NO_LEGENDARIES);
+        boolean noDualTypes = settings.get(Settings.Name.STARTERS_NO_DUAL_TYPES);
+        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         boolean triStageOnly = startersMod == Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
         boolean basicOnly = triStageOnly || startersMod == Settings.StartersMod.RANDOM_BASIC;
-        int bstMin = settings.getSetting(Settings.Name.STARTERS_BST_MINIMUM);
-        int bstMax = settings.getSetting(Settings.Name.STARTERS_BST_MAXIMUM);
+        int bstMin = settings.get(Settings.Name.STARTERS_BST_MINIMUM);
+        int bstMax = settings.get(Settings.Name.STARTERS_BST_MAXIMUM);
 
         SpeciesSet available;
 
@@ -419,7 +419,7 @@ public class StarterRandomizer extends Randomizer {
     }
 
     public void randomizeStarterHeldItems() {
-        boolean banBadItems = settings.getSetting(Settings.Name.STARTERS_BAN_BAD_HELD_ITEMS);
+        boolean banBadItems = settings.get(Settings.Name.STARTERS_BAN_BAD_HELD_ITEMS);
 
         List<Item> oldHeldItems = romHandler.getStarterHeldItems();
         List<Item> newHeldItems = new ArrayList<>();

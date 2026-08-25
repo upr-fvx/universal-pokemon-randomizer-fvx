@@ -1308,7 +1308,7 @@ public class RandomizerGUI {
                     initialState();
                     romLoaded();
                     SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(this.romHandler);
-                    Settings.StartersMod startersMod = settings.getSetting(Name.RANDOMIZE_STARTERS);
+                    Settings.StartersMod startersMod = settings.get(Name.RANDOMIZE_STARTERS);
                     if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
                         JOptionPane.showMessageDialog(frame, bundle.getString("GUI.starterUnavailable"));
                     }
@@ -1364,7 +1364,7 @@ public class RandomizerGUI {
                                       CustomPlayerGraphics cpg,
                                       boolean saveAsDirectory) {
         final SettingsManager settings = settingsManager;
-        final boolean raceMode = settings.getSetting(Name.RACE_MODE);
+        final boolean raceMode = settings.get(Name.RACE_MODE);
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
         // Setup log
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

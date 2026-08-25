@@ -1033,35 +1033,35 @@ public class RandomizerGUI {
         ));
 
         themeSelectionMenuItem = new JMenuItem();
-        themeSelectionMenuItem.setText(bundle.getString("GUI.themeSelectionMenuItem.text"));
+        themeSelectionMenuItem.setText(bundle.getString("GUI.header.settingsMenu.themeSelectionMenuItem.text"));
         settingsMenu.add(themeSelectionMenuItem);
 
         customNamesEditorMenuItem = new JMenuItem();
-        customNamesEditorMenuItem.setText(bundle.getString("GUI.customNamesEditorMenuItem.text"));
+        customNamesEditorMenuItem.setText(bundle.getString("GUI.header.settingsMenu.customNamesEditorMenuItem.text"));
         settingsMenu.add(customNamesEditorMenuItem);
 
         loadGetSettingsMenuItem = new JMenuItem();
-        loadGetSettingsMenuItem.setText(bundle.getString("GUI.loadGetSettingsMenuItem.text"));
+        loadGetSettingsMenuItem.setText(bundle.getString("GUI.header.settingsMenu.loadGetSettingsMenuItem.text"));
         settingsMenu.add(loadGetSettingsMenuItem);
 
         applyGameUpdateMenuItem = new JMenuItem();
-        applyGameUpdateMenuItem.setText(bundle.getString("GUI.applyGameUpdateMenuItem.text"));
+        applyGameUpdateMenuItem.setText(bundle.getString("GUI.header.settingsMenu.applyGameUpdateMenuItem.text"));
         settingsMenu.add(applyGameUpdateMenuItem);
 
         removeGameUpdateMenuItem = new JMenuItem();
-        removeGameUpdateMenuItem.setText(bundle.getString("GUI.removeGameUpdateMenuItem.text"));
+        removeGameUpdateMenuItem.setText(bundle.getString("GUI.header.settingsMenu.removeGameUpdateMenuItem.text"));
         settingsMenu.add(removeGameUpdateMenuItem);
 
         keepOrUnloadGameAfterRandomizingMenuItem = new JMenuItem();
         if (this.unloadGameOnSuccess) {
-            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.keepGameLoadedAfterRandomizingMenuItem.text"));
+            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.header.settingsMenu.keepGameLoadedAfterRandomizingMenuItem.text"));
         } else {
-            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.unloadGameAfterRandomizingMenuItem.text"));
+            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.header.settingsMenu.unloadGameAfterRandomizingMenuItem.text"));
         }
         settingsMenu.add(keepOrUnloadGameAfterRandomizingMenuItem);
 
         batchRandomizationMenuItem = new JMenuItem();
-        batchRandomizationMenuItem.setText(bundle.getString("GUI.batchRandomizationMenuItem.text"));
+        batchRandomizationMenuItem.setText(bundle.getString("GUI.header.settingsMenu.batchRandomizationMenuItem.text"));
         settingsMenu.add(batchRandomizationMenuItem);
     }
 
@@ -1765,10 +1765,10 @@ public class RandomizerGUI {
         this.unloadGameOnSuccess = !this.unloadGameOnSuccess;
         if (this.unloadGameOnSuccess) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.unloadGameAfterRandomizing"));
-            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.keepGameLoadedAfterRandomizingMenuItem.text"));
+            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.header.settingsMenu.keepGameLoadedAfterRandomizingMenuItem.text"));
         } else {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.keepGameLoadedAfterRandomizing"));
-            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.unloadGameAfterRandomizingMenuItem.text"));
+            keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.header.settingsMenu.unloadGameAfterRandomizingMenuItem.text"));
         }
         attemptWriteConfig();
     }

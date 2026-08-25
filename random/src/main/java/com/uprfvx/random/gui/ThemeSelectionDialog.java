@@ -36,7 +36,7 @@ public class ThemeSelectionDialog extends JDialog {
 
         ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
 
-        setTitle(bundle.getString("GUI.themeSelectionMenuItem.text"));
+        setTitle(bundle.getString("GUI.header.settingsMenu.themeSelectionMenuItem.text"));
         setContentPane(contentPane);
         setLocationRelativeTo(frame);
         getRootPane().setDefaultButton(okButton);

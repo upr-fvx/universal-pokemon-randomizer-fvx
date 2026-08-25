@@ -296,10 +296,10 @@ public class RandomizationLogger {
                 romHandler.hasShopSupport());
         logOverviewLine(getBS("GUI.itemsTab.shopPanel.pickupPanel.title"), itemRandomizer.isPickupChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
-        logOverviewLine(getBS("GUI.tePanel.title"),
+        logOverviewLine(getBS("GUI.typesTab.effectivenessPanel.title"),
                 typeEffRandomizer.isChangesMade() || typeEffUpdater.isUpdated(),
                 romHandler.hasTypeEffectivenessSupport());
-        logOverviewLine(getBS("GUI.ppalPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
+        logOverviewLine(getBS("GUI.graphicsTab.palettesPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
                 romHandler.hasPokemonPaletteSupport());
         log.println();
 

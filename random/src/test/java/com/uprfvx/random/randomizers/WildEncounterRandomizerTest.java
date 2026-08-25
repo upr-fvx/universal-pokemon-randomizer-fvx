@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.Gen5Constants;
@@ -128,12 +129,12 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
      */
     private SettingsManager getStandardSettings(String romName) {
         SettingsManager settings = new SettingsManager();
-        settings.setRandomizeWildPokemon(true);
-        settings.setWildPokemonZoneMod(SettingsManager.WildPokemonZoneMod.NONE);
-        settings.setUseTimeBasedEncounters(true);
-        settings.setAllowWildAltFormes(getGenerationNumberOf(romName) >= 5); //idk why 5 and not 3 but w/e
-        settings.setBanIrregularAltFormes(true);
-        settings.setBlockWildLegendaries(false);
+        settings.setSetting(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS, true);
+        settings.setSetting(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.SINGLE_ENCOUNTER);
+        settings.setSetting(Settings.Name.WILD_REMOVE_TIME_BASED, false);
+        settings.setSetting(Settings.Name.WILD_ALLOW_ALT_FORMES,getGenerationNumberOf(romName) >= 5); //idk why 5 and not 3 but w/e
+        settings.setSetting(Settings.Name.NO_IRREGULAR_ALT_FORMES, true);
+        settings.setSetting(Settings.Name.WILD_NO_LEGENDARIES, false);
         return settings;
     }
 

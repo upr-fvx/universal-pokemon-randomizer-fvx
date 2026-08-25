@@ -83,6 +83,9 @@ public class SettingsStringConverter {
     // m and d are short so they take less space in the function calls
     private void convertAndPopulateFromData(SettingsManager m, byte[] d) {
 
+        // TODO: investigate "update moves legacy" (i.e., the pre-ZX setting that only/always updated to Gen 5)
+        //  Can a settings string actually have it, when it has come this far?
+
         // TODO: testing all of this, somehow
 
         // Byte 0: Misc / Species Evolutions

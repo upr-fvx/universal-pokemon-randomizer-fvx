@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
@@ -24,7 +25,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         List<Species> before = new ArrayList<>(romHandler.getStarters());
 
         SettingsManager s = new SettingsManager();
-        s.setStartersMod(false, false, true);
+        s.setSetting(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         System.out.println("Before: " + before);
@@ -38,14 +39,14 @@ public class StarterRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager();
-        s.setStartersMod(SettingsManager.StartersMod.COMPLETELY_RANDOM);
+        s.setSetting(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
         StarterRandomizer sr = new StarterRandomizer(romHandler, s, RND);
 
         boolean allBasic = true;
         for (int i = 0; i < 100; i++) {
             sr.randomizeStarters();
-            System.out.println("Set #" + (i + 1) + ": " + romHandler.getStarters().stream().map(Species::getName)
-                    .collect(Collectors.toList()));
+            System.out.println("Set #" + (i + 1) + ": " 
+                    + romHandler.getStarters().stream().map(Species::getName).toList());
             if (romHandler.getStarters().stream().anyMatch(sp -> !sp.getEvolutionsTo().isEmpty())) {
                 allBasic = false;
                 break;
@@ -60,7 +61,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void randomWithTwoEvosWorks(String romName) {
         activateRomHandler(romName);
         SettingsManager s = new SettingsManager();
-        s.setStartersMod(SettingsManager.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
+        s.setSetting(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         checkStartersHaveTwoEvos();
@@ -338,7 +339,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         assumeFalse(romHandler.isORAS());
         //Because ORAS demands 12 starters, there aren't enough 3-stage Grass types to go around
         SettingsManager s = new SettingsManager();
-        s.setStartersMod(SettingsManager.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
+        s.setSetting(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS);
         s.setStartersTypeMod(SettingsManager.StartersTypeMod.SINGLE_TYPE);
         s.setStartersSingleType(Type.GRASS.ordinal() + 1);
 
@@ -437,7 +438,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         //arbitrary narrow range that has at least 3 Pokemon in all gens
         //(and 12 in gen 6)
 
-        s.setStartersMod(SettingsManager.StartersMod.COMPLETELY_RANDOM);
+        s.setSetting(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
         s.setStartersBSTMinimum(MINIMUM_BST);
         s.setStartersBSTMaximum(MAXIMUM_BST);
 

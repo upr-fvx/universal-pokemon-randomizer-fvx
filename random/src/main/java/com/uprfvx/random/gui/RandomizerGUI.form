@@ -654,7 +654,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -671,7 +671,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.followEvolutionsCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followEvolutionsCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -693,7 +693,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.shuffleRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.shuffleRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.shuffleRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -704,7 +704,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.totalsPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -746,7 +746,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -757,7 +757,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.shuffleRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.shuffleRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.shuffleRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -768,7 +768,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.followEvolutionsCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followEvolutionsCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -779,7 +779,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.followMegaEvosCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followMegaEvolutionsCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.followMegaEvosCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -801,7 +801,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.statsPanel.distPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -905,7 +905,7 @@
                         <properties>
                           <enabled value="false"/>
                           <hideActionText value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.typesPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.typesPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -950,7 +950,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.typesPanel.followMegaEvosCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followMegaEvolutionsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.typesPanel.followMegaEvosCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -1008,7 +1008,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -1043,7 +1043,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -1126,7 +1126,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.followMegaEvosCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followMegaEvolutionsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.followMegaEvosCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -1148,7 +1148,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.followEvolutionsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followEvolutionsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.abilitiesPanel.followEvolutionsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -1209,7 +1209,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -1226,7 +1226,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -1248,7 +1248,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.similarStrengthCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.similarStrengthCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.similarStrengthCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -1315,7 +1315,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.allowAltFormesCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.allowAltFormesCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -1568,7 +1568,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -1591,7 +1591,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.customRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.customRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.customRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -1602,7 +1602,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -1726,7 +1726,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.allowAltFormesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -1737,7 +1737,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.noLegendariesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noLegendariesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.noLegendariesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -1748,7 +1748,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomizeHeldItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomizeHeldItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomizeHeldItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -1759,7 +1759,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.banMinorItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.banMinorItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -2350,7 +2350,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.movesTab.movesetsPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.movesTab.movesetsPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -2440,7 +2440,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.movesTab.movesetsPanel.noGameBreakingMovesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noGameBreakingMovesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.movesTab.movesetsPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -2451,7 +2451,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.movesTab.movesetsPanel.forceGoodDamagingCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.forceGoodDamagingMoves.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.movesTab.movesetsPanel.forceGoodDamagingCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -2694,7 +2694,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsBossTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.bossTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2705,7 +2705,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsImportantTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.importantTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2716,7 +2716,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsRegularTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.regularTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.betterMovesetsRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2727,7 +2727,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToBossTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.bossTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2738,7 +2738,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToImportantTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.importantTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2749,7 +2749,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToRegularTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.regularTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.addPokemonToRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2796,7 +2796,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsBossTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.bossTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2818,7 +2818,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsImportantTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.importantTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2840,7 +2840,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsRegularTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.regularTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2871,7 +2871,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityBossTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.bossTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityBossTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2883,7 +2883,7 @@
                             <properties>
                               <enabled value="false"/>
                               <selected value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityImportantTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.importantTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityImportantTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -2904,7 +2904,7 @@
                                 </constraints>
                                 <properties>
                                   <enabled value="false"/>
-                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.unchangedRadioButton.text"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                                   <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.unchangedRadioButton.toolTipText"/>
                                 </properties>
                               </component>
@@ -2915,7 +2915,7 @@
                                 </constraints>
                                 <properties>
                                   <enabled value="false"/>
-                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.randomRadioButton.text"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                                   <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.randomRadioButton.toolTipText"/>
                                 </properties>
                               </component>
@@ -2993,7 +2993,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityRegularTrainersCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.regularTrainersCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -3090,7 +3090,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.changeLevelsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3132,7 +3132,7 @@
                           </component>
                           <component id="82ca5" class="javax.swing.JCheckBox" binding="tpUseLocalPokemonCheckBox">
                             <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3143,18 +3143,18 @@
                           </component>
                           <component id="acf1a" class="javax.swing.JCheckBox" binding="tpDontUseLegendariesCheckBox" default-binding="true">
                             <constraints>
-                              <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noLegendariesCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noLegendariesCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noLegendariesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="d0471" class="javax.swing.JCheckBox" binding="tpNoEarlyWonderGuardCheckBox">
                             <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3165,18 +3165,18 @@
                           </component>
                           <component id="be65d" class="javax.swing.JCheckBox" binding="tpAllowAlternateFormesCheckBox">
                             <constraints>
-                              <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="5" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.allowAlternateFormesCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.allowAlternateFormesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="af4d1" class="javax.swing.JCheckBox" binding="tpSwapMegaEvosCheckBox">
                             <constraints>
-                              <grid row="6" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3192,13 +3192,13 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.similarStrengthCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.similarStrengthCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.similarStrengthCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <component id="b329c" class="javax.swing.JCheckBox" binding="tpDistributeSpeciesCheckBox">
                             <constraints>
-                              <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3224,7 +3224,7 @@
                           </component>
                           <component id="34a10" class="javax.swing.JCheckBox" binding="tpRandomShinyTrainerPokemonCheckBox">
                             <constraints>
-                              <grid row="10" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3313,7 +3313,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -3356,7 +3356,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -3367,7 +3367,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allyPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -3399,7 +3399,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -3410,7 +3410,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.auraPanel.randomRadioButton.toolTipText."/>
                             </properties>
                           </component>
@@ -3443,7 +3443,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.percentageLevelModifierCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.changeLevelsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3454,7 +3454,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomizeHeldItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomizeHeldItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomizeHeldItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3465,7 +3465,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allowAltFormesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3476,7 +3476,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -3778,7 +3778,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.noLegendariesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noLegendariesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.noLegendariesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3800,7 +3800,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.similarStrengthCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.similarStrengthCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.similarStrengthCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3851,7 +3851,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.randomizeHeldItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomizeHeldItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.randomizeHeldItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3862,7 +3862,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.banMinorItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.banMinorItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3913,7 +3913,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.percentageLevelModifierCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.changeLevelsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3946,7 +3946,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.allowAltFormesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -3993,7 +3993,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -4072,13 +4072,13 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.percentageLevelModifierCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.changeLevelsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.percentageLevelModifierCheckBox.tooltipText"/>
                         </properties>
                       </component>
                       <component id="dbc7e" class="com.uprfvx.random.gui.SpinSlider" binding="stpPercentageLevelModifierSpinSlider">
                         <constraints>
-                          <grid row="2" column="5" row-span="3" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="5" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -4103,7 +4103,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -4186,7 +4186,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4215,7 +4215,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4226,7 +4226,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.noGameBreakingMovesCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noGameBreakingMovesCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4248,7 +4248,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.forceGoodDamagingCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.forceGoodDamagingMoves.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.movesPanel.forceGoodDamagingCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4303,7 +4303,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4365,7 +4365,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.followEvolutionsCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followEvolutionsCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.TMsPanel.compatibilityPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4444,7 +4444,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4473,7 +4473,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4494,7 +4494,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noGameBreakingMovesCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noGameBreakingMovesCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noGameBreakingMovesCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4516,7 +4516,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.forceGoodDamagingCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.forceGoodDamagingMoves.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.forceGoodDamagingCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4561,7 +4561,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4623,7 +4623,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.followEvolutionsCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followEvolutionsCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.compatibilityPanel.followEvolutionsCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4687,7 +4687,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -4722,7 +4722,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.shuffleRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.shuffleRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.shuffleRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -4733,7 +4733,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -4755,7 +4755,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.banMinorItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.banMinorItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.fieldPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -4834,7 +4834,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.unchangedRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.unchangedRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4845,7 +4845,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.shuffleRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.shuffleRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.shuffleRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4856,7 +4856,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banMinorItemsCheckBox.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.banMinorItemsCheckBox.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.banMinorItemsCheckBox.toolTipText"/>
                             </properties>
                           </component>
@@ -4891,7 +4891,7 @@
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.randomRadioButton.text"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.specialPanel.randomRadioButton.toolTipText"/>
                             </properties>
                           </component>
@@ -4967,7 +4967,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -5002,7 +5002,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -5013,7 +5013,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.banMinorItemsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.banMinorItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.itemsTab.shopPanel.pickupPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -5132,7 +5132,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.typesTab.effectivenessPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.typesTab.effectivenessPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -5167,7 +5167,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.typesTab.effectivenessPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.typesTab.effectivenessPanel.randomRadioButton.ToolTipText"/>
                         </properties>
                       </component>
@@ -5289,7 +5289,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -5324,7 +5324,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.randomRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -5346,7 +5346,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.followEvolutionsCheckBox.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.followEvolutionsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.followEvolutionsCheckBox.toolTipText"/>
                         </properties>
                       </component>
@@ -5430,7 +5430,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.customPlayerPanel.unchangedRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.unchangedRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.customPlayerPanel.unchangedRadioButton.toolTipText"/>
                         </properties>
                       </component>
@@ -5480,7 +5480,7 @@
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.customPlayerPanel.customRadioButton.text"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.customRadioButton.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.customPlayerPanel.customRadioButton.toolTipText"/>
                         </properties>
                       </component>

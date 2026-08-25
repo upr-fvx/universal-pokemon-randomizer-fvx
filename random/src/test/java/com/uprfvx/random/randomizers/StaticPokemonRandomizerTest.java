@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.StaticEncounter;
@@ -21,7 +22,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
         SettingsManager s = new SettingsManager();
-        s.setStaticPokemonMod(SettingsManager.StaticPokemonMod.RANDOM_MATCHING);
+        s.setSetting(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS, Settings.StaticPokemonMod.RANDOM_MATCHING);
         new StaticPokemonRandomizer(romHandler, s, RND).randomizeStaticPokemon();
 
         List<StaticEncounter> after = romHandler.getStaticPokemon();
@@ -46,7 +47,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
         SettingsManager s = new SettingsManager();
-        s.setStaticPokemonMod(SettingsManager.StaticPokemonMod.RANDOM_MATCHING);
+        s.setSetting(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS, Settings.StaticPokemonMod.RANDOM_MATCHING);
         new StaticPokemonRandomizer(romHandler, s, RND).randomizeStaticPokemon();
 
         List<StaticEncounter> after = romHandler.getStaticPokemon();
@@ -69,8 +70,8 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
         SettingsManager s = new SettingsManager();
-        s.setStaticPokemonMod(SettingsManager.StaticPokemonMod.COMPLETELY_RANDOM);
-        s.setSwapStaticMegaEvos(true);
+        s.setSetting(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS, Settings.StaticPokemonMod.COMPLETELY_RANDOM);
+        s.setSetting(Settings.Name.STATICS_SWAP_MEGA_EVOLVABLES, true);
         new StaticPokemonRandomizer(romHandler, s, RND).randomizeStaticPokemon();
 
         List<StaticEncounter> after = romHandler.getStaticPokemon();
@@ -114,9 +115,9 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasTotemPokemon());
 
         SettingsManager s = new SettingsManager();
-        s.setTotemPokemonMod(SettingsManager.TotemPokemonMod.RANDOM);
-        s.setAllyPokemonMod(SettingsManager.AllyPokemonMod.RANDOM);
-        s.setAllowTotemAltFormes(true);
+        s.setSetting(Settings.Name.RANDOMIZE_TOTEM_POKEMON, Settings.TotemPokemonMod.RANDOM);
+        s.setSetting(Settings.Name.TOTEMS_RANDOMIZE_ALLIES, Settings.AllyPokemonMod.RANDOM);
+        s.setSetting(Settings.Name.TOTEMS_ALLOW_ALT_FORMES, true);
 
         // small loop in case it just throws sometimes
         for (int i = 0; i < 10; i++) {

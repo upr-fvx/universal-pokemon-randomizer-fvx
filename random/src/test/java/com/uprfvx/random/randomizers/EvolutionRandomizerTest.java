@@ -115,7 +115,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosSameTyping(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         evosHaveSharedTypeCheck();
@@ -158,7 +158,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosSameTyping(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         Species eevee = romHandler.getSpecies().get(SpeciesIDs.eevee);
@@ -179,7 +179,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosMaxThreeStages(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         maxThreeEvoStagesCheck();
@@ -210,8 +210,8 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosSameTyping(true);
-        s.setEvosMaxThreeStages(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE, true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         evosHaveSharedTypeCheck();
@@ -230,7 +230,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosForceChange(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
@@ -250,7 +250,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosForceChange(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         Species cosmoem = romHandler.getSpecies().get(SpeciesIDs.cosmoem);
@@ -274,7 +274,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosSimilarStrength(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         similarStrengthCheck(allEvosBefore);
@@ -308,7 +308,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosForceGrowth(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_GROWTH, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
@@ -327,7 +327,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM);
-        s.setEvosNoConvergence(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
@@ -406,7 +406,7 @@ public class EvolutionRandomizerTest extends RandomizerTest {
 
         SettingsManager s = new SettingsManager();
         s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM_EVERY_LEVEL);
-        s.setEvosForceChange(true);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {
@@ -442,8 +442,8 @@ public class EvolutionRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager();
-        s.setEvolutionsMod(SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL);
-        s.setEvosNoConvergence(true);
+        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS, Settings.EvolutionsMod.RANDOM_EVERY_LEVEL);
+        s.setSetting(Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE, true);
         new EvolutionRandomizer(romHandler, s, RND).randomizeEvolutions();
 
         for (Species pk : romHandler.getSpeciesSet()) {

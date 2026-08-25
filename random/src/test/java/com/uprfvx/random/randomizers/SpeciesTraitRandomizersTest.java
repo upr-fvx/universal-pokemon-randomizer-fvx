@@ -1,5 +1,6 @@
 package com.uprfvx.random.randomizers;
 
+import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.SpeciesSet;
@@ -16,7 +17,7 @@ public class SpeciesTraitRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager();
-        s.setSpeciesTypesMod(SettingsManager.SpeciesTypesMod.COMPLETELY_RANDOM);
+        s.setSetting(Settings.Name.RANDOMIZE_SPECIES_TYPES, Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
 
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
 

@@ -1159,6 +1159,8 @@ public class SettingsManager {
         return VERSION + toStringWithoutVersion();
     }
 
+    // TODO: remove once we've tested SettingsStringConverter
+    @Deprecated
     private String toStringWithoutVersion() {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -1485,6 +1487,8 @@ public class SettingsManager {
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
+    // TODO: remove once we've tested SettingsStringConverter
+    @Deprecated
     private static SettingsManager fromStringWithoutVersion(String settingsString) throws IllegalArgumentException {
         byte[] data = Base64.getDecoder().decode(settingsString);
         if (hasInvalidChecksum(data)) {
@@ -1492,6 +1496,8 @@ public class SettingsManager {
         }
 
         SettingsManager settings = new SettingsManager();
+
+        /*
 
         // Restore the actual controls
         settings.setChangeImpossibleEvolutions(restoreState(data[0], 0));
@@ -1833,6 +1839,8 @@ public class SettingsManager {
 
         settings.setBSTBuffNerfMaxPercentage(data[68]); // small enough values that int8 range [-128, 127] is ok
 
+         */
+
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
         settings.setRomName(romName);
@@ -1944,7 +1952,7 @@ public class SettingsManager {
 
         // misc tweaks
         int oldMiscTweaks = this.currentMiscTweaks;
-        this.currentMiscTweaks &= rh.miscTweaksAvailable();
+//        this.currentMiscTweaks &= rh.miscTweaksAvailable();
 
         if (oldMiscTweaks != this.currentMiscTweaks) {
             feedback.setRemovedCodeTweaks(true);

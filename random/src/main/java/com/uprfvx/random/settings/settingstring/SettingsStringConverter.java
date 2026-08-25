@@ -7,6 +7,7 @@ import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.SettingsUpdater;
 import com.uprfvx.romio.gamedata.BattleStyle;
+import com.uprfvx.romio.gamedata.ExpCurve;
 import filefunctions.IOFunctions;
 
 import java.util.Base64;
@@ -82,6 +83,8 @@ public class SettingsStringConverter {
     // m and d are short so they take less space in the function calls
     private void convertAndPopulateFromData(SettingsManager m, byte[] d) {
 
+        // TODO: testing all of this, somehow
+
         // Byte 0: Misc / Species Evolutions
         loadBoolean(m, d, 0, 0, Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE);
         loadBoolean(m, d, 0, 1, Settings.Name.UPDATE_MOVES);
@@ -149,8 +152,8 @@ public class SettingsStringConverter {
 
         // Bytes 5--10: Custom Starters
         load2ByteInt(m, d, 5, Settings.Name.STARTER_CUSTOM_1);
-        load2ByteInt(m, d, 7, Settings.Name.STARTER_CUSTOM_1);
-        load2ByteInt(m, d, 9, Settings.Name.STARTER_CUSTOM_1);
+        load2ByteInt(m, d, 7, Settings.Name.STARTER_CUSTOM_2);
+        load2ByteInt(m, d, 9, Settings.Name.STARTER_CUSTOM_3);
 
 
         // Byte 11: Movesets
@@ -378,8 +381,16 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 29, 7, Settings.Name.TRAINERS_AVOID_DUPLICATES);
 
 
-        // Bytes 30--33: Pokémon Generation Restrictions
-        // TODO: load
+        // Byte 30: Pokémon Generation Restrictions
+        loadBoolean(m, d, 30, 0, Settings.Name.LIMIT_ALLOW_RELATIVES);
+        loadBoolean(m, d, 30, 1, Settings.Name.LIMIT_BAN_GENERATION_1, true);
+        loadBoolean(m, d, 30, 2, Settings.Name.LIMIT_BAN_GENERATION_2, true);
+        loadBoolean(m, d, 30, 3, Settings.Name.LIMIT_BAN_GENERATION_3, true);
+        loadBoolean(m, d, 30, 4, Settings.Name.LIMIT_BAN_GENERATION_4, true);
+        loadBoolean(m, d, 30, 5, Settings.Name.LIMIT_BAN_GENERATION_5, true);
+        loadBoolean(m, d, 30, 6, Settings.Name.LIMIT_BAN_GENERATION_6, true);
+        loadBoolean(m, d, 30, 7, Settings.Name.LIMIT_BAN_GENERATION_7, true);
+        // Bytes 31--33 Unused (meant to be more Generation Restrictions, but all those fit in the first byte)
 
 
         // Bytes 34--37: Misc Tweaks
@@ -500,8 +511,17 @@ public class SettingsStringConverter {
 
 
         // Byte 48: Standard EXP curve
-        // TODO: this enum is written in an entirely different way, for some reason
-        //  (maybe in a *better* way, but still)
+        // For some reason this one enum is written in an entirely different way. Do not ask why.
+        ExpCurve standard = switch(d[48]) {
+            case 0 -> ExpCurve.MEDIUM_FAST;
+            case 1 -> ExpCurve.ERRATIC;
+            case 2 -> ExpCurve.FLUCTUATING;
+            case 3 -> ExpCurve.MEDIUM_SLOW;
+            case 4 -> ExpCurve.FAST;
+            case 5 -> ExpCurve.SLOW;
+            default -> throw new IllegalStateException("Invalid byte value for Standard EXP curve: " + d[48]);
+        };
+        m.setSetting(Settings.Name.SPECIES_EXP_CURVE_STANDARD_SELECTION, standard);
 
 
         // Byte 49: Static Pokémon level modifier
@@ -600,7 +620,7 @@ public class SettingsStringConverter {
 
 
         // Bytes 58--60: Starter BST limits
-        // TODO: what is even up with these
+        // TODO: what is even up with these (ask stella)
         loadPackedBytePair(m, d, 58, 59, 0x0F, 8, Settings.Name.STARTERS_BST_MINIMUM);
         loadPackedBytePair(m, d, 58, 60, 0xF0, 4, Settings.Name.STARTERS_BST_MAXIMUM);
 

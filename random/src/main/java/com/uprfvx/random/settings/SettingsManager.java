@@ -1519,9 +1519,8 @@ public class SettingsManager {
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
         settings.setRomName(romName);
 
-         */
-
         return settings;
+        */
     }
 
     // getters and setters

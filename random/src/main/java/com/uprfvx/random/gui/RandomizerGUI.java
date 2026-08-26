@@ -833,14 +833,49 @@ public class RandomizerGUI {
         //than to convert a bunch of freestanding constructors to a list creation, if I'm wrong.
 
         List<SettingCoordinator<?, ?>> settingUICoordinators = List.of(
-                // *** GENERAL ***
-                //General Options
-                associateCheckBox(Name.NO_RANDOM_INTRO_MON, coRandomIntroMonCheckBox),
-                associateCheckBox(Name.NO_PREMATURE_EVOLUTIONS, lsNoPrematureEvosCheckbox),
+                //TODO: remove I think
                 associateCheckBox(Name.RACE_MODE, raceModeCheckBox),
-                associateCheckBox(Name.NO_IRREGULAR_ALT_FORMES, lsNoIrregularAltFormesCheckBox),
-                //Limit Pokemon
-                //TODO: add to list OR add handling to dialog
+
+                // *** GENERAL ***
+
+                //Cosmetic
+                associateCheckBox(Name.COSMETIC_RANDOM_INTRO_MON, coRandomIntroMonCheckBox),
+                associateCheckBox(Name.COSMETIC_RANDOMIZE_CATCHING_TUTORIAL, coRandomizeCatchingTutorialCheckBox),
+                associateCheckBox(Name.COSMETIC_LOWER_CASE_SPECIES_NAMES, coLowerCaseSpeciesNamesCheckBox),
+                associateCheckBox(Name.COSMETIC_RANDOMIZE_TRAINER_NAMES, coRandomizeTrainerNamesCheckBox),
+                associateCheckBox(Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES, coRandomizeTrainerClassNamesCheckBox),
+
+                //Limit Species
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_1, lsBanGeneration1CheckBox),
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_2, lsBanGeneration2CheckBox),
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_3, lsBanGeneration3CheckBox),
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_4, lsBanGeneration4CheckBox),
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_5, lsBanGeneration5CheckBox),
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_6, lsBanGeneration6CheckBox),
+                associateCheckBox(Name.LIMIT_BAN_GENERATION_7, lsBanGeneration7CheckBox),
+                associateCheckBox(Name.LIMIT_ALLOW_RELATIVES, lsAllowRelativesCheckBox),
+                associateCheckBox(Name.LIMIT_NO_TEMPORARY_ALT_FORMES, lsNoIrregularAltFormesCheckBox),
+                associateCheckBox(Name.LIMIT_RETAIN_TEMPORARY_FORMES, lsRetainAltFormesCheckBox),
+                associateCheckBox(Name.LIMIT_NO_PREMATURE_EVOLUTIONS, lsNoPrematureEvosCheckbox),
+
+                //Quality of Life Tweaks
+                associateCheckBox(Name.QUALITY_FASTEST_TEXT, qoltFastestTextCheckBox),
+                associateCheckBox(Name.QUALITY_RUN_INDOORS, qoltRunIndoorsCheckBox),
+                associateCheckBox(Name.QUALITY_NATIONAL_DEX_AT_START, qoltNationalDexCheckBox),
+                associateCheckBox(Name.QUALITY_RUN_WITHOUT_RUNNING_SHOES, qoltRunWithoutRunningShoesCheckBox),
+                associateCheckBox(Name.QUALITY_FASTER_HP_AND_EXP_BARS, qoltFasterHPAndEXPBarsCheckBox),
+                associateCheckBox(Name.QUALITY_FAST_DISTORTION_WORLD, qoltFastDistortionWorldCheckBox),
+                associateCheckBox(Name.QUALITY_DISABLE_LOW_HP_MUSIC, qoltDisableLowHPMusicCheckBox),
+                associateCheckBox(Name.QUALITY_FAST_EGG_HATCHING, qoltFastEggsCheckBox),
+                associateCheckBox(Name.QUALITY_REUSABLE_TMS, qoltReusableTMsCheckBox),
+                associateCheckBox(Name.QUALITY_FORGETTABLE_HMS, qoltForgettableHMsCheckBox),
+
+                //Balance Tweaks
+                associateCheckBox(Name.BALANCE_NERF_X_ACCURACY, btNerfXAccuracyCheckBox),
+                associateCheckBox(Name.BALANCE_UPDATE_CRIT_RATE, btUpdateCritRateCheckBox),
+                associateCheckBox(Name.BALANCE_USE_SCALED_EXPERIENCE,btScalingEXPCheckBox),
+                associateCheckBox(Name.BALANCE_FORCE_CHALLENGE_MODE, btForceChallengeModeCheckBox),
+                associateCheckBox(Name.BALANCE_NO_EV_YIELDS, btNoEVYieldsCheckBox),
 
                 // *** SPECIES TRAITS ***
                 //Species BSTs

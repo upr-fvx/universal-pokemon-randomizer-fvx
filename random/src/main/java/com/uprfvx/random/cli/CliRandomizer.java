@@ -114,14 +114,15 @@ public class CliRandomizer {
     }
 
     private static void displaySettingsWarnings(SettingsManager settings, RomHandler romHandler) {
-        SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(romHandler);
-        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
-        if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
-            printWarning(bundle.getString("GUI.starterUnavailable"));
-        }
-        if (settings.isUpdatedFromOldVersion()) {
-            printWarning(bundle.getString("GUI.settingsFileOlder"));
-        }
+        // TODO: what kind of warnings do we want to show, with the new settings framework?
+//        SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(romHandler);
+//        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
+//        if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
+//            printWarning(bundle.getString("GUI.starterUnavailable"));
+//        }
+//        if (settings.isUpdatedFromOldVersion()) {
+//            printWarning(bundle.getString("GUI.settingsFileOlder"));
+//        }
     }
 
     private static CustomPlayerGraphics prepareCPG(RomHandler romHandler, String name, PlayerCharacterType type) {

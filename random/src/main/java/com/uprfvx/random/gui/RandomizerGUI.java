@@ -1307,11 +1307,11 @@ public class RandomizerGUI {
                     // load settings
                     initialState();
                     romLoaded();
-                    SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(this.romHandler);
                     Settings.StartersMod startersMod = settings.get(Name.RANDOMIZE_STARTERS);
-                    if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
-                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.starterUnavailable"));
-                    }
+                    // TODO: might be nice to be able to say "hey your custom starter is not an option"
+//                    if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
+//                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.starterUnavailable"));
+//                    }
                     this.restoreStateFromSettings(settings);
 
                     if (settings.isUpdatedFromOldVersion()) {
@@ -1528,7 +1528,7 @@ public class RandomizerGUI {
             try {
                 settings = SettingsManager.fromString(config);
                 customPlayerGraphics = pld.getCustomPlayerGraphics();
-                settings.tweakForRom(this.romHandler);
+                // settings.tweakForRom(this.romHandler);
                 this.restoreStateFromSettings(settings);
             } catch (IllegalArgumentException e) {
                 // settings load failed

@@ -2,7 +2,6 @@ package com.uprfvx.random.gui;
 
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.Version;
-import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -24,6 +23,8 @@ import java.util.*;
  * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
  */
 public class PresetLoadDialog extends JDialog {
+    // TODO: rework this class to mirror the removal of settings strings
+
     private JPanel contentPane;
     private JButton applyButton;
     private JButton cancelButton;
@@ -48,7 +49,6 @@ public class PresetLoadDialog extends JDialog {
     private CustomPlayerGraphics lastUsedCPG;
 
     private RomHandler currentROM;
-    private CustomNamesSet customNames;
     private CustomPlayerGraphics customPlayerGraphics;
     private String requiredName;
     private boolean completed;
@@ -188,9 +188,9 @@ public class PresetLoadDialog extends JDialog {
         if (data.length < SettingsManager.TOTAL_LENGTH_EXCEPT_NAME) {
             throw new IllegalArgumentException("The preset config is too short to be valid");
         }
-        if (SettingsManager.hasInvalidChecksum(data)) {
-            throw new IllegalArgumentException("Checksum failure.");
-        }
+//        if (SettingsManager.hasInvalidChecksum(data)) {
+//            throw new IllegalArgumentException("Checksum failure.");
+//        }
     }
 
     private void promptForDifferentRandomizerVersion(int presetVN) {

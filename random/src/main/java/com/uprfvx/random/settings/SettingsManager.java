@@ -1147,8 +1147,6 @@ public class SettingsManager {
         // 68 base stat total, random buff/nerf max percentage
         out.write(bstBuffNerfMaxPercentage);
 
-         */
-
         byte[] romName = this.romName.getBytes(StandardCharsets.US_ASCII);
         out.write(romName.length);
         out.write(romName, 0, romName.length);
@@ -1160,20 +1158,22 @@ public class SettingsManager {
 
         writeFullInt(out, 0); // padding
 
+         */
+
         return Base64.getEncoder().encodeToString(out.toByteArray());
     }
 
     // TODO: remove once we've tested SettingsStringConverter
     @Deprecated
     private static SettingsManager fromStringWithoutVersion(String settingsString) throws IllegalArgumentException {
+        return new SettingsManager();
+        /*
         byte[] data = Base64.getDecoder().decode(settingsString);
         if (hasInvalidChecksum(data)) {
             throw new IllegalArgumentException("Malformed input string");
         }
 
         SettingsManager settings = new SettingsManager();
-
-        /*
 
         // Restore the actual controls
         settings.setChangeImpossibleEvolutions(restoreState(data[0], 0));
@@ -1515,193 +1515,13 @@ public class SettingsManager {
 
         settings.setBSTBuffNerfMaxPercentage(data[68]); // small enough values that int8 range [-128, 127] is ok
 
-         */
-
         int romNameLength = data[LENGTH_OF_SETTINGS_DATA] & 0xFF;
         String romName = new String(data, LENGTH_OF_SETTINGS_DATA + 1, romNameLength, StandardCharsets.US_ASCII);
         settings.setRomName(romName);
 
-        return settings;
-    }
-
-    public static class TweakForROMFeedback {
-        private boolean changedStarter;
-        private boolean removedCodeTweaks;
-
-        public boolean isChangedStarter() {
-            return changedStarter;
-        }
-
-        public TweakForROMFeedback setChangedStarter(boolean changedStarter) {
-            this.changedStarter = changedStarter;
-            return this;
-        }
-
-        public boolean isRemovedCodeTweaks() {
-            return removedCodeTweaks;
-        }
-
-        public TweakForROMFeedback setRemovedCodeTweaks(boolean removedCodeTweaks) {
-            this.removedCodeTweaks = removedCodeTweaks;
-            return this;
-        }
-    }
-
-    public TweakForROMFeedback tweakForRom(RomHandler rh) {
-        // TODO: will this method even be relevant any more?
-        //  A lot of this should be possible to manage automatically with the new SettingDefinitions.
-
-        // Commented out code until we know what to do with it, so the methods used can be removed
-        // (what they correspond to should still be obvious, imo)
-
-        TweakForROMFeedback feedback = new TweakForROMFeedback();
-
-        /*
-        if (!rh.canSetIntroPokemon()) {
-            this.setRandomizeIntroMon(false);
-        }
-
-        // move update check
-        if (this.isUpdateMovesLegacy() && rh instanceof Gen5RomHandler) {
-            // don't actually update moves
-            this.setUpdateMovesLegacy(false);
-            this.setUpdateMoves(false);
-        }
-
-        // starters
-        List<Species> romSpecies;
-        if (rh.hasStarterAltFormes()) {
-            romSpecies = rh.getSpeciesInclFormes();
-        } else {
-            romSpecies = rh.getSpecies();
-        }
-        List<Species> romStarters = rh.getStarters();
-        for (int starter = 0; starter < 3; starter++) {
-            if (this.customStarters[starter] < 0 || this.customStarters[starter] >= romSpecies.size()) {
-                // invalid starter for this game
-                feedback.setChangedStarter(true);
-                if (starter >= romStarters.size()) {
-                    this.customStarters[starter] = 1;
-                } else {
-                    this.customStarters[starter] = romSpecies.indexOf(romStarters.get(starter));
-                }
-            }
-        }
-
-        // trainers
-        if (!rh.canGiveCustomMovesetsToBossTrainers()) {
-            this.setBetterBossTrainerMovesets(false);
-        }
-        if (!rh.canGiveCustomMovesetsToImportantTrainers()) {
-            this.setBetterImportantTrainerMovesets(false);
-        }
-        if (!rh.canGiveCustomMovesetsToRegularTrainers()) {
-            this.setBetterRegularTrainerMovesets(false);
-        }
-        if (!rh.canAddPokemonToBossTrainers()) {
-            this.setAdditionalBossTrainerPokemon(0);
-        }
-        if (!rh.canAddPokemonToImportantTrainers()) {
-            this.setAdditionalImportantTrainerPokemon(0);
-        }
-        if (!rh.canAddPokemonToRegularTrainers()) {
-            this.setAdditionalRegularTrainerPokemon(0);
-        }
-        if (!rh.canAddHeldItemsToBossTrainers()) {
-            this.setRandomizeHeldItemsForBossTrainerPokemon(false);
-        }
-        if (!rh.canAddHeldItemsToImportantTrainers()) {
-            this.setRandomizeHeldItemsForImportantTrainerPokemon(false);
-        }
-        if (!rh.canAddHeldItemsToRegularTrainers()) {
-            this.setRandomizeHeldItemsForRegularTrainerPokemon(false);
-        }
-
-        // gen restrictions
-        if (rh instanceof Gen1RomHandler || (rh instanceof Gen3RomHandler && !rh.isRomValid(null))) {
-            this.currentRestrictions = null;
-            this.setLimitPokemon(false);
-        } else {
-            this.currentRestrictions.limitToGen(rh.generationOfPokemon());
-        }
-
-        // gen 5 exclusive stuff
-        if (rh.generationOfPokemon() != 5) {
-            if (trainersMod == TrainersMod.MAINPLAYTHROUGH) {
-                trainersMod = TrainersMod.RANDOM;
-            }
-        }
-
-        // misc tweaks
-        int oldMiscTweaks = this.currentMiscTweaks;
-//        this.currentMiscTweaks &= rh.miscTweaksAvailable();
-
-        if (oldMiscTweaks != this.currentMiscTweaks) {
-            feedback.setRemovedCodeTweaks(true);
-        }
-
-        if (rh.abilitiesPerSpecies() == 0) {
-            this.setAbilitiesMod(AbilitiesMod.UNCHANGED);
-            this.setAllowWonderGuard(false);
-        }
-
-        if (!rh.supportsStarterHeldItems()) {
-            // starter held items don't exist
-            this.setRandomizeStartersHeldItems(false);
-            this.setBanBadRandomStarterHeldItems(false);
-        }
-
-        if (!rh.supportsFourStartingMoves()) {
-            this.setStartWithGuaranteedMoves(false);
-        }
-
-        if (rh instanceof Gen1RomHandler || rh instanceof Gen2RomHandler) {
-            this.setTrainersBlockEarlyWonderGuard(false);
-        }
-
-        if (!rh.hasTimeBasedEncounters()) {
-            this.setUseTimeBasedEncounters(false);
-        }
-
-        if (rh instanceof Gen1RomHandler) {
-            this.setRandomizeWildPokemonHeldItems(false);
-            this.setBanBadRandomWildPokemonHeldItems(false);
-        }
-
-        if (!rh.canChangeStaticPokemon()) {
-            this.setStaticPokemonMod(StaticPokemonMod.UNCHANGED);
-        }
-
-        if (!rh.hasMoveTutors()) {
-            this.setMoveTutorMovesMod(MoveTutorMovesMod.UNCHANGED);
-            this.setMoveTutorsCompatibilityMod(MoveTutorsCompatibilityMod.UNCHANGED);
-            this.setTutorLevelUpMoveSanity(false);
-            this.setKeepFieldMoveTutors(false);
-        }
-
-        if (rh instanceof Gen1RomHandler) {
-            // missing some ingame trade fields
-            this.setRandomizeInGameTradesItems(false);
-            this.setRandomizeInGameTradesIVs(false);
-            this.setRandomizeInGameTradesOTs(false);
-        }
-
-        if (!rh.hasPhysicalSpecialSplit()) {
-            this.setRandomizeMoveCategory(false);
-        }
-
-        if (!rh.hasShopSupport()) {
-            this.setShopItemsMod(ShopItemsMod.UNCHANGED);
-            this.setBalanceShopPrices(false);
-        }
-
-        if (!rh.canChangeShopSizes()) {
-            this.setAddCheapRareCandiesToShops(false);
-        }
          */
 
-        // done
-        return feedback;
+        return settings;
     }
 
     // getters and setters
@@ -1720,34 +1540,6 @@ public class SettingsManager {
 
     private void setUpdatedFromOldVersion(boolean updatedFromOldVersion) {
         this.updatedFromOldVersion = updatedFromOldVersion;
-    }
-
-    private static void writeFullInt(ByteArrayOutputStream out, int value) {
-        byte[] crc = new byte[4];
-        IOFunctions.writeFullInt(crc, 0, value);
-        out.write(crc, 0, crc.length);
-    }
-
-    private static void writeFullIntBigEndian(ByteArrayOutputStream out, int value) {
-        byte[] crc = ByteBuffer.allocate(4).putInt(value).array();
-        out.write(crc, 0, crc.length);
-    }
-
-    /**
-     * Returns whether the input settings bytes has an invalid checksum.
-     * @param data A byte array representing a Settings object.
-     */
-    public static boolean hasInvalidChecksum(byte[] data) {
-        // Check the checksum
-        ByteBuffer buf = ByteBuffer.allocate(LENGTH_OF_CHECKSUM)
-                .put(data, data.length - LENGTH_OF_CHECKSUM - LENGTH_OF_END_PADDING, LENGTH_OF_CHECKSUM);
-        buf.rewind();
-        int crc = buf.getInt();
-
-        CRC32 checksum = new CRC32();
-        checksum.update(data, 0, data.length - LENGTH_OF_CHECKSUM - LENGTH_OF_END_PADDING);
-
-        return (int) checksum.getValue() != crc;
     }
 
 }

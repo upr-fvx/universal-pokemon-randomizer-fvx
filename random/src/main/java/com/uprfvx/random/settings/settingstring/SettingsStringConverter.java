@@ -10,9 +10,12 @@ import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import filefunctions.IOFunctions;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.CRC32;
 
 /**
  * Used to convert settings from the "settings string" format
@@ -28,10 +31,24 @@ import java.util.Map;
  * to use for settings, a binary format that could be written as a
  * (relatively) short base64 string. It had the advantage of being
  * very brief, but was opaque and unwieldy to work with.
+ * <br><br>
+ * The format of the settings string is as follows:
+ * <ol>
+ *     <li>(3 chars) version number</li>
+ *     <li>(69 bytes) general settings</li>
+ *     <li>(1 byte) length of ROM name in bytes = N</li>
+ *     <li>(N bytes) ROM name in US-ASCII</li>
+ *     <li>(4 bytes) CRC32 checksum</li>
+ *     <li>(4 bytes) padding</li>
+ * </ol>
  */
 public class SettingsStringConverter {
 
     private static final int VERSION_ID_LENGTH = 3;
+    private static final int CHECKSUM_LENGTH = 4;
+    // There used to be a checksum for the custom names, post the usual checksum.
+    // This was removed, so 4 bytes of padding at the end.
+    private static final int END_PADDING_LENGTH = 4;
 
     private static boolean restoreState(byte b, int index) {
         if (index >= 8) {
@@ -60,6 +77,8 @@ public class SettingsStringConverter {
         String withoutVersion = stringWithVersion.substring(VERSION_ID_LENGTH);
         byte[] data = Base64.getDecoder().decode(withoutVersion);
 
+        checkCheckSum(data);
+
         convertAndPopulateFromData(manager, data);
     }
 
@@ -78,6 +97,20 @@ public class SettingsStringConverter {
             throw new IllegalArgumentException("Version id does not match that of FVX v1.6.0\n." +
                     "\tExpected=" + Version.FVX_1_6_0.id + ", Was=" + versionID);
         }
+    }
+
+    private void checkCheckSum(byte[] data) {
+        ByteBuffer buf = ByteBuffer.allocate(CHECKSUM_LENGTH)
+                .put(data, data.length - CHECKSUM_LENGTH - END_PADDING_LENGTH, CHECKSUM_LENGTH);
+        buf.rewind();
+        int crc = buf.getInt();
+
+        CRC32 checksum = new CRC32();
+        checksum.update(data, 0, data.length - CHECKSUM_LENGTH - END_PADDING_LENGTH);
+
+        if ((int) checksum.getValue() != crc) {
+            throw new IllegalArgumentException("Checksum mismatch");
+        };
     }
 
     // m and d are short so they take less space in the function calls
@@ -717,8 +750,12 @@ public class SettingsStringConverter {
         // Byte 68: BST Random Buff/Nerf Max Percentage
         loadByte(m, d, 68, Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
 
-        // TODO: loading the ROM name?
-        // TODO: checksum
+
+        // Byte 69: ROM name length
+        // Byte 70+: ROM name
+        int romNameLength = d[69] & 0xFF;
+        String romName = new String(d, 70, romNameLength, StandardCharsets.US_ASCII);
+        m.setRomName(romName);
     }
 
     private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {

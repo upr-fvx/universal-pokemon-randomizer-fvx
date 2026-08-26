@@ -63,56 +63,146 @@ import java.util.List;
  */
 public class RandomizerGUI {
 
-    //Header/Main
-    private JTabbedPane tabbedPane1;
+    //region JComponent Declarations
+
+    //region *** Header/Main ***
+
+    //Header left
+    private JCheckBox raceModeCheckBox;
+    private JButton loadSettingsButton;
+    private JButton saveSettingsButton;
+
+    //Header right
     private JButton openROMButton;
     private JButton randomizeSaveButton;
     private JButton premadeSeedButton;
     private JButton settingsButton;
-    private JButton loadSettingsButton;
-    private JButton saveSettingsButton;
-    private JPanel mainPanel;
 
-    //General tab
-    private JCheckBox raceModeCheckBox;
+    //Main
+    private JPanel mainPanel;
+    private JTabbedPane randomizationSettingsTabbedPane;
+
+    //endregion
+
+    //region *** General tab ***
+
+    //Cosmetic options
+    private JPanel cosmeticPanel;
+    private JCheckBox coRandomIntroMonCheckBox;
+    private JCheckBox coRandomizeCatchingTutorialCheckBox;
+    private JCheckBox coLowerCaseSpeciesNamesCheckBox;
+    private JCheckBox coRandomizeTrainerNamesCheckBox;
+    private JCheckBox coRandomizeTrainerClassNamesCheckBox;
+
+    //Limit Species
+    //--By Generation
     private JCheckBox lsBanGeneration1CheckBox;
     private JCheckBox lsBanGeneration2CheckBox;
-    private JCheckBox lsAllowRelativesCheckBox;
     private JCheckBox lsBanGeneration3CheckBox;
+    private JCheckBox lsBanGeneration4CheckBox;
+    private JCheckBox lsBanGeneration5CheckBox;
+    private JCheckBox lsBanGeneration6CheckBox;
+    private JCheckBox lsBanGeneration7CheckBox;
+    private JCheckBox lsAllowRelativesCheckBox;
+    //--By Other Qualities
+    private JCheckBox lsNoIrregularAltFormesCheckBox;
+    private JCheckBox lsRetainAltFormesCheckBox; //This is a little odd placement, but it seems relevant?
+    private JCheckBox lsNoPrematureEvosCheckbox;
 
+    //Quality of Life Tweaks
+    private JPanel qolTweaksPanel;
+    private JLabel qoltNoneAvailableLabel;
+    private JCheckBox qoltFastestTextCheckBox;
+    private JCheckBox qoltRunIndoorsCheckBox;
+    private JCheckBox qoltNationalDexCheckBox;
+    private JCheckBox qoltRunWithoutRunningShoesCheckBox;
+    private JCheckBox qoltFasterHPAndEXPBarsCheckBox;
+    private JCheckBox qoltFastDistortionWorldCheckBox;
+    private JCheckBox qoltDisableLowHPMusicCheckBox;
+    private JCheckBox qoltFastEggsCheckBox;
+    private JCheckBox qoltReusableTMsCheckBox;
+    private JCheckBox qoltForgettableHMsCheckBox;
+
+    //Balance Tweaks
+    private JPanel balanceTweaksPanel;
+    private JLabel btNoneAvailableLabel;
+    private JCheckBox btNerfXAccuracyCheckBox;
+    private JCheckBox btUpdateCritRateCheckBox;
+    private JCheckBox btScalingEXPCheckBox;
+    private JCheckBox btForceChallengeModeCheckBox;
+    private JCheckBox btNoEVYieldsCheckBox;
+
+    //endregion
+
+    //region *** Species Traits tab ***
+
+    //Base Stats
+    private JCheckBox sbsUpdateBaseStatsCheckBox;
+    //--Totals
+
+    //--Distribution
     private JRadioButton sbsdUnchangedRadioButton;
     private JRadioButton sbsdShuffleRadioButton;
     private JRadioButton sbsdRandomRadioButton;
-    private JRadioButton secLegendariesSlowRadioButton;
-    private JRadioButton secStrongLegendariesSlowRadioButton;
-    private JRadioButton secAllSpeciesRadioButton;
-    private JCheckBox secStandardizeEXPCurvesCheckBox;
     private JCheckBox sbsdFollowEvolutionsCheckBox;
-    private JCheckBox sbsUpdateBaseStatsCheckBox;
-    private JCheckBox stForceDualTypeCheckBox;
+
+    //Types
     private JRadioButton stUnchangedRadioButton;
     private JRadioButton stRandomFollowEvolutionsRadioButton;
     private JRadioButton stRandomCompletelyRadioButton;
+
+    private JCheckBox stForceDualTypeCheckBox;
+    private JCheckBox stUpdateRotomCheckBox;
+
+    //Abilities
     private JRadioButton saUnchangedRadioButton;
     private JRadioButton saRandomRadioButton;
-    private JCheckBox saBanWonderGuardCheckBox;
+
     private JCheckBox saFollowEvolutionsCheckBox;
+
+    //--Ban
+    private JCheckBox saBanWonderGuardCheckBox;
     private JCheckBox saBanTrappingAbilitiesCheckBox;
     private JCheckBox saBanNegativeAbilitiesCheckBox;
     private JCheckBox saBanMinorAbilitiesCheckBox;
+
+    //Evolutions
+    private JCheckBox peChangeImpossibleEvosCheckBox;
+
+    private JCheckBox peAllowPikachuEvolutionCheckBox;
+    private JCheckBox peUseEstimatedInsteadOfHardcodedLevelsCheckBox;
+
+    private JCheckBox peMakeEvolutionsEasierCheckBox;
+    private JSlider peMakeEvolutionsEasierLvlSlider;
+    //--Randomize
     private JRadioButton peUnchangedRadioButton;
     private JRadioButton peRandomRadioButton;
     private JCheckBox peSimilarStrengthCheckBox;
     private JCheckBox peSameTypingCheckBox;
     private JCheckBox peLimitEvolutionsToThreeCheckBox;
+
     private JCheckBox peForceChangeCheckBox;
-    private JCheckBox peChangeImpossibleEvosCheckBox;
-    private JCheckBox peUseEstimatedInsteadOfHardcodedLevelsCheckBox;
-    private JCheckBox peMakeEvolutionsEasierCheckBox;
-    private JSlider peMakeEvolutionsEasierLvlSlider;
     private JCheckBox peForceGrowthCheckBox;
     private JCheckBox peNoConvergenceCheckBox;
     private JCheckBox peAdjustLevelsCheckBox;
+
+    //EXP Curves
+    private JCheckBox secStandardizeEXPCurvesCheckBox;
+    private JRadioButton secLegendariesSlowRadioButton;
+    private JRadioButton secStrongLegendariesSlowRadioButton;
+    private JRadioButton secAllSpeciesRadioButton;
+
+    //endregion
+
+    private JCheckBox btBanLuckyEggCheckBox;
+    private JCheckBox btNoFreeLuckyEggCheckBox;
+    private JCheckBox miscBanBigMoneyManiacCheckBox;
+    private JCheckBox miscUpdateTypeEffectivenessCheckBox;
+
+    private JPanel generalItemsPanel;
+    private JCheckBox miscSOSBattlesCheckBox;
+    private JCheckBox miscRandomizePCPotionCheckBox;
+
     private JRadioButton spUnchangedRadioButton;
     private JRadioButton spCustomRadioButton;
     private JRadioButton spRandomRadioButton;
@@ -155,8 +245,6 @@ public class RandomizerGUI {
     private JCheckBox tpWeightTypesCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
-    private JCheckBox coRandomizeTrainerNamesCheckBox;
-    private JCheckBox coRandomizeTrainerClassNamesCheckBox;
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private SpinSlider tpPercentageEvolutionLevelModifierSpinSlider;
     private SpinSlider tpPercentageLevelModifierSpinSlider;
@@ -217,28 +305,13 @@ public class RandomizerGUI {
     private JCheckBox shBalanceShopItemPricesCheckBox;
     private JCheckBox shGuaranteeEvolutionItemsCheckBox;
     private JCheckBox shGuaranteeXItemsCheckBox;
-    private JCheckBox btScalingEXPCheckBox;
-    private JCheckBox btNerfXAccuracyCheckBox;
-    private JCheckBox btUpdateCritRateCheckBox;
-    private JCheckBox qoltFastestTextCheckBox;
-    private JCheckBox qoltRunIndoorsCheckBox;
-    private JCheckBox miscRandomizePCPotionCheckBox;
-    private JCheckBox miscAllowPikachuEvolutionCheckBox;
-    private JCheckBox qoltNationalDexCheckBox;
-    private JCheckBox miscUpdateTypeEffectivenessCheckBox;
-    private JCheckBox coLowerCasePokemonNamesCheckBox;
-    private JCheckBox coRandomizeCatchingTutorialCheckBox;
-    private JCheckBox btBanLuckyEggCheckBox;
-    private JCheckBox btNoFreeLuckyEggCheckBox;
-    private JCheckBox miscBanBigMoneyManiacCheckBox;
     private JPanel speciesAbilitiesPanel;
     private JPanel moveTutorPanel;
     private JPanel mtMovesPanel;
     private JPanel mtCompatPanel;
     private JLabel mtNoExistLabel;
     private JPanel shopItemsPanel;
-    private JLabel qoltNoneAvailableLabel;
-    private JPanel miscTweaksPanel;
+
     private JLabel gameMascotLabel;
     private JPanel baseTweaksPanel;
     private JLabel romNameLabel;
@@ -308,8 +381,6 @@ public class RandomizerGUI {
     private JRadioButton puRandomRadioButton;
     private JCheckBox puBanBadItemsCheckBox;
     private JCheckBox sbsdAssignEvoStatsRandomlyCheckBox;
-    private JCheckBox lsNoIrregularAltFormesCheckBox;
-    private JCheckBox lsNoPrematureEvosCheckbox;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox saForceTwoAbilitiesCheckbox;
     private JRadioButton ppalUnchangedRadioButton;
@@ -358,7 +429,6 @@ public class RandomizerGUI {
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
     private JPanel specialShopsPanel;
     private JCheckBox shAddRareCandyCheckBox;
-    private JCheckBox coRandomIntroMonCheckBox;
     private JLabel tpBetterMovesetsLabel;
     private JCheckBox tpBetterMovesetsBossTrainersCheckBox;
     private JCheckBox tpBetterMovesetsImportantTrainersCheckBox;
@@ -372,27 +442,6 @@ public class RandomizerGUI {
     private SpinSlider sbstRandomBuffNerfSpinSlider;
     private JSpinner sbsUpdateGenerationChoiceSpinner;
     private JPanel speciesBanAbilitiesPanel;
-    private JCheckBox lsBanGeneration4CheckBox;
-    private JCheckBox lsBanGeneration5CheckBox;
-    private JCheckBox lsBanGeneration6CheckBox;
-    private JCheckBox lsBanGeneration7CheckBox;
-    private JCheckBox miscForceChallengeModeCheckBox;
-    private JCheckBox miscBalanceStaticLevelsCheckBox;
-    private JCheckBox lsRetainAltFormesCheckBox;
-    private JCheckBox qoltRunWithoutRunningShoesCheckBox;
-    private JCheckBox miscFasterHPAndEXPBarsCheckBox;
-    private JCheckBox miscFastDistortionWorldCheckBox;
-    private JCheckBox miscDisableLowHPMusicCheckBox;
-    private JPanel balanceTweaksPanel;
-    private JCheckBox miscSOSBattlesCheckBox;
-    private JCheckBox stUpdateRotomCheckBox;
-    private JPanel cosmeticPanel;
-    private JLabel btNoneAvailableLabel;
-    private JPanel generalItemsPanel;
-    private JCheckBox qoltReusableTMsCheckBox;
-    private JCheckBox qoltForgettableHMsCheckBox;
-    private JCheckBox qoltFastEggsCheckBox;
-    private JCheckBox btNoEVYieldsCheckBox;
     private JCheckBox spBasicOnlyCheckBox;
     private JCheckBox spHasEvolutionsCheckBox;
     private JLabel spBSTLimitsLabel;
@@ -413,7 +462,9 @@ public class RandomizerGUI {
     private JCheckBox tbsExcludeTripleBattlesCheckBox;
     private JCheckBox tbsExtendTeamsCheckBox;
     private JCheckBox tbsExcludeRotationBattlesCheckBox;
+    private JCheckBox miscBalanceStaticLevelsCheckBox;
 
+    //endregion
 
     private static final Random RND = new Random();
 
@@ -1833,7 +1884,7 @@ public class RandomizerGUI {
     private void restoreStateFromSettings(SettingsManager settings) {
         // keeping this block temporarily, to be able to look at it in case it holds some secrets
         // TODO: clear this whole block.
-        /**
+        /*
         limitPokemonCheckBox.setSelected(settings.isLimitPokemon());
         currentRestrictions = settings.getCurrentRestrictions();
         if (currentRestrictions != null) {
@@ -2440,8 +2491,8 @@ public class RandomizerGUI {
         //Well, this lets them be named variables, which helps for code readability if nothing else...
         setInitialButtonState(btScalingEXPCheckBox, btNerfXAccuracyCheckBox, btUpdateCritRateCheckBox,
                 qoltFastestTextCheckBox, qoltRunIndoorsCheckBox, miscRandomizePCPotionCheckBox,
-				miscAllowPikachuEvolutionCheckBox, qoltNationalDexCheckBox,
-                coLowerCasePokemonNamesCheckBox, coRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
+                peAllowPikachuEvolutionCheckBox, qoltNationalDexCheckBox,
+                coLowerCaseSpeciesNamesCheckBox, coRandomizeCatchingTutorialCheckBox, btBanLuckyEggCheckBox,
                 btNoFreeLuckyEggCheckBox, miscBanBigMoneyManiacCheckBox);
 
         mtNoExistLabel.setVisible(false);
@@ -2911,7 +2962,7 @@ public class RandomizerGUI {
             //typesPanel.setVisible(typeSupport);
             //We shouldn't use setVisible on the panels directly in the tabbedPane; it causes strange bleedover
             //Disable it instead
-            tabbedPane1.setEnabledAt(7, typeSupport);
+            randomizationSettingsTabbedPane.setEnabledAt(7, typeSupport);
             teUnchangedRadioButton.setEnabled(typeSupport);
             teUnchangedRadioButton.setSelected(true);
             teRandomRadioButton.setEnabled(typeSupport);
@@ -2954,7 +3005,7 @@ public class RandomizerGUI {
             boolean cpgReplaceChoiceSupport = cpgSupport && romHandler.hasMultiplePlayerCharacters();
             cpgSelection.setReplaceChoiceVisible(cpgReplaceChoiceSupport);
 
-            tabbedPane1.setEnabledAt(8, ppalSupport || cpgSupport);
+            randomizationSettingsTabbedPane.setEnabledAt(8, ppalSupport || cpgSupport);
 
             if (romHandler.generationOfPokemon() < 6) {
                 applyGameUpdateMenuItem.setVisible(false);

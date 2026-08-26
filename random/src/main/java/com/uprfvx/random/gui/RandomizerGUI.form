@@ -15,7 +15,7 @@
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
       </vspacer>
-      <tabbedpane id="d57f7" binding="tabbedPane1" default-binding="true">
+      <tabbedpane id="d57f7" binding="randomizationSettingsTabbedPane">
         <constraints>
           <grid row="8" column="1" row-span="1" col-span="11" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
             <preferred-size width="200" height="200"/>
@@ -240,7 +240,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="bac4f" binding="miscTweaksPanel" layout-manager="GridBagLayout">
+                  <grid id="bac4f" binding="qolTweaksPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -347,7 +347,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.QOLTweaksPanel.runWithoutRunningShoesCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="996fe" class="javax.swing.JCheckBox" binding="miscFasterHPAndEXPBarsCheckBox">
+                      <component id="996fe" class="javax.swing.JCheckBox" binding="qoltFasterHPAndEXPBarsCheckBox">
                         <constraints>
                           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -358,7 +358,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.QOLTweaksPanel.fasterHpAndExpBarsCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="2c54f" class="javax.swing.JCheckBox" binding="miscFastDistortionWorldCheckBox">
+                      <component id="2c54f" class="javax.swing.JCheckBox" binding="qoltFastDistortionWorldCheckBox">
                         <constraints>
                           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -369,7 +369,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.QOLTweaksPanel.fastDistortionWorldCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="4ae35" class="javax.swing.JCheckBox" binding="miscDisableLowHPMusicCheckBox">
+                      <component id="4ae35" class="javax.swing.JCheckBox" binding="qoltDisableLowHPMusicCheckBox">
                         <constraints>
                           <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -433,7 +433,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.scalingEXPCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="84cb6" class="javax.swing.JCheckBox" binding="miscForceChallengeModeCheckBox">
+                      <component id="84cb6" class="javax.swing.JCheckBox" binding="btForceChallengeModeCheckBox">
                         <constraints>
                           <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -471,20 +471,15 @@
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.tweaksNoneLabel.text"/>
                         </properties>
                       </component>
-                      <component id="c29dc" class="javax.swing.JCheckBox" binding="miscBalanceStaticLevelsCheckBox">
+                      <vspacer id="a6e3c">
                         <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.balanceGivenLevelsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.balanceGivenLevelsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
+                      </vspacer>
                       <component id="2692d" class="javax.swing.JCheckBox" binding="btNoEVYieldsCheckBox">
                         <constraints>
-                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -493,12 +488,6 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.noEVYieldsCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <vspacer id="a6e3c">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
                     </children>
                   </grid>
                   <vspacer id="94f8e">
@@ -583,7 +572,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.cosmeticPanel.randomizeTrainerClassNamesCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="5055c" class="javax.swing.JCheckBox" binding="coLowerCasePokemonNamesCheckBox">
+                      <component id="5055c" class="javax.swing.JCheckBox" binding="coLowerCaseSpeciesNamesCheckBox">
                         <constraints>
                           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -1360,7 +1349,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.removeTimeBasedCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="17b92" class="javax.swing.JCheckBox" binding="miscAllowPikachuEvolutionCheckBox">
+                      <component id="17b92" class="javax.swing.JCheckBox" binding="peAllowPikachuEvolutionCheckBox">
                         <constraints>
                           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4141,6 +4130,17 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
+                      <component id="8fd1d" class="javax.swing.JCheckBox" binding="miscBalanceStaticLevelsCheckBox">
+                        <constraints>
+                          <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.balanceGivenLevelsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.balanceTweaksPanel.balanceGivenLevelsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
                 </children>

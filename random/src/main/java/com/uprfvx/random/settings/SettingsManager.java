@@ -771,26 +771,6 @@ public class SettingsManager {
     private String romName;
     private boolean updatedFromOldVersion = false;
 
-    private boolean banPrematureEvos;
-
-    public enum BaseStatisticsMod {
-        UNCHANGED, SHUFFLE, RANDOM
-    }
-
-    private BaseStatisticsMod baseStatisticsMod = BaseStatisticsMod.UNCHANGED;
-
-    public enum AbilitiesMod {
-        UNCHANGED, RANDOMIZE
-    }
-
-    public enum StartersMod {
-        UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
-    }
-
-    // index in the rom's list of pokemon
-    // offset from the dropdown index from RandomizerGUI by 1
-    private int[] customStarters = new int[3];
-
     public void writeToFileFormat(FileOutputStream out) throws IOException {
         byte[] settings = toStringWithoutVersion().getBytes(StandardCharsets.UTF_8);
         ByteBuffer buf = ByteBuffer.allocate(settings.length + 8);
@@ -1742,35 +1722,6 @@ public class SettingsManager {
         this.updatedFromOldVersion = updatedFromOldVersion;
     }
 
-    // TODO: deal with the weird custom starters test
-    @Deprecated
-    public void setCustomStarters(int[] customStarters) {
-        this.customStarters = customStarters;
-    }
-
-	private static int makeByteSelected(boolean... bools) {
-        if (bools.length > 8) {
-            throw new IllegalArgumentException("Can't set more than 8 bits in a byte!");
-        }
-
-        int initial = 0;
-        int state = 1;
-        for (boolean b : bools) {
-            initial |= b ? state : 0;
-            state *= 2;
-        }
-        return initial;
-    }
-
-    private static boolean restoreState(byte b, int index) {
-        if (index >= 8) {
-            throw new IllegalArgumentException("Can't read more than 8 bits from a byte!");
-        }
-
-        int value = b & 0xFF;
-        return ((value >> index) & 0x01) == 0x01;
-    }
-
     private static void writeFullInt(ByteArrayOutputStream out, int value) {
         byte[] crc = new byte[4];
         IOFunctions.writeFullInt(crc, 0, value);
@@ -1780,46 +1731,6 @@ public class SettingsManager {
     private static void writeFullIntBigEndian(ByteArrayOutputStream out, int value) {
         byte[] crc = ByteBuffer.allocate(4).putInt(value).array();
         out.write(crc, 0, crc.length);
-    }
-
-    private static void write2ByteIntBigEndian(ByteArrayOutputStream out, int value) {
-        out.write(value & 0xFF);
-        out.write((value >> 8) & 0xFF);
-    }
-
-    private static <E extends Enum<E>> E restoreEnum(Class<E> clazz, byte b, int... indices) {
-        boolean[] bools = new boolean[indices.length];
-        int i = 0;
-        for (int idx : indices) {
-            bools[i] = restoreState(b, idx);
-            i++;
-        }
-        return getEnum(clazz, bools);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <E extends Enum<E>> E getEnum(Class<E> clazz, boolean... bools) {
-        int index = getSetEnum(clazz.getSimpleName(), bools);
-        try {
-            return ((E[]) clazz.getMethod("values").invoke(null))[index];
-        } catch (Exception e) {
-            throw new IllegalArgumentException(String.format("Unable to parse enum of type %s", clazz.getSimpleName()),
-                    e);
-        }
-    }
-
-    private static int getSetEnum(String type, boolean... bools) {
-        int index = -1;
-        for (int i = 0; i < bools.length; i++) {
-            if (bools[i]) {
-                if (index >= 0) {
-                    throw new IllegalStateException(String.format("Only one value for %s may be chosen!", type));
-                }
-                index = i;
-            }
-        }
-        // We have to return something, so return the default
-        return index >= 0 ? index : 0;
     }
 
     /**

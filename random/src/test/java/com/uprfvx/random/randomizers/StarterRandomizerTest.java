@@ -2,6 +2,7 @@ package com.uprfvx.random.randomizers;
 
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.romio.constants.SpeciesIDs;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -484,33 +485,25 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void customStartersCanBeSet(String romName) {
         activateRomHandler(romName);
         SettingsManager s = new SettingsManager();
+
+        List<Integer> customStarters = List.of(SpeciesIDs.venusaur, SpeciesIDs.charizard, SpeciesIDs.blastoise);
         s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
-        int customCount = romHandler.starterCount();
-        int[] custom = new int[customCount];
-        for (int i = 0; i < custom.length; i++) {
-            custom[i] = i + 1;
-        }
-        s.setCustomStarters(custom);
+        s.set(Settings.Name.STARTER_CUSTOM_1, customStarters.get(0));
+        s.set(Settings.Name.STARTER_CUSTOM_2, customStarters.get(1));
+        s.set(Settings.Name.STARTER_CUSTOM_3, customStarters.get(2));
 
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         List<Species> starters = romHandler.getStarters();
         List<Species> allPokes = romHandler.getSpecies();
 
-        StringBuilder sb = new StringBuilder("Starters");
-        sb.append(" (should be ");
-        for (int i = 0; i < customCount; i++) {
-            sb.append(allPokes.get(custom[i]).getName());
-            if (i != customCount - 1) {
-                sb.append(", ");
-            }
-        }
-        sb.append("): ");
-        sb.append(starters);
-        System.out.println(sb);
+        System.out.print("Expected: ");
+        System.out.println(customStarters.stream().map(allPokes::get).map(Species::getNumberAndFullName).toList());
+        System.out.print("Actual:   ");
+        System.out.println(starters.stream().map(Species::getNumberAndFullName).toList());
 
-        for (int i = 0; i < customCount; i++) {
-            assertEquals(starters.get(i), allPokes.get(custom[i]));
+        for (int i = 0; i < 3; i++) {
+            assertEquals(starters.get(i), allPokes.get(customStarters.get(i)));
         }
     }
 }

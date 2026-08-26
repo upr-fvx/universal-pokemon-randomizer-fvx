@@ -718,6 +718,7 @@ public class SettingsStringConverter {
         loadByte(m, d, 68, Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
 
         // TODO: loading the ROM name?
+        // TODO: checksum
     }
 
     private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {

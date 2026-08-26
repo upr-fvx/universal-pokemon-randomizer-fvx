@@ -264,42 +264,42 @@ public class RandomizationLogger {
     private void logOverview() {
         printSectionTitle("overview");
         // The overview lines intentionally (mostly) map to panels in the UI, thus they share their bundle strings.
-        logOverviewLine(getBS("GUI.pbsPanel.title"),
+        logOverviewLine(getBS("GUI.traitsTab.statsPanel.title"),
                 speciesBSRandomizer.isChangesMade() || speciesBSUpdater.isUpdated(), true);
-        logOverviewLine(getBS("GUI.ptPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.paPanel.title"), speciesAbilityRandomizer.isChangesMade(),
+        logOverviewLine(getBS("GUI.traitsTab.typesPanel.title"), speciesTypeRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.traitsTab.abilitiesPanel.title"), speciesAbilityRandomizer.isChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
-        logOverviewLine(getBS("GUI.pePanel.title"), evoRandomizer.isChangesMade()
+        logOverviewLine(getBS("GUI.traitsTab.evolutionPanel.title"), evoRandomizer.isChangesMade()
                 || shouldLogEvolutionImprovements(), true);
-        logOverviewLine(getBS("GUI.spPanel.title"), starterRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.stpPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
+        logOverviewLine(getBS("GUI.givenTab.startersPanel.title"), starterRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.wildTab.staticsPanel.title"), staticPokeRandomizer.isStaticChangesMade(),
                 romHandler.canChangeStaticPokemon());
-        logOverviewLine(getBS("GUI.igtPanel.title"), tradeRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.mdPanel.title"),
+        logOverviewLine(getBS("GUI.givenTab.tradesPanel.title"), tradeRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.movesTab.traitsPanel.title"),
                 moveDataRandomizer.isChangesMade() || moveUpdater.isUpdated() || moveNameRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.pmsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.tpPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.movesTab.movesetsPanel.title"), speciesMovesetRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.foeTab.trainersPanel.title"), trainerPokeRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerMovesets"), trainerMovesetRandomizer.isChangesMade(), true);
         logOverviewLine(getBS("Log.overview.trainerNames"), trainerNameRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.totpPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
+        logOverviewLine(getBS("GUI.foeTab.totemPanel.title"), staticPokeRandomizer.isTotemChangesMade(),
                 romHandler.hasTotemPokemon());
-        logOverviewLine(getBS("GUI.wpPanel.title"), wildEncounterRandomizer.isChangesMade(), true);
-        logOverviewLine(getBS("GUI.tmMovesPanel.title"), tmtMoveRandomizer.isTMChangesMade(), true);
-        logOverviewLine(getBS("GUI.thcPanel.title"), tmhmtCompRandomizer.isTMHMChangesMade(), true);
-        logOverviewLine(getBS("GUI.mtMovesPanel.title"), tmtMoveRandomizer.isTutorChangesMade(),
+        logOverviewLine(getBS("GUI.wildTab.randomPanel.title"), wildEncounterRandomizer.isChangesMade(), true);
+        logOverviewLine(getBS("GUI.teachingTab.TMsPanel.movesPanel.title"), tmtMoveRandomizer.isTMChangesMade(), true);
+        logOverviewLine(getBS("GUI.teachingTab.TMsPanel.compatibilityPanel.title"), tmhmtCompRandomizer.isTMHMChangesMade(), true);
+        logOverviewLine(getBS("GUI.teachingTab.tutorsPanel.movesPanel.title"), tmtMoveRandomizer.isTutorChangesMade(),
                 romHandler.hasMoveTutors());
-        logOverviewLine(getBS("GUI.mtcPanel.title"), tmhmtCompRandomizer.isTutorChangesMade(),
+        logOverviewLine(getBS("GUI.teachingTab.tutorsPanel.compatibilityPanel.title"), tmhmtCompRandomizer.isTutorChangesMade(),
                 romHandler.hasMoveTutors());
         // field items aren't logged properly, but still important to show *whether* they were randomized
-        logOverviewLine(getBS("GUI.fiPanel.title"), itemRandomizer.isFieldChangesMade(), true);
-        logOverviewLine(getBS("GUI.shPanel.title"), itemRandomizer.isShopChangesMade(),
+        logOverviewLine(getBS("GUI.itemsTab.fieldPanel.title"), itemRandomizer.isFieldChangesMade(), true);
+        logOverviewLine(getBS("GUI.itemsTab.shopPanel.title"), itemRandomizer.isShopChangesMade(),
                 romHandler.hasShopSupport());
-        logOverviewLine(getBS("GUI.puPanel.title"), itemRandomizer.isPickupChangesMade(),
+        logOverviewLine(getBS("GUI.itemsTab.shopPanel.pickupPanel.title"), itemRandomizer.isPickupChangesMade(),
                 romHandler.abilitiesPerSpecies() != 0);
-        logOverviewLine(getBS("GUI.tePanel.title"),
+        logOverviewLine(getBS("GUI.typesTab.effectivenessPanel.title"),
                 typeEffRandomizer.isChangesMade() || typeEffUpdater.isUpdated(),
                 romHandler.hasTypeEffectivenessSupport());
-        logOverviewLine(getBS("GUI.ppalPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
+        logOverviewLine(getBS("GUI.graphicsTab.palettesPanel.title"), paletteRandomizer != null && paletteRandomizer.isChangesMade(),
                 romHandler.hasPokemonPaletteSupport());
         log.println();
 

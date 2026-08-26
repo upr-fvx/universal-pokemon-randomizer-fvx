@@ -18,12 +18,13 @@ The main developers of this Randomizer use IntelliJ IDEA to develop, build, and 
 git clone https://github.com/upr-fvx/universal-pokemon-randomizer-fvx.git
 ```
 3. Run IntelliJ IDEA. [On the initial window, select "Open"]({{ site.baseurl }}/assets/images/wikipages/building/intellij_open.png) then select the universal-pokemon-randomizer-fvx folder that you cloned in the previous step.
-4. Under File -> Project Structure -> Project, [ensure that the "Project SDK" is set to 25]({{ site.baseurl }}/assets/images/wikipages/building/sdk_set.png). If you do not have any version of 25 available, [click the "Project SDK" dropdown to expose the "Download JDK..." option]({{ site.baseurl }}/assets/images/wikipages/building/sdk_dropdown.png), then [download any 25 version]({{ site.baseurl }}/assets/images/wikipages/building/sdk_download.png). It should now be selected as your Project SDK.
+4. Under File → Project Structure → Project, [ensure that the "Project SDK" is set to 25]({{ site.baseurl }}/assets/images/wikipages/building/sdk_set.png). If you do not have any version of 25 available, [click the "Project SDK" dropdown to expose the "Download JDK..." option]({{ site.baseurl }}/assets/images/wikipages/building/sdk_dropdown.png), then [download any 25 version]({{ site.baseurl }}/assets/images/wikipages/building/sdk_download.png). It should now be selected as your Project SDK.
 5. On the same screen, ensure the "Language level" is also 25.
-6. Under File -> Settings -> Build, Execution, Deployment -> Build Tools -> Gradle, [ensure the project is built and ran using Gradle, and that the Gradle JVM is the Project SDK]({{ site.baseurl }}/assets/images/wikipages/building/gradle_options.png).
+6. Under File → Settings → Build, Execution, Deployment → Build Tools → Gradle, [ensure the project is built and ran using Gradle, and that the Gradle JVM is the Project SDK]({{ site.baseurl }}/assets/images/wikipages/building/gradle_options.png).
+7. Under File → Settings → Editor → File Encodings, [ensure that the "Project Encoding" and the "Default encoding for properties files" are both set to UTF-8]({{ site.baseurl }}/assets/images/wikipages/building/encoding_options.png).
 
 ### Building and launching the Randomizer (quick)
-Assuming you followed all steps in the previous section, you should see the elephantine Gradle icon near the top-right corner of IntelliJ. [Click on the icon, and navigate to "universal-pokemon-randomizer-fvx -> Tasks -> launch"]({{ site.baseurl }}/assets/images/wikipages/building/gradle_launch.png). There should be a `launch` task next to a cog icon. Double-clicking that will build all code and run the Randomizer if the build is successful. 
+Assuming you followed all steps in the previous section, you should see the elephantine Gradle icon ![Gradle icon]({{ site.baseurl }}/assets/images/wikipages/building/gradle_icon.png) near the top-right corner of IntelliJ. [Click on the icon, and navigate to "universal-pokemon-randomizer-fvx → Tasks → launch"]({{ site.baseurl }}/assets/images/wikipages/building/gradle_launch.png). There should be a `launch` task next to a cog icon. Double-clicking that will build all code and run the Randomizer if the build is successful. 
 
 Congrats, you've now built the randomizer!
 

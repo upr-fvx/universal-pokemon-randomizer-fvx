@@ -280,7 +280,7 @@ public class PresetLoadDialog extends JDialog {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File f = romFileChooser.getSelectedFile();
 
-            JDialog opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), this, true);
+            JDialog opDialog = new OperationDialog(bundle.getString("GUI.loadROM.loadingDialog.message"), this, true);
             Thread t = new Thread(() -> {
                 SwingUtilities.invokeLater(() -> opDialog.setVisible(true));
 
@@ -310,7 +310,7 @@ public class PresetLoadDialog extends JDialog {
                     SwingUtilities.invokeLater(() -> {
                         opDialog.setVisible(false);
                         JOptionPane.showMessageDialog(this,
-                                bundle.getString("GUI.loadFailedNoLog"));
+                                bundle.getString("GUI.loadROM.loadFailedNoLogDialog.message"));
                     });
                 }
             });

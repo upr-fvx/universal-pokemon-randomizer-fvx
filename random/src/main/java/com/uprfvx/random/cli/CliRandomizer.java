@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * A class with functions for randomizing from the command line.
+ */
 public class CliRandomizer {
 
     // TODO: Why is this class fully static? It gives bad vibes since it's also in Java. Is it really fine like this?
@@ -74,7 +77,7 @@ public class CliRandomizer {
                     if (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler) {
                         String currentFN = romHandler.loadedFilename();
                         if (currentFN.equals(fh.getAbsolutePath())) {
-                            printError(bundle.getString("GUI.cantOverwriteDS"));
+                            printError(bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
                             return false;
                         }
                     }
@@ -117,10 +120,10 @@ public class CliRandomizer {
         SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(romHandler);
         Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
-            printWarning(bundle.getString("GUI.starterUnavailable"));
+            printWarning(bundle.getString("GUI.saveROM.starterUnavailableDialog.message"));
         }
         if (settings.isUpdatedFromOldVersion()) {
-            printWarning(bundle.getString("GUI.settingsFileOlder"));
+            printWarning(bundle.getString("GUI.loadSettings.settingsFileOlderDialog.message"));
         }
     }
 

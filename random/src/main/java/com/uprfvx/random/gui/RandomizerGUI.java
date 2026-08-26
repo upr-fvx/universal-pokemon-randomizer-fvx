@@ -2167,11 +2167,6 @@ public class RandomizerGUI {
         **/
     }
 
-        //Keeping this one as well, just in case it's useful.
-        //TODO: remove this entire block
-        /**
-         */
-        return null;
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,
                                        String settingsString, String seedString) {
         attemptToLogException(ex, baseMessageKey, noLogMessageKey, false, settingsString, seedString);

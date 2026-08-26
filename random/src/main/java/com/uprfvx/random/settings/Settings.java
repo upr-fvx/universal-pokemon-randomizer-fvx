@@ -290,8 +290,52 @@ public class Settings {
 
     //region general options
 
+    //Limit Species restrictions
+    private static final SettingRestriction generation1SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_1, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_1, true)
+            ); //The support check shouldn't matter, but this future-proofs it for romhacks I guess?
+
+    private static final SettingRestriction generation2SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_2, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_2, true)
+            );
+
+    private static final SettingRestriction generation3SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_3, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_3, true)
+            );
+
+    private static final SettingRestriction generation4SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_4, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_4, true)
+            );
+
+    private static final SettingRestriction generation5SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_5, true)
+            );
+
+    private static final SettingRestriction generation6SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_6, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_6, true)
+            );
+
+    private static final SettingRestriction generation7SpeciesAvailable =
+            new MultiSettingRestriction(false, false,
+                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_7, isFalse),
+                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_7, true)
+            );
+
+
     // needs to be up here since general options relies on it
-    public static final SettingRestriction notEvolveEveryLevelRestriction = new SimpleSettingRestriction<>(
+    private static final SettingRestriction notEvolveEveryLevelRestriction = new SimpleSettingRestriction<>(
             Name.RANDOMIZE_SPECIES_EVOLUTIONS, notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL)
     );
 
@@ -319,37 +363,86 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_1,
                     Category.LIMIT_POKEMON)
-                    .supported(atLeastGeneration(2))  //There's no sense letting a user ban ALL Pokémon
+                    .supported(atLeastGeneration(2))  //Gen 2 because there's no sense letting a user ban ALL species
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation2SpeciesAvailable,
+                            generation3SpeciesAvailable,
+                            generation4SpeciesAvailable,
+                            generation5SpeciesAvailable,
+                            generation6SpeciesAvailable,
+                            generation7SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_2,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation1SpeciesAvailable,
+                            generation3SpeciesAvailable,
+                            generation4SpeciesAvailable,
+                            generation5SpeciesAvailable,
+                            generation6SpeciesAvailable,
+                            generation7SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_3,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(3))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation1SpeciesAvailable,
+                            generation2SpeciesAvailable,
+                            generation4SpeciesAvailable,
+                            generation5SpeciesAvailable,
+                            generation6SpeciesAvailable,
+                            generation7SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_4,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(4))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation1SpeciesAvailable,
+                            generation2SpeciesAvailable,
+                            generation3SpeciesAvailable,
+                            generation5SpeciesAvailable,
+                            generation6SpeciesAvailable,
+                            generation7SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_5,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(5))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation1SpeciesAvailable,
+                            generation2SpeciesAvailable,
+                            generation3SpeciesAvailable,
+                            generation4SpeciesAvailable,
+                            generation6SpeciesAvailable,
+                            generation7SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_6,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(6))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation1SpeciesAvailable,
+                            generation2SpeciesAvailable,
+                            generation3SpeciesAvailable,
+                            generation4SpeciesAvailable,
+                            generation5SpeciesAvailable,
+                            generation7SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_7,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(7))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                            generation1SpeciesAvailable,
+                            generation2SpeciesAvailable,
+                            generation3SpeciesAvailable,
+                            generation4SpeciesAvailable,
+                            generation5SpeciesAvailable,
+                            generation6SpeciesAvailable))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_ALLOW_RELATIVES,
@@ -360,7 +453,9 @@ public class Settings {
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_2, isTrue),
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_3, isTrue),
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_4, isTrue),
-                            new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isTrue),
+                            //new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isTrue),
+                            //Generation 5 has no relatives in any other supported generation
+                            //(Its first cross-generation relatives are introduced in Gen 8)
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_6, isTrue),
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_7, isTrue)))
                     .build(),
@@ -370,7 +465,7 @@ public class Settings {
                     .build(),
             //This is an odd placement for "retain temporary formes",
             //but it seems like a better fit than Balance Tweaks, which is the only other place that seems sensible.
-            //Unless we make a dedicated Formes area.
+            //Unless we make a dedicated Formes area.  --Foxoftheasterisk, August 2026
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_RETAIN_TEMPORARY_FORMES,
                     Category.LIMIT_POKEMON)

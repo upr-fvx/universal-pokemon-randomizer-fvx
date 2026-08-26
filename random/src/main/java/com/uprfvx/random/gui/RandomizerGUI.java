@@ -837,7 +837,6 @@ public class RandomizerGUI {
                 associateCheckBox(Name.RACE_MODE, raceModeCheckBox),
 
                 // *** GENERAL ***
-
                 //Cosmetic
                 associateCheckBox(Name.COSMETIC_RANDOM_INTRO_MON, coRandomIntroMonCheckBox),
                 associateCheckBox(Name.COSMETIC_RANDOMIZE_CATCHING_TUTORIAL, coRandomizeCatchingTutorialCheckBox),

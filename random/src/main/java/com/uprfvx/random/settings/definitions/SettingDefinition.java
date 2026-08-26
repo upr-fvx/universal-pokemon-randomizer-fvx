@@ -101,8 +101,9 @@ public abstract class SettingDefinition<V extends Serializable> {
     //not determine if they actually do occur or what those changes are.
     private final List<Settings.Name> dependentOn;
 
-    //Whether the setting has values that are not supported by all games. If true, the possible values will be
-    // polled when a new game is loaded.
+    //Whether the setting has values that are not supported by all games. If true, when a new game is associated,
+    // the default value will be checked; also, when a game is associated or unassociated, listeners will be informed
+    // so they can poll the values.
     private final boolean hasSupportRestrictions;
 
     /**

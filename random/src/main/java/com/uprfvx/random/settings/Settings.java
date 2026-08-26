@@ -18,16 +18,19 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 
 //The list of EVERY setting supported by the randomizer.
 
-//The types of setting definition are:
+//The basic types of setting definition are:
 //SimpleSettingDefinition: Any setting that does not have restrictions on its values (that is to say, any value
 // supported by the data type is applicable whenever the setting itself is supported and enabled.)
 //EnumSettingDefinition: A setting which is an enum type, which can disable certain values based on other settings
 // or RomHandler support. If you do not need to disable certain values, use a SimpleSettingDefinition.
 //NumericSettingDefinition: A setting that is a numeric type, which is restricted to a certain range. The range can
 // be restricted further based on other settings or RomHandler support.
+
+//There are also some other setting definitions for more specific cases:
 //TODO: StringSettingDefinition, for restrictions like charset and string length.
 //TODO: Image settings??
-//SpeciesSettingDefinition. A decently weird special case for starter selection.
+//SpeciesIndexSettingDefinition, which allows selection of a particular Pokemon species, represented internally
+// as an int.
 
 //Support is determined by a simple Predicate(RomHandler).
 //Enabled/Disabled state is determined by SettingRestrictions, which contain two parts:
@@ -72,8 +75,8 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
-    //When splitting a setting into multiple or changing its type, add the old version to the list of removed settings
-    //so that we can load it in with the correct data type and SettingsUpdater can convert it to the new setting(s).
+    //When splitting a setting into multiple or changing its type, add the old version to the list of removed settings.
+    //This allows loading it with the correct data type so SettingsUpdater can convert it to the new setting(s).
 
     /**
      * Enumerates every setting used in the randomizer.
@@ -81,7 +84,7 @@ public class Settings {
     public enum Name {
         //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
         //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.
-        RACE_MODE, //TODO: remove after confirming is a GUI setting.
+        RACE_MODE, //TODO: remove after confirming is a GUI-only setting.
 
         // *** GENERAL ***
         //Cosmetic options

@@ -492,7 +492,7 @@ public class RandomizerGUI {
 
         boolean canWrite = attemptWriteConfig();
         if (!canWrite) {
-            JOptionPane.showMessageDialog(null, bundle.getString("GUI.cantWriteConfigFile"));
+            JOptionPane.showMessageDialog(null, bundle.getString("GUI.startup.cantWriteConfigFileDialog.message"));
         }
 
         if (!haveCheckedCustomNames) {
@@ -821,13 +821,15 @@ public class RandomizerGUI {
 
     private void showInitialPopup() {
         if (!usedLauncher) {
-            String message = bundle.getString("GUI.pleaseUseTheLauncher");
+            String message = bundle.getString("GUI.startup.pleaseUseLauncherDialog.message");
             Object[] messages = {message};
             JOptionPane.showMessageDialog(frame, messages);
         }
         if (initialPopup) {
-            String message = String.format(bundle.getString("GUI.firstStart"),Version.LATEST.name);
-            JLabel label = new JLabel("<html><a href=\"" + SysConstants.WIKI_IMPORTANT_INFO_URL + "\">Checking out the \"Important Information\" page on the Wiki is highly recommended.</a>");
+            String message = String.format(bundle.getString("GUI.startup.firstStartDialog.message"),Version.LATEST.name);
+            JLabel label = new JLabel(String.format(
+                    bundle.getString("GUI.startup.firstStartDialog.wikiLink"),
+                    SysConstants.WIKI_IMPORTANT_INFO_URL));
             label.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -849,14 +851,13 @@ public class RandomizerGUI {
 
     private void showInvalidRomPopup() {
         if (showInvalidRomPopup) {
-            String message = String.format(bundle.getString("GUI.invalidRomMessage"));
-            JLabel label = new JLabel("<html><b>Randomizing ROM hacks or bad ROM dumps is not supported and may cause issues.</b>");
-            JCheckBox checkbox = new JCheckBox("Don't show this again");
-            Object[] messages = {message, label, checkbox};
+            String message = String.format(bundle.getString("GUI.loadROM.invalidROMDialog.message"));
+            JCheckBox checkbox = new JCheckBox(bundle.getString("GUI.loadROM.invalidROMDialog.dontShowAgainCheckBox.text"));
+            Object[] messages = {message, checkbox};
             Object[] options = {"OK"};
             JOptionPane.showOptionDialog(frame,
                     messages,
-                    "Invalid ROM detected",
+                    bundle.getString("GUI.loadROM.invalidROMDialog.title"),
                     JOptionPane.OK_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,
@@ -1089,7 +1090,7 @@ public class RandomizerGUI {
     private Thread openRom(File f, boolean reinitialize) {
         // A rather simple method - make the romOpener open the file and react to its results -
         // complicated by the need of an animated loading dialog and thus multithreading...
-        opDialog = new OperationDialog(bundle.getString("GUI.loadingText"), frame, true);
+        opDialog = new OperationDialog(bundle.getString("GUI.loadROM.loadingDialog.message"), frame, true);
         Thread t = new Thread(() -> {
             SwingUtilities.invokeLater(() -> opDialog.setVisible(!reinitialize));
             try {
@@ -1114,7 +1115,7 @@ public class RandomizerGUI {
                 SwingUtilities.invokeLater(() -> {
                     opDialog.setVisible(false);
                     initialState();
-                    attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                    attemptToLogException(e, "GUI.loadROM.loadFailedDialog.message", "GUI.loadROM.loadFailedNoLogDialog.message", null, null);
                 });
             }
         });
@@ -1127,35 +1128,35 @@ public class RandomizerGUI {
         switch (results.getFailType()) {
             case UNREADABLE:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.unreadableRom"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.unreadableRomDialog.message"), f.getName()));
                 break;
             case INVALID_TOO_SHORT:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.tooShortToBeARom"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.tooShortToBeARomDialog.message"), f.getName()));
                 break;
             case INVALID_ZIP_FILE:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.openedZIPfile"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.openedZIPFileDialog.message"), f.getName()));
                 break;
             case INVALID_RAR_FILE:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.openedRARfile"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.openedRARFileDialog.message"), f.getName()));
                 break;
             case INVALID_IPS_FILE:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.openedIPSfile"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.openedIPSFileDialog.message"), f.getName()));
                 break;
             case EXTRA_MEMORY_NOT_AVAILABLE:
                 JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.pleaseUseTheLauncher"));
+                        bundle.getString("GUI.startup.pleaseUseLauncherDialog.message"));
                 break;
             case ENCRYPTED_ROM:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.encryptedRom"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.encryptedRomDialog.message"), f.getName()));
                 break;
             case UNSUPPORTED_ROM:
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.unsupportedRom"), f.getName()));
+                        String.format(bundle.getString("GUI.loadROM.unsupportedRomDialog.message"), f.getName()));
                 break;
         }
     }
@@ -1165,12 +1166,12 @@ public class RandomizerGUI {
             return; // none loaded
         }
         if (raceModeCheckBox.isSelected() && batchRandomizationSettings.isBatchRandomizationEnabled()) {
-            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.batchRandomizationRequirements"));
+            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.batchRandomization.requirementsDialog.message"));
             return;
         }
         if (raceModeCheckBox.isSelected() && isTrainerSetting(TRAINER_UNCHANGED) &&
                 !wpRandomizeWildPokemonCheckBox.isSelected()) {
-            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.raceModeRequirements"));
+            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.raceModeRequirementsDialog.message"));
             return;
         }
         /*
@@ -1201,7 +1202,7 @@ public class RandomizerGUI {
                 if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
                     String currentFN = this.romHandler.loadedFilename();
                     if (currentFN.equals(fh.getAbsolutePath())) {
-                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantOverwriteDS"));
+                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
                         allowed = false;
                     }
                 }
@@ -1224,7 +1225,7 @@ public class RandomizerGUI {
             int numberOfRandomizedROMs = batchRandomizationSettings.getNumberOfRandomizedROMs();
             int startingIndex = batchRandomizationSettings.getStartingIndex();
             int endingIndex = startingIndex + numberOfRandomizedROMs;
-            final String progressTemplate = bundle.getString("GUI.batchRandomizationProgress");
+            final String progressTemplate = bundle.getString("GUI.batchRandomization.progressDialog.message");
             OperationDialog batchProgressDialog = new OperationDialog(String.format(progressTemplate, 0, numberOfRandomizedROMs), frame, true);
             SwingWorker<Void, Void> swingWorker = new SwingWorker<>() {
                 int i;
@@ -1271,7 +1272,7 @@ public class RandomizerGUI {
                         attemptWriteConfig();
                     }
                     SwingUtilities.invokeLater(() -> batchProgressDialog.setVisible(false));
-                    JOptionPane.showMessageDialog(frame, bundle.getString("GUI.randomizationDone"));
+                    JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.randomizationDoneDialog.message"));
                     if (unloadGameOnSuccess) {
                         unloadRomHandler();
                         initialState();
@@ -1336,27 +1337,27 @@ public class RandomizerGUI {
                     SettingsManager.TweakForROMFeedback feedback = settings.tweakForRom(this.romHandler);
                     Settings.StartersMod startersMod = settings.getSetting(Name.RANDOMIZE_STARTERS);
                     if (feedback.isChangedStarter() && startersMod == Settings.StartersMod.CUSTOM) {
-                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.starterUnavailable"));
+                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.starterUnavailableDialog.message"));
                     }
                     this.restoreStateFromSettings(settings);
 
                     if (settings.isUpdatedFromOldVersion()) {
                         // show a warning dialog, but load it
-                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.settingsFileOlder"));
+                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.settingsFileOlderDialog.message"));
                     }
 
                     JOptionPane.showMessageDialog(frame,
-                            String.format(bundle.getString("GUI.settingsLoaded"), fh.getName()));
+                            String.format(bundle.getString("GUI.loadSettings.settingsLoadedDialog.message"), fh.getName()));
                 });
             } catch (UnsupportedOperationException ex) {
                 ex.printStackTrace();
                 JOptionPane.showMessageDialog(frame, ex.getMessage());
             } catch (IllegalArgumentException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.invalidSettingsFile"));
+                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.invalidSettingsFileDialog.message"));
             } catch (IOException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.settingsLoadFailed"));
+                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.settingsLoadFailedDialog.message"));
             }
         }
     }
@@ -1377,7 +1378,7 @@ public class RandomizerGUI {
                 getCurrentSettings().writeToFileFormat(fos);
                 fos.close();
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.settingsSaveFailed"));
+                JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveSettings.settingsSaveFailedDialog.message"));
             }
         }
     }
@@ -1393,7 +1394,7 @@ public class RandomizerGUI {
         final PrintStream log = getPrintStream(baos);
 
         try {
-            opDialog = new OperationDialog(bundle.getString("GUI.savingText"), frame, true);
+            opDialog = new OperationDialog(bundle.getString("GUI.saveROM.savingDialog.message"), frame, true);
             Thread t = new Thread(() -> performRandomizationInner(
                     filename, seed, settings, cpg, baos, log, raceMode, batchRandomization, saveAsDirectory
             ));
@@ -1402,7 +1403,11 @@ public class RandomizerGUI {
                 t.join();
             }
         } catch (Exception ex) {
-            attemptToLogException(ex, "GUI.saveFailed", "GUI.saveFailedNoLog", settings.toString(), Long.toString(seed));
+            attemptToLogException(ex,
+                    "GUI.saveROM.saveFailedDialog.message",
+                    "GUI.saveROM.saveFailedNoLogDialog.message",
+                    settings.toString(),
+                    Long.toString(seed));
             log.close();
         }
     }
@@ -1423,7 +1428,7 @@ public class RandomizerGUI {
 
         if (results.wasSaveSuccessful()) {
             if (!results.wasLogSuccessful()) {
-                attemptToLogException(results.getLogException(), "GUI.logFailedMessage", "GUI.logFailedMessageNoLog",
+                attemptToLogException(results.getLogException(), "GUI.saveROM.logFailedDialog.message", "GUI.saveROM.logFailedNoLogDialog.message",
                         true, settings.toString(), Long.toString(seed));
             }
             SwingUtilities.invokeLater(() -> finishRandomization(
@@ -1432,13 +1437,13 @@ public class RandomizerGUI {
         } else {
             Exception e = results.getException();
             if (e instanceof RandomizationException) {
-                attemptToLogException(e, "GUI.saveFailedMessage", "GUI.saveFailedMessageNoLog", true,
+                attemptToLogException(e, "GUI.saveROM.saveFailedDialog.message", "GUI.saveROM.saveFailedNoLogDialog.message", true,
                         settings.toString(), Long.toString(seed));
             } else if (e instanceof CannotWriteToLocationException) {
                 JOptionPane.showMessageDialog(mainPanel,
-                        String.format(bundle.getString("GUI.cannotWriteToLocation"), filename));
+                        String.format(bundle.getString("GUI.saveROM.cannotWriteToLocationDialog.message"), filename));
             } else {
-                attemptToLogException(e, "GUI.saveFailedIO", "GUI.saveFailedIONoLog",
+                attemptToLogException(e, "GUI.saveROM.saveFailedIODialog.message", "GUI.saveROM.saveFailedIONoLogDialog.message",
                         settings.toString(), Long.toString(seed));
             }
 
@@ -1465,7 +1470,7 @@ public class RandomizerGUI {
 
         if (presetMode) {
             JOptionPane.showMessageDialog(frame,
-                    bundle.getString("GUI.randomizationDone"));
+                    bundle.getString("GUI.saveROM.randomizationDoneDialog.message"));
 
         } else if (!batchRandomization) {
             // Compile a config string
@@ -1490,28 +1495,28 @@ public class RandomizerGUI {
         byte[] out = baos.toByteArray();
         if (raceMode) {
             JOptionPane.showMessageDialog(frame,
-                    String.format(bundle.getString("GUI.raceModeCheckValuePopup"), checkValue));
+                    String.format(bundle.getString("GUI.saveROM.raceModeCheckValueDialog.message"), checkValue));
         } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
             try {
                 saveLogFile(filename, batchRandomizationSettings.getLogFileEnding(), out);
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.logSaveFailed"));
+                        bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
             }
         } else if (!batchRandomization) {
             int response = JOptionPane.showConfirmDialog(frame,
-                    bundle.getString("GUI.saveLogDialog.text"),
-                    bundle.getString("GUI.saveLogDialog.title"),
+                    bundle.getString("GUI.saveROM.saveLogDialog.message"),
+                    bundle.getString("GUI.saveROM.saveLogDialog.title"),
                     JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 try {
                     saveLogFile(filename, "log", out);
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(frame,
-                            bundle.getString("GUI.logSaveFailed"));
+                            bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
                 }
                 JOptionPane.showMessageDialog(frame,
-                        String.format(bundle.getString("GUI.logSaved"), filename));
+                        String.format(bundle.getString("GUI.saveROM.logSavedDialog.message"), filename));
             }
         }
     }
@@ -1573,7 +1578,7 @@ public class RandomizerGUI {
                     if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
                         String currentFN = this.romHandler.loadedFilename();
                         if (currentFN.equals(fh.getAbsolutePath())) {
-                            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.cantOverwriteDS"));
+                            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
                             allowed = false;
                         }
                     }
@@ -1610,7 +1615,7 @@ public class RandomizerGUI {
     private SaveType askForSaveType() {
         SaveType saveType = SaveType.FILE;
         if (romHandler.hasGameUpdateLoaded()) {
-            String text = bundle.getString("GUI.savingWithGameUpdate");
+            String text = bundle.getString("GUI.saveROM.savingWithGameUpdate.message");
             String url = SysConstants.WIKI_3DS_INFO_URL + "#managing-game-updates";
             showMessageDialogWithLink(text, url);
             saveType = SaveType.DIRECTORY;
@@ -1669,7 +1674,7 @@ public class RandomizerGUI {
             String actualUpdateTitleId = Abstract3DSRomHandler.getTitleIdFromFile(fh.getAbsolutePath());
             if (actualUpdateTitleId == null) {
                 // Error: couldn't find a title ID in the update
-                JOptionPane.showMessageDialog(frame, String.format(bundle.getString("GUI.invalidGameUpdate"), fh.getName()));
+                JOptionPane.showMessageDialog(frame, String.format(bundle.getString("GUI.loadGameUpdate.invalidGameUpdateDialog.message"), fh.getName()));
                 return;
             }
             Abstract3DSRomHandler ctrRomHandler = (Abstract3DSRomHandler) romHandler;
@@ -1682,19 +1687,19 @@ public class RandomizerGUI {
                     romHandler.loadGameUpdate(fh.getAbsolutePath());
                 } catch (EncryptedROMException ex) {
                     JOptionPane.showMessageDialog(mainPanel,
-                            String.format(bundle.getString("GUI.encryptedRom"), fh.getAbsolutePath()));
+                            String.format(bundle.getString("GUI.loadROM.encryptedRomDialog.message"), fh.getAbsolutePath()));
                     return;
                 }
                 gameUpdates.put(romHandler.getROMCode(), fh.getAbsolutePath());
                 attemptWriteConfig();
                 removeGameUpdateMenuItem.setVisible(true);
                 setRomNameLabel();
-                String text = String.format(bundle.getString("GUI.gameUpdateApplied"), romHandler.getROMName());
+                String text = String.format(bundle.getString("GUI.loadGameUpdate.gameUpdateAppliedDialog.message"), romHandler.getROMName());
                 String url = SysConstants.WIKI_3DS_INFO_URL + "#3ds-game-updates";
                 showMessageDialogWithLink(text, url);
             } else {
                 // Error: update is not for the correct game
-                JOptionPane.showMessageDialog(frame, String.format(bundle.getString("GUI.nonMatchingGameUpdate"), fh.getName(), romHandler.getROMName()));
+                JOptionPane.showMessageDialog(frame, String.format(bundle.getString("GUI.loadGameUpdate.nonMatchingGameUpdateDialog.message"), fh.getName(), romHandler.getROMName()));
             }
         }
     }
@@ -1738,22 +1743,22 @@ public class RandomizerGUI {
             String configString = loadSettingsStringField.getText().trim();
             if (!configString.isEmpty()) {
                 if (configString.length() < 3) {
-                    JOptionPane.showMessageDialog(frame,bundle.getString("GUI.invalidSettingsString"));
+                    JOptionPane.showMessageDialog(frame,bundle.getString("GUI.loadSettingsString.invalidSettingsStringDialog.message"));
                 } else {
                     try {
                         int version = Integer.parseInt(configString.substring(0, 3));
                         if (version > Version.LATEST.id) {
-                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringTooNew"));
+                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.loadSettingsString.settingsStringTooNewDialog.message"));
                             return;
                         } else if (version < Version.LATEST.id) {
-                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringOlder"));
+                            JOptionPane.showMessageDialog(frame,bundle.getString("GUI.loadSettingsString.settingsStringOlderDialog.message"));
                         }
                         SettingsManager settings = SettingsManager.fromString(configString);
                         settings.tweakForRom(this.romHandler);
                         restoreStateFromSettings(settings);
-                        JOptionPane.showMessageDialog(frame,bundle.getString("GUI.settingsStringLoaded"));
+                        JOptionPane.showMessageDialog(frame,bundle.getString("GUI.loadSettingsString.settingsStringLoadedDialog.message"));
                     } catch (IllegalArgumentException ex) {
-                        JOptionPane.showMessageDialog(frame,bundle.getString("GUI.invalidSettingsString"));
+                        JOptionPane.showMessageDialog(frame,bundle.getString("GUI.loadSettingsString.invalidSettingsStringDialog.message"));
                     }
                 }
 
@@ -1764,10 +1769,10 @@ public class RandomizerGUI {
     private void keepOrUnloadGameAfterRandomizingMenuItemActionPerformed() {
         this.unloadGameOnSuccess = !this.unloadGameOnSuccess;
         if (this.unloadGameOnSuccess) {
-            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.unloadGameAfterRandomizing"));
+            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.afterRandomizing.unloadGameDialog.message"));
             keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.header.settingsMenu.keepGameLoadedAfterRandomizingMenuItem.text"));
         } else {
-            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.keepGameLoadedAfterRandomizing"));
+            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.afterRandomizing.keepGameLoadedDialog.message"));
             keepOrUnloadGameAfterRandomizingMenuItem.setText(bundle.getString("GUI.header.settingsMenu.unloadGameAfterRandomizingMenuItem.text"));
         }
         attemptWriteConfig();
@@ -1808,7 +1813,7 @@ public class RandomizerGUI {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                attemptToLogException(e, "GUI.loadFailed", "GUI.loadFailedNoLog", null, null);
+                attemptToLogException(e, "GUI.loadROM.loadFailedDialog.message", "GUI.loadROM.loadFailedNoLogDialog.message", null, null);
             }
         }
     }
@@ -2474,7 +2479,7 @@ public class RandomizerGUI {
 
     private void initialState() {
 
-        romNameLabel.setText(bundle.getString("GUI.header.noRomLoaded"));
+        romNameLabel.setText(bundle.getString("GUI.header.romInformationPanel.noRomLoaded"));
         romCodeLabel.setText("");
         romSupportLabel.setText("");
 
@@ -2786,14 +2791,14 @@ public class RandomizerGUI {
 
             setRomNameLabel();
             romCodeLabel.setText(romHandler.getROMCode());
-            romSupportLabel.setText(bundle.getString("GUI.romSupportPrefix") + " "
+            romSupportLabel.setText(bundle.getString("GUI.header.romInformationPanel.supportPrefix.text") + " "
                     + this.romHandler.getSupportLevel());
 
             if (!romHandler.isRomValid(null)) {
                 romNameLabel.setForeground(Color.RED);
                 romCodeLabel.setForeground(Color.RED);
                 romSupportLabel.setForeground(Color.RED);
-                romSupportLabel.setText("<html>" + bundle.getString("GUI.romSupportPrefix") + " <b>Unofficial ROM</b>");
+                romSupportLabel.setText("<html>" + bundle.getString("GUI.header.romInformationPanel.supportPrefix.text") + " <b>Unofficial ROM</b>");
                 showInvalidRomPopup();
             } else {
                 romNameLabel.setForeground(Color.BLACK);
@@ -3218,7 +3223,7 @@ public class RandomizerGUI {
                 romHandler.closeResources();
             }
         } catch (Exception e) {
-            attemptToLogException(e, "GUI.processFailed","GUI.processFailedNoLog", null, null);
+            attemptToLogException(e, "GUI.loadROM.processFailedDialog.message", "GUI.loadROM.processFailedNoLogDialog.message", null, null);
             unloadRomHandler();
             initialState();
         }
@@ -3951,14 +3956,14 @@ public class RandomizerGUI {
     private void checkCustomNames() {
         if (OldCustomNamesImporter.hasOldNamesToImport()) {
             int response = JOptionPane.showConfirmDialog(frame,
-                    bundle.getString("GUI.convertNameFilesDialog.text"),
-                    bundle.getString("GUI.convertNameFilesDialog.title"), JOptionPane.YES_NO_OPTION);
+                    bundle.getString("GUI.startup.convertNameFilesDialog.message"),
+                    bundle.getString("GUI.startup.convertNameFilesDialog.title"), JOptionPane.YES_NO_OPTION);
             if (response == JOptionPane.YES_OPTION) {
                 try {
                     CustomNamesSet newNamesData = OldCustomNamesImporter.importOldNames();
                     CustomNamesSet.writeNamesToFile(newNamesData);
                 } catch (IOException ex) {
-                    JOptionPane.showMessageDialog(frame, bundle.getString("GUI.convertNameFilesFailed"));
+                    JOptionPane.showMessageDialog(frame, bundle.getString("GUI.startup.convertNameFilesFailedDialog.message"));
                 }
             }
 

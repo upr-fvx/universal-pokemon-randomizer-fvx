@@ -5645,7 +5645,7 @@
             <properties>
               <horizontalAlignment value="0"/>
               <labelFor value=""/>
-              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.header.noRomLoaded"/>
+              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.header.romInformationPanel.noRomLoaded"/>
             </properties>
           </component>
           <component id="41f42" class="javax.swing.JLabel" binding="romCodeLabel">

@@ -639,11 +639,11 @@ public class GameRandomizer {
 
     private void maybeRandomizeTrainerNames() {
         if (romHandler.canChangeTrainerText()) {
-            if (settings.get(Settings.Name.TRAINERS_RANDOMIZE_CLASS_NAMES)) {
+            if (settings.get(Settings.Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES)) {
                 trainerNameRandomizer.randomizeTrainerClassNames();
             }
 
-            if (settings.get(Settings.Name.TRAINERS_RANDOMIZE_NAMES)) {
+            if (settings.get(Settings.Name.COSMETIC_RANDOMIZE_TRAINER_NAMES)) {
                 trainerNameRandomizer.randomizeTrainerNames();
             }
         }
@@ -748,7 +748,7 @@ public class GameRandomizer {
 
     private void maybeRandomizeIntroPokemon() {
         // TODO: move to live with the misc tweaks?
-        if (!(boolean) settings.get(Settings.Name.NO_RANDOM_INTRO_MON)) {
+        if (!(boolean) settings.get(Settings.Name.COSMETIC_RANDOM_INTRO_MON)) {
             introPokeRandomizer.randomizeIntroPokemon();
         }
     }

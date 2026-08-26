@@ -29,81 +29,81 @@ public class MiscTweakRandomizer extends Randomizer {
     public void applyMiscTweaks() {
 
         // Banning items has to happen before any other settings that may place items
-        if (settings.get(Settings.Name.TWEAK_BAN_LUCKY_EGG)) {
+        if (settings.get(Settings.Name.ITEMS_BAN_LUCKY_EGG)) {
             banLuckyEgg();
         }
-        if (settings.get(Settings.Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS)) {
+        if (settings.get(Settings.Name.ITEMS_BAN_BIG_MONEY_MANIAC_ITEMS)) {
             banBigMoneyManiacItems();
         }
 
 
-        if (settings.get(Settings.Name.TWEAK_USE_SCALED_EXPERIENCE)) {
+        if (settings.get(Settings.Name.BALANCE_USE_SCALED_EXPERIENCE)) {
             romHandler.makeExperienceScaled();
         }
-        if (settings.get(Settings.Name.TWEAK_NERF_X_ACCURACY)) {
+        if (settings.get(Settings.Name.BALANCE_NERF_X_ACCURACY)) {
             romHandler.nerfXAccuracy();
         }
-        if (settings.get(Settings.Name.TWEAK_UPDATE_CRIT_RATE)) {
+        if (settings.get(Settings.Name.BALANCE_UPDATE_CRIT_RATE)) {
             romHandler.updateCritRate();
         }
-        if (settings.get(Settings.Name.TWEAK_FASTEST_TEXT)) {
+        if (settings.get(Settings.Name.QUALITY_FASTEST_TEXT)) {
             romHandler.forceFastestText();
         }
-        if (settings.get(Settings.Name.TWEAK_RUN_INDOORS)) {
+        if (settings.get(Settings.Name.QUALITY_RUN_INDOORS)) {
             romHandler.allowRunningIndoors();
         }
-        if (settings.get(Settings.Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES)) {
+        if (settings.get(Settings.Name.QUALITY_RUN_WITHOUT_RUNNING_SHOES)) {
             romHandler.allowRunningWithoutRunningShoes();
         }
-        if (settings.get(Settings.Name.TWEAK_RANDOMIZE_PC_POTION)) {
+        if (settings.get(Settings.Name.ITEMS_RANDOMIZE_PC_POTION)) {
             randomizePCPotion();
         }
-        if (settings.get(Settings.Name.TWEAK_ALLOW_PIKACHU_EVOLUTION)) {
+        if (settings.get(Settings.Name.SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION)) {
             romHandler.allowPikachuEvolution();
         }
-        if (settings.get(Settings.Name.TWEAK_NATIONAL_DEX_AT_START)) {
+        if (settings.get(Settings.Name.QUALITY_NATIONAL_DEX_AT_START)) {
             romHandler.giveNationalDexAtStart();
         }
-        if (settings.get(Settings.Name.TWEAK_FAST_EGG_HATCHING)) {
+        if (settings.get(Settings.Name.QUALITY_FAST_EGG_HATCHING)) {
             romHandler.makeEggsHatchFast();
         }
-        if (settings.get(Settings.Name.TWEAK_FORCE_CHALLENGE_MODE)) {
+        if (settings.get(Settings.Name.BALANCE_FORCE_CHALLENGE_MODE)) {
             romHandler.forceChallengeMode();
         }
-        if (settings.get(Settings.Name.TWEAK_CAPITAL_CASE_SPECIES_NAMES)) {
+        if (settings.get(Settings.Name.COSMETIC_LOWER_CASE_SPECIES_NAMES)) {
             makeSpeciesNamesCapitalCase();
         }
-        if (settings.get(Settings.Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL)) {
+        if (settings.get(Settings.Name.COSMETIC_RANDOMIZE_CATCHING_TUTORIAL)) {
             randomizeCatchingTutorial();
         }
-        if (settings.get(Settings.Name.TWEAK_NO_FREE_LUCKY_EGG)) {
+        if (settings.get(Settings.Name.ITEMS_NO_FREE_LUCKY_EGG)) {
             replaceFreeLuckyEgg();
         }
-        if (settings.get(Settings.Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES)) {
+        if (settings.get(Settings.Name.WILD_ALL_SPECIES_CALL_ALLIES)) {
             makeAllSpeciesCallAllies();
         }
-        if (settings.get(Settings.Name.TWEAK_BALANCE_FOSSIL_LEVELS)) {
+        if (settings.get(Settings.Name.STATICS_BALANCE_FOSSIL_LEVELS)) {
             balanceFossilPokemonLevels();
         }
-        if (settings.get(Settings.Name.TWEAK_RETAIN_TEMPORARY_FORMES)) {
+        if (settings.get(Settings.Name.LIMIT_RETAIN_TEMPORARY_FORMES)) {
             romHandler.forceRetainTemporaryFormes();
         }
-        if (settings.get(Settings.Name.TWEAK_FASTER_HP_AND_EXP_BARS)) {
+        if (settings.get(Settings.Name.QUALITY_FASTER_HP_AND_EXP_BARS)) {
             romHandler.makeHPAndEXPBarsFaster();
         }
-        if (settings.get(Settings.Name.TWEAK_FAST_DISTORTION_WORLD)) {
+        if (settings.get(Settings.Name.QUALITY_FAST_DISTORTION_WORLD)) {
             romHandler.makeDistortionWorldShorter();
         }
-        if (settings.get(Settings.Name.TWEAK_UPDATE_ROTOM_TYPING)) {
+        if (settings.get(Settings.Name.SPECIES_TYPES_UPDATE_ROTOM_TYPING)) {
             updateRotomTyping();
         }
-        if (settings.get(Settings.Name.TWEAK_DISABLE_LOW_HP_MUSIC)) {
+        if (settings.get(Settings.Name.QUALITY_DISABLE_LOW_HP_MUSIC)) {
             romHandler.disableLowHPMusic();
         }
-        if (settings.get(Settings.Name.TWEAK_REUSABLE_TMS)) {
+        if (settings.get(Settings.Name.QUALITY_REUSABLE_TMS)) {
             romHandler.makeTMsReusable();
         }
-        if (settings.get(Settings.Name.TWEAK_FORGETTABLE_HMS)) {
+        if (settings.get(Settings.Name.QUALITY_FORGETTABLE_HMS)) {
             romHandler.makeHMsForgettable();
         }
 

@@ -657,7 +657,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         SettingsManager settings = new SettingsManager();
         settings.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
-        settings.set(Settings.Name.NO_PREMATURE_EVOLUTIONS, true);
+        settings.set(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS, true);
 
         new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
 
@@ -904,7 +904,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         // Restrict pool to make duplicates more likely if there is a bug
         s.set(Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, true);
         s.set(Settings.Name.TRAINERS_NO_LEGENDARIES, true);
-        s.set(Settings.Name.NO_PREMATURE_EVOLUTIONS, true);
+        s.set(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS, true);
         s.set(Settings.Name.TRAINERS_EVOLVE_POKEMON, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 

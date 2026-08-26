@@ -80,14 +80,24 @@ public class Settings {
      */
     public enum Name {
         //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
-        //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.\
+        //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.
+        RACE_MODE, //TODO: remove after confirming is a GUI setting.
 
         // *** GENERAL ***
-        //General options
-        NO_IRREGULAR_ALT_FORMES, NO_PREMATURE_EVOLUTIONS, NO_RANDOM_INTRO_MON, RACE_MODE,
+        //Cosmetic options
+        COSMETIC_RANDOM_INTRO_MON, COSMETIC_RANDOMIZE_CATCHING_TUTORIAL, COSMETIC_LOWER_CASE_SPECIES_NAMES,
+        COSMETIC_RANDOMIZE_TRAINER_NAMES, COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES,
         //Limit Pokemon
         LIMIT_BAN_GENERATION_1, LIMIT_BAN_GENERATION_2, LIMIT_BAN_GENERATION_3, LIMIT_BAN_GENERATION_4,
         LIMIT_BAN_GENERATION_5, LIMIT_BAN_GENERATION_6, LIMIT_BAN_GENERATION_7, LIMIT_ALLOW_RELATIVES,
+        LIMIT_NO_TEMPORARY_ALT_FORMES, LIMIT_RETAIN_TEMPORARY_FORMES, LIMIT_NO_PREMATURE_EVOLUTIONS,
+        //Quality-of-Life Tweaks
+        QUALITY_FASTEST_TEXT, QUALITY_RUN_INDOORS, QUALITY_NATIONAL_DEX_AT_START, QUALITY_RUN_WITHOUT_RUNNING_SHOES,
+        QUALITY_FASTER_HP_AND_EXP_BARS, QUALITY_FAST_DISTORTION_WORLD, QUALITY_DISABLE_LOW_HP_MUSIC,
+        QUALITY_FAST_EGG_HATCHING, QUALITY_REUSABLE_TMS, QUALITY_FORGETTABLE_HMS,
+        //Balance Tweaks
+        BALANCE_NERF_X_ACCURACY, BALANCE_UPDATE_CRIT_RATE, BALANCE_USE_SCALED_EXPERIENCE, BALANCE_FORCE_CHALLENGE_MODE,
+        BALANCE_NO_EV_YIELDS,
 
         // *** SPECIES TRAITS ***
         //Base Stat Totals
@@ -100,6 +110,7 @@ public class Settings {
         UPDATE_SPECIES_BASE_STATS, SPECIES_UPDATE_BASE_STATS_TO_GENERATION,
         //Species' Types
         RANDOMIZE_SPECIES_TYPES, SPECIES_TYPES_FORCE_DUAL_TYPES, SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS,
+        SPECIES_TYPES_UPDATE_ROTOM_TYPING,
         //Species' Abilities
         RANDOMIZE_SPECIES_ABILITIES, SPECIES_ABILITIES_FOLLOW_EVOLUTIONS, SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS,
         SPECIES_ABILITIES_COMBINE_DUPLICATES, SPECIES_ALWAYS_HAVE_TWO_ABILITIES, SPECIES_ABILITIES_BAN_WONDER_GUARD,
@@ -110,6 +121,7 @@ public class Settings {
         SPECIES_EVOLUTIONS_FORCE_GROWTH, SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES, SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
         SPECIES_EVOLUTIONS_MAKE_POSSIBLE, SPECIES_EVOLUTIONS_MAKE_EASIER, SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL,
         SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
+        SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION,
         //Species' EXP Curves
         STANDARDIZE_SPECIES_EXP_CURVES, SPECIES_EXP_CURVE_STANDARD_SELECTION, SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
 
@@ -156,7 +168,7 @@ public class Settings {
         //Trainers Diverse Types
         TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
         //Trainers Cosmetic
-        TRAINERS_RANDOM_SHINY_POKEMON, TRAINERS_RANDOMIZE_NAMES, TRAINERS_RANDOMIZE_CLASS_NAMES,
+        TRAINERS_RANDOM_SHINY_POKEMON,
         //Trainers Battle Styles
         TRAINERS_RANDOMIZE_BATTLE_STYLE, TRAINERS_SINGLE_STYLE_SELECTION,
         //Totem Pokemon
@@ -175,11 +187,11 @@ public class Settings {
         WILD_EVOLUTION_RESTRICTION, WILD_EVOLUTION_KEEP_RELATIONS,
         //Wild Post Tweaks
         WILD_MINIMUM_CATCH_RATE_SELECTION, WILD_RANDOMIZE_HELD_ITEMS,
-        WILD_HELD_ITEMS_BAN_MINOR, WILD_LEVEL_MODIFIER_PERCENT,
+        WILD_HELD_ITEMS_BAN_MINOR, WILD_LEVEL_MODIFIER_PERCENT, WILD_ALL_SPECIES_CALL_ALLIES,
         //Static Encounters
         RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
         STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC,
-        STATICS_LEVEL_MODIFIER_PERCENT,
+        STATICS_LEVEL_MODIFIER_PERCENT, STATICS_BALANCE_FOSSIL_LEVELS,
 
         // *** MOVE TEACHERS ***
         //TM Moves
@@ -193,6 +205,8 @@ public class Settings {
         RANDOMIZE_TUTOR_COMPATABILITY, TUTOR_COMPATABILITY_LEVEL_UP_SANITY, TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS,
 
         // *** ITEMS ***
+        //General
+        ITEMS_BAN_LUCKY_EGG, ITEMS_NO_FREE_LUCKY_EGG, ITEMS_BAN_BIG_MONEY_MANIAC_ITEMS, ITEMS_RANDOMIZE_PC_POTION,
         //Field Items
         RANDOMIZE_FIELD_ITEMS, FIELD_ITEMS_BAN_MINOR,
         //Shop Items General
@@ -213,22 +227,13 @@ public class Settings {
         //Custom Player Graphics
         //TODO: determine how we're handling these
 
-        // *** MISC ***
-        //Misc Tweaks
-        TWEAK_USE_SCALED_EXPERIENCE, TWEAK_NERF_X_ACCURACY, TWEAK_UPDATE_CRIT_RATE, TWEAK_FASTEST_TEXT,
-        TWEAK_RUN_INDOORS, TWEAK_RANDOMIZE_PC_POTION, TWEAK_ALLOW_PIKACHU_EVOLUTION, TWEAK_NATIONAL_DEX_AT_START,
-        TWEAK_FAST_EGG_HATCHING, TWEAK_FORCE_CHALLENGE_MODE, TWEAK_CAPITAL_CASE_SPECIES_NAMES,
-        TWEAK_RANDOMIZE_CATCHING_TUTORIAL, TWEAK_BAN_LUCKY_EGG, TWEAK_NO_FREE_LUCKY_EGG, TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS,
-        TWEAK_ALL_WILD_POKEMON_CALL_ALLIES, TWEAK_BALANCE_FOSSIL_LEVELS, TWEAK_RETAIN_TEMPORARY_FORMES,
-        TWEAK_RUN_WITHOUT_RUNNING_SHOES, TWEAK_FASTER_HP_AND_EXP_BARS, TWEAK_FAST_DISTORTION_WORLD, TWEAK_UPDATE_ROTOM_TYPING,
-        TWEAK_DISABLE_LOW_HP_MUSIC, TWEAK_REUSABLE_TMS, TWEAK_FORGETTABLE_HMS, TWEAK_NO_EV_YIELDS
     }
 
     public enum Category {
         //Unlike Names, there are no limitations on renaming or removing categories.
 
         // *** GENERAL OPTIONS ***
-        GENERAL_OPTIONS, LIMIT_POKEMON,
+        COSMETIC_OPTIONS, LIMIT_POKEMON, QUALITY_TWEAKS, BALANCE_TWEAKS,
 
         // *** SPECIES TRAITS ***
         SPECIES_BASE_STATISTIC_TOTALS, SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS,
@@ -253,19 +258,17 @@ public class Settings {
         TM_MOVES, TM_AND_HM_COMPATABILITY, MOVE_TUTOR_MOVES, MOVE_TUTOR_COMPATABILITY,
 
         // *** ITEMS ***
-        FIELD_ITEMS, SHOP_ITEMS_GENERAL, SPECIAL_SHOP_ITEMS, PICKUP_ITEMS,
+        ITEMS_GENERAL, FIELD_ITEMS, SHOP_ITEMS_GENERAL, SPECIAL_SHOP_ITEMS, PICKUP_ITEMS,
 
         // *** TYPES ***
         TYPE_EFFECTIVENESS,
 
         // *** GRAPHICS ***
-        SPECIES_PALETTES, CUSTOM_PLAYER_GRAPHICS,
-
-        // *** MISC. TWEAKS ***
-        MISC_TWEAKS;
+        SPECIES_PALETTES, CUSTOM_PLAYER_GRAPHICS;
 
         // ****** Supercategories ******/
-        public static final List<Category> GENERAL = List.of(GENERAL_OPTIONS, LIMIT_POKEMON);
+        public static final List<Category> GENERAL = List.of(COSMETIC_OPTIONS, LIMIT_POKEMON, QUALITY_TWEAKS,
+                BALANCE_TWEAKS);
         public static final List<Category> SPECIES_TRAITS = List.of(SPECIES_BASE_STATISTIC_TOTALS,
                 SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS, SPECIES_TYPES,
                 SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
@@ -280,7 +283,6 @@ public class Settings {
                 PICKUP_ITEMS);
         public static final List<Category> TYPES = List.of(TYPE_EFFECTIVENESS);
         public static final List<Category> GRAPHICS = List.of(SPECIES_PALETTES, CUSTOM_PLAYER_GRAPHICS);
-        public static final List<Category> MISC = List.of(MISC_TWEAKS);
     }
 
     //region general options
@@ -292,28 +294,23 @@ public class Settings {
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.NO_RANDOM_INTRO_MON,
-                    Category.GENERAL_OPTIONS)
-                    //TODO: move to misc. tweaks?
-                    // (I guess there's an internal reason it isn't, but from a user perspective there's no clear reason)
-                    .build(),
-
-            //TODO: make this setting actually work?
-            // "this setting" is race mode?
-            // I believe I was referring to "NoRandomIntroMon" but I cannot recall for sure anymore.
-            //TODO investigate this todo i guess
-            new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.RACE_MODE,
-                    Category.GENERAL_OPTIONS)
+                    Category.COSMETIC_OPTIONS)
+                    .build(), //TODO: confirm safe to remove
+
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.COSMETIC_RANDOM_INTRO_MON,
+                    Category.COSMETIC_OPTIONS)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.NO_IRREGULAR_ALT_FORMES,
-                    Category.GENERAL_OPTIONS)
+                    Name.COSMETIC_LOWER_CASE_SPECIES_NAMES,
+                    Category.COSMETIC_OPTIONS)
+                    .supported(atMostGeneration(4))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.NO_PREMATURE_EVOLUTIONS,
-                    Category.GENERAL_OPTIONS)
-                    .prerequisite(notEvolveEveryLevelRestriction)
+                    Name.COSMETIC_RANDOMIZE_CATCHING_TUTORIAL,
+                    Category.COSMETIC_OPTIONS)
+                    .supported(RomHandler::hasCatchingTutorialSupport)
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -363,7 +360,102 @@ public class Settings {
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isTrue),
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_6, isTrue),
                             new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_7, isTrue)))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.LIMIT_NO_TEMPORARY_ALT_FORMES,
+                    Category.LIMIT_POKEMON)
+                    .build(),
+            //This is an odd placement for "retain temporary formes",
+            //but it seems like a better fit than Balance Tweaks, which is the only other place that seems sensible.
+            //Unless we make a dedicated Formes area.
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.LIMIT_RETAIN_TEMPORARY_FORMES,
+                    Category.LIMIT_POKEMON)
+                    .supported(RomHandler::canForceRetainTemporaryFormes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.LIMIT_NO_PREMATURE_EVOLUTIONS,
+                    Category.LIMIT_POKEMON)
+                    .prerequisite(notEvolveEveryLevelRestriction)
+                    .build(),
+
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_FASTEST_TEXT,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canForceFastestText)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_RUN_INDOORS,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canAllowRunningIndoors)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_RUN_WITHOUT_RUNNING_SHOES,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canAllowRunningWithoutRunningShoes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_NATIONAL_DEX_AT_START,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canGiveNationalDexAtStart)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_FAST_EGG_HATCHING,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canMakeEggsHatchFast)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_FASTER_HP_AND_EXP_BARS,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canMakeHPAndEXPBarsFaster)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_FAST_DISTORTION_WORLD,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canMakeDistortionWorldShorter)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_DISABLE_LOW_HP_MUSIC,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canDisableLowHPMusic)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_REUSABLE_TMS,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canMakeTMsReusable)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.QUALITY_FORGETTABLE_HMS,
+                    Category.QUALITY_TWEAKS)
+                    .supported(RomHandler::canMakeHMsForgettable)
+                    .build(),
+
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BALANCE_USE_SCALED_EXPERIENCE,
+                    Category.BALANCE_TWEAKS)
+                    .supported(RomHandler::canMakeExperienceScaled)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BALANCE_NERF_X_ACCURACY,
+                    Category.BALANCE_TWEAKS)
+                    .supported(RomHandler::canNerfXAccuracy)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BALANCE_UPDATE_CRIT_RATE,
+                    Category.BALANCE_TWEAKS)
+                    .supported(RomHandler::canUpdateCritRate)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BALANCE_FORCE_CHALLENGE_MODE,
+                    Category.BALANCE_TWEAKS)
+                    .supported(RomHandler::canForceChallengeMode)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BALANCE_NO_EV_YIELDS,
+                    Category.BALANCE_TWEAKS)
+                    .supported(RomHandler::hasEVs)
                     .build()
+
     );
 
     //endregion
@@ -392,6 +484,23 @@ public class Settings {
 
     public enum ExpCurveExtentMod {
         LEGENDARIES, STRONG_LEGENDARIES, ALL
+    }
+
+    public static boolean hasOldRotomFormeTypes(RomHandler rh) {
+        // Am aware this could just check for platinum more easily ^^.
+        // Just having fun with it, and voilà free ROM hack support.
+        // -- voliol 12026-08-16
+        List<Species> allSpecs = rh.getSpecies();
+        if (allSpecs.size() <= SpeciesIDs.rotom) {
+            return false;
+        }
+        Species rotom = allSpecs.get(SpeciesIDs.rotom);
+        if (rotom.isValidFormeNumber(1)) {
+            return false;
+        }
+        Species altRotom = rotom.getForme(1);
+        return (altRotom.getPrimaryType(true) == Type.ELECTRIC
+                && altRotom.getSecondaryType(true) == Type.GHOST);
     }
 
     public static final List<SettingDefinition<?>> SPECIES_TRAITS = List.of(
@@ -481,6 +590,11 @@ public class Settings {
                     Category.SPECIES_TYPES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_TYPES, matchesEnum(SpeciesTypesMod.RANDOM_FOLLOW_EVOLUTIONS))
                     .supported(RomHandler::hasMegaEvolutions)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.SPECIES_TYPES_UPDATE_ROTOM_TYPING,
+                    Category.SPECIES_TYPES)
+                    .supported(Settings::hasOldRotomFormeTypes)
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -618,6 +732,11 @@ public class Settings {
                     .prerequisite(notEvolveEveryLevelRestriction)
                     .supported(RomHandler::hasTimeBasedEvolutions)
                     .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION,
+                    Category.SPECIES_EVOLUTIONS)
+                    .supported(RomHandler::canAllowPikachuEvolution)
+                    .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STANDARDIZE_SPECIES_EXP_CURVES,
@@ -639,7 +758,7 @@ public class Settings {
 
     //endregion
 
-    //region given pokemon [currently Starters, Statics, & Trades]
+    //region given pokemon
     // I think yes move them now, while we're doing all this setting stuff.
 
     public enum StartersMod {
@@ -1168,11 +1287,11 @@ public class Settings {
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_RANDOMIZE_NAMES,
+                    Name.COSMETIC_RANDOMIZE_TRAINER_NAMES,
                     Category.TRAINERS_COSMETIC)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_RANDOMIZE_CLASS_NAMES,
+                    Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES,
                     Category.TRAINERS_COSMETIC)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -1362,6 +1481,11 @@ public class Settings {
                     0,
                     -100, 155)
                     .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.WILD_ALL_SPECIES_CALL_ALLIES,
+                    Category.WILD_POST_TWEAKS)
+                    .supported(RomHandler::hasSOSBattles)
+                    .build(),
 
             // Statics are somewhat awkward here since they currently encompass gift mons too,
             // but once those are broken out this is the right place for them to be settings-wise
@@ -1406,7 +1530,13 @@ public class Settings {
                     Category.STATIC_ENCOUNTERS,
                     0,
                     -100, 155)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STATICS_BALANCE_FOSSIL_LEVELS,
+                    Category.STATIC_ENCOUNTERS)
+                    .supported(RomHandler::hasFossilPokemonLevelSupport)
                     .build()
+
     );
 
     //endregion
@@ -1571,6 +1701,27 @@ public class Settings {
     }
 
     public static final List<SettingDefinition<?>> ITEMS = List.of(
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.ITEMS_RANDOMIZE_PC_POTION,
+                    Category.ITEMS_GENERAL)
+                    .supported(RomHandler::hasPCPotionItem)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.ITEMS_BAN_LUCKY_EGG,
+                    Category.ITEMS_GENERAL)
+                    .supported(atLeastGeneration(2))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.ITEMS_NO_FREE_LUCKY_EGG,
+                    Category.ITEMS_GENERAL)
+                    .supported(RomHandler::hasFreeLuckyEggItem)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.ITEMS_BAN_BIG_MONEY_MANIAC_ITEMS,
+                    Category.ITEMS_GENERAL)
+                    .supported(rh -> !rh.getBigMoneyManiacItems().isEmpty())
+                    .build(),
+
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_FIELD_ITEMS,
                     Category.FIELD_ITEMS,
@@ -1707,160 +1858,6 @@ public class Settings {
 
     //endregion graphics
 
-    //region misc tweaks
-
-    public static boolean hasOldRotomFormeTypes(RomHandler rh) {
-        // Am aware this could just check for platinum more easily ^^.
-        // Just having fun with it, and voilà free ROM hack support.
-        // -- voliol 12026-08-16
-        List<Species> allSpecs = rh.getSpecies();
-        if (allSpecs.size() <= SpeciesIDs.rotom) {
-            return false;
-        }
-        Species rotom = allSpecs.get(SpeciesIDs.rotom);
-        if (rotom.isValidFormeNumber(1)) {
-            return false;
-        }
-        Species altRotom = rotom.getForme(1);
-        return (altRotom.getPrimaryType(true) == Type.ELECTRIC
-                && altRotom.getSecondaryType(true) == Type.GHOST);
-    }
-
-    public static final List<SettingDefinition<?>> MISC_TWEAKS = List.of(
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_USE_SCALED_EXPERIENCE,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canMakeExperienceScaled)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_NERF_X_ACCURACY,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canNerfXAccuracy)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_UPDATE_CRIT_RATE,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canUpdateCritRate)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_FASTEST_TEXT,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canForceFastestText)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_RUN_INDOORS,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canAllowRunningIndoors)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canAllowRunningWithoutRunningShoes)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_RANDOMIZE_PC_POTION,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::hasPCPotionItem)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_ALLOW_PIKACHU_EVOLUTION,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canAllowPikachuEvolution)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_NATIONAL_DEX_AT_START,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canGiveNationalDexAtStart)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_FAST_EGG_HATCHING,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canMakeEggsHatchFast)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_FORCE_CHALLENGE_MODE,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canForceChallengeMode)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_CAPITAL_CASE_SPECIES_NAMES,
-                    Category.MISC_TWEAKS)
-                    .supported(atMostGeneration(4))
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::hasCatchingTutorialSupport)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_BAN_LUCKY_EGG,
-                    Category.MISC_TWEAKS)
-                    .supported(atLeastGeneration(2))
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_NO_FREE_LUCKY_EGG,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::hasFreeLuckyEggItem)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS,
-                    Category.MISC_TWEAKS)
-                    .supported(rh -> !rh.getBigMoneyManiacItems().isEmpty())
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::hasSOSBattles)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_BALANCE_FOSSIL_LEVELS,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::hasFossilPokemonLevelSupport)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_RETAIN_TEMPORARY_FORMES,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canForceRetainTemporaryFormes)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_FASTER_HP_AND_EXP_BARS,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canMakeHPAndEXPBarsFaster)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_FAST_DISTORTION_WORLD,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canMakeDistortionWorldShorter)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_UPDATE_ROTOM_TYPING,
-                    Category.MISC_TWEAKS)
-                    .supported(Settings::hasOldRotomFormeTypes)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_DISABLE_LOW_HP_MUSIC,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canDisableLowHPMusic)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_REUSABLE_TMS,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canMakeTMsReusable)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_FORGETTABLE_HMS,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::canMakeHMsForgettable)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TWEAK_NO_EV_YIELDS,
-                    Category.MISC_TWEAKS)
-                    .supported(RomHandler::hasEVs)
-                    .build()
-    );
-
-    //endregion
-
     static {
         List<SettingDefinition<?>> all = new ArrayList<>(GENERAL_OPTIONS);
         all.addAll(SPECIES_TRAITS);
@@ -1872,7 +1869,6 @@ public class Settings {
         all.addAll(ITEMS);
         all.addAll(TYPES);
         all.addAll(GRAPHICS);
-        all.addAll(MISC_TWEAKS);
         ALL_SETTINGS = Collections.unmodifiableList(all);
 
         List<SettingDefinition<?>> removed = new ArrayList<>();

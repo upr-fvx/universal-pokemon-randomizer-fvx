@@ -125,8 +125,8 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 0, 0, Settings.Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE);
         loadBoolean(m, d, 0, 1, Settings.Name.UPDATE_MOVES);
         // (0, 2) unused
-        loadBoolean(m, d, 0, 3, Settings.Name.TRAINERS_RANDOMIZE_NAMES);
-        loadBoolean(m, d, 0, 4, Settings.Name.TRAINERS_RANDOMIZE_CLASS_NAMES);
+        loadBoolean(m, d, 0, 3, Settings.Name.COSMETIC_RANDOMIZE_TRAINER_NAMES);
+        loadBoolean(m, d, 0, 4, Settings.Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES);
         loadBoolean(m, d, 0, 5, Settings.Name.SPECIES_EVOLUTIONS_MAKE_EASIER);
         loadBoolean(m, d, 0, 6, Settings.Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED);
         loadBoolean(m, d, 0, 7, Settings.Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS);
@@ -431,32 +431,32 @@ public class SettingsStringConverter {
 
         // Bytes 34--37: Misc Tweaks
         int mt = IOFunctions.readFullIntBigEndian(d, 34);
-        loadMiscTweak(m, mt, MiscTweakValues.BW_EXP_PATCH, Settings.Name.TWEAK_USE_SCALED_EXPERIENCE);
-        loadMiscTweak(m, mt, MiscTweakValues.NERF_X_ACCURACY, Settings.Name.TWEAK_NERF_X_ACCURACY);
-        loadMiscTweak(m, mt, MiscTweakValues.UPDATE_CRIT_RATE, Settings.Name.TWEAK_UPDATE_CRIT_RATE);
-        loadMiscTweak(m, mt, MiscTweakValues.FASTEST_TEXT, Settings.Name.TWEAK_FASTEST_TEXT);
-        loadMiscTweak(m, mt, MiscTweakValues.RUNNING_SHOES_INDOORS, Settings.Name.TWEAK_RUN_INDOORS);
-        loadMiscTweak(m, mt, MiscTweakValues.RANDOMIZE_PC_POTION, Settings.Name.TWEAK_RANDOMIZE_PC_POTION);
-        loadMiscTweak(m, mt, MiscTweakValues.ALLOW_PIKACHU_EVOLUTION, Settings.Name.TWEAK_ALLOW_PIKACHU_EVOLUTION);
-        loadMiscTweak(m, mt, MiscTweakValues.NATIONAL_DEX_AT_START, Settings.Name.TWEAK_NATIONAL_DEX_AT_START);
-        loadMiscTweak(m, mt, MiscTweakValues.FAST_EGG_HATCHING, Settings.Name.TWEAK_FAST_EGG_HATCHING);
-        loadMiscTweak(m, mt, MiscTweakValues.FORCE_CHALLENGE_MODE, Settings.Name.TWEAK_FORCE_CHALLENGE_MODE);
-        loadMiscTweak(m, mt, MiscTweakValues.LOWER_CASE_POKEMON_NAMES, Settings.Name.TWEAK_CAPITAL_CASE_SPECIES_NAMES);
-        loadMiscTweak(m, mt, MiscTweakValues.RANDOMIZE_CATCHING_TUTORIAL, Settings.Name.TWEAK_RANDOMIZE_CATCHING_TUTORIAL);
-        loadMiscTweak(m, mt, MiscTweakValues.BAN_LUCKY_EGG, Settings.Name.TWEAK_BAN_LUCKY_EGG);
-        loadMiscTweak(m, mt, MiscTweakValues.NO_FREE_LUCKY_EGG, Settings.Name.TWEAK_NO_FREE_LUCKY_EGG);
-        loadMiscTweak(m, mt, MiscTweakValues.BAN_BIG_MANIAC_ITEMS, Settings.Name.TWEAK_BAN_BIG_MONEY_MANIAC_ITEMS);
-        loadMiscTweak(m, mt, MiscTweakValues.SOS_BATTLES_FOR_ALL, Settings.Name.TWEAK_ALL_WILD_POKEMON_CALL_ALLIES);
-        loadMiscTweak(m, mt, MiscTweakValues.BALANCE_STATIC_LEVELS, Settings.Name.TWEAK_BALANCE_FOSSIL_LEVELS);
-        loadMiscTweak(m, mt, MiscTweakValues.RETAIN_ALT_FORMES, Settings.Name.TWEAK_RETAIN_TEMPORARY_FORMES);
-        loadMiscTweak(m, mt, MiscTweakValues.RUN_WITHOUT_RUNNING_SHOES, Settings.Name.TWEAK_RUN_WITHOUT_RUNNING_SHOES);
-        loadMiscTweak(m, mt, MiscTweakValues.FASTER_HP_AND_EXP_BARS, Settings.Name.TWEAK_FASTER_HP_AND_EXP_BARS);
-        loadMiscTweak(m, mt, MiscTweakValues.FAST_DISTORTION_WORLD, Settings.Name.TWEAK_FAST_DISTORTION_WORLD);
-        loadMiscTweak(m, mt, MiscTweakValues.UPDATE_ROTOM_FORME_TYPING, Settings.Name.TWEAK_UPDATE_ROTOM_TYPING);
-        loadMiscTweak(m, mt, MiscTweakValues.DISABLE_LOW_HP_MUSIC, Settings.Name.TWEAK_DISABLE_LOW_HP_MUSIC);
-        loadMiscTweak(m, mt, MiscTweakValues.REUSABLE_TMS, Settings.Name.TWEAK_REUSABLE_TMS);
-        loadMiscTweak(m, mt, MiscTweakValues.FORGETTABLE_HMS, Settings.Name.TWEAK_FORGETTABLE_HMS);
-        loadMiscTweak(m, mt, MiscTweakValues.NO_EV_YIELDS, Settings.Name.TWEAK_NO_EV_YIELDS);
+        loadMiscTweak(m, mt, MiscTweakValues.BW_EXP_PATCH, Settings.Name.BALANCE_USE_SCALED_EXPERIENCE);
+        loadMiscTweak(m, mt, MiscTweakValues.NERF_X_ACCURACY, Settings.Name.BALANCE_NERF_X_ACCURACY);
+        loadMiscTweak(m, mt, MiscTweakValues.UPDATE_CRIT_RATE, Settings.Name.BALANCE_UPDATE_CRIT_RATE);
+        loadMiscTweak(m, mt, MiscTweakValues.FASTEST_TEXT, Settings.Name.QUALITY_FASTEST_TEXT);
+        loadMiscTweak(m, mt, MiscTweakValues.RUNNING_SHOES_INDOORS, Settings.Name.QUALITY_RUN_INDOORS);
+        loadMiscTweak(m, mt, MiscTweakValues.RANDOMIZE_PC_POTION, Settings.Name.ITEMS_RANDOMIZE_PC_POTION);
+        loadMiscTweak(m, mt, MiscTweakValues.ALLOW_PIKACHU_EVOLUTION, Settings.Name.SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION);
+        loadMiscTweak(m, mt, MiscTweakValues.NATIONAL_DEX_AT_START, Settings.Name.QUALITY_NATIONAL_DEX_AT_START);
+        loadMiscTweak(m, mt, MiscTweakValues.FAST_EGG_HATCHING, Settings.Name.QUALITY_FAST_EGG_HATCHING);
+        loadMiscTweak(m, mt, MiscTweakValues.FORCE_CHALLENGE_MODE, Settings.Name.BALANCE_FORCE_CHALLENGE_MODE);
+        loadMiscTweak(m, mt, MiscTweakValues.LOWER_CASE_POKEMON_NAMES, Settings.Name.COSMETIC_LOWER_CASE_SPECIES_NAMES);
+        loadMiscTweak(m, mt, MiscTweakValues.RANDOMIZE_CATCHING_TUTORIAL, Settings.Name.COSMETIC_RANDOMIZE_CATCHING_TUTORIAL);
+        loadMiscTweak(m, mt, MiscTweakValues.BAN_LUCKY_EGG, Settings.Name.ITEMS_BAN_LUCKY_EGG);
+        loadMiscTweak(m, mt, MiscTweakValues.NO_FREE_LUCKY_EGG, Settings.Name.ITEMS_NO_FREE_LUCKY_EGG);
+        loadMiscTweak(m, mt, MiscTweakValues.BAN_BIG_MANIAC_ITEMS, Settings.Name.ITEMS_BAN_BIG_MONEY_MANIAC_ITEMS);
+        loadMiscTweak(m, mt, MiscTweakValues.SOS_BATTLES_FOR_ALL, Settings.Name.WILD_ALL_SPECIES_CALL_ALLIES);
+        loadMiscTweak(m, mt, MiscTweakValues.BALANCE_STATIC_LEVELS, Settings.Name.STATICS_BALANCE_FOSSIL_LEVELS);
+        loadMiscTweak(m, mt, MiscTweakValues.RETAIN_ALT_FORMES, Settings.Name.LIMIT_RETAIN_TEMPORARY_FORMES);
+        loadMiscTweak(m, mt, MiscTweakValues.RUN_WITHOUT_RUNNING_SHOES, Settings.Name.QUALITY_RUN_WITHOUT_RUNNING_SHOES);
+        loadMiscTweak(m, mt, MiscTweakValues.FASTER_HP_AND_EXP_BARS, Settings.Name.QUALITY_FASTER_HP_AND_EXP_BARS);
+        loadMiscTweak(m, mt, MiscTweakValues.FAST_DISTORTION_WORLD, Settings.Name.QUALITY_FAST_DISTORTION_WORLD);
+        loadMiscTweak(m, mt, MiscTweakValues.UPDATE_ROTOM_FORME_TYPING, Settings.Name.SPECIES_TYPES_UPDATE_ROTOM_TYPING);
+        loadMiscTweak(m, mt, MiscTweakValues.DISABLE_LOW_HP_MUSIC, Settings.Name.QUALITY_DISABLE_LOW_HP_MUSIC);
+        loadMiscTweak(m, mt, MiscTweakValues.REUSABLE_TMS, Settings.Name.QUALITY_REUSABLE_TMS);
+        loadMiscTweak(m, mt, MiscTweakValues.FORGETTABLE_HMS, Settings.Name.QUALITY_FORGETTABLE_HMS);
+        loadMiscTweak(m, mt, MiscTweakValues.NO_EV_YIELDS, Settings.Name.BALANCE_NO_EV_YIELDS);
 
 
         // Byte 38: Trainer Pokémon level modifier
@@ -582,7 +582,7 @@ public class SettingsStringConverter {
                         1, Settings.PickupItemsMod.UNCHANGED
                 ));
         loadBoolean(m, d, 51, 2, Settings.Name.PICKUP_ITEMS_BAN_MINOR);
-        loadBoolean(m, d, 51, 3, Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        loadBoolean(m, d, 51, 3, Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         // (51, 4--7) unused
 
 
@@ -690,7 +690,7 @@ public class SettingsStringConverter {
 
         // Byte 63: Evolution Stuff + level-modifier activation
         loadBoolean(m, d, 63, 0, Settings.Name.TRAINERS_EVOLVE_POKEMON);
-        loadBoolean(m, d, 63, 1, Settings.Name.NO_PREMATURE_EVOLUTIONS);
+        loadBoolean(m, d, 63, 1, Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
         // (63, 2--5) are booleans that can entirely disable other level percentage options
         if (!restoreState(d[63], 2)) {
             m.set(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, 0);
@@ -714,7 +714,7 @@ public class SettingsStringConverter {
 
 
         // Byte 65: General Options
-        loadBoolean(m, d, 65, 0, Settings.Name.NO_RANDOM_INTRO_MON, true);
+        loadBoolean(m, d, 65, 0, Settings.Name.COSMETIC_RANDOM_INTRO_MON, true);
         loadBoolean(m, d, 65, 1, Settings.Name.RACE_MODE);
         // (65, 2) unused
         // (65, 3) is a generation restriction override

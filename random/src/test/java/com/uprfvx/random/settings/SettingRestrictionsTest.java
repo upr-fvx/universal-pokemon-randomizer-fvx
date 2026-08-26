@@ -14,11 +14,11 @@ public class SettingRestrictionsTest {
     @Test
     public void simpleBooleanRestrictionWorks() {
         SettingsManager manager = new SettingsManager();
-        SimpleSettingRestriction<Boolean> restriction = new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue);
+        SimpleSettingRestriction<Boolean> restriction = new SimpleSettingRestriction<>(Name.COSMETIC_RANDOM_INTRO_MON, isTrue);
         assert(restriction.test(manager) == false);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
-        boolean value = manager.get(Name.NO_RANDOM_INTRO_MON);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
+        boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         assumeTrue(value);
         assert(restriction.test(manager) == true);
     }
@@ -71,7 +71,7 @@ public class SettingRestrictionsTest {
         SettingsManager manager = new SettingsManager();
         manager.set(Name.UPDATE_MOVES, true);
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, false,
-                new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
+                new SimpleSettingRestriction<>(Name.COSMETIC_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
                 new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
@@ -79,7 +79,7 @@ public class SettingRestrictionsTest {
 
         assert(restriction.test(manager) == false);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assert(restriction.test(manager) == true);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 6);
@@ -88,7 +88,7 @@ public class SettingRestrictionsTest {
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assert(restriction.test(manager) == true);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 9);
@@ -100,7 +100,7 @@ public class SettingRestrictionsTest {
         SettingsManager manager = new SettingsManager();
         manager.set(Name.UPDATE_MOVES, true);
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, false,
-                new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
+                new SimpleSettingRestriction<>(Name.COSMETIC_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
                 new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
@@ -108,7 +108,7 @@ public class SettingRestrictionsTest {
 
         assert(restriction.test(manager) == false);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assert(restriction.test(manager) == false);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 6);
@@ -117,7 +117,7 @@ public class SettingRestrictionsTest {
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == true);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assert(restriction.test(manager) == false);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 9);
@@ -129,7 +129,7 @@ public class SettingRestrictionsTest {
         SettingsManager manager = new SettingsManager();
         manager.set(Name.UPDATE_MOVES, true);
         MultiSettingRestriction restriction = new MultiSettingRestriction(true, true,
-                new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
+                new SimpleSettingRestriction<>(Name.COSMETIC_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
                 new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
@@ -137,7 +137,7 @@ public class SettingRestrictionsTest {
 
         assert(restriction.test(manager) == true);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assert(restriction.test(manager) == false);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 6);
@@ -146,7 +146,7 @@ public class SettingRestrictionsTest {
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == false);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assert(restriction.test(manager) == false);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 9);
@@ -158,7 +158,7 @@ public class SettingRestrictionsTest {
         SettingsManager manager = new SettingsManager();
         manager.set(Name.UPDATE_MOVES, true);
         MultiSettingRestriction restriction = new MultiSettingRestriction(false, true,
-                new SimpleSettingRestriction<>(Name.NO_RANDOM_INTRO_MON, isTrue),
+                new SimpleSettingRestriction<>(Name.COSMETIC_RANDOM_INTRO_MON, isTrue),
                 new SimpleSettingRestriction<>(Name.UPDATE_MOVES_TO_GENERATION, lessThanValue(8)),
                 new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS,
                         matchesEnum(Settings.BSTMod.SHUFFLE))
@@ -166,7 +166,7 @@ public class SettingRestrictionsTest {
 
         assert(restriction.test(manager) == true);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assert(restriction.test(manager) == true);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 6);
@@ -175,7 +175,7 @@ public class SettingRestrictionsTest {
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         assert(restriction.test(manager) == false);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assert(restriction.test(manager) == true);
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 9);

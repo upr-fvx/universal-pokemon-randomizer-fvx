@@ -29,7 +29,7 @@ public class EvolutionRandomizer extends Randomizer {
         boolean forceGrowth = settings.get(Settings.Name.SPECIES_EVOLUTIONS_FORCE_GROWTH);
         boolean noConvergence = settings.get(Settings.Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE);
 
-        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
 

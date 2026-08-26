@@ -56,7 +56,7 @@ public class StaticPokemonRandomizer extends Randomizer {
         boolean limitMainGameLegendaries = settings.get(Settings.Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES);
         boolean limit600 = settings.get(Settings.Name.STATICS_FULL_RANDOM_OVER_600_BST);
         boolean allowAltFormes = settings.get(Settings.Name.STATICS_ALLOW_ALT_FORMES);
-        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         boolean swapMegaEvos = settings.get(Settings.Name.STATICS_SWAP_MEGA_EVOLVABLES);
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
@@ -334,7 +334,7 @@ public class StaticPokemonRandomizer extends Randomizer {
         boolean randomizeHeldItems = settings.get(Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS);
         int levelModifier = settings.get(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT);
         boolean allowAltFormes = settings.get(Settings.Name.TOTEMS_ALLOW_ALT_FORMES);
-        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
 

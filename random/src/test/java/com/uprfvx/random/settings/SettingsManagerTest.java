@@ -18,7 +18,7 @@ public class SettingsManagerTest {
     public void canGetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        boolean value = manager.get(Name.NO_RANDOM_INTRO_MON);
+        boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         assert(value == false);
     }
 
@@ -26,8 +26,8 @@ public class SettingsManagerTest {
     public void canSetBooleanValue() {
         SettingsManager manager = new SettingsManager();
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
-        boolean value = manager.get(Name.NO_RANDOM_INTRO_MON);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
+        boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         assert(value == true);
     }
 
@@ -93,7 +93,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(ClassCastException.class, () -> {
-            int value = manager.get(Name.NO_RANDOM_INTRO_MON);
+            int value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         });
     }
 
@@ -102,7 +102,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Exception e = assertThrows(IllegalArgumentException.class, () -> {
-            manager.set(Name.NO_RANDOM_INTRO_MON, 3.0);
+            manager.set(Name.COSMETIC_RANDOM_INTRO_MON, 3.0);
         });
     }
 
@@ -191,8 +191,8 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.addListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assert(listener.manualSettingChangeCalled);
     }
 
@@ -283,7 +283,7 @@ public class SettingsManagerTest {
         TestSettingsListener listener = new TestSettingsListener();
 
         manager.addUniversalListener(listener);
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assert(listener.manualSettingChangeCalled);
 
         listener.reset();
@@ -353,26 +353,26 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.addListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
 
         listener.reset();
-        manager.removeListener(Name.NO_RANDOM_INTRO_MON, listener);
+        manager.removeListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
         assumeFalse(listener.manualSettingChangeCalled);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assert !listener.manualSettingChangeCalled;
 
         manager.addUniversalListener(listener);
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
 
         listener.reset();
         manager.removeUniversalListener(listener);
         assumeFalse(listener.manualSettingChangeCalled);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assert !listener.manualSettingChangeCalled;
     }
 
@@ -454,20 +454,20 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         TestSettingsListener listener = new TestSettingsListener();
 
-        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
-        manager.addListener(Name.NO_RANDOM_INTRO_MON, listener);
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.addListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
+        manager.addListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
         assert listener.manualChangeCallCount == 1;
 
         listener.reset();
-        manager.removeListener(Name.NO_RANDOM_INTRO_MON, listener);
+        manager.removeListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
         assumeFalse(listener.manualSettingChangeCalled);
         assumeTrue(listener.manualChangeCallCount == 0);
 
         manager.addUniversalListener(listener);
         manager.addUniversalListener(listener);
-        manager.set(Name.NO_RANDOM_INTRO_MON, false);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assumeTrue(listener.manualSettingChangeCalled);
         assert listener.manualChangeCallCount == 1;
     }
@@ -477,11 +477,11 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
         manager.set(Name.UPDATE_MOVES, true);
 
-        manager.set(Name.NO_RANDOM_INTRO_MON, true);
+        manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 8);
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
 
-        boolean boolValue = manager.get(Name.NO_RANDOM_INTRO_MON);
+        boolean boolValue = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         int intValue = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
         Settings.BSTMod enumValue = manager.get(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
 
@@ -491,7 +491,7 @@ public class SettingsManagerTest {
 
         manager.resetAll();
 
-        boolValue = manager.get(Name.NO_RANDOM_INTRO_MON);
+        boolValue = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         intValue = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
         enumValue = manager.get(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
 

@@ -59,8 +59,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean noLegendaries = settings.get(Settings.Name.TRAINERS_NO_LEGENDARIES);
         boolean noEarlyWonderGuard = settings.get(Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
         boolean includeFormes = settings.get(Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
-        boolean banIrregularAltFormes = settings.get(Settings.Name.NO_IRREGULAR_ALT_FORMES);
-        boolean doNotUsePrematureEvos = settings.get(Settings.Name.NO_PREMATURE_EVOLUTIONS);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
+        boolean doNotUsePrematureEvos = settings.get(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
         boolean swapMegaEvos = settings.get(Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
         boolean shinyChance = settings.get(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
@@ -68,7 +68,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         int eliteFourUniquePokemonNumber = settings.get(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT);
         boolean evolveAsFarAsLegal = settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON);
         int percentageEvoLvlModifier = settings.get(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
-        boolean forceChallengeMode = settings.get(Settings.Name.TWEAK_FORCE_CHALLENGE_MODE);
+        boolean forceChallengeMode = settings.get(Settings.Name.BALANCE_FORCE_CHALLENGE_MODE);
         boolean rivalCarriesStarter = settings.get(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER);
         boolean bossDiversity = settings.get(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES);
         boolean importantDiversity = settings.get(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES);

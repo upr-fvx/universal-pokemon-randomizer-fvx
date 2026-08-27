@@ -30,8 +30,8 @@ public class SpinnerManager extends SingleElementManager<Integer, JSpinner> impl
     }
 
     @Override
-    public void addListener(ChangeListener listener) {
-        element.addChangeListener(listener);
+    public void addListener(Runnable listener) {
+        element.addChangeListener(_ -> listener.run());
     }
 
     @Override

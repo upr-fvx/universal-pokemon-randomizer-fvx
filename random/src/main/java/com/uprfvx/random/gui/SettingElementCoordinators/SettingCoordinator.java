@@ -65,7 +65,7 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
         displayedValue = newValue;
     }
 
-    protected void elementValueChanged(ChangeEvent e) {
+    protected void elementValueChanged() {
         V newValue = element.getElementValue();
         if (!newValue.equals(displayedValue)) {
             manager.set(settingName, newValue);

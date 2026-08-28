@@ -20,10 +20,10 @@ public class EnumSettingCoordinator<E extends Enum<E>> extends SettingCoordinato
 
     @Override
     public void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager) {
+        super.onPossibleEnablementChange(setting, manager);
         settingMatchCheck(setting);
 
         if(!manager.isEnabled(settingName)) {
-            element.setEnabled(false);
             return;
         }
 
@@ -42,12 +42,13 @@ public class EnumSettingCoordinator<E extends Enum<E>> extends SettingCoordinato
             element.setVisible(false);
             return;
         }
+        element.setVisible(true);
 
         Map<E, Boolean> support = new HashMap<>();
         for(E value : element.getValues()) {
             support.put(value, manager.isValueSupported(settingName, value));
         }
-        element.setEnabled(support);
+        element.setVisible(support);
     }
 
     @Override

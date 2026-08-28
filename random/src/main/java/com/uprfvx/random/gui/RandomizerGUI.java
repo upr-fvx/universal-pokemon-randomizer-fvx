@@ -199,8 +199,8 @@ public class RandomizerGUI {
     private JRadioButton peRandomRadioButton;
     private JRadioButton peRandomEveryLevelRadioButton;
     private JCheckBox peSimilarStrengthCheckBox;
-    private JCheckBox peSameTypingCheckBox;
-    private JCheckBox peLimitEvolutionsToThreeCheckBox;
+    private JCheckBox peShareTypingCheckBox;
+    private JCheckBox peMaxThreeStagesCheckBox;
     private JCheckBox peAllowAltFormesCheckBox;
     private JCheckBox peForceChangeCheckBox;
     private JCheckBox peForceGrowthCheckBox;
@@ -888,6 +888,7 @@ public class RandomizerGUI {
                 associateSpinSlider(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, sbstRandomBuffNerfSpinSlider),
                 associateCheckBox(Name.SPECIES_BSTS_FOLLOW_EVOLUTION, sbstFollowEvolutionsCheckBox),
                 associateCheckBox(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, sbstSwapLegendariesCheckBox),
+
                 //Species Base Stat Distributions
                 associateButtonSet(Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS,
                         Map.of(
@@ -898,9 +899,11 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, sbsdFollowEvolutionsCheckBox),
                 associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, sbsdFollowMegaEvosCheckBox),
                 associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, sbsdAssignEvoStatsRandomlyCheckBox),
+
                 //Update Base Stats
                 associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, sbsUpdateBaseStatsCheckBox),
                 associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, sbsUpdateGenerationChoiceSpinner),
+
                 //Species Types
                 associateButtonSet(Name.RANDOMIZE_SPECIES_TYPES,
                         Map.of(
@@ -910,6 +913,8 @@ public class RandomizerGUI {
                         )),
                 associateCheckBox(Name.SPECIES_TYPES_FOLLOW_MEGA_EVOLUTIONS, stFollowMegaEvosCheckBox),
                 associateCheckBox(Name.SPECIES_TYPES_FORCE_DUAL_TYPES, stForceDualTypeCheckBox),
+                associateCheckBox(Name.SPECIES_TYPES_UPDATE_ROTOM_TYPING, stUpdateRotomCheckBox),
+
                 //Species Abilities
                 associateButtonSet(Name.RANDOMIZE_SPECIES_ABILITIES,
                         Map.of(
@@ -924,19 +929,49 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_ABILITIES_BAN_TRAPPING, saBanTrappingAbilitiesCheckBox),
                 associateCheckBox(Name.SPECIES_ABILITIES_BAN_MINOR, saBanMinorAbilitiesCheckBox),
                 associateCheckBox(Name.SPECIES_ABILITIES_BAN_NEGATIVE, saBanNegativeAbilitiesCheckBox),
+
                 //Species evolutions
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_MAKE_POSSIBLE, peChangeImpossibleEvosCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED, peRemoveTimeBasedEvolutionsCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION, peAllowPikachuEvolutionCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, peUseEstimatedInsteadOfHardcodedLevelsCheckBox),
+                associateSlider(Name.SPECIES_EVOLUTIONS_MAKE_EASIER, peMakeEvolutionsEasierLvlSlider,
+                        peMakeEvolutionsEasierCheckBox),
+                //--Randomize
                 associateButtonSet(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
                         Map.of(
                                 EvolutionsMod.UNCHANGED, peUnchangedRadioButton,
                                 EvolutionsMod.RANDOM, peRandomRadioButton,
                                 EvolutionsMod.RANDOM_EVERY_LEVEL, peRandomEveryLevelRadioButton
+                        )),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, peSimilarStrengthCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE, peShareTypingCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES, peMaxThreeStagesCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES, peAllowAltFormesCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_FORCE_CHANGE, peForceChangeCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_FORCE_GROWTH, peForceGrowthCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE, peNoConvergenceCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH, peAdjustLevelsCheckBox),
+
+                //EXP Curves
+                associateCheckBox(Name.STANDARDIZE_SPECIES_EXP_CURVES, secStandardizeEXPCurvesCheckBox),
+                associateComboBoxUsingToString(Name.SPECIES_EXP_CURVE_STANDARD_SELECTION, secEXPCurveComboBox,
+                        Arrays.asList(ExpCurve.values())),
+                associateButtonSet(Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
+                        Map.of(
+                                ExpCurveExtentMod.ALL, secAllSpeciesRadioButton,
+                                ExpCurveExtentMod.STRONG_LEGENDARIES, secStrongLegendariesSlowRadioButton,
+                                ExpCurveExtentMod.LEGENDARIES, secLegendariesSlowRadioButton
                         ))
+
 
 
                 //TODO: complete list of settings
         );
 
     }
+
+    //region associate controls helper methods
 
     private BooleanSettingCoordinator<CheckBoxManager> associateCheckBox(Name settingName, JCheckBox checkBox) {
         return new BooleanSettingCoordinator<>(settingName, settingsManager, new CheckBoxManager(checkBox));
@@ -947,14 +982,35 @@ public class RandomizerGUI {
         return new EnumSettingCoordinator<>(settingName, settingsManager, new ButtonGroupManager<>(map));
     }
 
+    private <E extends Enum<E>> EnumSettingCoordinator<E> associateComboBoxUsingToString(
+            Name settingName, JComboBox<String> comboBox, List<E> valuesInOrder) {
+        Map<E, String> valuesToDisplay = new HashMap<>();
+        valuesInOrder.forEach(e -> valuesToDisplay.put(e, e.toString()));
+
+        return new EnumSettingCoordinator<>(settingName, settingsManager, new EnumComboBoxManager<>(
+                comboBox, valuesInOrder, valuesToDisplay));
+    }
+
+    private NumericSettingCoordinator<Integer, SliderManager> associateSlider(
+            Name settingName, JSlider slider, JCheckBox latch) {
+        return new NumericSettingCoordinator<>(settingName, settingsManager, new SliderManager(slider), latch);
+    }
+
     private NumericSettingCoordinator<Integer, SpinSliderManager> associateSpinSlider(
             Name settingName, SpinSlider spinSlider) {
         return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinSliderManager(spinSlider));
     }
 
+    private NumericSettingCoordinator<Integer, SpinSliderManager> associateSpinSlider(
+            Name settingName, SpinSlider spinSlider, JCheckBox latch) {
+        return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinSliderManager(spinSlider), latch);
+    }
+
     private NumericSettingCoordinator<Integer, SpinnerManager> associateSpinner(Name settingName, JSpinner spinner) {
         return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinnerManager(spinner));
     }
+
+    //endregion
 
     private void checkSpMinimumNeedsLower() {
         if((int)spBSTMaximumSpinner.getValue() < (int)spBSTMinimumSpinner.getValue()) {
@@ -2105,8 +2161,8 @@ public class RandomizerGUI {
         peRandomRadioButton.setSelected(settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.RANDOM);
         peRandomEveryLevelRadioButton.setSelected(settings.getEvolutionsMod() == SettingsManager.EvolutionsMod.RANDOM_EVERY_LEVEL);
         peSimilarStrengthCheckBox.setSelected(settings.isEvosSimilarStrength());
-        peSameTypingCheckBox.setSelected(settings.isEvosSameTyping());
-        peLimitEvolutionsToThreeCheckBox.setSelected(settings.isEvosMaxThreeStages());
+        peShareTypingCheckBox.setSelected(settings.isEvosSameTyping());
+        peMaxThreeStagesCheckBox.setSelected(settings.isEvosMaxThreeStages());
         peForceChangeCheckBox.setSelected(settings.isEvosForceChange());
         peAllowAltFormesCheckBox.setSelected(settings.isEvosAllowAltFormes());
         peForceGrowthCheckBox.setSelected(settings.isEvosForceGrowth());
@@ -2432,7 +2488,7 @@ public class RandomizerGUI {
                 saForceTwoAbilitiesCheckbox);
 
         setInitialButtonState(peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
-				peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
+				peSimilarStrengthCheckBox, peShareTypingCheckBox, peMaxThreeStagesCheckBox,
 				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
                 peUseEstimatedInsteadOfHardcodedLevelsCheckBox, peRemoveTimeBasedEvolutionsCheckBox,
                 peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox, peAdjustLevelsCheckBox);
@@ -3322,15 +3378,15 @@ public class RandomizerGUI {
         }
 
         if (peRandomRadioButton.isSelected()) {
-            enableButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
+            enableButtons(peSimilarStrengthCheckBox, peShareTypingCheckBox, peMaxThreeStagesCheckBox,
                     peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
         } else if (peRandomEveryLevelRadioButton.isSelected()) {
-            enableButtons(peSameTypingCheckBox, peForceChangeCheckBox,
+            enableButtons(peShareTypingCheckBox, peForceChangeCheckBox,
                     peAllowAltFormesCheckBox, peNoConvergenceCheckBox);
             disableAndDeselectButtons(peSimilarStrengthCheckBox,
-                    peLimitEvolutionsToThreeCheckBox, peForceGrowthCheckBox);
+                    peMaxThreeStagesCheckBox, peForceGrowthCheckBox);
         } else {
-            disableAndDeselectButtons(peSimilarStrengthCheckBox, peSameTypingCheckBox, peLimitEvolutionsToThreeCheckBox,
+            disableAndDeselectButtons(peSimilarStrengthCheckBox, peShareTypingCheckBox, peMaxThreeStagesCheckBox,
                     peForceChangeCheckBox, peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox);
         }
 

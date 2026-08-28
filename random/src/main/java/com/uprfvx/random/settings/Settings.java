@@ -295,7 +295,7 @@ public class Settings {
             new MultiSettingRestriction(false, false,
                     new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_1, isFalse),
                     new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_1, true)
-            ); //The support check shouldn't matter, but this future-proofs it for romhacks I guess?
+            ); //The support check shouldn't matter for Gen 1, but this future-proofs it for romhacks I guess?
 
     private static final SettingRestriction generation2SpeciesAvailable =
             new MultiSettingRestriction(false, false,

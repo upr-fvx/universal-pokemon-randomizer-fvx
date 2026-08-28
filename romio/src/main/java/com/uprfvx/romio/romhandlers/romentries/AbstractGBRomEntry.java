@@ -1,6 +1,7 @@
 package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.romhandlers.AbstractGBRomHandler;
+import ini.IniEntry;
 
 import java.util.*;
 
@@ -56,7 +57,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
     }
 
     private void setExpectedCRC32(String s) {
-        this.expectedCRC32 = IniEntryReader.parseLong("0x" + s);
+        this.expectedCRC32 = ini.IniEntryReader.parseLong("0x" + s);
     }
 
     public Set<GBUnusedChunkEntry> getUnusedChunks() {
@@ -76,8 +77,8 @@ public abstract class AbstractGBRomEntry extends RomEntry {
             if (parts.length != 2) {
                 throw new IllegalArgumentException("Invalid format, must have 2 args in brackets. " + Arrays.toString(valuePair));
             }
-            int offset = IniEntryReader.parseInt(parts[0]);
-            int length = IniEntryReader.parseInt(parts[1]);
+            int offset = ini.IniEntryReader.parseInt(parts[0]);
+            int length = ini.IniEntryReader.parseInt(parts[1]);
             GBUnusedChunkEntry chunk = new GBUnusedChunkEntry(offset, length);
             unusedChunks.put(key, chunk);
         }
@@ -86,8 +87,7 @@ public abstract class AbstractGBRomEntry extends RomEntry {
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof AbstractGBRomEntry) {
-            AbstractGBRomEntry gbOther = (AbstractGBRomEntry) other;
+        if (other instanceof AbstractGBRomEntry gbOther) {
             unusedChunks.putAll(gbOther.unusedChunks);
         }
     }

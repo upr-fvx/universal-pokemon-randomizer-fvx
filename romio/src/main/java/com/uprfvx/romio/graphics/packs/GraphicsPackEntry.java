@@ -1,7 +1,7 @@
 package com.uprfvx.romio.graphics.packs;
 
-import com.uprfvx.romio.romhandlers.romentries.IniEntry;
-import com.uprfvx.romio.romhandlers.romentries.IniEntryReader;
+import ini.IniEntry;
+import ini.IniEntryReader;
 
 import java.io.IOException;
 import java.util.List;

@@ -2,6 +2,7 @@ package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.constants.Gen5Constants;
 import com.uprfvx.romio.romhandlers.Gen5RomHandler;
+import ini.IniEntry;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -53,14 +54,14 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
                     case "Species": {
                         speciesOverlayOffsets = new int[offsets.length];
                         for (int i = 0; i < speciesOverlayOffsets.length; i++) {
-                            speciesOverlayOffsets[i] = IniEntryReader.parseInt(offsets[i]);
+                            speciesOverlayOffsets[i] = ini.IniEntryReader.parseInt(offsets[i]);
                         }
                         break;
                     }
                     case "Level": {
                         levelOverlayOffsets = new int[offsets.length];
                         for (int i = 0; i < levelOverlayOffsets.length; i++) {
-                            levelOverlayOffsets[i] = IniEntryReader.parseInt(offsets[i]);
+                            levelOverlayOffsets[i] = ini.IniEntryReader.parseInt(offsets[i]);
                         }
                         break;
                     }
@@ -68,8 +69,8 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
                         speciesScriptOffsets = new InFileEntry[offsets.length];
                         for (int i = 0; i < speciesScriptOffsets.length; i++) {
                             String[] parts = offsets[i].split(":");
-                            speciesScriptOffsets[i] = new InFileEntry(IniEntryReader.parseInt(parts[0]),
-                                    IniEntryReader.parseInt(parts[1]));
+                            speciesScriptOffsets[i] = new InFileEntry(ini.IniEntryReader.parseInt(parts[0]),
+                                    ini.IniEntryReader.parseInt(parts[1]));
                         }
                         break;
                     }
@@ -106,11 +107,11 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
     }
 
     private void setCopyTradeScripts(String s) {
-        copyTradeScripts = IniEntryReader.parseBoolean(s);
+        copyTradeScripts = ini.IniEntryReader.parseBoolean(s);
     }
 
     private void setCopyStoryText(String s) {
-        copyStoryText = IniEntryReader.parseBoolean(s);
+        copyStoryText = ini.IniEntryReader.parseBoolean(s);
     }
 
     public boolean isBlack() {
@@ -118,7 +119,7 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
     }
 
     private void setBlack(String s) {
-        black = IniEntryReader.parseBoolean(s);
+        black = ini.IniEntryReader.parseBoolean(s);
     }
 
     public List<DSStaticPokemon> getStaticPokemonFakeBall() {
@@ -149,9 +150,9 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
         int c = 0;
         for (String off : offsets) {
             String[] parts = off.split(":");
-            fileNum = IniEntryReader.parseInt(parts[0]);
-            requestedOffsets[c] = IniEntryReader.parseInt(parts[1]);
-            givenOffsets[c++] = IniEntryReader.parseInt(parts[2]);
+            fileNum = ini.IniEntryReader.parseInt(parts[0]);
+            requestedOffsets[c] = ini.IniEntryReader.parseInt(parts[1]);
+            givenOffsets[c++] = ini.IniEntryReader.parseInt(parts[2]);
         }
         tradeScripts.add(new Gen5RomHandler.TradeScript(fileNum, requestedOffsets, givenOffsets));
     }
@@ -166,8 +167,8 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
         int c = 0;
         for (String off : offsets) {
             String[] parts = off.split(":");
-            int entry = IniEntryReader.parseInt(parts[0]);
-            int offset = IniEntryReader.parseInt(parts[1]);
+            int entry = ini.IniEntryReader.parseInt(parts[0]);
+            int offset = ini.IniEntryReader.parseInt(parts[1]);
             offs[c++] = new InFileEntry(entry, offset);
         }
         offsetArrayEntries.put(valuePair[0], offs);
@@ -186,8 +187,7 @@ public class Gen5RomEntry extends AbstractDSRomEntry {
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof Gen5RomEntry) {
-            Gen5RomEntry gen5Other = (Gen5RomEntry) other;
+        if (other instanceof Gen5RomEntry gen5Other) {
             offsetArrayEntries.putAll(gen5Other.offsetArrayEntries);
             if (isCopyStaticPokemon()) {
                 staticPokemonFakeBall.addAll(gen5Other.staticPokemonFakeBall);

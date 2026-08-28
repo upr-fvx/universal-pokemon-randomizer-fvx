@@ -2,6 +2,7 @@ package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.romhandlers.Gen3RomHandler;
+import ini.IniEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +52,7 @@ public class Gen3RomEntry extends AbstractGBRomEntry {
                 String[] romOffsets = segments[1].substring(1, segments[1].length() - 1).split(",");
                 int[] offsets = new int[romOffsets.length];
                 for (int i = 0; i < offsets.length; i++) {
-                    offsets[i] = IniEntryReader.parseInt(romOffsets[i]);
+                    offsets[i] = ini.IniEntryReader.parseInt(romOffsets[i]);
                 }
                 switch (segments[0]) {
                     case "Species":
@@ -68,10 +69,10 @@ public class Gen3RomEntry extends AbstractGBRomEntry {
         protected static Gen3EventTextEntry parseEventTextEntry(String s) {
             if (s.startsWith("[") && s.endsWith("]")) {
                 String[] parts = s.substring(1, s.length() - 1).split(",", 6);
-                int id = IniEntryReader.parseInt(parts[0]);
-                int mapBank = IniEntryReader.parseInt(parts[1]);
-                int mapNumber = IniEntryReader.parseInt(parts[2]);
-                int personNum = IniEntryReader.parseInt(parts[3]);
+                int id = ini.IniEntryReader.parseInt(parts[0]);
+                int mapBank = ini.IniEntryReader.parseInt(parts[1]);
+                int mapNumber = ini.IniEntryReader.parseInt(parts[2]);
+                int personNum = ini.IniEntryReader.parseInt(parts[3]);
                 int[] offsetInScript = parseOffsetInScript(parts[4]);
                 String template = parts[5];
                 return new Gen3EventTextEntry(id, mapBank, mapNumber, personNum, offsetInScript, template);
@@ -142,7 +143,7 @@ public class Gen3RomEntry extends AbstractGBRomEntry {
     }
 
     private void setCopyStaticPokemon(String s) {
-        this.copyStaticPokemon = IniEntryReader.parseBoolean(s);
+        this.copyStaticPokemon = ini.IniEntryReader.parseBoolean(s);
     }
 
     public List<Gen3RomHandler.StaticPokemon> getStaticPokemon() {
@@ -201,8 +202,7 @@ public class Gen3RomEntry extends AbstractGBRomEntry {
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof Gen3RomEntry) {
-            Gen3RomEntry gen3Other = (Gen3RomEntry) other;
+        if (other instanceof Gen3RomEntry gen3Other) {
             if (copyStaticPokemon) {
                 staticPokemon.addAll(gen3Other.staticPokemon);
                 roamingPokemon.addAll(gen3Other.roamingPokemon);

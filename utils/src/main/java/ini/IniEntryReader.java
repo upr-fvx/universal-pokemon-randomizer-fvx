@@ -1,4 +1,4 @@
-package com.uprfvx.romio.romhandlers.romentries;
+package ini;
 
 import java.io.IOException;
 import java.io.StringReader;

@@ -2,6 +2,7 @@ package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.constants.Gen1Constants;
 import com.uprfvx.romio.romhandlers.Gen1RomHandler;
+import ini.IniEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,7 +49,7 @@ public class Gen1RomEntry extends AbstractGBCRomEntry {
                 String[] romOffsets = segments[1].substring(1, segments[1].length() - 1).split(",");
                 int[] offsets = new int[romOffsets.length];
                 for (int i = 0; i < offsets.length; i++) {
-                    offsets[i] = IniEntryReader.parseInt(romOffsets[i]);
+                    offsets[i] = ini.IniEntryReader.parseInt(romOffsets[i]);
                 }
                 switch (segments[0]) {
                     case "Species":
@@ -114,8 +115,7 @@ public class Gen1RomEntry extends AbstractGBCRomEntry {
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof Gen1RomEntry) {
-            Gen1RomEntry gen1Other = (Gen1RomEntry) other;
+        if (other instanceof Gen1RomEntry gen1Other) {
             if (getIntValue("CopyStaticPokemon") == 1) {
                 staticPokemon.addAll(gen1Other.staticPokemon);
                 ghostMarowakOffsets = gen1Other.ghostMarowakOffsets;

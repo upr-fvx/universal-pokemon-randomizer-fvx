@@ -2,6 +2,7 @@ package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.constants.Gen2Constants;
 import com.uprfvx.romio.romhandlers.Gen2RomHandler;
+import ini.IniEntry;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +50,7 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
                 String[] romOffsets = segments[1].substring(1, segments[1].length() - 1).split(",");
                 int[] offsets = new int[romOffsets.length];
                 for (int i = 0; i < offsets.length; i++) {
-                    offsets[i] = IniEntryReader.parseInt(romOffsets[i]);
+                    offsets[i] = ini.IniEntryReader.parseInt(romOffsets[i]);
                 }
                 switch (segments[0]) {
                     case "Species":
@@ -120,7 +121,7 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
     private void addShopName(String s)  {
         if (s.startsWith("[") && s.endsWith("]")) {
             String[] parts = s.substring(1, s.length() - 1).split(",", 2);
-            int index = IniEntryReader.parseInt(parts[0]);
+            int index = ini.IniEntryReader.parseInt(parts[0]);
             String name = parts[1].trim();
             while (shopNames.size() < index) {
                 shopNames.add("MISSING NAME");
@@ -138,8 +139,7 @@ public class Gen2RomEntry extends AbstractGBCRomEntry {
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof Gen2RomEntry) {
-            Gen2RomEntry gen2Other = (Gen2RomEntry) other;
+        if (other instanceof Gen2RomEntry gen2Other) {
             if (getIntValue("CopyStaticPokemon") == 1) {
                 staticPokemon.addAll(gen2Other.staticPokemon);
                 intValues.put("StaticPokemonSupport", 1);

@@ -128,7 +128,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
      * @return A SettingsManager object with the described settings.
      */
     private SettingsManager getStandardSettings(String romName) {
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS, true);
         settings.set(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.SINGLE_ENCOUNTER);
         settings.set(Settings.Name.WILD_REMOVE_TIME_BASED, false);
@@ -1624,7 +1624,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         Map<Integer, Type> typeThemedAreas = new HashMap<>();
         recordTypeThemeBefore(beforeAreas, typeThemedAreas);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.GAME);
         settings.set(Settings.Name.WILD_KEEP_TYPE_THEMES, true);
         settings.set(Settings.Name.WILD_REMOVE_TIME_BASED, false);

@@ -134,8 +134,13 @@ public class SettingsManager {
         if (currentValue.equals(newValue))
             return true; //if the setting is already set to the relevant value, save us checking dependencies
 
-        if(!definition.isValueSettable(newValue, this, game))
-            return false;
+        if (!definition.isValueSettable(newValue, this, game)) {
+            System.out.println("value was not settable: " + settingName + ", " + newValue);
+            System.out.println("current value is: " + currentValue + " (" + currentValue.getClass() + ")");
+            // TODO: should this method throw here, or return a boolean?
+            throw new RuntimeException();
+            //return false;
+        }
 
         state.setValue(newValue);
 

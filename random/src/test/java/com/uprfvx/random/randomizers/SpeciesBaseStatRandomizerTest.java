@@ -17,6 +17,7 @@ import java.util.*;
 
 import static com.uprfvx.random.randomizers.SpeciesBaseStatRandomizer.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
@@ -313,6 +314,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
 
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
@@ -323,8 +325,10 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void shuffleSpeciesStats_FollowEvolutions_FollowMegaEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasMegaEvolutions());
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, true);
 
@@ -348,6 +352,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.RANDOM);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
         sbsr.randomizeSpeciesStats();
@@ -357,8 +362,10 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void randomizeStats_FollowEvolutions_FollowMegaEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasMegaEvolutions());
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.RANDOM);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, true);
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
@@ -374,6 +381,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.RANDOM);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, true);
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);

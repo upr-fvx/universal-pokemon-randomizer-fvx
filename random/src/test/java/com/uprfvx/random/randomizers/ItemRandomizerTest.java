@@ -187,6 +187,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.hasShopSupport());
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_BAN_MINOR, true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -208,7 +209,9 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.hasShopSupport());
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS, true);
+        System.out.println(s.get(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS).toString());
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
         Set<Item> regularShop = romHandler.getRegularShopItems();
@@ -230,6 +233,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.hasShopSupport());
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_BAN_OVERPOWERED, true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
 
@@ -252,6 +256,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.hasShopSupport());
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS, true);
         s.set(Settings.Name.SHOP_ITEMS_GUARANTEE_X_ITEMS, true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
@@ -297,6 +302,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_PICKUP_ITEMS, Settings.PickupItemsMod.RANDOM);
         s.set(Settings.Name.PICKUP_ITEMS_BAN_MINOR, true);
         new ItemRandomizer(romHandler, s, RND).randomizePickupItems();
 

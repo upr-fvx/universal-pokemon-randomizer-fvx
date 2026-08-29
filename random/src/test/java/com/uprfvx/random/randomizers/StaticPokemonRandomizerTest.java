@@ -67,6 +67,8 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void randomSwapMegaEvolvablesWorks(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasMegaEvolutions());
+
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
         SettingsManager s = new SettingsManager(romHandler);

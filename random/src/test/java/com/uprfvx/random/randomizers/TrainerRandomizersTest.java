@@ -65,7 +65,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, BattleStyle.Modification.SINGLE_STYLE);
         settings.set(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION, BattleStyle.Style.DOUBLE_BATTLE);
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
@@ -86,7 +86,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) == 5 || getGenerationNumberOf(romName) == 6);
         activateRomHandler(romName);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, BattleStyle.Modification.SINGLE_STYLE);
         settings.set(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION, BattleStyle.Style.TRIPLE_BATTLE);
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
@@ -107,7 +107,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) == 5 || getGenerationNumberOf(romName) == 6);
         activateRomHandler(romName);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, BattleStyle.Modification.SINGLE_STYLE);
         settings.set(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION, BattleStyle.Style.ROTATION_BATTLE);
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
@@ -128,7 +128,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, BattleStyle.Modification.RANDOM);
         new TrainerPokemonRandomizer(romHandler, settings, RND).modifyBattleStyle();
 
@@ -466,8 +466,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
-        s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         elite4UniquePokemonCheck();
@@ -479,9 +479,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
         s.set(Settings.Name.TRAINERS_USE_LOCAL, true);
         s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
         s.set(Settings.Name.WILD_REMOVE_TIME_BASED, false);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -494,9 +494,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager(romHandler);
-        //s.setTrainersUseLocalPokemon(true);
-        s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON,  Settings.TrainersMod.TYPE_THEMED);
+        s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         elite4UniquePokemonCheck();
@@ -655,7 +654,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void doNotUsePrematureEvosWorks(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
         settings.set(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS, true);
 
@@ -677,7 +676,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void typeDiverseTrainersWorks(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager settings = new SettingsManager();
+        SettingsManager settings = new SettingsManager(romHandler);
         settings.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
         settings.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
         settings.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
@@ -726,14 +725,16 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
-        SettingsManager settings = new SettingsManager();
-        settings.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.UNCHANGED);
-        addPossibleTrainerPokemon();
-        settings.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
-        settings.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
-        settings.set(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, true);
+        SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.UNCHANGED);
+        addPossibleTrainerPokemon(s);
+        s.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
+        s.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
+        if (romHandler.canAddPokemonToRegularTrainers()) {
+            s.set(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, true);
+        }
 
-        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         for (Trainer trainer : romHandler.getTrainers()) {
             Set<Type> usedTypes = EnumSet.noneOf(Type.class);
@@ -793,14 +794,16 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
-        SettingsManager settings = new SettingsManager();
-        settings.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.UNCHANGED);
-        addPossibleTrainerPokemon();
-        settings.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
-        settings.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
-        settings.set(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, true);
+        SettingsManager s = new SettingsManager(romHandler);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.UNCHANGED);
+        addPossibleTrainerPokemon(s);
+        s.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
+        s.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
+        if (romHandler.canAddPokemonToRegularTrainers()) {
+            s.set(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, true);
+        }
 
-        new TrainerPokemonRandomizer(romHandler, settings, RND).randomizeTrainerPokes();
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         for (Trainer trainer : romHandler.getTrainers()) {
             Type theme = typeThemedTrainers.get(trainer);
@@ -839,16 +842,14 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
-        addPossibleTrainerPokemon();
-
         SettingsManager s = new SettingsManager(romHandler); //TrainersMod == UNCHANGED
+        addPossibleTrainerPokemon(s);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, true);
     }
 
-    private void addPossibleTrainerPokemon() {
-        SettingsManager s = new SettingsManager(romHandler);
+    private void addPossibleTrainerPokemon(SettingsManager s) {
         if (romHandler.canAddPokemonToBossTrainers()) {
             s.set(Settings.Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, 5);
         }
@@ -867,7 +868,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers());
 
-        addPossibleTrainerPokemon();
+        addPossibleTrainerPokemon(new SettingsManager(romHandler));
 
         for (Trainer tr : romHandler.getTrainers()) {
             System.out.println(tr);
@@ -896,13 +897,14 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers());
 
-        addPossibleTrainerPokemon(); // Fill all trainer teams to increase chance of duplicates if there is a bug
-
         SettingsManager s = new SettingsManager(romHandler); //TrainersMod == UNCHANGED
+
+        addPossibleTrainerPokemon(s); // Fill all trainer teams to increase chance of duplicates if there is a bug
+
         s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
         s.set(Settings.Name.TRAINERS_AVOID_DUPLICATES, true);
         // Restrict pool to make duplicates more likely if there is a bug
-        s.set(Settings.Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, true);
+        s.set(Settings.Name.TRAINERS_USE_SIMILAR_STRENGTH, true);
         s.set(Settings.Name.TRAINERS_NO_LEGENDARIES, true);
         s.set(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS, true);
         s.set(Settings.Name.TRAINERS_EVOLVE_POKEMON, true);
@@ -933,7 +935,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         SettingsManager s = new SettingsManager(romHandler);
         s.set(Settings.Name.TRAINERS_EVOLVE_POKEMON, true);
         int trainersPercentageEvoLvlModifier = -50;
-        s.set(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, trainersPercentageEvoLvlModifier);
+        s.set(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, trainersPercentageEvoLvlModifier);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         // Test
@@ -952,7 +954,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         SettingsManager s = new SettingsManager(romHandler);
         s.set(Settings.Name.TRAINERS_EVOLVE_POKEMON, true);
         int trainersPercentageEvoLvlModifier = -50;
-        s.set(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, trainersPercentageEvoLvlModifier);
+        s.set(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, trainersPercentageEvoLvlModifier);
         TrainerPokemonRandomizer tpRando = new TrainerPokemonRandomizer(romHandler, s, RND);
         tpRando.evolveTrainerPokemonAsFarAsLegal();
 
@@ -1108,22 +1110,37 @@ public class TrainerRandomizersTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void betterMovesets_DoesNotCauseCrash(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.canGiveCustomMovesetsToBossTrainers() 
+                || romHandler.canGiveCustomMovesetsToImportantTrainers()
+                || romHandler.canGiveCustomMovesetsToRegularTrainers());
+        
         SettingsManager s = new SettingsManager(romHandler);
-        s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES, true);
-        s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT, true);
-        s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR, true);
+        giveBetterMovesetsToPossible(s);
         new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
+    }
+
+    private void giveBetterMovesetsToPossible(SettingsManager s) {
+        if (romHandler.canGiveCustomMovesetsToBossTrainers()) {
+            s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES, true);
+        }
+        if (romHandler.canGiveCustomMovesetsToImportantTrainers()) {
+            s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT, true);
+        }
+        if (romHandler.canGiveCustomMovesetsToRegularTrainers()) {
+            s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR, true);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void betterMovesets_DoesNotCauseUbiquitousMove(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.canGiveCustomMovesetsToBossTrainers()
+                || romHandler.canGiveCustomMovesetsToImportantTrainers()
+                || romHandler.canGiveCustomMovesetsToRegularTrainers());
 
         SettingsManager s = new SettingsManager(romHandler);
-        s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES, true);
-        s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT, true);
-        s.set(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR, true);
+        giveBetterMovesetsToPossible(s);
         new TrainerMovesetRandomizer(romHandler, s, RND).randomizeTrainerMovesets();
 
         Map<Integer, Integer> moveCounts = new TreeMap<>();

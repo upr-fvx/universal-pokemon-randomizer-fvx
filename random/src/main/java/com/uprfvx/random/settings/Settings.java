@@ -593,7 +593,7 @@ public class Settings {
             return false;
         }
         Species rotom = allSpecs.get(SpeciesIDs.rotom);
-        if (rotom.isValidFormeNumber(1)) {
+        if (!rotom.isValidFormeNumber(1)) {
             return false;
         }
         Species altRotom = rotom.getForme(1);
@@ -976,6 +976,12 @@ public class Settings {
                     Name.STARTERS_NO_LEGENDARIES,
                     Category.STARTERS_GENERAL)
                     .prerequisite(anyStarterIsRandomRestriction)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STARTERS_ALLOW_ALT_FORMES,
+                    Category.STARTERS_GENERAL)
+                    .prerequisite(anyStarterIsRandomRestriction)
+                    .supported(RomHandler::hasStarterAltFormes)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STARTERS_RANDOMIZE_HELD_ITEMS,
@@ -1609,7 +1615,7 @@ public class Settings {
                     Name.STATICS_ALLOW_ALT_FORMES,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasStarterAltFormes)
+                    .supported(RomHandler::hasStaticAltFormes)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STATICS_SWAP_MEGA_EVOLVABLES,

@@ -490,7 +490,9 @@ public class StarterRandomizerTest extends RandomizerTest {
         s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
         s.set(Settings.Name.STARTER_CUSTOM_1, customStarters.get(0));
         s.set(Settings.Name.STARTER_CUSTOM_2, customStarters.get(1));
-        s.set(Settings.Name.STARTER_CUSTOM_3, customStarters.get(2));
+        if (s.isEnabled(Settings.Name.STARTER_CUSTOM_3)) {
+            s.set(Settings.Name.STARTER_CUSTOM_3, customStarters.get(2));
+        }
 
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 

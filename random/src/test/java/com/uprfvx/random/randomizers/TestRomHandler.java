@@ -78,6 +78,7 @@ public class TestRomHandler extends AbstractRomHandler {
     //Encounters (wild)
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
+    private final boolean hasEncounterLocations;
     private final boolean hasTimeBasedEncounters;
     private final boolean hasWildAltFormes;
     private final SpeciesSet originalBannedForWild;
@@ -100,6 +101,7 @@ public class TestRomHandler extends AbstractRomHandler {
     //TMs/HMs
     private final boolean originalIsTMsReusable;
     private boolean testIsTMsReusable;
+    private final boolean canMakeTMsReusable;
     private final boolean canTMsBeHeld;
 
     //Types
@@ -203,6 +205,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
 
+        hasEncounterLocations = mockupOf.hasEncounterLocations();
         hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
@@ -223,6 +226,7 @@ public class TestRomHandler extends AbstractRomHandler {
         originalTotems = Collections.unmodifiableList(mockupOf.getTotemPokemon());
 
         originalIsTMsReusable = mockupOf.isTMsReusable();
+        canMakeTMsReusable = mockupOf.canMakeTMsReusable();
         canTMsBeHeld = mockupOf.canTMsBeHeld();
 
         hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
@@ -773,6 +777,11 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
         testEncounters = encounters;
+    }
+
+    @Override
+    public boolean hasEncounterLocations() {
+        return hasEncounterLocations;
     }
 
     @Override
@@ -1447,6 +1456,11 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     // TODO: put rest of misc tweak methods in here as not implemented
+
+    @Override
+    public boolean canMakeTMsReusable() {
+        return canMakeTMsReusable;
+    }
 
     @Override
     public void makeTMsReusable() {

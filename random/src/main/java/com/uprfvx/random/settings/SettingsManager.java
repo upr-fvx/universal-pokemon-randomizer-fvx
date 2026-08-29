@@ -64,12 +64,26 @@ public class SettingsManager {
 
     //region public functions
 
+    /**
+     * Creates a SettingsManager without associating it to a game/{@link RomHandler}.
+     */
     public SettingsManager() {
         initializeSettings();
 
         listeners = new HashMap<>();
-        game = null;
         universalListeners = new HashSet<>();
+        game = null;
+    }
+
+    /**
+     * Creates a SettingsManager and immediately associates it with a game/{@link RomHandler}.
+     */
+    public SettingsManager(RomHandler game) {
+        initializeSettings();
+
+        listeners = new HashMap<>();
+        universalListeners = new HashSet<>();
+        associateGame(game);
     }
 
     /**

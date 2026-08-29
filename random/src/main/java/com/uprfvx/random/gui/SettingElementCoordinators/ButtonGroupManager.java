@@ -40,8 +40,8 @@ public class ButtonGroupManager<E extends Enum<E>, J extends AbstractButton>
     }
 
     @Override
-    public void addListener(ChangeListener listener) {
-        elements.values().forEach(j -> j.addChangeListener(listener));
+    public void addListener(Runnable listener) {
+        elements.values().forEach(j -> j.addChangeListener(_ -> listener.run()));
     }
 
     @Override

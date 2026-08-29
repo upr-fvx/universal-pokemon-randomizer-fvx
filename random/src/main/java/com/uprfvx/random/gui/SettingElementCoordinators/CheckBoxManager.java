@@ -22,7 +22,7 @@ public class CheckBoxManager extends SingleElementManager<Boolean, JCheckBox> {
         return element.isSelected();
     }
 
-    public void addListener(ChangeListener listener) {
-        element.addChangeListener(listener);
+    public void addListener(Runnable listener) {
+        element.addChangeListener(_ -> listener.run());
     }
 }

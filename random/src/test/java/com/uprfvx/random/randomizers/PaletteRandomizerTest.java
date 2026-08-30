@@ -24,7 +24,7 @@ public class PaletteRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasPokemonPaletteSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
 
         createPaletteRandomizer(romHandler, s).randomizePokemonPalettes();
@@ -36,7 +36,7 @@ public class PaletteRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasPokemonPaletteSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
         s.set(Settings.Name.PALETTES_FOLLOW_TYPES, true);
 
@@ -49,7 +49,7 @@ public class PaletteRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasPokemonPaletteSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
         s.set(Settings.Name.PALETTES_FOLLOW_EVOLUTIONS, true);
 
@@ -69,7 +69,7 @@ public class PaletteRandomizerTest extends RandomizerTest {
                 pk -> normalPalsBefore.put(pk, new Palette(pk.getNormalPalette()))
         );
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_PALETTES, Settings.SpeciesPalettesMod.RANDOM);
         s.set(Settings.Name.PALETTES_SHINY_FROM_NORMAL, true);
 

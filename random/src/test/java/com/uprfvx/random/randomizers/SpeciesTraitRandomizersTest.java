@@ -16,7 +16,7 @@ public class SpeciesTraitRandomizersTest extends RandomizerTest {
     public void randomizeTypesCompletelyFollowsCosmeticFormes(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_TYPES, Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
 
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();

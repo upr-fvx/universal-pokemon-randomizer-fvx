@@ -1,6 +1,5 @@
 package com.uprfvx.random.randomizers;
 
-import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.MoveIDs;
 import com.uprfvx.romio.gamedata.Move;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,14 +15,14 @@ public class MoveNameRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void randomizeMoveNamesDoesNotCrash(String romName) {
         activateRomHandler(romName);
-        new MoveNameRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), RND).randomizeMoveNames();
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void randomizedMoveNamesAreNotBlank(String romName) {
         activateRomHandler(romName);
-        new MoveNameRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), RND).randomizeMoveNames();
 
         for (Move mv : romHandler.getMoves()) {
             if (mv != null) {
@@ -39,7 +38,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         int maxLen = romHandler.getMaxMoveNameLength();
 
-        new MoveNameRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), RND).randomizeMoveNames();
 
         for (Move mv : romHandler.getMoves()) {
             if (mv != null && mv.internalId != MoveIDs.struggle) {
@@ -53,7 +52,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void randomizedMoveNamesAreUnique(String romName) {
         activateRomHandler(romName);
-        new MoveNameRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), RND).randomizeMoveNames();
 
         Set<String> seen = new HashSet<>();
         for (Move mv : romHandler.getMoves()) {
@@ -82,7 +81,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
         }
         assertNotNull(originalStruggleName, "Struggle not found in move list");
 
-        new MoveNameRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), RND).randomizeMoveNames();
 
         // Verify Struggle kept its original name
         for (Move mv : moves) {
@@ -98,7 +97,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void randomizeMoveNamesSetsChangesMade(String romName) {
         activateRomHandler(romName);
-        MoveNameRandomizer randomizer = new MoveNameRandomizer(romHandler, new SettingsManager(), RND);
+        MoveNameRandomizer randomizer = new MoveNameRandomizer(romHandler, createSettingsManager(), RND);
         randomizer.randomizeMoveNames();
 
         assertTrue(randomizer.isChangesMade(), "changesMade should be true after randomization");
@@ -112,7 +111,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
         long seed = 12345L;
 
         // First run
-        new MoveNameRandomizer(romHandler, new SettingsManager(), new Random(seed)).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), new Random(seed)).randomizeMoveNames();
         List<String> firstRunNames = new ArrayList<>();
         for (Move mv : romHandler.getMoves()) {
             firstRunNames.add(mv != null ? mv.name : null);
@@ -121,7 +120,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
         // Reset and do second run with same seed
         romHandler.reset();
         romHandler.prepare();
-        new MoveNameRandomizer(romHandler, new SettingsManager(), new Random(seed)).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), new Random(seed)).randomizeMoveNames();
         List<String> secondRunNames = new ArrayList<>();
         for (Move mv : romHandler.getMoves()) {
             secondRunNames.add(mv != null ? mv.name : null);
@@ -142,7 +141,7 @@ public class MoveNameRandomizerTest extends RandomizerTest {
             originalNames.add(mv != null ? mv.name : null);
         }
 
-        new MoveNameRandomizer(romHandler, new SettingsManager(), RND).randomizeMoveNames();
+        new MoveNameRandomizer(romHandler, createSettingsManager(), RND).randomizeMoveNames();
 
         // At least some names should have changed (all non-null, non-Struggle moves)
         int changedCount = 0;

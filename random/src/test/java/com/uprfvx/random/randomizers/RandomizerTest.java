@@ -106,4 +106,16 @@ public class RandomizerTest {
         };
     }
 
+    /**
+     * Creates a new {@link SettingsManager} and associates it with the loaded game/{@link RomHandler}.<br>
+     * This method should always be used inside these randomizer tests, to ensure that the settings fed into
+     * the tests are always valid/supported for the given game. This way we test the states that can happen,
+     * instead of ones that cannot.
+     */
+    protected SettingsManager createSettingsManager() {
+        SettingsManager s = new SettingsManager();
+        s.associateGame(romHandler);
+        return s;
+    }
+
 }

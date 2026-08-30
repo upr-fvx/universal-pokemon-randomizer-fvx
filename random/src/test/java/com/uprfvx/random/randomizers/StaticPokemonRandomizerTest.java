@@ -21,7 +21,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS, Settings.StaticPokemonMod.RANDOM_MATCHING);
         new StaticPokemonRandomizer(romHandler, s, RND).randomizeStaticPokemon();
 
@@ -46,7 +46,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS, Settings.StaticPokemonMod.RANDOM_MATCHING);
         new StaticPokemonRandomizer(romHandler, s, RND).randomizeStaticPokemon();
 
@@ -71,7 +71,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
 
         List<StaticEncounter> before = deepCopy(romHandler.getStaticPokemon());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_STATIC_ENCOUNTERS, Settings.StaticPokemonMod.COMPLETELY_RANDOM);
         s.set(Settings.Name.STATICS_SWAP_MEGA_EVOLVABLES, true);
         new StaticPokemonRandomizer(romHandler, s, RND).randomizeStaticPokemon();
@@ -116,7 +116,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasTotemPokemon());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_TOTEM_POKEMON, Settings.TotemPokemonMod.RANDOM);
         s.set(Settings.Name.TOTEMS_RANDOMIZE_ALLIES, Settings.AllyPokemonMod.RANDOM);
         s.set(Settings.Name.TOTEMS_ALLOW_ALT_FORMES, true);

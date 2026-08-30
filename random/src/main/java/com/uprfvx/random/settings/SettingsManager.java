@@ -65,7 +65,8 @@ public class SettingsManager {
     //region public functions
 
     /**
-     * Creates a SettingsManager without associating it to a game/{@link RomHandler}.
+     * Creates a SettingsManager with default values for all underlying settings,
+     * and no associated game/{@link RomHandler}.
      */
     public SettingsManager() {
         initializeSettings();
@@ -73,17 +74,6 @@ public class SettingsManager {
         listeners = new HashMap<>();
         universalListeners = new HashSet<>();
         game = null;
-    }
-
-    /**
-     * Creates a SettingsManager and immediately associates it with a game/{@link RomHandler}.
-     */
-    public SettingsManager(RomHandler game) {
-        initializeSettings();
-
-        listeners = new HashMap<>();
-        universalListeners = new HashSet<>();
-        associateGame(game);
     }
 
     /**

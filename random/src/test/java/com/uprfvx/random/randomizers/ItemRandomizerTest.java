@@ -21,7 +21,7 @@ public class ItemRandomizerTest extends RandomizerTest{
     public void shuffleFieldItemsRetainsSameItems(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_FIELD_ITEMS, Settings.FieldItemsMod.SHUFFLE);
 
         Map<Item, Integer> itemCountsBefore = countFieldItems(romHandler.getFieldItems());
@@ -49,7 +49,7 @@ public class ItemRandomizerTest extends RandomizerTest{
     public void randomFieldItemsSetsOnlyAllowedItems(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_FIELD_ITEMS, Settings.FieldItemsMod.RANDOM);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
 
@@ -64,7 +64,7 @@ public class ItemRandomizerTest extends RandomizerTest{
     public void randomEvenFieldItemsSetsOnlyAllowedItems(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_FIELD_ITEMS, Settings.FieldItemsMod.RANDOM_EVEN);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
 
@@ -79,7 +79,7 @@ public class ItemRandomizerTest extends RandomizerTest{
     public void randomFieldItemsCanBanBadItems(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_FIELD_ITEMS, Settings.FieldItemsMod.RANDOM);
         s.set(Settings.Name.FIELD_ITEMS_BAN_MINOR, true);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
@@ -95,7 +95,7 @@ public class ItemRandomizerTest extends RandomizerTest{
     public void randomEvenFieldItemsCanBanBadItems(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_FIELD_ITEMS, Settings.FieldItemsMod.RANDOM_EVEN);
         s.set(Settings.Name.FIELD_ITEMS_BAN_MINOR, true);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
@@ -112,7 +112,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         // no item appears more than one more time than any other
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_FIELD_ITEMS, Settings.FieldItemsMod.RANDOM_EVEN);
         new ItemRandomizer(romHandler, s, RND).randomizeFieldItems();
 
@@ -141,7 +141,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         Map<Item, Integer> itemCountsBefore = countItems(romHandler.getShops()
                 .stream().filter(Shop::isSpecialShop).collect(Collectors.toList()));
         System.out.println(itemCountsBefore);
-        new ItemRandomizer(romHandler, new SettingsManager(), RND).shuffleShopItems();
+        new ItemRandomizer(romHandler, createSettingsManager(), RND).shuffleShopItems();
         Map<Item, Integer> itemCountsAfter = countItems(romHandler.getShops()
                 .stream().filter(Shop::isSpecialShop).collect(Collectors.toList()));
         System.out.println(itemCountsAfter);
@@ -172,7 +172,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         romHandler.getShops().stream().filter(Shop::isSpecialShop).forEach(shop -> before.addAll(shop.getItems()));
         System.out.println(before);
 
-        new ItemRandomizer(romHandler, new SettingsManager(), RND).shuffleShopItems();
+        new ItemRandomizer(romHandler, createSettingsManager(), RND).shuffleShopItems();
 
         List<Item> after = new ArrayList<>();
         romHandler.getShops().stream().filter(Shop::isSpecialShop).forEach(shop -> after.addAll(shop.getItems()));
@@ -186,7 +186,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(romHandler.hasShopSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_BAN_MINOR, true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
@@ -208,7 +208,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(romHandler.hasShopSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS, true);
         System.out.println(s.get(Settings.Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS).toString());
@@ -232,7 +232,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(romHandler.hasShopSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_BAN_OVERPOWERED, true);
         new ItemRandomizer(romHandler, s, RND).randomizeShopItems();
@@ -255,7 +255,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(romHandler.hasShopSupport());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, Settings.ShopItemsMod.RANDOM);
         s.set(Settings.Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS, true);
         s.set(Settings.Name.SHOP_ITEMS_GUARANTEE_X_ITEMS, true);
@@ -301,7 +301,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(getGenerationNumberOf(romName) >= 3);
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_PICKUP_ITEMS, Settings.PickupItemsMod.RANDOM);
         s.set(Settings.Name.PICKUP_ITEMS_BAN_MINOR, true);
         new ItemRandomizer(romHandler, s, RND).randomizePickupItems();
@@ -320,7 +320,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         assumeTrue(romHandler.canTMsBeHeld());
         assumeTrue(!romHandler.isTMsReusable());
 
-        SettingsManager s = new SettingsManager(romHandler);
+        SettingsManager s = createSettingsManager();
         new ItemRandomizer(romHandler, s, RND).randomizePickupItems();
 
         boolean tmUsed = false;
@@ -345,7 +345,7 @@ public class ItemRandomizerTest extends RandomizerTest{
             romHandler.makeTMsReusable();
         }
 
-        new ItemRandomizer(romHandler, new SettingsManager(), RND).randomizePickupItems();
+        new ItemRandomizer(romHandler, createSettingsManager(), RND).randomizePickupItems();
 
         for (PickupItem pi : romHandler.getPickupItems()) {
             System.out.println(pi);
@@ -360,7 +360,7 @@ public class ItemRandomizerTest extends RandomizerTest{
         activateRomHandler(romName);
         assumeTrue(!romHandler.canTMsBeHeld());
 
-        new ItemRandomizer(romHandler, new SettingsManager(), RND).randomizePickupItems();
+        new ItemRandomizer(romHandler, createSettingsManager(), RND).randomizePickupItems();
 
         for (PickupItem pi : romHandler.getPickupItems()) {
             System.out.println(pi);

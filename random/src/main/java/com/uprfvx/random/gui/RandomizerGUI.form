@@ -3981,7 +3981,7 @@
                       <font style="1"/>
                     </border>
                     <children>
-                      <component id="a9da2" class="javax.swing.JRadioButton" binding="stpUnchangedRadioButton" default-binding="true">
+                      <component id="a9da2" class="javax.swing.JRadioButton" binding="seUnchangedRadioButton">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4016,7 +4016,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="142ac" class="javax.swing.JRadioButton" binding="stpSwapLegendariesSwapStandardsRadioButton">
+                      <component id="142ac" class="javax.swing.JRadioButton" binding="seSwapLegendariesSwapStandardsRadioButton">
                         <constraints>
                           <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4027,7 +4027,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.swapLegendariesSwapStandardsRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="8b8cf" class="javax.swing.JRadioButton" binding="stpRandomCompletelyRadioButton" default-binding="true">
+                      <component id="8b8cf" class="javax.swing.JRadioButton" binding="seRandomCompletelyRadioButton">
                         <constraints>
                           <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4038,7 +4038,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomCompletelyRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="8f5fc" class="javax.swing.JRadioButton" binding="stpRandomSimilarStrengthRadioButton">
+                      <component id="8f5fc" class="javax.swing.JRadioButton" binding="seRandomSimilarStrengthRadioButton">
                         <constraints>
                           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4049,7 +4049,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomSimilarStrengthRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="e8807" class="javax.swing.JCheckBox" binding="stpSwapMegaEvosCheckBox">
+                      <component id="e8807" class="javax.swing.JCheckBox" binding="seSwapMegaEvosCheckBox">
                         <constraints>
                           <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4060,7 +4060,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.swapMegaEvosCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="30e1b" class="javax.swing.JCheckBox" binding="stpPercentageLevelModifierCheckBox">
+                      <component id="30e1b" class="javax.swing.JCheckBox" binding="sePercentageLevelModifierCheckBox">
                         <constraints>
                           <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4071,7 +4071,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.percentageLevelModifierCheckBox.tooltipText"/>
                         </properties>
                       </component>
-                      <component id="dbc7e" class="com.uprfvx.random.gui.SpinSlider" binding="stpPercentageLevelModifierSpinSlider">
+                      <component id="dbc7e" class="com.uprfvx.random.gui.SpinSlider" binding="sePercentageLevelModifierSpinSlider">
                         <constraints>
                           <grid row="2" column="5" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4080,7 +4080,7 @@
                           <enabled value="true"/>
                         </properties>
                       </component>
-                      <component id="285be" class="javax.swing.JCheckBox" binding="stpRandomize600BSTCheckBox">
+                      <component id="285be" class="javax.swing.JCheckBox" binding="seRandomize600BSTCheckBox">
                         <constraints>
                           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4091,7 +4091,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomize600BSTCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="d9fc" class="javax.swing.JCheckBox" binding="stpAllowAltFormesCheckBox">
+                      <component id="d9fc" class="javax.swing.JCheckBox" binding="seAllowAltFormesCheckBox">
                         <constraints>
                           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4102,7 +4102,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="9c5fc" class="javax.swing.JCheckBox" binding="stpLimitMainGameLegendariesCheckBox">
+                      <component id="9c5fc" class="javax.swing.JCheckBox" binding="seLimitMainGameLegendariesCheckBox">
                         <constraints>
                           <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4113,7 +4113,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.limitMainGameLegendariesCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="761c9" class="javax.swing.JCheckBox" binding="stpFixMusicCheckBox">
+                      <component id="761c9" class="javax.swing.JCheckBox" binding="seFixMusicCheckBox">
                         <constraints>
                           <grid row="5" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4136,7 +4136,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="8fd1d" class="javax.swing.JCheckBox" binding="stpBalanceGivenLevelsCheckBox">
+                      <component id="8fd1d" class="javax.swing.JCheckBox" binding="seBalanceGivenLevelsCheckBox">
                         <constraints>
                           <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>

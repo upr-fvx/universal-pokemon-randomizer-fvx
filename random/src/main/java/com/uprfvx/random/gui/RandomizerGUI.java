@@ -832,6 +832,10 @@ public class RandomizerGUI {
         //...Maybe I'll put them all in a List anyway, just in case. Much easier to ignore a created list
         //than to convert a bunch of freestanding constructors to a list creation, if I'm wrong.
 
+        //If nothing else, the List will be helpful for test purposes.
+
+        //--foxoftheasterisk, August 2026
+
         List<SettingCoordinator<?, ?>> settingUICoordinators = List.of(
                 //TODO: remove I think
                 associateCheckBox(Name.RACE_MODE, raceModeCheckBox),

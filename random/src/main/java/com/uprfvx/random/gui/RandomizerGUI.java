@@ -962,8 +962,38 @@ public class RandomizerGUI {
                                 ExpCurveExtentMod.ALL, secAllSpeciesRadioButton,
                                 ExpCurveExtentMod.STRONG_LEGENDARIES, secStrongLegendariesSlowRadioButton,
                                 ExpCurveExtentMod.LEGENDARIES, secLegendariesSlowRadioButton
-                        ))
+                        )),
 
+                // *** GIVEN POKEMON ***
+                //Starters
+                associateButtonSet(Name.RANDOMIZE_STARTERS,
+                        Map.of(
+                                StartersMod.UNCHANGED, spUnchangedRadioButton,
+                                StartersMod.CUSTOM, spCustomRadioButton,
+                                StartersMod.RANDOM, spRandomRadioButton
+                        )),
+                //TODO: figure out how to handle species combo boxes
+                associateSpinner(Name.STARTERS_BST_MINIMUM, spBSTMinimumSpinner, spBSTMinimumCheckbox),
+                associateSpinner(Name.STARTERS_BST_MAXIMUM, spBSTMaximumSpinner, spBSTMaximumCheckbox),
+                associateCheckBox(Name.STARTERS_NO_LEGENDARIES, spNoLegendariesCheckBox),
+                associateCheckBox(Name.STARTERS_RANDOMIZE_HELD_ITEMS, spRandomizeStarterHeldItemsCheckBox),
+                associateCheckBox(Name.STARTERS_BAN_MINOR_HELD_ITEMS, spBanMinorItemsCheckBox),
+                associateCheckBox(Name.STARTERS_ALLOW_ALT_FORMES, spAllowAltFormesCheckBox),
+                //--Evolution Restrictions
+                associateCheckBox(Name.STARTERS_BASIC_ONLY, spBasicOnlyCheckBox),
+                associateSlider(Name.STARTERS_MINIMUM_EVOLUTION_STAGES, spHasEvolutionCountSlider,
+                        spHasEvolutionsCheckBox),
+                //--Type Restrictions
+                associateButtonSet(Name.STARTERS_TYPE_RESTRICTION,
+                        Map.of(
+                                StartersTypeMod.NONE, spTypeNoneRadioButton,
+                                StartersTypeMod.FIRE_WATER_GRASS, spTypeFwgRadioButton,
+                                StartersTypeMod.TRIANGLE, spTypeTriangleRadioButton,
+                                StartersTypeMod.UNIQUE, spTypeUniqueRadioButton,
+                                StartersTypeMod.SINGLE_TYPE, spTypeSingleRadioButton
+                        )),
+                associateCheckBox(Name.STARTERS_NO_DUAL_TYPES, spTypeNoDualCheckbox)
+                //TODO: also figure out handling for types+random combobox
 
 
                 //TODO: complete list of settings
@@ -1008,6 +1038,11 @@ public class RandomizerGUI {
 
     private NumericSettingCoordinator<Integer, SpinnerManager> associateSpinner(Name settingName, JSpinner spinner) {
         return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinnerManager(spinner));
+    }
+
+    private NumericSettingCoordinator<Integer, SpinnerManager> associateSpinner(
+            Name settingName, JSpinner spinner, JCheckBox latch) {
+        return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinnerManager(spinner), latch);
     }
 
     //endregion

@@ -130,10 +130,12 @@ public class Settings {
 
         // *** GIVEN POKEMON ***
         //Starters General
-        RANDOMIZE_STARTERS, STARTERS_NO_LEGENDARIES, STARTERS_RANDOMIZE_HELD_ITEMS, STARTERS_BAN_BAD_HELD_ITEMS,
+        RANDOMIZE_STARTERS, STARTERS_NO_LEGENDARIES, STARTERS_RANDOMIZE_HELD_ITEMS, STARTERS_BAN_MINOR_HELD_ITEMS,
         STARTERS_ALLOW_ALT_FORMES,
         //Starters Custom
         STARTER_CUSTOM_1, STARTER_CUSTOM_2, STARTER_CUSTOM_3,
+        //Starter Evolutions
+        STARTERS_BASIC_ONLY, STARTERS_MINIMUM_EVOLUTION_STAGES,
         //Starter Types
         STARTERS_TYPE_RESTRICTION, STARTERS_NO_DUAL_TYPES, STARTERS_SINGLE_TYPE_SELECTION,
         //Starter BSTs
@@ -243,7 +245,7 @@ public class Settings {
         SPECIES_TYPES, SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES,
 
         // *** GIVEN POKEMON ***
-        STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES, STARTER_BSTS, IN_GAME_TRADES,
+        STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_EVOLUTIONS, STARTER_TYPES, STARTER_BSTS, IN_GAME_TRADES,
 
         // *** MOVES AND MOVESETS ***
         MOVE_TRAITS, SPECIES_MOVESETS,
@@ -275,8 +277,8 @@ public class Settings {
         public static final List<Category> SPECIES_TRAITS = List.of(SPECIES_BASE_STATISTIC_TOTALS,
                 SPECIES_BASE_STATISTIC_DISTRIBUTION, SPECIES_UPDATE_BASE_STATISTICS, SPECIES_TYPES,
                 SPECIES_ABILITIES, SPECIES_EVOLUTIONS, SPECIES_EXP_CURVES);
-        public static final List<Category> GIVEN_POKEMON = List.of(STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_TYPES,
-                STARTER_BSTS, IN_GAME_TRADES);
+        public static final List<Category> GIVEN_POKEMON = List.of(STARTERS_GENERAL, STARTERS_CUSTOM, STARTER_EVOLUTIONS,
+                STARTER_TYPES, STARTER_BSTS, IN_GAME_TRADES);
         public static final List<Category> MOVES_AND_MOVESETS = List.of(MOVE_TRAITS, SPECIES_MOVESETS);
         public static final List<Category> WILD_ENCOUNTERS = List.of(WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES,
                 WILD_EVOLUTIONS, WILD_POST_TWEAKS, STATIC_ENCOUNTERS);
@@ -856,11 +858,10 @@ public class Settings {
 
     //endregion
 
-    //region given pokemon
-    // I think yes move them now, while we're doing all this setting stuff.
+    //region Given Pokémon
 
     public enum StartersMod {
-        UNCHANGED, CUSTOM, COMPLETELY_RANDOM, RANDOM_WITH_TWO_EVOLUTIONS, RANDOM_BASIC
+        UNCHANGED, CUSTOM, RANDOM
     }
 
     public enum StartersTypeMod {
@@ -882,11 +883,7 @@ public class Settings {
                     )
             ),
             new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                    matchesEnum(StartersMod.COMPLETELY_RANDOM)),
-            new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                    matchesEnum(StartersMod.RANDOM_WITH_TWO_EVOLUTIONS)),
-            new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                    matchesEnum(StartersMod.RANDOM_BASIC))
+                    matchesEnum(StartersMod.RANDOM))
     );
 
     private final static SettingRestriction allStartersAreRandomRestriction = new MultiSettingRestriction(
@@ -902,11 +899,7 @@ public class Settings {
                             equalsValue(SpeciesIndexSettingDefinition.RANDOM_SPECIES))
             ),
             new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                    matchesEnum(StartersMod.COMPLETELY_RANDOM)),
-            new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                    matchesEnum(StartersMod.RANDOM_WITH_TWO_EVOLUTIONS)),
-            new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                    matchesEnum(StartersMod.RANDOM_BASIC))
+                    matchesEnum(StartersMod.RANDOM))
     );
 
     public enum StaticPokemonMod {
@@ -922,9 +915,6 @@ public class Settings {
                     Name.RANDOMIZE_STARTERS,
                     Category.STARTERS_GENERAL,
                     StartersMod.UNCHANGED)
-                    .restrictedStates(Map.of(
-                            StartersMod.RANDOM_WITH_TWO_EVOLUTIONS, notEvolveEveryLevelRestriction,
-                            StartersMod.RANDOM_BASIC, notEvolveEveryLevelRestriction))
                     .build(),
             new SpeciesIndexSettingDefinition.Builder<>(
                     Name.STARTER_CUSTOM_1,
@@ -947,6 +937,23 @@ public class Settings {
                     .supported(rh -> rh.getStarters().size() > 2)
                     .supportedMaximums(rh -> rh.getSpecies().size() - 1)
                     .variableDefaultValue(rh -> rh.getStarters().get(2).getNumber())
+                    .build(),
+
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.STARTERS_BASIC_ONLY,
+                    Category.STARTER_EVOLUTIONS)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            anyStarterIsRandomRestriction,
+                            notEvolveEveryLevelRestriction))
+                    .build(),
+            new NumericSettingDefinition.Builder<>(
+                    Name.STARTERS_MINIMUM_EVOLUTION_STAGES,
+                    Category.STARTER_EVOLUTIONS,
+                    0,
+                    0, 2)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            anyStarterIsRandomRestriction,
+                            notEvolveEveryLevelRestriction))
                     .build(),
 
             new EnumSettingDefinition.Builder<>(
@@ -983,7 +990,7 @@ public class Settings {
                     .supported(RomHandler::supportsStarterHeldItems)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STARTERS_BAN_BAD_HELD_ITEMS,
+                    Name.STARTERS_BAN_MINOR_HELD_ITEMS,
                     Category.STARTERS_GENERAL)
                     .prerequisite(Name.STARTERS_RANDOMIZE_HELD_ITEMS, isTrue)
                     .build(),

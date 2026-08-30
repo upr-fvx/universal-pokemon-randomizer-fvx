@@ -176,14 +176,21 @@ public class SettingsStringConverter {
         loadEnum(m, d, 4, Settings.Name.RANDOMIZE_STARTERS,
                 Map.of(
                         0, Settings.StartersMod.CUSTOM,
-                        1, Settings.StartersMod.COMPLETELY_RANDOM,
+                        1, Settings.StartersMod.RANDOM,
                         2, Settings.StartersMod.UNCHANGED,
-                        3, Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS,
-                        7, Settings.StartersMod.RANDOM_BASIC
+                        3, Settings.StartersMod.RANDOM,
+                        7, Settings.StartersMod.RANDOM
                 ));
         loadBoolean(m, d, 4, 4, Settings.Name.STARTERS_RANDOMIZE_HELD_ITEMS);
-        loadBoolean(m, d, 4, 5, Settings.Name.STARTERS_BAN_BAD_HELD_ITEMS);
+        loadBoolean(m, d, 4, 5, Settings.Name.STARTERS_BAN_MINOR_HELD_ITEMS);
         loadBoolean(m, d, 4, 6, Settings.Name.STARTERS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 4, 7, Settings.Name.STARTERS_BASIC_ONLY);
+        if(restoreState(d[4], 3)) {
+            //This bit was "Random Basic with Two Evos", which is now three independent settings.
+            //(The first is handled by the LoadEnum.)
+            m.set(Settings.Name.STARTERS_BASIC_ONLY, true);
+            m.set(Settings.Name.STARTERS_MINIMUM_EVOLUTION_STAGES, 2);
+        }
 
 
         // Bytes 5--10: Custom Starters

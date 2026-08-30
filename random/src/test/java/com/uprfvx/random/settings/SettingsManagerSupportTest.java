@@ -44,7 +44,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Yellow (U)");
 
         manager.associateGame(romHandler);
-        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
 
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
@@ -58,7 +58,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Yellow (U)");
 
         manager.associateGame(romHandler);
-        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
 
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.UNIQUE);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
@@ -72,7 +72,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Red (U)");
 
         manager.associateGame(romHandler);
-        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
 
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
@@ -101,7 +101,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Yellow (U)");
 
-        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
 
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);

@@ -26,7 +26,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         List<Species> before = new ArrayList<>(romHandler.getStarters());
 
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
         System.out.println("Before: " + before);
@@ -40,7 +40,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         StarterRandomizer sr = new StarterRandomizer(romHandler, s, RND);
 
         boolean allBasic = true;
@@ -86,7 +86,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasStarterTypeTriangleSupport());
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
@@ -161,7 +161,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasStarterTypeTriangleSupport());
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.TRIANGLE);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
@@ -248,7 +248,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void uniqueTypesWorksWithCompletelyRandom(String romName) {
         activateRomHandler(romName);
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.UNIQUE);
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
 
@@ -324,7 +324,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void singleTypeWorksWithCompletelyRandom(String romName) {
         activateRomHandler(romName);
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.SINGLE_TYPE);
 
         runStarterSingleTypeOnEveryTypeWithCheck(s);
@@ -395,7 +395,7 @@ public class StarterRandomizerTest extends RandomizerTest {
     public void noDualTypesWorks(String romName) {
         activateRomHandler(romName);
         SettingsManager s = new SettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_NO_DUAL_TYPES, true);
 
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();
@@ -417,7 +417,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
         SettingsManager s = new SettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_TYPES, Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_NO_DUAL_TYPES, true);
 
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
@@ -437,7 +437,7 @@ public class StarterRandomizerTest extends RandomizerTest {
         //arbitrary narrow range that has at least 3 Pokemon in all gens
         //(and 12 in gen 6)
 
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.COMPLETELY_RANDOM);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
         s.set(Settings.Name.STARTERS_BST_MINIMUM, MINIMUM_BST);
         s.set(Settings.Name.STARTERS_BST_MAXIMUM, MAXIMUM_BST);
 

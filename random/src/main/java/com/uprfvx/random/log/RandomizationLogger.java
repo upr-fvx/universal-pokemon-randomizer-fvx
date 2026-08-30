@@ -697,11 +697,10 @@ public class RandomizationLogger {
         String mode = switch (startersMod) {
             case UNCHANGED -> getBS("Log.sp.unchanged"); // should never happen
             case CUSTOM -> getBS("Log.sp.custom");
-            case COMPLETELY_RANDOM -> getBS("Log.sp.random");
-            case RANDOM_BASIC -> getBS("Log.sp.randomBasic");
-            case RANDOM_WITH_TWO_EVOLUTIONS -> getBS("Log.sp.random2Evolution");
+            case RANDOM -> getBS("Log.sp.random");
         };
         log.printf(getBS("Log.sp.mode"), mode);
+        //TODO: should this make note of other starter restrictions (evolutions, types, BSTs)?
 
         List<Species> starters = romHandler.getStarters();
         List<Item> heldItems = romHandler.getStarterHeldItems();

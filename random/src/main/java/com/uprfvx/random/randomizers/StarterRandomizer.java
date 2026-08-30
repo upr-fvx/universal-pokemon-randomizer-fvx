@@ -319,8 +319,8 @@ public class StarterRandomizer extends Randomizer {
         boolean noLegendaries = settings.get(Settings.Name.STARTERS_NO_LEGENDARIES);
         boolean noDualTypes = settings.get(Settings.Name.STARTERS_NO_DUAL_TYPES);
         Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
-        boolean triStageOnly = startersMod == Settings.StartersMod.RANDOM_WITH_TWO_EVOLUTIONS;
-        boolean basicOnly = triStageOnly || startersMod == Settings.StartersMod.RANDOM_BASIC;
+        int minEvoStages = settings.get(Settings.Name.STARTERS_MINIMUM_EVOLUTION_STAGES);
+        boolean basicOnly = settings.get(Settings.Name.STARTERS_BASIC_ONLY);
         int bstMin = settings.get(Settings.Name.STARTERS_BST_MINIMUM);
         int bstMax = settings.get(Settings.Name.STARTERS_BST_MAXIMUM);
 
@@ -348,8 +348,8 @@ public class StarterRandomizer extends Randomizer {
         if (basicOnly) {
             available = available.filterBasic(false);
         }
-        if (triStageOnly) {
-            available.removeIf(p -> p.getStagesAfter(false) < 2);
+        if (minEvoStages != 0) {
+            available.removeIf(p -> p.getStagesAfter(false) < minEvoStages);
         }
         if(bstMin != 0 || bstMax != 1530) {
             available.removeIf(p -> p.getBST(false) < bstMin || p.getBST(false) > bstMax);
@@ -419,7 +419,7 @@ public class StarterRandomizer extends Randomizer {
     }
 
     public void randomizeStarterHeldItems() {
-        boolean banBadItems = settings.get(Settings.Name.STARTERS_BAN_BAD_HELD_ITEMS);
+        boolean banBadItems = settings.get(Settings.Name.STARTERS_BAN_MINOR_HELD_ITEMS);
 
         List<Item> oldHeldItems = romHandler.getStarterHeldItems();
         List<Item> newHeldItems = new ArrayList<>();

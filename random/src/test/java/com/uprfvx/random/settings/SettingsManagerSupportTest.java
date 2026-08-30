@@ -18,10 +18,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.set(Name.BAN_GENERATION_1, true);
+        manager.set(Name.LIMIT_BAN_GENERATION_1, true);
 
-        boolean value = manager.get(Name.BAN_GENERATION_1);
-        assert(value == false);
+        boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
+        assert(!value);
     }
 
     @Test
@@ -31,10 +31,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.associateGame(romHandler);
 
-        manager.set(Name.BAN_GENERATION_1, true);
+        manager.set(Name.LIMIT_BAN_GENERATION_1, true);
 
-        boolean value = manager.get(Name.BAN_GENERATION_1);
-        assert(value == true);
+        boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
+        assert(value);
     }
 
     @Test
@@ -85,14 +85,14 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         SettingsManager manager = new SettingsManager();
         loadROM("Red (U)");
 
-        manager.set(Name.BAN_GENERATION_1, true);
-        boolean value = manager.get(Name.BAN_GENERATION_1);
+        manager.set(Name.LIMIT_BAN_GENERATION_1, true);
+        boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
         assumeTrue(value);
 
         manager.associateGame(romHandler);
 
-        value = manager.get(Name.BAN_GENERATION_1);
-        assert(value == false);
+        value = manager.get(Name.LIMIT_BAN_GENERATION_1);
+        assert(!value);
     }
 
     @Test
@@ -122,10 +122,10 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.associateGame(romHandler);
         manager.unassociateGame();
 
-        manager.set(Name.BAN_GENERATION_1, true);
+        manager.set(Name.LIMIT_BAN_GENERATION_1, true);
 
-        boolean value = manager.get(Name.BAN_GENERATION_1);
-        assert(value == true);
+        boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
+        assert(value);
     }
 
     @Test

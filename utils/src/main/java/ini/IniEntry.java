@@ -1,11 +1,12 @@
-package com.uprfvx.romio.romhandlers.romentries;
+package ini;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An abstract class for any kind of "entries" which can be expected to be read from .ini files. E.g. the
- * {@link RomEntry} classes.
+ * An abstract class for any kind of "entries" which can be expected to be read from .ini files.<br>
+ * The format is a non-standard one, NOT to be confused with TOML or YAML even though it may look
+ * similar at a glance.
  */
 public abstract class IniEntry {
 

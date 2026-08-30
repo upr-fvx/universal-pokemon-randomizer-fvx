@@ -52,7 +52,7 @@ public class Gen7RomEntry extends Abstract3DSRomEntry {
     }
 
     private void setSunny(String s) {
-        sunny = IniEntryReader.parseBoolean(s);
+        sunny = ini.IniEntryReader.parseBoolean(s);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.uprfvx.romio.romhandlers.romentries;
+package ini;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -88,7 +88,7 @@ public abstract class IniEntryReader<T extends IniEntry> {
     private final Map<String, BiConsumer<T, String[]>> keySuffixMethods = new HashMap<>();
     private final Map<String, BiConsumer<T, String>> specialKeyMethods = new HashMap<>();
 
-    public IniEntryReader(DefaultReadMode defaultReadMode) {
+    protected IniEntryReader(DefaultReadMode defaultReadMode) {
         this.defaultReadMode = defaultReadMode;
     }
 

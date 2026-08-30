@@ -43,6 +43,8 @@ public class TestRomHandler extends AbstractRomHandler {
     private RestrictedSpeciesService testRSS = null;
     private List<Species> testSpeciesInOrder = null;
     private List<Species> testSpeciesInclFormesInOrder = null;
+    private final boolean hasMegaEvolutions;
+    private final boolean hasFunctionalFormes;
 
     //Abilities
     private final int abilitiesPerSpecies;
@@ -55,6 +57,8 @@ public class TestRomHandler extends AbstractRomHandler {
     private final Map<Integer, List<Integer>> originalEggMoves;
     private Map<Integer, List<Integer>> testEggMoves;
     private final int maxMoveNameLength;
+    private final boolean hasPhysicalSpecialSplit;
+    private final boolean supportsFourStartingMoves;
 
     // TMs/HMs/Tutors
     private final List<Integer> originalTMMoves;
@@ -74,6 +78,7 @@ public class TestRomHandler extends AbstractRomHandler {
     //Encounters (wild)
     private final List<EncounterArea> originalEncounters;
     List<EncounterArea> testEncounters = null;
+    private final boolean hasEncounterLocations;
     private final boolean hasTimeBasedEncounters;
     private final boolean hasWildAltFormes;
     private final SpeciesSet originalBannedForWild;
@@ -86,6 +91,7 @@ public class TestRomHandler extends AbstractRomHandler {
     private final SpeciesSet originalBannedForStatics;
     private final boolean forceSwapStaticMegaEvos;
     private final List<Integer> mainGameLegendaries;
+    private final boolean hasStaticMusicFix;
 
     //Totems
     private final boolean hasTotemPokemon;
@@ -95,6 +101,7 @@ public class TestRomHandler extends AbstractRomHandler {
     //TMs/HMs
     private final boolean originalIsTMsReusable;
     private boolean testIsTMsReusable;
+    private final boolean canMakeTMsReusable;
     private final boolean canTMsBeHeld;
 
     //Types
@@ -109,13 +116,11 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean isUSUM;
     private final int romType;
 
-    //Misc tweaks
-    private final int miscTweaksAvailable;
-
     //Starters
     private final List<Species> originalStarters;
     private List<Species> testStarters = null;
     private final boolean hasStarterAltFormes;
+    private final boolean supportsStarterHeldItems;
 
     //Items
     private final List<Item> items;
@@ -156,6 +161,9 @@ public class TestRomHandler extends AbstractRomHandler {
     private final boolean canAddPokemonToBossTrainers;
     private final boolean canAddPokemonToImportantTrainers;
     private final boolean canAddPokemonToRegularTrainers;
+    private final boolean canAddHeldItemsToBossTrainers;
+    private final boolean canAddHeldItemsToImportantTrainers;
+    private final boolean canAddHeldItemsToRegularTrainers;
     private int highestEvoLvl = 0;
 
     //Palettes
@@ -172,12 +180,17 @@ public class TestRomHandler extends AbstractRomHandler {
         originalEncounters = Collections.unmodifiableList(mockupOf.getEncounters(true));
         originalIrregularFormes = SpeciesSet.unmodifiable(mockupOf.getIrregularFormes());
 
+        hasMegaEvolutions = mockupOf.hasMegaEvolutions();
+        hasFunctionalFormes = mockupOf.hasFunctionalFormes();
+
         abilitiesPerSpecies = mockupOf.abilitiesPerSpecies();
 
         originalMoves = Collections.unmodifiableList(mockupOf.getMoves());
         originalMovesLearnt = Collections.unmodifiableMap(mockupOf.getMovesLearnt());
         originalEggMoves = Collections.unmodifiableMap(mockupOf.getEggMoves());
         maxMoveNameLength = mockupOf.getMaxMoveNameLength();
+        hasPhysicalSpecialSplit = mockupOf.hasPhysicalSpecialSplit();
+        supportsFourStartingMoves = mockupOf.supportsFourStartingMoves();
 
         originalTMMoves = Collections.unmodifiableList(mockupOf.getTMMoves());
         hmMoves = Collections.unmodifiableList(mockupOf.getHMMoves());
@@ -192,6 +205,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
         altFormesCanHaveDifferentEvolutions = mockupOf.altFormesCanHaveDifferentEvolutions();
 
+        hasEncounterLocations = mockupOf.hasEncounterLocations();
         hasTimeBasedEncounters = mockupOf.hasTimeBasedEncounters();
         hasWildAltFormes = mockupOf.hasWildAltFormes();
         originalBannedForWild = SpeciesSet.unmodifiable(mockupOf.getBannedForWildEncounters());
@@ -206,11 +220,13 @@ public class TestRomHandler extends AbstractRomHandler {
         } else {
             mainGameLegendaries = Collections.unmodifiableList(new ArrayList<>());
         }
+        hasStaticMusicFix = mockupOf.hasStaticMusicFix();
 
         hasTotemPokemon = mockupOf.hasTotemPokemon();
         originalTotems = Collections.unmodifiableList(mockupOf.getTotemPokemon());
 
         originalIsTMsReusable = mockupOf.isTMsReusable();
+        canMakeTMsReusable = mockupOf.canMakeTMsReusable();
         canTMsBeHeld = mockupOf.canTMsBeHeld();
 
         hasTypeEffectivenessSupport = mockupOf.hasTypeEffectivenessSupport();
@@ -221,10 +237,9 @@ public class TestRomHandler extends AbstractRomHandler {
         isORAS = mockupOf.isORAS();
         isUSUM = mockupOf.isUSUM();
 
-        miscTweaksAvailable = mockupOf.miscTweaksAvailable();
-
         originalStarters = Collections.unmodifiableList(mockupOf.getStarters());
         hasStarterAltFormes = mockupOf.hasStarterAltFormes();
+        supportsStarterHeldItems = mockupOf.supportsStarterHeldItems();
 
         items = Collections.unmodifiableList(mockupOf.getItems());
         originalAllowedItems = items.stream().filter(Objects::nonNull).filter(Item::isAllowed).collect(Collectors.toSet());
@@ -255,6 +270,9 @@ public class TestRomHandler extends AbstractRomHandler {
         canAddPokemonToBossTrainers = mockupOf.canAddPokemonToBossTrainers();
         canAddPokemonToImportantTrainers = mockupOf.canAddPokemonToImportantTrainers();
         canAddPokemonToRegularTrainers = mockupOf.canAddPokemonToRegularTrainers();
+        canAddHeldItemsToBossTrainers = mockupOf.canAddHeldItemsToBossTrainers();
+        canAddHeldItemsToImportantTrainers = mockupOf.canAddHeldItemsToImportantTrainers();
+        canAddHeldItemsToRegularTrainers = mockupOf.canAddHeldItemsToRegularTrainers();
 
         hasPokemonPaletteSupport = mockupOf.hasPokemonPaletteSupport();
         if (generation >= 3 && generation <= 5) {
@@ -684,7 +702,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean supportsStarterHeldItems() {
-        throw new NotImplementedException();
+        return supportsStarterHeldItems;
     }
 
     @Override
@@ -734,7 +752,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasMegaEvolutions() {
-        throw new NotImplementedException();
+        return hasMegaEvolutions;
     }
 
     @Override
@@ -759,6 +777,11 @@ public class TestRomHandler extends AbstractRomHandler {
     @Override
     public void setEncounters(boolean useTimeOfDay, List<EncounterArea> encounters) {
         testEncounters = encounters;
+    }
+
+    @Override
+    public boolean hasEncounterLocations() {
+        return hasEncounterLocations;
     }
 
     @Override
@@ -841,17 +864,17 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean canAddHeldItemsToBossTrainers() {
-        throw new NotImplementedException();
+        return canAddHeldItemsToBossTrainers;
     }
 
     @Override
     public boolean canAddHeldItemsToImportantTrainers() {
-        throw new NotImplementedException();
+        return canAddHeldItemsToImportantTrainers;
     }
 
     @Override
     public boolean canAddHeldItemsToRegularTrainers() {
-        throw new NotImplementedException();
+        return canAddHeldItemsToRegularTrainers;
     }
 
     @Override
@@ -886,7 +909,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasPhysicalSpecialSplit() {
-        throw new NotImplementedException();
+        return hasPhysicalSpecialSplit;
     }
 
     @Override
@@ -948,7 +971,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean supportsFourStartingMoves() {
-        throw new NotImplementedException();
+        return supportsFourStartingMoves;
     }
 
     @Override
@@ -1017,7 +1040,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasStaticMusicFix() {
-        throw new NotImplementedException();
+        return hasStaticMusicFix;
     }
 
     @Override
@@ -1435,6 +1458,11 @@ public class TestRomHandler extends AbstractRomHandler {
     // TODO: put rest of misc tweak methods in here as not implemented
 
     @Override
+    public boolean canMakeTMsReusable() {
+        return canMakeTMsReusable;
+    }
+
+    @Override
     public void makeTMsReusable() {
         if (!canMakeTMsReusable()) {
             throw new UnsupportedOperationException();
@@ -1454,7 +1482,7 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public boolean hasFunctionalFormes() {
-        throw new NotImplementedException();
+        return hasFunctionalFormes;
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.constants.Gen2Constants;
+import ini.IniEntry;
+import ini.IniEntryReader;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,18 +46,17 @@ public abstract class RomEntry extends IniEntry {
             if (is == null) {
                 throw new RuntimeException("ROM Entry file not found: " + ROMENTRIES_PATH + "/" + fileName);
             }
-            Scanner scanner = new Scanner(is, "UTF-8");
+            Scanner scanner = new Scanner(is, StandardCharsets.UTF_8);
             setFileName(fileName);
             return readEntriesFromScanner(scanner);
         }
 
         @Override
         protected boolean matchesCopyFromValue(T other, String value) {
-            switch (copyFromMode) {
-                case NAME : return value.equalsIgnoreCase(other.getName());
-                case ROMCODE : return value.equals(other.getRomCode());
-            }
-            throw new RuntimeException("Should not get here");
+            return switch (copyFromMode) {
+                case NAME -> value.equalsIgnoreCase(other.getName());
+                case ROMCODE -> value.equals(other.getRomCode());
+            };
         }
 
     }
@@ -92,7 +94,7 @@ public abstract class RomEntry extends IniEntry {
     }
 
     private void setVersion(String s) {
-        this.version = IniEntryReader.parseInt(s);
+        this.version = ini.IniEntryReader.parseInt(s);
     }
 
     public int getRomType() {

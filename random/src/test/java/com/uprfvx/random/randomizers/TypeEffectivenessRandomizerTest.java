@@ -1,6 +1,5 @@
 package com.uprfvx.random.randomizers;
 
-import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.Effectiveness;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.gamedata.TypeTable;
@@ -26,7 +25,7 @@ public class TypeEffectivenessRandomizerTest extends RandomizerTest {
         System.out.println(before.toBigString());
         System.out.println(Arrays.toString(effCountsBefore));
 
-        new TypeEffectivenessRandomizer(romHandler, new SettingsManager(), RND).randomizeTypeEffectiveness(false);
+        new TypeEffectivenessRandomizer(romHandler, createSettingsManager(), RND).randomizeTypeEffectiveness(false);
 
         TypeTable after = romHandler.getTypeTable();
         int[] effCountsAfter = getEffCounts(after);
@@ -58,7 +57,7 @@ public class TypeEffectivenessRandomizerTest extends RandomizerTest {
             maxSEWhenDefending = Math.max(maxSEWhenDefending, before.superEffectiveWhenDefending(t).size());
         }
 
-        new TypeEffectivenessRandomizer(romHandler, new SettingsManager(), RND).randomizeTypeEffectiveness(true);
+        new TypeEffectivenessRandomizer(romHandler, createSettingsManager(), RND).randomizeTypeEffectiveness(true);
         TypeTable after = romHandler.getTypeTable();
         System.out.println(after.toBigString());
 
@@ -127,7 +126,7 @@ public class TypeEffectivenessRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasTypeEffectivenessSupport(), "Does not have Type Effectiveness support.");
 
         TypeTable before = new TypeTable(romHandler.getTypeTable());
-        new TypeEffectivenessRandomizer(romHandler, new SettingsManager(), RND).randomizeTypeEffectivenessKeepIdentities();
+        new TypeEffectivenessRandomizer(romHandler, createSettingsManager(), RND).randomizeTypeEffectivenessKeepIdentities();
         TypeTable after = romHandler.getTypeTable();
 
         System.out.println("Before:");
@@ -156,7 +155,7 @@ public class TypeEffectivenessRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasTypeEffectivenessSupport(), "Does not have Type Effectiveness support.");
 
         TypeTable before = new TypeTable(romHandler.getTypeTable());
-        new TypeEffectivenessRandomizer(romHandler, new SettingsManager(), RND).invertTypeEffectiveness(false);
+        new TypeEffectivenessRandomizer(romHandler, createSettingsManager(), RND).invertTypeEffectiveness(false);
         TypeTable after = romHandler.getTypeTable();
 
         for (Type attacker : after.getTypes()) {
@@ -184,7 +183,7 @@ public class TypeEffectivenessRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasTypeEffectivenessSupport(), "Does not have Type Effectiveness support.");
 
         TypeTable before = new TypeTable(romHandler.getTypeTable());
-        new TypeEffectivenessRandomizer(romHandler, new SettingsManager(), RND).invertTypeEffectiveness(true);
+        new TypeEffectivenessRandomizer(romHandler, createSettingsManager(), RND).invertTypeEffectiveness(true);
         TypeTable after = romHandler.getTypeTable();
         int immCountBefore = 0;
         int immCountAfter = 0;
@@ -207,7 +206,7 @@ public class TypeEffectivenessRandomizerTest extends RandomizerTest {
         assumeTrue(romHandler.hasTypeEffectivenessSupport(), "Does not have Type Effectiveness support.");
 
         TypeTable before = new TypeTable(romHandler.getTypeTable());
-        new TypeEffectivenessRandomizer(romHandler, new SettingsManager(), RND).invertTypeEffectiveness(true);
+        new TypeEffectivenessRandomizer(romHandler, createSettingsManager(), RND).invertTypeEffectiveness(true);
         TypeTable after = romHandler.getTypeTable();
         for (Type attacker : before.getTypes()) {
             for (Type defender : before.getTypes()) {

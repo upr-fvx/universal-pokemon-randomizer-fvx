@@ -1,6 +1,7 @@
 package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.romhandlers.AbstractGBCRomHandler;
+import ini.IniEntry;
 
 import java.util.*;
 
@@ -49,7 +50,7 @@ public abstract class AbstractGBCRomEntry extends AbstractGBRomEntry {
     }
 
     private void setNonJapanese(String unparsed) {
-        this.nonJapanese = IniEntryReader.parseInt(unparsed);
+        this.nonJapanese = ini.IniEntryReader.parseInt(unparsed);
     }
 
     public String getExtraTableFile() {
@@ -65,14 +66,14 @@ public abstract class AbstractGBCRomEntry extends AbstractGBRomEntry {
     }
 
     private void setCRCInHeader(String s) {
-        this.crcInHeader = IniEntryReader.parseInt(s);
+        this.crcInHeader = ini.IniEntryReader.parseInt(s);
     }
 
     private void addTMText(String s)  {
         if (s.startsWith("[") && s.endsWith("]")) {
             String[] parts = s.substring(1, s.length() - 1).split(",", 3);
-            int number = IniEntryReader.parseInt(parts[0]);
-            int offset = IniEntryReader.parseInt(parts[1]);
+            int number = ini.IniEntryReader.parseInt(parts[0]);
+            int offset = ini.IniEntryReader.parseInt(parts[1]);
             String template = parts[2];
             GBCTMTextEntry tte = new GBCTMTextEntry(number, offset, template);
             tmTexts.add(tte);
@@ -89,16 +90,15 @@ public abstract class AbstractGBCRomEntry extends AbstractGBRomEntry {
 
     private void addBankEndFreeSpaceMargin(String[] valuePair) {
         String keyString = valuePair[0].split("<")[1].split(">")[0];
-        int key = IniEntryReader.parseInt(keyString);
-        int value = IniEntryReader.parseInt(valuePair[1]);
+        int key = ini.IniEntryReader.parseInt(keyString);
+        int value = ini.IniEntryReader.parseInt(valuePair[1]);
         bankEndFreeSpaceMargins.put(key, value);
     }
 
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof AbstractGBCRomEntry) {
-            AbstractGBCRomEntry gbcOther = (AbstractGBCRomEntry) other;
+        if (other instanceof AbstractGBCRomEntry gbcOther) {
             extraTableFile = gbcOther.extraTableFile;
             if (getIntValue("CopyTMText") == 1) {
                 tmTexts.addAll(gbcOther.tmTexts);

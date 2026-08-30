@@ -2,6 +2,7 @@ package com.uprfvx.romio.romhandlers.romentries;
 
 import com.uprfvx.romio.constants.Gen4Constants;
 import com.uprfvx.romio.romhandlers.Gen4RomHandler;
+import ini.IniEntry;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -55,8 +56,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                         speciesEntries = new InFileEntry[offsets.length];
                         for (int i = 0; i < speciesEntries.length; i++) {
                             String[] parts = offsets[i].split(":");
-                            speciesEntries[i] = new InFileEntry(IniEntryReader.parseInt(parts[0]),
-                                    IniEntryReader.parseInt(parts[1]));
+                            speciesEntries[i] = new InFileEntry(ini.IniEntryReader.parseInt(parts[0]),
+                                    ini.IniEntryReader.parseInt(parts[1]));
                         }
                         break;
                     }
@@ -64,8 +65,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                         levelEntries = new InFileEntry[offsets.length];
                         for (int i = 0; i < levelEntries.length; i++) {
                             String[] parts = offsets[i].split(":");
-                            levelEntries[i] = new InFileEntry(IniEntryReader.parseInt(parts[0]),
-                                    IniEntryReader.parseInt(parts[1]));
+                            levelEntries[i] = new InFileEntry(ini.IniEntryReader.parseInt(parts[0]),
+                                    ini.IniEntryReader.parseInt(parts[1]));
                         }
                         break;
                     }
@@ -73,8 +74,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                         textEntries = new Gen4RomHandler.TextEntry[offsets.length];
                         for (int i = 0; i < textEntries.length; i++) {
                             String[] parts = offsets[i].split(":");
-                            textEntries[i] = new Gen4RomHandler.TextEntry(IniEntryReader.parseInt(parts[0]),
-                                    IniEntryReader.parseInt(parts[1]));
+                            textEntries[i] = new Gen4RomHandler.TextEntry(ini.IniEntryReader.parseInt(parts[0]),
+                                    ini.IniEntryReader.parseInt(parts[1]));
                         }
                         break;
                     }
@@ -98,14 +99,14 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                     case "Species" : {
                         speciesCodeOffsets = new int[offsets.length];
                         for (int i = 0; i < speciesCodeOffsets.length; i++) {
-                            speciesCodeOffsets[i] = IniEntryReader.parseInt(offsets[i]);
+                            speciesCodeOffsets[i] = ini.IniEntryReader.parseInt(offsets[i]);
                         }
                         break;
                     }
                     case "Level" : {
                         levelCodeOffsets = new int[offsets.length];
                         for (int i = 0; i < levelCodeOffsets.length; i++) {
-                            levelCodeOffsets[i] = IniEntryReader.parseInt(offsets[i]);
+                            levelCodeOffsets[i] = ini.IniEntryReader.parseInt(offsets[i]);
                         }
                         break;
                     }
@@ -113,8 +114,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                         speciesScriptOffsets = new InFileEntry[offsets.length];
                         for (int i = 0; i < speciesScriptOffsets.length; i++) {
                             String[] parts = offsets[i].split(":");
-                            speciesScriptOffsets[i] = new InFileEntry(IniEntryReader.parseInt(parts[0]),
-                                    IniEntryReader.parseInt(parts[1]));
+                            speciesScriptOffsets[i] = new InFileEntry(ini.IniEntryReader.parseInt(parts[0]),
+                                    ini.IniEntryReader.parseInt(parts[1]));
                         }
                         break;
                     }
@@ -122,8 +123,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                         genderOffsets = new InFileEntry[offsets.length];
                         for (int i = 0; i < genderOffsets.length; i++) {
                             String[] parts = offsets[i].split(":");
-                            genderOffsets[i] = new InFileEntry(IniEntryReader.parseInt(parts[0]),
-                                    IniEntryReader.parseInt(parts[1]));
+                            genderOffsets[i] = new InFileEntry(ini.IniEntryReader.parseInt(parts[0]),
+                                    ini.IniEntryReader.parseInt(parts[1]));
                         }
                         break;
                     }
@@ -138,12 +139,12 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
             Matcher m = r.matcher(tmTextString);
             while (m.find()) {
                 String[] segments = m.group().split("=");
-                int tmNum = IniEntryReader.parseInt(segments[0]);
+                int tmNum = ini.IniEntryReader.parseInt(segments[0]);
                 String[] entries = segments[1].substring(1, segments[1].length() - 1).split(",");
                 List<Gen4RomHandler.TextEntry> textEntries = new ArrayList<>();
                 for (String entry : entries) {
                     String[] textSegments = entry.split(":");
-                    Gen4RomHandler.TextEntry textEntry = new Gen4RomHandler.TextEntry(IniEntryReader.parseInt(textSegments[0]), IniEntryReader.parseInt(textSegments[1]));
+                    Gen4RomHandler.TextEntry textEntry = new Gen4RomHandler.TextEntry(ini.IniEntryReader.parseInt(textSegments[0]), ini.IniEntryReader.parseInt(textSegments[1]));
                     textEntries.add(textEntry);
                 }
                 tmTexts.put(tmNum, textEntries);
@@ -155,10 +156,10 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
                     .split(",");
             for (String tmTextGameCornerEntry : tmTextGameCornerEntries) {
                 String[] segments = tmTextGameCornerEntry.trim().split("=");
-                int tmNum = IniEntryReader.parseInt(segments[0]);
+                int tmNum = ini.IniEntryReader.parseInt(segments[0]);
                 String textEntry = segments[1].substring(1, segments[1].length() - 1);
                 String[] textSegments = textEntry.split(":");
-                Gen4RomHandler.TextEntry entry = new Gen4RomHandler.TextEntry(IniEntryReader.parseInt(textSegments[0]), IniEntryReader.parseInt(textSegments[1]));
+                Gen4RomHandler.TextEntry entry = new Gen4RomHandler.TextEntry(ini.IniEntryReader.parseInt(textSegments[0]), ini.IniEntryReader.parseInt(textSegments[1]));
                 tmTextGameCorner.put(tmNum, entry);
             }
         }
@@ -193,11 +194,11 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
     }
 
     private void setIgnoreGameCornerStatics(String s) {
-        this.ignoreGameCornerStatics = IniEntryReader.parseBoolean(s);
+        this.ignoreGameCornerStatics = ini.IniEntryReader.parseBoolean(s);
     }
 
     private void setCopyText(String s) {
-        this.copyText = IniEntryReader.parseBoolean(s);
+        this.copyText = ini.IniEntryReader.parseBoolean(s);
     }
 
     private void addStaticPokemonGameCorner(String s) {
@@ -236,8 +237,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
         String[] offsets = s.substring(1, s.length() - 1).split(",");
         for (String off : offsets) {
             String[] parts = off.split("=");
-            int tmNum = IniEntryReader.parseInt(parts[0]);
-            int offset = IniEntryReader.parseInt(parts[1]);
+            int tmNum = ini.IniEntryReader.parseInt(parts[0]);
+            int offset = ini.IniEntryReader.parseInt(parts[1]);
             tmScriptOffsetsFrontier.put(tmNum, offset);
         }
     }
@@ -250,8 +251,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
         String[] offsets = s.substring(1, s.length() - 1).split(",");
         for (String off : offsets) {
             String[] parts = off.split("=");
-            int tmNum = IniEntryReader.parseInt(parts[0]);
-            int stringNumber = IniEntryReader.parseInt(parts[1]);
+            int tmNum = ini.IniEntryReader.parseInt(parts[0]);
+            int stringNumber = ini.IniEntryReader.parseInt(parts[1]);
             tmTextsFrontier.put(tmNum, stringNumber);
         }
     }
@@ -265,8 +266,8 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
         String[] offsets = valuePair[1].substring(1, valuePair[1].length() - 1).split(",");
         for (String off : offsets) {
             String[] parts = off.split(":");
-            int file = IniEntryReader.parseInt(parts[0]);
-            int offset = IniEntryReader.parseInt(parts[1]);
+            int file = ini.IniEntryReader.parseInt(parts[0]);
+            int offset = ini.IniEntryReader.parseInt(parts[1]);
             InFileEntry entry = new InFileEntry(file, offset);
             marillCryScriptEntries.add(entry);
         }
@@ -275,8 +276,7 @@ public class Gen4RomEntry extends AbstractDSRomEntry {
     @Override
     public void copyFrom(IniEntry other) {
         super.copyFrom(other);
-        if (other instanceof Gen4RomEntry) {
-            Gen4RomEntry gen4Other = (Gen4RomEntry) other;
+        if (other instanceof Gen4RomEntry gen4Other) {
             if (isCopyStaticPokemon() && ignoreGameCornerStatics) {
                 removeStaticPokemonIf(staticPokemon -> staticPokemon instanceof Gen4RomHandler.StaticPokemonGameCorner);
             }

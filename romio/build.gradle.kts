@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":utils"))
+    testFixturesImplementation(project(":utils"))
 }
 
 tasks.named<Test>("test") {

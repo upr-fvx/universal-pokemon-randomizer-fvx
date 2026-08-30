@@ -13,10 +13,14 @@ import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import static com.uprfvx.random.randomizers.SpeciesBaseStatRandomizer.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
@@ -27,7 +31,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeBSTs_RandomBuffNerf_AllBuffsNerfsWithinMaxPercentage(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         s.set(Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 50);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
@@ -45,7 +49,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeBSTs_RandomBuffNerf_FollowEvolutions_Works(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         s.set(Settings.Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 50);
         s.set(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION, true);
@@ -77,7 +81,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         List<Integer> before = getSortedBSTs(romHandler.getSpeciesSet());
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
@@ -143,7 +147,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         List<FamilyBSTs> before = getSortedFamilyBSTs(romHandler.getSpeciesSet());
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION, true);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
@@ -172,7 +176,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         List<Integer> beforeLegs = getSortedBSTs(legendaries);
         List<Integer> beforeNonLegs = getSortedBSTs(nonLegendaries);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, true);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
@@ -194,7 +198,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
         List<FamilyBSTs> beforeLegs = getSortedFamilyBSTs(legendaries);
         List<FamilyBSTs> beforeNonLegs = getSortedFamilyBSTs(nonLegendaries);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_BSTS_FOLLOW_EVOLUTION, true);
         s.set(Settings.Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, true);
@@ -214,7 +218,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeBSTs_Random_AllBSTsAreWithinBounds(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
@@ -230,7 +234,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeBSTs_CosmeticFormesHaveSameBSTAsBaseForme(String romName) {
         activateRomHandler(romName);
 
-        new SpeciesBaseStatRandomizer(romHandler, new SettingsManager(), RND).randomizeBSTs();
+        new SpeciesBaseStatRandomizer(romHandler, createSettingsManager(), RND).randomizeBSTs();
 
         for (Species pk : romHandler.getSpeciesSetInclFormes()) {
             if (pk.isEssentiallyCosmetic()) {
@@ -247,7 +251,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeBSTs_MegaEvolutionsHaveBSTOfBaseFormePlus100(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         new SpeciesBaseStatRandomizer(romHandler, s, RND).randomizeBSTs();
 
@@ -279,7 +283,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
 
         List<List<Integer>> statsBefore = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();
 
-        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(new SettingsManager());
+        SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(createSettingsManager());
         sbsr.shuffleSpeciesStats();
 
         List<List<Integer>> statsAfter = romHandler.getSpeciesSet().stream().map(this::getSortedStats).toList();
@@ -312,7 +316,8 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void shuffleSpeciesStats_FollowEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
 
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
@@ -323,8 +328,10 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void shuffleSpeciesStats_FollowEvolutions_FollowMegaEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasMegaEvolutions());
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.SHUFFLE);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, true);
 
@@ -337,7 +344,7 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeStats_NoFollowEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
         sbsr.randomizeSpeciesStats();
     }
@@ -347,7 +354,8 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeStats_FollowEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.RANDOM);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
         sbsr.randomizeSpeciesStats();
@@ -357,8 +365,10 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     @MethodSource("getRomNames")
     public void randomizeStats_FollowEvolutions_FollowMegaEvolutions_DoesNotThrow(String romName) {
         activateRomHandler(romName);
+        assumeTrue(romHandler.hasMegaEvolutions());
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.RANDOM);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_MEGA_EVOLUTIONS, true);
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);
@@ -373,7 +383,8 @@ public class SpeciesBaseStatRandomizerTest extends RandomizerTest {
     public void randomizeStats_FollowEvolutions_AssignStatsRandomly_EachStatIsAtLeastThatOfPrevo(String romName) {
         activateRomHandler(romName);
 
-        SettingsManager s = new SettingsManager();
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_SPECIES_BASE_STAT_DISTRIBUTIONS, Settings.BaseStatDistributionsMod.RANDOM);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_FOLLOW_EVOLUTIONS, true);
         s.set(Settings.Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, true);
         SpeciesBaseStatRandomizer sbsr = getSpeciesBaseStatRandomizer(s);

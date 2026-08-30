@@ -223,23 +223,23 @@ public abstract class SettingDefinition<V extends Serializable> {
     public boolean isValueSettable(V value, SettingsManager manager, RomHandler game) {
         // split into multiple ifs so we can insert test prints if needed
         if (!isEnabled(manager)) {
-            System.out.println("setting not enabled");
+            // System.out.println("setting not enabled");
             return false;
         }
         if (game != null && !isSupported(game)) {
-            System.out.println("setting not supported");
+            // System.out.println("setting not supported");
             return false;
         }
         if (!isValueValid(value)) {
-            System.out.println("value not valid");
+            // System.out.println("value not valid");
             return false;
         }
         if (!isValueEnabled(value, manager)) {
-            System.out.println("value not enabled");
+            // System.out.println("value not enabled");
             return false;
         }
         if (game != null && !isValueSupported(value, game)) {
-            System.out.println("value not supported");
+            // System.out.println("value not supported");
             return false;
         }
         return true;

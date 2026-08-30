@@ -115,11 +115,12 @@ public class SettingsManager {
      * @param settingName The setting to set.
      * @param newValue The value to set the setting to.
      * @param <T> The type of the setting.
-     * @return True if the value now matches the value set, false if the value is not currently valid.
      * @throws IllegalArgumentException if there is no setting of the given name,
      *                                  or if the type of the setting does not match the type of the value.
+     * @throws IllegalStateException if the setting is not enabled or supported,
+     *                               or if the value is not valid, enabled, or supported.
      */
-    public <T extends Serializable> boolean set(Name settingName, T newValue) {
+    public <T extends Serializable> void set(Name settingName, T newValue) {
         if (newValue == null) {
             throw new IllegalArgumentException("Cannot set settings to null!");
         }
@@ -132,14 +133,11 @@ public class SettingsManager {
         T currentValue = state.getValue();
 
         if (currentValue.equals(newValue))
-            return true; //if the setting is already set to the relevant value, save us checking dependencies
+            return; //if the setting is already set to the relevant value, save us checking dependencies
 
         if (!definition.isValueSettable(newValue, this, game)) {
-            System.out.println("value was not settable: " + settingName + ", " + newValue);
-            System.out.println("current value is: " + currentValue + " (" + currentValue.getClass() + ")");
-            // TODO: should this method throw here, or return a boolean?
-            throw new RuntimeException();
-            //return false;
+            throw new IllegalStateException("Value was not settable: " + settingName + ", " + newValue + "\n"
+                    + "Current value is: " + currentValue + " (" + currentValue.getClass() + ")");
         }
 
         state.setValue(newValue);
@@ -149,8 +147,6 @@ public class SettingsManager {
         Set<Name> possibleChanges = checkDependencies(settingName);
         if(possibleChanges != null)
             alertListenersToPossibleEnablementChanges(possibleChanges);
-
-        return true;
     }
 
     /**

@@ -935,8 +935,8 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_REMOVE_TIME_BASED, peRemoveTimeBasedEvolutionsCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION, peAllowPikachuEvolutionCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, peUseEstimatedInsteadOfHardcodedLevelsCheckBox),
-                associateSlider(Name.SPECIES_EVOLUTIONS_MAKE_EASIER, peMakeEvolutionsEasierLvlSlider,
-                        peMakeEvolutionsEasierCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_MAKE_EASIER, peMakeEvolutionsEasierCheckBox),
+                associateSlider(Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL, peMakeEvolutionsEasierLvlSlider),
                 //--Randomize
                 associateButtonSet(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
                         Map.of(
@@ -1019,6 +1019,10 @@ public class RandomizerGUI {
 
         return new EnumSettingCoordinator<>(settingName, settingsManager, new EnumComboBoxManager<>(
                 comboBox, valuesInOrder, valuesToDisplay));
+    }
+
+    private NumericSettingCoordinator<Integer, SliderManager> associateSlider(Name settingName, JSlider slider) {
+        return new NumericSettingCoordinator<>(settingName, settingsManager, new SliderManager(slider));
     }
 
     private NumericSettingCoordinator<Integer, SliderManager> associateSlider(

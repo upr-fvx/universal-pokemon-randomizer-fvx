@@ -78,9 +78,6 @@ public abstract class SettingDefinition<V extends Serializable> {
 
     //The default value.
     protected final V defaultValue;
-    //TODO: variable default values? (By RomHandler only; changing default by SettingRestriction risks loops.)
-    // There is at least one case for this (Starter BST limits) although it's not *extremely* necessary.
-    // Two: Custom starters. (That's a bit more important.)
 
     protected final Class<? extends Serializable> type;
 
@@ -95,6 +92,7 @@ public abstract class SettingDefinition<V extends Serializable> {
     //A function that returns a variable default value depending on RomHandler.
     //If it returns null, defaultValue will be used.
     private final Function<RomHandler, V> variableDefaultValue;
+    //TODO: make variable default values actually work
 
     //A list of settings that disable or apply restrictions to this setting.
     //Different types of settings apply restrictions differently, so this list can only check if changes MIGHT occur,

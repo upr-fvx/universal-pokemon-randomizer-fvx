@@ -59,6 +59,8 @@ public class SettingsManager {
     private RomHandler game;
     private boolean updatedFromOldVersion;
 
+    private boolean batchMode = false;
+
     //endregion
 
     //region public functions
@@ -84,6 +86,8 @@ public class SettingsManager {
      * @throws ClassCastException if the setting's value cannot be cast to T.
      */
     public <T extends Serializable> T get(Name settingName) {
+        batchModeCheck();
+
         SettingState<T> state = getTypedState(settingName);
         try {
             return state.getValue();
@@ -110,6 +114,8 @@ public class SettingsManager {
      *                               or if the value is not valid, enabled, or supported.
      */
     public <T extends Serializable> void set(Name settingName, T newValue) {
+        batchModeCheck();
+
         if (newValue == null) {
             throw new IllegalArgumentException("Cannot set settings to null!");
         }
@@ -136,6 +142,59 @@ public class SettingsManager {
         Set<Name> possibleChanges = checkDependencies(settingName);
         if(possibleChanges != null)
             alertListenersToPossibleEnablementChanges(possibleChanges);
+    }
+
+    /**
+     * Sets the requested setting's state to the given value.
+     * Delays all checks (aside from validity) until the next call to batchFinish().
+     * batchFinish() should be called manually when the batch assignment is done,
+     * but if it is not, it will be automatically called at the start of a call
+     * to get(), set(), associateGame(), or unassociateGame().
+     * For security reasons, only works if the type of the value given exactly matches the type of the setting's
+     * current value.
+     * @param settingName The setting to set.
+     * @param newValue The value to set the setting to.
+     * @param <T> The type of the setting.
+     * @throws IllegalArgumentException if there is no setting of the given name,
+     *                                  or if the type of the setting does not match the type of the value,
+     *                                  or if the value given is never valid for the setting.
+     */
+    public <T extends Serializable> void batchSet(Name settingName, T newValue) {
+        if (newValue == null) {
+            throw new IllegalArgumentException("Cannot set settings to null!");
+        }
+
+        SettingState<T> state = getTypedState(settingName);
+        SettingDefinition<T> definition = state.getDefinition();
+
+        valueTypeCheck(newValue, definition);
+
+        T currentValue = state.getValue();
+
+        if (currentValue.equals(newValue))
+            return; //if the setting is already set to the relevant value, then we can skip some checks
+
+        if (!definition.isValueValid(newValue)) {
+            throw new IllegalStateException("Value was not valid: " + settingName + ", " + newValue);
+        }
+
+        state.setValue(newValue);
+        batchMode = true;
+
+        alertListenersToManualChange(settingName); //should this happen in batch mode?
+    }
+
+    /**
+     * Checks that every setting is currently set to a correct state, and resets it to default if it is not.
+     * For use after batchSet.
+     * Does nothing if batchSet has not been called since the last call of this function.
+     */
+    public void batchFinalize() {
+        if(!batchMode)
+            return;
+
+        settingStates.keySet().forEach(this::valueCorrectCheck);
+        batchMode = false;
     }
 
     /**
@@ -194,11 +253,14 @@ public class SettingsManager {
      * Immediately resets all unsupported settings and values to their default values.
      * The game must be unassociated before another game can be associated.
      * @param game The game to associate this SettingsManager with.
+     * @throws IllegalStateException if a game is already associated.
      */
     public void associateGame(RomHandler game) {
         if (this.game != null) {
             throw new IllegalStateException("Current game must be unassociated before associating new game.");
         }
+
+        batchModeCheck();
 
         this.game = game;
 
@@ -233,8 +295,14 @@ public class SettingsManager {
 
     /**
      * Removes the current game association, causing all settings to be considered supported.
+     * Does nothing if there is no game association.
      */
     public void unassociateGame() {
+        if (game == null)
+            return;
+
+        batchModeCheck();
+
         RomHandler oldGame = game;
         game = null;
 
@@ -471,7 +539,7 @@ public class SettingsManager {
      * @param settingName The setting to reset.
      * @throws IllegalArgumentException if there is no setting with the given name.
      */
-    public void reset(Name settingName) {
+    public void manualReset(Name settingName) {
         SettingState<?> state = getUntypedState(settingName);
         if (!state.isDefault()) {
             state.reset();
@@ -825,6 +893,40 @@ public class SettingsManager {
             throw new IllegalArgumentException("Parsing not defined for the type of setting: " + name);
         }
         return value;
+    }
+
+    /**
+     * Resets the given setting to its default value. May change other settings as a result.
+     * @param settingName The setting to reset.
+     * @throws IllegalArgumentException if there is no setting with the given name.
+     */
+    public void automaticReset(Name settingName) {
+        SettingState<?> state = getUntypedState(settingName);
+        if (!state.isDefault()) {
+            state.reset();
+            alertListenersToAutomaticChange(settingName);
+
+            Set<Name> possiblyChanged = checkDependencies(settingName);
+            alertListenersToPossibleEnablementChanges(possiblyChanged);
+        }
+    }
+
+    /**
+     * Checks if the SettingsManager is currently in batch mode, and ends it if it is.
+     */
+    private void batchModeCheck() {
+        if(batchMode)
+            batchFinalize();
+    }
+
+    /**
+     * Checks if the given setting is set to a correct (supported and enabled) value;
+     * resets it if it is not, potentially resetting dependent settings as well.
+     */
+    private void valueCorrectCheck(Name setting) {
+        SettingState<?> state = getUntypedState(setting);
+        if(!state.currentValueIsCorrect(this, game))
+            automaticReset(setting);
     }
 
     //Can't believe these aren't utility functions built into the language... anyway.

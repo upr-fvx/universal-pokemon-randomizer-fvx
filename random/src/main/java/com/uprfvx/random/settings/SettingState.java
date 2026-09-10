@@ -28,6 +28,16 @@ class SettingState<V extends Serializable> {
     }
 
     /**
+     * Checks that the current value of the SettingState is both enabled and supported.
+     * @param manager The SettingsManager holding the current state of the settings.
+     * @param game The RomHandler handling the game in question.
+     * @return True if the current value is valid, false otherwise.
+     */
+    public boolean currentValueIsCorrect(SettingsManager manager, RomHandler game) {
+        return currentValueIsEnabled(manager) && currentValueIsSupported(game);
+    }
+
+    /**
      * Checks that the current value of the SettingState is valid given the state of the SettingsManager.
      * @param manager The SettingsManager holding the current state of the settings.
      * @return True if the current value is valid, false otherwise.

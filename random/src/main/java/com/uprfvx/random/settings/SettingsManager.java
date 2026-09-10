@@ -32,14 +32,12 @@ import com.uprfvx.random.settings.definitions.SettingDefinition;
 import com.uprfvx.random.settings.settingstring.SettingsStringUpdater;
 import com.uprfvx.romio.romhandlers.*;
 import filefunctions.FileFunctions;
-import filefunctions.IOFunctions;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Stream;
-import java.util.zip.CRC32;
 
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 import static com.uprfvx.random.settings.Settings.Name;
@@ -59,6 +57,7 @@ public class SettingsManager {
     private Set<SettingChangeListener> universalListeners;
 
     private RomHandler game;
+    private boolean updatedFromOldVersion;
 
     //endregion
 
@@ -483,6 +482,88 @@ public class SettingsManager {
         }
     }
 
+    /**
+     * Resets all settings to default, then reads a String ini format output by {@link #toString()},
+     * and repopulates the setting states accordingly.<br>
+     * Sets {@link #updatedFromOldVersion} to true in case {@code Version} is an old version, false otherwise.<br>
+     * @throws IllegalArgumentException in case the format is incorrect.
+     */
+    public void populateFromIni(String ini) {
+        if (!ini.startsWith("[Settings]")) {
+            throw new IllegalArgumentException("Ini must start with [Settings]");
+        }
+
+        int versionID = -1;
+        String romName = "";
+        Map<Name, Serializable> nonDefaultValues = new HashMap<>();
+
+        for (String line : ini.split("\n")) {
+            line = line.trim();
+            String[] parts = line.split(">=|<|=");
+
+            switch (parts[0]) {
+                case "Version":
+                    versionID = Integer.parseInt(parts[1]);
+                    break;
+                case "Game":
+                    romName = parts[1];
+                    break;
+                case "Setting":
+                    Name name = Name.valueOf(parts[1]);
+                    Serializable value = parseIniSettingValue(name, parts[2]);
+                    nonDefaultValues.put(name, value);
+                    break;
+            }
+        }
+
+        if (versionID == -1) {
+            throw new IllegalArgumentException("Version ID must be set");
+        }
+        if (romName.isEmpty()) {
+            throw new IllegalArgumentException("ROM name must be set");
+        }
+
+        // TODO: complete
+        // Turn off automatic state correction.
+        resetAll();
+        for (Map.Entry<Name, Serializable> entry : nonDefaultValues.entrySet()) {
+            set(entry.getKey(), entry.getValue());
+        }
+        new SettingsUpdater().update(this, versionID);
+        // Correct all faulty states
+        // Turn on automatic state correction.
+
+        if (versionID != Version.LATEST.id) {
+            updatedFromOldVersion = true;
+        }
+        // TODO: some other output depending on loading from a different game, etc?
+        //  And maybe for corrupt (but still legible) inis too?
+    }
+
+    /**
+     * Outputs an ini-style description, including only the settings not in their default state.
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[Settings]\n");
+        sb.append("Version=").append(Version.LATEST.id).append("\n");
+        sb.append("Game=").append(game == null ? "NONE" : game.getROMName()).append("\n");
+        // assumes ALL_SETTINGS is being used to populate the states in this manager
+        for (SettingDefinition<?> setting : ALL_SETTINGS) {
+            Name name = setting.getName();
+            if (!isDefault(name)) {
+                sb.append("Setting<");
+                sb.append(name);
+                sb.append(">=");
+                sb.append(get(name).toString());
+                sb.append("\n");
+            }
+        }
+        sb.append("\n");
+
+        return sb.toString();
+    }
+
     //endregion
 
     //region private and package-private functions
@@ -719,6 +800,33 @@ public class SettingsManager {
         });
     }
 
+    /**
+     * Parses a string as a setting value, contextualized by the name of the setting said value is meant for.
+     * @param name The name of the relevant setting.
+     * @param toParse The String to parse as a value.
+     * @return A value that matches the type of the named setting.
+     * @throws IllegalArgumentException if the name does not correspond to a setting with a parsable type
+     * (Boolean, Integer, or Enum), or if an Integer or Enum value is invalid.
+     */
+    private Serializable parseIniSettingValue(Name name, String toParse) {
+        Class<?> type = get(name).getClass();
+        Serializable value;
+        if (type.equals(Boolean.class)) {
+            value = Boolean.parseBoolean(toParse);
+        } else if (type.equals(Integer.class)) {
+            try {
+                value = Integer.parseInt(toParse);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException(e);
+            }
+        } else if (type.isEnum()) {
+            value = Enum.valueOf(type.asSubclass(Enum.class), toParse);
+        } else {
+            throw new IllegalArgumentException("Parsing not defined for the type of setting: " + name);
+        }
+        return value;
+    }
+
     //Can't believe these aren't utility functions built into the language... anyway.
     //Maybe because they're non-deterministic if the comparators are equal
     // (but different in some non-comparison-affecting way)?
@@ -774,7 +882,6 @@ public class SettingsManager {
     public static final int MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL = 40;
 
     private String romName;
-    private boolean updatedFromOldVersion = false;
 
     public void writeToFileFormat(FileOutputStream out) throws IOException {
         byte[] settings = toStringWithoutVersion().getBytes(StandardCharsets.UTF_8);
@@ -831,8 +938,8 @@ public class SettingsManager {
         return settings;
     }
 
-    @Override
-    public String toString() {
+    @Deprecated
+    public String toStringOld() {
         return VERSION + toStringWithoutVersion();
     }
 

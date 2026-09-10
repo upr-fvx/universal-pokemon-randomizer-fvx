@@ -1669,7 +1669,7 @@ public class RandomizerGUI {
             attemptToLogException(ex,
                     "GUI.saveROM.saveFailedDialog.message",
                     "GUI.saveROM.saveFailedNoLogDialog.message",
-                    settings.toString(),
+                    settings.toStringOld(),
                     Long.toString(seed));
             log.close();
         }
@@ -1692,7 +1692,7 @@ public class RandomizerGUI {
         if (results.wasSaveSuccessful()) {
             if (!results.wasLogSuccessful()) {
                 attemptToLogException(results.getLogException(), "GUI.saveROM.logFailedDialog.message", "GUI.saveROM.logFailedNoLogDialog.message",
-                        true, settings.toString(), Long.toString(seed));
+                        true, settings.toStringOld(), Long.toString(seed));
             }
             SwingUtilities.invokeLater(() -> finishRandomization(
                     filename, seed, cpg, baos, results.getCheckValue(), raceMode, batchRandomization
@@ -1701,13 +1701,13 @@ public class RandomizerGUI {
             Exception e = results.getException();
             if (e instanceof RandomizationException) {
                 attemptToLogException(e, "GUI.saveROM.saveFailedDialog.message", "GUI.saveROM.saveFailedNoLogDialog.message", true,
-                        settings.toString(), Long.toString(seed));
+                        settings.toStringOld(), Long.toString(seed));
             } else if (e instanceof CannotWriteToLocationException) {
                 JOptionPane.showMessageDialog(mainPanel,
                         String.format(bundle.getString("GUI.saveROM.cannotWriteToLocationDialog.message"), filename));
             } else {
                 attemptToLogException(e, "GUI.saveROM.saveFailedIODialog.message", "GUI.saveROM.saveFailedIONoLogDialog.message",
-                        settings.toString(), Long.toString(seed));
+                        settings.toStringOld(), Long.toString(seed));
             }
 
             SwingUtilities.invokeLater(() -> {

@@ -163,7 +163,7 @@ public class RandomizationLogger {
         log.printf(getBS("Log.baseGame"), gameName);
         log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
-        log.printf(getBS("Log.settings"), settings.toString());
+        log.printf(getBS("Log.settings"), settings.toStringOld());
         log.println();
         log.printf(getBS("Log.problems"));
         log.println();

@@ -18,10 +18,16 @@ public class SettingsUpdater {
      * If the settings are old and there are any {@link SettingDefinition}s that
      * have since changed*, this method will update the settings accordingly.<br>
      * *E.g. been split, removed, renamed, or had their type changed.
+     * @param sm the SettingsManager
+     * @param versionID the ID of the version to update from
      */
-    public void update(SettingsManager sm) {
+    public void update(SettingsManager sm, int versionID) {
         // No SettingDefinitions have changed yet, so this method is appropriately empty.
-        // TODO: examples?
+
+        // Example:
+        // if (versionID < Version.[SPECIFIC_VERSION].id) {
+        //     [do the update here]
+        // }
     }
 
 }

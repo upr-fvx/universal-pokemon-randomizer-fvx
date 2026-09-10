@@ -47,7 +47,7 @@ public class SettingsTest {
     }
 
     @Test
-    public void EverySettingHasUniqueName() {
+    public void everySettingHasUniqueName() {
         Map<Settings.Name, Settings.Category> namesToCategories = new HashMap<>();
         boolean passing = true;
         for (SettingDefinition<?> setting : ALL_SETTINGS) {
@@ -75,5 +75,62 @@ public class SettingsTest {
             }
         }
         assert(passing);
+    }
+
+    /**
+     * Prints any Setting requirement loops. I.e. settings that somehow depend on their own state.
+     * These are not inherently bad, the rest of the code knows how to handle them, but can be good to know about.
+     */
+    @Test
+    public void printSettingRequirementLoops() {
+        System.out.println("Setting requirement loops:");
+
+        for (SettingDefinition<?> root : ALL_SETTINGS) {
+            Set<SettingDefinition<?>> visited = new HashSet<>();
+            boolean loop = false;
+            Map<SettingDefinition<?>, SettingDefinition<?>> path = new HashMap<>();
+
+            List<SettingDefinition<?>> queue = new LinkedList<>();
+            queue.add(root);
+            while (!queue.isEmpty()) {
+                SettingDefinition<?> node = queue.removeFirst();
+                visited.add(node);
+
+                List<? extends SettingDefinition<?>> children = node.getSettingsDependentOn().stream()
+                        .map(this::nameToSetting).toList();
+                for (SettingDefinition<?> child : children) {
+                    path.putIfAbsent(child, node);
+                    queue.add(child);
+
+                    if (child == root) {
+                        loop = true;
+                        queue.clear();
+                    } else if (visited.contains(child)) { // also a loop, but we'll properly report it later
+                        queue.clear();
+                    }
+                }
+            }
+
+            if (loop) {
+                System.out.println(root.getName() + " depends on itself.");
+                SettingDefinition<?> parent = path.get(root);
+                do {
+                    System.out.println("-> " + parent.getName());
+                    parent = path.get(parent);
+                } while (!parent.equals(root));
+                System.out.println();
+
+                queue.clear();
+            }
+        }
+    }
+
+    private SettingDefinition<?> nameToSetting(Settings.Name name) {
+        for (SettingDefinition<?> setting : ALL_SETTINGS) {
+            if (setting.getName() == name) {
+                return setting;
+            }
+        }
+        throw new IllegalArgumentException("No setting with name " + name);
     }
 }

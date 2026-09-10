@@ -1022,7 +1022,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM_BASIC);
+        s.set(Settings.Name.RANDOMIZE_STARTERS, Settings.StartersMod.RANDOM);
+        s.set(Settings.Name.STARTERS_BASIC_ONLY, true);
         s.set(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER, true);
 
         new StarterRandomizer(romHandler, s, RND).randomizeStarters();

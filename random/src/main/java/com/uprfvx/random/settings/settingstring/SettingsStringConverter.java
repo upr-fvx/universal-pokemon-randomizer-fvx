@@ -10,6 +10,7 @@ import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import filefunctions.IOFunctions;
 
+import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -63,7 +64,9 @@ public class SettingsStringConverter {
      * Takes a {@link SettingsManager} and a FVX v1.6.0 settings string (including version),
      * and converts the settings stored in the latter to populate the former.<br>
      * <b>NOTE:</b> this converts the settings into that of FVX v[VERSION]. Use {@link SettingsUpdater}
-     * to get settings that match the current version.
+     * to get settings that match the current version. Also, this uses
+     * {@link SettingsManager#batchSet(Settings.Name, Serializable) batch setting} without calling
+     * {@link SettingsManager#batchFinalize()}.
      * @throws NullPointerException if <code>manager</code> or <code>stringWithVersion</code> are null.
      * @throws IllegalArgumentException if the settings string is not of FVX v1.6.0, or is otherwise invalid.
      */
@@ -188,8 +191,8 @@ public class SettingsStringConverter {
         if(restoreState(d[4], 3)) {
             //This bit was "Random Basic with Two Evos", which is now three independent settings.
             //(The first is handled by the LoadEnum.)
-            m.set(Settings.Name.STARTERS_BASIC_ONLY, true);
-            m.set(Settings.Name.STARTERS_MINIMUM_EVOLUTION_STAGES, 2);
+            m.batchSet(Settings.Name.STARTERS_BASIC_ONLY, true);
+            m.batchSet(Settings.Name.STARTERS_MINIMUM_EVOLUTION_STAGES, 2);
         }
 
 
@@ -213,14 +216,14 @@ public class SettingsStringConverter {
         if (!hasGuaranteedMoves) {
             guaranteedMoveCount = 1;
         }
-        m.set(Settings.Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT, guaranteedMoveCount);
+        m.batchSet(Settings.Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT, guaranteedMoveCount);
 
 
         // Byte 12: Movesets Force Good Damaging
         loadBits(m, d, 12, 0, 7, Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT);
         // (12, 7) is a boolean that can entirely disable the option
         if (restoreState(d[12], 7)) {
-            m.set(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT, 0);
+            m.batchSet(Settings.Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT, 0);
         }
 
 
@@ -333,7 +336,7 @@ public class SettingsStringConverter {
         loadBits(m, d, 22, 0, 7, Settings.Name.TMS_GOOD_DAMAGING_PERCENT);
         // (22, 7) is a boolean that can entirely disable the option
         if (restoreState(d[22], 7)) {
-            m.set(Settings.Name.TMS_GOOD_DAMAGING_PERCENT, 0);
+            m.batchSet(Settings.Name.TMS_GOOD_DAMAGING_PERCENT, 0);
         }
 
 
@@ -358,7 +361,7 @@ public class SettingsStringConverter {
         loadBits(m, d, 24, 0, 7, Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT);
         // (24, 7) is a boolean that can entirely disable the option
         if (restoreState(d[24], 7)) {
-            m.set(Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT, 0);
+            m.batchSet(Settings.Name.TUTORS_GOOD_DAMAGING_PERCENT, 0);
         }
 
 
@@ -564,7 +567,7 @@ public class SettingsStringConverter {
             case 5 -> ExpCurve.SLOW;
             default -> throw new IllegalStateException("Invalid byte value for Standard EXP curve: " + d[48]);
         };
-        m.set(Settings.Name.SPECIES_EXP_CURVE_STANDARD_SELECTION, standard);
+        m.batchSet(Settings.Name.SPECIES_EXP_CURVE_STANDARD_SELECTION, standard);
 
 
         // Byte 49: Static Pokémon level modifier
@@ -604,9 +607,9 @@ public class SettingsStringConverter {
             case 4 -> Settings.CatchRateMod.GUARANTEED;
             default -> throw new IllegalStateException("Invalid minimal catch rate index: " + minCatchRateIndex);
         };
-        m.set(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION, minCatchRate);
+        m.batchSet(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION, minCatchRate);
         if (unchangedCatchRate) {
-            m.set(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION, Settings.CatchRateMod.UNCHANGED);
+            m.batchSet(Settings.Name.WILD_MINIMUM_CATCH_RATE_SELECTION, Settings.CatchRateMod.UNCHANGED);
         }
         // (52, 6--7) unused
 
@@ -700,16 +703,16 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 63, 1, Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
         // (63, 2--5) are booleans that can entirely disable other level percentage options
         if (!restoreState(d[63], 2)) {
-            m.set(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, 0);
+            m.batchSet(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, 0);
         }
         if (!restoreState(d[63], 3)) {
-            m.set(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT, 0);
+            m.batchSet(Settings.Name.WILD_LEVEL_MODIFIER_PERCENT, 0);
         }
         if (!restoreState(d[63], 4)) {
-            m.set(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT, 0);
+            m.batchSet(Settings.Name.TOTEMS_LEVEL_MODIFIER_PERCENT, 0);
         }
         if (!restoreState(d[63], 5)) {
-            m.set(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT, 0);
+            m.batchSet(Settings.Name.STATICS_LEVEL_MODIFIER_PERCENT, 0);
         }
         // (63, 6--7) unused
 
@@ -726,13 +729,13 @@ public class SettingsStringConverter {
         // (65, 2) unused
         // (65, 3) is a generation restriction override
         if (restoreState(d[65], 3)) {
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_1, false);
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_2, false);
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_3, false);
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_4, false);
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_5, false);
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_6, false);
-            m.set(Settings.Name.LIMIT_BAN_GENERATION_7, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_1, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_2, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_3, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_4, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_5, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_6, false);
+            m.batchSet(Settings.Name.LIMIT_BAN_GENERATION_7, false);
         }
         // (65, 4--7) unused
 
@@ -766,14 +769,14 @@ public class SettingsStringConverter {
     }
 
     private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {
-        manager.set(name, restoreState(data[byteNum], bitNum));
+        manager.batchSet(name, restoreState(data[byteNum], bitNum));
     }
 
     private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum,
                             Settings.Name name, boolean invert) {
         boolean state = restoreState(data[byteNum], bitNum);
         if (invert) {state = !state;}
-        manager.set(name, state);
+        manager.batchSet(name, state);
     }
 
     /**
@@ -782,7 +785,7 @@ public class SettingsStringConverter {
     private void loadBits(SettingsManager manager, byte[] data, int byteNum, int bitNum, int bitLength,
                          Settings.Name name) {
         int value = readBits(data, byteNum, bitNum, bitLength);
-        manager.set(name, value);
+        manager.batchSet(name, value);
     }
 
     /**
@@ -796,14 +799,14 @@ public class SettingsStringConverter {
      * Loads a signed byte.
      */
     private void loadByte(SettingsManager manager, byte[] data, int byteNum, Settings.Name name) {
-        manager.set(name, data[byteNum]);
+        manager.batchSet(name, data[byteNum]);
     }
 
     /**
      * Loads a signed byte, shifted by a constant.
      */
     private void loadByte(SettingsManager manager, byte[] data, int byteNum, Settings.Name name, int shift) {
-        manager.set(name, data[byteNum] + shift);
+        manager.batchSet(name, data[byteNum] + shift);
     }
 
     /**
@@ -813,14 +816,14 @@ public class SettingsStringConverter {
     private void loadPackedBytePair(SettingsManager manager, byte[] data, int highByteNum, int lowByteNum,
                                     int highMask, int highShift, Settings.Name name) {
         int value = ((data[highByteNum] & highMask) << highShift) | (data[lowByteNum] & 0xFF);
-        manager.set(name, value);
+        manager.batchSet(name, value);
     }
 
     /**
      * Loads a signed 2-byte small-endian int.
      */
     private void load2ByteInt(SettingsManager manager, byte[] data, int byteNum, Settings.Name name) {
-        manager.set(name, IOFunctions.read2ByteInt(data, byteNum));
+        manager.batchSet(name, IOFunctions.read2ByteInt(data, byteNum));
     }
 
     /**
@@ -839,11 +842,11 @@ public class SettingsStringConverter {
         }
 
         E value = enabledValues.getFirst();
-        manager.set(name, value);
+        manager.batchSet(name, value);
     }
 
     private void loadMiscTweak(SettingsManager manager, int allTweaks, int bitMask, Settings.Name name) {
-        manager.set(name, (allTweaks & bitMask) != 0);
+        manager.batchSet(name, (allTweaks & bitMask) != 0);
     }
 
 }

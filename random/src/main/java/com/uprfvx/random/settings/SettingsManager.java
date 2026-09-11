@@ -146,10 +146,11 @@ public class SettingsManager {
 
     /**
      * Sets the requested setting's state to the given value.
-     * Delays all checks (aside from validity) until the next call to batchFinish().
-     * batchFinish() should be called manually when the batch assignment is done,
+     * Delays all checks (aside from validity) until the next call to {@link #batchFinalize()}.<br>
+     * batchFinalize() should be called manually when the batch assignment is done,
      * but if it is not, it will be automatically called at the start of a call
-     * to get(), set(), associateGame(), or unassociateGame().
+     * to {@link #get(Name)}, {@link #set(Name, Serializable)}, {@link #associateGame(RomHandler)}, or
+     * {@link #unassociateGame()}.<br>
      * For security reasons, only works if the type of the value given exactly matches the type of the setting's
      * current value.
      * @param settingName The setting to set.
@@ -557,6 +558,7 @@ public class SettingsManager {
      * @throws IllegalArgumentException in case the format is incorrect.
      */
     public void populateFromIni(String ini) {
+        // TODO: break out first part?
         if (!ini.startsWith("[Settings]")) {
             throw new IllegalArgumentException("Ini must start with [Settings]");
         }
@@ -591,15 +593,12 @@ public class SettingsManager {
             throw new IllegalArgumentException("ROM name must be set");
         }
 
-        // TODO: complete
-        // Turn off automatic state correction.
         resetAll();
         for (Map.Entry<Name, Serializable> entry : nonDefaultValues.entrySet()) {
-            set(entry.getKey(), entry.getValue());
+            batchSet(entry.getKey(), entry.getValue());
         }
         new SettingsUpdater().update(this, versionID);
-        // Correct all faulty states
-        // Turn on automatic state correction.
+        batchFinalize();
 
         if (versionID != Version.LATEST.id) {
             updatedFromOldVersion = true;

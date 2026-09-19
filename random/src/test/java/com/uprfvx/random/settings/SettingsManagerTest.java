@@ -2,6 +2,9 @@ package com.uprfvx.random.settings;
 
 import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.Settings.Name;
+import com.uprfvx.random.settings.definitions.SettingDefinition;
+import com.uprfvx.romio.constants.SpeciesIDs;
+import com.uprfvx.romio.gamedata.Type;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -618,13 +621,6 @@ public class SettingsManagerTest {
         assertTrue(manager.isUpdatedFromOldVersion());
     }
 
-    // TODO: write tests
-    // - no game -> no game loads (with "may change" notification)
-    // - some game -> no game loads (with "may change" notification)
-    // - no game -> some game loads (with "not match" notification)
-    // - some game -> same game loads (with all is good notification)
-    // - some game -> other game loads (with "not match" notification)
-
     @Test
     public void populateFromIni_CanLoadSimple_Boolean() {
         SettingsManager manager = new SettingsManager();
@@ -664,9 +660,36 @@ public class SettingsManagerTest {
         assertEquals(Settings.PickupItemsMod.RANDOM, manager.get(Name.RANDOMIZE_PICKUP_ITEMS));
     }
 
-    // TODO: write tests
-    // - various tests for corrupt and/or invalid settings; batch correction etc
+    // TODO: write various tests for corrupt and/or invalid settings; batch correction etc
 
-    // - a complicated toString -> populateFromIni equals original
+    @Test
+    public void populateFromIni_ComplicatedSetOfSettings_CanSaveAndLoadFromIniCorrectly() {
+        // This test will be inherently fragile, since in a bigger set of settings *something*
+        // is likely to be changed. Not sure how to work around that best.
+        SettingsManager before = new SettingsManager();
+        before.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
+        before.set(Name.STARTER_CUSTOM_3, SpeciesIDs.chikorita);
+        before.set(Name.STARTERS_NO_DUAL_TYPES, true);
+        before.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.SINGLE_TYPE);
+        before.set(Name.STARTERS_SINGLE_TYPE_SELECTION, Type.GRASS.toInt());
+
+        SettingsManager after = new SettingsManager();
+        after.populateFromIni(before.toString());
+
+        System.out.println("before:\n" + before);
+        System.out.println("after:\n" + after);
+
+        assertTrue(allSettingsEquals(before, after));
+    }
+
+    private boolean allSettingsEquals(SettingsManager a, SettingsManager b) {
+        for (SettingDefinition<?> setting : Settings.ALL_SETTINGS) {
+            if (!a.get(setting.getName()).equals(b.get(setting.getName()))) {
+                System.out.println("setting mismatch: " + setting.getName());
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

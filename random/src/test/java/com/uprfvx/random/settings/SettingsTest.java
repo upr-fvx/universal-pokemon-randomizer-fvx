@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A class for tests on the set of SettingDefinitions.
@@ -25,9 +26,6 @@ public class SettingsTest {
                 System.out.println("Setting had exception: " + setting.getDefinition().getName());
                 throw e;
             }
-
-
-
         }
     }
 
@@ -43,7 +41,7 @@ public class SettingsTest {
                 passing = false;
             }
         }
-        assert(passing);
+        assertTrue(passing);
     }
 
     @Test
@@ -59,7 +57,7 @@ public class SettingsTest {
             namesToCategories.put(setting.getName(), setting.getCategory());
         }
 
-        assert passing;
+        assertTrue(passing);
     }
 
     @Test
@@ -74,7 +72,7 @@ public class SettingsTest {
                 passing = false;
             }
         }
-        assert(passing);
+        assertTrue(passing);
     }
 
     /**

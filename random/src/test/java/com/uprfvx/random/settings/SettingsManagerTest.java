@@ -23,7 +23,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
-        assert(!value);
+        assertFalse(value);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class SettingsManagerTest {
 
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
-        assert(value);
+        assertTrue(value);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         int value = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
-        assert (value == 9);
+        assertEquals(9, value);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class SettingsManagerTest {
 
         manager.set(Name.UPDATE_MOVES_TO_GENERATION, 8);
         int value = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
-        assert (value == 8);
+        assertEquals(8, value);
     }
 
     @Test
@@ -60,7 +60,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         Settings.BSTMod value = manager.get(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
-        assert (value == Settings.BSTMod.UNCHANGED);
+        assertEquals(Settings.BSTMod.UNCHANGED, value);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class SettingsManagerTest {
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
         Settings.BSTMod value = manager.get(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
-        assert (value == Settings.BSTMod.RANDOM);
+        assertEquals(Settings.BSTMod.RANDOM, value);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         int value = manager.get(Name.STARTER_CUSTOM_1);
-        assert (value == 0);
+        assertEquals(0, value);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class SettingsManagerTest {
 
         manager.set(Name.STARTER_CUSTOM_1, 8);
         int value = manager.get(Name.STARTER_CUSTOM_1);
-        assert (value == 8);
+        assertEquals(8, value);
     }
 
     //TODO: other data types used (String, Double, ?)
@@ -119,7 +119,7 @@ public class SettingsManagerTest {
         assertThrows(IllegalStateException.class,
                 () -> manager.set(Name.UPDATE_MOVES_TO_GENERATION, 1));
         int value = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
-        assert (value != 1);
+        assertNotEquals(1, value);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class SettingsManagerTest {
         assertThrows(IllegalStateException.class,
                 () -> manager.set(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, true));
         boolean value = manager.get(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
-        assert (!value);
+        assertFalse(value);
     }
 
     @Test
@@ -139,7 +139,7 @@ public class SettingsManagerTest {
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         manager.set(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
         int value = manager.get(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
-        assert (value == 22);
+        assertEquals(22, value);
     }
 
     @Test
@@ -149,11 +149,11 @@ public class SettingsManagerTest {
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         manager.set(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
         int value = manager.get(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
-        assumeTrue(value == 22);
+        assertEquals(22, value);
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
         value = manager.get(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE);
-        assert (value != 22);
+        assertNotEquals(22, value);
     }
 
     @Test
@@ -168,7 +168,7 @@ public class SettingsManagerTest {
         assertThrows(IllegalStateException.class,
                 () -> manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS));
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertNotEquals(Settings.StartersTypeMod.FIRE_WATER_GRASS, value);
     }
 
     @Test
@@ -178,7 +178,7 @@ public class SettingsManagerTest {
         manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert (value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertEquals(Settings.StartersTypeMod.FIRE_WATER_GRASS, value);
     }
 
     @Test
@@ -192,7 +192,7 @@ public class SettingsManagerTest {
 
         manager.set(Name.STARTER_CUSTOM_1, 15);
         value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertNotEquals(Settings.StartersTypeMod.FIRE_WATER_GRASS, value);
     }
 
     @Test
@@ -202,7 +202,7 @@ public class SettingsManagerTest {
 
         manager.addListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
-        assert(listener.manualSettingChangeCalled);
+        assertTrue(listener.manualSettingChangeCalled);
     }
 
     @Test
@@ -213,7 +213,7 @@ public class SettingsManagerTest {
         manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener);
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
 
-        assert(listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -225,7 +225,7 @@ public class SettingsManagerTest {
 
         manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener);
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -239,7 +239,7 @@ public class SettingsManagerTest {
         manager.addListener(Name.STARTERS_TYPE_RESTRICTION, listener);
         manager.set(Name.STARTER_CUSTOM_1, 0);
 
-        assert (listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -252,7 +252,7 @@ public class SettingsManagerTest {
         manager.addListener(Name.STARTERS_TYPE_RESTRICTION, listener);
         manager.set(Name.STARTER_CUSTOM_1, 15);
 
-        assert (listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -267,7 +267,7 @@ public class SettingsManagerTest {
         assumeFalse(listener.automaticSettingChangeCalled);
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener.automaticSettingChangeCalled);
+        assertTrue(listener.automaticSettingChangeCalled);
     }
 
     @Test
@@ -283,7 +283,7 @@ public class SettingsManagerTest {
         manager.addListener(Name.STARTERS_TYPE_RESTRICTION, listener);
 
         manager.set(Name.STARTER_CUSTOM_1, 15);
-        assert(listener.automaticSettingChangeCalled);
+        assertTrue(listener.automaticSettingChangeCalled);
     }
 
     @Test
@@ -293,13 +293,13 @@ public class SettingsManagerTest {
 
         manager.addUniversalListener(listener);
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
-        assert(listener.manualSettingChangeCalled);
+        assertTrue(listener.manualSettingChangeCalled);
 
         listener.reset();
         assumeFalse(listener.manualSettingChangeCalled);
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM);
-        assert(listener.manualSettingChangeCalled);
+        assertTrue(listener.manualSettingChangeCalled);
     }
 
     @Test
@@ -311,25 +311,25 @@ public class SettingsManagerTest {
 
         manager.addUniversalListener(listener);
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        assert(listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
         manager.set(Name.STARTER_CUSTOM_1, 15);
-        assert (listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         assumeFalse(listener.possibleEnablementChangeCalled);
 
         manager.set(Name.STARTER_CUSTOM_1, 0);
-        assert (listener.possibleEnablementChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -348,13 +348,13 @@ public class SettingsManagerTest {
         assumeFalse(listener.automaticSettingChangeCalled);
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener.automaticSettingChangeCalled);
+        assertTrue(listener.automaticSettingChangeCalled);
 
         listener.reset();
         assumeFalse(listener.automaticSettingChangeCalled);
 
         manager.set(Name.STARTER_CUSTOM_1, 15);
-        assert(listener.automaticSettingChangeCalled);
+        assertTrue(listener.automaticSettingChangeCalled);
     }
 
     @Test
@@ -371,7 +371,7 @@ public class SettingsManagerTest {
         assumeFalse(listener.manualSettingChangeCalled);
 
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
-        assert !listener.manualSettingChangeCalled;
+        assertFalse(listener.manualSettingChangeCalled);
 
         manager.addUniversalListener(listener);
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
@@ -382,7 +382,7 @@ public class SettingsManagerTest {
         assumeFalse(listener.manualSettingChangeCalled);
 
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
-        assert !listener.manualSettingChangeCalled;
+        assertFalse(listener.manualSettingChangeCalled);
     }
 
     @Test
@@ -394,22 +394,22 @@ public class SettingsManagerTest {
         manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener1);
         manager.addListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener2);
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        assert(listener1.possibleEnablementChangeCalled);
-        assert(listener2.possibleEnablementChangeCalled);
+        assertTrue(listener1.possibleEnablementChangeCalled);
+        assertTrue(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
         manager.set(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 16);
-        assert(listener1.manualSettingChangeCalled);
-        assert(listener2.manualSettingChangeCalled);
+        assertTrue(listener1.manualSettingChangeCalled);
+        assertTrue(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener1.automaticSettingChangeCalled);
-        assert(listener2.automaticSettingChangeCalled);
+        assertTrue(listener1.automaticSettingChangeCalled);
+        assertTrue(listener2.automaticSettingChangeCalled);
 
         manager.removeListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener1);
         manager.addUniversalListener(listener1);
@@ -417,22 +417,22 @@ public class SettingsManagerTest {
         listener2.reset();
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        assert(listener1.possibleEnablementChangeCalled);
-        assert(listener2.possibleEnablementChangeCalled);
+        assertTrue(listener1.possibleEnablementChangeCalled);
+        assertTrue(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
         manager.set(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 16);
-        assert(listener1.manualSettingChangeCalled);
-        assert(listener2.manualSettingChangeCalled);
+        assertTrue(listener1.manualSettingChangeCalled);
+        assertTrue(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener1.automaticSettingChangeCalled);
-        assert(listener2.automaticSettingChangeCalled);
+        assertTrue(listener1.automaticSettingChangeCalled);
+        assertTrue(listener2.automaticSettingChangeCalled);
 
         manager.removeListener(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, listener2);
         manager.addUniversalListener(listener2);
@@ -440,22 +440,22 @@ public class SettingsManagerTest {
         listener2.reset();
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
-        assert(listener1.possibleEnablementChangeCalled);
-        assert(listener2.possibleEnablementChangeCalled);
+        assertTrue(listener1.possibleEnablementChangeCalled);
+        assertTrue(listener2.possibleEnablementChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
         manager.set(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 16);
-        assert(listener1.manualSettingChangeCalled);
-        assert(listener2.manualSettingChangeCalled);
+        assertTrue(listener1.manualSettingChangeCalled);
+        assertTrue(listener2.manualSettingChangeCalled);
 
         listener1.reset();
         listener2.reset();
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.SHUFFLE);
-        assert(listener1.automaticSettingChangeCalled);
-        assert(listener2.automaticSettingChangeCalled);
+        assertTrue(listener1.automaticSettingChangeCalled);
+        assertTrue(listener2.automaticSettingChangeCalled);
     }
 
     @Test
@@ -467,7 +467,7 @@ public class SettingsManagerTest {
         manager.addListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         assumeTrue(listener.manualSettingChangeCalled);
-        assert listener.manualChangeCallCount == 1;
+        assertEquals(1, listener.manualChangeCallCount);
 
         listener.reset();
         manager.removeListener(Name.COSMETIC_RANDOM_INTRO_MON, listener);
@@ -478,7 +478,7 @@ public class SettingsManagerTest {
         manager.addUniversalListener(listener);
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, false);
         assumeTrue(listener.manualSettingChangeCalled);
-        assert listener.manualChangeCallCount == 1;
+        assertEquals(1, listener.manualChangeCallCount);
     }
 
     @Test
@@ -504,9 +504,9 @@ public class SettingsManagerTest {
         intValue = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
         enumValue = manager.get(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
 
-        assert (!boolValue);
-        assert (intValue != 8);
-        assert (enumValue != Settings.BSTMod.RANDOM);
+        assertFalse(boolValue);
+        assertNotEquals(8, intValue);
+        assertNotEquals(Settings.BSTMod.RANDOM, enumValue);
     }
 
     @Test
@@ -519,8 +519,8 @@ public class SettingsManagerTest {
 
         manager.resetAll();
 
-        assert listener.manualSettingChangeCalled;
-        assert listener.possibleEnablementChangeCalled;
+        assertTrue(listener.manualSettingChangeCalled);
+        assertTrue(listener.possibleEnablementChangeCalled);
 
         manager.removeUniversalListener(listener);
         listener.reset();
@@ -529,8 +529,8 @@ public class SettingsManagerTest {
 
         manager.resetAll();
 
-        assert listener.manualSettingChangeCalled;
-        assert !listener.possibleEnablementChangeCalled;
+        assertTrue(listener.manualSettingChangeCalled);
+        assertFalse(listener.possibleEnablementChangeCalled);
     }
 
     @Test
@@ -542,14 +542,14 @@ public class SettingsManagerTest {
         manager.addUniversalListener(listener);
 
         manager.resetAll();
-        assert !listener.automaticSettingChangeCalled;
+        assertFalse(listener.automaticSettingChangeCalled);
 
         manager.set(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS, Settings.BSTMod.RANDOM_BUFF_NERF);
         manager.set(Name.SPECIES_BST_RANDOM_BUFF_NERF_PERCENTAGE, 22);
         listener.reset();
 
         manager.resetAll();
-        assert !listener.automaticSettingChangeCalled;
+        assertFalse(listener.automaticSettingChangeCalled);
 
         manager.removeUniversalListener(listener);
         listener.reset();
@@ -558,7 +558,7 @@ public class SettingsManagerTest {
 
         manager.resetAll();
 
-        assert !listener.automaticSettingChangeCalled;
+        assertFalse(listener.automaticSettingChangeCalled);
     }
 
     @Test
@@ -568,23 +568,23 @@ public class SettingsManagerTest {
         manager.addUniversalListener(listener);
         manager.set(Name.UPDATE_MOVES, false);
 
-        assert !listener.manualSettingChangeCalled;
-        assert !listener.automaticSettingChangeCalled;
-        assert !listener.possibleEnablementChangeCalled;
+        assertFalse(listener.manualSettingChangeCalled);
+        assertFalse(listener.automaticSettingChangeCalled);
+        assertFalse(listener.possibleEnablementChangeCalled);
 
         manager.set(Name.UPDATE_MOVES, true);
-        assert !listener.automaticSettingChangeCalled;
+        assertFalse(listener.automaticSettingChangeCalled);
         assumeTrue(listener.manualSettingChangeCalled);
         assumeTrue(listener.possibleEnablementChangeCalled);
 
         listener.reset();
         manager.set(Name.UPDATE_MOVES, true);
-        assert !listener.manualSettingChangeCalled;
-        assert !listener.automaticSettingChangeCalled;
-        assert !listener.possibleEnablementChangeCalled;
+        assertFalse(listener.manualSettingChangeCalled);
+        assertFalse(listener.automaticSettingChangeCalled);
+        assertFalse(listener.possibleEnablementChangeCalled);
 
         manager.set(Name.UPDATE_MOVES, false);
-        assert !listener.automaticSettingChangeCalled;
+        assertFalse(listener.automaticSettingChangeCalled);
         assumeTrue(listener.manualSettingChangeCalled);
         assumeTrue(listener.possibleEnablementChangeCalled);
     }

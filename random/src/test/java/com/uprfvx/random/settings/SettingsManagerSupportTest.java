@@ -21,7 +21,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         assertThrows(IllegalStateException.class,
                 () -> manager.set(Name.LIMIT_BAN_GENERATION_1, true));
         boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
-        assert(!value);
+        assertFalse(value);
     }
 
     @Test
@@ -34,7 +34,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.set(Name.LIMIT_BAN_GENERATION_1, true);
 
         boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
-        assert(value);
+        assertTrue(value);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         assertThrows(IllegalStateException.class,
                 () -> manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS));
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert(value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertNotEquals(Settings.StartersTypeMod.FIRE_WATER_GRASS, value);
     }
 
     @Test
@@ -64,7 +64,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.UNIQUE);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert(value == Settings.StartersTypeMod.UNIQUE);
+        assertEquals(Settings.StartersTypeMod.UNIQUE, value);
     }
 
     @Test
@@ -78,7 +78,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
 
         manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert(value == Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertEquals(Settings.StartersTypeMod.FIRE_WATER_GRASS, value);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.associateGame(romHandler);
 
         value = manager.get(Name.LIMIT_BAN_GENERATION_1);
-        assert(!value);
+        assertFalse(value);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.associateGame(romHandler);
 
         value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
-        assert(value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertNotEquals(Settings.StartersTypeMod.FIRE_WATER_GRASS, value);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         manager.set(Name.LIMIT_BAN_GENERATION_1, true);
 
         boolean value = manager.get(Name.LIMIT_BAN_GENERATION_1);
-        assert(value);
+        assertTrue(value);
     }
 
     @Test

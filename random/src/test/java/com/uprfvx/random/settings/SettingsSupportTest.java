@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.Collection;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class SettingsSupportTest extends RomHandlerTest {
 
     @ParameterizedTest
@@ -42,6 +44,6 @@ public class SettingsSupportTest extends RomHandlerTest {
                 passing = false;
             }
         }
-        assert(passing);
+        assertTrue(passing);
     }
 }

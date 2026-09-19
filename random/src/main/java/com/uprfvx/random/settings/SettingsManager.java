@@ -59,7 +59,11 @@ public class SettingsManager {
     private Set<SettingChangeListener> universalListeners;
 
     private RomHandler game;
+
+    // TODO: break out into "results" record?
     private boolean updatedFromOldVersion;
+    public enum GameMatch { NO_GAME_LOADED, NO_MATCH, MATCH }
+    private GameMatch loadedSettingsMatchGame;
 
     private boolean batchMode = false;
 
@@ -88,8 +92,6 @@ public class SettingsManager {
      * @throws ClassCastException if the setting's value cannot be cast to T.
      */
     public <T extends Serializable> T get(Name settingName) {
-        batchModeCheck();
-
         SettingState<T> state = getTypedState(settingName);
         try {
             return state.getValue();
@@ -151,7 +153,7 @@ public class SettingsManager {
      * Delays all checks (aside from validity) until the next call to {@link #batchFinalize()}.<br>
      * batchFinalize() should be called manually when the batch assignment is done,
      * but if it is not, it will be automatically called at the start of a call
-     * to {@link #get(Name)}, {@link #set(Name, Serializable)}, {@link #associateGame(RomHandler)}, or
+     * to {@link #set(Name, Serializable)}, {@link #associateGame(RomHandler)}, or
      * {@link #unassociateGame()}.<br>
      * For security reasons, only works if the type of the value given exactly matches the type of the setting's
      * current value.
@@ -575,8 +577,15 @@ public class SettingsManager {
         if (entry.getVersionID() != Version.LATEST.id) {
             updatedFromOldVersion = true;
         }
-        // TODO: some other output depending on loading from a different game, etc?
-        //  And maybe for corrupt (but still legible) inis too?
+        if (game == null) {
+            loadedSettingsMatchGame = GameMatch.NO_GAME_LOADED;
+        } else if (entry.getROMName().equals(game.getROMName())) {
+            loadedSettingsMatchGame = GameMatch.MATCH;
+        } else {
+            loadedSettingsMatchGame = GameMatch.NO_MATCH;
+        }
+
+        // TODO: some other output depending on corrupted (but still legible) inis?
     }
 
     /**
@@ -1683,4 +1692,7 @@ public class SettingsManager {
         this.updatedFromOldVersion = updatedFromOldVersion;
     }
 
+    public GameMatch getLoadedSettingsMatchGame() {
+        return loadedSettingsMatchGame;
+    }
 }

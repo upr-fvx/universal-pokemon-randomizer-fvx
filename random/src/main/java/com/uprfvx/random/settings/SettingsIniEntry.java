@@ -56,7 +56,7 @@ class SettingsIniEntry extends IniEntry {
     public static SettingsIniEntry readFromString(String s) {
         Matcher matcher = Pattern.compile(ENTRY_REGEX).matcher(s);
         if (matcher.find()) {
-            String entryBlock = matcher.group(1);
+            String entryBlock = matcher.group();
             SettingsIniEntry entry = new SettingsIniEntryReader().readFromString(entryBlock).getFirst();
             if (entry.getVersionID() == 0) {
                 throw new IllegalArgumentException("Settings Ini Entry does not contain a VersionID");

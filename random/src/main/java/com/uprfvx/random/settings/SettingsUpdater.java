@@ -8,7 +8,7 @@ import com.uprfvx.random.settings.settingstring.SettingsStringUpdater;
  * Updates older settings to be compatible with the current version
  * of the Randomizer.
  * <br><br>
- * To update from the "settings string" format used up to FVX v1.6.0,
+ * To update from the "settings string" format used up to FVX v1.6.1,
  * use {@link SettingsStringUpdater} and {@link SettingsStringConverter}.
  */
 public class SettingsUpdater {

@@ -1,9 +1,10 @@
 package com.uprfvx.random.settings;
 
+import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.Settings.Name;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
@@ -19,7 +20,7 @@ public class SettingsManagerTest {
         SettingsManager manager = new SettingsManager();
 
         boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
-        assert(value == false);
+        assert(!value);
     }
 
     @Test
@@ -28,7 +29,7 @@ public class SettingsManagerTest {
 
         manager.set(Name.COSMETIC_RANDOM_INTRO_MON, true);
         boolean value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
-        assert(value == true);
+        assert(value);
     }
 
     @Test
@@ -92,7 +93,9 @@ public class SettingsManagerTest {
     public void getWrongTypeThrows() {
         SettingsManager manager = new SettingsManager();
 
-        Exception e = assertThrows(ClassCastException.class, () -> {
+        assertThrows(ClassCastException.class, () -> {
+            // this "int value" is necessary for the ClassCastException,
+            // even if the IDE might think it is "not used"
             int value = manager.get(Name.COSMETIC_RANDOM_INTRO_MON);
         });
     }
@@ -101,7 +104,7 @@ public class SettingsManagerTest {
     public void setWrongTypeThrows() {
         SettingsManager manager = new SettingsManager();
 
-        Exception e = assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalArgumentException.class, () -> {
             manager.set(Name.COSMETIC_RANDOM_INTRO_MON, 3.0);
         });
     }
@@ -110,7 +113,8 @@ public class SettingsManagerTest {
     public void setToOutOfRangeValueFails() {
         SettingsManager manager = new SettingsManager();
 
-        manager.set(Name.UPDATE_MOVES_TO_GENERATION, 1);
+        assertThrows(IllegalStateException.class,
+                () -> manager.set(Name.UPDATE_MOVES_TO_GENERATION, 1));
         int value = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
         assert (value != 1);
     }
@@ -119,9 +123,10 @@ public class SettingsManagerTest {
     public void setToDisabledSettingFails() {
         SettingsManager manager = new SettingsManager();
 
-        manager.set(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, true);
+        assertThrows(IllegalStateException.class,
+                () -> manager.set(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY, true));
         boolean value = manager.get(Name.SPECIES_BST_SHUFFLE_LEGENDARIES_SEPARATELY);
-        assert (value != true);
+        assert (!value);
     }
 
     @Test
@@ -157,7 +162,8 @@ public class SettingsManagerTest {
         manager.set(Name.RANDOMIZE_STARTERS, Settings.StartersMod.CUSTOM);
         manager.set(Name.STARTER_CUSTOM_1, 15);
 
-        manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS);
+        assertThrows(IllegalStateException.class,
+                () -> manager.set(Name.STARTERS_TYPE_RESTRICTION, Settings.StartersTypeMod.FIRE_WATER_GRASS));
         Settings.StartersTypeMod value = manager.get(Name.STARTERS_TYPE_RESTRICTION);
         assert (value != Settings.StartersTypeMod.FIRE_WATER_GRASS);
     }
@@ -495,7 +501,7 @@ public class SettingsManagerTest {
         intValue = manager.get(Name.UPDATE_MOVES_TO_GENERATION);
         enumValue = manager.get(Name.RANDOMIZE_SPECIES_BASE_STAT_TOTALS);
 
-        assert (boolValue != true);
+        assert (!boolValue);
         assert (intValue != 8);
         assert (enumValue != Settings.BSTMod.RANDOM);
     }
@@ -588,5 +594,79 @@ public class SettingsManagerTest {
 
     }
 
+    @Test
+    public void populateFromIni_LatestVersion_NotUpdated() {
+        SettingsManager manager = new SettingsManager();
+        manager.populateFromIni(String.format("""
+                        [Settings]
+                        VersionID=%d
+                        ROMName=NONE
+                        [Settings_end]
+                        """, Version.LATEST.id));
+        assertFalse(manager.isUpdatedFromOldVersion());
+    }
+
+    @Test
+    public void populateFromIni_NotLatestVersion_IsUpdated() {
+        SettingsManager manager = new SettingsManager();
+        manager.populateFromIni(String.format("""
+                        [Settings]
+                        VersionID=%d
+                        ROMName=NONE
+                        [Settings_end]
+                        """, Version.FVX_1_6_1.id));
+        assertTrue(manager.isUpdatedFromOldVersion());
+    }
+
+    // TODO: write tests
+    // - no game -> no game loads (with "may change" notification)
+    // - some game -> no game loads (with "may change" notification)
+    // - no game -> some game loads (with "not match" notification)
+    // - some game -> same game loads (with all is good notification)
+    // - some game -> other game loads (with "not match" notification)
+
+    @Test
+    public void populateFromIni_CanLoadSimple_Boolean() {
+        SettingsManager manager = new SettingsManager();
+        manager.populateFromIni(String.format("""
+                        [Settings]
+                        VersionID=%d
+                        ROMName=NONE
+                        Setting<UPDATE_MOVES>=true
+                        [Settings_end]
+                        """, Version.LATEST.id));
+        assertTrue((boolean) manager.get(Name.UPDATE_MOVES));
+    }
+
+    @Test
+    public void populateFromIni_CanLoadSimple_Integer() {
+        SettingsManager manager = new SettingsManager();
+        manager.populateFromIni(String.format("""
+                        [Settings]
+                        VersionID=%d
+                        ROMName=NONE
+                        Setting<TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT>=1
+                        [Settings_end]
+                        """, Version.LATEST.id));
+        assertEquals(1, (Integer) manager.get(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT));
+    }
+
+    @Test
+    public void populateFromIni_CanLoadSimple_Enum() {
+        SettingsManager manager = new SettingsManager();
+        manager.populateFromIni(String.format("""
+                        [Settings]
+                        VersionID=%d
+                        ROMName=NONE
+                        Setting<RANDOMIZE_PICKUP_ITEMS>=RANDOM
+                        [Settings_end]
+                        """, Version.LATEST.id));
+        assertEquals(Settings.PickupItemsMod.RANDOM, manager.get(Name.RANDOMIZE_PICKUP_ITEMS));
+    }
+
+    // TODO: write tests
+    // - various tests for corrupt and/or invalid settings; batch correction etc
+
+    // - a complicated toString -> populateFromIni equals original
 
 }

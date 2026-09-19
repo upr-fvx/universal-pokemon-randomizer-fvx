@@ -33,7 +33,7 @@ import java.util.zip.CRC32;
 /**
  * Updates settings strings (see {@link SettingsStringConverter})
  * that were created in even older versions of the Randomizer, to the format
- * used in FVX v1.6.0. For updating modern settings to match the current
+ * used in FVX v1.6.1. For updating modern settings to match the current
  * version, see {@link SettingsUpdater}.
  * <br><br>
  * This class is for keeping compatibility with legacy versions.

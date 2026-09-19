@@ -20,12 +20,12 @@ import java.util.zip.CRC32;
 
 /**
  * Used to convert settings from the "settings string" format
- * used in FVX v1.6.0 into the modern format used in FVX v[VERSION].
+ * used in FVX v1.6.1 into the modern format used in FVX v1.7.0.
  * <br><br>
- * This class only converts from FVX v1.6.0 into FVX v[VERSION].<br>
- * To convert an older settings string into the format of FVX v1.6.0,
+ * This class only converts from FVX v1.6.1 into FVX v1.7.0.<br>
+ * To convert an older settings string into the format of FVX v1.6.1,
  * use {@link SettingsStringUpdater}.<br>
- * To convert FVX v[VERSION] settings into those of the current version,
+ * To convert FVX v1.7.0 settings into those of the current version,
  * use {@link SettingsUpdater}.
  * <br><br>
  * The "settings string" format is an old format the Randomizer used
@@ -61,14 +61,14 @@ public class SettingsStringConverter {
     }
 
     /**
-     * Takes a {@link SettingsManager} and a FVX v1.6.0 settings string (including version),
+     * Takes a {@link SettingsManager} and a FVX v1.6.1 settings string (including version),
      * and converts the settings stored in the latter to populate the former.<br>
-     * <b>NOTE:</b> this converts the settings into that of FVX v[VERSION]. Use {@link SettingsUpdater}
+     * <b>NOTE:</b> this converts the settings into that of FVX v1.7.0. Use {@link SettingsUpdater}
      * to get settings that match the current version. Also, this uses
      * {@link SettingsManager#batchSet(Settings.Name, Serializable) batch setting} without calling
      * {@link SettingsManager#batchFinalize()}.
      * @throws NullPointerException if <code>manager</code> or <code>stringWithVersion</code> are null.
-     * @throws IllegalArgumentException if the settings string is not of FVX v1.6.0, or is otherwise invalid.
+     * @throws IllegalArgumentException if the settings string is not of FVX v1.6.1, or is otherwise invalid.
      */
     public void convertAndPopulate(SettingsManager manager, String stringWithVersion) {
         if (manager == null) {
@@ -96,9 +96,9 @@ public class SettingsStringConverter {
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Not a valid version id: " + versionChars);
         }
-        if (versionID >= Version.FVX_1_6_0.id) {
-            throw new IllegalArgumentException("Version id does not match that of FVX v1.6.0\n." +
-                    "\tExpected=" + Version.FVX_1_6_0.id + ", Was=" + versionID);
+        if (versionID >= Version.FVX_1_6_1.id) {
+            throw new IllegalArgumentException("Version id does not match that of FVX v1.6.1\n." +
+                    "\tExpected=" + Version.FVX_1_6_1.id + ", Was=" + versionID);
         }
     }
 

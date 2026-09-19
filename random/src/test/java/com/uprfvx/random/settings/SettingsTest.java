@@ -4,8 +4,10 @@ import com.uprfvx.random.settings.definitions.SettingDefinition;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
+import static com.uprfvx.random.settings.Settings.REMOVED_SETTINGS;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -41,6 +43,24 @@ public class SettingsTest {
                 passing = false;
             }
         }
+        assertTrue(passing);
+    }
+
+    @Test
+    public void everyNameHasASetting() {
+        boolean passing = true;
+
+        Set<Settings.Name> usedNames = new HashSet<>();
+        usedNames.addAll(ALL_SETTINGS.stream().map(SettingDefinition::getName).collect(Collectors.toSet()));
+        usedNames.addAll(REMOVED_SETTINGS.stream().map(SettingDefinition::getName).collect(Collectors.toSet()));
+
+        for (Settings.Name name : Settings.Name.values()) {
+            if (!usedNames.contains(name)) {
+                System.out.println(name + " is not used.");
+                passing = false;
+            }
+        }
+
         assertTrue(passing);
     }
 

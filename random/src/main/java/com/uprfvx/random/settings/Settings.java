@@ -1079,6 +1079,10 @@ public class Settings {
                     Category.MOVE_TRAITS)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.MOVES_RANDOMIZE_TYPE,
+                    Category.MOVE_TRAITS)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.MOVES_RANDOMIZE_CATEGORY,
                     Category.MOVE_TRAITS)
                     .supported(RomHandler::hasPhysicalSpecialSplit)
@@ -1698,7 +1702,7 @@ public class Settings {
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_TM_AND_HM_COMPATABILITY,
                     Category.TM_AND_HM_COMPATABILITY,
-                    TMsHMsCompatibilityMod.UNCHANGED)
+                    TMsHMsCompatibilityMod.UNCHANGED) // TODO: hide "full HM compatibility" if game has no HMs
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TM_COMPATABILITY_LEVEL_UP_SANITY,

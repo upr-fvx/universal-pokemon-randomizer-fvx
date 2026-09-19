@@ -540,6 +540,7 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
+    private JPanel limitSpeciesPanel;
 
     //endregion
 
@@ -905,6 +906,11 @@ public class RandomizerGUI {
                 //TODO: complete list of settings
         );
 
+        // proof of concept. might still be unwieldy for bigger panels
+        AutoHideListener.associate(limitSpeciesPanel, settingsManager,
+                Name.LIMIT_BAN_GENERATION_1, Name.LIMIT_BAN_GENERATION_2, Name.LIMIT_BAN_GENERATION_3,
+                Name.LIMIT_BAN_GENERATION_4, Name.LIMIT_BAN_GENERATION_5, Name.LIMIT_BAN_GENERATION_6,
+                Name.LIMIT_BAN_GENERATION_7, Name.LIMIT_ALLOW_RELATIVES);
     }
 
     //region associate controls helper methods
@@ -2541,6 +2547,8 @@ public class RandomizerGUI {
             loadSettingsButton.setEnabled(true);
             saveSettingsButton.setEnabled(true);
 
+            settingsManager.unassociateGame();
+            settingsManager.associateGame(romHandler);
             // TODO: make sure settings are reset if not supported at this point
             // TODO: clean up
 

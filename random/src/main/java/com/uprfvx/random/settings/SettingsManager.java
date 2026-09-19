@@ -283,7 +283,7 @@ public class SettingsManager {
             }
 
             SettingDefinition<?> definition = state.getDefinition();
-            boolean isSupported = !definition.isSupported(game);
+            boolean isSupported = definition.isSupported(game);
             alertListenersToSupportEvents(name, !isSupported, isSupported,
                     definition.hasValueSupportRestrictions(), didReset, game);
         }

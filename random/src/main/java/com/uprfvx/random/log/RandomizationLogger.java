@@ -138,6 +138,7 @@ public class RandomizationLogger {
         logHead();
         logTableOfContents();
         logOverview();
+        logSettings();
         logOptionalSections();
         logStatistics(startTime);
         logDiagnostics();
@@ -163,7 +164,6 @@ public class RandomizationLogger {
         log.printf(getBS("Log.baseGame"), gameName);
         log.printf(getBS("Log.version"), Version.LATEST.branchName, Version.LATEST.name);
         log.printf(getBS("Log.seed"), randomSource.getSeed());
-        log.printf(getBS("Log.settings"), settings.toStringOld());
         log.println();
         log.printf(getBS("Log.problems"));
         log.println();
@@ -177,6 +177,7 @@ public class RandomizationLogger {
         log.printf(getBS("Log.toc.instruction"));
         printContentsRow("toc");
         printContentsRow("overview");
+        printContentsRow("settings");
         printOptionalContentsRows();
         printContentsRow("stat");
         printContentsRow("dg");
@@ -263,6 +264,7 @@ public class RandomizationLogger {
 
     private void logOverview() {
         printSectionTitle("overview");
+        // TODO: do we want any info of the "general" options?
         // The overview lines intentionally (mostly) map to panels in the UI, thus they share their bundle strings.
         logOverviewLine(getBS("GUI.traitsTab.statsPanel.title"),
                 speciesBSRandomizer.isChangesMade() || speciesBSUpdater.isUpdated(), true);
@@ -303,14 +305,6 @@ public class RandomizationLogger {
                 romHandler.hasPokemonPaletteSupport());
         log.println();
 
-        if (miscTweakRandomizer.isChangesMade()) {
-            log.printf(getBS("Log.overview.miscTweaks"));
-            // TODO: new misc tweak logging (if any)
-        } else {
-            log.printf(getBS("Log.overview.noMiscTweaks"));
-        }
-        log.println();
-
         if (introPokeRandomizer.isChangesMade()) {
             log.printf(getBS("Log.overview.introPokemon"), introPokeRandomizer.getIntroSpecies().getFullName());
         }
@@ -324,6 +318,12 @@ public class RandomizationLogger {
                     getBS("Log.overview.changed") :
                     getBS("Log.overview.unchanged"));
         }
+    }
+
+    private void logSettings() {
+        printSectionTitle("settings");
+        log.print(settings);
+        printSectionSeparator();
     }
 
     private void logStatistics(long startTime) {

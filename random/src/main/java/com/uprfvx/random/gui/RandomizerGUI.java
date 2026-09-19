@@ -22,7 +22,10 @@ package com.uprfvx.random.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.*;
+import com.uprfvx.random.BatchRandomizationSettings;
+import com.uprfvx.random.GameRandomizer;
+import com.uprfvx.random.SysConstants;
+import com.uprfvx.random.Version;
 import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
@@ -32,12 +35,10 @@ import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
-import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.RootPath;
-import com.uprfvx.romio.constants.GlobalConstants;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
-import com.uprfvx.romio.gamedata.*;
+import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
 import com.uprfvx.romio.romio.ROMFilter;
@@ -46,7 +47,10 @@ import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -545,10 +549,8 @@ public class RandomizerGUI {
 
     private static JFrame frame;
 
-    private static String launcherInput = "";
     public static boolean usedLauncher = false;
 
-    private GenRestrictions currentRestrictions;
     private OperationDialog opDialog;
 
     private final ResourceBundle bundle;
@@ -598,7 +600,7 @@ public class RandomizerGUI {
 
     private BatchRandomizationSettings batchRandomizationSettings;
 
-    private SettingsManager settingsManager;
+    private final SettingsManager settingsManager;
 
     public RandomizerGUI() {
         ToolTipManager.sharedInstance().setInitialDelay(400);
@@ -613,7 +615,6 @@ public class RandomizerGUI {
         haveCheckedCustomNames = false;
         attemptReadConfig();
         initExplicit();
-        //initTweaksPanel();
         initFileChooserDirectories();
 
         boolean canWrite = attemptWriteConfig();
@@ -667,89 +668,7 @@ public class RandomizerGUI {
         settingsManager = new SettingsManager();
         associateSettingControls();
 
-
-        List<AbstractButton> subControlButtons = List.of(new AbstractButton[] {
-                lsNoIrregularAltFormesCheckBox, lsNoPrematureEvosCheckbox,
-
-                sbstUnchangedRadioButton, sbstRandomBuffNerfRadioButton, sbstShuffleRadioButton, sbstRandomRadioButton,
-
-                sbsdUnchangedRadioButton, sbsdShuffleRadioButton, sbsdRandomRadioButton, sbsdFollowMegaEvosCheckBox,
-                sbsdFollowEvolutionsCheckBox, secStandardizeEXPCurvesCheckBox, sbsUpdateBaseStatsCheckBox,
-
-                stUnchangedRadioButton, stRandomFollowEvolutionsRadioButton, stRandomCompletelyRadioButton,
-                stForceDualTypeCheckBox,
-
-                saUnchangedRadioButton, saRandomRadioButton,
-
-                peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
-                peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox, peAllowAltFormesCheckBox,
-
-                spUnchangedRadioButton, spCustomRadioButton, spRandomRadioButton,
-                spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton, spTypeSingleRadioButton,
-                spTypeNoDualCheckbox,
-                spBSTMinimumCheckbox, spBSTMaximumCheckbox, spRandomizeStarterHeldItemsCheckBox,
-
-                seUnchangedRadioButton, seSwapLegendariesSwapStandardsRadioButton, seRandomCompletelyRadioButton,
-                seRandomSimilarStrengthRadioButton, sePercentageLevelModifierCheckBox,
-
-                mdUpdateMovesCheckBox,
-
-                slmUnchangedRadioButton, slmRandomPreferringSameTypeRadioButton, slmRandomCompletelyRadioButton,
-                slmMetronomeOnlyModeRadioButton, slmGuaranteedLevel1MovesCheckBox, slmForceGoodDamagingCheckBox,
-
-                tpTrainersEvolveTheirPokemonCheckbox, tpPercentageLevelModifierCheckBox,
-                tpEliteFourUniquePokemonCheckBox, tbsUnchangedStyleRadioButton, tbsRandomStyleRadioButton,
-                tpAllowAlternateFormesCheckBox, tpAddToBossTrainersCheckBox, tpAddToImportantTrainersCheckBox,
-                tpAddToRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
-                tpRegularTrainersItemsCheckBox,
-
-                totpUnchangedRadioButton, totpRandomRadioButton, totpRandomSimilarStrengthRadioButton,
-                totpAllyUnchangedRadioButton, totpAllyRandomRadioButton, totpAllyRandomSimilarStrengthRadioButton,
-                totpPercentageLevelModifierCheckBox,
-
-                wpRandomizeWildPokemonCheckBox,
-                wpZoneNoneRadioButton, wpZoneEncounterSetRadioButton,
-                wpZoneMapRadioButton, wpZoneNamedLocationRadioButton, wpZoneGameRadioButton,
-                wpTRNoneRadioButton, wpTRThemedAreasRadioButton, wpTRKeepPrimaryRadioButton,
-                wpSimilarStrengthCheckBox, wpSetMinimumCatchRateCheckBox, wpRandomizeHeldItemsCheckBox,
-                wpPercentageLevelModifierCheckBox,
-
-                tmmUnchangedRadioButton, tmmRandomRadioButton, tmmForceGoodDamagingCheckBox, thcLevelupMoveSanityCheckBox,
-
-                thcUnchangedRadioButton, thcRandomPreferSameTypeRadioButton, thcRandomCompletelyRadioButton,
-                thcFullCompatibilityRadioButton,
-
-                mtmUnchangedRadioButton, mtmRandomRadioButton, mtmForceGoodDamagingCheckBox, mtcUnchangedRadioButton,
-                mtcLevelupMoveSanityCheckBox,
-
-                mtcRandomPreferSameTypeRadioButton, mtcRandomCompletelyRadioButton, mtcFullCompatibilityRadioButton,
-
-                fiUnchangedRadioButton, fiShuffleRadioButton, fiRandomRadioButton, fiRandomEvenDistributionRadioButton,
-
-                shUnchangedRadioButton, shShuffleRadioButton, shRandomRadioButton, puUnchangedRadioButton,
-
-                puRandomRadioButton,
-
-                teUnchangedRadioButton, teRandomRadioButton, teRandomBalancedRadioButton,
-                teKeepTypeIdentitiesRadioButton, teInverseRadioButton,
-
-                spalUnchangedRadioButton, spalRandomRadioButton,
-
-                cpgUnchangedRadioButton, cpgCustomRadioButton,
-        });
-        subControlButtons.forEach(comp -> comp.addActionListener(_ -> enableOrDisableSubControls()));
-
         openROMButton.addActionListener(_ -> selectAndOpenRom());
-        peMakeEvolutionsEasierLvlSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
-
-        spCustom1ComboBox.addActionListener(_ -> enableOrDisableSubControls());
-        spCustom2ComboBox.addActionListener(_ -> enableOrDisableSubControls());
-        spCustom3ComboBox.addActionListener(_ -> enableOrDisableSubControls());
-
-        spBSTMinimumSpinner.addChangeListener(_ -> checkSpMaximumNeedsRaise());
-        spBSTMaximumSpinner.addChangeListener(_ -> checkSpMinimumNeedsLower());
-
-        tpPercentageEvolutionLevelModifierSpinSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
 
         websiteLinkLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -784,21 +703,6 @@ public class RandomizerGUI {
         removeGameUpdateMenuItem.addActionListener(_ -> removeGameUpdateMenuItemActionPerformed());
         loadGetSettingsMenuItem.addActionListener(_ -> loadGetSettingsMenuItemActionPerformed());
         keepOrUnloadGameAfterRandomizingMenuItem.addActionListener(_ -> keepOrUnloadGameAfterRandomizingMenuItemActionPerformed());
-        /*
-        limitPokemonButton.addActionListener(_ -> {
-            GenerationLimitDialog gld = new GenerationLimitDialog(frame, currentRestrictions,
-                    romHandler.generationOfPokemon(), romHandler.forceSwapStaticMegaEvos());
-            if (gld.pressedOK()) {
-                currentRestrictions = gld.getChoice();
-                boolean isTypeTheme = isTrainerSetting(TRAINER_TYPE_THEMED) || isTrainerSetting(TRAINER_TYPE_THEMED_ELITE4_GYMS)
-                        || isTrainerSetting(TRAINER_KEEP_THEMED) || isTrainerSetting(TRAINER_KEEP_THEME_OR_PRIMARY);
-                if (currentRestrictions != null && !currentRestrictions.allowTrainerSwapMegaEvolvables(
-                        romHandler.forceSwapStaticMegaEvos(), isTypeTheme)) {
-                    disableAndDeselectButtons(tpSwapMegaEvosCheckBox);
-                }
-            }
-        });
-         */
 
         frame.addComponentListener(new ComponentListener() {
             @Override
@@ -822,8 +726,6 @@ public class RandomizerGUI {
             }
         });
         batchRandomizationMenuItem.addActionListener(_ -> batchRandomizationSettingsDialog());
-
-
     }
 
     private void associateSettingControls() {
@@ -1074,7 +976,7 @@ public class RandomizerGUI {
             int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + tpPercentageEvolutionLevelModifierSpinSlider.getValue() / 100.0));
             tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
                     bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"),
-                    Math.max(1, Math.min(100, modifiedLevel))));
+                    Math.clamp(modifiedLevel, 1, 100)));
         }
     }
 
@@ -2508,214 +2410,21 @@ public class RandomizerGUI {
 
         gameMascotLabel.setIcon(emptyIcon);
 
-        setInitialButtonState(
-                lsNoIrregularAltFormesCheckBox, lsNoPrematureEvosCheckbox, raceModeCheckBox, coRandomIntroMonCheckBox);
-
-        currentRestrictions = null;
-
         setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton,
                 loadSettingsButton, saveSettingsButton);
         enableButtons(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton);
 
         // the buttons in the main part of the gui (randomization options):
+        // TODO: set all settings to default (should set the connected GUI elements accordingly)
 
-        setInitialButtonState(sbstUnchangedRadioButton, sbstRandomBuffNerfRadioButton, sbstShuffleRadioButton,
-                sbstRandomRadioButton, sbstFollowEvolutionsCheckBox, sbstSwapLegendariesCheckBox);
-        spCustom1ComboBox.setEnabled(false);
-        sbstRandomBuffNerfSpinSlider.setEnabled(false);
-        sbstRandomBuffNerfSpinSlider.setValue(0);
+        // TODO: relabel the relevant spin boxes (i.e. starter selection)
 
-        setInitialButtonState(sbsdUnchangedRadioButton, sbsdShuffleRadioButton, sbsdRandomRadioButton,
-                secLegendariesSlowRadioButton, secStrongLegendariesSlowRadioButton, secAllSpeciesRadioButton,
-                secStandardizeEXPCurvesCheckBox, sbsdFollowEvolutionsCheckBox, sbsUpdateBaseStatsCheckBox,
-                sbsdFollowMegaEvosCheckBox, sbsdAssignEvoStatsRandomlyCheckBox);
-		secEXPCurveComboBox.setVisible(true);
-		secEXPCurveComboBox.setEnabled(false);
-		secEXPCurveComboBox.setSelectedIndex(0);
-		secEXPCurveComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "Medium Fast" }));
-
-        setInitialButtonState(stUnchangedRadioButton, stRandomFollowEvolutionsRadioButton, stRandomCompletelyRadioButton,
-                stFollowMegaEvosCheckBox, stForceDualTypeCheckBox);
-
-		speciesAbilitiesPanel.setVisible(true);
-        setInitialButtonState(saUnchangedRadioButton, saRandomRadioButton, saBanWonderGuardCheckBox,
-                saFollowEvolutionsCheckBox, saBanTrappingAbilitiesCheckBox, saBanNegativeAbilitiesCheckBox,
-                saBanMinorAbilitiesCheckBox, saFollowMegaEvosCheckBox, saWeighDuplicatesTogetherCheckBox,
-                saForceTwoAbilitiesCheckbox);
-
-        setInitialButtonState(peUnchangedRadioButton, peRandomRadioButton, peRandomEveryLevelRadioButton,
-				peSimilarStrengthCheckBox, peShareTypingCheckBox, peMaxThreeStagesCheckBox,
-				peForceChangeCheckBox, peChangeImpossibleEvosCheckBox, peMakeEvolutionsEasierCheckBox,
-                peUseEstimatedInsteadOfHardcodedLevelsCheckBox, peRemoveTimeBasedEvolutionsCheckBox,
-                peAllowAltFormesCheckBox, peForceGrowthCheckBox, peNoConvergenceCheckBox, peAdjustLevelsCheckBox);
-        peMakeEvolutionsEasierLvlSlider.setVisible(true);
-        peMakeEvolutionsEasierLvlSlider.setEnabled(false);
-        peMakeEvolutionsEasierLvlSlider.setValue(SettingsManager.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL);
-
-        setInitialButtonState(spUnchangedRadioButton, spCustomRadioButton, spRandomRadioButton,
-                spTypeNoneRadioButton, spTypeFwgRadioButton, spTypeTriangleRadioButton,
-				spTypeUniqueRadioButton, spTypeSingleRadioButton, spTypeNoDualCheckbox,
-                spNoLegendariesCheckBox,
-				spRandomizeStarterHeldItemsCheckBox, spBanMinorItemsCheckBox, spAllowAltFormesCheckBox,
-                spBSTMinimumCheckbox, spBSTMaximumCheckbox);
-		spCustom1ComboBox.setVisible(true);
-		spCustom1ComboBox.setEnabled(false);
-		spCustom1ComboBox.setSelectedIndex(0);
-		spCustom1ComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
-		spCustom2ComboBox.setVisible(true);
-		spCustom2ComboBox.setEnabled(false);
-		spCustom2ComboBox.setSelectedIndex(0);
-		spCustom2ComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
-		spCustom3ComboBox.setVisible(true);
-		spCustom3ComboBox.setEnabled(false);
-		spCustom3ComboBox.setSelectedIndex(0);
-		spCustom3ComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
-        spBSTMinimumSpinner.setVisible(true);
-        spBSTMinimumSpinner.setEnabled(false);
-        spBSTMinimumSpinner.setValue(0);
-        spBSTMaximumSpinner.setVisible(true);
-        spBSTMaximumSpinner.setEnabled(false);
-        spBSTMaximumSpinner.setValue(0);
-
-        setInitialButtonState(seUnchangedRadioButton, seSwapLegendariesSwapStandardsRadioButton,
-                seRandomCompletelyRadioButton, seRandomSimilarStrengthRadioButton, sePercentageLevelModifierCheckBox,
-                seLimitMainGameLegendariesCheckBox, seRandomize600BSTCheckBox, seAllowAltFormesCheckBox,
-                seSwapMegaEvosCheckBox, seFixMusicCheckBox);
-		sePercentageLevelModifierSpinSlider.setVisible(true);
-		sePercentageLevelModifierSpinSlider.setEnabled(false);
-		sePercentageLevelModifierSpinSlider.setValue(0);
-
-        setInitialButtonState(igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox,
-				igtRandomizeIVsCheckBox, igtRandomizeItemsCheckBox);
-
-        setInitialButtonState(mtRandomizeMovePowerCheckBox, mtRandomizeMoveAccuracyCheckBox, mtRandomizeMovePPCheckBox,
-                mtRandomizeMoveTypesCheckBox, mtRandomizeMoveCategoryCheckBox, mdUpdateMovesCheckBox, mtRandomizeMoveNamesCheckBox);
-		mdUpdateComboBox.setVisible(true);
-		mdUpdateComboBox.setEnabled(false);
-		mdUpdateComboBox.setSelectedIndex(0);
-		mdUpdateComboBox.setModel(new DefaultComboBoxModel<>(new String[] { "--" }));
-
-        setInitialButtonState(slmUnchangedRadioButton, slmRandomPreferringSameTypeRadioButton, slmRandomCompletelyRadioButton,
-                slmMetronomeOnlyModeRadioButton, slmGuaranteedLevel1MovesCheckBox, slmReorderDamagingMovesCheckBox,
-                slmNoGameBreakingMovesCheckBox, slmForceGoodDamagingCheckBox, slmEvolutionMovesCheckBox);
-		slmGuaranteedLevel1MovesSlider.setVisible(true);
-		slmGuaranteedLevel1MovesSlider.setEnabled(false);
-		slmGuaranteedLevel1MovesSlider.setValue(slmGuaranteedLevel1MovesSlider.getMinimum());
-		slmForceGoodDamagingSpinSlider.setVisible(true);
-		slmForceGoodDamagingSpinSlider.setEnabled(false);
-		slmForceGoodDamagingSpinSlider.setValue(slmForceGoodDamagingSpinSlider.getMinimum());
-
-        setInitialButtonState(tpRivalCarriesStarterCheckBox, tpSimilarStrengthCheckBox, tpAvoidDuplicatesCheckBox,
-                tpWeightTypesCheckBox, tpUseLocalPokemonCheckBox,
-				tpDontUseLegendariesCheckBox, tpNoEarlyWonderGuardCheckBox, coRandomizeTrainerNamesCheckBox,
-                coRandomizeTrainerClassNamesCheckBox,
-                tpTrainersEvolveTheirPokemonCheckbox, tpPercentageLevelModifierCheckBox,
-				tpEliteFourUniquePokemonCheckBox, tpAllowAlternateFormesCheckBox, tpSwapMegaEvosCheckBox,
-                tpAddToBossTrainersCheckBox, tpAddToImportantTrainersCheckBox,
-                tpAddToRegularTrainersCheckBox, tpBossTrainersItemsCheckBox, tpImportantTrainersItemsCheckBox,
-				tpRegularTrainersItemsCheckBox, tpConsumableItemsOnlyCheckBox, tpSensibleItemsCheckBox,
-				tpHighestLevelGetsItemCheckBox, tpRandomShinyTrainerPokemonCheckBox,
-                tpBetterMovesetsBossTrainersCheckBox, tpBetterMovesetsImportantTrainersCheckBox,
-                tpBetterMovesetsRegularTrainersCheckBox,
-                tpBossTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
-                tpRegularTrainersTypeDiversityCheckBox);
-		tpPercentageEvolutionLevelModifierSpinSlider.setVisible(true);
-		tpPercentageEvolutionLevelModifierSpinSlider.setEnabled(false);
-		tpPercentageEvolutionLevelModifierSpinSlider.setValue(0);
+        // TODO: look at these labels closer
         tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
         tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
         tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"), "--"));
-		tpPercentageLevelModifierSpinSlider.setVisible(true);
-		tpPercentageLevelModifierSpinSlider.setEnabled(false);
-        tpPercentageLevelModifierSpinSlider.setValue(0);
-		tpEliteFourUniquePokemonSpinner.setVisible(true);
-		tpEliteFourUniquePokemonSpinner.setEnabled(false);
-		tpEliteFourUniquePokemonSpinner.setValue(1);
-		tpAddToBossTrainersSpinner.setVisible(true);
-		tpAddToBossTrainersSpinner.setEnabled(false);
-		tpAddToBossTrainersSpinner.setValue(1);
-		tpAddToImportantTrainersSpinner.setVisible(true);
-		tpAddToImportantTrainersSpinner.setEnabled(false);
-		tpAddToImportantTrainersSpinner.setValue(1);
-		tpAddToRegularTrainersSpinner.setVisible(true);
-		tpAddToRegularTrainersSpinner.setEnabled(false);
-		tpAddToRegularTrainersSpinner.setValue(1);
 		tpAdditionalPokemonForLabel.setVisible(true);
 		tpHeldItemsLabel.setVisible(true);
-
-        tbsUnchangedStyleRadioButton.setVisible(true);
-        tbsUnchangedStyleRadioButton.setEnabled(false);
-        tbsUnchangedStyleRadioButton.setSelected(true);
-        tbsRandomStyleRadioButton.setVisible(true);
-        tbsRandomStyleRadioButton.setEnabled(false);
-        tbsRandomStyleRadioButton.setSelected(false);
-
-		totpPanel.setVisible(true);
-        setInitialButtonState(totpUnchangedRadioButton, totpRandomRadioButton, totpRandomSimilarStrengthRadioButton,
-				totpAllyUnchangedRadioButton, totpAllyRandomRadioButton, totpAllyRandomSimilarStrengthRadioButton,
-				totpAuraUnchangedRadioButton, totpAuraRandomRadioButton, totpAuraRandomSameStrengthRadioButton,
-				totpPercentageLevelModifierCheckBox, totpRandomizeHeldItemsCheckBox, totpAllowAltFormesCheckBox);
-		totpPercentageLevelModifierSpinSlider.setVisible(true);
-		totpPercentageLevelModifierSpinSlider.setEnabled(false);
-		totpPercentageLevelModifierSpinSlider.setValue(0);
-
-        setInitialButtonState(wpRandomizeWildPokemonCheckBox, wpZoneNoneRadioButton, wpZoneEncounterSetRadioButton,
-                wpZoneMapRadioButton, wpZoneNamedLocationRadioButton, wpZoneGameRadioButton,
-                wpSplitByEncounterTypesCheckBox,
-                wpTRNoneRadioButton, wpTRThemedAreasRadioButton, wpTRKeepPrimaryRadioButton, wpTRKeepThemesCheckBox,
-                wpERNoneRadioButton, wpERBasicOnlyRadioButton, wpERSameEvolutionStageRadioButton,
-                wpERKeepEvolutionsCheckBox, wpSimilarStrengthCheckBox, wpCatchEmAllModeCheckBox,
-                wpRemoveTimeBasedEncountersCheckBox, wpDontUseLegendariesCheckBox, wpSetMinimumCatchRateCheckBox,
-                        wpRandomizeHeldItemsCheckBox, wpBanMinorItemsCheckBox, wpBalanceShakingGrassPokemonCheckBox,
-                        wpPercentageLevelModifierCheckBox, wpAllowAltFormesCheckBox);
-
-        wpRemoveTimeBasedEncountersCheckBox.setSelected(true);
-		wpSetMinimumCatchRateSlider.setVisible(true);
-		wpSetMinimumCatchRateSlider.setEnabled(false);
-		wpSetMinimumCatchRateSlider.setValue(wpSetMinimumCatchRateSlider.getMinimum());
-		wpPercentageLevelModifierSpinSlider.setVisible(true);
-		wpPercentageLevelModifierSpinSlider.setEnabled(false);
-		wpPercentageLevelModifierSpinSlider.setValue(0);
-
-        setInitialButtonState(tmmUnchangedRadioButton, tmmRandomRadioButton, tmmNoGameBreakingMovesCheckBox,
-                thcFullHMCompatibilityCheckBox, thcLevelupMoveSanityCheckBox, tmmKeepFieldMoveTMsCheckBox,
-                tmmForceGoodDamagingCheckBox, thcFollowEvolutionsCheckBox, thcUnchangedRadioButton,
-				thcRandomPreferSameTypeRadioButton, thcRandomCompletelyRadioButton, thcFullCompatibilityRadioButton,
-                mtmUnchangedRadioButton, mtmRandomRadioButton, mtmNoGameBreakingMovesCheckBox, mtcLevelupMoveSanityCheckBox,
-                mtcLevelupMoveSanityCheckBox, mtmKeepFieldMoveTutorsCheckBox, mtmForceGoodDamagingCheckBox,
-                mtcFollowEvolutionsCheckBox, mtcUnchangedRadioButton, mtcRandomPreferSameTypeRadioButton,
-				mtcRandomCompletelyRadioButton, mtcFullCompatibilityRadioButton);
-		tmmForceGoodDamagingSpinSlider.setVisible(true);
-		tmmForceGoodDamagingSpinSlider.setEnabled(false);
-		tmmForceGoodDamagingSpinSlider.setValue(tmmForceGoodDamagingSpinSlider.getMinimum());
-		mtmForceGoodDamagingSpinSlider.setVisible(true);
-		mtmForceGoodDamagingSpinSlider.setEnabled(false);
-		mtmForceGoodDamagingSpinSlider.setValue(mtmForceGoodDamagingSpinSlider.getMinimum());
-
-        setInitialButtonState(fiUnchangedRadioButton, fiShuffleRadioButton, fiRandomRadioButton,
-				fiRandomEvenDistributionRadioButton, fiBanMinorItemsCheckBox, shUnchangedRadioButton,
-				shShuffleRadioButton, shRandomRadioButton, shBanOverpoweredShopItemsCheckBox, shBanMinorItemsCheckBox,
-				shBanRegularShopItemsCheckBox, shBalanceShopItemPricesCheckBox, shGuaranteeEvolutionItemsCheckBox,
-				shGuaranteeXItemsCheckBox, shAddRareCandyCheckBox, puUnchangedRadioButton, puRandomRadioButton,
-                puBanMinorItemsCheckBox);
-
-        setInitialButtonState(teUnchangedRadioButton, teRandomRadioButton, teRandomBalancedRadioButton,
-                teKeepTypeIdentitiesRadioButton, teInverseRadioButton, teAddRandomImmunitiesCheckBox,
-                teUpdateCheckbox);
-
-        setInitialButtonState(spalUnchangedRadioButton, spalRandomRadioButton, spalFollowTypesCheckBox,
-                spalFollowEvolutionsCheckBox, spalShinyFromNormalCheckBox,
-                        cpgUnchangedRadioButton, cpgCustomRadioButton);
-        cpgSelection.setInitialState();
-
-        // TODO: why do these checkboxes exist? can't they just be generated from the MiscTweak objects?
-        //Well, this lets them be named variables, which helps for code readability if nothing else...
-        setInitialButtonState(btScalingEXPCheckBox, btNerfXAccuracyCheckBox, btUpdateCritRateCheckBox,
-                qoltFastestTextCheckBox, qoltRunIndoorsCheckBox, giRandomizePCPotionCheckBox,
-                peAllowPikachuEvolutionCheckBox, qoltNationalDexCheckBox,
-                coLowerCaseSpeciesNamesCheckBox, coRandomizeCatchingTutorialCheckBox, giBanLuckyEggCheckBox,
-                giNoFreeLuckyEggCheckBox, giBanBigMoneyManiacCheckBox);
-
         mtNoExistLabel.setVisible(false);
         qoltNoneAvailableLabel.setVisible(false);
         btNoneAvailableLabel.setVisible(false);
@@ -2810,8 +2519,6 @@ public class RandomizerGUI {
     private void romLoaded() {
 
         try {
-            int pokemonGeneration = romHandler.generationOfPokemon();
-
             setRomNameLabel();
             romCodeLabel.setText(romHandler.getROMCode());
             romSupportLabel.setText(bundle.getString("GUI.header.romInformationPanel.supportPrefix.text") + " "
@@ -2829,196 +2536,13 @@ public class RandomizerGUI {
                 romSupportLabel.setForeground(Color.BLACK);
             }
 
-            lsNoIrregularAltFormesCheckBox.setVisible(pokemonGeneration >= 4);
-            lsNoIrregularAltFormesCheckBox.setEnabled(pokemonGeneration >= 4);
-
-            coRandomIntroMonCheckBox.setVisible(romHandler.canSetIntroPokemon());
-            coRandomIntroMonCheckBox.setEnabled(romHandler.canSetIntroPokemon());
-
             raceModeCheckBox.setEnabled(true);
 
             loadSettingsButton.setEnabled(true);
             saveSettingsButton.setEnabled(true);
 
-            // Pokemon Traits
-
-            // Pokemon Base Stat Totals
-            sbstUnchangedRadioButton.setEnabled(true);
-            sbstUnchangedRadioButton.setSelected(true);
-            sbstRandomBuffNerfRadioButton.setEnabled(true);
-            sbstShuffleRadioButton.setEnabled(true);
-            sbstRandomRadioButton.setEnabled(true);
-
-            sbstFollowEvolutionsCheckBox.setEnabled(false);
-            sbstSwapLegendariesCheckBox.setEnabled(false);
-
-            // Pokemon Base Statistics
-            sbsdUnchangedRadioButton.setEnabled(true);
-            sbsdUnchangedRadioButton.setSelected(true);
-            sbsdShuffleRadioButton.setEnabled(true);
-            sbsdRandomRadioButton.setEnabled(true);
-
-            secStandardizeEXPCurvesCheckBox.setEnabled(true);
-            secLegendariesSlowRadioButton.setSelected(true);
-            sbsUpdateBaseStatsCheckBox.setEnabled(pokemonGeneration < GlobalConstants.HIGHEST_POKEMON_GEN);
-            sbsdFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
-            ExpCurve[] expCurves = romHandler.getExpCurves();
-            String[] expCurveNames = new String[expCurves.length];
-            for (int i = 0; i < expCurves.length; i++) {
-                expCurveNames[i] = expCurves[i].toString();
-            }
-            secEXPCurveComboBox.setModel(new DefaultComboBoxModel<>(expCurveNames));
-            secEXPCurveComboBox.setSelectedIndex(0);
-
-            // Pokemon Types
-            stUnchangedRadioButton.setEnabled(true);
-            stUnchangedRadioButton.setSelected(true);
-            stRandomFollowEvolutionsRadioButton.setEnabled(true);
-            stRandomCompletelyRadioButton.setEnabled(true);
-            stFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
-            stForceDualTypeCheckBox.setEnabled(false);
-
-            // Pokemon Abilities
-            if (pokemonGeneration >= 3) {
-                saUnchangedRadioButton.setEnabled(true);
-                saUnchangedRadioButton.setSelected(true);
-                saRandomRadioButton.setEnabled(true);
-
-                saBanWonderGuardCheckBox.setEnabled(false);
-                saFollowEvolutionsCheckBox.setEnabled(false);
-                saBanTrappingAbilitiesCheckBox.setEnabled(false);
-                saBanNegativeAbilitiesCheckBox.setEnabled(false);
-                saBanMinorAbilitiesCheckBox.setEnabled(false);
-                saFollowMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
-                saWeighDuplicatesTogetherCheckBox.setEnabled(false);
-                saForceTwoAbilitiesCheckbox.setEnabled(false);
-            } else {
-                speciesAbilitiesPanel.setVisible(false);
-            }
-
-            // Pokemon Evolutions
-            peUnchangedRadioButton.setEnabled(true);
-            peUnchangedRadioButton.setSelected(true);
-            peRandomRadioButton.setEnabled(true);
-            peRandomEveryLevelRadioButton.setVisible(romHandler.canGiveEverySpeciesOneEvolutionEach());
-            peRandomEveryLevelRadioButton.setEnabled(romHandler.canGiveEverySpeciesOneEvolutionEach());
-            peChangeImpossibleEvosCheckBox.setEnabled(true);
-            peMakeEvolutionsEasierCheckBox.setEnabled(true);
-            peMakeEvolutionsEasierLvlSlider.setMaximum(
-                    Math.max(SettingsManager.MAKE_EVOLUTIONS_EASIER_DEFAULT_LVL, romHandler.getHighestEvoLvl()));
-            guaranteeMaximumValueTick(peMakeEvolutionsEasierLvlSlider);
-            peRemoveTimeBasedEvolutionsCheckBox.setVisible(romHandler.hasTimeBasedEvolutions());
-            peRemoveTimeBasedEvolutionsCheckBox.setEnabled(romHandler.hasTimeBasedEvolutions());
-            peAllowAltFormesCheckBox.setVisible(pokemonGeneration >= 7);
-
-            // Starters, Statics & Trades
-
-            // Starter Pokemon
-            spUnchangedRadioButton.setEnabled(true);
-            spUnchangedRadioButton.setSelected(true);
-
-            spCustomRadioButton.setEnabled(true);
-            spRandomRadioButton.setEnabled(true);
-            if (romHandler.isYellow()) {
-                spCustom3ComboBox.setVisible(false);
-            }
-            populateDropdowns();
-
-            boolean typeTriangleSupport = romHandler.hasStarterTypeTriangleSupport();
-            spTypeFwgRadioButton.setVisible(typeTriangleSupport);
-            spTypeTriangleRadioButton.setVisible(typeTriangleSupport);
-
-            spAllowAltFormesCheckBox.setVisible(romHandler.hasStarterAltFormes());
-            boolean supportsStarterHeldItems = romHandler.supportsStarterHeldItems();
-            spRandomizeStarterHeldItemsCheckBox.setEnabled(supportsStarterHeldItems);
-            spRandomizeStarterHeldItemsCheckBox.setVisible(supportsStarterHeldItems);
-            spBanMinorItemsCheckBox.setEnabled(false);
-            spBanMinorItemsCheckBox.setVisible(supportsStarterHeldItems);
-            //TODO: pull these numbers from the romHandler rather than nowhere
-            if(romHandler.generationOfPokemon() == 1) {
-                spBSTMinimumSpinner.setModel(new SpinnerNumberModel(249, 1, 1275, 1));
-                spBSTMaximumSpinner.setModel(new SpinnerNumberModel(253, 1, 1275, 1));
-            } else {
-                spBSTMinimumSpinner.setModel(new SpinnerNumberModel(307, 1, 1530, 1));
-                spBSTMaximumSpinner.setModel(new SpinnerNumberModel(320, 1, 1530, 1));
-            }
-
-            seUnchangedRadioButton.setEnabled(true);
-            seUnchangedRadioButton.setSelected(true);
-            if (romHandler.canChangeStaticPokemon()) {
-                seSwapLegendariesSwapStandardsRadioButton.setEnabled(true);
-                seRandomCompletelyRadioButton.setEnabled(true);
-                seRandomSimilarStrengthRadioButton.setEnabled(true);
-                seLimitMainGameLegendariesCheckBox.setVisible(romHandler.hasMainGameLegendaries());
-                seLimitMainGameLegendariesCheckBox.setEnabled(false);
-                seAllowAltFormesCheckBox.setVisible(romHandler.hasStaticAltFormes());
-                seSwapMegaEvosCheckBox.setVisible(pokemonGeneration == 6 && !romHandler.forceSwapStaticMegaEvos());
-                sePercentageLevelModifierCheckBox.setVisible(true);
-                sePercentageLevelModifierCheckBox.setEnabled(true);
-                sePercentageLevelModifierSpinSlider.setVisible(true);
-                sePercentageLevelModifierSpinSlider.setEnabled(false);
-                seFixMusicCheckBox.setVisible(romHandler.hasStaticMusicFix());
-                seFixMusicCheckBox.setEnabled(false);
-            } else {
-                seSwapLegendariesSwapStandardsRadioButton.setVisible(false);
-                seRandomCompletelyRadioButton.setVisible(false);
-                seRandomSimilarStrengthRadioButton.setVisible(false);
-                seRandomize600BSTCheckBox.setVisible(false);
-                seLimitMainGameLegendariesCheckBox.setVisible(false);
-                sePercentageLevelModifierCheckBox.setVisible(false);
-                sePercentageLevelModifierSpinSlider.setVisible(false);
-                seFixMusicCheckBox.setVisible(false);
-            }
-
-            igtRandomizeNicknamesCheckBox.setEnabled(false);
-            igtRandomizeOTsCheckBox.setEnabled(false);
-            igtRandomizeIVsCheckBox.setEnabled(false);
-            igtRandomizeItemsCheckBox.setEnabled(false);
-
-            if (pokemonGeneration == 1) {
-                igtRandomizeOTsCheckBox.setVisible(false);
-                igtRandomizeIVsCheckBox.setVisible(false);
-                igtRandomizeItemsCheckBox.setVisible(false);
-            }
-
-            // Move Data
-            mtRandomizeMovePowerCheckBox.setEnabled(true);
-            mtRandomizeMoveAccuracyCheckBox.setEnabled(true);
-            mtRandomizeMovePPCheckBox.setEnabled(true);
-            mtRandomizeMoveTypesCheckBox.setEnabled(true);
-            boolean canRandomizeMoveNames = romHandler.isEnglish();
-            mtRandomizeMoveNamesCheckBox.setEnabled(canRandomizeMoveNames);
-            mtRandomizeMoveNamesCheckBox.setVisible(canRandomizeMoveNames);
-            mtRandomizeMoveCategoryCheckBox.setEnabled(romHandler.hasPhysicalSpecialSplit());
-            mtRandomizeMoveCategoryCheckBox.setVisible(romHandler.hasPhysicalSpecialSplit());
-            mdUpdateMovesCheckBox.setEnabled(pokemonGeneration < 8);
-            mdUpdateMovesCheckBox.setVisible(pokemonGeneration < 8);
-
-            // Pokemon Movesets
-            slmUnchangedRadioButton.setEnabled(true);
-            slmUnchangedRadioButton.setSelected(true);
-            slmRandomPreferringSameTypeRadioButton.setEnabled(true);
-            slmRandomCompletelyRadioButton.setEnabled(true);
-            slmMetronomeOnlyModeRadioButton.setEnabled(true);
-
-            slmGuaranteedLevel1MovesCheckBox.setVisible(romHandler.supportsFourStartingMoves());
-            slmGuaranteedLevel1MovesSlider.setVisible(romHandler.supportsFourStartingMoves());
-            slmEvolutionMovesCheckBox.setVisible(pokemonGeneration >= 7);
-
-            tpAllowAlternateFormesCheckBox.setVisible(romHandler.hasFunctionalFormes());
-            tpTrainersEvolveTheirPokemonCheckbox.setEnabled(true);
-            tpPercentageLevelModifierCheckBox.setEnabled(true);
-            tpSwapMegaEvosCheckBox.setVisible(romHandler.hasMegaEvolutions());
-            tpBattleStylePanel.setVisible(pokemonGeneration >= 3);
-            if (tpBattleStylePanel.isVisible()) {
-                tbsUnchangedStyleRadioButton.setVisible(pokemonGeneration >= 3);
-                tbsUnchangedStyleRadioButton.setEnabled(true);
-                tbsUnchangedStyleRadioButton.setSelected(true);
-
-                tbsRandomStyleRadioButton.setVisible(pokemonGeneration >= 3);
-                tbsRandomStyleRadioButton.setEnabled(true);
-                tbsRandomStyleRadioButton.setSelected(false);
-            }
+            // TODO: make sure settings are reset if not supported at this point
+            // TODO: clean up
 
             boolean canAddPokesToBoss = romHandler.canAddPokemonToBossTrainers();
             boolean canAddPokesToImportant = romHandler.canAddPokemonToImportantTrainers();
@@ -3026,15 +2550,6 @@ public class RandomizerGUI {
             boolean additionalPokemonAvailable = canAddPokesToBoss || canAddPokesToImportant || canAddPokesToRegular;
 
             tpAdditionalPokemonForLabel.setVisible(additionalPokemonAvailable);
-            tpAddToBossTrainersCheckBox.setVisible(canAddPokesToBoss);
-            tpAddToBossTrainersCheckBox.setEnabled(canAddPokesToBoss);
-            tpAddToBossTrainersSpinner.setVisible(canAddPokesToBoss);
-            tpAddToImportantTrainersCheckBox.setVisible(canAddPokesToImportant);
-            tpAddToImportantTrainersCheckBox.setEnabled(canAddPokesToImportant);
-            tpAddToImportantTrainersSpinner.setVisible(canAddPokesToImportant);
-            tpAddToRegularTrainersCheckBox.setVisible(canAddPokesToRegular);
-            tpAddToRegularTrainersCheckBox.setEnabled(canAddPokesToRegular);
-            tpAddToRegularTrainersSpinner.setVisible(canAddPokesToRegular);
 
             boolean canAddHeldItemsToBoss = romHandler.canAddHeldItemsToBossTrainers();
             boolean canAddHeldItemsToImportant = romHandler.canAddHeldItemsToImportantTrainers();
@@ -3042,26 +2557,7 @@ public class RandomizerGUI {
             boolean heldItemsAvailable = canAddHeldItemsToBoss || canAddHeldItemsToImportant || canAddHeldItemsToRegular;
 
             tpHeldItemsLabel.setVisible(heldItemsAvailable);
-            tpBossTrainersItemsCheckBox.setVisible(canAddHeldItemsToBoss);
-            tpBossTrainersItemsCheckBox.setEnabled(false);
-            tpImportantTrainersItemsCheckBox.setVisible(canAddHeldItemsToImportant);
-            tpImportantTrainersItemsCheckBox.setEnabled(false);
-            tpRegularTrainersItemsCheckBox.setVisible(canAddHeldItemsToRegular);
-            tpRegularTrainersItemsCheckBox.setEnabled(false);
-            tpConsumableItemsOnlyCheckBox.setVisible(heldItemsAvailable);
-            tpConsumableItemsOnlyCheckBox.setEnabled(false);
-            tpSensibleItemsCheckBox.setVisible(heldItemsAvailable);
-            tpSensibleItemsCheckBox.setEnabled(false);
-            tpHighestLevelGetsItemCheckBox.setVisible(heldItemsAvailable);
-            tpHighestLevelGetsItemCheckBox.setEnabled(false);
 
-            disableAndDeselectButtons(tpRegularTrainersTypeDiversityCheckBox, tpImportantTrainersTypeDiversityCheckBox,
-                    tpBossTrainersTypeDiversityCheckBox);
-
-            enableButtons(coRandomizeTrainerNamesCheckBox, coRandomizeTrainerClassNamesCheckBox);
-
-            tpNoEarlyWonderGuardCheckBox.setVisible(romHandler.abilitiesPerSpecies() != 0);
-            tpRandomShinyTrainerPokemonCheckBox.setVisible(pokemonGeneration >= 7);
 
             boolean canGiveMovesetsToBoss = romHandler.canGiveCustomMovesetsToBossTrainers();
             boolean canGiveMovesetsToImportant = romHandler.canGiveCustomMovesetsToImportantTrainers();
@@ -3069,114 +2565,7 @@ public class RandomizerGUI {
             boolean betterMovesetsAvailable = canGiveMovesetsToBoss || canGiveMovesetsToImportant || canGiveMovesetsToRegular;
 
             tpBetterMovesetsLabel.setVisible(betterMovesetsAvailable);
-            tpBetterMovesetsBossTrainersCheckBox.setEnabled(canGiveMovesetsToBoss);
-            tpBetterMovesetsBossTrainersCheckBox.setVisible(canGiveMovesetsToBoss);
-            tpBetterMovesetsImportantTrainersCheckBox.setEnabled(canGiveMovesetsToImportant);
-            tpBetterMovesetsImportantTrainersCheckBox.setVisible(canGiveMovesetsToImportant);
-            tpBetterMovesetsRegularTrainersCheckBox.setEnabled(canGiveMovesetsToRegular);
-            tpBetterMovesetsRegularTrainersCheckBox.setVisible(canGiveMovesetsToRegular);
 
-            totpPanel.setVisible(romHandler.hasTotemPokemon());
-            if (totpPanel.isVisible()) {
-                totpUnchangedRadioButton.setEnabled(true);
-                totpUnchangedRadioButton.setSelected(true);
-                totpRandomRadioButton.setEnabled(true);
-                totpRandomSimilarStrengthRadioButton.setEnabled(true);
-
-                totpAllyUnchangedRadioButton.setEnabled(true);
-                totpAllyUnchangedRadioButton.setSelected(true);
-                totpAllyRandomRadioButton.setEnabled(true);
-                totpAllyRandomSimilarStrengthRadioButton.setEnabled(true);
-
-                totpAuraUnchangedRadioButton.setEnabled(true);
-                totpAuraUnchangedRadioButton.setSelected(true);
-                totpAuraRandomRadioButton.setEnabled(true);
-                totpAuraRandomSameStrengthRadioButton.setEnabled(true);
-
-                totpRandomizeHeldItemsCheckBox.setEnabled(true);
-                totpAllowAltFormesCheckBox.setEnabled(false);
-                totpPercentageLevelModifierCheckBox.setEnabled(true);
-                totpPercentageLevelModifierSpinSlider.setEnabled(false);
-            }
-
-            // Wild Pokemon
-            wpRandomizeWildPokemonCheckBox.setEnabled(true);
-            wpRandomizeWildPokemonCheckBox.setSelected(false);
-            wpZoneNamedLocationRadioButton.setVisible(romHandler.hasEncounterLocations());
-            if(romHandler.hasMapIndices()) {
-                wpZoneEncounterSetRadioButton.setVisible(false);
-                wpZoneMapRadioButton.setVisible(true);
-            } else {
-                wpZoneEncounterSetRadioButton.setVisible(true);
-                wpZoneMapRadioButton.setVisible(false);
-            }
-            wpZoneGameRadioButton.setSelected(true);
-            wpTRNoneRadioButton.setSelected(true);
-            wpERNoneRadioButton.setSelected(true);
-            wpRemoveTimeBasedEncountersCheckBox.setVisible(romHandler.hasTimeBasedEncounters());
-            wpRemoveTimeBasedEncountersCheckBox.setSelected(true);
-            wpSetMinimumCatchRateCheckBox.setEnabled(true);
-            wpRandomizeHeldItemsCheckBox.setEnabled(true);
-            wpRandomizeHeldItemsCheckBox.setVisible(pokemonGeneration != 1);
-            wpBanMinorItemsCheckBox.setVisible(pokemonGeneration != 1);
-            wpPercentageLevelModifierCheckBox.setEnabled(true);
-            wpAllowAltFormesCheckBox.setVisible(romHandler.hasWildAltFormes());
-
-            tmmUnchangedRadioButton.setEnabled(true);
-            tmmUnchangedRadioButton.setSelected(true);
-            tmmRandomRadioButton.setEnabled(true);
-            thcFullHMCompatibilityCheckBox.setVisible(pokemonGeneration < 7);
-            if (thcFullHMCompatibilityCheckBox.isVisible()) {
-                thcFullHMCompatibilityCheckBox.setEnabled(true);
-            }
-
-            thcUnchangedRadioButton.setEnabled(true);
-            thcUnchangedRadioButton.setSelected(true);
-            thcRandomPreferSameTypeRadioButton.setEnabled(true);
-            thcRandomCompletelyRadioButton.setEnabled(true);
-            thcFullCompatibilityRadioButton.setEnabled(true);
-
-            if (romHandler.hasMoveTutors()) {
-                mtMovesPanel.setVisible(true);
-                mtCompatPanel.setVisible(true);
-                mtNoExistLabel.setVisible(false);
-
-                mtmUnchangedRadioButton.setEnabled(true);
-                mtmUnchangedRadioButton.setSelected(true);
-                mtmRandomRadioButton.setEnabled(true);
-
-                mtcUnchangedRadioButton.setEnabled(true);
-                mtcUnchangedRadioButton.setSelected(true);
-                mtcRandomPreferSameTypeRadioButton.setEnabled(true);
-                mtcRandomCompletelyRadioButton.setEnabled(true);
-                mtcFullCompatibilityRadioButton.setEnabled(true);
-            } else {
-                mtMovesPanel.setVisible(false);
-                mtCompatPanel.setVisible(false);
-                mtNoExistLabel.setVisible(true);
-            }
-
-            fiUnchangedRadioButton.setEnabled(true);
-            fiUnchangedRadioButton.setSelected(true);
-            fiShuffleRadioButton.setEnabled(true);
-            fiRandomRadioButton.setEnabled(true);
-            fiRandomEvenDistributionRadioButton.setEnabled(true);
-
-            // Gen 1 doesn't really have any interesting special shops/items to put in them,
-            // so it might be worth hiding that panel.
-            shopItemsPanel.setVisible(romHandler.hasShopSupport());
-            shUnchangedRadioButton.setEnabled(true);
-            shUnchangedRadioButton.setSelected(true);
-            shShuffleRadioButton.setEnabled(true);
-            shRandomRadioButton.setEnabled(true);
-            shBalanceShopItemPricesCheckBox.setEnabled(true);
-            shAddRareCandyCheckBox.setVisible(romHandler.canChangeShopSizes());
-            shAddRareCandyCheckBox.setEnabled(romHandler.canChangeShopSizes());
-
-            pickupItemsPanel.setVisible(romHandler.abilitiesPerSpecies() > 0);
-            puUnchangedRadioButton.setEnabled(true);
-            puUnchangedRadioButton.setSelected(true);
-            puRandomRadioButton.setEnabled(true);
 
             // Types
             boolean typeSupport = romHandler.hasTypeEffectivenessSupport();
@@ -3184,33 +2573,12 @@ public class RandomizerGUI {
             //We shouldn't use setVisible on the panels directly in the tabbedPane; it causes strange bleedover
             //Disable it instead
             randomizationSettingsTabbedPane.setEnabledAt(7, typeSupport);
-            teUnchangedRadioButton.setEnabled(typeSupport);
-            teUnchangedRadioButton.setSelected(true);
-            teRandomRadioButton.setEnabled(typeSupport);
-            teRandomBalancedRadioButton.setEnabled(typeSupport);
-            teKeepTypeIdentitiesRadioButton.setEnabled(typeSupport);
-            teInverseRadioButton.setEnabled(typeSupport);
-            disableAndDeselectButtons(teAddRandomImmunitiesCheckBox);
-            teUpdateCheckbox.setVisible(typeSupport && pokemonGeneration < TypeEffectivenessUpdater.UPDATE_TO_GEN);
-            teUpdateCheckbox.setEnabled(typeSupport && pokemonGeneration < TypeEffectivenessUpdater.UPDATE_TO_GEN);
-            teUpdateCheckbox.setSelected(false);
 
             // Graphics
             boolean ppalSupport = romHandler.hasPokemonPaletteSupport();
             spalNotExistLabel.setVisible(!ppalSupport);
             boolean ppalPartialSupport = romHandler.pokemonPaletteSupportIsPartial();
             spalPartiallyImplementedLabel.setVisible(ppalPartialSupport);
-            spalUnchangedRadioButton.setVisible(ppalSupport);
-            spalUnchangedRadioButton.setEnabled(ppalSupport);
-            spalUnchangedRadioButton.setSelected(true);
-            spalRandomRadioButton.setVisible(ppalSupport);
-            spalRandomRadioButton.setEnabled(ppalSupport);
-            spalFollowTypesCheckBox.setVisible(ppalSupport);
-            spalFollowTypesCheckBox.setEnabled(false);
-            spalFollowEvolutionsCheckBox.setVisible(ppalSupport);
-            spalFollowEvolutionsCheckBox.setEnabled(false);
-            spalShinyFromNormalCheckBox.setVisible(!(romHandler instanceof Gen1RomHandler) && ppalSupport);
-            spalShinyFromNormalCheckBox.setEnabled(false);
 
             boolean cpgSupport = romHandler.hasCustomPlayerGraphicsSupport();
             cpgNotExistLabel.setVisible(!cpgSupport);
@@ -3271,20 +2639,20 @@ public class RandomizerGUI {
         }
     }
 
+    @Deprecated
     private void enableOrDisableSubControls() {
         //TODO: Check that current SettingRestrictions match these, then remove this entire block
+        /*
         if(romHandler == null) {
             //shouldn't be in this method right now
             return;
         }
 
-        /*
         if (limitPokemonCheckBox.isSelected()) {
             limitPokemonButton.setEnabled(true);
         } else {
             limitPokemonButton.setEnabled(false);
         }
-         */
 
         boolean followEvolutionControlsEnabled = !peRandomEveryLevelRadioButton.isSelected();
         boolean followMegaEvolutionControlsEnabled = !(peRandomEveryLevelRadioButton.isSelected() && !lsNoIrregularAltFormesCheckBox.isSelected() && peAllowAltFormesCheckBox.isSelected());
@@ -3298,7 +2666,7 @@ public class RandomizerGUI {
                 stRandomFollowEvolutionsRadioButton.setSelected(false);
                 stRandomCompletelyRadioButton.setSelected(true);
             }
-            /*
+
             spRandomTwoEvosRadioButton.setEnabled(false);
             if (spRandomTwoEvosRadioButton.isSelected()) {
                 spRandomTwoEvosRadioButton.setSelected(false);
@@ -3309,7 +2677,7 @@ public class RandomizerGUI {
                 spRandomBasicRadioButton.setSelected(false);
                 spRandomRadioButton.setSelected(true);
             }
-            */
+
             saFollowEvolutionsCheckBox.setSelected(false);
             thcFollowEvolutionsCheckBox.setSelected(false);
             mtcFollowEvolutionsCheckBox.setSelected(false);
@@ -3334,10 +2702,10 @@ public class RandomizerGUI {
             // All other "Follow Evolutions" controls get properly set/unset below
             // except this one, so manually enable it again.
             stRandomFollowEvolutionsRadioButton.setEnabled(true);
-            /*
+
             spRandomTwoEvosRadioButton.setEnabled(true);
             spRandomBasicRadioButton.setEnabled(true);
-             */
+
 
             // The controls that make evolutions easier/possible, however,
             // need to all be manually re-enabled.
@@ -3408,13 +2776,11 @@ public class RandomizerGUI {
             secEXPCurveComboBox.setEnabled(false);
         }
 
-        /* Commenting this so it can compile again
         if (sbsUpdateBaseStatsCheckBox.isSelected()) {
             pbsUpdateComboBox.setEnabled(true);
         } else {
             pbsUpdateComboBox.setEnabled(false);
         }
-        */
 
         if (stUnchangedRadioButton.isSelected()) {
             disableAndDeselectButtons(stFollowMegaEvosCheckBox, stForceDualTypeCheckBox);
@@ -3531,7 +2897,6 @@ public class RandomizerGUI {
             enableButtons(igtRandomizeItemsCheckBox, igtRandomizeIVsCheckBox,
                     igtRandomizeNicknamesCheckBox, igtRandomizeOTsCheckBox);
         }
-         */
 
         if (mdUpdateMovesCheckBox.isSelected()) {
             mdUpdateComboBox.setEnabled(true);
@@ -3906,56 +3271,7 @@ public class RandomizerGUI {
 
         cpgSelection.setEnabled(cpgCustomRadioButton.isSelected() && cpgCustomRadioButton.isVisible()
                 && cpgCustomRadioButton.isEnabled());
-        //*/
-    }
-
-    private void populateDropdowns() {
-        List<Species> currentStarters = romHandler.getStarters();
-        List<Species> allPokes =
-                romHandler.generationOfPokemon() >= 6 ?
-                        romHandler.getSpeciesInclFormes()
-                                .stream()
-                                .filter(pk -> pk == null || !pk.isEssentiallyCosmetic())
-                                .toList() :
-                        romHandler.getSpecies();
-        String[] pokeNames = new String[allPokes.size()];
-        pokeNames[0] = "Random";
-        for (int i = 1; i < allPokes.size(); i++) {
-            pokeNames[i] = allPokes.get(i).getFullName();
-
-        }
-
-        spCustom1ComboBox.setModel(new DefaultComboBoxModel<>(pokeNames));
-        spCustom1ComboBox.setSelectedIndex(allPokes.indexOf(currentStarters.get(0)));
-        spCustom2ComboBox.setModel(new DefaultComboBoxModel<>(pokeNames));
-        spCustom2ComboBox.setSelectedIndex(allPokes.indexOf(currentStarters.get(1)));
-        if (!romHandler.isYellow()) {
-            spCustom3ComboBox.setModel(new DefaultComboBoxModel<>(pokeNames));
-            spCustom3ComboBox.setSelectedIndex(allPokes.indexOf(currentStarters.get(2)));
-        }
-
-        int numTypes = romHandler.getTypeTable().getTypes().size();
-        String[] typeNames = new String[numTypes + 1];
-        typeNames[0] = "Random";
-        for (int i = 1; i <= numTypes; i++) {
-            typeNames[i] = Type.fromInt(i-1).toString();
-        }
-        spTypeSingleComboBox.setModel(new DefaultComboBoxModel<>(typeNames));
-
-        String[] baseStatGenerationNumbers = new String[Math.min(4, GlobalConstants.HIGHEST_POKEMON_GEN - romHandler.generationOfPokemon())];
-        int j = Math.max(6, romHandler.generationOfPokemon() + 1);
-        for (int i = 0; i < baseStatGenerationNumbers.length; i++) {
-            baseStatGenerationNumbers[i] = String.valueOf(j);
-            j++;
-        }
-
-        String[] moveGenerationNumbers = new String[GlobalConstants.HIGHEST_POKEMON_GEN - romHandler.generationOfPokemon()];
-        j = romHandler.generationOfPokemon() + 1;
-        for (int i = 0; i < moveGenerationNumbers.length; i++) {
-            moveGenerationNumbers[i] = String.valueOf(j);
-            j++;
-        }
-        mdUpdateComboBox.setModel(new DefaultComboBoxModel<>(moveGenerationNumbers));
+        */
     }
 
     private ImageIcon makeMascotIcon() {
@@ -4173,8 +3489,7 @@ public class RandomizerGUI {
             int exitCode = CliRandomizer.invoke(commandArgs);
             System.exit(exitCode);
         } else {
-            launcherInput = firstCliArg;
-            if (launcherInput.equals("please-use-the-launcher")) usedLauncher = true;
+            if (firstCliArg.equals("please-use-the-launcher")) usedLauncher = true;
             SwingUtilities.invokeLater(() -> {
                 frame = new JFrame("RandomizerGUI");
                 frame.setContentPane(new RandomizerGUI().mainPanel);

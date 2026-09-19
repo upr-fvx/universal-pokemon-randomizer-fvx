@@ -2,8 +2,9 @@
 REM Expansion not relevant yet, just good practice to have it here
 setlocal enabledelayedexpansion
 
-echo ===== Launching the Universal Pokémon Randomizer FVX at %date% %time% ===== >> console_output.log
-echo ===== Launching the Universal Pokémon Randomizer FVX at %date% %time%
+set "TIMESTAMP=%date% %time%"
+echo ===== Launching the Universal Pokémon Randomizer FVX at %TIMESTAMP% ===== >> console_output.log
+echo ===== Launching the Universal Pokémon Randomizer FVX at %TIMESTAMP% =====
 
 REM Change to the directory of the launcher
 cd /d "%~dp0"
@@ -33,3 +34,13 @@ if errorlevel 1 (
 
 REM Launch FVX
 "%JAVA%" -Xmx4608M -jar UPR-FVX.jar please-use-the-launcher
+REM Honestly not sure if all bad wrong things (crashes) give an errorlevel 1
+if errorlevel 1 (
+    echo Error: something went wrong with the Randomizer / Java. >> console_output.log
+    echo Error: something went wrong with the Randomizer / Java.
+)
+REM Since we can't mirror the Java launch output to console_output.log, put a wait here.
+REM Otherwise, users won't see the message(s) for when things go wrong.
+REM (For the curious the powershell command Tee-Object could be used, but then we get encoding issues)
+echo Press any key to exit...
+pause

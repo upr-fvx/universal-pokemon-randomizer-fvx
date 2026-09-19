@@ -107,6 +107,7 @@ public class ItemRandomizer extends Randomizer {
 
         tms.clear();
         tms.addAll(newTMs);
+        Collections.shuffle(tms, random);
     }
 
     /**

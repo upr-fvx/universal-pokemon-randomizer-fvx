@@ -1702,7 +1702,7 @@ public class Settings {
             new SimpleSettingDefinition.Builder<>(
                     Name.RANDOMIZE_TM_AND_HM_COMPATABILITY,
                     Category.TM_AND_HM_COMPATABILITY,
-                    TMsHMsCompatibilityMod.UNCHANGED) // TODO: hide "full HM compatibility" if game has no HMs
+                    TMsHMsCompatibilityMod.UNCHANGED)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TM_COMPATABILITY_LEVEL_UP_SANITY,
@@ -1735,6 +1735,7 @@ public class Settings {
                     Name.TMS_FULL_HM_COMPATABILITY,
                     Category.TM_AND_HM_COMPATABILITY)
                     .prerequisite(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY, notMatchesEnum(TMsHMsCompatibilityMod.FULL))
+                    .supported(rh -> rh.getHMCount() != 0)
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(

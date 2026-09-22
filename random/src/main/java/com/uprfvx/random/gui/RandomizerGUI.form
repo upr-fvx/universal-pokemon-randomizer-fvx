@@ -40,7 +40,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="816f6" layout-manager="GridBagLayout">
+                  <grid id="816f6" binding="limitPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="3" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -50,7 +50,7 @@
                     <children>
                       <hspacer id="9cc2f">
                         <constraints>
-                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.1" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -60,10 +60,10 @@
                           <gridbag weightx="0.0" weighty="0.1"/>
                         </constraints>
                       </vspacer>
-                      <grid id="a719b" binding="limitSpeciesPanel" layout-manager="GridBagLayout">
+                      <grid id="a719b" binding="banSpeciesPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="1" row-span="5" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
+                          <gridbag top="0" left="0" bottom="0" right="10" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
                         <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.generalTab.limitPanel.banSpeciesPanel.title"/>
@@ -171,7 +171,7 @@
                       </grid>
                       <component id="41e69" class="javax.swing.JCheckBox" binding="lsNoIrregularAltFormesCheckBox">
                         <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -182,7 +182,7 @@
                       </component>
                       <component id="23cx3" class="javax.swing.JCheckBox" binding="lsNoPrematureEvosCheckbox">
                         <constraints>
-                          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -203,15 +203,9 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <hspacer id="55192">
-                        <constraints>
-                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                       <component id="3dcc7" class="javax.swing.JCheckBox" binding="lsRetainAltFormesCheckBox">
                         <constraints>
-                          <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -604,7 +598,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="fc2b0" layout-manager="GridBagLayout">
+                  <grid id="fc2b0" binding="statsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="0" bottom="0" right="0" weightx="0.1" weighty="0.0"/>
@@ -626,7 +620,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <grid id="c93fe" layout-manager="GridBagLayout">
+                      <grid id="c93fe" binding="totalsPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="1" row-span="3" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -720,13 +714,13 @@
                           </component>
                         </children>
                       </grid>
-                      <grid id="9e3ce" layout-manager="GridBagLayout">
+                      <grid id="9e3ce" binding="distPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="3" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
-                        <border type="none" title="Base Stat Distributions"/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.traitsTab.statsPanel.distPanel.title"/>
                         <children>
                           <component id="576dd" class="javax.swing.JRadioButton" binding="sbsdUnchangedRadioButton">
                             <constraints>
@@ -876,7 +870,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </hspacer>
-                  <grid id="54ad9" layout-manager="GridBagLayout">
+                  <grid id="54ad9" binding="traitsTypesPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -1149,7 +1143,7 @@
                       </hspacer>
                     </children>
                   </grid>
-                  <grid id="b4a80" layout-manager="GridBagLayout">
+                  <grid id="b4a80" binding="evolutionPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -1420,7 +1414,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="f19a9" layout-manager="GridBagLayout">
+                  <grid id="f19a9" binding="expCurvesPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                       <gridbag top="5" left="0" bottom="0" right="0" weightx="0.1" weighty="0.0"/>
@@ -1540,7 +1534,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="bb7c7" layout-manager="GridBagLayout">
+                  <grid id="bb7c7" binding="startersPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -1595,7 +1589,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.randomRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <grid id="33c18" layout-manager="GridBagLayout">
+                      <grid id="33c18" binding="spTypesPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="11" row-span="8" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -1752,7 +1746,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.banMinorItemsCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <grid id="b12f8" layout-manager="GridBagLayout">
+                      <grid id="b12f8" binding="spEvolutionPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="4" column="1" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -2018,7 +2012,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="f2cab" layout-manager="GridBagLayout">
+                  <grid id="f2cab" binding="tradesPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -2161,7 +2155,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="d5afa" layout-manager="GridBagLayout">
+                  <grid id="d5afa" binding="moveTraitsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -2322,7 +2316,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="6490f" layout-manager="GridBagLayout">
+                  <grid id="6490f" binding="movesetsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -2510,7 +2504,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <grid id="6ba9a" layout-manager="GridBagLayout">
+                  <grid id="6ba9a" binding="trainersPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -2554,7 +2548,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomizeCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <grid id="92f66" layout-manager="GridBagLayout">
+                      <grid id="92f66" binding="tpTypesPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="5" row-span="2" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -3083,7 +3077,7 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <grid id="3dc4f" layout-manager="GridBagLayout">
+                      <grid id="3dc4f" binding="tpInnerPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="3" column="5" row-span="13" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>

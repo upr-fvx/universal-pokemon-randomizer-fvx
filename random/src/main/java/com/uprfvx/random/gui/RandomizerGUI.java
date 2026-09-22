@@ -540,7 +540,23 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
-    private JPanel limitSpeciesPanel;
+    private JPanel banSpeciesPanel;
+    private JPanel limitPanel;
+    private JPanel statsPanel;
+    private JPanel totalsPanel;
+    private JPanel distPanel;
+    private JPanel traitsTypesPanel;
+    private JPanel evolutionPanel;
+    private JPanel expCurvesPanel;
+    private JPanel startersPanel;
+    private JPanel spTypesPanel;
+    private JPanel spEvolutionPanel;
+    private JPanel tradesPanel;
+    private JPanel moveTraitsPanel;
+    private JPanel movesetsPanel;
+    private JPanel trainersPanel;
+    private JPanel tpTypesPanel;
+    private JPanel tpInnerPanel;
 
     //endregion
 
@@ -668,6 +684,7 @@ public class RandomizerGUI {
 
         settingsManager = new SettingsManager();
         associateSettingControls();
+        initVisibilityListeners();
 
         openROMButton.addActionListener(_ -> selectAndOpenRom());
 
@@ -905,12 +922,6 @@ public class RandomizerGUI {
 
                 //TODO: complete list of settings
         );
-
-        // proof of concept. might still be unwieldy for bigger panels
-        AutoHideListener.associate(limitSpeciesPanel, settingsManager,
-                Name.LIMIT_BAN_GENERATION_1, Name.LIMIT_BAN_GENERATION_2, Name.LIMIT_BAN_GENERATION_3,
-                Name.LIMIT_BAN_GENERATION_4, Name.LIMIT_BAN_GENERATION_5, Name.LIMIT_BAN_GENERATION_6,
-                Name.LIMIT_BAN_GENERATION_7, Name.LIMIT_ALLOW_RELATIVES);
     }
 
     //region associate controls helper methods
@@ -962,6 +973,72 @@ public class RandomizerGUI {
     }
 
     //endregion
+
+    private void initVisibilityListeners() {
+        System.out.println(banSpeciesPanel.getComponents().length);
+        for (Component component : banSpeciesPanel.getComponents()) {
+            System.out.println(component);
+            System.out.println(component.getName());
+        }
+
+        // all panels in the tabs should be here
+        List<JPanel> panels = List.of(
+                // General Options
+                cosmeticPanel, limitPanel, banSpeciesPanel, qolTweaksPanel, balanceTweaksPanel,
+                // Species Traits
+                statsPanel, totalsPanel, distPanel, traitsTypesPanel, speciesAbilitiesPanel, evolutionPanel,
+                expCurvesPanel,
+                // Given Pokémon
+                startersPanel, spEvolutionPanel, spTypesPanel, tradesPanel,
+                // Moves & Movesets
+                moveTraitsPanel, movesetsPanel,
+                // Foe Pokémon
+                trainersPanel, tpInnerPanel, tpBattleStylePanel, tpTypesPanel, totpPanel, totpAllyPanel, totpAuraPanel
+                // Wild Pokémon
+                // TODO: fill in rest
+        );
+        for (JPanel panel : panels) {
+            ComponentListener autoHidePanelListener = new AutoHidePanelListener(panel);
+            for (Component component : panel.getComponents()) {
+                component.addComponentListener(autoHidePanelListener);
+            }
+        }
+    }
+
+    private static class AutoHidePanelListener implements ComponentListener {
+
+        private final JPanel panel;
+
+        public AutoHidePanelListener(JPanel panel) {
+            this.panel = panel;
+        }
+
+        @Override
+        public void componentResized(ComponentEvent e) {}
+        @Override
+        public void componentMoved(ComponentEvent e) {}
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+            panel.setVisible(true);
+        }
+
+        @Override
+        public void componentHidden(ComponentEvent e) {
+            System.out.println("Applying listener to:" + panel);
+            boolean anyComponentVisible = false;
+            for (Component component : panel.getComponents()) {
+                // spacers are empty JPanels. ignore them
+                if (component instanceof JPanel subPanel && subPanel.getComponents().length == 0) continue;
+                if (component.isVisible()) {
+                    System.out.println("Still visible component:" + component);
+                    anyComponentVisible = true;
+                    break;
+                }
+            }
+            panel.setVisible(anyComponentVisible);
+        }
+    }
 
     private void checkSpMinimumNeedsLower() {
         if((int)spBSTMaximumSpinner.getValue() < (int)spBSTMinimumSpinner.getValue()) {

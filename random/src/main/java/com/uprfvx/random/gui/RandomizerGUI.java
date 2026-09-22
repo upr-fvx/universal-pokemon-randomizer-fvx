@@ -270,8 +270,8 @@ public class RandomizerGUI {
     private JCheckBox mtRandomizeMoveAccuracyCheckBox;
     private JCheckBox mtRandomizeMovePPCheckBox;
     private JCheckBox mtRandomizeMoveTypesCheckBox;
-    private JCheckBox mtRandomizeMoveNamesCheckBox;
     private JCheckBox mtRandomizeMoveCategoryCheckBox;
+    private JCheckBox mtRandomizeMoveNamesCheckBox;
     private JCheckBox mdUpdateMovesCheckBox;
     private JComboBox<String> mdUpdateComboBox;
 
@@ -927,9 +927,111 @@ public class RandomizerGUI {
                                 StartersTypeMod.UNIQUE, spTypeUniqueRadioButton,
                                 StartersTypeMod.SINGLE_TYPE, spTypeSingleRadioButton
                         )),
-                associateCheckBox(Name.STARTERS_NO_DUAL_TYPES, spTypeNoDualCheckbox)
+                associateCheckBox(Name.STARTERS_NO_DUAL_TYPES, spTypeNoDualCheckbox),
                 //TODO: also figure out handling for types+random combobox
 
+                // In-Game Trades
+                // TODO: how to associate an underlying enum to two checkboxes?
+                associateCheckBox(Name.TRADES_RANDOMIZE_NICKNAMES, igtRandomizeNicknamesCheckBox),
+                associateCheckBox(Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS, igtRandomizeOTsCheckBox),
+                associateCheckBox(Name.TRADES_RANDOMIZE_IVS, igtRandomizeIVsCheckBox),
+                associateCheckBox(Name.TRADES_RANDOMIZE_HELD_ITEMS, igtRandomizeItemsCheckBox),
+
+                // *** MOVES & MOVESETS ***
+                //Move Traits
+                associateCheckBox(Name.MOVES_RANDOMIZE_POWER, mtRandomizeMovePowerCheckBox),
+                associateCheckBox(Name.MOVES_RANDOMIZE_ACCURACY, mtRandomizeMoveAccuracyCheckBox),
+                associateCheckBox(Name.MOVES_RANDOMIZE_PP, mtRandomizeMovePPCheckBox),
+                associateCheckBox(Name.MOVES_RANDOMIZE_TYPE, mtRandomizeMoveTypesCheckBox),
+                associateCheckBox(Name.MOVES_RANDOMIZE_CATEGORY, mtRandomizeMoveCategoryCheckBox),
+                associateCheckBox(Name.MOVES_RANDOMIZE_NAME, mtRandomizeMoveNamesCheckBox),
+                associateCheckBox(Name.UPDATE_MOVES, mdUpdateMovesCheckBox),
+                // TODO: this numeric combo box
+
+                //Species Learned Movesets
+                associateButtonSet(Name.RANDOMIZE_SPECIES_MOVESETS,
+                        Map.of(
+                            MovesetsMod.UNCHANGED, slmUnchangedRadioButton,
+                            MovesetsMod.RANDOM_PREFER_SAME_TYPE, slmRandomPreferringSameTypeRadioButton,
+                            MovesetsMod.COMPLETELY_RANDOM, slmRandomCompletelyRadioButton,
+                            MovesetsMod.METRONOME_ONLY, slmMetronomeOnlyModeRadioButton
+                        )),
+                associateSlider(Name.MOVESETS_GUARANTEED_LEVEL_1_MOVE_COUNT, slmGuaranteedLevel1MovesSlider,
+                        slmGuaranteedLevel1MovesCheckBox),
+                associateCheckBox(Name.MOVESETS_ORDER_BY_DAMAGE, slmReorderDamagingMovesCheckBox),
+                associateCheckBox(Name.MOVESETS_BAN_OVERPOWERED, slmNoGameBreakingMovesCheckBox),
+                associateSpinSlider(Name.MOVESETS_FORCE_GOOD_DAMAGING_PERCENT, slmForceGoodDamagingSpinSlider,
+                        slmForceGoodDamagingCheckBox),
+                associateCheckBox(Name.MOVESETS_GUARANTEE_EVOLUTION_MOVES, slmEvolutionMovesCheckBox),
+
+                // *** FOE POKEMON ***
+                //Trainer Pokemon
+                // TODO: the main trainer mon enum
+                //--B-I-R column
+                associateSpinner(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, tpAddToBossTrainersSpinner,
+                        tpAddToBossTrainersCheckBox),
+                associateSpinner(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT, tpAddToImportantTrainersSpinner,
+                        tpAddToImportantTrainersCheckBox),
+                associateSpinner(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT, tpAddToRegularTrainersSpinner,
+                        tpAddToRegularTrainersCheckBox),
+                associateCheckBox(Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES, tpBetterMovesetsBossTrainersCheckBox),
+                associateCheckBox(Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT, tpBetterMovesetsImportantTrainersCheckBox),
+                associateCheckBox(Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR, tpBetterMovesetsRegularTrainersCheckBox),
+                associateCheckBox(Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES, tpBossTrainersItemsCheckBox),
+                associateCheckBox(Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT, tpImportantTrainersItemsCheckBox),
+                associateCheckBox(Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR, tpRegularTrainersItemsCheckBox),
+                associateCheckBox(Name.TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY, tpConsumableItemsOnlyCheckBox),
+                associateCheckBox(Name.TRAINER_HELD_ITEMS_SENSIBLE_ONLY, tpSensibleItemsCheckBox),
+                associateCheckBox(Name.TRAINERS_HELD_ITEMS_ACES_ONLY, tpHighestLevelGetsItemCheckBox),
+                associateCheckBox(Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, tpBossTrainersTypeDiversityCheckBox),
+                associateCheckBox(Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, tpImportantTrainersTypeDiversityCheckBox),
+                associateCheckBox(Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, tpRegularTrainersTypeDiversityCheckBox),
+                //--Battle Style
+                // TODO: what to do with battle styles? the GUI does not match the extant settings/internal logic.
+                //  Implement new functionaly or revert GUI?
+                //--Bools column
+                associateCheckBox(Name.TRAINERS_USE_LOCAL, tpUseLocalPokemonCheckBox),
+                associateCheckBox(Name.TRAINERS_NO_LEGENDARIES, tpDontUseLegendariesCheckBox),
+                associateCheckBox(Name.TRAINERS_ALLOW_ALT_FORMES, tpAllowAlternateFormesCheckBox),
+                associateCheckBox(Name.TRAINERS_USE_SIMILAR_STRENGTH, tpSimilarStrengthCheckBox),
+                associateCheckBox(Name.TRAINERS_AVOID_DUPLICATES, tpAvoidDuplicatesCheckBox),
+                associateCheckBox(Name.TRAINERS_NO_EARLY_WONDER_GUARD, tpNoEarlyWonderGuardCheckBox),
+                associateCheckBox(Name.TRAINERS_RIVAL_CARRIES_STARTER, tpRivalCarriesStarterCheckBox),
+                associateCheckBox(Name.TRAINERS_SWAP_MEGA_EVOLVABLES, tpSwapMegaEvosCheckBox),
+                associateCheckBox(Name.TRAINERS_RANDOM_SHINY_POKEMON, tpRandomShinyTrainerPokemonCheckBox),
+                //--Quantified column
+                associateSpinner(Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, tpEliteFourUniquePokemonSpinner,
+                        tpEliteFourUniquePokemonCheckBox),
+                associateCheckBox(Name.TRAINERS_EVOLVE_POKEMON, tpTrainersEvolveTheirPokemonCheckbox),
+                associateSpinSlider(Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, tpPercentageEvolutionLevelModifierSpinSlider),
+                associateSpinSlider(Name.TRAINERS_LEVEL_MODIFIER_PERCENT, tpPercentageLevelModifierSpinSlider,
+                        tpPercentageLevelModifierCheckBox),
+
+                //Totem Pokemon
+                associateButtonSet(Name.RANDOMIZE_TOTEM_POKEMON,
+                        Map.of(
+                                TotemPokemonMod.UNCHANGED, totpUnchangedRadioButton,
+                                TotemPokemonMod.RANDOM, totpRandomRadioButton,
+                                TotemPokemonMod.SIMILAR_STRENGTH, totpRandomSimilarStrengthRadioButton
+                        )),
+                associateCheckBox(Name.TOTEMS_RANDOMIZE_HELD_ITEMS, totpRandomizeHeldItemsCheckBox),
+                associateCheckBox(Name.TOTEMS_ALLOW_ALT_FORMES, totpAllowAltFormesCheckBox),
+                associateSpinSlider(Name.TOTEMS_LEVEL_MODIFIER_PERCENT, totpPercentageLevelModifierSpinSlider,
+                        totpPercentageLevelModifierCheckBox),
+                //--Allies
+                associateButtonSet(Name.TOTEMS_RANDOMIZE_ALLIES,
+                        Map.of(
+                                AllyPokemonMod.UNCHANGED, totpAllyUnchangedRadioButton,
+                                AllyPokemonMod.RANDOM, totpAllyRandomRadioButton,
+                                AllyPokemonMod.SIMILAR_STRENGTH, totpAllyRandomSimilarStrengthRadioButton
+                        )),
+                //--Auras
+                associateButtonSet(Name.TOTEMS_RANDOMIZE_AURAS,
+                        Map.of(
+                                AuraMod.UNCHANGED, totpAuraUnchangedRadioButton,
+                                AuraMod.RANDOM, totpAuraRandomRadioButton,
+                                AuraMod.SAME_STRENGTH, totpAuraRandomSameStrengthRadioButton
+                        ))
 
                 //TODO: complete list of settings
         );

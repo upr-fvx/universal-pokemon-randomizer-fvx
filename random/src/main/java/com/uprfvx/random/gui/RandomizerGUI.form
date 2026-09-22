@@ -3494,7 +3494,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="c2161" layout-manager="GridBagLayout">
+                  <grid id="c2161" binding="wpPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -3516,7 +3516,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <grid id="af326" layout-manager="GridBagLayout">
+                      <grid id="af326" binding="wpTypesPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="2" column="3" row-span="4" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -3576,7 +3576,7 @@
                           </hspacer>
                         </children>
                       </grid>
-                      <grid id="e032f" layout-manager="GridBagLayout">
+                      <grid id="e032f" binding="wpReplacementsPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="3" column="1" row-span="8" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -3699,7 +3699,7 @@
                           <gridbag weightx="0.1" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <grid id="fc6a6" layout-manager="GridBagLayout">
+                      <grid id="fc6a6" binding="wpEvolutionPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="7" column="3" row-span="5" col-span="2" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -3965,7 +3965,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="1d5c8" layout-manager="GridBagLayout">
+                  <grid id="1d5c8" binding="staticsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -4161,7 +4161,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="b2c62" layout-manager="GridBagLayout">
+                  <grid id="b2c62" binding="tmsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -4171,7 +4171,7 @@
                       <font style="1"/>
                     </border>
                     <children>
-                      <grid id="a78c8" layout-manager="GridBagLayout">
+                      <grid id="a78c8" binding="tmMovesPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -4288,7 +4288,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <grid id="51d08" layout-manager="GridBagLayout">
+                      <grid id="51d08" binding="tmCompatPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="20" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
@@ -4419,7 +4419,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="e917c" binding="moveTutorPanel" layout-manager="GridBagLayout">
+                  <grid id="e917c" binding="tutorsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -4670,7 +4670,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="7b397" layout-manager="GridBagLayout">
+                  <grid id="7b397" binding="fieldItemsPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -5270,7 +5270,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="f8597" layout-manager="GridBagLayout">
+                  <grid id="f8597" binding="palettesPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -5411,7 +5411,7 @@
                       <gridbag weightx="0.0" weighty="0.0"/>
                     </constraints>
                   </vspacer>
-                  <grid id="b9ad9" layout-manager="GridBagLayout">
+                  <grid id="b9ad9" binding="customPlayerPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>

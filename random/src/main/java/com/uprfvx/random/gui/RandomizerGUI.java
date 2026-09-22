@@ -449,7 +449,7 @@ public class RandomizerGUI {
     private JCheckBox thcFullHMCompatibilityCheckBox;
 
     //Tutors
-    private JPanel moveTutorPanel;
+    private JPanel tutorsPanel;
     private JLabel mtNoExistLabel;
     //--Moves
     private JPanel mtMovesPanel;
@@ -557,6 +557,17 @@ public class RandomizerGUI {
     private JPanel trainersPanel;
     private JPanel tpTypesPanel;
     private JPanel tpInnerPanel;
+    private JPanel wpPanel;
+    private JPanel wpReplacementsPanel;
+    private JPanel wpTypesPanel;
+    private JPanel wpEvolutionPanel;
+    private JPanel staticsPanel;
+    private JPanel tmsPanel;
+    private JPanel tmCompatPanel;
+    private JPanel tmMovesPanel;
+    private JPanel fieldItemsPanel;
+    private JPanel palettesPanel;
+    private JPanel customPlayerPanel;
 
     //endregion
 
@@ -993,9 +1004,17 @@ public class RandomizerGUI {
                 // Moves & Movesets
                 moveTraitsPanel, movesetsPanel,
                 // Foe Pokémon
-                trainersPanel, tpInnerPanel, tpBattleStylePanel, tpTypesPanel, totpPanel, totpAllyPanel, totpAuraPanel
+                trainersPanel, tpInnerPanel, tpBattleStylePanel, tpTypesPanel, totpPanel, totpAllyPanel, totpAuraPanel,
                 // Wild Pokémon
-                // TODO: fill in rest
+                wpPanel, wpReplacementsPanel, wpTypesPanel, wpEvolutionPanel, staticsPanel,
+                // Move Teaching
+                tmsPanel, tmMovesPanel, tmCompatPanel, tutorsPanel, mtMovesPanel, mtCompatPanel,
+                // Items
+                generalItemsPanel, fieldItemsPanel, shopItemsPanel, pickupItemsPanel,
+                // Types
+                typesPanel,
+                // Graphics
+                palettesPanel, customPlayerPanel
         );
         for (JPanel panel : panels) {
             ComponentListener autoHidePanelListener = new AutoHidePanelListener(panel);

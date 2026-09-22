@@ -5,7 +5,6 @@ import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import java.awt.event.ActionEvent;
 import java.io.Serializable;
 
@@ -53,7 +52,11 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
         setValue(initialValue);
 
         element.setEnabled(unlatched && manager.isEnabled(settingName));
-        element.setVisible(manager.isSupported(settingName));
+        boolean isSupported = manager.isSupported(settingName);
+        element.setVisible(isSupported);
+        if (latch != null) {
+            latch.setVisible(isSupported);
+        }
     }
 
     private void latchValueChanged(ActionEvent event) {
@@ -107,6 +110,9 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
         settingMatchCheck(setting);
 
         element.setVisible(isSupported);
+        if (latch != null) {
+            latch.setVisible(isSupported);
+        }
     }
 
     protected void settingMatchCheck(Settings.Name nameGiven) {

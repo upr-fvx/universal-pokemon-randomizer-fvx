@@ -1177,7 +1177,7 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <grid id="5fd12" layout-manager="GridBagLayout">
+                      <grid id="5fd12" binding="evolutionInnerPanel" layout-manager="GridBagLayout">
                         <constraints>
                           <grid row="1" column="1" row-span="6" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
@@ -5108,14 +5108,14 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="653db" binding="typesPanel" layout-manager="GridBagLayout">
+              <grid id="653db" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="d7e16" layout-manager="GridBagLayout">
+                  <grid id="d7e16" binding="effectivenessPanel" layout-manager="GridBagLayout">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.1" weighty="0.0"/>
@@ -5263,7 +5263,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="900f1" binding="graphicsPanel" layout-manager="GridBagLayout">
+              <grid id="900f1" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>

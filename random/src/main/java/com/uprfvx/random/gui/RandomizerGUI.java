@@ -108,7 +108,9 @@ public class RandomizerGUI {
     private JCheckBox coRandomizeTrainerClassNamesCheckBox;
 
     //Limit Species
+    private JPanel limitPanel;
     //--By Generation
+    private JPanel banSpeciesPanel;
     private JCheckBox lsBanGeneration1CheckBox;
     private JCheckBox lsBanGeneration2CheckBox;
     private JCheckBox lsBanGeneration3CheckBox;
@@ -150,9 +152,11 @@ public class RandomizerGUI {
     //region *** Species Traits tab ***
 
     //Base Stats
+    private JPanel statsPanel;
     private JCheckBox sbsUpdateBaseStatsCheckBox;
     private JSpinner sbsUpdateGenerationChoiceSpinner;
     //--Totals
+    private JPanel totalsPanel;
     private JRadioButton sbstUnchangedRadioButton;
     private JRadioButton sbstRandomBuffNerfRadioButton;
     private SpinSlider sbstRandomBuffNerfSpinSlider;
@@ -161,6 +165,7 @@ public class RandomizerGUI {
     private JCheckBox sbstFollowEvolutionsCheckBox;
     private JCheckBox sbstSwapLegendariesCheckBox;
     //--Distribution
+    private JPanel distPanel;
     private JRadioButton sbsdUnchangedRadioButton;
     private JRadioButton sbsdShuffleRadioButton;
     private JRadioButton sbsdRandomRadioButton;
@@ -169,6 +174,7 @@ public class RandomizerGUI {
     private JCheckBox sbsdAssignEvoStatsRandomlyCheckBox;
 
     //Types
+    private JPanel traitsTypesPanel;
     private JRadioButton stUnchangedRadioButton;
     private JRadioButton stRandomFollowEvolutionsRadioButton;
     private JRadioButton stRandomCompletelyRadioButton;
@@ -192,6 +198,7 @@ public class RandomizerGUI {
     private JCheckBox saBanMinorAbilitiesCheckBox;
 
     //Evolutions
+    private JPanel evolutionPanel;
     private JCheckBox peChangeImpossibleEvosCheckBox;
     private JCheckBox peRemoveTimeBasedEvolutionsCheckBox;
     private JCheckBox peAllowPikachuEvolutionCheckBox;
@@ -199,6 +206,7 @@ public class RandomizerGUI {
     private JCheckBox peMakeEvolutionsEasierCheckBox;
     private JSlider peMakeEvolutionsEasierLvlSlider;
     //--Randomize
+    private JPanel evolutionInnerPanel;
     private JRadioButton peUnchangedRadioButton;
     private JRadioButton peRandomRadioButton;
     private JRadioButton peRandomEveryLevelRadioButton;
@@ -212,6 +220,7 @@ public class RandomizerGUI {
     private JCheckBox peAdjustLevelsCheckBox;
 
     //EXP Curves
+    private JPanel expCurvesPanel;
     private JCheckBox secStandardizeEXPCurvesCheckBox;
     private JComboBox<String> secEXPCurveComboBox;
     private JRadioButton secLegendariesSlowRadioButton;
@@ -223,6 +232,7 @@ public class RandomizerGUI {
     //region *** Given Pokemon tab ***
 
     //Starter Pokemon
+    private JPanel startersPanel;
     private JRadioButton spUnchangedRadioButton;
     private JRadioButton spCustomRadioButton;
     private JRadioButton spRandomRadioButton;
@@ -239,10 +249,12 @@ public class RandomizerGUI {
     private JCheckBox spBanMinorItemsCheckBox;
     private JCheckBox spAllowAltFormesCheckBox;
     //--Evolution Restrictions
+    private JPanel spEvolutionPanel;
     private JCheckBox spBasicOnlyCheckBox;
     private JCheckBox spHasEvolutionsCheckBox;
     private JSlider spHasEvolutionCountSlider;
     //--Type Restrictions
+    private JPanel spTypesPanel;
     private JRadioButton spTypeNoneRadioButton;
     private JRadioButton spTypeFwgRadioButton;
     private JRadioButton spTypeTriangleRadioButton;
@@ -252,6 +264,7 @@ public class RandomizerGUI {
     private JCheckBox spTypeNoDualCheckbox;
 
     //In-Game Trades
+    private JPanel tradesPanel;
     private JCheckBox igtRandomizeGivenSpeciesCheckBox;
     private JCheckBox igtRandomizeRequestedSpeciesCheckBox;
     private JCheckBox igtRandomizeNicknamesCheckBox;
@@ -266,6 +279,7 @@ public class RandomizerGUI {
     //region *** Moves and Movesets ***
 
     //Move Traits
+    private JPanel moveTraitsPanel;
     private JCheckBox mtRandomizeMovePowerCheckBox;
     private JCheckBox mtRandomizeMoveAccuracyCheckBox;
     private JCheckBox mtRandomizeMovePPCheckBox;
@@ -276,6 +290,7 @@ public class RandomizerGUI {
     private JComboBox<String> mdUpdateComboBox;
 
     //Species Learned Movesets
+    private JPanel movesetsPanel;
     private JRadioButton slmUnchangedRadioButton;
     private JRadioButton slmRandomPreferringSameTypeRadioButton;
     private JRadioButton slmRandomCompletelyRadioButton;
@@ -293,6 +308,7 @@ public class RandomizerGUI {
     //region *** Foe Pokemon ***
 
     //Trainer Pokemon
+    private JPanel trainersPanel;
     private JCheckBox tpRandomizeTrainerPokemonCheckBox;
     //--B-I-R column
     private JLabel tpAdditionalPokemonForLabel;
@@ -327,6 +343,7 @@ public class RandomizerGUI {
     private JCheckBox tbsExcludeTripleBattlesCheckBox;
     private JCheckBox tbsExcludeRotationBattlesCheckBox;
     //--Type Restrictions
+    private JPanel tpTypesPanel;
     private JRadioButton tpTypesUnrestrictedRadioButton;
     private JRadioButton tpRandomTypeThemesRadioButton;
     private JRadioButton tpKeepTypeThemesRadioButton;
@@ -334,6 +351,7 @@ public class RandomizerGUI {
     private JCheckBox tpTypeGymsAndElitesOnlyCheckBox;
     private JCheckBox tpWeightTypesCheckBox;
     //--Bools column
+    private JPanel tpInnerPanel;
     private JCheckBox tpUseLocalPokemonCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;
     private JCheckBox tpAllowAlternateFormesCheckBox;
@@ -379,8 +397,10 @@ public class RandomizerGUI {
     //region *** Wild Pokemon ***
 
     //Random Encounters
+    private JPanel wpPanel;
     private JCheckBox wpRandomizeWildPokemonCheckBox;
     //--Replacement Zone
+    private JPanel wpReplacementsPanel;
     private JRadioButton wpZoneGameRadioButton;
     private JRadioButton wpZoneNamedLocationRadioButton;
     private JRadioButton wpZoneMapRadioButton;
@@ -389,10 +409,12 @@ public class RandomizerGUI {
     private JRadioButton wpZoneNoneRadioButton;
     private JCheckBox wpRemoveTimeBasedEncountersCheckBox;
     //--Type Restrictions
+    private JPanel wpTypesPanel;
     private JRadioButton wpTRNoneRadioButton;
     private JRadioButton wpTRThemedAreasRadioButton;
     private JRadioButton wpTRKeepPrimaryRadioButton;
     private JCheckBox wpTRKeepThemesCheckBox;
+    private JPanel wpEvolutionPanel;
     //--Evolution Restrictions
     private JRadioButton wpERNoneRadioButton;
     private JRadioButton wpERBasicOnlyRadioButton;
@@ -414,6 +436,7 @@ public class RandomizerGUI {
     private JCheckBox wpSOSForAllCheckBox;
 
     //Static Encounters
+    private JPanel staticsPanel;
     private JRadioButton seUnchangedRadioButton;
     private JRadioButton seSwapLegendariesSwapStandardsRadioButton;
     private JRadioButton seRandomCompletelyRadioButton;
@@ -432,7 +455,9 @@ public class RandomizerGUI {
     //region *** Move Teaching ***
 
     //TMs & HMs
+    private JPanel tmsPanel;
     //--Moves
+    private JPanel tmMovesPanel;
     private JRadioButton tmmUnchangedRadioButton;
     private JRadioButton tmmRandomRadioButton;
     private JCheckBox tmmNoGameBreakingMovesCheckBox;
@@ -440,6 +465,7 @@ public class RandomizerGUI {
     private JCheckBox tmmForceGoodDamagingCheckBox;
     private SpinSlider tmmForceGoodDamagingSpinSlider;
     //--Compatibility
+    private JPanel tmCompatPanel;
     private JRadioButton thcUnchangedRadioButton;
     private JRadioButton thcRandomPreferSameTypeRadioButton;
     private JRadioButton thcRandomCompletelyRadioButton;
@@ -480,6 +506,7 @@ public class RandomizerGUI {
     private JCheckBox giNoFreeLuckyEggCheckBox;
 
     //Field Items
+    private JPanel fieldItemsPanel;
     private JRadioButton fiUnchangedRadioButton;
     private JRadioButton fiShuffleRadioButton;
     private JRadioButton fiRandomRadioButton;
@@ -510,9 +537,9 @@ public class RandomizerGUI {
     //endregion
 
     //region *** Types ***
-    private JPanel typesPanel;
 
     //Type Effectiveness
+    private JPanel effectivenessPanel;
     private JRadioButton teUnchangedRadioButton;
     private JRadioButton teRandomRadioButton;
     private JRadioButton teRandomBalancedRadioButton;
@@ -525,8 +552,8 @@ public class RandomizerGUI {
 
     //region *** Graphics ***
 
-    private JPanel graphicsPanel;
     //Species Palettes
+    private JPanel palettesPanel;
     private JLabel spalNotExistLabel;
     private JLabel spalPartiallyImplementedLabel;
     private JRadioButton spalUnchangedRadioButton;
@@ -536,40 +563,13 @@ public class RandomizerGUI {
     private JCheckBox spalShinyFromNormalCheckBox;
 
     //Custom Player Graphics
+    private JPanel customPlayerPanel;
     private JLabel cpgNotExistLabel;
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
+    private JPanel t;
 
-    // TODO: move panels up
-    private JPanel banSpeciesPanel;
-    private JPanel limitPanel;
-    private JPanel statsPanel;
-    private JPanel totalsPanel;
-    private JPanel distPanel;
-    private JPanel traitsTypesPanel;
-    private JPanel evolutionPanel;
-    private JPanel expCurvesPanel;
-    private JPanel startersPanel;
-    private JPanel spTypesPanel;
-    private JPanel spEvolutionPanel;
-    private JPanel tradesPanel;
-    private JPanel moveTraitsPanel;
-    private JPanel movesetsPanel;
-    private JPanel trainersPanel;
-    private JPanel tpTypesPanel;
-    private JPanel tpInnerPanel;
-    private JPanel wpPanel;
-    private JPanel wpReplacementsPanel;
-    private JPanel wpTypesPanel;
-    private JPanel wpEvolutionPanel;
-    private JPanel staticsPanel;
-    private JPanel tmsPanel;
-    private JPanel tmCompatPanel;
-    private JPanel tmMovesPanel;
-    private JPanel fieldItemsPanel;
-    private JPanel palettesPanel;
-    private JPanel customPlayerPanel;
 
     //endregion
 
@@ -1268,8 +1268,8 @@ public class RandomizerGUI {
                 // General Options
                 cosmeticPanel, limitPanel, banSpeciesPanel, qolTweaksPanel, balanceTweaksPanel,
                 // Species Traits
-                statsPanel, totalsPanel, distPanel, traitsTypesPanel, speciesAbilitiesPanel, evolutionPanel,
-                expCurvesPanel,
+                statsPanel, totalsPanel, distPanel, traitsTypesPanel, speciesAbilitiesPanel, speciesBanAbilitiesPanel,
+                evolutionPanel, evolutionInnerPanel, expCurvesPanel,
                 // Given Pokémon
                 startersPanel, spEvolutionPanel, spTypesPanel, tradesPanel,
                 // Moves & Movesets
@@ -1281,9 +1281,9 @@ public class RandomizerGUI {
                 // Move Teaching
                 tmsPanel, tmMovesPanel, tmCompatPanel, tutorsPanel, mtMovesPanel, mtCompatPanel,
                 // Items
-                generalItemsPanel, fieldItemsPanel, shopItemsPanel, pickupItemsPanel,
+                generalItemsPanel, fieldItemsPanel, shopItemsPanel, specialShopsPanel, pickupItemsPanel,
                 // Types
-                typesPanel,
+                effectivenessPanel,
                 // Graphics
                 palettesPanel, customPlayerPanel
         );
@@ -1392,7 +1392,7 @@ public class RandomizerGUI {
             JOptionPane.showOptionDialog(frame,
                     messages,
                     bundle.getString("GUI.loadROM.invalidROMDialog.title"),
-                    JOptionPane.OK_OPTION,
+                    JOptionPane.DEFAULT_OPTION,
                     JOptionPane.WARNING_MESSAGE,
                     null,
                     options,
@@ -2972,17 +2972,9 @@ public class RandomizerGUI {
 
             randomizationSettingsTabbedPane.setEnabledAt(8, ppalSupport || cpgSupport);
 
-            if (romHandler.generationOfPokemon() < 6) {
-                applyGameUpdateMenuItem.setVisible(false);
-            } else {
-                applyGameUpdateMenuItem.setVisible(true);
-            }
+            applyGameUpdateMenuItem.setVisible(romHandler.generationOfPokemon() >= 6);
 
-            if (romHandler.hasGameUpdateLoaded()) {
-                removeGameUpdateMenuItem.setVisible(true);
-            } else {
-                removeGameUpdateMenuItem.setVisible(false);
-            }
+            removeGameUpdateMenuItem.setVisible(romHandler.hasGameUpdateLoaded());
 
             gameMascotLabel.setIcon(makeMascotIcon());
 

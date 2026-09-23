@@ -495,9 +495,9 @@ public class RandomizerGUI {
     private JRadioButton shUnchangedRadioButton;
     private JRadioButton shShuffleRadioButton;
     private JRadioButton shRandomRadioButton;
-    private JCheckBox shBanOverpoweredShopItemsCheckBox;
     private JCheckBox shBanMinorItemsCheckBox;
     private JCheckBox shBanRegularShopItemsCheckBox;
+    private JCheckBox shBanOverpoweredShopItemsCheckBox;
     private JCheckBox shGuaranteeEvolutionItemsCheckBox;
     private JCheckBox shGuaranteeXItemsCheckBox;
 
@@ -540,6 +540,8 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
+
+    // TODO: move panels up
     private JPanel banSpeciesPanel;
     private JPanel limitPanel;
     private JPanel statsPanel;
@@ -1031,7 +1033,154 @@ public class RandomizerGUI {
                                 AuraMod.UNCHANGED, totpAuraUnchangedRadioButton,
                                 AuraMod.RANDOM, totpAuraRandomRadioButton,
                                 AuraMod.SAME_STRENGTH, totpAuraRandomSameStrengthRadioButton
-                        ))
+                        )),
+
+                // *** WILD POKEMON ***
+                //Random Encounters
+                associateCheckBox(Name.RANDOMIZE_WILD_ENCOUNTERS, wpRandomizeWildPokemonCheckBox),
+                //--Replacement Zone
+                associateButtonSet(Name.WILD_REPLACEMENT_ZONE,
+                        Map.of(
+                                WildPokemonZoneMod.GAME, wpZoneGameRadioButton,
+                                WildPokemonZoneMod.NAMED_LOCATION, wpZoneNamedLocationRadioButton,
+                                WildPokemonZoneMod.MAP, wpZoneMapRadioButton,
+                                WildPokemonZoneMod.ENCOUNTER_SET, wpZoneEncounterSetRadioButton,
+                                WildPokemonZoneMod.SINGLE_ENCOUNTER, wpZoneNoneRadioButton
+                        )),
+                associateCheckBox(Name.WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES, wpSplitByEncounterTypesCheckBox),
+                associateCheckBox(Name.WILD_REMOVE_TIME_BASED, wpRemoveTimeBasedEncountersCheckBox),
+                //--Type Restrictions
+                associateButtonSet(Name.WILD_TYPE_RESTRICTION,
+                        Map.of(
+                                WildPokemonTypeMod.NONE, wpTRNoneRadioButton,
+                                WildPokemonTypeMod.RANDOM_THEMES, wpTRThemedAreasRadioButton,
+                                WildPokemonTypeMod.KEEP_PRIMARY, wpTRKeepPrimaryRadioButton
+                        )),
+                associateCheckBox(Name.WILD_KEEP_TYPE_THEMES, wpTRKeepThemesCheckBox),
+                //--Evolution Restrictions
+                associateButtonSet(Name.WILD_EVOLUTION_RESTRICTION,
+                        Map.of(
+                                WildPokemonEvolutionMod.NONE, wpERNoneRadioButton,
+                                WildPokemonEvolutionMod.BASIC_ONLY, wpERBasicOnlyRadioButton,
+                                WildPokemonEvolutionMod.KEEP_STAGE, wpERSameEvolutionStageRadioButton
+                        )),
+                associateCheckBox(Name.WILD_EVOLUTION_KEEP_RELATIONS, wpERKeepEvolutionsCheckBox),
+                //--Randomization Options
+                associateCheckBox(Name.WILD_NO_LEGENDARIES, wpDontUseLegendariesCheckBox),
+                associateCheckBox(Name.WILD_CATCH_EM_ALL, wpCatchEmAllModeCheckBox),
+                associateCheckBox(Name.WILD_USE_SIMILAR_STRENGTH, wpSimilarStrengthCheckBox),
+                associateCheckBox(Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, wpBalanceShakingGrassPokemonCheckBox),
+                associateCheckBox(Name.WILD_ALLOW_ALT_FORMES, wpAllowAltFormesCheckBox),
+                //--Other Options
+                associateCheckBox(Name.WILD_RANDOMIZE_HELD_ITEMS, wpRandomizeHeldItemsCheckBox),
+                associateCheckBox(Name.WILD_HELD_ITEMS_BAN_MINOR, wpBanMinorItemsCheckBox),
+                // TODO: min catch rate should be a combo box,
+                associateSpinSlider(Name.WILD_LEVEL_MODIFIER_PERCENT, wpPercentageLevelModifierSpinSlider,
+                        wpPercentageLevelModifierCheckBox),
+                associateCheckBox(Name.WILD_ALL_SPECIES_CALL_ALLIES, wpSOSForAllCheckBox),
+
+                //Static Pokémon
+                associateButtonSet(Name.RANDOMIZE_STATIC_ENCOUNTERS,
+                        Map.of(
+                                StaticPokemonMod.UNCHANGED, seUnchangedRadioButton,
+                                StaticPokemonMod.RANDOM_MATCHING, seSwapLegendariesSwapStandardsRadioButton,
+                                StaticPokemonMod.COMPLETELY_RANDOM, seRandomCompletelyRadioButton,
+                                StaticPokemonMod.SIMILAR_STRENGTH, seRandomSimilarStrengthRadioButton
+                        )),
+                associateCheckBox(Name.STATICS_FULL_RANDOM_OVER_600_BST, seRandomize600BSTCheckBox),
+                associateCheckBox(Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES, seLimitMainGameLegendariesCheckBox),
+                associateCheckBox(Name.STATICS_ALLOW_ALT_FORMES, seAllowAltFormesCheckBox),
+                associateCheckBox(Name.STATICS_SWAP_MEGA_EVOLVABLES, seSwapMegaEvosCheckBox),
+                associateCheckBox(Name.STATICS_FIX_MUSIC, seFixMusicCheckBox),
+                associateSpinSlider(Name.STATICS_LEVEL_MODIFIER_PERCENT, sePercentageLevelModifierSpinSlider,
+                        sePercentageLevelModifierCheckBox),
+                associateCheckBox(Name.STATICS_BALANCE_FOSSIL_LEVELS, seBalanceGivenLevelsCheckBox),
+
+                // *** MOVE TEACHING ***
+                //TMs & HMs
+                //--Moves
+                associateButtonSet(Name.RANDOMIZE_TM_MOVES,
+                        Map.of(
+                                TMMovesMod.UNCHANGED, tmmUnchangedRadioButton,
+                                TMMovesMod.RANDOM, tmmRandomRadioButton
+                        )),
+                associateCheckBox(Name.TMS_BAN_OVERPOWERED, tmmNoGameBreakingMovesCheckBox),
+                associateCheckBox(Name.TMS_KEEP_FIELD_MOVES, tmmKeepFieldMoveTMsCheckBox),
+                associateSpinSlider(Name.TMS_GOOD_DAMAGING_PERCENT, tmmForceGoodDamagingSpinSlider,
+                        tmmForceGoodDamagingCheckBox),
+                //--Compatibility
+                associateButtonSet(Name.RANDOMIZE_TM_AND_HM_COMPATABILITY,
+                        Map.of(
+                                TMsHMsCompatibilityMod.UNCHANGED, thcUnchangedRadioButton,
+                                TMsHMsCompatibilityMod.RANDOM_PREFER_TYPE, thcRandomPreferSameTypeRadioButton,
+                                TMsHMsCompatibilityMod.COMPLETELY_RANDOM, thcRandomCompletelyRadioButton,
+                                TMsHMsCompatibilityMod.FULL, thcFullCompatibilityRadioButton
+                        )),
+                associateCheckBox(Name.TM_COMPATABILITY_LEVEL_UP_SANITY, thcLevelupMoveSanityCheckBox),
+                associateCheckBox(Name.TM_COMPATABILITY_FOLLOW_EVOLUTIONS, thcFollowEvolutionsCheckBox),
+                associateCheckBox(Name.TMS_FULL_HM_COMPATABILITY, thcFullHMCompatibilityCheckBox),
+
+                //Tutors
+                associateButtonSet(Name.RANDOMIZE_TUTOR_MOVES,
+                        Map.of(
+                                MoveTutorMovesMod.UNCHANGED, mtmUnchangedRadioButton,
+                                MoveTutorMovesMod.RANDOM, mtmRandomRadioButton
+                        )),
+                associateCheckBox(Name.TUTORS_BAN_OVERPOWERED, mtmNoGameBreakingMovesCheckBox),
+                associateCheckBox(Name.TUTORS_KEEP_FIELD_MOVES, mtmKeepFieldMoveTutorsCheckBox),
+                associateSpinSlider(Name.TUTORS_GOOD_DAMAGING_PERCENT, mtmForceGoodDamagingSpinSlider,
+                        mtmForceGoodDamagingCheckBox),
+                //--Compatibility
+                associateButtonSet(Name.RANDOMIZE_TUTOR_COMPATABILITY,
+                        Map.of(
+                                MoveTutorsCompatibilityMod.UNCHANGED, mtcUnchangedRadioButton,
+                                MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE, mtcRandomPreferSameTypeRadioButton,
+                                MoveTutorsCompatibilityMod.COMPLETELY_RANDOM, mtcRandomCompletelyRadioButton,
+                                MoveTutorsCompatibilityMod.FULL, mtcFullCompatibilityRadioButton
+                        )),
+                associateCheckBox(Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY, mtcLevelupMoveSanityCheckBox),
+                associateCheckBox(Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS, mtcFollowEvolutionsCheckBox),
+
+                // *** Items ***
+                //General
+                associateCheckBox(Name.ITEMS_BAN_LUCKY_EGG, giBanLuckyEggCheckBox),
+                associateCheckBox(Name.ITEMS_BAN_BIG_MONEY_MANIAC_ITEMS, giBanBigMoneyManiacCheckBox),
+                associateCheckBox(Name.ITEMS_RANDOMIZE_PC_POTION, giRandomizePCPotionCheckBox),
+                associateCheckBox(Name.ITEMS_NO_FREE_LUCKY_EGG, giNoFreeLuckyEggCheckBox),
+
+                //Field Items
+                associateButtonSet(Name.RANDOMIZE_FIELD_ITEMS,
+                        Map.of(
+                                FieldItemsMod.UNCHANGED, fiUnchangedRadioButton,
+                                FieldItemsMod.SHUFFLE, fiShuffleRadioButton,
+                                FieldItemsMod.RANDOM, fiRandomRadioButton,
+                                FieldItemsMod.RANDOM_EVEN, fiRandomEvenDistributionRadioButton
+                        )),
+                associateCheckBox(Name.FIELD_ITEMS_BAN_MINOR, fiBanMinorItemsCheckBox),
+
+                //Shop Items
+                associateCheckBox(Name.SHOP_ITEMS_BALANCE_PRICES, shBalanceShopItemPricesCheckBox),
+                associateCheckBox(Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY, shAddRareCandyCheckBox),
+                //--Special Shops
+                associateButtonSet(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS,
+                        Map.of(
+                                ShopItemsMod.UNCHANGED, shUnchangedRadioButton,
+                                ShopItemsMod.SHUFFLE, shShuffleRadioButton,
+                                ShopItemsMod.RANDOM, shRandomRadioButton
+                        )),
+                associateCheckBox(Name.SHOP_ITEMS_BAN_MINOR, shBanMinorItemsCheckBox),
+                associateCheckBox(Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS, shBanRegularShopItemsCheckBox),
+                associateCheckBox(Name.SHOP_ITEMS_BAN_OVERPOWERED, shBanOverpoweredShopItemsCheckBox),
+                associateCheckBox(Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS, shGuaranteeEvolutionItemsCheckBox),
+                associateCheckBox(Name.SHOP_ITEMS_GUARANTEE_X_ITEMS, shGuaranteeXItemsCheckBox),
+
+                //Pickup Items
+                associateButtonSet(Name.RANDOMIZE_PICKUP_ITEMS,
+                        Map.of(
+                                PickupItemsMod.UNCHANGED, puUnchangedRadioButton,
+                                PickupItemsMod.RANDOM, puRandomRadioButton
+                        )),
+                associateCheckBox(Name.PICKUP_ITEMS_BAN_MINOR, puBanMinorItemsCheckBox)
 
                 //TODO: complete list of settings
         );

@@ -620,13 +620,9 @@ public class RandomizerGUI {
 
     private final List<String> trainerSettings = new ArrayList<>();
     private final List<String> trainerSettingToolTips = new ArrayList<>();
-    private final int TRAINER_UNCHANGED = 0, TRAINER_RANDOM = 1, TRAINER_RANDOM_EVEN = 2, TRAINER_RANDOM_EVEN_MAIN = 3,
-                        TRAINER_TYPE_THEMED = 4, TRAINER_TYPE_THEMED_ELITE4_GYMS = 5, TRAINER_KEEP_THEMED = 6,
-                        TRAINER_KEEP_THEME_OR_PRIMARY = 7;
 
     private final List<String> selectableBattleStyles = new ArrayList<>();
     private final List<String> selectableBattleStylesTooltips = new ArrayList<>();
-    private final int SINGLE_BATTLE = 0, DOUBLE_BATTLE = 1, TRIPLE_BATTLE = 2, ROTATION_BATTLE = 3;
 
     private BatchRandomizationSettings batchRandomizationSettings;
 
@@ -1707,8 +1703,9 @@ public class RandomizerGUI {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.batchRandomization.requirementsDialog.message"));
             return;
         }
-        if (raceModeCheckBox.isSelected() && isTrainerSetting(TRAINER_UNCHANGED) &&
-                !wpRandomizeWildPokemonCheckBox.isSelected()) {
+        if (raceModeCheckBox.isSelected() &&
+                !settingsManager.get(Name.RANDOMIZE_TRAINER_POKEMON).equals(TrainersMod.UNCHANGED) &&
+                settingsManager.get(Name.RANDOMIZE_WILD_ENCOUNTERS).equals(true)) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.raceModeRequirementsDialog.message"));
             return;
         }
@@ -3844,17 +3841,6 @@ public class RandomizerGUI {
             result.remove(bundle.getString("GUI.foeTab.trainersPanel.battleStylePanel.excludeRotationCheckBox.text"));
         }
         return result.toArray(new String[0]);
-    }
-
-    //TODO: remove these functions
-    private boolean isTrainerSetting(int setting) {
-        //return trainerSettings.indexOf(tpComboBox.getSelectedItem()) == setting;
-        return true;
-    }
-
-    private boolean isBattleStyle(int setting) {
-        //return selectableBattleStyles.indexOf(tpBattleStyleCombobox.getSelectedItem()) == setting;
-        return true;
     }
 
     public static void main(String[] args) {

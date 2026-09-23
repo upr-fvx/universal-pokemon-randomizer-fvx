@@ -429,8 +429,8 @@ public class RandomizerGUI {
     //--Other Options
     private JCheckBox wpRandomizeHeldItemsCheckBox;
     private JCheckBox wpBanMinorItemsCheckBox;
-    private JCheckBox wpSetMinimumCatchRateCheckBox;
-    private JSlider wpSetMinimumCatchRateSlider;
+    private JLabel wpMinimumCatchRateLabel;
+    private JComboBox<String> wpMinimumCatchRateComboBox;
     private JCheckBox wpPercentageLevelModifierCheckBox;
     private SpinSlider wpPercentageLevelModifierSpinSlider;
     private JCheckBox wpSOSForAllCheckBox;
@@ -568,7 +568,6 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
-    private JPanel t;
 
 
     //endregion
@@ -1070,7 +1069,8 @@ public class RandomizerGUI {
                 //--Other Options
                 associateCheckBox(Name.WILD_RANDOMIZE_HELD_ITEMS, wpRandomizeHeldItemsCheckBox),
                 associateCheckBox(Name.WILD_HELD_ITEMS_BAN_MINOR, wpBanMinorItemsCheckBox),
-                // TODO: min catch rate should be a combo box,
+                associateComboBoxUsingToString(Name.WILD_MINIMUM_CATCH_RATE_SELECTION, wpMinimumCatchRateComboBox,
+                        Arrays.asList(CatchRateMod.values())),
                 associateSpinSlider(Name.WILD_LEVEL_MODIFIER_PERCENT, wpPercentageLevelModifierSpinSlider,
                         wpPercentageLevelModifierCheckBox),
                 associateCheckBox(Name.WILD_ALL_SPECIES_CALL_ALLIES, wpSOSForAllCheckBox),

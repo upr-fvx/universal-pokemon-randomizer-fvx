@@ -3695,7 +3695,7 @@
                       </hspacer>
                       <hspacer id="45277">
                         <constraints>
-                          <grid row="1" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="11" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.1" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -3829,7 +3829,7 @@
                       </vspacer>
                       <component id="b72b8" class="javax.swing.JCheckBox" binding="wpRandomizeHeldItemsCheckBox">
                         <constraints>
-                          <grid row="1" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="8" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3840,41 +3840,13 @@
                       </component>
                       <component id="7e552" class="javax.swing.JCheckBox" binding="wpBanMinorItemsCheckBox">
                         <constraints>
-                          <grid row="2" column="9" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="9" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.banMinorItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.banMinorItemsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="90234" class="javax.swing.JCheckBox" binding="wpSetMinimumCatchRateCheckBox">
-                        <constraints>
-                          <grid row="3" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="7580b" class="javax.swing.JSlider" binding="wpSetMinimumCatchRateSlider">
-                        <constraints>
-                          <grid row="4" column="9" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag top="0" left="10" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <majorTickSpacing value="1"/>
-                          <maximum value="5"/>
-                          <minimum value="1"/>
-                          <paintLabels value="true"/>
-                          <preferredSize width="200" height="40"/>
-                          <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.setMinimumCatchRateSlider.toolTipText"/>
-                          <value value="1"/>
                         </properties>
                       </component>
                       <vspacer id="8844c">
@@ -3891,7 +3863,7 @@
                       </vspacer>
                       <component id="7c5b4" class="javax.swing.JCheckBox" binding="wpPercentageLevelModifierCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="6" column="8" row-span="2" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="8" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3902,7 +3874,7 @@
                       </component>
                       <component id="7b0ac" class="com.uprfvx.random.gui.SpinSlider" binding="wpPercentageLevelModifierSpinSlider" default-binding="true">
                         <constraints>
-                          <grid row="8" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="8" row-span="3" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0" ipadx="30"/>
                         </constraints>
                         <properties>
@@ -3913,7 +3885,7 @@
                       </component>
                       <component id="3d9a" class="javax.swing.JCheckBox" binding="wpSOSForAllCheckBox">
                         <constraints>
-                          <grid row="9" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="8" column="8" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3935,10 +3907,29 @@
                       </component>
                       <vspacer id="2efca">
                         <constraints>
-                          <grid row="10" column="9" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="10" column="9" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
+                      <component id="fdf5" class="javax.swing.JLabel" binding="wpMinimumCatchRateLabel">
+                        <constraints>
+                          <grid row="3" column="8" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.minimumCatchRateLabel.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.minimumCatchRateLabel.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="45c1b" class="javax.swing.JComboBox" binding="wpMinimumCatchRateComboBox">
+                        <constraints>
+                          <grid row="3" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.minimumCatchRateLabel.toolTipText"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
                   <hspacer id="731f9">

@@ -1180,9 +1180,33 @@ public class RandomizerGUI {
                                 PickupItemsMod.UNCHANGED, puUnchangedRadioButton,
                                 PickupItemsMod.RANDOM, puRandomRadioButton
                         )),
-                associateCheckBox(Name.PICKUP_ITEMS_BAN_MINOR, puBanMinorItemsCheckBox)
+                associateCheckBox(Name.PICKUP_ITEMS_BAN_MINOR, puBanMinorItemsCheckBox),
 
-                //TODO: complete list of settings
+                // *** TYPES ***
+                //Type Effectiveness
+                associateButtonSet(Name.RANDOMIZE_TYPE_EFFECTIVENESS,
+                        Map.of(
+                                TypeEffectivenessMod.UNCHANGED, teUnchangedRadioButton,
+                                TypeEffectivenessMod.RANDOM, teRandomRadioButton,
+                                TypeEffectivenessMod.RANDOM_BALANCED, teRandomBalancedRadioButton,
+                                TypeEffectivenessMod.KEEP_IDENTITIES, teKeepTypeIdentitiesRadioButton,
+                                TypeEffectivenessMod.INVERSE, teInverseRadioButton
+                        )),
+                associateCheckBox(Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES, teAddRandomImmunitiesCheckBox),
+                associateCheckBox(Name.UPDATE_TYPE_EFFECTIVENESS, teUpdateCheckbox),
+
+                // *** GRAPHICS ***
+                //Species Palettes
+                associateButtonSet(Name.RANDOMIZE_SPECIES_PALETTES,
+                        Map.of(
+                                SpeciesPalettesMod.UNCHANGED, spalUnchangedRadioButton,
+                                SpeciesPalettesMod.RANDOM, spalRandomRadioButton
+                        )),
+                associateCheckBox(Name.PALETTES_FOLLOW_TYPES, spalFollowTypesCheckBox),
+                associateCheckBox(Name.PALETTES_FOLLOW_EVOLUTIONS, spalFollowEvolutionsCheckBox),
+                associateCheckBox(Name.PALETTES_SHINY_FROM_NORMAL, spalShinyFromNormalCheckBox)
+
+                // TODO: again, what to do with CPGs?
         );
     }
 

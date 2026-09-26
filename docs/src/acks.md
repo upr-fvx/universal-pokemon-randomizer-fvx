@@ -29,8 +29,6 @@ Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of usefu
 
 [The Kingdom of DS Hacking! Discord server](https://discord.com/invite/m4XcSTB4ga) covers what the pret server lacks, by focusing on the Gen 4/5 games. Much information can be found about said games here, and the research conducted by its members furthers our understanding of how to hack them. Special thanks to AdAstra!
 
-[Island of Lost ROM Hacks](https://discord.gg/NrPDYB2mtW) is a smaller Discord server dedicated to the preservation of ROM hacks, and small talk. Its members have provided insight and advice, a place to bounce off ideas for the Randomizer.
-
 ## Tools used
 
 Not all the functionality implemented into the Randomizer was documented anywhere, but some of the functionality did already have tools available. Analysing the output of the tools below was another important part of the implementation of this program.

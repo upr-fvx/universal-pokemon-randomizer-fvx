@@ -13,7 +13,7 @@ Thanks to
 [Every person who submitted a merged pull request] @tqja for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] Nick edits and Happy Time Boredom for the CPG sprites, and
+[Every person who made a new CPG] Nick edits, Happy Time Boredom, and Baro for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -41,6 +41,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ### Graphics
 - (Gen 2) New Custom Player Graphics: Ness (Earthbound) by Nick edits, Kris Dreemurr (Deltarune) and Twilight Sparkle (My Little Pony) by Happy Time Boredom.
+- (Gen 3) New RSE Custom Player Graphics: Rande and Joseph (Pokémon Quartz) by Baro.
 
 ### Misc. Tweaks
 - (Gen 4+5) [The description of a misc. tweak addition or change here.]

@@ -93,6 +93,7 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - Happy Time Boredom (Various)
 - 2torial_ (Sonic)
 - Nick edits (Ness)
+- Baro (Rande, Joseph)
 
 ## Direct code contributors
 

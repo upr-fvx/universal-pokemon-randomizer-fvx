@@ -51,16 +51,20 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
         V initialValue = manager.get(settingName);
         setValue(initialValue);
 
-        element.setEnabled(unlatched && manager.isEnabled(settingName));
+        boolean isEnabled = manager.isEnabled(settingName);
         boolean isSupported = manager.isSupported(settingName);
+
+        element.setEnabled(unlatched && isEnabled);
         element.setVisible(isSupported);
         if (latch != null) {
+            latch.setEnabled(isEnabled);
             latch.setVisible(isSupported);
         }
     }
 
     private void latchValueChanged(ActionEvent event) {
         unlatched = latch.isSelected();
+        onPossibleEnablementChange(settingName, manager);
     }
 
     public void setValue(V newValue) {
@@ -102,7 +106,15 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
     public void onPossibleEnablementChange(Settings.Name setting, SettingsManager manager) {
         settingMatchCheck(setting);
 
-        element.setEnabled(unlatched && manager.isEnabled(settingName));
+        boolean isEnabled = manager.isEnabled(setting);
+        element.setEnabled(unlatched && isEnabled);
+        if (latch != null) {
+            latch.setEnabled(isEnabled);
+            if (!isEnabled && latch.isSelected()) {
+                latch.setSelected(false);
+                latchValueChanged(null);
+            }
+        }
     }
 
     @Override

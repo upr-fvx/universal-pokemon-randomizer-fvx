@@ -35,11 +35,13 @@ import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.settings.definitions.SpeciesIndexSettingDefinition;
 import com.uprfvx.random.settings.definitions.TypeOrRandomSettingDefinition;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
 import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
@@ -64,6 +66,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 /**
  * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
@@ -586,6 +589,7 @@ public class RandomizerGUI {
     private OperationDialog opDialog;
 
     private final ResourceBundle bundle;
+    private final ResourceBundle nameBundle;
     protected RomHandler.Factory[] checkHandlers;
     private RomHandler romHandler;
 
@@ -634,6 +638,7 @@ public class RandomizerGUI {
         ToolTipManager.sharedInstance().setInitialDelay(400);
         ToolTipManager.sharedInstance().setDismissDelay(Integer.MAX_VALUE);
         bundle = ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
+        nameBundle = ResourceBundle.getBundle("com/uprfvx/random/gui/NameBundle");
         checkHandlers = new RomHandler.Factory[] { new Gen1RomHandler.Factory(), new Gen2RomHandler.Factory(),
                 new Gen3RomHandler.Factory(), new Gen4RomHandler.Factory(), new Gen5RomHandler.Factory(),
                 new Gen6RomHandler.Factory(), new Gen7RomHandler.Factory() };
@@ -908,6 +913,12 @@ public class RandomizerGUI {
                                 StartersMod.CUSTOM, spCustomRadioButton,
                                 StartersMod.RANDOM, spRandomRadioButton
                         )),
+                associateIntComboBoxUsingDisplayFunction(Name.STARTER_CUSTOM_1, spCustom1ComboBox,
+                        this::getSpeciesNameOrRandom),
+                associateIntComboBoxUsingDisplayFunction(Name.STARTER_CUSTOM_2, spCustom2ComboBox,
+                        this::getSpeciesNameOrRandom),
+                associateIntComboBoxUsingDisplayFunction(Name.STARTER_CUSTOM_3, spCustom3ComboBox,
+                        this::getSpeciesNameOrRandom),
                 //TODO: figure out how to handle species combo boxes
                 associateSpinner(Name.STARTERS_BST_MINIMUM, spBSTMinimumSpinner, spBSTMinimumCheckbox),
                 associateSpinner(Name.STARTERS_BST_MAXIMUM, spBSTMaximumSpinner, spBSTMaximumCheckbox),
@@ -1236,17 +1247,14 @@ public class RandomizerGUI {
 
     private IntegerEnumSettingCoordinator associateIntComboBoxUsingDisplayFunction(
             Name settingName, JComboBox<String> comboBox, Function<Integer, String> displayFunction) {
-        Map<Integer, String> valuesToDisplay = new HashMap<>();
-        int min = settingsManager.getValidMinimum(settingName);
-        int max = settingsManager.getValidMaximum(settingName);
-        System.out.println(min);
-        System.out.println(max);
-        for (int i = min; i <= max; i++) {
-            valuesToDisplay.put(i, displayFunction.apply(i));
-        }
+
+        List<Integer> valueOrder = IntStream.rangeClosed(
+                settingsManager.getValidMinimum(settingName),
+                settingsManager.getValidMaximum(settingName))
+                .boxed().toList();
 
         return new IntegerEnumSettingCoordinator(settingName, settingsManager, new IntegerEnumComboBoxManager(
-                comboBox, valuesToDisplay));
+                comboBox, valueOrder, displayFunction));
     }
 
     private NumericSettingCoordinator<Integer, SliderManager> associateSlider(Name settingName, JSlider slider) {
@@ -1275,6 +1283,23 @@ public class RandomizerGUI {
     private NumericSettingCoordinator<Integer, SpinnerManager> associateSpinner(
             Name settingName, JSpinner spinner, JCheckBox latch) {
         return new NumericSettingCoordinator<>(settingName, settingsManager, new SpinnerManager(spinner), latch);
+    }
+
+    private String getSpeciesNameOrRandom(int index) {
+        if (index == SpeciesIndexSettingDefinition.RANDOM_SPECIES) {
+            return bundle.getString("GUI.givenTab.startersPanel.customComboBox.random");
+        }
+        if (romHandler != null) {
+            List<Species> allSpecies = romHandler.getSpecies();
+            if (index >= allSpecies.size() || allSpecies.get(index) == null) {
+                return index + " ERROR: SHOULD NOT BE SEEN";
+            }
+            return allSpecies.get(index).getName();
+        }
+        // These are a bit misleading for alt formes, since they will only correspond to
+        // the correct forme if USUM is loaded. Fixing that will take a further forme rewrite.
+        // TODO: improve starter forme selection
+        return nameBundle.getString("Species." + index);
     }
 
     //endregion

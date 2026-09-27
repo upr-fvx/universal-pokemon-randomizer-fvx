@@ -545,7 +545,7 @@ public class Gen7Constants {
 
         putFormSuffixes(map, SpeciesIDs.pikachu,
                 // the last one is Partner Cap because it is only in USUM, but unsure which is which of the others
-                "-InACap", "-InACap", "-InACap", "-InACap", "-InACap", "-InACap", "-PartnerCap");
+                "-InACap1", "-InACap2", "-InACap3", "-InACap4", "-InACap5", "-InACap6", "-PartnerCap");
         putFormSuffixes(map, SpeciesIDs.raticate, "-Alolan", "-Totem");
         putFormSuffixes(map, SpeciesIDs.marowak, "-Alolan", "-Totem");
 
@@ -576,7 +576,7 @@ public class Gen7Constants {
         putFormSuffixes(map, SpeciesIDs.floette, "", "", "", "", "-Eternal"); // first 4 are just colors
         putFormSuffixes(map, SpeciesIDs.zygarde,
                 // using '%' causes issues with Java's string formatting, so avoid it/use 'p' instead
-                "-10p", "-PowerConstruct", "-PowerConstruct", "-Complete");
+                "-10p", "-10p-PConstruct", "-PConstruct", "-Complete");
         putFormSuffixes(map, SpeciesIDs.hoopa, "-Unbound");
 
         putFormSuffixes(map, SpeciesIDs.oricorio, "-Pom-Pom", "-Pa'u", "-Sensu");

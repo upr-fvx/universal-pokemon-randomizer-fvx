@@ -2,6 +2,7 @@ package com.uprfvx.random.gui.SettingElementCoordinators;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * A class for managing Integers in a {@link JComboBox}.
@@ -13,22 +14,30 @@ public class IntegerEnumComboBoxManager extends SingleElementManager<Integer, JC
     // This class is very similar to EnumComboBoxManager. If you can manage to merge their functionality in
     // some pretty way, feel free.
 
-    List<Integer> valueOrder;
+    private final List<Integer> valueOrder;
+    private final Function<Integer, String> displayFunction;
+
     Map<Integer, String> valueToDisplay;
     Map<String, Integer> displayToValue;
     Map<Integer, Boolean> enablement;
     Map<Integer, Boolean> visibility;
 
-    public IntegerEnumComboBoxManager(JComboBox<String> element, Map<Integer, String> valueToDisplay) {
+    public IntegerEnumComboBoxManager(JComboBox<String> element, List<Integer> valueOrder,
+                                      Function<Integer, String> displayFunction) {
         super(element);
 
-        this.valueOrder = valueToDisplay.keySet().stream().sorted().toList();
+        this.valueOrder = valueOrder;
+        this.displayFunction = displayFunction;
+        updateDisplay();
+    }
 
-        this.valueToDisplay = Collections.unmodifiableMap(valueToDisplay);
-        Map<String, Integer> inverse = new HashMap<>();
-        valueToDisplay.forEach((i, s) -> inverse.put(s, i));
-        displayToValue = Collections.unmodifiableMap(inverse);
-
+    public void updateDisplay() {
+        valueToDisplay = new HashMap<>();
+        displayToValue = new HashMap<>();
+        for (int value : valueOrder) {
+            valueToDisplay.put(value, displayFunction.apply(value));
+            displayToValue.put(displayFunction.apply(value), value);
+        }
         refreshModel();
     }
 
@@ -45,9 +54,7 @@ public class IntegerEnumComboBoxManager extends SingleElementManager<Integer, JC
     private void refreshModel() {
         List<String> displayedItems = new ArrayList<>();
 
-        List<Integer> valuesInOrder = valueToDisplay.keySet().stream().sorted().toList();
-
-        for (Integer value : valuesInOrder) {
+        for (int value : valueOrder) {
             if((enablement == null || enablement.get(value))
                     && (visibility == null || visibility.get(value))) {
                 displayedItems.add(valueToDisplay.get(value));

@@ -56,5 +56,6 @@ public class IntegerEnumSettingCoordinator extends SettingCoordinator<Integer, I
     @Override
     public void onPossibleSupportedValuesChange(Settings.Name setting, SettingsManager manager, RomHandler game) {
         onSupportChange(setting, manager, manager.isSupported(setting));
+        element.updateDisplay();
     }
 }

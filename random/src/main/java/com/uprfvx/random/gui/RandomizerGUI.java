@@ -1305,12 +1305,6 @@ public class RandomizerGUI {
     //endregion
 
     private void initVisibilityListeners() {
-        System.out.println(banSpeciesPanel.getComponents().length);
-        for (Component component : banSpeciesPanel.getComponents()) {
-            System.out.println(component);
-            System.out.println(component.getName());
-        }
-
         // all panels in the tabs should be here
         List<JPanel> panels = List.of(
                 // General Options
@@ -1363,13 +1357,11 @@ public class RandomizerGUI {
 
         @Override
         public void componentHidden(ComponentEvent e) {
-            System.out.println("Applying listener to:" + panel);
             boolean anyComponentVisible = false;
             for (Component component : panel.getComponents()) {
                 // spacers are empty JPanels. ignore them
                 if (component instanceof JPanel subPanel && subPanel.getComponents().length == 0) continue;
                 if (component.isVisible()) {
-                    System.out.println("Still visible component:" + component);
                     anyComponentVisible = true;
                     break;
                 }

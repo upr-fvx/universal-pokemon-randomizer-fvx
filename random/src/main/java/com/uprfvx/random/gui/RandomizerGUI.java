@@ -35,10 +35,12 @@ import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.settings.definitions.TypeOrRandomSettingDefinition;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.exceptions.EncryptedROMException;
 import com.uprfvx.romio.gamedata.ExpCurve;
+import com.uprfvx.romio.gamedata.Type;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
 import com.uprfvx.romio.romio.ROMFilter;
@@ -61,6 +63,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
@@ -153,8 +156,8 @@ public class RandomizerGUI {
 
     //Base Stats
     private JPanel statsPanel;
-    private JCheckBox sbsUpdateBaseStatsCheckBox;
-    private JSpinner sbsUpdateGenerationChoiceSpinner;
+    private JCheckBox sbsUpdateCheckBox;
+    private JComboBox<String> sbsUpdateComboBox;
     //--Totals
     private JPanel totalsPanel;
     private JRadioButton sbstUnchangedRadioButton;
@@ -833,8 +836,9 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_STAT_DISTRIBUTIONS_ASSIGN_EVO_STATS_RANDOMLY, sbsdAssignEvoStatsRandomlyCheckBox),
 
                 //Update Base Stats
-                associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, sbsUpdateBaseStatsCheckBox),
-                associateSpinner(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, sbsUpdateGenerationChoiceSpinner),
+                associateCheckBox(Name.UPDATE_SPECIES_BASE_STATS, sbsUpdateCheckBox),
+                associateIntComboBoxUsingDisplayFunction(Name.SPECIES_UPDATE_BASE_STATS_TO_GENERATION, sbsUpdateComboBox,
+                        (i) -> String.format(bundle.getString("GUI.traitsTab.statsPanel.updateComboBox.template"), i)),
 
                 //Species Types
                 associateButtonSet(Name.RANDOMIZE_SPECIES_TYPES,
@@ -887,7 +891,7 @@ public class RandomizerGUI {
 
                 //EXP Curves
                 associateCheckBox(Name.STANDARDIZE_SPECIES_EXP_CURVES, secStandardizeEXPCurvesCheckBox),
-                associateComboBoxUsingToString(Name.SPECIES_EXP_CURVE_STANDARD_SELECTION, secEXPCurveComboBox,
+                associateEnumComboBoxUsingToString(Name.SPECIES_EXP_CURVE_STANDARD_SELECTION, secEXPCurveComboBox,
                         Arrays.asList(ExpCurve.values())),
                 associateButtonSet(Name.SPECIES_EXP_CURVE_STANDARDIZE_EXTENT,
                         Map.of(
@@ -925,7 +929,10 @@ public class RandomizerGUI {
                                 StartersTypeMod.SINGLE_TYPE, spTypeSingleRadioButton
                         )),
                 associateCheckBox(Name.STARTERS_NO_DUAL_TYPES, spTypeNoDualCheckbox),
-                //TODO: also figure out handling for types+random combobox
+                associateIntComboBoxUsingDisplayFunction(Name.STARTERS_SINGLE_TYPE_SELECTION, spTypeSingleComboBox,
+                        (i) -> (i == TypeOrRandomSettingDefinition.RANDOM_TYPE)
+                                ? bundle.getString("GUI.givenTab.startersPanel.typesPanel.singleTypeComboBox.random")
+                                : Type.values()[i].toString()),
 
                 // In-Game Trades
                 // TODO: how to associate an underlying enum to two checkboxes?
@@ -943,7 +950,8 @@ public class RandomizerGUI {
                 associateCheckBox(Name.MOVES_RANDOMIZE_CATEGORY, mtRandomizeMoveCategoryCheckBox),
                 associateCheckBox(Name.MOVES_RANDOMIZE_NAME, mtRandomizeMoveNamesCheckBox),
                 associateCheckBox(Name.UPDATE_MOVES, mdUpdateMovesCheckBox),
-                // TODO: this numeric combo box
+                associateIntComboBoxUsingDisplayFunction(Name.UPDATE_MOVES_TO_GENERATION, mdUpdateComboBox,
+                        (i) -> String.format(bundle.getString("GUI.movesTab.traitsPanel.updateMovesComboBox.template"), i)),
 
                 //Species Learned Movesets
                 associateButtonSet(Name.RANDOMIZE_SPECIES_MOVESETS,
@@ -1069,7 +1077,7 @@ public class RandomizerGUI {
                 //--Other Options
                 associateCheckBox(Name.WILD_RANDOMIZE_HELD_ITEMS, wpRandomizeHeldItemsCheckBox),
                 associateCheckBox(Name.WILD_HELD_ITEMS_BAN_MINOR, wpBanMinorItemsCheckBox),
-                associateComboBoxUsingToString(Name.WILD_MINIMUM_CATCH_RATE_SELECTION, wpMinimumCatchRateComboBox,
+                associateEnumComboBoxUsingToString(Name.WILD_MINIMUM_CATCH_RATE_SELECTION, wpMinimumCatchRateComboBox,
                         Arrays.asList(CatchRateMod.values())),
                 associateSpinSlider(Name.WILD_LEVEL_MODIFIER_PERCENT, wpPercentageLevelModifierSpinSlider,
                         wpPercentageLevelModifierCheckBox),
@@ -1217,13 +1225,28 @@ public class RandomizerGUI {
         return new EnumSettingCoordinator<>(settingName, settingsManager, new ButtonGroupManager<>(map));
     }
 
-    private <E extends Enum<E>> EnumSettingCoordinator<E> associateComboBoxUsingToString(
+    private <E extends Enum<E>> EnumSettingCoordinator<E> associateEnumComboBoxUsingToString(
             Name settingName, JComboBox<String> comboBox, List<E> valuesInOrder) {
         Map<E, String> valuesToDisplay = new HashMap<>();
         valuesInOrder.forEach(e -> valuesToDisplay.put(e, e.toString()));
 
         return new EnumSettingCoordinator<>(settingName, settingsManager, new EnumComboBoxManager<>(
                 comboBox, valuesInOrder, valuesToDisplay));
+    }
+
+    private IntegerEnumSettingCoordinator associateIntComboBoxUsingDisplayFunction(
+            Name settingName, JComboBox<String> comboBox, Function<Integer, String> displayFunction) {
+        Map<Integer, String> valuesToDisplay = new HashMap<>();
+        int min = settingsManager.getValidMinimum(settingName);
+        int max = settingsManager.getValidMaximum(settingName);
+        System.out.println(min);
+        System.out.println(max);
+        for (int i = min; i <= max; i++) {
+            valuesToDisplay.put(i, displayFunction.apply(i));
+        }
+
+        return new IntegerEnumSettingCoordinator(settingName, settingsManager, new IntegerEnumComboBoxManager(
+                comboBox, valuesToDisplay));
     }
 
     private NumericSettingCoordinator<Integer, SliderManager> associateSlider(Name settingName, JSlider slider) {

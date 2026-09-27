@@ -28,7 +28,7 @@ public class TypeOrRandomSettingDefinition extends NumericSettingDefinition<Inte
     public static class Builder<B extends Builder<B>> extends NumericSettingDefinition.Builder<B, Integer> {
 
         public Builder(Settings.Name name, Settings.Category category) {
-            super(name, category, RANDOM_TYPE, RANDOM_TYPE, Type.SIZE);
+            super(name, category, RANDOM_TYPE, RANDOM_TYPE, Type.SIZE - 1);
         }
 
         @Override

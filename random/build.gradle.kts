@@ -111,7 +111,16 @@ PlatformConfig.entries.forEach { cfg ->
     val decompress = tasks.register<Copy>("decompressJmods${taskName(cfg)}") {
         group = "release setup"
         dependsOn(download)
-        from(download.map { t -> decompresser(t.dest) })
+        from(download.map { t -> decompresser(t.dest) }) {
+            // Strip the archive's top-level directory, which vendors name
+            // inconsistently ("jdk-25.0.2", "jdk-25.0.2.jdk", Adoptium's
+            // "JDK-<version>-jmods"). jlink is pointed at <cfg>/jmods below.
+            eachFile {
+                relativePath = RelativePath(relativePath.isFile,
+                    *relativePath.segments.drop(1).toTypedArray())
+            }
+            includeEmptyDirs = false
+        }
         into(layout.buildDirectory.dir("jmods/decompressed/${cfg.name}"))
     }
 
@@ -119,12 +128,21 @@ PlatformConfig.entries.forEach { cfg ->
         group = "release setup"
         dependsOn(decompress)
 
-        val modulePath = layout.buildDirectory.dir("jmods/decompressed/${cfg.name}/jdk-$javaVersion/jmods")
+        val modulePath = layout.buildDirectory.dir("jmods/decompressed/${cfg.name}/jmods")
         val outputDir = layout.buildDirectory.dir("java-runtime-image/${cfg.name}")
         val modules = "java.base,java.desktop,java.logging,java.naming"
 
-        onlyIf {
-            !outputDir.get().asFile.exists()
+        doFirst {
+            // jlink silently falls back to the running JDK's system modules
+            // when the module path is empty, producing images for the wrong
+            // platform. Fail instead.
+            if (modulePath.get().asFile.listFiles { f -> f.extension == "jmod" }.isNullOrEmpty()) {
+                throw GradleException(
+                    "No .jmod files found in ${modulePath.get().asFile.absolutePath}; " +
+                    "the JDK archive for ${cfg.name} has an unexpected layout."
+                )
+            }
+            outputDir.get().asFile.deleteRecursively()
         }
 
         executable = javaHome.map { it.file("bin/jlink").asFile.absolutePath }.get()

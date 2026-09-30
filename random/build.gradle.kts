@@ -167,6 +167,14 @@ PlatformConfig.entries.forEach { cfg ->
         from("src/main/launcher") {
             include("README.txt")
             expand("launcherName" to launcherName)
+            filter { line ->
+                when {
+                    line.startsWith("[LINUX_ONLY]") ->
+                        if (cfg.apiOS == "linux") line.removePrefix("[LINUX_ONLY]") else null
+                    else -> line
+                }
+            }
+
         }
         from("src/main/launcher") {
             include("**.${cfg.launcherExtension}")

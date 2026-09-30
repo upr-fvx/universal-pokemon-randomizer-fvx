@@ -10,7 +10,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] @tqja and @bryanjeal for your code contributions,
+[Every person who submitted a merged pull request] @tqja, @bryanjeal and @Sam-R13 for your code contributions,
 [Every person who submitted a solved issue] for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] Nick edits, Happy Time Boredom, and Baro for the CPG sprites, and
@@ -53,5 +53,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ## Bugfixes
 - Fixed TM Field Items not being entirely random. (Issue #248)
 - Fixed Mac release zips shipping a Linux Java runtime (Issue #226, #263)
+- Fixed Linux launcher assuming bash to be found at `/bin/sh`. Since this breaks the launcher for the (presumed smaller) group whose distros has `/bin/sh` be a symlink to bash in a non-standard location, also added a couple lines to `README.txt` informing them what to do. (Issue #268) 
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

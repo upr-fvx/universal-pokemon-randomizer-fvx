@@ -40,7 +40,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - (Gen 3) [The description of a changed feature here.]
 
 ### Graphics
-- (Gen 2) New Custom Player Graphics: Ness (Earthbound) by Nick edits, Kris Dreemurr (Deltarune) and Twilight Sparkle (My Little Pony) by Happy Time Boredom.
+- (Gen 2) New Custom Player Graphics: Ness and Giygas (EarthBound) and Giegue (EarthBound Beginnings) by Nick edits, Kris Dreemurr (Deltarune) and Twilight Sparkle (My Little Pony) by Happy Time Boredom.
 - (Gen 3) New RSE Custom Player Graphics: Rande and Joseph (Pokémon Quartz) by Baro.
 
 ### Misc. Tweaks

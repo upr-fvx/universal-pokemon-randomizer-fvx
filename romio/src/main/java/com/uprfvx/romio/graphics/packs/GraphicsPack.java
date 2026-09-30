@@ -142,6 +142,10 @@ public abstract class GraphicsPack {
         return entry.getAdapter();
     }
 
+    public GraphicsPackEntry.Category getCategory() {
+        return entry.getCategory();
+    }
+
     public abstract List<BufferedImage> getSampleImages();
 
     protected GraphicsPackEntry getEntry() {

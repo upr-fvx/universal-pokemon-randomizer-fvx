@@ -1475,6 +1475,56 @@ public class Gen5Constants {
         68,
     };
 
+    private static final Map<Integer, Integer> mugshotTrainerMapBW = Map.ofEntries(
+            Map.entry(1, 0x35), // Cheren
+            Map.entry(2, 0x3B), // Bianca
+            Map.entry(3, 0x0B), // Chili
+            Map.entry(4, 0x0D), // Cress
+            Map.entry(5, 0x0C), // Cilan
+            Map.entry(6, 0x15), // Lenora
+            Map.entry(7, 0x16), // Burgh
+            Map.entry(8, 0x17), // Elesa
+            Map.entry(9, 0x18), // Clay
+            Map.entry(10, 0x19), // Skyla
+            Map.entry(11, 0x83), // Brycen
+            Map.entry(12, 0x84), // Iris // TODO: investigate how these work
+            Map.entry(13, 0x85), // Drayden
+            Map.entry(14, 0xE4), // Shauntal
+            Map.entry(15, 0xE6), // Grimsley
+            Map.entry(16, 0xE5), // Marshal
+            Map.entry(17, 0xE7), // Caitlin
+            Map.entry(18, 0x197), // Alder
+            Map.entry(19, 0x24A), // N
+            Map.entry(20, 0xE8) // Ghetsis
+    );
+
+    private static final Map<Integer, Integer> mugshotTrainerMapBW2 = Map.ofEntries(
+            Map.entry(1, 0x9C), // Cheren
+            Map.entry(2, 0x9D), // Roxie
+            Map.entry(3, 0x9A), // Burgh
+            Map.entry(4, 0x99), // Elesa
+            Map.entry(5, 0x9E), // Clay
+            Map.entry(6, 0x9B), // Skyla
+            Map.entry(7, 0x9F), // Drayden
+            Map.entry(8, 0xA0), // Marlon
+            // TODO: which order is the E4 in??
+            Map.entry(13, 0x155), // Iris
+            Map.entry(15, 0x5), // N
+            Map.entry(16, 0x166), // Colress
+            Map.entry(17, 0x159), // Ghetsis
+            Map.entry(18, 0xCA) // Benga
+    );
+
+    public static Map<Integer, Integer> mugshotTrainerMap(int romType) {
+        if (romType == Type_BW) {
+            return mugshotTrainerMapBW;
+        } else if (romType == Type_BW2) {
+            return mugshotTrainerMapBW2;
+        } else {
+            throw new IllegalArgumentException("invalid ROM Type: " + romType);
+        }
+    }
+
     public static void tagTrainersBW(List<Trainer> trs) {
         // We use different Gym IDs to cheat the system for the 3 n00bs
         // Chili, Cress, and Cilan

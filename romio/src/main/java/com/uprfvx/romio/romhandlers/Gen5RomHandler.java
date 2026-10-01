@@ -1192,10 +1192,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     public void loadTrainers() {
         trainers.clear();
         try {
-            NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
-            NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));
+            NARCArchive trs = readNARC(romEntry.getFile("TrainerData"));
+            NARCArchive trpokes = readNARC(romEntry.getFile("TrainerPokemon"));
             int trainernum = trs.files.size();
-            List<String> tnames = this.getTrainerNames();
+            List<String> tnames = loadTrainerNames();
             for (int i = 1; i < trainernum; i++) {
                 // Trainer entries are 20 bytes
                 // Team flags; 1 byte; 0x01 = custom moves, 0x02 = held item
@@ -1320,6 +1320,28 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
+    }
+
+    private List<String> loadTrainerNames() {
+        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
+        tnames.removeFirst(); // blank one
+        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
+            List<String> pwtNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
+            tnames.addAll(pwtNames);
+        }
+
+        System.out.println("Loading mugshot names");
+        int i = 0;
+        // Tack the mugshot names on the end
+        List<String> mnames = getStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"));
+        for (String mname : mnames) {
+            if (!mname.isEmpty() && (mname.charAt(0) >= 'A' && mname.charAt(0) <= 'Z')) {
+                tnames.add(mname);
+            }
+            System.out.println(i + ": " + mname);
+            i++;
+        }
+        return tnames;
     }
 
     @Override
@@ -1501,6 +1523,23 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
+
+        saveTrainerNames();
+    }
+
+    private void saveTrainerNames() {
+        List<String> names = trainers.stream().map(Trainer::getName).collect(Collectors.toList());
+        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
+            int normalTrainerCount = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset")).size();
+            setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"),
+                    names.subList(0, normalTrainerCount));
+            setStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"),
+                    names.subList(normalTrainerCount, names.size()));
+        } else {
+            setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), names);
+        }
+
+        // TODO: we also want to use the above names to write mugshot names
     }
 
     @Override
@@ -3042,66 +3081,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<String> getTrainerNames() {
-        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        tnames.removeFirst(); // blank one
-        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-            List<String> pwtNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
-            tnames.addAll(pwtNames);
-        }
-        // Tack the mugshot names on the end
-        List<String> mnames = getStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"));
-        for (String mname : mnames) {
-            if (!mname.isEmpty() && (mname.charAt(0) >= 'A' && mname.charAt(0) <= 'Z')) {
-                tnames.add(mname);
-            }
-        }
-        return tnames;
-    }
-
-    @Override
     public int maxTrainerNameLength() {
         return 10;// based off the english ROMs
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        // Grab the mugshot names off the back of the list of trainer names
-        // we got back
-        List<String> mnames = getStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"));
-        int trNamesSize = trainerNames.size();
-        for (int i = mnames.size() - 1; i >= 0; i--) {
-            String origMName = mnames.get(i);
-            if (!origMName.isEmpty() && (origMName.charAt(0) >= 'A' && origMName.charAt(0) <= 'Z')) {
-                // Grab replacement
-                String replacement = trainerNames.remove(--trNamesSize);
-                mnames.set(i, replacement);
-            }
-        }
-        // Save back mugshot names
-        setStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"), mnames);
-
-        // Now save the rest of trainer names
-        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-            List<String> pwtNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
-            List<String> newTNames = new ArrayList<>();
-            List<String> newPWTNames = new ArrayList<>();
-            newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
-            for (int i = 1; i < tnames.size() + pwtNames.size(); i++) {
-                if (i < tnames.size()) {
-                    newTNames.add(trainerNames.get(i - 1));
-                } else {
-                    newPWTNames.add(trainerNames.get(i - 1));
-                }
-            }
-            setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
-            setStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"), newPWTNames);
-        } else {
-            List<String> newTNames = new ArrayList<>(trainerNames);
-            newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
-            setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
-        }
     }
 
     @Override

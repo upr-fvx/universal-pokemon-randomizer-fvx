@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerTrainerTest extends RomHandlerTest {
@@ -366,6 +367,19 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
                 assertTrue(carriesStarter);
             }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void trainerNamesAreNotNull(String romName) {
+        assumeFalse(getGenerationNumberOf(romName) == 1); // gen 1 has odd name handling
+        loadROM(romName);
+
+        List<Trainer> trainers = romHandler.getTrainers();
+        for (int i = 0; i < trainers.size(); i++) {
+            System.out.println(i + ": " + trainers.get(i));
+            assertNotNull(trainers.get(i).getName());
         }
     }
 

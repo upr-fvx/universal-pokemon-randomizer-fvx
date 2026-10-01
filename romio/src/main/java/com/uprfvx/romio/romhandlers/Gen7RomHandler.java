@@ -1565,8 +1565,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         List<String> names = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
         for (int i = 0; i < names.size(); i++) {
-            TrainerClass tc = new TrainerClass(i);
-            tc.setName(names.get(i));
+            TrainerClass tc = new TrainerClass(i, names.get(i));
             trainerClasses.add(tc);
         }
     }

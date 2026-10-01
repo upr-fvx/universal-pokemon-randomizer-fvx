@@ -1627,8 +1627,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
         int length = romEntry.getIntValue("TrainerClassNameLength");
         for (int i = 0; i < amount; i++) {
             String name = readVariableLengthString(baseOffset + i * length);
-            TrainerClass tc = new TrainerClass(i);
-            tc.setName(name);
+            TrainerClass tc = new TrainerClass(i, name);
             trainerClasses.add(tc);
         }
     }

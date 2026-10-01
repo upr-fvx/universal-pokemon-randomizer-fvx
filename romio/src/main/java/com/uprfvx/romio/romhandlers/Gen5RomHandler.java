@@ -1161,14 +1161,15 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
 
     @Override
     public void loadTrainerClasses() {
+        trainerClasses.clear();
+
         List<String> names = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
         if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
             names.addAll(getStrings(false, romEntry.getIntValue("PWTTrainerClassesTextOffset")));
         }
 
         for (int i = 0; i < names.size(); i++) {
-            TrainerClass tc = new TrainerClass(i);
-            tc.setName(names.get(i));
+            TrainerClass tc = new TrainerClass(i, names.get(i));
             trainerClasses.add(tc);
         }
     }

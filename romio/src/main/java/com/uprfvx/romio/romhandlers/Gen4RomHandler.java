@@ -2695,8 +2695,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 
 		List<String> names = getStrings(romEntry.getIntValue("TrainerClassesTextOffset"));
 		for (int i = 0; i < names.size(); i++) {
-			TrainerClass tc = new TrainerClass(i);
-			tc.setName(names.get(i));
+			TrainerClass tc = new TrainerClass(i, names.get(i));
 			trainerClasses.add(tc);
 		}
 	}

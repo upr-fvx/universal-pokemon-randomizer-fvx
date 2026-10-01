@@ -1173,8 +1173,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             String name = readVariableLengthString(nameOffset, false);
             nameOffset += lengthOfStringAt(nameOffset, false);
 
-            TrainerClass tc = new TrainerClass(i);
-            tc.setName(name);
+            TrainerClass tc = new TrainerClass(i, name);
             trainerClasses.add(tc);
         }
 

@@ -105,9 +105,10 @@ public class Trainer implements Comparable<Trainer> {
     private int index;
     private List<TrainerPokemon> pokemon = new ArrayList<>();
     private String tag;
+
     private String name; // TODO: make trainer name randomization use Trainer.name in all gens, really strange it doesn't
-    private int trainerclass;
-    private String fullDisplayName;
+    private TrainerClass trainerclass;
+
     private MultiBattleStatus multiBattleStatus = MultiBattleStatus.NEVER;
     private boolean forcedDoubleBattle; // for doubleBattleMode
     private int forceStarterPosition = -1;
@@ -128,7 +129,6 @@ public class Trainer implements Comparable<Trainer> {
         this.tag = original.tag;
         this.name = original.name;
         this.trainerclass = original.trainerclass;
-        this.fullDisplayName = original.fullDisplayName;
         this.multiBattleStatus = original.multiBattleStatus;
         this.forcedDoubleBattle = original.forcedDoubleBattle;
         this.forceStarterPosition = original.forceStarterPosition;
@@ -139,13 +139,11 @@ public class Trainer implements Comparable<Trainer> {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        if (fullDisplayName != null) {
-            sb.append(fullDisplayName).append(" ");
-        } else if (name != null) {
-            sb.append(name).append(" ");
-        }
-        if (trainerclass != 0) {
-            sb.append("(").append(trainerclass).append(") - ");
+
+        sb.append(getFullDisplayName());
+        sb.append(" ");
+        if (trainerclass != null) {
+            sb.append("(").append(trainerclass.getID()).append(") - ");
         }
         if (currBattleStyle.isBattleStyleChanged()) {
             sb.append("(").append(currBattleStyle.getStyle().toString()).append(") - ");
@@ -250,20 +248,29 @@ public class Trainer implements Comparable<Trainer> {
         this.name = name;
     }
 
-    public int getTrainerclass() {
+    public TrainerClass getTrainerclass() {
         return trainerclass;
     }
 
-    public void setTrainerclass(int trainerclass) {
+    public void setTrainerclass(TrainerClass trainerclass) {
         this.trainerclass = trainerclass;
     }
 
     public String getFullDisplayName() {
-        return fullDisplayName;
-    }
-
-    public void setFullDisplayName(String fullDisplayName) {
-        this.fullDisplayName = fullDisplayName;
+        if (trainerclass == null && name == null) {
+            return "NAMELESS";
+        }
+        StringBuilder sb = new StringBuilder();
+        if (trainerclass != null) {
+            sb.append(trainerclass.getName());
+        }
+        if (trainerclass != null && name != null) {
+            sb.append(" ");
+        }
+        if (name != null) {
+            sb.append(name);
+        }
+        return sb.toString();
     }
 
     public MultiBattleStatus getMultiBattleStatus() {

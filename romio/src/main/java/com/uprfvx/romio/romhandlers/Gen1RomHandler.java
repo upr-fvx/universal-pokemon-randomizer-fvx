@@ -1164,6 +1164,38 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+        trainerClasses.clear();
+
+        int[] nameOffsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
+        int nameOffset = nameOffsets[nameOffsets.length - 1];
+        for (int i = 0; i < Gen1Constants.tclassesCounts[1]; i++) {
+            String name = readVariableLengthString(nameOffset, false);
+            nameOffset += lengthOfStringAt(nameOffset, false);
+
+            TrainerClass tc = new TrainerClass(i);
+            tc.setName(name);
+            trainerClasses.add(tc);
+        }
+
+        // TODO: deal with in-battle only names (the ones that are shorter in Japanese)
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+        if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
+            int[] nameOffsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
+            int nameOffset = nameOffsets[nameOffsets.length - 1];
+
+            for (TrainerClass tc : trainerClasses) {
+                int oldLength = lengthOfStringAt(nameOffset, false);
+                writeFixedLengthString(tc.getName(), nameOffset, oldLength);
+                nameOffset += oldLength;
+            }
+        }
+    }
+
+    @Override
     // This is very similar to the implementation in Gen2RomHandler. As trainers is a private field though,
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
@@ -1175,19 +1207,17 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         if (trainersPerClass.length != trainerClassAmount) {
             throw new RuntimeException("Conflicting count of trainer classes.");
         }
-        List<String> tcnames = getTrainerClassesForText();
 
         int index = 0;
-        for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
+        for (int trClassID = 0; trClassID < trainerClassAmount; trClassID++) {
 
-            int offset = readPointer(trainerClassTableOffset + trainerClass * 2);
+            int offset = readPointer(trainerClassTableOffset + trClassID * 2);
 
-            for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClass]; trainerNum++) {
+            for (int trainerNum = 0; trainerNum < trainersPerClass[trClassID]; trainerNum++) {
                 index++;
                 Trainer tr = readTrainer(offset);
                 tr.setIndex(index);
-                tr.setTrainerclass(trainerClass);
-                tr.setFullDisplayName(tcnames.get(trainerClass));
+                tr.setTrainerclass(trainerClasses.get(trClassID));
                 trainers.add(tr);
 
                 offset += trainerToBytes(tr).length;
@@ -1265,7 +1295,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClassNum]; trainerNum++) {
                 Trainer tr = trainerIterator.next();
-                if (tr.getTrainerclass() != trainerClassNum) {
+                if (tr.getTrainerclass().getID() != trainerClassNum) {
                     System.err.println("Trainer mismatch: " + tr.getName());
                 }
                 byte[] trainerBytes = trainerToBytes(tr);
@@ -2022,27 +2052,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
         writeNybble(offset + 1, false, (value % 1000) / 100);
         writeNybble(offset + 2, true, (value % 100) / 10);
         writeNybble(offset + 2, false, value % 10);
-    }
-
-    /**
-     * Similar to {@link #getTrainerClassNames()}, but has the following differences:
-     * <ul>
-     * <li>This only reads the actual trainer class name list, while {@code getTrainerClassNames()} also reads the copy
-     * "only used for trainers' defeat speeches" (according to pokered). The names in the copy are shortened in the
-     * Japanese but redundant in all (?) other versions.</li>
-     * <li>This doesn't filter out the "individual" class names of bosses (e.g. MISTY, BROCK, LANCE).</li>
-     * </ul>
-     */
-    private List<String> getTrainerClassesForText() {
-        int[] offsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
-        List<String> tcNames = new ArrayList<>();
-        int offset = offsets[offsets.length - 1];
-        for (int j = 0; j < Gen1Constants.tclassesCounts[1]; j++) {
-            String name = readVariableLengthString(offset, false);
-            offset += lengthOfStringAt(offset, false);
-            tcNames.add(name);
-        }
-        return tcNames;
     }
 
     @Override

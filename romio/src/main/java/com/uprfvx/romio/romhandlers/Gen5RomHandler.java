@@ -156,6 +156,7 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         loadItems();
         loadSpeciesStats();
         loadMoves();
+        loadTrainerClasses();
         loadTrainers();
         loadPokemonPalettes();
 
@@ -1159,13 +1160,40 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+        List<String> names = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
+        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
+            names.addAll(getStrings(false, romEntry.getIntValue("PWTTrainerClassesTextOffset")));
+        }
+
+        for (int i = 0; i < names.size(); i++) {
+            TrainerClass tc = new TrainerClass(i);
+            tc.setName(names.get(i));
+            trainerClasses.add(tc);
+        }
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+        List<String> names = trainerClasses.stream().map(TrainerClass::getName).collect(Collectors.toList());
+        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
+            int normalClassCount = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset")).size();
+            setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"),
+                    names.subList(0, normalClassCount));
+            setStrings(false, romEntry.getIntValue("PWTTrainerClassesTextOffset"),
+                    names.subList(normalClassCount, names.size()));
+        } else {
+            setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), names);
+        }
+    }
+
+    @Override
     public void loadTrainers() {
         trainers.clear();
         try {
             NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
             NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));
             int trainernum = trs.files.size();
-            List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             for (int i = 1; i < trainernum; i++) {
                 // Trainer entries are 20 bytes
@@ -1186,10 +1214,10 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 tr.setIndex(i);
                 boolean readMovesets = (trainer[0] & 1) != 0;
                 boolean readItems = (trainer[0] & 2) != 0;
-                tr.setTrainerclass(trainer[1] & 0xFF);
+                tr.setTrainerclass(trainerClasses.get(trainer[1] & 0xFF));
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
-                tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
+                tr.setName(tnames.get(i - 1));
                 int battleType = trainer[2] & 0xFF;
                 switch (battleType) {
                     case 0:
@@ -1261,7 +1289,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         Trainer tr = new Trainer();
                         tr.setIndex(trainers.size() + 1);
                         int nameAndClassIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(trno);
-                        tr.setFullDisplayName(tclasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex) + " " + tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex));
+                        tr.setTrainerclass(trainerClasses.get(Gen5Constants.normalTrainerClassLength + nameAndClassIndex));
+                        tr.setName(tnames.get(Gen5Constants.normalTrainerNameLength + nameAndClassIndex));
                         tr.setRequiresUniqueHeldItems(true);
                         int pokemonNum = 6;
                         if (trno < 2) {

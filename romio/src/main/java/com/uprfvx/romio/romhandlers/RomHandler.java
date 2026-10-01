@@ -540,8 +540,22 @@ public interface RomHandler {
     // Trainer Classes
     // ===============
 
+    List<TrainerClass> getTrainerClasses();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void loadTrainerClasses();
+
+    /**
+     * Only made public for testing. Do NOT use otherwise!
+     */
+    void saveTrainerClasses();
+
+    @Deprecated
     List<String> getTrainerClassNames();
 
+    @Deprecated
     void setTrainerClassNames(List<String> trainerClassNames);
 
     boolean fixedTrainerClassNamesLength();

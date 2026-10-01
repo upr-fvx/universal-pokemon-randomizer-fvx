@@ -621,7 +621,7 @@ public class Gen2Constants {
         int currnum = -1;
         for (Trainer t : allTrainers) {
             // adjusted to not change the above but use 0-indexing properly
-            if (t.getTrainerclass() == classNum - 1) {
+            if (t.getTrainerclass().getID() == classNum - 1) {
                 currnum++;
                 if (currnum == number) {
                     t.setTag(tag);

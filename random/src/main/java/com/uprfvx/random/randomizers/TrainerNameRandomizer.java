@@ -3,6 +3,7 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.romio.gamedata.TrainerClass;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
@@ -12,6 +13,8 @@ public class TrainerNameRandomizer extends Randomizer {
     public TrainerNameRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
     }
+
+    // TODO: needs to account for Gen 1 trainer names/classes
 
     @SuppressWarnings("unchecked")
     public void randomizeTrainerNames() {
@@ -178,7 +181,8 @@ public class TrainerNameRandomizer extends Randomizer {
         }
 
         // Get the current trainer names data
-        List<String> currentClassNames = romHandler.getTrainerClassNames();
+        List<TrainerClass> trainerClasses = romHandler.getTrainerClasses();
+        List<String> currentClassNames = trainerClasses.stream().map(TrainerClass::getName).toList();
         boolean mustBeSameLength = romHandler.fixedTrainerClassNamesLength();
         int maxLength = romHandler.maxTrainerClassNameLength();
 
@@ -215,7 +219,9 @@ public class TrainerNameRandomizer extends Randomizer {
         }
 
         // Done choosing, save
-        romHandler.setTrainerClassNames(newClassNames);
+        for (int i = 0; i < newClassNames.size(); i++) {
+            trainerClasses.get(i).setName(newClassNames.get(i));
+        }
         changesMade = true;
     }
 }

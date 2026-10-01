@@ -481,7 +481,7 @@ public class Gen1Constants {
     private static Trainer getTrainer(List<Trainer> allTrainers, int classNum, int number) {
         int i = 0;
         for (Trainer t : allTrainers) {
-            if (t.getTrainerclass() == classNum - 1) {
+            if (t.getTrainerclass().getID() == classNum - 1) {
                 if (i == number) {
                     return t;
                 }

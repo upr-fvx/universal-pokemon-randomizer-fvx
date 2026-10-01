@@ -143,6 +143,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
 
         loadSpeciesStats();
         loadMoves();
+        loadTrainerClasses();
         loadTrainers();
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
         shopNames = Gen6Constants.getShopNames(romEntry.getRomType());
@@ -1831,6 +1832,29 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+        trainerClasses.clear();
+
+        List<String> names = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
+        for (int i = 0; i < names.size(); i++) {
+            TrainerClass tc = new TrainerClass(i);
+            tc.setName(names.get(i));
+            trainerClasses.add(tc);
+        }
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+        List<String> names = trainerClasses.stream().map(TrainerClass::getName).toList();
+        setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), names);
+        try {
+            writeStringsForAllLanguages(names, romEntry.getIntValue("TrainerClassesTextOffset"));
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
     public void loadTrainers() {
         trainers.clear();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
@@ -1838,7 +1862,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
             GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
             int trainernum = trs.size();
-            List<String> tclasses = this.getTrainerClassNames();
             List<String> tnames = this.getTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
             for (int i = 0; i < tnames.size(); i++) {
@@ -1868,7 +1891,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 boolean readMovesets = (pokeType & 1) != 0;
                 boolean readItems = (pokeType & 2) != 0;
                 tr.setIndex(i);
-                tr.setTrainerclass(isORAS ? readWord(trainer,2) : trainer[1] & 0xFF);
+                int trClassID = isORAS ? readWord(trainer,2) : trainer[1] & 0xFF;
+                tr.setTrainerclass(trainerClasses.get(trClassID));
                 int offset = isORAS ? 6 : 2;
                 int battleType = trainer[offset] & 0xFF;
                 switch (battleType) {
@@ -1888,9 +1912,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 int numPokes = trainer[offset+1] & 0xFF;
                 boolean healer = trainer[offset+13] != 0;
                 int pokeOffs = 0;
-                String trainerClass = tclasses.get(tr.getTrainerclass());
                 String trainerName = tnamesMap.getOrDefault(i - 1, "UNKNOWN");
-                tr.setFullDisplayName(trainerClass + " " + trainerName);
+                tr.setName(trainerName);
 
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is

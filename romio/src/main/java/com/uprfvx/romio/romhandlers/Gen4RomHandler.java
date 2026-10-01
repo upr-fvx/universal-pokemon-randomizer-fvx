@@ -146,6 +146,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		loadItems();
 		loadSpeciesStats();
 		loadMoves();
+		loadTrainerClasses();
         loadTrainers();
 		loadPokemonPalettes();
 		abilityNames = getStrings(romEntry.getIntValue("AbilityNamesTextOffset"));
@@ -2689,12 +2690,29 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
     @Override
+	public void loadTrainerClasses() {
+		trainerClasses.clear();
+
+		List<String> names = getStrings(romEntry.getIntValue("TrainerClassesTextOffset"));
+		for (int i = 0; i < names.size(); i++) {
+			TrainerClass tc = new TrainerClass(i);
+			tc.setName(names.get(i));
+			trainerClasses.add(tc);
+		}
+	}
+
+	@Override
+	public void saveTrainerClasses() {
+		List<String> names = trainerClasses.stream().map(TrainerClass::getName).toList();
+		setStrings(romEntry.getIntValue("TrainerClassesTextOffset"), names);
+	}
+
+	@Override
     public void loadTrainers() {
         trainers.clear();
         try {
             NARCArchive trs = readNARC(romEntry.getFile("TrainerData"));
             NARCArchive trpokes = readNARC(romEntry.getFile("TrainerPokemon"));
-            List<String> tclasses = getTrainerClassNames();
             List<String> tnames = loadTrainerNames();
             int trainernum = trs.files.size();
             for (int i = 1; i < trainernum; i++) {
@@ -2713,7 +2731,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                 Trainer tr = new Trainer();
                 boolean readMovesets = (trainer[0] & 1) != 0;
                 boolean readItems = (trainer[0] & 2) != 0;
-                tr.setTrainerclass(trainer[1] & 0xFF);
+                tr.setTrainerclass(trainerClasses.get(trainer[1] & 0xFF));
                 tr.setIndex(i);
                 int numPokes = trainer[3] & 0xFF;
                 int battleStyle = trainer[16] & 0xFF;
@@ -2721,7 +2739,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                     tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
                 int pokeOffs = 0;
 				tr.setName(tnames.get(i - 1));
-                tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
                     // IV SB LV LV SP SP FRM FRM

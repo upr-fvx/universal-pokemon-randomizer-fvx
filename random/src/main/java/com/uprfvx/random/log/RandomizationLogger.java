@@ -1446,7 +1446,7 @@ public class RandomizationLogger {
                             tag.startsWith("CHAMPION")
             );
 
-            int trainerClass = trainer.getTrainerclass();
+            int trainerClass = trainer.getTrainerclass().getID();
             switch (generation) {
                 case 1:
                     // Include Champion fight against the Rival

@@ -1619,12 +1619,35 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+        trainerClasses.clear();
+
+        int baseOffset = romEntry.getIntValue("TrainerClassNames");
+        int amount = romEntry.getIntValue("TrainerClassCount");
+        int length = romEntry.getIntValue("TrainerClassNameLength");
+        for (int i = 0; i < amount; i++) {
+            String name = readVariableLengthString(baseOffset + i * length);
+            TrainerClass tc = new TrainerClass(i);
+            tc.setName(name);
+            trainerClasses.add(tc);
+        }
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+        int baseOffset = romEntry.getIntValue("TrainerClassNames");
+        int length = romEntry.getIntValue("TrainerClassNameLength");
+        for (int i = 0; i < trainerClasses.size(); i++) {
+            writeFixedLengthString(trainerClasses.get(i).getName(), baseOffset + i * length, length);
+        }
+    }
+
+    @Override
     public void loadTrainers() {
         trainers.clear();
         int baseOffset = romEntry.getIntValue("TrainerData");
         int amount = romEntry.getIntValue("TrainerCount");
         int entryLen = romEntry.getIntValue("TrainerEntrySize");
-        List<String> tcnames = this.getTrainerClassNames();
         for (int i = 1; i < amount; i++) {
             // Trainer entries are 40 bytes
             // Team flags; 1 byte; 0x01 = custom moves, 0x02 = held item
@@ -1645,8 +1668,8 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             Trainer tr = new Trainer();
             tr.setOffset(trOffset);
             tr.setIndex(i);
-            int trainerclass = rom[trOffset + 1] & 0xFF;
-            tr.setTrainerclass((rom[trOffset + 2] & 0x80) > 0 ? 1 : 0);
+            int tClassID = rom[trOffset + 1] & 0xFF;
+            tr.setTrainerclass(trainerClasses.get(tClassID));
 
             int pokeDataType = rom[trOffset] & 0xFF;
             if (rom[trOffset + (entryLen - 16)] == 0x01) {
@@ -1655,7 +1678,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             int numPokes = rom[trOffset + (entryLen - 8)] & 0xFF;
             int pointerToPokes = readPointer(trOffset + (entryLen - 4));
             tr.setName(this.readVariableLengthString(trOffset + 4));
-            tr.setFullDisplayName(tcnames.get(trainerclass) + " " + tr.getName());
+
             // Pokemon structure data is like
             // IV IV LV SP SP
             // (HI HI)
@@ -1747,7 +1770,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
 		Trainer meteorFallsSteven = trainers.get(Gen3Constants.emMeteorFallsStevenIndex - 1);
 		mossdeepSteven.setTrainerclass(meteorFallsSteven.getTrainerclass());
 		mossdeepSteven.setName(meteorFallsSteven.getName());
-		mossdeepSteven.setFullDisplayName(meteorFallsSteven.getFullDisplayName());
 
 		for (int i = 0; i < 3; i++) {
 			int currentOffset = mossdeepStevenOffset + (i * 20);
@@ -1812,7 +1834,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
             // after
             int pokemonPointerOffset = trOffset + (entryLen - 4);
             new DataRewriter<Trainer>().rewriteData(pokemonPointerOffset, tr, this::trainerPokemonToBytes,
-                    (oldDataOffset) -> readTrainerPokemonDataLength(trOffset));
+                    (_) -> readTrainerPokemonDataLength(trOffset));
 
             writeByte(trOffset, (byte) tr.getPoketype());
             writeFixedLengthString(tr.getName(), trOffset + 4, nameLen);
@@ -3172,7 +3194,7 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
                 }
             } else if (romEntry.getRomType() == Gen3Constants.RomType_FRLG) {
                 for (int levelRange = 0; levelRange < 10; levelRange++) {
-                    pickupItems.get(0).getProbabilities()[levelRange] = 15;
+                    pickupItems.getFirst().getProbabilities()[levelRange] = 15;
                     for (int i = 1; i < 7; i++) {
                         pickupItems.get(i).getProbabilities()[levelRange] = 10;
                     }

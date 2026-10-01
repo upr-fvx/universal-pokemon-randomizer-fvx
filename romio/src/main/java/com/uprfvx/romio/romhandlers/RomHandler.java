@@ -516,8 +516,10 @@ public interface RomHandler {
 
     boolean canChangeTrainerText();
 
+    @Deprecated
     List<String> getTrainerNames();
 
+    @Deprecated
     void setTrainerNames(List<String> trainerNames);
 
     enum TrainerNameMode {

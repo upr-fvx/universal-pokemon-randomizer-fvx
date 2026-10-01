@@ -2064,38 +2064,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<String> getTrainerNames() {
-        int[] offsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
-        List<String> trainerNames = new ArrayList<>();
-        int offset = offsets[offsets.length - 1];
-        for (int j = 0; j < Gen1Constants.tclassesCounts[1]; j++) {
-            String name = readVariableLengthString(offset, false);
-            offset += lengthOfStringAt(offset, false);
-            if (Gen1Constants.singularTrainers.contains(j)) {
-                trainerNames.add(name);
-            }
-        }
-        return trainerNames;
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-            int[] offsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
-            Iterator<String> trainerNamesI = trainerNames.iterator();
-            int offset = offsets[offsets.length - 1];
-            for (int j = 0; j < Gen1Constants.tclassesCounts[1]; j++) {
-                int oldLength = lengthOfStringAt(offset, false);
-                if (Gen1Constants.singularTrainers.contains(j)) {
-                    String newName = trainerNamesI.next();
-                    writeFixedLengthString(newName, offset, oldLength);
-                }
-                offset += oldLength;
-            }
-        }
-    }
-
-    @Override
     public TrainerNameMode trainerNameMode() {
         return TrainerNameMode.SAME_LENGTH;
     }

@@ -3,6 +3,7 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.romio.gamedata.Trainer;
 import com.uprfvx.romio.gamedata.TrainerClass;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
@@ -61,7 +62,8 @@ public class TrainerNameRandomizer extends Randomizer {
         }
 
         // Get the current trainer names data
-        List<String> currentTrainerNames = romHandler.getTrainerNames();
+        List<Trainer> trainers = romHandler.getTrainers();
+        List<String> currentTrainerNames = trainers.stream().map(Trainer::getName).toList();
         if (currentTrainerNames.isEmpty()) {
             // RBY have no trainer names
             return;
@@ -138,7 +140,9 @@ public class TrainerNameRandomizer extends Randomizer {
         }
 
         // Done choosing, save
-        romHandler.setTrainerNames(newTrainerNames);
+        for (int i = 0; i < newTrainerNames.size(); i++) {
+            trainers.get(i).setName(newTrainerNames.get(i));
+        }
         changesMade = true;
     }
 

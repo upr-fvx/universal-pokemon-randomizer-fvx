@@ -1858,10 +1858,10 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         trainers.clear();
         boolean isORAS = romEntry.getRomType() == Gen6Constants.Type_ORAS;
         try {
-            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
-            GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
+            GARCArchive trs = readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trpokes = readGARC(romEntry.getFile("TrainerPokemon"),true);
             int trainernum = trs.size();
-            List<String> tnames = this.getTrainerNames();
+            List<String> tnames = loadTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
             for (int i = 0; i < tnames.size(); i++) {
                 tnamesMap.put(i,tnames.get(i));
@@ -1978,6 +1978,13 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
+    }
+
+    private List<String> loadTrainerNames() {
+        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
+        tnames.removeFirst(); // blank one
+
+        return tnames;
     }
 
     @Override
@@ -2103,6 +2110,22 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
             this.writeGARC(romEntry.getFile("TrainerPokemon"), trpokes);
         } catch (IOException ex) {
             throw new RomIOException(ex);
+        }
+
+        saveTrainerNames();
+    }
+
+    private void saveTrainerNames() {
+        List<String> trainerNames = trainers.stream().map(Trainer::getName).toList();
+
+        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
+        List<String> newTNames = new ArrayList<>(trainerNames);
+        newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
+        setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
+        try {
+            writeStringsForAllLanguages(newTNames, romEntry.getIntValue("TrainerNamesTextOffset"));
+        } catch (IOException e) {
+            throw new RomIOException(e);
         }
     }
 
@@ -3291,29 +3314,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<String> getTrainerNames() {
-        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        tnames.removeFirst(); // blank one
-
-        return tnames;
-    }
-
-    @Override
     public int maxTrainerNameLength() {
         return 10;
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        List<String> newTNames = new ArrayList<>(trainerNames);
-        newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
-        setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
-        try {
-            writeStringsForAllLanguages(newTNames, romEntry.getIntValue("TrainerNamesTextOffset"));
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
     }
 
     private void writeStringsForAllLanguages(List<String> strings, int index) throws IOException {

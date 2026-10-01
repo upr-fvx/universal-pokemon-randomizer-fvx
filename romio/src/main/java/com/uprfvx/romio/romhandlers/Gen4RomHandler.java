@@ -2942,8 +2942,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	private void saveTrainerNames() {
-		List<String> trainerNames = trainers.stream()
-				.skip(1).map(Trainer::getName).toList();
+		List<String> trainerNames = trainers.stream().map(Trainer::getName).toList();
 
 		List<String> oldTNames = getStrings(romEntry.getIntValue("TrainerNamesTextOffset"));
 		List<String> newTNames = new ArrayList<>(trainerNames);

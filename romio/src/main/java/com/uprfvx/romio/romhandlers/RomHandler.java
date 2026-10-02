@@ -554,12 +554,6 @@ public interface RomHandler {
      */
     void saveTrainerClasses();
 
-    @Deprecated
-    List<String> getTrainerClassNames();
-
-    @Deprecated
-    void setTrainerClassNames(List<String> trainerClassNames);
-
     boolean fixedTrainerClassNamesLength();
 
     int maxTrainerClassNameLength();

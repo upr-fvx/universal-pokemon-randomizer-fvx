@@ -3339,21 +3339,6 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<String> getTrainerClassNames() {
-        return getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), trainerClassNames);
-        try {
-            writeStringsForAllLanguages(trainerClassNames, romEntry.getIntValue("TrainerClassesTextOffset"));
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
-    }
-
-    @Override
     public int maxTrainerClassNameLength() {
         return 15; // "Pokémon Breeder" is possible, so,
     }

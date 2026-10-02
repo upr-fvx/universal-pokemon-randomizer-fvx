@@ -3256,29 +3256,6 @@ public class Gen3RomHandler extends AbstractGBRomHandler {
     }
 
     @Override
-    public List<String> getTrainerClassNames() {
-        int baseOffset = romEntry.getIntValue("TrainerClassNames");
-        int amount = romEntry.getIntValue("TrainerClassCount");
-        int length = romEntry.getIntValue("TrainerClassNameLength");
-        List<String> trainerClassNames = new ArrayList<>();
-        for (int i = 0; i < amount; i++) {
-            trainerClassNames.add(readVariableLengthString(baseOffset + i * length));
-        }
-        return trainerClassNames;
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        int baseOffset = romEntry.getIntValue("TrainerClassNames");
-        int amount = romEntry.getIntValue("TrainerClassCount");
-        int length = romEntry.getIntValue("TrainerClassNameLength");
-        Iterator<String> trainerClassNamesIterator = trainerClassNames.iterator();
-        for (int i = 0; i < amount; i++) {
-            writeFixedLengthString(trainerClassNamesIterator.next(), baseOffset + i * length, length);
-        }
-    }
-
-    @Override
     public int maxTrainerClassNameLength() {
         return romEntry.getIntValue("TrainerClassNameLength") - 1;
     }

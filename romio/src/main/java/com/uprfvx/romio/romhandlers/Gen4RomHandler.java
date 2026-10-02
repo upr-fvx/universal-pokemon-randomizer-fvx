@@ -4776,16 +4776,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<String> getTrainerClassNames() {
-		return getStrings(romEntry.getIntValue("TrainerClassesTextOffset"));
-	}
-
-	@Override
-	public void setTrainerClassNames(List<String> trainerClassNames) {
-		setStrings(romEntry.getIntValue("TrainerClassesTextOffset"), trainerClassNames);
-	}
-
-	@Override
 	public int maxTrainerClassNameLength() {
 		return 12;// based off the english ROMs
 	}

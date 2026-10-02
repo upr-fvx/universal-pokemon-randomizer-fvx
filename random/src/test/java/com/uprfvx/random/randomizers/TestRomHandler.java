@@ -1174,16 +1174,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<String> getTrainerClassNames() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public boolean fixedTrainerClassNamesLength() {
         throw new NotImplementedException();
     }

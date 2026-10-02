@@ -2075,66 +2075,6 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<String> getTrainerClassNames() {
-        int[] offsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
-        List<String> trainerClassNames = new ArrayList<>();
-        if (offsets.length == 2) {
-            for (int i = 0; i < offsets.length; i++) {
-                int offset = offsets[i];
-                for (int j = 0; j < Gen1Constants.tclassesCounts[i]; j++) {
-                    String name = readVariableLengthString(offset, false);
-                    offset += lengthOfStringAt(offset, false);
-                    if (i == 0 || !Gen1Constants.singularTrainers.contains(j)) {
-                        trainerClassNames.add(name);
-                    }
-                }
-            }
-        } else {
-            int offset = offsets[0];
-            for (int j = 0; j < Gen1Constants.tclassesCounts[1]; j++) {
-                String name = readVariableLengthString(offset, false);
-                offset += lengthOfStringAt(offset, false);
-                if (!Gen1Constants.singularTrainers.contains(j)) {
-                    trainerClassNames.add(name);
-                }
-            }
-        }
-        return trainerClassNames;
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        if (romEntry.getIntValue("CanChangeTrainerText") > 0) {
-            int[] offsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
-            Iterator<String> tcNamesIter = trainerClassNames.iterator();
-            if (offsets.length == 2) {
-                for (int i = 0; i < offsets.length; i++) {
-                    int offset = offsets[i];
-                    for (int j = 0; j < Gen1Constants.tclassesCounts[i]; j++) {
-                        int oldLength = lengthOfStringAt(offset, false);
-                        if (i == 0 || !Gen1Constants.singularTrainers.contains(j)) {
-                            String newName = tcNamesIter.next();
-                            writeFixedLengthString(newName, offset, oldLength);
-                        }
-                        offset += oldLength;
-                    }
-                }
-            } else {
-                int offset = offsets[0];
-                for (int j = 0; j < Gen1Constants.tclassesCounts[1]; j++) {
-                    int oldLength = lengthOfStringAt(offset, false);
-                    if (!Gen1Constants.singularTrainers.contains(j)) {
-                        String newName = tcNamesIter.next();
-                        writeFixedLengthString(newName, offset, oldLength);
-                    }
-                    offset += oldLength;
-                }
-            }
-        }
-
-    }
-
-    @Override
     public boolean fixedTrainerClassNamesLength() {
         return true;
     }

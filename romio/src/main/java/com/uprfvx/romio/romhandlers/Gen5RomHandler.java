@@ -3101,36 +3101,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     @Override
-    public List<String> getTrainerClassNames() {
-        List<String> classNames = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
-        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-            classNames.addAll(getStrings(false, romEntry.getIntValue("PWTTrainerClassesTextOffset")));
-        }
-        return classNames;
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
-            List<String> newTClasses = new ArrayList<>();
-            List<String> newPWTClasses = new ArrayList<>();
-            List<String> classNames = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
-            List<String> pwtClassNames = getStrings(false, romEntry.getIntValue("PWTTrainerClassesTextOffset"));
-            for (int i = 0; i < classNames.size() + pwtClassNames.size(); i++) {
-                if (i < classNames.size()) {
-                    newTClasses.add(trainerClassNames.get(i));
-                } else {
-                    newPWTClasses.add(trainerClassNames.get(i));
-                }
-            }
-            setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), newTClasses);
-            setStrings(false, romEntry.getIntValue("PWTTrainerClassesTextOffset"), newPWTClasses);
-        } else {
-            setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), trainerClassNames);
-        }
-    }
-
-    @Override
     public int maxTrainerClassNameLength() {
         return 12;// based off the english ROMs
     }

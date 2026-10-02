@@ -23,8 +23,6 @@ public class TrainerNameRandomizer extends Randomizer {
         super(romHandler, settings, random);
     }
 
-    // TODO: needs to account for Gen 1 trainer names/classes
-
     public void randomizeTrainerNames() {
 
         if (!romHandler.canChangeTrainerText()) {
@@ -118,14 +116,27 @@ public class TrainerNameRandomizer extends Randomizer {
     }
 
     private List<String> getTrainerNames() {
-        List<Trainer> trainers = romHandler.getTrainers();
-        return trainers.stream().map(Trainer::getName).toList();
+        List<String> trainerNames = new ArrayList<>();
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getName() == null) continue;
+            trainerNames.add(tr.getName());
+        }
+        for (TrainerClass personalTC : romHandler.getPersonalTrainerClasses()) {
+            trainerNames.add(personalTC.getName());
+        }
+        return trainerNames;
     }
 
     private void setTrainerNames(List<String> newTrainerNames) {
-        List<Trainer> trainers = romHandler.getTrainers();
-        for (int i = 0; i < newTrainerNames.size(); i++) {
-            trainers.get(i).setName(newTrainerNames.get(i));
+        int i = 0;
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getName() == null) continue;
+            tr.setName(newTrainerNames.get(i));
+            i++;
+        }
+        for (TrainerClass personalTC : romHandler.getPersonalTrainerClasses()) {
+            personalTC.setName(newTrainerNames.get(i));
+            i++;
         }
     }
 
@@ -183,14 +194,23 @@ public class TrainerNameRandomizer extends Randomizer {
     }
 
     private List<String> getTrainerClassNames() {
-        List<TrainerClass> trainerClasses = romHandler.getTrainerClasses();
-        return trainerClasses.stream().map(TrainerClass::getName).toList();
+        List<String> trainerClassNames = new ArrayList<>();
+        List<TrainerClass> personal = romHandler.getPersonalTrainerClasses();
+        for (TrainerClass tc : romHandler.getTrainerClasses()) {
+            if (personal.contains(tc)) continue;
+            trainerClassNames.add(tc.getName());
+        }
+
+        return trainerClassNames;
     }
 
     private void setTrainerClassNames(List<String> newClassNames) {
-        List<TrainerClass> trainerClasses = romHandler.getTrainerClasses();
-        for (int i = 0; i < newClassNames.size(); i++) {
-            trainerClasses.get(i).setName(newClassNames.get(i));
+        List<TrainerClass> personal = romHandler.getPersonalTrainerClasses();
+        int i = 0;
+        for (TrainerClass tc : romHandler.getTrainerClasses()) {
+            if (personal.contains(tc)) continue;
+            tc.setName(newClassNames.get(i));
+            i++;
         }
     }
 

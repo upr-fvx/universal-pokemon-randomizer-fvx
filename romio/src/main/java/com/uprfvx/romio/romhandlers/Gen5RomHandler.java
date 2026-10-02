@@ -1329,18 +1329,6 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
             List<String> pwtNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
             tnames.addAll(pwtNames);
         }
-
-        System.out.println("Loading mugshot names");
-        int i = 0;
-        // Tack the mugshot names on the end
-        List<String> mnames = getStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"));
-        for (String mname : mnames) {
-            if (!mname.isEmpty() && (mname.charAt(0) >= 'A' && mname.charAt(0) <= 'Z')) {
-                tnames.add(mname);
-            }
-            System.out.println(i + ": " + mname);
-            i++;
-        }
         return tnames;
     }
 
@@ -1528,18 +1516,34 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
     }
 
     private void saveTrainerNames() {
-        List<String> names = trainers.stream().map(Trainer::getName).collect(Collectors.toList());
+        List<String> tNames = trainers.stream().map(Trainer::getName).collect(Collectors.toList());
+        List<String> oldTNames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
+        tNames.addFirst(oldTNames.getFirst()); // restore 0-entry
+
         if (romEntry.getRomType() == Gen5Constants.Type_BW2) {
             int normalTrainerCount = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset")).size();
             setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"),
-                    names.subList(0, normalTrainerCount));
-            setStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"),
-                    names.subList(normalTrainerCount, names.size()));
+                    tNames.subList(0, normalTrainerCount));
+
+            // Only a subset of the PWT trainer names get used for Trainer objects, and not simply the first ones.
+            List<String> pwtNames = tNames.subList(normalTrainerCount, tNames.size());
+            List<String> internalPWTNames = getStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"));
+            for (int i = 0; i < pwtNames.size(); i++) {
+                int internalIndex = Gen5Constants.bw2DriftveilTrainerOffsets.get(i);
+                internalPWTNames.set(internalIndex, pwtNames.get(i));
+            }
+            setStrings(false, romEntry.getIntValue("PWTTrainerNamesTextOffset"), internalPWTNames);
         } else {
-            setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), names);
+            setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), tNames);
         }
 
-        // TODO: we also want to use the above names to write mugshot names
+        // Mugshot names are stored separately. Use the above list to write them too.
+        List<String> mnames = getStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"));
+        Map<Integer, Integer> mugshotMap = Gen5Constants.getMugshotTrainerMap(getROMType());
+        for (Map.Entry<Integer, Integer> entry : mugshotMap.entrySet()) {
+            mnames.set(entry.getKey(), tNames.get(entry.getValue()));
+        }
+        setStrings(false, romEntry.getIntValue("TrainerMugshotsTextOffset"), mnames);
     }
 
     @Override

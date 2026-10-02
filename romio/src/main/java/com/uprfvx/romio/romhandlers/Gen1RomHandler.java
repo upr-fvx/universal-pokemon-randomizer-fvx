@@ -2059,6 +2059,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public List<TrainerClass> getPersonalTrainerClasses() {
+        return Collections.unmodifiableList(
+                Gen1Constants.personalTrainerClasses.stream().map(trainerClasses::get).toList()
+        );
+    }
+
+    @Override
     public List<Integer> getDoublesTrainerClasses() {
         return Collections.emptyList();
     }

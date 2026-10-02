@@ -516,12 +516,6 @@ public interface RomHandler {
 
     boolean canChangeTrainerText();
 
-    @Deprecated
-    List<String> getTrainerNames();
-
-    @Deprecated
-    void setTrainerNames(List<String> trainerNames);
-
     enum TrainerNameMode {
         SAME_LENGTH, MAX_LENGTH, MAX_LENGTH_WITH_CLASS
     }
@@ -535,7 +529,7 @@ public interface RomHandler {
     // only a certain amount of space in the ROM bank.
     int maxSumOfTrainerNameLengths();
 
-    // Only needed if above mode is "MAX LENGTH WITH CLASS"
+    // Only needed if above mode is "MAX_LENGTH_WITH_CLASS"
     List<Integer> getTCNameLengthsByTrainer();
 
     // ===============
@@ -557,6 +551,12 @@ public interface RomHandler {
     boolean fixedTrainerClassNamesLength();
 
     int maxTrainerClassNameLength();
+
+    /**
+     * Returns an unmodifiable {@link List} of all {@link TrainerClass}es that carry what is ostensibly
+     * the trainer's name in games without trainer-specific names. <b>E.g.</b>, MISTY or LANCE in Gen 1.
+     */
+    List<TrainerClass> getPersonalTrainerClasses();
 
     List<Integer> getDoublesTrainerClasses();
 

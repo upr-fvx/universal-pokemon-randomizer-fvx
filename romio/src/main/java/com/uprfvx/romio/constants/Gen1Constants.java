@@ -61,7 +61,9 @@ public class Gen1Constants {
 
     public static final int[] tclassesCounts = new int[] { 21, 47 };
 
-    public static final List<Integer> singularTrainers = Arrays.asList(28, 32, 33, 34, 35, 36, 37, 38, 39, 43, 45, 46);
+    public static final List<Integer> personalTrainerClasses = Arrays.asList(
+            28, 32, 33, 34, 35, 36, 37, 38, 39, 43, 45, 46
+    );
 
     public static final List<Integer> bannedMovesWithXAccBanned = Arrays.asList(
             MoveIDs.sonicBoom, MoveIDs.dragonRage, MoveIDs.spore);

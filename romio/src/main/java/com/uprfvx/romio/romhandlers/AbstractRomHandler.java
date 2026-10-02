@@ -665,6 +665,11 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public List<TrainerClass> getPersonalTrainerClasses() {
+        return Collections.emptyList();
+    }
+
+    @Override
     public ResourceLifetime getResourceLifetime() {
         return ResourceLifetime.NONE;
     }
@@ -830,18 +835,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public boolean forceSwapStaticMegaEvos() {
         return false;
-    }
-
-    @Override
-    public List<String> getTrainerNames() {
-        return getTrainers().stream().map(Trainer::getName).collect(Collectors.toList());
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        for (int i = 0; i < trainerNames.size(); i++) {
-            getTrainers().get(i).setName(trainerNames.get(i));
-        }
     }
 
     @Override

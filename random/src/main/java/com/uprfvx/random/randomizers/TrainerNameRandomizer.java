@@ -110,6 +110,10 @@ public class TrainerNameRandomizer extends Randomizer {
                     + "\nPlease add some shorter names to your custom trainer names.");
         }
 
+        if (detectUpperCaseNames(currentTrainerNames)) {
+            newTrainerNames.replaceAll(String::toUpperCase);
+        }
+
         // Done choosing, save
         setTrainerNames(newTrainerNames);
         changesMade = true;
@@ -186,6 +190,10 @@ public class TrainerNameRandomizer extends Randomizer {
                 translation.put(trainerClassName, changeTo);
                 newClassNames.add(changeTo);
             }
+        }
+
+        if (detectUpperCaseNames(currentClassNames)) {
+            newClassNames.replaceAll(String::toUpperCase);
         }
 
         // Done choosing, save

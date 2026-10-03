@@ -1062,6 +1062,35 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+        trainerClasses.clear();
+
+        int amount = romEntry.getIntValue("TrainerClassAmount");
+        int nameOffset = romEntry.getIntValue("TrainerClassNamesOffset");
+
+        for (int i = 0; i < amount; i++) {
+            String name = readVariableLengthString(nameOffset, false);
+            nameOffset += lengthOfStringAt(nameOffset, false);
+
+            TrainerClass tc = new TrainerClass(i, name);
+            trainerClasses.add(tc);
+        }
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+        if (romEntry.getIntValue("CanChangeTrainerText") != 0) {
+            int nameOffset = romEntry.getIntValue("TrainerClassNamesOffset");
+
+            for (TrainerClass tc : trainerClasses) {
+                int len = lengthOfStringAt(nameOffset, false);
+                writeFixedLengthString(tc.getName(), nameOffset, len);
+                nameOffset += len;
+            }
+        }
+    }
+
+    @Override
     // This is very similar to the implementation in Gen1RomHandler. As trainers is a private field though,
     // the two should only be reconciled during some bigger refactoring, where other private fields (e.g. pokemonList)
     // are considered.
@@ -1070,19 +1099,17 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
         int trainerClassTableOffset = romEntry.getIntValue("TrainerDataTableOffset");
         int trainerClassAmount = romEntry.getIntValue("TrainerClassAmount");
         int[] trainersPerClass = romEntry.getArrayValue("TrainerDataClassCounts");
-        List<String> tcnames = this.getTrainerClassNames();
 
         int index = 0;
-        for (int trainerClass = 0; trainerClass < trainerClassAmount; trainerClass++) {
+        for (int trClassID = 0; trClassID < trainerClassAmount; trClassID++) {
 
-            int offset = readPointer(trainerClassTableOffset + trainerClass * 2);
+            int offset = readPointer(trainerClassTableOffset + trClassID * 2);
 
-            for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClass]; trainerNum++) {
+            for (int trainerNum = 0; trainerNum < trainersPerClass[trClassID]; trainerNum++) {
                 index++;
                 Trainer tr = readTrainer(offset);
                 tr.setIndex(index);
-                tr.setTrainerclass(trainerClass);
-                tr.setFullDisplayName(tcnames.get(trainerClass) + " " + tr.getName());
+                tr.setTrainerclass(trainerClasses.get(trClassID));
                 trainers.add(tr);
 
                 offset += trainerToBytes(tr).length;
@@ -1171,7 +1198,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
 
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClassNum]; trainerNum++) {
                 Trainer tr = trainerIterator.next();
-                if (tr.getTrainerclass() != trainerClassNum) {
+                if (tr.getTrainerclass().getID() != trainerClassNum) {
                     System.err.println("Trainer mismatch: " + tr.getName());
                 }
                 byte[] trainerBytes = trainerToBytes(tr);
@@ -2157,7 +2184,7 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     public List<Integer> getTCNameLengthsByTrainer() {
         int traineramount = romEntry.getIntValue("TrainerClassAmount");
         int[] trainerclasslimits = romEntry.getArrayValue("TrainerDataClassCounts");
-        List<String> tcNames = this.getTrainerClassNames();
+        List<String> tcNames = trainerClasses.stream().map(TrainerClass::getName).toList();
         List<Integer> tcLengthsByT = new ArrayList<>();
 
         for (int i = 0; i < traineramount; i++) {
@@ -2171,36 +2198,8 @@ public class Gen2RomHandler extends AbstractGBCRomHandler {
     }
 
     @Override
-    public List<String> getTrainerClassNames() {
-        int amount = romEntry.getIntValue("TrainerClassAmount");
-        int offset = romEntry.getIntValue("TrainerClassNamesOffset");
-        List<String> trainerClassNames = new ArrayList<>();
-        for (int j = 0; j < amount; j++) {
-            String name = readVariableLengthString(offset, false);
-            offset += lengthOfStringAt(offset, false);
-            trainerClassNames.add(name);
-        }
-        return trainerClassNames;
-    }
-
-    @Override
     public Set<Item> getEvolutionItems() {
         return itemIdsToSet(Gen2Constants.evolutionItems);
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        if (romEntry.getIntValue("CanChangeTrainerText") != 0) {
-            int amount = romEntry.getIntValue("TrainerClassAmount");
-            int offset = romEntry.getIntValue("TrainerClassNamesOffset");
-            Iterator<String> trainerClassNamesI = trainerClassNames.iterator();
-            for (int j = 0; j < amount; j++) {
-                int len = lengthOfStringAt(offset, false);
-                String newName = trainerClassNamesI.next();
-                writeFixedLengthString(newName, offset, len);
-                offset += len;
-            }
-        }
     }
 
     @Override

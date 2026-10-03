@@ -3,81 +3,54 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.romio.gamedata.Trainer;
+import com.uprfvx.romio.gamedata.TrainerClass;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.*;
 
 public class TrainerNameRandomizer extends Randomizer {
 
+    private static final int MAX_TRIES = 10000;
+
+    private static final int MAX_TRAINER_NAME_LEN = 10; // why this? should logically depend on the game
+    private static final List<String> REPEATED_TRAINER_NAMES =
+            Arrays.asList("GRUNT", "EXECUTIVE", "SHADOW", "ADMIN", "GOON", "EMPLOYEE");
+
+    private record CustomNames(List<String> all, Map<Integer, List<String>> byLength) {}
+
     public TrainerNameRandomizer(RomHandler romHandler, SettingsManager settings, Random random) {
         super(romHandler, settings, random);
     }
 
-    @SuppressWarnings("unchecked")
     public void randomizeTrainerNames() {
-        CustomNamesSet customNames = getCustomNames();
 
         if (!romHandler.canChangeTrainerText()) {
             return;
         }
 
-        // index 0 = singles, 1 = doubles
-        List<String>[] allTrainerNames = new List[]{new ArrayList<String>(), new ArrayList<String>()};
-        Map<Integer, List<String>>[] trainerNamesByLength = new Map[]{new TreeMap<Integer, List<String>>(),
-                new TreeMap<Integer, List<String>>()};
+        // Setup custom names
+        CustomNamesSet customNamesRaw = getCustomNames();
+        CustomNames singlesCustomNames = readCustomNameList(customNamesRaw.trainerNames(), MAX_TRAINER_NAME_LEN);
+        CustomNames doublesCustomNames = readCustomNameList(customNamesRaw.doublesTrainerNames(), MAX_TRAINER_NAME_LEN);
 
-        List<String> repeatedTrainerNames = Arrays.asList("GRUNT", "EXECUTIVE", "SHADOW", "ADMIN", "GOON", "EMPLOYEE");
-
-        // Read name lists
-        for (String trainername : customNames.trainerNames()) {
-            int len = romHandler.internalStringLength(trainername);
-            if (len <= 10) {
-                allTrainerNames[0].add(trainername);
-                if (trainerNamesByLength[0].containsKey(len)) {
-                    trainerNamesByLength[0].get(len).add(trainername);
-                } else {
-                    List<String> namesOfThisLength = new ArrayList<>();
-                    namesOfThisLength.add(trainername);
-                    trainerNamesByLength[0].put(len, namesOfThisLength);
-                }
-            }
-        }
-
-        for (String trainername : customNames.doublesTrainerNames()) {
-            int len = romHandler.internalStringLength(trainername);
-            if (len <= 10) {
-                allTrainerNames[1].add(trainername);
-                if (trainerNamesByLength[1].containsKey(len)) {
-                    trainerNamesByLength[1].get(len).add(trainername);
-                } else {
-                    List<String> namesOfThisLength = new ArrayList<>();
-                    namesOfThisLength.add(trainername);
-                    trainerNamesByLength[1].put(len, namesOfThisLength);
-                }
-            }
-        }
-
-        // Get the current trainer names data
-        List<String> currentTrainerNames = romHandler.getTrainerNames();
-        if (currentTrainerNames.isEmpty()) {
-            // RBY have no trainer names
-            return;
-        }
+        // RomHandler-dependent variables
+        List<String> currentTrainerNames = getTrainerNames();
         RomHandler.TrainerNameMode mode = romHandler.trainerNameMode();
         int maxLength = romHandler.maxTrainerNameLength();
         int totalMaxLength = romHandler.maxSumOfTrainerNameLengths();
-
-        boolean success = false;
-        int tries = 0;
+        List<Integer> tcNameLengths = romHandler.getTCNameLengthsByTrainer();
 
         // Init the translation map and new list
         Map<String, String> translation = new HashMap<>();
         List<String> newTrainerNames = new ArrayList<>();
-        List<Integer> tcNameLengths = romHandler.getTCNameLengthsByTrainer();
+
+        boolean success = false;
+        int tries = 0;
 
         // loop until we successfully pick names that fit
         // should always succeed first attempt except for gen2.
-        while (!success && tries < 10000) {
+        while (!success && tries < MAX_TRIES) {
             success = true;
             translation.clear();
             newTrainerNames.clear();
@@ -87,16 +60,19 @@ public class TrainerNameRandomizer extends Randomizer {
             int tnIndex = -1;
             for (String trainerName : currentTrainerNames) {
                 tnIndex++;
-                if (translation.containsKey(trainerName) && !repeatedTrainerNames.contains(trainerName.toUpperCase())) {
+                if (translation.containsKey(trainerName) &&
+                        !REPEATED_TRAINER_NAMES.contains(trainerName.toUpperCase())) {
                     // use an already picked translation
                     newTrainerNames.add(translation.get(trainerName));
                     totalLength += romHandler.internalStringLength(translation.get(trainerName));
                 } else {
-                    int idx = trainerName.contains("&") ? 1 : 0;
-                    List<String> pickFrom = allTrainerNames[idx];
+                    boolean doubles = trainerName.contains("&");
+                    CustomNames customNames = doubles ? doublesCustomNames : singlesCustomNames;
+
+                    List<String> pickFrom = customNames.all();
                     int intStrLen = romHandler.internalStringLength(trainerName);
                     if (mode == RomHandler.TrainerNameMode.SAME_LENGTH) {
-                        pickFrom = trainerNamesByLength[idx].get(intStrLen);
+                        pickFrom = customNames.byLength().get(intStrLen);
                     }
                     String changeTo = trainerName;
                     int ctl = intStrLen;
@@ -130,64 +106,64 @@ public class TrainerNameRandomizer extends Randomizer {
         }
 
         if (!success) {
-            throw new RandomizationException("Could not randomize trainer names in a reasonable amount of attempts."
+            throw new RandomizationException("Could not randomize trainer names within " + MAX_TRIES + " tries."
                     + "\nPlease add some shorter names to your custom trainer names.");
         }
 
+        if (detectUpperCaseNames(currentTrainerNames)) {
+            newTrainerNames.replaceAll(String::toUpperCase);
+        }
+
         // Done choosing, save
-        romHandler.setTrainerNames(newTrainerNames);
+        setTrainerNames(newTrainerNames);
         changesMade = true;
     }
 
-    @SuppressWarnings("unchecked")
-    public void randomizeTrainerClassNames() {
-        CustomNamesSet customNames = getCustomNames();
+    private List<String> getTrainerNames() {
+        List<String> trainerNames = new ArrayList<>();
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getName() == null) continue;
+            trainerNames.add(tr.getName());
+        }
+        for (TrainerClass personalTC : romHandler.getPersonalTrainerClasses()) {
+            trainerNames.add(personalTC.getName());
+        }
+        return trainerNames;
+    }
 
+    private void setTrainerNames(List<String> newTrainerNames) {
+        int i = 0;
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getName() == null) continue;
+            tr.setName(newTrainerNames.get(i));
+            i++;
+        }
+        for (TrainerClass personalTC : romHandler.getPersonalTrainerClasses()) {
+            personalTC.setName(newTrainerNames.get(i));
+            i++;
+        }
+    }
+
+    public void randomizeTrainerClassNames() {
         if (!romHandler.canChangeTrainerText()) {
             return;
         }
 
-        // index 0 = singles, index 1 = doubles
-        List<String>[] allTrainerClasses = new List[]{new ArrayList<String>(), new ArrayList<String>()};
-        Map<Integer, List<String>>[] trainerClassesByLength = new Map[]{new HashMap<Integer, List<String>>(),
-                new HashMap<Integer, List<String>>()};
+        // Setup custom names
+        CustomNamesSet customNamesRaw = getCustomNames();
+        CustomNames singlesCustomClasses = readCustomNameList(customNamesRaw.trainerClasses(), Integer.MAX_VALUE);
+        CustomNames doublesCustomClasses = readCustomNameList(customNamesRaw.doublesTrainerClasses(), Integer.MAX_VALUE);
 
-        // Read names data
-        for (String trainerClassName : customNames.trainerClasses()) {
-            allTrainerClasses[0].add(trainerClassName);
-            int len = romHandler.internalStringLength(trainerClassName);
-            if (trainerClassesByLength[0].containsKey(len)) {
-                trainerClassesByLength[0].get(len).add(trainerClassName);
-            } else {
-                List<String> namesOfThisLength = new ArrayList<>();
-                namesOfThisLength.add(trainerClassName);
-                trainerClassesByLength[0].put(len, namesOfThisLength);
-            }
-        }
-
-        for (String trainerClassName : customNames.doublesTrainerClasses()) {
-            allTrainerClasses[1].add(trainerClassName);
-            int len = romHandler.internalStringLength(trainerClassName);
-            if (trainerClassesByLength[1].containsKey(len)) {
-                trainerClassesByLength[1].get(len).add(trainerClassName);
-            } else {
-                List<String> namesOfThisLength = new ArrayList<>();
-                namesOfThisLength.add(trainerClassName);
-                trainerClassesByLength[1].put(len, namesOfThisLength);
-            }
-        }
-
-        // Get the current trainer names data
-        List<String> currentClassNames = romHandler.getTrainerClassNames();
+        // RomHandler-dependent variables
+        List<String> currentClassNames = getTrainerClassNames();
+        int numTrainerClasses = currentClassNames.size();
+        List<Integer> doublesClasses = romHandler.getDoublesTrainerClasses();
         boolean mustBeSameLength = romHandler.fixedTrainerClassNamesLength();
         int maxLength = romHandler.maxTrainerClassNameLength();
 
         // Init the translation map and new list
         Map<String, String> translation = new HashMap<>();
         List<String> newClassNames = new ArrayList<>();
-
-        int numTrainerClasses = currentClassNames.size();
-        List<Integer> doublesClasses = romHandler.getDoublesTrainerClasses();
 
         // Start choosing
         for (int i = 0; i < numTrainerClasses; i++) {
@@ -196,11 +172,13 @@ public class TrainerNameRandomizer extends Randomizer {
                 // use an already picked translation
                 newClassNames.add(translation.get(trainerClassName));
             } else {
-                int idx = doublesClasses.contains(i) ? 1 : 0;
-                List<String> pickFrom = allTrainerClasses[idx];
+                boolean doubles = doublesClasses.contains(i);
+                CustomNames customClasses = doubles ? doublesCustomClasses : singlesCustomClasses;
+
+                List<String> pickFrom = customClasses.all();
                 int intStrLen = romHandler.internalStringLength(trainerClassName);
                 if (mustBeSameLength) {
-                    pickFrom = trainerClassesByLength[idx].get(intStrLen);
+                    pickFrom = customClasses.byLength().get(intStrLen);
                 }
                 String changeTo = trainerClassName;
                 if (pickFrom != null && !pickFrom.isEmpty()) {
@@ -214,8 +192,48 @@ public class TrainerNameRandomizer extends Randomizer {
             }
         }
 
+        if (detectUpperCaseNames(currentClassNames)) {
+            newClassNames.replaceAll(String::toUpperCase);
+        }
+
         // Done choosing, save
-        romHandler.setTrainerClassNames(newClassNames);
+        setTrainerClassNames(newClassNames);
         changesMade = true;
     }
+
+    private List<String> getTrainerClassNames() {
+        List<String> trainerClassNames = new ArrayList<>();
+        List<TrainerClass> personal = romHandler.getPersonalTrainerClasses();
+        for (TrainerClass tc : romHandler.getTrainerClasses()) {
+            if (personal.contains(tc)) continue;
+            trainerClassNames.add(tc.getName());
+        }
+
+        return trainerClassNames;
+    }
+
+    private void setTrainerClassNames(List<String> newClassNames) {
+        List<TrainerClass> personal = romHandler.getPersonalTrainerClasses();
+        int i = 0;
+        for (TrainerClass tc : romHandler.getTrainerClasses()) {
+            if (personal.contains(tc)) continue;
+            tc.setName(newClassNames.get(i));
+            i++;
+        }
+    }
+
+    private CustomNames readCustomNameList(List<String> customNames, int limit) {
+        List<String> allNames = new ArrayList<>();
+        Map<Integer, List<String>> byLength = new TreeMap<>();
+        for (String trainername : customNames) {
+            int len = romHandler.internalStringLength(trainername);
+            if (len <= limit) {
+                allNames.add(trainername);
+                byLength.putIfAbsent(len, new ArrayList<>());
+                byLength.get(len).add(trainername);
+            }
+        }
+        return new CustomNames(allNames, byLength);
+    }
+
 }

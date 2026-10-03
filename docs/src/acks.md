@@ -29,8 +29,6 @@ Similarly, [ProjectPokemon](https://projectpokemon.org/) contains a lot of usefu
 
 [The Kingdom of DS Hacking! Discord server](https://discord.com/invite/m4XcSTB4ga) covers what the pret server lacks, by focusing on the Gen 4/5 games. Much information can be found about said games here, and the research conducted by its members furthers our understanding of how to hack them. Special thanks to AdAstra!
 
-[Island of Lost ROM Hacks](https://discord.gg/NrPDYB2mtW) is a smaller Discord server dedicated to the preservation of ROM hacks, and small talk. Its members have provided insight and advice, a place to bounce off ideas for the Randomizer.
-
 ## Tools used
 
 Not all the functionality implemented into the Randomizer was documented anywhere, but some of the functionality did already have tools available. Analysing the output of the tools below was another important part of the implementation of this program.
@@ -74,7 +72,7 @@ In addition,
 
 The Custom Player Graphics requires image files to insert into the game. Some of these are from other Pokémon ROM hacking projects, while others were made as general resources. Full credits for each CPG are included in its files, but for good measure an abridged version is here as well. 
 
-All authors were asked when possible, or clearly stated free use for the image. For some old ROM hacks their creators are no longer contact-able on the internet, and so are used under the assumption normally seen in the ROM hacking community, that old work may be iterated upon as long as proper credits are given. Should your work be included and you do not agree, please notify us and it will be removed from the Randomizer.
+All authors were asked when possible, or clearly stated free use for the image. For some old ROM hacks their creators are no longer contact-able on the internet. These are used under the assumption normally seen in the ROM hacking community: that old work may be iterated upon as long as proper credits are given. Should your work be included, and you do not agree, please notify us and it will be removed from the Randomizer.
 
 - voliol (Various)
 - altedgy (Blue)
@@ -92,8 +90,11 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - FourLeafSunny (Various)
 - NachoPeñalva (Various)
 - Ploxel (King Dedede, Meta Knight)
-- Happy Time Boredom (Duck, Dennis the Menace)
+- Happy Time Boredom (Various)
 - 2torial_ (Sonic)
+- Nick edits (Ness, Giygas, Giegue)
+- Baro (Rande, Joseph)
+- FrootzBasket (Hello Kitty)
 
 ## Direct code contributors
 
@@ -124,6 +125,8 @@ Since Dabomstew opened up the Randomizer to open source development, a number of
 - Glamurio
 - Axel
 - tqja
+- Sam Rabe
+- Bryan
 
 <!--- "Randomizer" is intentionally capitalized in this subheading. Normally on this website it is only capitalized while referring to the UPR, while the concept or randomizers is not. However, here we are paying respects and thus following the "capitalization means respect" principle. Plus Dabomstew capitalized it this way lol.-->
 ## The Randomizers that came before 

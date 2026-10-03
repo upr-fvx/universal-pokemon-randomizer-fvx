@@ -3,12 +3,14 @@ package com.uprfvx.random.randomizers;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.exceptions.RandomizationException;
+import com.uprfvx.romio.gamedata.Move;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.services.RestrictedSpeciesService;
 import com.uprfvx.romio.services.TypeService;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -43,6 +45,24 @@ public abstract class Randomizer {
     protected int applyPercentageLevelModifier(int level, int percentageLevelModifier) {
         int modifiedLevel = (int) Math.round(level * (1 + percentageLevelModifier / 100.0));
         return Math.clamp(modifiedLevel, 1, 100);
+    }
+
+    /**
+     * Detects whether the ROM stores some list of names in ALL CAPS by sampling
+     * said list. If a majority of alphabetic characters are uppercase,
+     * we assume the ROM uses ALL CAPS.
+     */
+    protected static boolean detectUpperCaseNames(List<String> names) {
+        int upper = 0, lower = 0;
+        for (String name : names) {
+            if (name == null) continue;
+            for (char c : name.toCharArray()) {
+                if (Character.isUpperCase(c)) upper++;
+                else if (Character.isLowerCase(c)) lower++;
+            }
+        }
+        // If there are essentially no lowercase letters, it's ALL CAPS
+        return lower == 0 || (upper > 0 && lower * 10 < upper);
     }
 
     protected CustomNamesSet getCustomNames() {

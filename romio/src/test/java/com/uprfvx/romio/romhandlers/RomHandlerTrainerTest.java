@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class RomHandlerTrainerTest extends RomHandlerTest {
@@ -371,37 +372,27 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
-    public void trainerNamesAreNotEmpty(String romName) {
+    public void trainerNamesAreNotNull(String romName) {
+        assumeFalse(getGenerationNumberOf(romName) == 1); // Gen 1 has no names, only class names
         loadROM(romName);
-        assertFalse(romHandler.getTrainerNames().isEmpty());
+
+        List<Trainer> trainers = romHandler.getTrainers();
+        for (int i = 0; i < trainers.size(); i++) {
+            System.out.println(i + ": " + trainers.get(i));
+            assertNotNull(trainers.get(i).getName());
+        }
     }
 
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void trainerNamesDoNotChangeWithGetAndSet(String romName) {
+        assumeFalse(getGenerationNumberOf(romName) == 1); // Gen 1 has no names, only class names
         loadROM(romName);
-        List<String> trainerNames = romHandler.getTrainerNames();
-        System.out.println(trainerNames);
-        List<String> before = new ArrayList<>(trainerNames);
-        romHandler.setTrainerNames(trainerNames);
-        assertEquals(before, romHandler.getTrainerNames());
-    }
 
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void trainerClassNamesAreNotEmpty(String romName) {
-        loadROM(romName);
-        assertFalse(romHandler.getTrainerClassNames().isEmpty());
-    }
-
-    @ParameterizedTest
-    @MethodSource("getRomNames")
-    public void trainerClassNamesDoNotChangeWithGetAndSet(String romName) {
-        loadROM(romName);
-        List<String> trainerClassNames = romHandler.getTrainerClassNames();
-        System.out.println(trainerClassNames);
-        List<String> before = new ArrayList<>(trainerClassNames);
-        romHandler.setTrainerClassNames(trainerClassNames);
-        assertEquals(before, romHandler.getTrainerClassNames());
+        List<String> before = romHandler.getTrainers().stream().map(Trainer::getName).toList();
+        romHandler.saveTrainers();
+        romHandler.loadTrainers();
+        List<String> after = romHandler.getTrainers().stream().map(Trainer::getName).toList();
+        assertEquals(before, after);
     }
 }

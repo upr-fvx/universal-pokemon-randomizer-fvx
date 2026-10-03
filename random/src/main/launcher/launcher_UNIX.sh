@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # pipes all logging to also go to console_output.log
 exec 1> >(tee -a console_output.log >&1)
@@ -45,7 +45,7 @@ fi
 # Detect noexec mount
 FS=$(df -P "$DIR" | awk 'NR==2 {print $6}')
 
-if grep -q " $FS " /proc/mounts | grep -q noexec; then
+if grep " $FS " /proc/mounts | grep -q noexec; then
     printf '%s\n' "Error: UPR FVX is located on a filesystem mounted with noexec: $FS" >&2
     printf '%s\n' "Hint: Move UPR FVX to a directory that allows execution, perhaps your home folder." >&2
     exit 1

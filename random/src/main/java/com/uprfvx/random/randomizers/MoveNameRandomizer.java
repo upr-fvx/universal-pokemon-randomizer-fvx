@@ -132,7 +132,7 @@ public class MoveNameRandomizer extends Randomizer {
         usedMoveNames.clear();
         List<Move> moves = romHandler.getMoves();
         int maxNameLength = romHandler.getMaxMoveNameLength();
-        boolean useUpperCase = detectUpperCaseNames(moves);
+        boolean useUpperCase = detectUpperCaseNames(moves.stream().map(mv -> mv.name).toList());
         for (Move mv : moves) {
             if (mv != null && mv.internalId != MoveIDs.struggle) {
                 String name = getRandomMoveName(mv, mv.type, maxNameLength);
@@ -140,24 +140,6 @@ public class MoveNameRandomizer extends Randomizer {
             }
         }
         changesMade = true;
-    }
-
-    /**
-     * Detects whether the ROM stores move names in ALL CAPS by sampling
-     * existing move names. If a majority of alphabetic characters are
-     * uppercase, we assume the ROM uses ALL CAPS.
-     */
-    private static boolean detectUpperCaseNames(List<Move> moves) {
-        int upper = 0, lower = 0;
-        for (Move mv : moves) {
-            if (mv == null || mv.name == null) continue;
-            for (char c : mv.name.toCharArray()) {
-                if (Character.isUpperCase(c)) upper++;
-                else if (Character.isLowerCase(c)) lower++;
-            }
-        }
-        // If there are essentially no lowercase letters, it's ALL CAPS
-        return lower == 0 || (upper > 0 && lower * 10 < upper);
     }
 
     // Move all the name generation logic here:

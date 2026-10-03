@@ -19,12 +19,20 @@ fi
 
 # Detect embedded Java / system architecture mismatch
 ARCH=$(file -b "$JAVA")
-if printf '%s' "$ARCH" | grep -q "x86-64"; then
-    JAVA_ARCH="x86"
-elif printf '%s' "$ARCH" | grep -q "aarch64\|arm64"; then
-    JAVA_ARCH="ARM"
+if printf '%s' "$ARCH" | grep -q "Mach-O"; then
+    if printf '%s' "$ARCH" | grep -q "x86-64"; then
+        JAVA_ARCH="x86"
+    elif printf '%s' "$ARCH" | grep -q "aarch64\|arm64"; then
+        JAVA_ARCH="ARM"
+    else
+        JAVA_ARCH="unknown"
+    fi
 else
-    JAVA_ARCH="unknown"
+    # Not a Mach-O binary (e.g. an ELF Linux binary from a mispackaged release).
+    printf '%s\n' "Error: embedded Java runtime is not a macOS binary (file reports: $ARCH)." >&2
+    printf '%s\n' "The release archive is mispackaged. Please report this at" >&2
+    printf '%s\n' "https://github.com/upr-fvx/universal-pokemon-randomizer-fvx/issues" >&2
+    exit 1
 fi
 
 # Detect system architecture

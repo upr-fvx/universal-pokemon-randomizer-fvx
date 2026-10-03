@@ -19,6 +19,7 @@ public class GraphicsPackEntry extends IniEntry {
             putSpecialKeyMethod("From", GraphicsPackEntry::setFrom);
             putSpecialKeyMethod("Creator", GraphicsPackEntry::setOriginalCreator);
             putSpecialKeyMethod("Adapter", GraphicsPackEntry::setAdapter);
+            putSpecialKeyMethod("Category", GraphicsPackEntry::setCategory);
         }
 
         /**
@@ -43,7 +44,7 @@ public class GraphicsPackEntry extends IniEntry {
         return reader.readFromString(string);
     }
 
-    private enum Category {
+    public enum Category {
         POKEMON, GAMES, OTHER
     }
 
@@ -52,6 +53,7 @@ public class GraphicsPackEntry extends IniEntry {
     private String from;
     private String originalCreator;
     private String adapter;
+    private Category category;
 
     public GraphicsPackEntry(String name, String path) {
         super(name);
@@ -92,6 +94,14 @@ public class GraphicsPackEntry extends IniEntry {
 
     private void setAdapter(String adapter) {
         this.adapter = adapter;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = Category.valueOf(category);
     }
 
 }

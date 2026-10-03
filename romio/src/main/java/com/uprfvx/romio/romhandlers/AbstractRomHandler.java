@@ -59,6 +59,7 @@ public abstract class AbstractRomHandler implements RomHandler {
 
     private List<Type> starterTypeTriangle = null;
 
+    protected final List<TrainerClass> trainerClasses = new ArrayList<>();
     protected final List<Trainer> trainers = new ArrayList<>();
 
     /*
@@ -100,6 +101,11 @@ public abstract class AbstractRomHandler implements RomHandler {
     @Override
     public SpeciesSet getBannedForWildEncounters() {
         return new SpeciesSet();
+    }
+
+    @Override
+    public List<TrainerClass> getTrainerClasses() {
+        return Collections.unmodifiableList(trainerClasses);
     }
 
     @Override
@@ -653,6 +659,11 @@ public abstract class AbstractRomHandler implements RomHandler {
      */
 
     @Override
+    public List<TrainerClass> getPersonalTrainerClasses() {
+        return Collections.emptyList();
+    }
+
+    @Override
     public boolean canMakeExperienceScaled() {
         return false;
     }
@@ -1031,18 +1042,6 @@ public abstract class AbstractRomHandler implements RomHandler {
     }
 
     @Override
-    public List<String> getTrainerNames() {
-        return getTrainers().stream().map(Trainer::getName).collect(Collectors.toList());
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        for (int i = 0; i < trainerNames.size(); i++) {
-            getTrainers().get(i).setName(trainerNames.get(i));
-        }
-    }
-
-    @Override
     public int maxTrainerNameLength() {
         // default: no real limit
         return Integer.MAX_VALUE;
@@ -1242,6 +1241,7 @@ public abstract class AbstractRomHandler implements RomHandler {
     protected void prepareSaveRom() {
         saveSpeciesStats();
         saveMoves();
+        saveTrainerClasses();
         saveTrainers();
         savePokemonPalettes();
     }

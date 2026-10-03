@@ -145,6 +145,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		loadItems();
 		loadSpeciesStats();
 		loadMoves();
+		loadTrainerClasses();
         loadTrainers();
 		loadPokemonPalettes();
 		abilityNames = getStrings(romEntry.getIntValue("AbilityNamesTextOffset"));
@@ -2688,13 +2689,29 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
     @Override
+	public void loadTrainerClasses() {
+		trainerClasses.clear();
+
+		List<String> names = getStrings(romEntry.getIntValue("TrainerClassesTextOffset"));
+		for (int i = 0; i < names.size(); i++) {
+			TrainerClass tc = new TrainerClass(i, names.get(i));
+			trainerClasses.add(tc);
+		}
+	}
+
+	@Override
+	public void saveTrainerClasses() {
+		List<String> names = trainerClasses.stream().map(TrainerClass::getName).toList();
+		setStrings(romEntry.getIntValue("TrainerClassesTextOffset"), names);
+	}
+
+	@Override
     public void loadTrainers() {
         trainers.clear();
         try {
-            NARCArchive trs = this.readNARC(romEntry.getFile("TrainerData"));
-            NARCArchive trpokes = this.readNARC(romEntry.getFile("TrainerPokemon"));
-            List<String> tclasses = this.getTrainerClassNames();
-            List<String> tnames = this.getTrainerNames();
+            NARCArchive trs = readNARC(romEntry.getFile("TrainerData"));
+            NARCArchive trpokes = readNARC(romEntry.getFile("TrainerPokemon"));
+            List<String> tnames = loadTrainerNames();
             int trainernum = trs.files.size();
             for (int i = 1; i < trainernum; i++) {
                 // Trainer entries are 20 bytes
@@ -2712,14 +2729,14 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                 Trainer tr = new Trainer();
                 boolean readMovesets = (trainer[0] & 1) != 0;
                 boolean readItems = (trainer[0] & 2) != 0;
-                tr.setTrainerclass(trainer[1] & 0xFF);
+                tr.setTrainerclass(trainerClasses.get(trainer[1] & 0xFF));
                 tr.setIndex(i);
                 int numPokes = trainer[3] & 0xFF;
                 int battleStyle = trainer[16] & 0xFF;
                 if (battleStyle != 0)
                     tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
                 int pokeOffs = 0;
-                tr.setFullDisplayName(tclasses.get(tr.getTrainerclass()) + " " + tnames.get(i - 1));
+				tr.setName(tnames.get(i - 1));
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
                     // IV SB LV LV SP SP FRM FRM
@@ -2781,6 +2798,17 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
             throw new RomIOException(ex);
         }
     }
+
+	private List<String> loadTrainerNames() {
+		List<String> tnames = new ArrayList<>(getStrings(romEntry.getIntValue("TrainerNamesTextOffset")));
+		tnames.removeFirst(); // blank one
+		for (int i = 0; i < tnames.size(); i++) {
+			if (tnames.get(i).contains("\\and")) {
+				tnames.set(i, tnames.get(i).replace("\\and", "&"));
+			}
+		}
+		return tnames;
+	}
 
 	@Override
 	public List<Integer> getMainPlaythroughTrainers() {
@@ -2908,6 +2936,24 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 		} catch (IOException ex) {
 			throw new RomIOException(ex);
 		}
+
+		saveTrainerNames();
+	}
+
+	private void saveTrainerNames() {
+		List<String> trainerNames = trainers.stream().map(Trainer::getName).toList();
+
+		List<String> oldTNames = getStrings(romEntry.getIntValue("TrainerNamesTextOffset"));
+		List<String> newTNames = new ArrayList<>(trainerNames);
+		for (int i = 0; i < newTNames.size(); i++) {
+			if (newTNames.get(i).contains("&")) {
+				newTNames.set(i, newTNames.get(i).replace("&", "\\and"));
+			}
+		}
+		newTNames.addFirst(oldTNames.getFirst()); // the 0-entry, preserve it
+
+		// rewrite, only compressed if they were compressed before
+		setStrings(romEntry.getIntValue("TrainerNamesTextOffset"), newTNames, lastStringsCompressed);
 	}
 
 	@Override
@@ -4711,37 +4757,11 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	}
 
 	@Override
-	public List<String> getTrainerNames() {
-		List<String> tnames = new ArrayList<>(getStrings(romEntry.getIntValue("TrainerNamesTextOffset")));
-		tnames.removeFirst(); // blank one
-		for (int i = 0; i < tnames.size(); i++) {
-			if (tnames.get(i).contains("\\and")) {
-				tnames.set(i, tnames.get(i).replace("\\and", "&"));
-			}
-		}
-		return tnames;
-	}
-
-	@Override
 	public int maxTrainerNameLength() {
 		return 10;// based off the english ROMs fixed
 	}
 
-	@Override
-	public void setTrainerNames(List<String> trainerNames) {
-		List<String> oldTNames = getStrings(romEntry.getIntValue("TrainerNamesTextOffset"));
-		List<String> newTNames = new ArrayList<>(trainerNames);
-		for (int i = 0; i < newTNames.size(); i++) {
-			if (newTNames.get(i).contains("&")) {
-				newTNames.set(i, newTNames.get(i).replace("&", "\\and"));
-			}
-		}
-		newTNames.addFirst(oldTNames.getFirst()); // the 0-entry, preserve it
 
-		// rewrite, only compressed if they were compressed before
-		setStrings(romEntry.getIntValue("TrainerNamesTextOffset"), newTNames, lastStringsCompressed);
-
-	}
 
 	@Override
 	public TrainerNameMode trainerNameMode() {
@@ -4752,16 +4772,6 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 	public List<Integer> getTCNameLengthsByTrainer() {
 		// not needed
 		return new ArrayList<>();
-	}
-
-	@Override
-	public List<String> getTrainerClassNames() {
-		return getStrings(romEntry.getIntValue("TrainerClassesTextOffset"));
-	}
-
-	@Override
-	public void setTrainerClassNames(List<String> trainerClassNames) {
-		setStrings(romEntry.getIntValue("TrainerClassesTextOffset"), trainerClassNames);
 	}
 
 	@Override

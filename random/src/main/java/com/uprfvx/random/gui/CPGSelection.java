@@ -8,10 +8,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CPGSelection {
 
@@ -19,7 +16,9 @@ public class CPGSelection {
 
     /**
      * Returns a list of all Custom Player Graphics packs, which work with the given {@link RomHandler}.
-     * These are {@link GraphicsPack}, since that's the superclass.
+     * These are {@link GraphicsPack}, since that's the superclass.<br>
+     * The list is sorted; first according to Category (POKEMON -> GAMES -> OTHER),
+     * then alphabetically by source ("from"), then alphabetically by name.
      */
     public static List<GraphicsPack> getAllCPGPacks(RomHandler romHandler) {
         // TODO: this doesn't really belong in this class
@@ -58,6 +57,14 @@ public class CPGSelection {
             }
         }
 
+        allPacks.sort((o1, o2) -> {
+            int cat = o1.getCategory().compareTo(o2.getCategory());
+            if (cat != 0) return cat;
+            int from = o1.getFrom().compareTo(o2.getFrom());
+            if (from != 0) return from;
+            return o1.getName().compareTo(o2.getName());
+        });
+
         return Collections.unmodifiableList(allPacks);
     }
 
@@ -74,7 +81,7 @@ public class CPGSelection {
             GraphicsPack cpg = (GraphicsPack) e.getItem();
             infoForm.setGraphicsPack(cpg);
         });
-        randomButton.addActionListener(e -> {
+        randomButton.addActionListener(_ -> {
             int randomIndex;
             do {
                 randomIndex = RND.nextInt(comboBox.getItemCount());

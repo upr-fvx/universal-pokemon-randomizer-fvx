@@ -530,6 +530,16 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+
+    }
+
+    @Override
     public void loadTrainers() {
 
     }
@@ -1166,16 +1176,6 @@ public class TestRomHandler extends AbstractRomHandler {
     }
 
     @Override
-    public List<String> getTrainerNames() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public TrainerNameMode trainerNameMode() {
         throw new NotImplementedException();
     }
@@ -1192,16 +1192,6 @@ public class TestRomHandler extends AbstractRomHandler {
 
     @Override
     public List<Integer> getTCNameLengthsByTrainer() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public List<String> getTrainerClassNames() {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
         throw new NotImplementedException();
     }
 

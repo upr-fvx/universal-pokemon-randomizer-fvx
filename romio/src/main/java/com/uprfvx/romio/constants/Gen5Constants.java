@@ -1484,6 +1484,59 @@ public class Gen5Constants {
         68,
     };
 
+    private static final Map<Integer, Integer> mugshotTrainerMapBW = Map.ofEntries(
+            Map.entry(1, 0x35), // Cheren
+            Map.entry(2, 0x3B), // Bianca
+            Map.entry(3, 0x0B), // Chili
+            Map.entry(4, 0x0D), // Cress
+            Map.entry(5, 0x0C), // Cilan
+            Map.entry(6, 0x15), // Lenora
+            Map.entry(7, 0x16), // Burgh
+            Map.entry(8, 0x17), // Elesa
+            Map.entry(9, 0x18), // Clay
+            Map.entry(10, 0x19), // Skyla
+            Map.entry(11, 0x83), // Brycen
+            Map.entry(12, 0x84), // Iris
+            Map.entry(13, 0x85), // Drayden
+            Map.entry(14, 0xE4), // Shauntal
+            Map.entry(15, 0xE6), // Grimsley
+            Map.entry(16, 0xE5), // Marshal
+            Map.entry(17, 0xE7), // Caitlin
+            Map.entry(18, 0x197), // Alder
+            Map.entry(19, 0x24A), // N
+            Map.entry(20, 0xE8) // Ghetsis
+    );
+
+    private static final Map<Integer, Integer> mugshotTrainerMapBW2 = Map.ofEntries(
+            Map.entry(1, 0x9C), // Cheren
+            Map.entry(2, 0x9D), // Roxie
+            Map.entry(3, 0x9A), // Burgh
+            Map.entry(4, 0x99), // Elesa
+            Map.entry(5, 0x9E), // Clay
+            Map.entry(6, 0x9B), // Skyla
+            Map.entry(7, 0x9F), // Drayden
+            Map.entry(8, 0xA0), // Marlon
+            Map.entry(9, 0x26), // Shauntal
+            Map.entry(10, 0x28), // Grimsley
+            Map.entry(11, 0x27), // Marshal
+            Map.entry(12, 0x29), // Caitlin
+            Map.entry(13, 0x155), // Iris
+            Map.entry(15, 0x5), // N
+            Map.entry(16, 0x166), // Colress
+            Map.entry(17, 0x159), // Ghetsis
+            Map.entry(18, 0xCA) // Benga
+    );
+
+    public static Map<Integer, Integer> getMugshotTrainerMap(int romType) {
+        if (romType == Type_BW) {
+            return mugshotTrainerMapBW;
+        } else if (romType == Type_BW2) {
+            return mugshotTrainerMapBW2;
+        } else {
+            throw new IllegalArgumentException("invalid ROM Type: " + romType);
+        }
+    }
+
     public static void tagTrainersBW(List<Trainer> trs) {
         // We use different Gym IDs to cheat the system for the 3 n00bs
         // Chili, Cress, and Cilan
@@ -1510,8 +1563,8 @@ public class Gen5Constants {
         tag(trs, 0x18, "GYM5-LEADER"); // Clay
         tag(trs, 0x19, "GYM6-LEADER"); // Skyla
         tag(trs, 0x83, "GYM7-LEADER"); // Brycen
-        tag(trs, 0x84, "GYM8-LEADER"); // Iris or Drayden
-        tag(trs, 0x85, "GYM8-LEADER"); // Iris or Drayden
+        tag(trs, 0x84, "GYM8-LEADER"); // Iris
+        tag(trs, 0x85, "GYM8-LEADER"); // Drayden
 
         // Elite 4
         tag(trs, 0xE4, "ELITE1"); // Shauntal
@@ -1592,11 +1645,11 @@ public class Gen5Constants {
 
         // Elite 4 / Champion
         // Order: Normal, Challenge Mode, Rematch, Rematch Challenge Mode
-        tag(trs, "ELITE1", 0x26, 0x304, 0x8f, 0x309);
-        tag(trs, "ELITE2", 0x28, 0x305, 0x91, 0x30a);
-        tag(trs, "ELITE3", 0x29, 0x307, 0x92, 0x30c);
-        tag(trs, "ELITE4", 0x27, 0x306, 0x90, 0x30b);
-        tag(trs, "CHAMPION", 0x155, 0x308, 0x218, 0x30d);
+        tag(trs, "ELITE1", 0x26, 0x304, 0x8f, 0x309); // Shauntal
+        tag(trs, "ELITE2", 0x28, 0x305, 0x91, 0x30a); // Grimsley
+        tag(trs, "ELITE3", 0x29, 0x307, 0x92, 0x30c); // Caitlin
+        tag(trs, "ELITE4", 0x27, 0x306, 0x90, 0x30b); // Marshal
+        tag(trs, "CHAMPION", 0x155, 0x308, 0x218, 0x30d); // Iris
 
         // Rival - Hugh
         tagRivalBW(trs, "RIVAL1", 0xa1); // Start

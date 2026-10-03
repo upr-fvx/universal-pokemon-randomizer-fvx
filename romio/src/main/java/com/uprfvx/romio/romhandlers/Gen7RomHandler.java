@@ -136,6 +136,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
         loadSpeciesStats();
         loadMoves();
+        loadTrainerClasses();
         loadTrainers();
 
         abilityNames = getStrings(false,romEntry.getIntValue("AbilityNamesTextOffset"));
@@ -1577,14 +1578,35 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
+    public void loadTrainerClasses() {
+        trainerClasses.clear();
+
+        List<String> names = getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
+        for (int i = 0; i < names.size(); i++) {
+            TrainerClass tc = new TrainerClass(i, names.get(i));
+            trainerClasses.add(tc);
+        }
+    }
+
+    @Override
+    public void saveTrainerClasses() {
+        List<String> names = trainerClasses.stream().map(TrainerClass::getName).toList();
+        setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), names);
+        try {
+            writeStringsForAllLanguages(names, romEntry.getIntValue("TrainerClassesTextOffset"));
+        } catch (IOException e) {
+            throw new RomIOException(e);
+        }
+    }
+
+    @Override
     public void loadTrainers() {
         trainers.clear();
         try {
-            GARCArchive trs = this.readGARC(romEntry.getFile("TrainerData"),true);
-            GARCArchive trpokes = this.readGARC(romEntry.getFile("TrainerPokemon"),true);
+            GARCArchive trs = readGARC(romEntry.getFile("TrainerData"),true);
+            GARCArchive trpokes = readGARC(romEntry.getFile("TrainerPokemon"),true);
             int trainernum = trs.size();
-            List<String> tclasses = this.getTrainerClassNames();
-            List<String> tnames = this.getTrainerNames();
+            List<String> tnames = loadTrainerNames();
             Map<Integer,String> tnamesMap = new TreeMap<>();
             for (int i = 0; i < tnames.size(); i++) {
                 tnamesMap.put(i,tnames.get(i));
@@ -1594,7 +1616,7 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 byte[] trpoke = trpokes.getFile(i);
                 Trainer tr = new Trainer();
                 tr.setIndex(i);
-                tr.setTrainerclass(trainer[0] & 0xFF);
+                tr.setTrainerclass(trainerClasses.get(trainer[0] & 0xFF));
                 int battleType = trainer[2] & 0xFF;
                 switch (battleType) {
                     case 0:
@@ -1608,9 +1630,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int trainerAILevel = trainer[12] & 0xFF;
                 boolean healer = trainer[15] != 0;
                 int pokeOffs = 0;
-                String trainerClass = tclasses.get(tr.getTrainerclass());
                 String trainerName = tnamesMap.getOrDefault(i - 1, "UNKNOWN");
-                tr.setFullDisplayName(trainerClass + " " + trainerName);
+                tr.setName(trainerName);
 
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
@@ -1675,6 +1696,13 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
         } catch (IOException ex) {
             throw new RomIOException(ex);
         }
+    }
+
+    private List<String> loadTrainerNames() {
+        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
+        tnames.removeFirst(); // blank one
+
+        return tnames;
     }
 
     @Override
@@ -1774,6 +1802,22 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             }
         } catch (IOException ex) {
             throw new RomIOException(ex);
+        }
+
+        saveTrainerNames();
+    }
+
+    private void saveTrainerNames() {
+        List<String> trainerNames = trainers.stream().map(Trainer::getName).toList();
+
+        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
+        List<String> newTNames = new ArrayList<>(trainerNames);
+        newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
+        setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
+        try {
+            writeStringsForAllLanguages(newTNames, romEntry.getIntValue("TrainerNamesTextOffset"));
+        } catch (IOException e) {
+            throw new RomIOException(e);
         }
     }
 
@@ -2936,29 +2980,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     }
 
     @Override
-    public List<String> getTrainerNames() {
-        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        tnames.removeFirst(); // blank one
-
-        return tnames;
-    }
-
-    @Override
     public int maxTrainerNameLength() {
         return 10;
-    }
-
-    @Override
-    public void setTrainerNames(List<String> trainerNames) {
-        List<String> tnames = getStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"));
-        List<String> newTNames = new ArrayList<>(trainerNames);
-        newTNames.addFirst(tnames.getFirst()); // the 0-entry, preserve it
-        setStrings(false, romEntry.getIntValue("TrainerNamesTextOffset"), newTNames);
-        try {
-            writeStringsForAllLanguages(newTNames, romEntry.getIntValue("TrainerNamesTextOffset"));
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
     }
 
     private void writeStringsForAllLanguages(List<String> strings, int index) throws IOException {
@@ -2979,21 +3002,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public List<Integer> getTCNameLengthsByTrainer() {
         return new ArrayList<>();
-    }
-
-    @Override
-    public List<String> getTrainerClassNames() {
-        return getStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"));
-    }
-
-    @Override
-    public void setTrainerClassNames(List<String> trainerClassNames) {
-        setStrings(false, romEntry.getIntValue("TrainerClassesTextOffset"), trainerClassNames);
-        try {
-            writeStringsForAllLanguages(trainerClassNames, romEntry.getIntValue("TrainerClassesTextOffset"));
-        } catch (IOException e) {
-            throw new RomIOException(e);
-        }
     }
 
     @Override

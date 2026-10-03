@@ -6,6 +6,11 @@ DO NOT change the name of the randomizer program as this will cause the launcher
 The launcher and the randomizer program must be in the same folder.
 The launcher is necessary for being able to randomize 3DS games.
 
+[LINUX_ONLY]The launcher script assumes you have bash installed at "/bin/bash".
+[LINUX_ONLY]This should be the case for most Linux distributions.
+[LINUX_ONLY]If your distro does not have bash at "/bin/bash", modify the launcher script,
+[LINUX_ONLY]or run the Randomizer JAR manually through the console.
+[LINUX_ONLY]
 
 2. TROUBLESHOOTING
 

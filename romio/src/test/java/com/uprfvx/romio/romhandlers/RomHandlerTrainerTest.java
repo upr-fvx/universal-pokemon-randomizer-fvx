@@ -373,6 +373,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void trainerNamesAreNotNull(String romName) {
+        assumeFalse(getGenerationNumberOf(romName) == 1); // Gen 1 has no names, only class names
         loadROM(romName);
 
         List<Trainer> trainers = romHandler.getTrainers();
@@ -385,6 +386,7 @@ public class RomHandlerTrainerTest extends RomHandlerTest {
     @ParameterizedTest
     @MethodSource("getRomNames")
     public void trainerNamesDoNotChangeWithGetAndSet(String romName) {
+        assumeFalse(getGenerationNumberOf(romName) == 1); // Gen 1 has no names, only class names
         loadROM(romName);
 
         List<String> before = romHandler.getTrainers().stream().map(Trainer::getName).toList();

@@ -1308,7 +1308,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
             for (int trainerNum = 0; trainerNum < trainersPerClass[trainerClassNum]; trainerNum++) {
                 Trainer tr = trainerIterator.next();
                 if (tr.getTrainerclass().getID() != trainerClassNum) {
-                    System.err.println("Trainer mismatch: " + tr.getName());
+                    System.err.println("Trainer mismatch: " + tr.getFullDisplayName());
                 }
                 byte[] trainerBytes = trainerToBytes(tr);
                 baos.write(trainerBytes, 0, trainerBytes.length);

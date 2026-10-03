@@ -1063,12 +1063,7 @@ public class RandomizationLogger {
             prevHadCustomMoves = hasCustomMoves;
             log.print("#" + t.getIndex() + " ");
             String originalTrainerName = originalTrainerNames.get(t.getIndex());
-            String currentTrainerName = "";
-            if (t.getFullDisplayName() != null) {
-                currentTrainerName = t.getFullDisplayName();
-            } else if (t.getName() != null) {
-                currentTrainerName = t.getName();
-            }
+            String currentTrainerName = t.getFullDisplayName();
             if (!currentTrainerName.isEmpty()) {
                 if (trainerNameRandomizer.isChangesMade()) {
                     log.printf("(%s => %s)", originalTrainerName, currentTrainerName);
@@ -1402,13 +1397,7 @@ public class RandomizationLogger {
         List<String> trainerNames = new ArrayList<>();
         trainerNames.add(""); // for index 0
         for (Trainer t : trainers) {
-            if (t.getFullDisplayName() != null) {
-                trainerNames.add(t.getFullDisplayName());
-            } else if (t.getName() != null) {
-                trainerNames.add(t.getName());
-            } else {
-                trainerNames.add("");
-            }
+            trainerNames.add(t.getFullDisplayName());
         }
         return trainerNames;
     }

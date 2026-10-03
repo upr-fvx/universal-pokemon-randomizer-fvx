@@ -1169,15 +1169,13 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
         int[] nameOffsets = romEntry.getArrayValue("TrainerClassNamesOffsets");
         int nameOffset = nameOffsets[nameOffsets.length - 1];
-        for (int i = 0; i < Gen1Constants.tclassesCounts[1]; i++) {
+        for (int i = 0; i < Gen1Constants.trainerClassCount; i++) {
             String name = readVariableLengthString(nameOffset, false);
             nameOffset += lengthOfStringAt(nameOffset, false);
 
             TrainerClass tc = new TrainerClass(i, name);
             trainerClasses.add(tc);
         }
-
-        // TODO: deal with in-battle only names (the ones that are shorter in Japanese)
     }
 
     @Override
@@ -1190,6 +1188,21 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 int oldLength = lengthOfStringAt(nameOffset, false);
                 writeFixedLengthString(tc.getName(), nameOffset, oldLength);
                 nameOffset += oldLength;
+            }
+
+            // There is a list of in-battle only names. In the original Japanese versions,
+            // these serve as abbreviations necessary for a smaller text-box. In all other
+            // versions they are redundant... but still used and so should be overwritten.
+            // These technically have a pointer table to them, but we instead read/write the entries directly
+            // (probably the pointer table was not understood when the original code was written ^^; ).
+            if (nameOffsets.length == 2) {
+                int abbNameOffset = nameOffsets[0];
+                for (int tcID : Gen1Constants.abbreviatedTrainerClasses) {
+                    int oldLength = lengthOfStringAt(abbNameOffset, false);
+                    String newName = trainerClasses.get(tcID - 1).getName();
+                    writeFixedLengthString(newName, nameOffset, oldLength);
+                    abbNameOffset += oldLength;
+                }
             }
         }
     }
@@ -2060,9 +2073,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
 
     @Override
     public List<TrainerClass> getPersonalTrainerClasses() {
-        return Collections.unmodifiableList(
-                Gen1Constants.personalTrainerClasses.stream().map(trainerClasses::get).toList()
-        );
+        return Gen1Constants.personalTrainerClasses.stream().map(trainerClasses::get).toList();
     }
 
     @Override

@@ -92,8 +92,9 @@ All authors were asked when possible, or clearly stated free use for the image. 
 - Ploxel (King Dedede, Meta Knight)
 - Happy Time Boredom (Various)
 - 2torial_ (Sonic)
-- Nick edits (Ness)
+- Nick edits (Ness, Giygas, Giegue)
 - Baro (Rande, Joseph)
+- FrootzBasket (Hello Kitty)
 
 ## Direct code contributors
 

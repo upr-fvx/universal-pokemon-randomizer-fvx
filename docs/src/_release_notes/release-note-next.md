@@ -13,7 +13,7 @@ Thanks to
 [Every person who submitted a merged pull request] @tqja, @bryanjeal and @Sam-R13 for your code contributions,
 [Every person who submitted a solved issue] @willow0510 for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
-[Every person who made a new CPG] Nick edits, Happy Time Boredom, and Baro for the CPG sprites, and
+[Every person who made a new CPG] Nick edits, Happy Time Boredom, and FrootzBasket from Spriter's Resource, and Baro for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
 
@@ -43,7 +43,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - Made randomized Trainer (Class) names capitalized in games that normally have capitalized names.
 
 ### Graphics
-- (Gen 2) New Custom Player Graphics: Ness and Giygas (EarthBound) and Giegue (EarthBound Beginnings) by Nick edits, Kris Dreemurr (Deltarune) and Twilight Sparkle (My Little Pony) by Happy Time Boredom.
+- (Gen 2) New Custom Player Graphics: Ness and Giygas (EarthBound) and Giegue (EarthBound Beginnings) by Nick edits, Kris Dreemurr (Deltarune) and Twilight Sparkle (My Little Pony) by Happy Time Boredom, Hello Kitty (Sanrio) by FrootzBasket.
 - (Gen 3) New RSE Custom Player Graphics: Rande and Joseph (Pokémon Quartz) by Baro.
 - Added a sorting order to the Custom Player Graphics selection. Pokémon CPGs come first, then CPGs from other video games, finally CPGs from other sources. 
 

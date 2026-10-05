@@ -17,60 +17,66 @@ import java.util.function.Predicate;
 
 import static com.uprfvx.random.settings.SettingUtils.*;
 
-//The list of EVERY setting supported by the randomizer.
+/**
+ * A class containing EVERY setting supported by the randomizer. Settings are defined here,
+ * including their names, possible values, and relations to each other and the {@link RomHandler}/loaded game.
+ * <br><br>
+ * A setting has a name, a category, and then a number of states. Which states are possible depends on
+ * the type of {@link SettingDefinition} (possible states might be booleans/integers/enums, etc.),
+ * as well as inter-setting prerequisites and RomHandler support.<br>
+ * It is possible to change or replace already established settings, but preferably they should be designed well
+ * from the start.
+ * <br><br>
+ * Setting names are defined in the {@link Name} enum. They should be human-readable, and easy to understand.
+ * Each name should only be used for one setting. Categories and supercategories (in {@link Category}) inform
+ * which settings belong together, guiding the shapes of UIs.
+ * <br><br>
+ * Each setting has a default state, and any number of other states.
+ * When a setting's prerequisites are not met, or it is not supported, it reverts to its default state.<br>
+ * A Setting in its default state should do NOTHING. In other words, it should not change any aspect
+ * of the game going through the Randomizer. Something like "give all Trainer Pokémon a +0% level boost"
+ * counts as doing nothing, as long as there are no side effects.
+ * <i>Following this is the responsibility of outside classes.</i><br>
+ * A Setting in any other state should do SOMETHING.<br>
+ * (An exception to these rules is when a Setting A in a non-default state enables
+ * Setting B which has a default state that does something. In this case,
+ * it is acceptable that the default state of Setting B does something,
+ * and that the non-default state of Setting A does nothing (directly, enabling Setting B not counted).
+ * <b>E.g.</b>, A={@link Name#UPDATE_SPECIES_BASE_STATS UPDATE_SPECIES_BASE_STATS} and
+ * B={@link Name#SPECIES_UPDATE_BASE_STATS_TO_GENERATION SPECIES_UPDATE_BASE_STATS_TO_GENERATION}.)<br>
+ * (If the default state of A enables B, or the default state of B does nothing,
+ * these are bad settings. Change or remove either of them.)
+ * <br><br>
+ * The basic types of setting definition are:
+ * <dl>
+ *     <dt>{@link SimpleSettingDefinition}</dt>
+ *     <dd>Any setting that does not have restrictions on its values (that is to say, any value
+ *     supported by the data type is applicable whenever the setting itself is supported and enabled.)</dd>
+ *     <dt>{@link EnumSettingDefinition}</dt>
+ *     <dd>A setting which is an enum type, which can disable certain values based on other settings
+ *     or RomHandler support. If you do not need to disable certain values, use a SimpleSettingDefinition.</dd>
+ *     <dt>{@link NumericSettingDefinition}</dt>
+ *     <dd>A setting that is a numeric type, which is restricted to a certain range. The range can
+ *     be restricted further based on other settings or RomHandler support.</dd>
+ * </dl>
+ * There are also some other setting definitions for more specific cases: {@link RangeLimitDefinition},
+ * {@link SpeciesIndexSettingDefinition}, {@link TypeOrRandomSettingDefinition}.
+ * <br><br>
+ * Support is determined by a simple {@link Predicate}({@link RomHandler}).
+ * <br><br>
+ * Enabled/Disabled state is determined by {@link SettingRestriction}s, which contain two parts:
+ * The setting(s) which must be checked, and the function to check them against. Most cases can be
+ * handled by a {@link SimpleSettingRestriction}, which compares the value of a single setting against a predicate.<br>
+ * If there are multiple relevant settings, there is also {@link MultiSettingRestriction}, which combines the
+ * results of two or more SettingRestrictions in an AND, OR, NAND, or NOR manner.
+ * (This can include other MultiSettingRestrictions.)<br>
+ * Simple and Multi should cover the needs of almost every setting. If they do not,
+ * there is {@link SettingSupportRestriction}, or writing new extensions of SettingRestrictions.
+ * <br><br>
+ * {@link SettingUtils} contains several helpful functions for convenience.
+ * <br><br>
+ */
 
-//The basic types of setting definition are:
-//SimpleSettingDefinition: Any setting that does not have restrictions on its values (that is to say, any value
-// supported by the data type is applicable whenever the setting itself is supported and enabled.)
-//EnumSettingDefinition: A setting which is an enum type, which can disable certain values based on other settings
-// or RomHandler support. If you do not need to disable certain values, use a SimpleSettingDefinition.
-//NumericSettingDefinition: A setting that is a numeric type, which is restricted to a certain range. The range can
-// be restricted further based on other settings or RomHandler support.
-
-//There are also some other setting definitions for more specific cases:
-//TODO: StringSettingDefinition, for restrictions like charset and string length.
-//TODO: Image settings??
-//SpeciesIndexSettingDefinition, which allows selection of a particular Pokemon species, represented internally
-// as an int.
-
-//Support is determined by a simple Predicate(RomHandler).
-//Enabled/Disabled state is determined by SettingRestrictions, which contain two parts:
-// The setting(s) which must be checked, and the function to check them against.
-//Most cases can be handled by a SimpleSettingRestriction, which compares the value of a single setting against a predicate.
-//When checking Enum settings, EnumMatchRestriction is also available.
-//If there are multiple relevant settings, there is also MultiSettingRestriction, which combines the results of two
-// or more SettingRestrictions in an AND, OR, NAND, or NOR manner. (This can include other MultiSettingRestrictions.)
-//For more complicated checks (such as comparing one setting's value to another's) you may need to write your own
-// extension of SettingRestriction.
-
-//SettingsUtils contains several helpful functions for convenience:
-//isTrue and isFalse, which check the states of boolean settings.
-//equalsValue, lessThanValue, greaterThanValue, lessThanOrEqualsValue, and greaterThanOrEqualsValue,
-// which compare a numeric setting to a set value.
-//matchesEnumValue and doesNotMatchEnumValue, which check enum settings' states.
-//ofGeneration, notOfGeneration, atLeastGeneration, and atMostGeneration, which check the generation of a RomHandler.
-
-//Setting names should be unique. They also will (eventually) be used as ini keys, so they should (a) be relatively
-// human-readable, (b) contain no spaces nor the equals sign.
-//Each setting's name should be listed in Settings.Names so developers don't have to memorize them/type
-// them correctly each time. Similarly, categories should be in Settings.Category and should be added to the appropriate
-// supercategory.
-//Setting categories should be the most specific applicable category. (E.g., "Base Stat Distributions" rather than
-// "Pokemon Base Stats" or "Pokemon Traits".)
-//Supercategories should be the tabs of the GUI.
-//Intermediate categories are skipped.
-
-// A Setting in its default state should do NOTHING.
-// In other words, it should not change any aspect of the game going through the Randomizer.
-// Something like "give all Trainer Pokémon a +0% level boost" counts as doing nothing,
-// as long as there are no side effects. Following this is the responsibility of outside classes.
-// A Setting in any other state should do SOMETHING.
-// An exception to these rules is when a Setting A in a non-default state enables
-// Setting B which has a default state that does something. In this case,
-// it is acceptable that the default state of Setting B does something,
-// and that the non-default state of Setting A does nothing (directly, enabling Setting B not counted).
-// If the default state of A enables B, or the default state of B does nothing,
-// these are bad settings. Change or remove either of them.
 public class Settings {
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;
@@ -235,6 +241,11 @@ public class Settings {
 
     public enum Category {
         //Unlike Names, there are no limitations on renaming or removing categories.
+
+        //Setting categories should be the most specific applicable category.
+        // (E.g., "Base Stat Distributions" rather than "Pokemon Base Stats" or "Pokemon Traits".)
+        //Supercategories should be the tabs of the GUI.
+        //Intermediate categories are skipped.
 
         // *** GENERAL OPTIONS ***
         COSMETIC_OPTIONS, LIMIT_POKEMON, QUALITY_TWEAKS, BALANCE_TWEAKS,
@@ -2004,6 +2015,7 @@ public class Settings {
                     .build()
 
             // TODO: what to do with CPGs? Should they be included here?
+            //  Presumably they'd need a choice-of-emergent-strings SettingDefinition.
     );
 
     //endregion graphics

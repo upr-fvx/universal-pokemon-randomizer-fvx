@@ -5,6 +5,9 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * Contains helpful methods for defining settings in {@link Settings}.
+ */
 public class SettingUtils {
 
     //region setting value predicates

@@ -13,6 +13,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Predicate;
 
 import static com.uprfvx.random.settings.SettingUtils.*;
 
@@ -63,8 +64,6 @@ import static com.uprfvx.random.settings.SettingUtils.*;
 // In other words, it should not change any aspect of the game going through the Randomizer.
 // Something like "give all Trainer Pokémon a +0% level boost" counts as doing nothing,
 // as long as there are no side effects. Following this is the responsibility of outside classes.
-// (NoRandomIntroMon is possibly an exception to this rule, since the randomized mon
-//  acts as confirmation the Randomizer has been applied) // TODO: should it be?
 // A Setting in any other state should do SOMETHING.
 // An exception to these rules is when a Setting A in a non-default state enables
 // Setting B which has a default state that does something. In this case,
@@ -464,6 +463,7 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_NO_TEMPORARY_ALT_FORMES,
                     Category.LIMIT_POKEMON)
+                    .supported(atLeastGeneration(4))
                     .build(),
             //This is an odd placement for "retain temporary formes",
             //but it seems like a better fit than Balance Tweaks, which is the only other place that seems sensible.
@@ -671,6 +671,7 @@ public class Settings {
                     9,
                     6, 9)
                     .prerequisite(Name.UPDATE_SPECIES_BASE_STATS, isTrue)
+                    .supported(notOfGeneration(1))
                     .supportedMinimums(rh -> Math.max(6, rh.generationOfPokemon() + 1))
                     .build(),
 
@@ -711,6 +712,7 @@ public class Settings {
                                     notEvolveEveryLevelRestriction,
                                     new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_ABILITIES,
                                             notMatchesEnum(AbilitiesMod.UNCHANGED))))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS,
@@ -722,31 +724,37 @@ public class Settings {
                     Name.SPECIES_ABILITIES_COMBINE_DUPLICATES,
                     Category.SPECIES_ABILITIES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES,
                     Category.SPECIES_ABILITIES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SPECIES_ABILITIES_BAN_WONDER_GUARD,
                     Category.SPECIES_ABILITIES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SPECIES_ABILITIES_BAN_TRAPPING,
                     Category.SPECIES_ABILITIES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SPECIES_ABILITIES_BAN_NEGATIVE,
                     Category.SPECIES_ABILITIES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SPECIES_ABILITIES_BAN_MINOR,
                     Category.SPECIES_ABILITIES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_ABILITIES, notMatchesEnum(AbilitiesMod.UNCHANGED))
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
                     .build(),
 
             new EnumSettingDefinition.Builder<>(
@@ -999,6 +1007,7 @@ public class Settings {
                     Name.STARTERS_BAN_MINOR_HELD_ITEMS,
                     Category.STARTERS_GENERAL)
                     .prerequisite(Name.STARTERS_RANDOMIZE_HELD_ITEMS, isTrue)
+                    .supported(RomHandler::supportsStarterHeldItems)
                     .build(),
             new RangeLimitDefinition.LowerLimitBuilder<>(
                     Name.STARTERS_BST_MINIMUM,
@@ -1167,6 +1176,9 @@ public class Settings {
             new SimpleSettingRestriction<>(Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR, isTrue)
     );
 
+    private static final Predicate<RomHandler> addHeldItemsToAnyTrainerSupport = rh ->
+            rh.canAddHeldItemsToBossTrainers() || rh.canAddHeldItemsToImportantTrainers() || rh.canAddHeldItemsToRegularTrainers();
+
     public enum TotemPokemonMod {
         UNCHANGED, RANDOM, SIMILAR_STRENGTH
     }
@@ -1244,16 +1256,19 @@ public class Settings {
                     Name.TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY,
                     Category.TRAINERS_HELD_ITEMS)
                     .prerequisite(addHeldItemsToAnyTrainerRestriction)
+                    .supported(addHeldItemsToAnyTrainerSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINER_HELD_ITEMS_SENSIBLE_ONLY,
                     Category.TRAINERS_HELD_ITEMS)
                     .prerequisite(addHeldItemsToAnyTrainerRestriction)
+                    .supported(addHeldItemsToAnyTrainerSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_HELD_ITEMS_ACES_ONLY,
                     Category.TRAINERS_HELD_ITEMS)
                     .prerequisite(addHeldItemsToAnyTrainerRestriction)
+                    .supported(addHeldItemsToAnyTrainerSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
@@ -1396,6 +1411,7 @@ public class Settings {
                     Category.TRAINERS_BATTLE_STYLE,
                     BattleStyle.Style.SINGLE_BATTLE)
                     .prerequisite(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyle.Modification.SINGLE_STYLE))
+                    .supported(atLeastGeneration(3))
                     .supportedStates(Map.of(
                             BattleStyle.Style.TRIPLE_BATTLE, ofGeneration(5, 6),
                             BattleStyle.Style.ROTATION_BATTLE, ofGeneration(5, 6)))
@@ -1409,7 +1425,7 @@ public class Settings {
                     Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES,
                     Category.TRAINERS_COSMETIC)
                     .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
+            new SimpleSettingDefinition.BooleanBuilder<>( // TODO: this appears twice. remedy
                     Name.TRAINERS_RANDOM_SHINY_POKEMON,
                     Category.TRAINERS_COSMETIC)
                     .prerequisite(anyTrainerPokemonIsRandomRestriction) //why does this need randomized Pokémon?
@@ -1442,6 +1458,7 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TOTEMS_ALLOW_ALT_FORMES,
                     Category.TOTEM_POKEMON)
+                    .supported(RomHandler::hasTotemPokemon)
                     .prerequisite(
                             new MultiSettingRestriction(true, false,
                                     new SimpleSettingRestriction<>(Name.RANDOMIZE_TOTEM_POKEMON,
@@ -1589,6 +1606,7 @@ public class Settings {
                     Name.WILD_HELD_ITEMS_BAN_MINOR,
                     Category.WILD_POST_TWEAKS)
                     .prerequisite(Name.WILD_RANDOMIZE_HELD_ITEMS, isTrue)
+                    .supported(notOfGeneration(1))
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     Name.WILD_LEVEL_MODIFIER_PERCENT,
@@ -1615,41 +1633,43 @@ public class Settings {
                     Name.STATICS_FULL_RANDOM_OVER_600_BST,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
+                    .supported(RomHandler::canChangeStaticPokemon)
                     .build(), //This is such a weirdly specific setting...
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, matchesEnum(StaticPokemonMod.SIMILAR_STRENGTH))
-                    .supported(RomHandler::hasMainGameLegendaries)
+                    .supported(rh -> rh.canChangeStaticPokemon() && rh.hasMainGameLegendaries())
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STATICS_ALLOW_ALT_FORMES,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasStaticAltFormes)
+                    .supported(rh -> rh.canChangeStaticPokemon() && rh.hasStaticAltFormes())
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STATICS_SWAP_MEGA_EVOLVABLES,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasMegaEvolutions)
+                    .supported(rh -> rh.canChangeStaticPokemon() && rh.hasMegaEvolutions())
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STATICS_FIX_MUSIC,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
-                    .supported(RomHandler::hasStaticMusicFix)
+                    .supported(rh -> rh.canChangeStaticPokemon() && rh.hasStaticMusicFix())
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     Name.STATICS_LEVEL_MODIFIER_PERCENT,
                     Category.STATIC_ENCOUNTERS,
                     0,
                     -100, 155)
+                    .supported(RomHandler::canChangeStaticPokemon)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.STATICS_BALANCE_FOSSIL_LEVELS,
                     Category.STATIC_ENCOUNTERS)
-                    .supported(RomHandler::hasFossilPokemonLevelSupport)
+                    .supported(rh -> rh.canChangeStaticPokemon() && rh.hasFossilPokemonLevelSupport())
                     .build()
 
     );
@@ -1749,11 +1769,13 @@ public class Settings {
                     Name.TUTORS_BAN_OVERPOWERED,
                     Category.MOVE_TUTOR_MOVES)
                     .prerequisite(Name.RANDOMIZE_TUTOR_MOVES, notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
+                    .supported(RomHandler::hasMoveTutors)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TUTORS_KEEP_FIELD_MOVES,
                     Category.MOVE_TUTOR_MOVES)
                     .prerequisite(Name.RANDOMIZE_TUTOR_MOVES, notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
+                    .supported(RomHandler::hasMoveTutors)
                     .build(),
             new NumericSettingDefinition.Builder<>(
                     Name.TUTORS_GOOD_DAMAGING_PERCENT,
@@ -1761,6 +1783,7 @@ public class Settings {
                     0,
                     0, 100)
                     .prerequisite(Name.RANDOMIZE_TUTOR_MOVES, notMatchesEnum(MoveTutorMovesMod.UNCHANGED))
+                    .supported(RomHandler::hasMoveTutors)
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1782,6 +1805,7 @@ public class Settings {
                                             matchesEnum(MoveTutorsCompatibilityMod.COMPLETELY_RANDOM)),
                                     new SimpleSettingRestriction<>(Name.RANDOMIZE_TUTOR_COMPATABILITY,
                                             matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE))))
+                    .supported(RomHandler::hasMoveTutors)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TUTOR_COMPATABILITY_FOLLOW_EVOLUTIONS,
@@ -1795,6 +1819,7 @@ public class Settings {
                                             new SimpleSettingRestriction<>(Name.RANDOMIZE_TUTOR_COMPATABILITY,
                                                     matchesEnum(MoveTutorsCompatibilityMod.RANDOM_PREFER_TYPE)),
                                             new SimpleSettingRestriction<>(Name.TUTOR_COMPATABILITY_LEVEL_UP_SANITY, isTrue))))
+                    .supported(RomHandler::hasMoveTutors)
                     .build()
     );
 
@@ -1864,26 +1889,31 @@ public class Settings {
                     Name.SHOP_ITEMS_BAN_MINOR,
                     Category.SPECIAL_SHOP_ITEMS)
                     .prerequisite(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, matchesEnum(ShopItemsMod.RANDOM))
+                    .supported(RomHandler::hasShopSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SHOP_ITEMS_BAN_REGULAR_SHOP_ITEMS,
                     Category.SPECIAL_SHOP_ITEMS)
                     .prerequisite(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, matchesEnum(ShopItemsMod.RANDOM))
+                    .supported(RomHandler::hasShopSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SHOP_ITEMS_BAN_OVERPOWERED,
                     Category.SPECIAL_SHOP_ITEMS)
                     .prerequisite(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, matchesEnum(ShopItemsMod.RANDOM))
+                    .supported(RomHandler::hasShopSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SHOP_ITEMS_GUARANTEE_EVOLUTION_ITEMS,
                     Category.SPECIAL_SHOP_ITEMS)
                     .prerequisite(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, matchesEnum(ShopItemsMod.RANDOM))
+                    .supported(RomHandler::hasShopSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SHOP_ITEMS_GUARANTEE_X_ITEMS,
                     Category.SPECIAL_SHOP_ITEMS)
                     .prerequisite(Name.RANDOMIZE_SPECIAL_SHOP_ITEMS, matchesEnum(ShopItemsMod.RANDOM))
+                    .supported(RomHandler::hasShopSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SHOP_ITEMS_BALANCE_PRICES,
@@ -1893,7 +1923,7 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.SHOP_ITEMS_ADD_CHEAP_RARE_CANDY,
                     Category.SHOP_ITEMS_GENERAL)
-                    .supported(RomHandler::canChangeShopSizes)
+                    .supported(rh -> rh.hasShopSupport() && rh.canChangeShopSizes())
                     .build(),
 
             new SimpleSettingDefinition.Builder<>(
@@ -1906,6 +1936,7 @@ public class Settings {
                     Name.PICKUP_ITEMS_BAN_MINOR,
                     Category.PICKUP_ITEMS)
                     .prerequisite(Name.RANDOMIZE_PICKUP_ITEMS, matchesEnum(PickupItemsMod.RANDOM))
+                    .supported(rh -> rh.abilitiesPerSpecies() > 0)
                     .build()
     );
 
@@ -1928,6 +1959,7 @@ public class Settings {
                     Name.TYPE_INVERSE_ADD_RANDOM_IMMUNITIES,
                     Category.TYPE_EFFECTIVENESS)
                     .prerequisite(Name.RANDOMIZE_TYPE_EFFECTIVENESS, matchesEnum(TypeEffectivenessMod.INVERSE))
+                    .supported(RomHandler::hasTypeEffectivenessSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.UPDATE_TYPE_EFFECTIVENESS,
@@ -1956,17 +1988,19 @@ public class Settings {
                     Name.PALETTES_FOLLOW_TYPES,
                     Category.SPECIES_PALETTES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(SpeciesPalettesMod.RANDOM))
+                    .supported(RomHandler::hasPokemonPaletteSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.PALETTES_FOLLOW_EVOLUTIONS,
                     Category.SPECIES_PALETTES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(SpeciesPalettesMod.RANDOM))
+                    .supported(RomHandler::hasPokemonPaletteSupport)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.PALETTES_SHINY_FROM_NORMAL,
                     Category.SPECIES_PALETTES)
                     .prerequisite(Name.RANDOMIZE_SPECIES_PALETTES, matchesEnum(SpeciesPalettesMod.RANDOM))
-                    .supported(notOfGeneration(1))
+                    .supported(rh -> rh.hasPokemonPaletteSupport() && notOfGeneration(1).test(rh))
                     .build()
 
             // TODO: what to do with CPGs? Should they be included here?

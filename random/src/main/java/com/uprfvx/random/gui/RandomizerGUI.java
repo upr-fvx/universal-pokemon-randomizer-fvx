@@ -2058,20 +2058,55 @@ public class RandomizerGUI {
 
         opDialog.setVisible(false);
 
-        showSaveLogDialog(filename, baos, checkValue, raceMode, batchRandomization);
-
-        if (presetMode) {
-            JOptionPane.showMessageDialog(frame,
-                    bundle.getString("GUI.saveROM.randomizationDoneDialog.message"));
-
-        } else if (!batchRandomization) {
-            // TODO: remove / rework config string usage
-            // Compile a config string
-            // String configString = getCurrentSettings().toString();
-            String configString = "DUMMY DUMMY REPORT IF SEEN ON GITHUB";
-            // Show the preset maker
-            new PresetMakeDialog(frame, seed, configString);
+        if (raceMode) {
+            // TODO: the idea is to only show this when loading a preset generating using race mode
+            boolean raceModeLogSaved = false; // TODO: implement proper
+            if (raceModeLogSaved) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.saveROM.randomizationDoneRaceModeWithLog.message"));
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.saveROM.randomizationDoneRaceMode.message"));
+            }
+        } else if (batchRandomization) {
+            // TODO: this should only show on the final batch
+            if (batchRandomizationSettings.shouldGenerateLogFile()) {
+                JOptionPane.showMessageDialog(frame,
+                        String.format(bundle.getString("GUI.saveROM.randomizationDoneBatchModeWithLog.message"),
+                                batchRandomizationSettings.getNumberOfRandomizedROMs()));
+            } else {
+                JOptionPane.showMessageDialog(frame,
+                        String.format(bundle.getString("GUI.saveROM.randomizationDoneBatchMode.message"),
+                                batchRandomizationSettings.getNumberOfRandomizedROMs()));
+            }
+        } else {
+            int choice = JOptionPane.showOptionDialog(frame,
+                    bundle.getString("GUI.saveROM.randomizationDone.message"),
+                    null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, new Object[] {
+                            bundle.getString("GUI.saveROM.createLog"),
+                            bundle.getString("GUI.saveROM.createPreset"),
+                            bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
+                    }, null);
+            System.out.println(choice);
+            // TODO: output log/preset file if requested
         }
+
+
+//        showSaveLogDialog(filename, baos, checkValue, raceMode, batchRandomization);
+//
+//        if (presetMode) {
+//            JOptionPane.showMessageDialog(frame,
+//                    bundle.getString("GUI.saveROM.randomizationDoneDialog.message"));
+//
+//        } else if (!batchRandomization) {
+//            // TODO: remove / rework config string usage
+//            // Compile a config string
+//            // String configString = getCurrentSettings().toString();
+//            String configString = "DUMMY DUMMY REPORT IF SEEN ON GITHUB";
+//            // Show the preset maker
+//            new PresetMakeDialog(frame, seed, configString);
+//        }
 
         // Done
         if (this.unloadGameOnSuccess && !batchRandomization) {
@@ -3026,17 +3061,6 @@ public class RandomizerGUI {
             unloadRomHandler();
             initialState();
         }
-    }
-
-    private void guaranteeMaximumValueTick(JSlider slider) {
-        // Create standard labels (only up to the last multiple)
-        Dictionary<Integer, JComponent> table = slider.createStandardLabels(slider.getMajorTickSpacing(), slider.getMinimum());
-
-        // Force label at the exact maximum
-        int max = slider.getMaximum();
-        table.put(max, new JLabel(String.valueOf(max)));
-
-        slider.setLabelTable(table);
     }
 
     private void setRomNameLabel() {

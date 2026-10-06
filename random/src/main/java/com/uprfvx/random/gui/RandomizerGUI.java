@@ -2012,19 +2012,16 @@ public class RandomizerGUI {
 
     private void performRandomizationInner(String filename,
                                            long seed, SettingsManager settings, CustomPlayerGraphics cpg,
-                                           ByteArrayOutputStream baos, PrintStream log,
+                                           ByteArrayOutputStream logBAOS, PrintStream log,
                                            boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
         SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
         GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
         GameRandomizer.Results results = randomizer.randomize(filename, log, seed);
 
         if (results.wasSaveSuccessful()) {
-            if (!results.wasLogSuccessful()) {
-                attemptToLogException(results.getLogException(), "GUI.saveROM.logFailedDialog.message", "GUI.saveROM.logFailedNoLogDialog.message",
-                        true, settings.toStringOld(), Long.toString(seed));
-            }
+            Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
             SwingUtilities.invokeLater(() -> finishRandomization(
-                    filename, seed, cpg, baos, results.getCheckValue(), raceMode, batchRandomization
+                    filename, seed, cpg, logBAOS, logException, raceMode, batchRandomization
             ));
         } else {
             Exception e = results.getException();
@@ -2049,8 +2046,8 @@ public class RandomizerGUI {
 
     private void finishRandomization(String filename, long seed,
                                      CustomPlayerGraphics cpg,
-                                     ByteArrayOutputStream baos,
-                                     int checkValue,
+                                     ByteArrayOutputStream logBAOS,
+                                     Exception logException,
                                      boolean raceMode, boolean batchRandomization) {
         if (cpg != null) {
             recordCPGAsLastUsed(cpg);
@@ -2069,6 +2066,14 @@ public class RandomizerGUI {
                         bundle.getString("GUI.saveROM.randomizationDoneRaceMode.message"));
             }
         } else if (batchRandomization) {
+            if (batchRandomizationSettings.shouldGenerateLogFile()) {
+                try {
+                    saveLogFile(filename, batchRandomizationSettings.getLogFileEnding(), logBAOS.toByteArray());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(frame,
+                            bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
+                }
+            }
             // TODO: this should only show on the final batch
             if (batchRandomizationSettings.shouldGenerateLogFile()) {
                 JOptionPane.showMessageDialog(frame,
@@ -2089,24 +2094,12 @@ public class RandomizerGUI {
                             bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
                     }, null);
             System.out.println(choice);
-            // TODO: output log/preset file if requested
+            if (choice == 0) {
+                attemptSaveLog(filename, seed, logBAOS, logException);
+            } else if (choice == 1) {
+                savePresetFile(filename, seed);
+            }
         }
-
-
-//        showSaveLogDialog(filename, baos, checkValue, raceMode, batchRandomization);
-//
-//        if (presetMode) {
-//            JOptionPane.showMessageDialog(frame,
-//                    bundle.getString("GUI.saveROM.randomizationDoneDialog.message"));
-//
-//        } else if (!batchRandomization) {
-//            // TODO: remove / rework config string usage
-//            // Compile a config string
-//            // String configString = getCurrentSettings().toString();
-//            String configString = "DUMMY DUMMY REPORT IF SEEN ON GITHUB";
-//            // Show the preset maker
-//            new PresetMakeDialog(frame, seed, configString);
-//        }
 
         // Done
         if (this.unloadGameOnSuccess && !batchRandomization) {
@@ -2118,42 +2111,21 @@ public class RandomizerGUI {
 
     }
 
-    private void showSaveLogDialog(String filename, ByteArrayOutputStream baos,
-                                   int checkValue,
-                                   boolean raceMode, boolean batchRandomization) {
-        byte[] out = baos.toByteArray();
-        if (raceMode) {
-            JOptionPane.showMessageDialog(frame,
-                    String.format(bundle.getString("GUI.saveROM.raceModeCheckValueDialog.message"), checkValue));
-        } else if (batchRandomization && batchRandomizationSettings.shouldGenerateLogFile()) {
-            try {
-                saveLogFile(filename, batchRandomizationSettings.getLogFileEnding(), out);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
-            }
-        } else if (!batchRandomization) {
-            int response = JOptionPane.showConfirmDialog(frame,
-                    bundle.getString("GUI.saveROM.saveLogDialog.message"),
-                    bundle.getString("GUI.saveROM.saveLogDialog.title"),
-                    JOptionPane.YES_NO_OPTION);
-            if (response == JOptionPane.YES_OPTION) {
-                try {
-                    saveLogFile(filename, "log", out);
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(frame,
-                            bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
-                }
-                JOptionPane.showMessageDialog(frame,
-                        String.format(bundle.getString("GUI.saveROM.logSavedDialog.message"), filename));
-            }
+    private void attemptSaveLog(String filename, long seed, ByteArrayOutputStream logBAOS, Exception logException) {
+        if (logException != null) {
+            attemptToLogException(logException,
+                    "GUI.saveROM.logFailedDialog.message",
+                    "GUI.saveROM.logFailedNoLogDialog.message",
+                    true, settingsManager.toStringOld(), Long.toString(seed));
         }
-    }
-
-    private void recordCPGAsLastUsed(CustomPlayerGraphics cpg) {
-        lastUsedCPGConfigs.put(romHandler.getROMName() + ".pack", cpg.getGraphicsPack().getName());
-        lastUsedCPGConfigs.put(romHandler.getROMName() + ".type", cpg.getTypeToReplace().toString());
-        attemptWriteConfig();
+        try {
+            saveLogFile(filename, "log", logBAOS.toByteArray());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(frame,
+                    bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
+        }
+        JOptionPane.showMessageDialog(frame,
+                String.format(bundle.getString("GUI.saveROM.logSavedDialog.message"), filename));
     }
 
     private void saveLogFile(String filename, String fileEnding, byte[] out) throws IOException {
@@ -2163,6 +2135,29 @@ public class RandomizerGUI {
         fos.write(0xBF);
         fos.write(out);
         fos.close();
+    }
+
+    private void savePresetFile(String filename, long seed) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos, false, StandardCharsets.UTF_8);
+        ps.println("[ Universal Pokémon Randomizer FVX - Randomized Game Preset ]");
+        ps.println("Random seed: " + seed);
+        ps.println(settingsManager.toString());
+
+        try (FileOutputStream fos = new FileOutputStream(filename + ".preset")) {
+            fos.write(baos.toByteArray());
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(frame,
+                    bundle.getString("GUI.saveROM.presetSaveFailedDialog.message"));
+        }
+        JOptionPane.showMessageDialog(frame,
+                String.format(bundle.getString("GUI.saveROM.presetSavedDialog.message"), filename));
+    }
+
+    private void recordCPGAsLastUsed(CustomPlayerGraphics cpg) {
+        lastUsedCPGConfigs.put(romHandler.getROMName() + ".pack", cpg.getGraphicsPack().getName());
+        lastUsedCPGConfigs.put(romHandler.getROMName() + ".type", cpg.getTypeToReplace().toString());
+        attemptWriteConfig();
     }
 
     private void presetLoader() {
@@ -2797,6 +2792,7 @@ public class RandomizerGUI {
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey, boolean showMessage,
                                        String settingsString, String seedString) {
+        // TODO: rewrite somehow since we no longer have settingsString
 
         // Make sure the operation dialog doesn't show up over the error
         // dialog

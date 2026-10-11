@@ -29,7 +29,7 @@ public class MoveNameRandomizer extends Randomizer {
 
     private static final int MAX_ATTEMPTS_PER_NAME = 50;
 
-    private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^\\]]+)\\]");
+    private static final Pattern BRACKET_PATTERN = Pattern.compile("\\[([^]]+)]");
     private static final Pattern WORD_PATTERN = Pattern.compile("\\(([^)]+)\\)");
 
     private static final Map<Type, String[]> TYPE_MOVE_NAMES =
@@ -132,7 +132,7 @@ public class MoveNameRandomizer extends Randomizer {
         usedMoveNames.clear();
         List<Move> moves = romHandler.getMoves();
         int maxNameLength = romHandler.getMaxMoveNameLength();
-        boolean useUpperCase = detectUpperCaseNames(moves.stream().map(mv -> mv.name).toList());
+        boolean useUpperCase = detectUpperCaseNames(moves.stream().filter(Objects::nonNull).map(mv -> mv.name).toList());
         for (Move mv : moves) {
             if (mv != null && mv.internalId != MoveIDs.struggle) {
                 String name = getRandomMoveName(mv, mv.type, maxNameLength);
@@ -185,14 +185,15 @@ public class MoveNameRandomizer extends Randomizer {
 
     /**
      * Determines the best "action word" for a move based on its properties.
-     *
-     * Priority:
-     * 1. isPunchMove
-     * 2. isSoundMove
-     * 3. Drain moves (damaging + absorbPercent > 0)
-     * 4. STATUS category
-     * 5. isTrapMove
-     * 6. Default
+     * <br><br>
+     * Priority:<ol>
+     * <li>isPunchMove</li>
+     * <li>isSoundMove</li>
+     * <li>Drain moves (damaging + absorbPercent > 0)</li>
+     * <li>STATUS category</li>
+     * <li>isTrapMove</li>
+     * <li>Default</li>
+     * </ol>
      */
     private static String[] getActionWords(Move mv) {
         if (mv.isPunchMove) {
@@ -244,15 +245,16 @@ public class MoveNameRandomizer extends Randomizer {
     /**
      * For STATUS moves, picks the right subcategory word list based on the move's
      * mechanical effect.
-     *
-     * Classification order:
-     * 1. Known healing moves (by move number) -> STATUS_HEAL
-     * 2. Per-status-type infliction words (sleep, poison, burn, etc.)
-     * 3. Trap moves -> STATUS_TRAP
-     * 4. Stat buffs (self-targeting positive) -> STATUS_BUFF
-     * 5. Stat debuffs (opponent-targeting) -> STATUS_DEBUFF
-     * 6. Field/ally effects -> STATUS_BUFF
-     * 7. Fallback (for unclassifiable moves like Splash, Teleport)
+     * <br><br>
+     * Classification order:<ol>
+     * <li>Known healing moves (by move number) -> STATUS_HEAL</li>
+     * <li>Per-status-type infliction words (sleep, poison, burn, etc.)</li>
+     * <li>Trap moves -> STATUS_TRAP</li>
+     * <li>Stat buffs (self-targeting positive) -> STATUS_BUFF</li>
+     * <li>Stat debuffs (opponent-targeting) -> STATUS_DEBUFF</li>
+     * <li>Field/ally effects -> STATUS_BUFF</li>
+     * <li>Fallback (for unclassifiable moves like Splash, Teleport)</li>
+     * </ol>
      */
     private static String[] getStatusSubcategoryWords(Move mv) {
         // Known healing moves identified by move number
@@ -314,7 +316,6 @@ public class MoveNameRandomizer extends Randomizer {
     );
 
     private static String[] getExtraList(String key) {
-        if (EXTRA_NAME_LISTS == null) return null;
         return EXTRA_NAME_LISTS.get(key);
     }
 

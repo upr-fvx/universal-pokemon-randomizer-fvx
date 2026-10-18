@@ -73,6 +73,7 @@ public class TradeRandomizer extends Randomizer {
                 usedGivens.add(given);
                 trade.getGivenSpeciesHolder().setSpecies(given);
                 randomizeGivenCosmeticForme(trade);
+                changesMade = true;
             }
 
             // requested pokemon?
@@ -88,6 +89,7 @@ public class TradeRandomizer extends Randomizer {
                     usedRequests.add(request);
                     trade.setRequestedSpecies(request);
                 }
+                changesMade = true;
             }
 
             // nickname?
@@ -98,6 +100,7 @@ public class TradeRandomizer extends Randomizer {
                 }
                 usedNicknames.add(nickname);
                 trade.setNickname(nickname);
+                changesMade = true;
             } else if (trade.getNickname().equalsIgnoreCase(oldgiven.getName())) {
                 // change the name for sanity
                 trade.setNickname(trade.getGivenSpecies().getName());
@@ -111,6 +114,7 @@ public class TradeRandomizer extends Randomizer {
                 usedOTs.add(ot);
                 trade.setOtName(ot);
                 trade.setOtId(random.nextInt(65536));
+                changesMade = true;
             }
 
             if (randomStats) {
@@ -118,16 +122,17 @@ public class TradeRandomizer extends Randomizer {
                 for (int i = 0; i < trade.getIVs().length; i++) {
                     trade.getIVs()[i] = random.nextInt(maxIV);
                 }
+                changesMade = true;
             }
 
             if (randomItem) {
                 trade.setHeldItem(possibleItems.get(random.nextInt(possibleItems.size())));
+                changesMade = true;
             }
         }
 
         // things that the game doesn't support should just be ignored
         romHandler.setInGameTrades(trades);
-        changesMade = true;
     }
 
     /**

@@ -1004,8 +1004,16 @@ public class RandomizerGUI {
                 associateCheckBox(Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, tpImportantTrainersTypeDiversityCheckBox),
                 associateCheckBox(Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, tpRegularTrainersTypeDiversityCheckBox),
                 //--Battle Style
-                // TODO: what to do with battle styles? the GUI does not match the extant settings/internal logic.
-                //  Implement new functionaly or revert GUI?
+                associateButtonSet(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
+                        Map.of(
+                                BattleStyleMod.UNCHANGED, tbsUnchangedStyleRadioButton,
+                                BattleStyleMod.RANDOM, tbsRandomStyleRadioButton
+                        )),
+                associateCheckBox(Name.BATTLE_STYLE_EXTEND_TEAMS, tbsExtendTeamsCheckBox),
+                associateCheckBox(Name.BATTLE_STYLE_BAN_SINGLE, tbsExcludeSingleBattlesCheckBox),
+                associateCheckBox(Name.BATTLE_STYLE_BAN_DOUBLE, tbsExcludeDoubleBattlesCheckBox),
+                associateCheckBox(Name.BATTLE_STYLE_BAN_TRIPLE, tbsExcludeTripleBattlesCheckBox),
+                associateCheckBox(Name.BATTLE_STYLE_BAN_ROTATION, tbsExcludeRotationBattlesCheckBox),
                 //--Bools column
                 associateCheckBox(Name.TRAINERS_USE_LOCAL, tpUseLocalPokemonCheckBox),
                 associateCheckBox(Name.TRAINERS_NO_LEGENDARIES, tpDontUseLegendariesCheckBox),

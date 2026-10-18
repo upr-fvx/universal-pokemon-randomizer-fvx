@@ -1036,40 +1036,81 @@ public class TrainerPokemonRandomizer extends Randomizer {
         changesMade = true;
     }
 
-    private BattleStyle createTrainerStyle(BattleStyle style) {
-        // Unchanged: passes style through
-        // Randomize: Select a random Style to use
-        // Single Style: passes style through, as the selected style is already picked.
-        BattleStyle trainerStyle = new BattleStyle(style.getModification(), style.getStyle());
-        if (trainerStyle.getModification() == BattleStyle.Modification.RANDOM) {
-            int styleCount = BattleStyle.Style.values().length;
-            if (romHandler.generationOfPokemon() < 5 || romHandler.generationOfPokemon() > 6)
-                styleCount = 2; // Remove triple & rotation as options
-            trainerStyle.setStyle(BattleStyle.Style.values()[random.nextInt(styleCount)]);
-        }
-        return trainerStyle;
-    }
-
-    public void modifyBattleStyle() {
-        BattleStyle.Modification mod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
-        if (mod == BattleStyle.Modification.UNCHANGED)
-            return;
-        BattleStyle mandatedStyle = new BattleStyle(
-                mod, settings.get(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
-        );
+    public void randomizeBattleStyle() {
+        // TODO: write new tests
+        List<BattleStyle> allowed = setupAllowedBattleStyles();
+        boolean extendTeams = settings.get(Settings.Name.BATTLE_STYLE_EXTEND_TEAMS);
 
         List<Trainer> trainers = romHandler.getTrainers();
         for (Trainer tr : trainers) {
-            if (!(tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS || tr.shouldNotGetBuffs())) {
-                tr.setCurrBattleStyle(createTrainerStyle(mandatedStyle));
-                while (tr.getPokemon().size() < tr.getCurrBattleStyle().getRequiredPokemonCount()) {
+            if (tr.getMultiBattleStatus() == Trainer.MultiBattleStatus.ALWAYS) continue;
+            if (tr.shouldNotGetBuffs()) continue;
+
+            pickAndSetBattleMode(allowed, extendTeams, tr);
+
+            if (extendTeams) {
+                while (tr.getPokemon().size() < tr.getBattleStyle().getRequiredPokemonCount()) {
                     tr.getPokemon().add(new TrainerPokemon(tr.getPokemon().getFirst()));
                 }
-                tr.setForcedDoubleBattle(true);
             }
         }
+
         romHandler.makeDoubleBattleModePossible();
         changesMade = true;
+    }
+
+    private List<BattleStyle> setupAllowedBattleStyles() {
+        List<BattleStyle> allowed = new ArrayList<>();
+        if (!(boolean) settings.get(Settings.Name.BATTLE_STYLE_BAN_SINGLE)) {
+            allowed.add(BattleStyle.SINGLE_BATTLE);
+        }
+        if (!(boolean) settings.get(Settings.Name.BATTLE_STYLE_BAN_DOUBLE)) {
+            allowed.add(BattleStyle.DOUBLE_BATTLE);
+        }
+        if (romHandler.generationOfPokemon() == 5 || romHandler.generationOfPokemon() == 6) {
+            if (!(boolean) settings.get(Settings.Name.BATTLE_STYLE_BAN_TRIPLE)) {
+                allowed.add(BattleStyle.TRIPLE_BATTLE);
+            }
+            if (!(boolean) settings.get(Settings.Name.BATTLE_STYLE_BAN_ROTATION)) {
+                allowed.add(BattleStyle.ROTATION_BATTLE);
+            }
+        }
+        if (allowed.isEmpty()) {
+            throw new IllegalStateException("No style is allowed");
+        }
+        return allowed;
+    }
+
+    private void pickAndSetBattleMode(List<BattleStyle> allowed, boolean extendTeams, Trainer tr) {
+        BattleStyle chosen;
+        if (extendTeams) {
+            chosen = allowed.get(random.nextInt(allowed.size()));
+        } else {
+            chosen = getBattleStyleForNonExtendable(allowed, tr);
+        }
+        tr.setBattleStyle(chosen);
+        tr.setBattleStyleForciblyChanged(true);
+    }
+
+    private BattleStyle getBattleStyleForNonExtendable(List<BattleStyle> allowed, Trainer tr) {
+        int pokeCount = tr.getPokemon().size();
+
+        BattleStyle chosen;
+        List<BattleStyle> allowedForThis = allowed.stream()
+                .filter((bs) -> bs.getRequiredPokemonCount() <= pokeCount)
+                .toList();
+        if (allowedForThis.isEmpty()) {
+            if (pokeCount == 1) {
+                chosen = BattleStyle.SINGLE_BATTLE;
+            } else if (pokeCount == 2) {
+                chosen = BattleStyle.DOUBLE_BATTLE;
+            } else {
+                throw new RuntimeException("Should never get here.");
+            }
+        } else {
+            chosen = allowedForThis.get(random.nextInt(allowedForThis.size()));
+        }
+        return chosen;
     }
 
     public void randomizeTrainerHeldItems() {

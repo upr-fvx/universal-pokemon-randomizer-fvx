@@ -1620,10 +1620,10 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int battleType = trainer[2] & 0xFF;
                 switch (battleType) {
                     case 0:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
+                        tr.setBattleStyle(BattleStyle.SINGLE_BATTLE);
                         break;
                     case 1:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                        tr.setBattleStyle(BattleStyle.DOUBLE_BATTLE);
                         break;
                 }
                 int numPokes = trainer[3] & 0xFF;
@@ -1742,8 +1742,8 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                 int numPokes = tr.getPokemon().size();
                 trainer[offset+3] = (byte) numPokes;
 
-                if (tr.isForcedDoubleBattle()) {
-                    if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+                if (tr.isBattleStyleForciblyChanged()) {
+                    if (tr.getBattleStyle() == BattleStyle.DOUBLE_BATTLE) {
                         if (trainer[offset + 2] == 0) {
                             trainer[offset + 2] = 1;
                             trainer[offset + 12] |= 0x8; // Flag that needs to be set for trainers not to attack their own pokes

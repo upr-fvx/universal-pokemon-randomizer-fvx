@@ -32,7 +32,6 @@ import com.uprfvx.random.updaters.MoveUpdater;
 import com.uprfvx.random.updaters.SpeciesBaseStatUpdater;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.random.updaters.Updater;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -179,7 +178,7 @@ public class GameRandomizer {
                 evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer, moveNameRandomizer,
                 speciesMovesetRandomizer, trainerPokeRandomizer, trainerMovesetRandomizer, trainerNameRandomizer,
                 wildEncounterRandomizer, encHeldItemRandomizer, tmtMoveRandomizer, tmhmtCompRandomizer, itemRandomizer,
-                typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
+                typeEffRandomizer, paletteRandomizer);
     }
 
     public Results randomize(final String filename) {
@@ -593,9 +592,9 @@ public class GameRandomizer {
             trainerPokeRandomizer.addTrainerPokemon();
         }
 
-        BattleStyle.Modification battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
-        if (battleStyleMod != BattleStyle.Modification.UNCHANGED) {
-            trainerPokeRandomizer.modifyBattleStyle();
+        Settings.BattleStyleMod battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+        if (battleStyleMod != Settings.BattleStyleMod.UNCHANGED) {
+            trainerPokeRandomizer.randomizeBattleStyle();
         }
 
         Settings.TrainersMod trainersMod = settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON);

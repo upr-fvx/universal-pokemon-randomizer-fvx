@@ -68,7 +68,6 @@ public class RandomizationLogger {
     private final ItemRandomizer itemRandomizer;
     private final TypeEffectivenessRandomizer typeEffRandomizer;
     private final PaletteRandomizer paletteRandomizer;
-    private final MiscTweakRandomizer miscTweakRandomizer;
 
     private PrintStream log;
 
@@ -84,7 +83,7 @@ public class RandomizationLogger {
                                WildEncounterRandomizer wildEncounterRandomizer, EncounterHeldItemRandomizer encHeldItemRandomizer,
                                TMTutorMoveRandomizer tmtMoveRandomizer, TMHMTutorCompatibilityRandomizer tmhmtCompRandomizer,
                                ItemRandomizer itemRandomizer, TypeEffectivenessRandomizer typeEffRandomizer,
-                               PaletteRandomizer paletteRandomizer, MiscTweakRandomizer miscTweakRandomizer) {
+                               PaletteRandomizer paletteRandomizer) {
         this.randomSource = randomSource;
         this.settings = settings;
         this.romHandler = romHandler;
@@ -121,7 +120,6 @@ public class RandomizationLogger {
         this.itemRandomizer = itemRandomizer;
         this.typeEffRandomizer = typeEffRandomizer;
         this.paletteRandomizer = paletteRandomizer;
-        this.miscTweakRandomizer = miscTweakRandomizer;
     }
 
     /**
@@ -1113,9 +1111,9 @@ public class RandomizationLogger {
                     first = false;
                 }
             }
-            BattleStyle.Modification battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
-            if (battleStyleMod != BattleStyle.Modification.UNCHANGED) {
-                log.printf(" (Battle Style: %s)", battleStyleNames[t.getCurrBattleStyle().getStyle().ordinal()]);
+            Settings.BattleStyleMod battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+            if (battleStyleMod != Settings.BattleStyleMod.UNCHANGED) {
+                log.printf(" (Battle Style: %s)", battleStyleNames[t.getBattleStyle().ordinal()]);
             }
             log.println();
         }
@@ -1438,7 +1436,6 @@ public class RandomizationLogger {
         String romCode = romHandler.getROMCode();
         return trainer -> {
             String tag = trainer.getTag();
-            String name = trainer.getFullDisplayName();
 
             boolean isDefaultLeader = tag != null && (
                     (tag.startsWith("GYM") && tag.endsWith("-LEADER")) ||

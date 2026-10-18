@@ -4,7 +4,6 @@ import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.constants.SpeciesIDs;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
@@ -180,7 +179,8 @@ public class Settings {
         //Trainers Cosmetic
         TRAINERS_RANDOM_SHINY_POKEMON,
         //Trainers Battle Styles
-        TRAINERS_RANDOMIZE_BATTLE_STYLE, TRAINERS_SINGLE_STYLE_SELECTION,
+        TRAINERS_RANDOMIZE_BATTLE_STYLE, BATTLE_STYLE_EXTEND_TEAMS, BATTLE_STYLE_BAN_SINGLE, BATTLE_STYLE_BAN_DOUBLE,
+        BATTLE_STYLE_BAN_TRIPLE, BATTLE_STYLE_BAN_ROTATION,
         //Totem Pokemon
         RANDOMIZE_TOTEM_POKEMON, TOTEMS_RANDOMIZE_ALLIES, TOTEMS_RANDOMIZE_AURAS, TOTEMS_RANDOMIZE_HELD_ITEMS,
         TOTEMS_ALLOW_ALT_FORMES, TOTEMS_LEVEL_MODIFIER_PERCENT,
@@ -302,50 +302,6 @@ public class Settings {
 
     //region general options
 
-    //Limit Species restrictions
-    private static final SettingRestriction generation1SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_1, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_1, true)
-            ); //The support check shouldn't matter for Gen 1, but this future-proofs it for romhacks I guess?
-
-    private static final SettingRestriction generation2SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_2, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_2, true)
-            );
-
-    private static final SettingRestriction generation3SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_3, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_3, true)
-            );
-
-    private static final SettingRestriction generation4SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_4, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_4, true)
-            );
-
-    private static final SettingRestriction generation5SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_5, true)
-            );
-
-    private static final SettingRestriction generation6SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_6, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_6, true)
-            );
-
-    private static final SettingRestriction generation7SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_7, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_7, true)
-            );
-
-
     // needs to be up here since general options relies on it
     private static final SettingRestriction notEvolveEveryLevelRestriction = new SimpleSettingRestriction<>(
             Name.RANDOMIZE_SPECIES_EVOLUTIONS, notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL)
@@ -376,85 +332,85 @@ public class Settings {
                     Name.LIMIT_BAN_GENERATION_1,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))  //Gen 2 because there's no sense letting a user ban ALL species
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_2,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_3,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(3))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_4,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(4))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_5,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(5))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_6,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(6))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_7,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(7))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_ALLOW_RELATIVES,
@@ -1167,6 +1123,10 @@ public class Settings {
         TYPE_THEMED_ELITE4_GYMS, KEEP_THEMED, KEEP_THEME_OR_PRIMARY
     }
 
+    public enum BattleStyleMod {
+        UNCHANGED, RANDOM
+    }
+
     private static final SettingRestriction anyTrainerPokemonIsRandomRestriction = new MultiSettingRestriction(
             true, false,
             new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, notMatchesEnum(TrainersMod.UNCHANGED)),
@@ -1409,18 +1369,66 @@ public class Settings {
             new SimpleSettingDefinition.Builder<>(
                     Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
                     Category.TRAINERS_BATTLE_STYLE,
-                    BattleStyle.Modification.UNCHANGED)
+                    BattleStyleMod.UNCHANGED)
                     .supported(atLeastGeneration(3))
                     .build(),
-            new EnumSettingDefinition.Builder<>(
-                    Name.TRAINERS_SINGLE_STYLE_SELECTION,
-                    Category.TRAINERS_BATTLE_STYLE,
-                    BattleStyle.Style.SINGLE_BATTLE)
-                    .prerequisite(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyle.Modification.SINGLE_STYLE))
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_EXTEND_TEAMS,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM))
                     .supported(atLeastGeneration(3))
-                    .supportedStates(Map.of(
-                            BattleStyle.Style.TRIPLE_BATTLE, ofGeneration(5, 6),
-                            BattleStyle.Style.ROTATION_BATTLE, ofGeneration(5, 6)))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_SINGLE,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                                    Name.BATTLE_STYLE_BAN_TRIPLE,
+                                    Name.BATTLE_STYLE_BAN_ROTATION
+                            )))
+                    .supported(atLeastGeneration(3))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_SINGLE,
+                                    Name.BATTLE_STYLE_BAN_TRIPLE,
+                                    Name.BATTLE_STYLE_BAN_ROTATION
+                            )))
+                    .supported(atLeastGeneration(3))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_TRIPLE,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_SINGLE,
+                                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                                    Name.BATTLE_STYLE_BAN_ROTATION
+                            )))
+                    .supported(ofGeneration(5, 6))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_ROTATION,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_SINGLE,
+                                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                                    Name.BATTLE_STYLE_BAN_TRIPLE
+                            )))
+                    .supported(ofGeneration(5, 6))
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -1434,7 +1442,7 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>( // TODO: this appears twice. remedy
                     Name.TRAINERS_RANDOM_SHINY_POKEMON,
                     Category.TRAINERS_COSMETIC)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction) //why does this need randomized Pokémon?
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction) // TODO: why does this need randomized Pokémon?
                     .supported(atLeastGeneration(7))
                     .build(),
 

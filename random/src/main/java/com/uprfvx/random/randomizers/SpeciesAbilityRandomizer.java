@@ -5,7 +5,6 @@ import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.GlobalConstants;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -30,11 +29,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         boolean megaEvolutionSanity = settings.get(Settings.Name.SPECIES_ABILITIES_FOLLOW_MEGA_EVOLUTIONS);
         boolean weighDuplicatesTogether = settings.get(Settings.Name.SPECIES_ABILITIES_COMBINE_DUPLICATES);
         boolean ensureTwoAbilities = settings.get(Settings.Name.SPECIES_ALWAYS_HAVE_TWO_ABILITIES);
-        BattleStyle battleStyle = new BattleStyle(
-                settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
-                settings.get(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
-        );
-        boolean isMultiBattleOnly = battleStyle.isOnlyMultiBattles();
+        boolean isMultiBattleOnly = settings.get(Settings.Name.BATTLE_STYLE_BAN_SINGLE);
 
         // Abilities don't exist in some games...
         if (romHandler.abilitiesPerSpecies() == 0) {

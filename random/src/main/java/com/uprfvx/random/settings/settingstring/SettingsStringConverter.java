@@ -1,12 +1,9 @@
 package com.uprfvx.random.settings.settingstring;
 
-// TODO: what is the version?
-
 import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.SettingsUpdater;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import filefunctions.IOFunctions;
 
@@ -683,19 +680,29 @@ public class SettingsStringConverter {
 
         
         // Byte 62: Battle style
+        // Some changes were made to battle style settings in the same go as creating the new settings system.
         loadEnum(m, d, 62, Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
                 Map.of(
-                        0, BattleStyle.Modification.UNCHANGED,
-                        1, BattleStyle.Modification.RANDOM,
-                        2, BattleStyle.Modification.SINGLE_STYLE
+                        0, Settings.BattleStyleMod.UNCHANGED,
+                        1, Settings.BattleStyleMod.RANDOM,
+                        2, Settings.BattleStyleMod.RANDOM
                 ));
-        loadEnum(m, d, 62, Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION,
-                Map.of(
-                        3, BattleStyle.Style.SINGLE_BATTLE,
-                        4, BattleStyle.Style.DOUBLE_BATTLE,
-                        5, BattleStyle.Style.TRIPLE_BATTLE,
-                        6, BattleStyle.Style.ROTATION_BATTLE
-                ));
+        // BATTLE_STYLE_EXTEND_TEAMS is a new setting, which prior to this was always implied when randomizing.
+        loadBoolean(m, d, 62, 0, Settings.Name.BATTLE_STYLE_EXTEND_TEAMS, true);
+        // (62, 2) really is "SINGLE_STYLE", i.e, only use a given style for all trainers.
+        //         This was replaced by the ability to ban certain styles.
+        // (62, 3--6) then hold an enum for which style is the "single style".
+        if (restoreState(d[62], 2)) {
+            m.set(Settings.Name.BATTLE_STYLE_BAN_SINGLE, !restoreState(d[62], 3));
+            m.set(Settings.Name.BATTLE_STYLE_BAN_DOUBLE, !restoreState(d[62], 4));
+            m.set(Settings.Name.BATTLE_STYLE_BAN_TRIPLE, !restoreState(d[62], 5));
+            m.set(Settings.Name.BATTLE_STYLE_BAN_ROTATION, !restoreState(d[62], 6));
+        } else {
+            m.set(Settings.Name.BATTLE_STYLE_BAN_SINGLE, false);
+            m.set(Settings.Name.BATTLE_STYLE_BAN_DOUBLE, false);
+            m.set(Settings.Name.BATTLE_STYLE_BAN_TRIPLE, false);
+            m.set(Settings.Name.BATTLE_STYLE_BAN_ROTATION, false);
+        }
         // (62, 7) unused
 
 

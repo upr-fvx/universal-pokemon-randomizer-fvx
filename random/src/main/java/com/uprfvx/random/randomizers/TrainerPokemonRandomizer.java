@@ -1037,7 +1037,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeBattleStyle() {
-        // TODO: write new tests
         List<BattleStyle> allowed = setupAllowedBattleStyles();
         boolean extendTeams = settings.get(Settings.Name.BATTLE_STYLE_EXTEND_TEAMS);
 

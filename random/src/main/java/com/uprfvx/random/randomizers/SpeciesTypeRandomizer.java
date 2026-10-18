@@ -18,6 +18,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
     private static final double GSTC_MIDDLE_EVO = 0.15;
     private static final double GSTC_FINAL_EVO = 0.25;
     private static final double GSTC_MEGA_EVO = 0.25;
+    private static final double GSTC_ALT_FORME = 0.5;
 
     public SpeciesTypeRandomizer(RomHandler romHandler, Settings settings, Random random) {
         super(romHandler, settings, random);
@@ -44,7 +45,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
                 if (evTo.isMegaEvolution()) {
                     chance = GSTC_MEGA_EVO;
                 }
-                assignRandomSecondaryType(evTo, chance, dualTypeOnly);
+                assignRandomSecondaryType(evTo, chance, false);
             }
         };
 
@@ -52,6 +53,12 @@ public class SpeciesTypeRandomizer extends Randomizer {
             pk.setPrimaryType(typeService.randomType(random));
             pk.setSecondaryType(null);
             assignRandomSecondaryType(pk, GSTC_NO_EVO, dualTypeOnly);
+        };
+
+        AltFormeAction altFormeAction = (baseForme, altForme) -> {
+            altForme.setPrimaryType(baseForme.getPrimaryType(false));
+            altForme.setSecondaryType(baseForme.getSecondaryType(false));
+            assignRandomSecondaryType(altForme, GSTC_ALT_FORME, false);
         };
 
         AltFormeAction cosmeticAction = (baseForme, altForme) -> {
@@ -62,6 +69,7 @@ public class SpeciesTypeRandomizer extends Randomizer {
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(basicAction, evolvedAction)
                 .noEvoAction(noEvoAction)
+                .altFormeAction(altFormeAction)
                 .cosmeticAction(cosmeticAction)
                 .evolutionSanity(evolutionSanity)
                 .treatMegasAsEvos(megaEvolutionSanity)
@@ -73,10 +81,9 @@ public class SpeciesTypeRandomizer extends Randomizer {
 
     private void assignRandomSecondaryType(Species sp, double chance, boolean dualTypeOnly) {
         if (random.nextDouble() < chance || dualTypeOnly) {
-            sp.setSecondaryType(typeService.randomType(random));
-            while (sp.getSecondaryType(false) == sp.getPrimaryType(false)) {
+            do {
                 sp.setSecondaryType(typeService.randomType(random));
-            }
+            } while (sp.getSecondaryType(false) == sp.getPrimaryType(false));
         }
     }
 }

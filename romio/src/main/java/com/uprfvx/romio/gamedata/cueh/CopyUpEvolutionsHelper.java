@@ -179,6 +179,15 @@ public class CopyUpEvolutionsHelper {
             }
 
             /**
+             * Sets the action to run on non-cosmetic alt formes. Applies the basicAction to the altForme.
+             * (essentially a shorthand for {@code (_, altforme) -> basicAction.applyTo(altForme)})
+             */
+            public Builder altFormeAction(BasicSpeciesAction basicAction) {
+                this.altFormeAction = (_, altForme) -> basicAction.applyTo(altForme);
+                return this;
+            }
+
+            /**
              * Sets the action to run on essentially cosmetic alt formes ({@link Species} explains what that is).
              */
             public Builder cosmeticAction(AltFormeAction cosmeticAction) {

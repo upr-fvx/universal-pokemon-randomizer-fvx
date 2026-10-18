@@ -4,6 +4,7 @@ import com.uprfvx.random.Settings;
 import com.uprfvx.romio.constants.AbilityIDs;
 import com.uprfvx.romio.constants.Gen3Constants;
 import com.uprfvx.romio.constants.GlobalConstants;
+import com.uprfvx.romio.gamedata.cueh.AltFormeAction;
 import com.uprfvx.romio.gamedata.cueh.BasicSpeciesAction;
 import com.uprfvx.romio.gamedata.cueh.CopyUpEvolutionsHelper;
 import com.uprfvx.romio.gamedata.cueh.EvolvedSpeciesAction;
@@ -102,6 +103,7 @@ public class SpeciesAbilityRandomizer extends Randomizer {
         CopyUpEvolutionsHelper.Options cuehOptions = new CopyUpEvolutionsHelper.Options
                 .Builder(basicAction, evolvedAction)
                 .cosmeticAction((baseForme, altForme) -> altForme.copyBaseFormeAbilities(baseForme))
+                .altFormeAction(basicAction)
                 .evolutionSanity(evolutionSanity)
                 .treatMegasAsEvos(megaEvolutionSanity)
                 .build();

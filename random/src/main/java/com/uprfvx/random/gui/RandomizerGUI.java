@@ -946,7 +946,8 @@ public class RandomizerGUI {
                                 : Type.values()[i].toString()),
 
                 // In-Game Trades
-                // TODO: how to associate an underlying enum to two checkboxes?
+                associateCheckBox(Name.TRADES_RANDOMIZE_GIVEN, igtRandomizeGivenSpeciesCheckBox),
+                associateCheckBox(Name.TRADES_RANDOMIZE_REQUESTED, igtRandomizeRequestedSpeciesCheckBox),
                 associateCheckBox(Name.TRADES_RANDOMIZE_NICKNAMES, igtRandomizeNicknamesCheckBox),
                 associateCheckBox(Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS, igtRandomizeOTsCheckBox),
                 associateCheckBox(Name.TRADES_RANDOMIZE_IVS, igtRandomizeIVsCheckBox),

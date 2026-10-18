@@ -146,8 +146,8 @@ public class Settings {
         //Starter BSTs
         STARTERS_BST_MINIMUM, STARTERS_BST_MAXIMUM,
         //In-Game Trades
-        RANDOMIZE_IN_GAME_TRADES, TRADES_RANDOMIZE_NICKNAMES, TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
-        TRADES_RANDOMIZE_IVS, TRADES_RANDOMIZE_HELD_ITEMS,
+        TRADES_RANDOMIZE_GIVEN, TRADES_RANDOMIZE_REQUESTED, TRADES_RANDOMIZE_NICKNAMES,
+        TRADES_RANDOMIZE_ORIGINAL_TRAINERS, TRADES_RANDOMIZE_IVS, TRADES_RANDOMIZE_HELD_ITEMS,
 
         // *** MOVES AND MOVESETS ***
         //Move Traits
@@ -925,10 +925,6 @@ public class Settings {
         UNCHANGED, RANDOM_MATCHING, COMPLETELY_RANDOM, SIMILAR_STRENGTH
     }
 
-    public enum InGameTradesMod {
-        UNCHANGED, RANDOMIZE_GIVEN, RANDOMIZE_GIVEN_AND_REQUESTED
-    }
-
     public static final List<SettingDefinition<?>> STARTERS_AND_TRADES = List.of(
             new EnumSettingDefinition.Builder<>(
                     Name.RANDOMIZE_STARTERS,
@@ -1035,32 +1031,31 @@ public class Settings {
                     .supportedMaximums(overrideForGeneration(1, BaseStats.STAT_MAX * 5))
                     .build(),
 
-            new SimpleSettingDefinition.Builder<>(
-                    Name.RANDOMIZE_IN_GAME_TRADES,
-                    Category.IN_GAME_TRADES,
-                    InGameTradesMod.UNCHANGED)
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRADES_RANDOMIZE_GIVEN,
+                    Category.IN_GAME_TRADES)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRADES_RANDOMIZE_REQUESTED,
+                    Category.IN_GAME_TRADES)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_NICKNAMES,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_IVS,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_HELD_ITEMS,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build()
     );

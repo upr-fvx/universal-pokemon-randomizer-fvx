@@ -697,12 +697,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeInGameTrades() {
-        Settings.InGameTradesMod mod = settings.get(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
-        switch (mod) {
-            case RANDOMIZE_GIVEN:
-            case RANDOMIZE_GIVEN_AND_REQUESTED:
-                tradeRandomizer.randomizeIngameTrades();
-        }
+        tradeRandomizer.randomizeIngameTrades();
     }
 
     private void maybeRandomizeFieldItems() {

@@ -36,8 +36,8 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ### Pokemon Base Stats
 - [The description of a new feature here.] (Issue #[issue num])
 
-### Static Pokemon
-- (Gen 3) [The description of a changed feature here.]
+### In-Game Trades
+- All trade randomization options can now be used independently of each other.
 
 ### Trainer Pokemon
 - "Add Held Items to Trainers" options can now be used without randomizing Trainer Pokémon. (Issue #250) 

@@ -113,7 +113,7 @@ public class SettingsStringConverter {
 
         if ((int) checksum.getValue() != crc) {
             throw new IllegalArgumentException("Checksum mismatch");
-        };
+        }
     }
 
     // m and d are short so they take less space in the function calls
@@ -366,16 +366,17 @@ public class SettingsStringConverter {
 
 
         // Byte 25: In-game trades
-        loadEnum(m, d, 25, Settings.Name.RANDOMIZE_IN_GAME_TRADES,
-                Map.of(
-                        0, Settings.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED,
-                        1, Settings.InGameTradesMod.RANDOMIZE_GIVEN,
-                        6, Settings.InGameTradesMod.UNCHANGED
-                ));
+        // In-game trades are stored as an enum. This enum was broken up with the introduction of the new settings.
+        // (25, 0) is RANDOMIZE_GIVEN_AND_REQUESTED.
+        loadBoolean(m, d, 25, 0, Settings.Name.TRADES_RANDOMIZE_REQUESTED);
+        // (25, 1) is RANDOMIZE_GIVEN.
+        boolean randomizeGiven = restoreState(d[25], 0) || restoreState(d[25], 1);
+        m.set(Settings.Name.TRADES_RANDOMIZE_GIVEN, randomizeGiven);
         loadBoolean(m, d, 25, 2, Settings.Name.TRADES_RANDOMIZE_HELD_ITEMS);
         loadBoolean(m, d, 25, 3, Settings.Name.TRADES_RANDOMIZE_IVS);
         loadBoolean(m, d, 25, 4, Settings.Name.TRADES_RANDOMIZE_NICKNAMES);
         loadBoolean(m, d, 25, 5, Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
+        // (25, 6) is UNCHANGED of the above mention enum.
         // (25, 7) unused
 
 

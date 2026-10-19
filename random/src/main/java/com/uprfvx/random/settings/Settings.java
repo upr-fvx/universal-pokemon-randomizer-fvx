@@ -164,8 +164,7 @@ public class Settings {
         // TODO: finish the introduction of new trainer settings:
         //  - reading the trainer settings from settingsstring
         //  - rewriting trainer randomizer to use them / write related tests
-        //  - make sure all GUI elements have good names/hoverover text
-        //  - link up GUI elements to these settings
+        //  - make sure all GUI elements have good names / hoverover text
         //Trainers General
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_USE_SIMILAR_STRENGTH, TRAINERS_AVOID_DUPLICATES,
         TRAINERS_DISTRIBUTE_SPECIES_EVENLY, TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY, TRAINERS_SWAP_MEGA_EVOLVABLES,
@@ -176,7 +175,7 @@ public class Settings {
         //Trainers Specific Trainers
         TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT,
         //Trainers Types
-        TRAINERS_TYPE_RESTRICTION, TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, TRAINERS_WEIGHT_TYPES,
+        TRAINERS_TYPE_RESTRICTION, TRAINERS_KEEP_TYPE_THEMES, TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, TRAINERS_WEIGHT_TYPES,
         TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
         //Trainer Movesets
         TRAINERS_BETTER_MOVESETS_FOR_BOSSES, TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
@@ -1279,6 +1278,11 @@ public class Settings {
                     Name.TRAINERS_TYPE_RESTRICTION,
                     Category.TRAINERS_TYPES,
                     TrainersTypeMod.UNCHANGED)
+                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_KEEP_TYPE_THEMES,
+                    Category.TRAINERS_TYPES)
                     .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(

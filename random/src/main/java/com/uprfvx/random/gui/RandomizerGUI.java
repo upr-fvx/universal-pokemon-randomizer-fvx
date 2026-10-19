@@ -316,7 +316,36 @@ public class RandomizerGUI {
     //Trainer Pokemon
     private JPanel trainersPanel;
     private JCheckBox tpRandomizeTrainerPokemonCheckBox;
-    //--B-I-R column
+    //--Type Restrictions
+    private JPanel tpTypesPanel;
+    private JRadioButton tpTypesUnrestrictedRadioButton;
+    private JRadioButton tpRandomTypeThemesRadioButton;
+    private JRadioButton tpKeepPrimaryRadioButton;
+    private JCheckBox tpKeepTypeThemesCheckBox;
+    private JCheckBox tpTypeGymsAndElitesOnlyCheckBox;
+    private JCheckBox tpWeightTypesCheckBox;
+    private JLabel tpTypeDiversityLabel;
+    private JCheckBox tpBossTrainersTypeDiversityCheckBox;
+    private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
+    private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
+    //--Bools panel
+    private JPanel tpInnerPanel;
+    private JCheckBox tpSimilarStrengthCheckBox;
+    private JCheckBox tpAvoidDuplicatesCheckBox;
+    private JCheckBox tpDistributeSpeciesCheckBox;
+    private JCheckBox tpDistributeInMainGameOnly;
+    private JCheckBox tpSwapMegaEvosCheckBox;
+    private JCheckBox tpRandomShinyTrainerPokemonCheckBox;
+    private JCheckBox tpRivalCarriesStarterCheckBox;
+    private JCheckBox tpEliteFourUniquePokemonCheckBox;
+    private JSpinner tpEliteFourUniquePokemonSpinner;
+    private JPanel tpBanSpeciesPanel;
+    private JCheckBox tpUseLocalPokemonCheckBox;
+    private JCheckBox tpDontUseLegendariesCheckBox;
+    private JCheckBox tpAllowAlternateFormesCheckBox;
+    private JCheckBox tpNoEarlyWonderGuardCheckBox;
+    //--B-I-R panel
+    private JPanel tpBIRPanel;
     private JLabel tpAdditionalPokemonForLabel;
     private JCheckBox tpAddToBossTrainersCheckBox;
     private JSpinner tpAddToBossTrainersSpinner;
@@ -335,9 +364,6 @@ public class RandomizerGUI {
     private JCheckBox tpConsumableItemsOnlyCheckBox;
     private JCheckBox tpSensibleItemsCheckBox;
     private JCheckBox tpHighestLevelGetsItemCheckBox;
-    private JCheckBox tpBossTrainersTypeDiversityCheckBox;
-    private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
-    private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
     //--Battle Style
     private JPanel tpBattleStylePanel;
     private JRadioButton tbsUnchangedStyleRadioButton;
@@ -347,29 +373,7 @@ public class RandomizerGUI {
     private JCheckBox tbsExcludeDoubleBattlesCheckBox;
     private JCheckBox tbsExcludeTripleBattlesCheckBox;
     private JCheckBox tbsExcludeRotationBattlesCheckBox;
-    //--Type Restrictions
-    private JPanel tpTypesPanel;
-    private JRadioButton tpTypesUnrestrictedRadioButton;
-    private JRadioButton tpRandomTypeThemesRadioButton;
-    private JRadioButton tpKeepPrimaryRadioButton;
-    private JCheckBox tpTypeGymsAndElitesOnlyCheckBox;
-    private JCheckBox tpWeightTypesCheckBox;
-    //--Bools column
-    private JPanel tpInnerPanel;
-    private JCheckBox tpUseLocalPokemonCheckBox;
-    private JCheckBox tpDontUseLegendariesCheckBox;
-    private JCheckBox tpAllowAlternateFormesCheckBox;
-    private JCheckBox tpSimilarStrengthCheckBox;
-    private JCheckBox tpDistributeSpeciesCheckBox;
-    private JCheckBox tpDistributeInMainGameOnly;
-    private JCheckBox tpAvoidDuplicatesCheckBox;
-    private JCheckBox tpNoEarlyWonderGuardCheckBox;
-    private JCheckBox tpRivalCarriesStarterCheckBox;
-    private JCheckBox tpSwapMegaEvosCheckBox;
-    private JCheckBox tpRandomShinyTrainerPokemonCheckBox;
-    //--Quantified column
-    private JCheckBox tpEliteFourUniquePokemonCheckBox;
-    private JSpinner tpEliteFourUniquePokemonSpinner;
+    //--Quantified Options
     private JCheckBox tpTrainersEvolveTheirPokemonCheckbox;
     private SpinSlider tpPercentageEvolutionLevelModifierSpinSlider;
     private JLabel tpCalculatedFullyEvolvedLvlLabel;
@@ -572,9 +576,6 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
-    private JLabel tpTypeDiversityLabel;
-    private JPanel trainersBanSpeciesPanel;
-    private JCheckBox tpKeepTypeThemesCheckBox;
 
 
     //endregion
@@ -984,8 +985,35 @@ public class RandomizerGUI {
 
                 // *** FOE POKEMON ***
                 //Trainer Pokemon
-                // TODO: the main trainer mon enum
-                //--B-I-R column
+                associateCheckBox(Name.RANDOMIZE_TRAINER_POKEMON, tpRandomizeTrainerPokemonCheckBox),
+                //--Type Restrictions
+                associateButtonSet(Name.TRAINERS_TYPE_RESTRICTION,
+                        Map.of(
+                                TrainersTypeMod.UNCHANGED, tpTypesUnrestrictedRadioButton,
+                                TrainersTypeMod.RANDOM_THEMES, tpRandomTypeThemesRadioButton,
+                                TrainersTypeMod.KEEP_PRIMARY, tpKeepPrimaryRadioButton
+                        )),
+                associateCheckBox(Name.TRAINERS_KEEP_TYPE_THEMES, tpKeepTypeThemesCheckBox),
+                associateCheckBox(Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, tpTypeGymsAndElitesOnlyCheckBox),
+                associateCheckBox(Name.TRAINERS_WEIGHT_TYPES, tpWeightTypesCheckBox),
+                associateCheckBox(Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, tpBossTrainersTypeDiversityCheckBox),
+                associateCheckBox(Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, tpImportantTrainersTypeDiversityCheckBox),
+                associateCheckBox(Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, tpRegularTrainersTypeDiversityCheckBox),
+                //--Bools panel
+                associateCheckBox(Name.TRAINERS_USE_SIMILAR_STRENGTH, tpSimilarStrengthCheckBox),
+                associateCheckBox(Name.TRAINERS_AVOID_DUPLICATES, tpAvoidDuplicatesCheckBox),
+                associateCheckBox(Name.TRAINERS_DISTRIBUTE_SPECIES_EVENLY, tpDistributeSpeciesCheckBox),
+                associateCheckBox(Name.TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY, tpDistributeInMainGameOnly),
+                associateCheckBox(Name.TRAINERS_SWAP_MEGA_EVOLVABLES, tpSwapMegaEvosCheckBox),
+                associateCheckBox(Name.TRAINERS_RANDOM_SHINY_POKEMON, tpRandomShinyTrainerPokemonCheckBox),
+                associateCheckBox(Name.TRAINERS_RIVAL_CARRIES_STARTER, tpRivalCarriesStarterCheckBox),
+                associateSpinner(Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, tpEliteFourUniquePokemonSpinner,
+                        tpEliteFourUniquePokemonCheckBox),
+                associateCheckBox(Name.TRAINERS_USE_LOCAL, tpUseLocalPokemonCheckBox),
+                associateCheckBox(Name.TRAINERS_NO_LEGENDARIES, tpDontUseLegendariesCheckBox),
+                associateCheckBox(Name.TRAINERS_ALLOW_ALT_FORMES, tpAllowAlternateFormesCheckBox),
+                associateCheckBox(Name.TRAINERS_NO_EARLY_WONDER_GUARD, tpNoEarlyWonderGuardCheckBox),
+                //--B-I-R panel
                 associateSpinner(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, tpAddToBossTrainersSpinner,
                         tpAddToBossTrainersCheckBox),
                 associateSpinner(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT, tpAddToImportantTrainersSpinner,
@@ -1001,9 +1029,6 @@ public class RandomizerGUI {
                 associateCheckBox(Name.TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY, tpConsumableItemsOnlyCheckBox),
                 associateCheckBox(Name.TRAINER_HELD_ITEMS_SENSIBLE_ONLY, tpSensibleItemsCheckBox),
                 associateCheckBox(Name.TRAINERS_HELD_ITEMS_ACES_ONLY, tpHighestLevelGetsItemCheckBox),
-                associateCheckBox(Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, tpBossTrainersTypeDiversityCheckBox),
-                associateCheckBox(Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, tpImportantTrainersTypeDiversityCheckBox),
-                associateCheckBox(Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, tpRegularTrainersTypeDiversityCheckBox),
                 //--Battle Style
                 associateButtonSet(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
                         Map.of(
@@ -1015,19 +1040,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.BATTLE_STYLE_BAN_DOUBLE, tbsExcludeDoubleBattlesCheckBox),
                 associateCheckBox(Name.BATTLE_STYLE_BAN_TRIPLE, tbsExcludeTripleBattlesCheckBox),
                 associateCheckBox(Name.BATTLE_STYLE_BAN_ROTATION, tbsExcludeRotationBattlesCheckBox),
-                //--Bools column
-                associateCheckBox(Name.TRAINERS_USE_LOCAL, tpUseLocalPokemonCheckBox),
-                associateCheckBox(Name.TRAINERS_NO_LEGENDARIES, tpDontUseLegendariesCheckBox),
-                associateCheckBox(Name.TRAINERS_ALLOW_ALT_FORMES, tpAllowAlternateFormesCheckBox),
-                associateCheckBox(Name.TRAINERS_USE_SIMILAR_STRENGTH, tpSimilarStrengthCheckBox),
-                associateCheckBox(Name.TRAINERS_AVOID_DUPLICATES, tpAvoidDuplicatesCheckBox),
-                associateCheckBox(Name.TRAINERS_NO_EARLY_WONDER_GUARD, tpNoEarlyWonderGuardCheckBox),
-                associateCheckBox(Name.TRAINERS_RIVAL_CARRIES_STARTER, tpRivalCarriesStarterCheckBox),
-                associateCheckBox(Name.TRAINERS_SWAP_MEGA_EVOLVABLES, tpSwapMegaEvosCheckBox),
-                associateCheckBox(Name.TRAINERS_RANDOM_SHINY_POKEMON, tpRandomShinyTrainerPokemonCheckBox),
                 //--Quantified column
-                associateSpinner(Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, tpEliteFourUniquePokemonSpinner,
-                        tpEliteFourUniquePokemonCheckBox),
                 associateCheckBox(Name.TRAINERS_EVOLVE_POKEMON, tpTrainersEvolveTheirPokemonCheckbox),
                 associateSpinSlider(Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, tpPercentageEvolutionLevelModifierSpinSlider),
                 associateSpinSlider(Name.TRAINERS_LEVEL_MODIFIER_PERCENT, tpPercentageLevelModifierSpinSlider,
@@ -1327,7 +1340,8 @@ public class RandomizerGUI {
                 // Moves & Movesets
                 moveTraitsPanel, movesetsPanel,
                 // Foe Pokémon
-                trainersPanel, tpInnerPanel, tpBattleStylePanel, tpTypesPanel, totpPanel, totpAllyPanel, totpAuraPanel,
+                trainersPanel, tpInnerPanel, tpBanSpeciesPanel, tpBIRPanel, tpBattleStylePanel, tpTypesPanel,
+                totpPanel, totpAllyPanel, totpAuraPanel,
                 // Wild Pokémon
                 wpPanel, wpReplacementsPanel, wpTypesPanel, wpEvolutionPanel, staticsPanel,
                 // Move Teaching

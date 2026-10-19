@@ -303,6 +303,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                             .getMegaEvolutionItem());
                 }
 
+                // TODO: break out this shiny thing; no need to be done only if trainers are randomized
                 if (shinyChance) {
                     if (random.nextInt(256) == 0) {
                         tp.setIVs(tp.getIVs() | (1 << 30));

@@ -335,7 +335,6 @@ public class RandomizerGUI {
     private JCheckBox tpConsumableItemsOnlyCheckBox;
     private JCheckBox tpSensibleItemsCheckBox;
     private JCheckBox tpHighestLevelGetsItemCheckBox;
-    private JLabel tpTypeDiversityLabel;
     private JCheckBox tpBossTrainersTypeDiversityCheckBox;
     private JCheckBox tpImportantTrainersTypeDiversityCheckBox;
     private JCheckBox tpRegularTrainersTypeDiversityCheckBox;
@@ -352,8 +351,7 @@ public class RandomizerGUI {
     private JPanel tpTypesPanel;
     private JRadioButton tpTypesUnrestrictedRadioButton;
     private JRadioButton tpRandomTypeThemesRadioButton;
-    private JRadioButton tpKeepTypeThemesRadioButton;
-    private JRadioButton tpKeepThemesOrPrimaryRadioButton;
+    private JRadioButton tpKeepPrimaryRadioButton;
     private JCheckBox tpTypeGymsAndElitesOnlyCheckBox;
     private JCheckBox tpWeightTypesCheckBox;
     //--Bools column
@@ -574,6 +572,9 @@ public class RandomizerGUI {
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
+    private JLabel tpTypeDiversityLabel;
+    private JPanel trainersBanSpeciesPanel;
+    private JCheckBox tpKeepTypeThemesCheckBox;
 
 
     //endregion

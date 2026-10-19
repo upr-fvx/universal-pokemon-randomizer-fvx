@@ -41,6 +41,10 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ### Trainer Pokemon
 - "Add Held Items to Trainers" options can now be used without randomizing Trainer Pokémon. (Issue #250) 
+- Revamped Battle Style options.
+  - New Options: **Exclude Single/Double/Triple/Rotation Battles**. These replace "Single Battle Style", and giving more control over what battle styles are possible when randomizing. If you want to have only Single/Double battles in a Gen 5/6 game, that is now possible. Or only Double/Triple battles, etc...
+  - New Option: **Extend teams**. Previously, trainers were always given extra Pokémon if they had too few Pokémon for their randomized battle style. Now, that is an option. If this is **not** selected, a trainer will never be assigned a battle style which they do not have enough Pokémon for.
+  
 
 ### Misc. Tweaks
 - (Gen 5) made "No Free Lucky Egg" replace the free Lucky Egg with a random mulch instead of always Gooey Mulch.

@@ -41,7 +41,17 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     public void randomizeTrainerPokes() {
-        //TODO: this method direly needs a refactor to despaghettify
+        //TODO: this method (whole class really) direly needs a refactor to despaghettify
+
+        // settings used to immediately ban species, or immediately setup lists of conditionally banned species
+        boolean noLegendaries = settings.get(Settings.Name.TRAINERS_NO_LEGENDARIES);
+        boolean includeFormes = settings.get(Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
+        boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
+        Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
+        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
+        boolean useLocalPokemon = settings.get(Settings.Name.TRAINERS_USE_LOCAL);
+        boolean noEarlyWonderGuard = settings.get(Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
+
         Settings.TrainersMod mod = settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
         boolean isTypeThemed = mod == Settings.TrainersMod.TYPE_THEMED;
         boolean isTypeThemedEliteFourGymOnly = mod == Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS;
@@ -52,27 +62,22 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean distributionSetting = mod == Settings.TrainersMod.DISTRIBUTED;
         boolean mainPlaythroughSetting = mod == Settings.TrainersMod.MAINPLAYTHROUGH;
 
-        boolean usePowerLevels = settings.get(Settings.Name.TRAINERS_USE_SIMILAR_STRENGTH);
-        boolean avoidDuplicates = settings.get(Settings.Name.TRAINERS_AVOID_DUPLICATES);
-        boolean weightByFrequency = settings.get(Settings.Name.TRAINERS_WEIGHT_TYPES);
-        boolean useLocalPokemon = settings.get(Settings.Name.TRAINERS_USE_LOCAL);
-        boolean noLegendaries = settings.get(Settings.Name.TRAINERS_NO_LEGENDARIES);
-        boolean noEarlyWonderGuard = settings.get(Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
-        boolean includeFormes = settings.get(Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
-        boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
-        boolean doNotUsePrematureEvos = settings.get(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
-        boolean swapMegaEvos = settings.get(Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
-        boolean shinyChance = settings.get(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
-        Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
-        boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;
-        int eliteFourUniquePokemonNumber = settings.get(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT);
-        boolean evolveAsFarAsLegal = settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON);
-        int percentageEvoLvlModifier = settings.get(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
-        boolean forceChallengeMode = settings.get(Settings.Name.BALANCE_FORCE_CHALLENGE_MODE);
-        boolean rivalCarriesStarter = settings.get(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER);
         boolean bossDiversity = settings.get(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES);
         boolean importantDiversity = settings.get(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES);
         boolean regularDiversity = settings.get(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES);
+
+        boolean usePowerLevels = settings.get(Settings.Name.TRAINERS_USE_SIMILAR_STRENGTH);
+        boolean avoidDuplicates = settings.get(Settings.Name.TRAINERS_AVOID_DUPLICATES);
+        boolean weightByFrequency = settings.get(Settings.Name.TRAINERS_WEIGHT_TYPES);
+        boolean doNotUsePrematureEvos = settings.get(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
+        boolean swapMegaEvos = settings.get(Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
+        boolean shinyChance = settings.get(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
+        boolean evolveAsFarAsLegal = settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON);
+        int percentageEvoLvlModifier = settings.get(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+        boolean forceChallengeMode = settings.get(Settings.Name.BALANCE_FORCE_CHALLENGE_MODE);
+
+        int eliteFourUniquePokemonNumber = settings.get(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT);
+        boolean rivalCarriesStarter = settings.get(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER);
 
         boolean skipOriginalTeamMembers = mod == Settings.TrainersMod.UNCHANGED;
         // If we get here with TrainersMod UNCHANGED, that means additional Pokemon were
@@ -107,6 +112,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             allowedByType = allowed.sortByType(false);
             typeWeightings = new TreeMap<>();
             totalTypeWeighting = 0;
+            initTypeWeightings(noLegendaries, includeFormes);
 
             Map<String, List<Trainer>> groups = getTrainerGroups(currentTrainers, isTypeThemedEliteFourGymOnly);
             Map<String, Type> themes = pickGroupTypeThemes(keepTypeThemes || keepThemeOrPrimaryTypes, groups.keySet());
@@ -150,11 +156,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Randomize Trainer Pokemon
         for (Trainer t : scrambledTrainers) {
-            chooseRandomPokemonForTrainer(t, isTypeThemed, weightByFrequency, noLegendaries, includeFormes,
+            chooseRandomPokemonForTrainer(t, isTypeThemed, weightByFrequency,
                     keepTypeThemes, keepThemeOrPrimaryTypes, rivalCarriesStarter,
                     eliteFourUniquePokemon, eliteFourIndices, bossDiversity, importantDiversity, regularDiversity,
                     avoidDuplicates, skipOriginalTeamMembers, eliteFourUniquePokemonNumber, swapMegaEvos,
-                    percentageEvoLvlModifier, evolveAsFarAsLegal, noEarlyWonderGuard, bannedFromUnique,
+                    percentageEvoLvlModifier, evolveAsFarAsLegal, bannedFromUnique,
                     eliteFourExceptions, wonderGuardPokemon, altFormes, usePowerLevels, doNotUsePrematureEvos,
                     distributionSetting, mainPlaythroughSetting, mainPlaythroughTrainers, shinyChance);
         }
@@ -188,19 +194,19 @@ public class TrainerPokemonRandomizer extends Randomizer {
      * Randomizes the {@link TrainerPokemon} of a given {@link Trainer}.
      */
     private void chooseRandomPokemonForTrainer(
-            Trainer t, boolean isTypeThemed, boolean weightByFrequency, boolean noLegendaries, boolean includeFormes,
+            Trainer t, boolean isTypeThemed, boolean weightByFrequency,
             boolean keepTypeThemes, boolean keepThemeOrPrimaryTypes,
             boolean rivalCarriesStarter, boolean eliteFourUniquePokemon, List<Integer> eliteFourIndices,
             boolean bossDiversity, boolean importantDiversity, boolean regularDiversity, boolean avoidDuplicates,
             boolean skipOriginalTeamMembers, int eliteFourUniquePokemonNumber, boolean swapMegaEvos,
-            int percentageEvoLvlModifier, boolean evolveAsFarAsLegal, boolean noEarlyWonderGuard,
+            int percentageEvoLvlModifier, boolean evolveAsFarAsLegal,
             SpeciesSet bannedFromUnique, SpeciesSet eliteFourExceptions, SpeciesSet wonderGuardPokemon,
             SpeciesSet altFormes, boolean usePowerLevels, boolean doNotUsePrematureEvos,
             boolean distributionSetting, boolean mainPlaythroughSetting, List<Integer> mainPlaythroughTrainers,
             boolean shinyChance) {
         //Get what type this trainer's theme should be, or null for no theme.
-        Type typeForTrainer = getTypeForTrainer(t, isTypeThemed, weightByFrequency, noLegendaries,
-                includeFormes, keepTypeThemes, keepThemeOrPrimaryTypes);
+        Type typeForTrainer = getTypeForTrainer(t, isTypeThemed, weightByFrequency,
+                keepTypeThemes, keepThemeOrPrimaryTypes);
 
         //Copy the list of trainer Pokemon so we can arrange it as we like
         //without changing the order in game
@@ -229,7 +235,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         for (int i = 0; i < trainerPokemonList.size(); i++) {
             chooseRandomTrainerPokemon(t, i, keepThemeOrPrimaryTypes, avoidDuplicates, skipOriginalTeamMembers,
                     eliteFourUniquePokemonNumber, swapMegaEvos, percentageEvoLvlModifier, evolveAsFarAsLegal,
-                    noEarlyWonderGuard, bannedFromUnique, eliteFourExceptions, wonderGuardPokemon, altFormes,
+                    bannedFromUnique, eliteFourExceptions, wonderGuardPokemon, altFormes,
                     usePowerLevels, doNotUsePrematureEvos, distributionSetting, mainPlaythroughSetting,
                     mainPlaythroughTrainers, shinyChance, trainerPokemonList, eliteFourTrackPokemon,
                     skipStarter, alreadyPlaced, typeForTrainer, usedTypes, forceTypeDiverse);
@@ -280,7 +286,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     private void chooseRandomTrainerPokemon(
             Trainer t, int i, boolean keepThemeOrPrimaryTypes, boolean avoidDuplicates, boolean skipOriginalTeamMembers,
             int eliteFourUniquePokemonNumber, boolean swapMegaEvos, int percentageEvoLvlModifier,
-            boolean evolveAsFarAsLegal, boolean noEarlyWonderGuard, SpeciesSet bannedFromUnique,
+            boolean evolveAsFarAsLegal, SpeciesSet bannedFromUnique,
             SpeciesSet eliteFourExceptions, SpeciesSet wonderGuardPokemon, SpeciesSet altFormes,
             boolean usePowerLevels, boolean doNotUsePrematureEvos,
             boolean distributionSetting, boolean mainPlaythroughSetting, List<Integer> mainPlaythroughTrainers,
@@ -320,7 +326,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                 bannedReplacement.addAll(bannedFromUnique);
                 allowedReplacement = eliteFourExceptions;
             }
-            if (noEarlyWonderGuard && tpLevel < 20) {
+            if (tpLevel < 20) { // wonderGuardPokemon should be empty if "no early wonder guard" is off
                 bannedReplacement.addAll(wonderGuardPokemon);
             }
             if (!tp.getSpeciesHolder().isAltFormeAllowed()) {
@@ -394,15 +400,16 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
     }
 
-    private Type getTypeForTrainer(Trainer t, boolean isTypeThemed, boolean weightByFrequency, boolean noLegendaries, boolean includeFormes, boolean keepTypeThemes, boolean keepThemeOrPrimaryTypes) {
+    private Type getTypeForTrainer(Trainer t, boolean isTypeThemed, boolean weightByFrequency,
+                                   boolean keepTypeThemes, boolean keepThemeOrPrimaryTypes) {
         Type typeForTrainer = trainerTypes.get(t);
         if (typeForTrainer == null && isTypeThemed) {
-            typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
+            typeForTrainer = pickType(weightByFrequency);
 
             // Ubers: can't have the same type as each other
             if (t.getTag() != null && t.getTag().equals("UBER")) {
                 while (usedUberTypes.contains(typeForTrainer)) {
-                    typeForTrainer = pickType(weightByFrequency, noLegendaries, includeFormes);
+                    typeForTrainer = pickType(weightByFrequency);
                 }
                 usedUberTypes.add(typeForTrainer);
             }
@@ -658,9 +665,9 @@ public class TrainerPokemonRandomizer extends Randomizer {
      * Picks a type, sometimes based on frequency of non-banned Pokémon of that type. Compare with randomType().
      * Never picks a type with no non-banned Pokémon, even when weightByFrequency == false.
      */
-    private Type pickType(boolean weightByFrequency, boolean noLegendaries, boolean allowAltFormes) {
+    private Type pickType(boolean weightByFrequency) {
         if (totalTypeWeighting == 0) {
-            initTypeWeightings(noLegendaries, allowAltFormes);
+            throw new IllegalStateException("type weightings have not been set");
         }
 
         if (weightByFrequency) {

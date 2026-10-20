@@ -1474,9 +1474,6 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_RANDOM_SHINY_POKEMON,
                     Category.TRAINERS_COSMETIC)
-                    // TODO: This should not need randomized Pokémon.
-                    //  It currently does, because randomizer logic, but that should be fixed.
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
                     .supported(atLeastGeneration(7))
                     .build(),
 

@@ -71,7 +71,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
         boolean weightByFrequency = settings.get(Settings.Name.TRAINERS_WEIGHT_TYPES);
         boolean doNotUsePrematureEvos = settings.get(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
         boolean swapMegaEvos = settings.get(Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
-        boolean shinyChance = settings.get(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
         boolean evolveAsFarAsLegal = settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON);
         int percentageEvoLvlModifier = settings.get(Settings.Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
         boolean forceChallengeMode = settings.get(Settings.Name.BALANCE_FORCE_CHALLENGE_MODE);
@@ -162,7 +161,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     avoidDuplicates, skipOriginalTeamMembers, eliteFourUniquePokemonNumber, swapMegaEvos,
                     percentageEvoLvlModifier, evolveAsFarAsLegal, bannedFromUnique,
                     eliteFourExceptions, wonderGuardPokemon, altFormes, usePowerLevels, doNotUsePrematureEvos,
-                    distributionSetting, mainPlaythroughSetting, mainPlaythroughTrainers, shinyChance);
+                    distributionSetting, mainPlaythroughSetting, mainPlaythroughTrainers);
         }
 
         // Save it all up
@@ -202,8 +201,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             int percentageEvoLvlModifier, boolean evolveAsFarAsLegal,
             SpeciesSet bannedFromUnique, SpeciesSet eliteFourExceptions, SpeciesSet wonderGuardPokemon,
             SpeciesSet altFormes, boolean usePowerLevels, boolean doNotUsePrematureEvos,
-            boolean distributionSetting, boolean mainPlaythroughSetting, List<Integer> mainPlaythroughTrainers,
-            boolean shinyChance) {
+            boolean distributionSetting, boolean mainPlaythroughSetting, List<Integer> mainPlaythroughTrainers) {
         //Get what type this trainer's theme should be, or null for no theme.
         Type typeForTrainer = getTypeForTrainer(t, isTypeThemed, weightByFrequency,
                 keepTypeThemes, keepThemeOrPrimaryTypes);
@@ -237,7 +235,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     eliteFourUniquePokemonNumber, swapMegaEvos, percentageEvoLvlModifier, evolveAsFarAsLegal,
                     bannedFromUnique, eliteFourExceptions, wonderGuardPokemon, altFormes,
                     usePowerLevels, doNotUsePrematureEvos, distributionSetting, mainPlaythroughSetting,
-                    mainPlaythroughTrainers, shinyChance, trainerPokemonList, eliteFourTrackPokemon,
+                    mainPlaythroughTrainers, trainerPokemonList, eliteFourTrackPokemon,
                     skipStarter, alreadyPlaced, typeForTrainer, usedTypes, forceTypeDiverse);
         }
     }
@@ -290,7 +288,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
             SpeciesSet eliteFourExceptions, SpeciesSet wonderGuardPokemon, SpeciesSet altFormes,
             boolean usePowerLevels, boolean doNotUsePrematureEvos,
             boolean distributionSetting, boolean mainPlaythroughSetting, List<Integer> mainPlaythroughTrainers,
-            boolean shinyChance, List<TrainerPokemon> trainerPokemonList,
+            List<TrainerPokemon> trainerPokemonList,
             boolean eliteFourTrackPokemon, boolean skipStarter,
             SpeciesSet alreadyPlaced,
             Type typeForTrainer, Set<Type> usedTypes, boolean forceTypeDiverse) {
@@ -379,13 +377,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
                     .filter(Species::isMegaEvolution)
                     .getRandomSpecies(random)
                     .getMegaEvolutionItem());
-        }
-
-        // TODO: break out this shiny thing; no need to be done only if trainers are randomized
-        if (shinyChance) {
-            if (random.nextInt(256) == 0) {
-                tp.setIVs(tp.getIVs() | (1 << 30));
-            }
         }
     }
 
@@ -1288,4 +1279,15 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
         // TODO: should this could as "changes made"?
     }
+
+    public void randomShinyTrainerPokemon() {
+        for (Trainer tr : romHandler.getTrainers()) {
+            for (TrainerPokemon tp : tr.getPokemon()) {
+                if (random.nextInt(256) == 0) {
+                    tp.setIVs(tp.getIVs() | (1 << 30));
+                }
+            }
+        }
+    }
+
 }

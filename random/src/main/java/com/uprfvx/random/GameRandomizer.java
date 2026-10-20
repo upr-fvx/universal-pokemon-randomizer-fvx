@@ -580,6 +580,7 @@ public class GameRandomizer {
         // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
         // 5. Randomize Trainer Pokemon (or evolve if not randomizing, i.e., UNCHANGED and no additional Pkmn)
+        // 6. Randomly set Trainer Pokemon to be shiny
 
         if (!settings.isDefault(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT)) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
@@ -609,6 +610,10 @@ public class GameRandomizer {
             trainerPokeRandomizer.randomizeTrainerPokes();
         } else if (settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON)) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
+        }
+
+        if (settings.get(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON)) {
+            trainerPokeRandomizer.randomShinyTrainerPokemon();
         }
     }
 

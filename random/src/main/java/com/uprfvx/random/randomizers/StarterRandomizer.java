@@ -314,11 +314,10 @@ public class StarterRandomizer extends Randomizer {
     private SpeciesSet getAvailableSet(List<Species> alreadyChosen) {
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesUnchanged = abilitiesMod == Settings.AbilitiesMod.UNCHANGED;
-        boolean allowAltFormes = settings.get(Settings.Name.STARTERS_ALLOW_ALT_FORMES);
+        boolean allowAltFormes = !(boolean) settings.get(Settings.Name.STARTERS_NO_ALT_FORMES);
         boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         boolean noLegendaries = settings.get(Settings.Name.STARTERS_NO_LEGENDARIES);
         boolean noDualTypes = settings.get(Settings.Name.STARTERS_NO_DUAL_TYPES);
-        Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
         int minEvoStages = settings.get(Settings.Name.STARTERS_MINIMUM_EVOLUTION_STAGES);
         boolean basicOnly = settings.get(Settings.Name.STARTERS_BASIC_ONLY);
         int bstMin = settings.get(Settings.Name.STARTERS_BST_MINIMUM);

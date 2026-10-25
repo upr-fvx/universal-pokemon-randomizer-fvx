@@ -25,7 +25,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         assumeTrue(romHandler.hasFunctionalFormes());
         SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
-        s.set(Settings.Name.TRAINERS_ALLOW_ALT_FORMES, true);
+        s.set(Settings.Name.TRAINERS_NO_ALT_FORMES, false);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         boolean altFormesUsed = false;
@@ -46,7 +46,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
         SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
-        s.set(Settings.Name.TRAINERS_ALLOW_ALT_FORMES, false);
+        s.set(Settings.Name.TRAINERS_NO_ALT_FORMES, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         boolean altFormesUsed = false;

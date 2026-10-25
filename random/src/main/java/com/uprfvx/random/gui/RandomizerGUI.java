@@ -220,7 +220,7 @@ public class RandomizerGUI {
     private JCheckBox peSimilarStrengthCheckBox;
     private JCheckBox peShareTypingCheckBox;
     private JCheckBox peMaxThreeStagesCheckBox;
-    private JCheckBox peAllowAltFormesCheckBox;
+    private JCheckBox peNoAltFormesCheckBox;
     private JCheckBox peForceChangeCheckBox;
     private JCheckBox peForceGrowthCheckBox;
     private JCheckBox peNoConvergenceCheckBox;
@@ -254,7 +254,7 @@ public class RandomizerGUI {
     private JCheckBox spNoLegendariesCheckBox;
     private JCheckBox spRandomizeStarterHeldItemsCheckBox;
     private JCheckBox spBanMinorItemsCheckBox;
-    private JCheckBox spAllowAltFormesCheckBox;
+    private JCheckBox spNoAltFormesCheckBox;
     //--Evolution Restrictions
     private JPanel spEvolutionPanel;
     private JCheckBox spBasicOnlyCheckBox;
@@ -342,7 +342,7 @@ public class RandomizerGUI {
     private JPanel tpBanSpeciesPanel;
     private JCheckBox tpUseLocalPokemonCheckBox;
     private JCheckBox tpDontUseLegendariesCheckBox;
-    private JCheckBox tpAllowAlternateFormesCheckBox;
+    private JCheckBox tpNoAlternateFormesCheckBox;
     private JCheckBox tpNoEarlyWonderGuardCheckBox;
     //--B-I-R panel
     private JPanel tpBIRPanel;
@@ -386,7 +386,7 @@ public class RandomizerGUI {
     private JRadioButton totpRandomRadioButton;
     private JRadioButton totpRandomSimilarStrengthRadioButton;
     private JCheckBox totpRandomizeHeldItemsCheckBox;
-    private JCheckBox totpAllowAltFormesCheckBox;
+    private JCheckBox totpNoAltFormesCheckBox;
     private JCheckBox totpPercentageLevelModifierCheckBox;
     private SpinSlider totpPercentageLevelModifierSpinSlider;
     //--Allies
@@ -433,7 +433,7 @@ public class RandomizerGUI {
     private JCheckBox wpCatchEmAllModeCheckBox;
     private JCheckBox wpSimilarStrengthCheckBox;
     private JCheckBox wpBalanceShakingGrassPokemonCheckBox;
-    private JCheckBox wpAllowAltFormesCheckBox;
+    private JCheckBox wpNoAltFormesCheckBox;
     //--Other Options
     private JCheckBox wpRandomizeHeldItemsCheckBox;
     private JCheckBox wpBanMinorItemsCheckBox;
@@ -451,7 +451,7 @@ public class RandomizerGUI {
     private JRadioButton seRandomSimilarStrengthRadioButton;
     private JCheckBox seRandomize600BSTCheckBox;
     private JCheckBox seLimitMainGameLegendariesCheckBox;
-    private JCheckBox seAllowAltFormesCheckBox;
+    private JCheckBox seNoAltFormesCheckBox;
     private JCheckBox seSwapMegaEvosCheckBox;
     private JCheckBox seFixMusicCheckBox;
     private JCheckBox sePercentageLevelModifierCheckBox;
@@ -891,7 +891,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, peSimilarStrengthCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE, peShareTypingCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES, peMaxThreeStagesCheckBox),
-                associateCheckBox(Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES, peAllowAltFormesCheckBox),
+                associateCheckBox(Name.SPECIES_EVOLUTIONS_NO_ALT_FORMES, peNoAltFormesCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_FORCE_CHANGE, peForceChangeCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_FORCE_GROWTH, peForceGrowthCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_NO_CONVERGENCE, peNoConvergenceCheckBox),
@@ -928,7 +928,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.STARTERS_NO_LEGENDARIES, spNoLegendariesCheckBox),
                 associateCheckBox(Name.STARTERS_RANDOMIZE_HELD_ITEMS, spRandomizeStarterHeldItemsCheckBox),
                 associateCheckBox(Name.STARTERS_BAN_MINOR_HELD_ITEMS, spBanMinorItemsCheckBox),
-                associateCheckBox(Name.STARTERS_ALLOW_ALT_FORMES, spAllowAltFormesCheckBox),
+                associateCheckBox(Name.STARTERS_NO_ALT_FORMES, spNoAltFormesCheckBox),
                 //--Evolution Restrictions
                 associateCheckBox(Name.STARTERS_BASIC_ONLY, spBasicOnlyCheckBox),
                 associateSlider(Name.STARTERS_MINIMUM_EVOLUTION_STAGES, spHasEvolutionCountSlider,
@@ -1011,7 +1011,7 @@ public class RandomizerGUI {
                         tpEliteFourUniquePokemonCheckBox),
                 associateCheckBox(Name.TRAINERS_USE_LOCAL, tpUseLocalPokemonCheckBox),
                 associateCheckBox(Name.TRAINERS_NO_LEGENDARIES, tpDontUseLegendariesCheckBox),
-                associateCheckBox(Name.TRAINERS_ALLOW_ALT_FORMES, tpAllowAlternateFormesCheckBox),
+                associateCheckBox(Name.TRAINERS_NO_ALT_FORMES, tpNoAlternateFormesCheckBox),
                 associateCheckBox(Name.TRAINERS_NO_EARLY_WONDER_GUARD, tpNoEarlyWonderGuardCheckBox),
                 //--B-I-R panel
                 associateSpinner(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, tpAddToBossTrainersSpinner,
@@ -1054,7 +1054,7 @@ public class RandomizerGUI {
                                 TotemPokemonMod.SIMILAR_STRENGTH, totpRandomSimilarStrengthRadioButton
                         )),
                 associateCheckBox(Name.TOTEMS_RANDOMIZE_HELD_ITEMS, totpRandomizeHeldItemsCheckBox),
-                associateCheckBox(Name.TOTEMS_ALLOW_ALT_FORMES, totpAllowAltFormesCheckBox),
+                associateCheckBox(Name.TOTEMS_NO_ALT_FORMES, totpNoAltFormesCheckBox),
                 associateSpinSlider(Name.TOTEMS_LEVEL_MODIFIER_PERCENT, totpPercentageLevelModifierSpinSlider,
                         totpPercentageLevelModifierCheckBox),
                 //--Allies
@@ -1107,7 +1107,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.WILD_CATCH_EM_ALL, wpCatchEmAllModeCheckBox),
                 associateCheckBox(Name.WILD_USE_SIMILAR_STRENGTH, wpSimilarStrengthCheckBox),
                 associateCheckBox(Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, wpBalanceShakingGrassPokemonCheckBox),
-                associateCheckBox(Name.WILD_ALLOW_ALT_FORMES, wpAllowAltFormesCheckBox),
+                associateCheckBox(Name.WILD_NO_ALT_FORMES, wpNoAltFormesCheckBox),
                 //--Other Options
                 associateCheckBox(Name.WILD_RANDOMIZE_HELD_ITEMS, wpRandomizeHeldItemsCheckBox),
                 associateCheckBox(Name.WILD_HELD_ITEMS_BAN_MINOR, wpBanMinorItemsCheckBox),
@@ -1127,7 +1127,7 @@ public class RandomizerGUI {
                         )),
                 associateCheckBox(Name.STATICS_FULL_RANDOM_OVER_600_BST, seRandomize600BSTCheckBox),
                 associateCheckBox(Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES, seLimitMainGameLegendariesCheckBox),
-                associateCheckBox(Name.STATICS_ALLOW_ALT_FORMES, seAllowAltFormesCheckBox),
+                associateCheckBox(Name.STATICS_NO_ALT_FORMES, seNoAltFormesCheckBox),
                 associateCheckBox(Name.STATICS_SWAP_MEGA_EVOLVABLES, seSwapMegaEvosCheckBox),
                 associateCheckBox(Name.STATICS_FIX_MUSIC, seFixMusicCheckBox),
                 associateSpinSlider(Name.STATICS_LEVEL_MODIFIER_PERCENT, sePercentageLevelModifierSpinSlider,

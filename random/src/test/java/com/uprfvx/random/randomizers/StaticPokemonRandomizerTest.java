@@ -119,7 +119,7 @@ public class StaticPokemonRandomizerTest extends RandomizerTest {
         SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_TOTEM_POKEMON, Settings.TotemPokemonMod.RANDOM);
         s.set(Settings.Name.TOTEMS_RANDOMIZE_ALLIES, Settings.AllyPokemonMod.RANDOM);
-        s.set(Settings.Name.TOTEMS_ALLOW_ALT_FORMES, true);
+        s.set(Settings.Name.TOTEMS_NO_ALT_FORMES, true);
 
         // small loop in case it just throws sometimes
         for (int i = 0; i < 10; i++) {

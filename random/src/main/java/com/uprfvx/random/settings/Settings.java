@@ -125,7 +125,7 @@ public class Settings {
         //Species' Evolutions
         RANDOMIZE_SPECIES_EVOLUTIONS, SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE,
         SPECIES_EVOLUTIONS_MAX_THREE_STAGES, SPECIES_EVOLUTIONS_NO_CONVERGENCE, SPECIES_EVOLUTIONS_FORCE_CHANGE,
-        SPECIES_EVOLUTIONS_FORCE_GROWTH, SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES, SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
+        SPECIES_EVOLUTIONS_FORCE_GROWTH, SPECIES_EVOLUTIONS_NO_ALT_FORMES, SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
         SPECIES_EVOLUTIONS_MAKE_POSSIBLE, SPECIES_EVOLUTIONS_MAKE_EASIER, SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL,
         SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
         SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION,
@@ -135,7 +135,7 @@ public class Settings {
         // *** GIVEN POKEMON ***
         //Starters General
         RANDOMIZE_STARTERS, STARTERS_NO_LEGENDARIES, STARTERS_RANDOMIZE_HELD_ITEMS, STARTERS_BAN_MINOR_HELD_ITEMS,
-        STARTERS_ALLOW_ALT_FORMES,
+        STARTERS_NO_ALT_FORMES,
         //Starters Custom
         STARTER_CUSTOM_1, STARTER_CUSTOM_2, STARTER_CUSTOM_3,
         //Starter Evolutions
@@ -166,8 +166,7 @@ public class Settings {
         TRAINERS_DISTRIBUTE_SPECIES_EVENLY, TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY, TRAINERS_SWAP_MEGA_EVOLVABLES,
         TRAINERS_EVOLVE_POKEMON, TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
         //Trainers Species Bans
-        // TODO: swap all these ALLOW_ALT_FORMES settings around so allowing is the default
-        TRAINERS_NO_LEGENDARIES, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_USE_LOCAL, TRAINERS_NO_EARLY_WONDER_GUARD,
+        TRAINERS_NO_LEGENDARIES, TRAINERS_NO_ALT_FORMES, TRAINERS_USE_LOCAL, TRAINERS_NO_EARLY_WONDER_GUARD,
         //Trainers Specific Trainers
         TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT,
         //Trainers Types
@@ -187,12 +186,12 @@ public class Settings {
         BATTLE_STYLE_BAN_TRIPLE, BATTLE_STYLE_BAN_ROTATION,
         //Totem Pokemon
         RANDOMIZE_TOTEM_POKEMON, TOTEMS_RANDOMIZE_ALLIES, TOTEMS_RANDOMIZE_AURAS, TOTEMS_RANDOMIZE_HELD_ITEMS,
-        TOTEMS_ALLOW_ALT_FORMES, TOTEMS_LEVEL_MODIFIER_PERCENT,
+        TOTEMS_NO_ALT_FORMES, TOTEMS_LEVEL_MODIFIER_PERCENT,
 
         // *** WILD ENCOUNTERS ***
         //Wild General
         RANDOMIZE_WILD_ENCOUNTERS, WILD_NO_LEGENDARIES,  WILD_CATCH_EM_ALL, WILD_USE_SIMILAR_STRENGTH,
-        WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, WILD_ALLOW_ALT_FORMES,
+        WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, WILD_NO_ALT_FORMES,
         //Wild Replacement Zone
         WILD_REPLACEMENT_ZONE, WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES, WILD_REMOVE_TIME_BASED,
         //Wild Types
@@ -204,7 +203,7 @@ public class Settings {
         WILD_HELD_ITEMS_BAN_MINOR, WILD_LEVEL_MODIFIER_PERCENT, WILD_ALL_SPECIES_CALL_ALLIES,
         //Static Encounters
         RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
-        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC,
+        STATICS_NO_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC,
         STATICS_LEVEL_MODIFIER_PERCENT, STATICS_BALANCE_FOSSIL_LEVELS,
 
         // *** MOVE TEACHERS ***
@@ -765,7 +764,7 @@ public class Settings {
                     .prerequisite(Name.RANDOMIZE_SPECIES_EVOLUTIONS, matchesEnum(EvolutionsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES,
+                    Name.SPECIES_EVOLUTIONS_NO_ALT_FORMES,
                     Category.SPECIES_EVOLUTIONS)
                     .prerequisite(Name.RANDOMIZE_SPECIES_EVOLUTIONS, notMatchesEnum(EvolutionsMod.UNCHANGED))
                     .supported(ofGeneration(7))
@@ -960,7 +959,7 @@ public class Settings {
                     .prerequisite(anyStarterIsRandomRestriction)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STARTERS_ALLOW_ALT_FORMES,
+                    Name.STARTERS_NO_ALT_FORMES,
                     Category.STARTERS_GENERAL)
                     .prerequisite(anyStarterIsRandomRestriction)
                     .supported(RomHandler::hasStarterAltFormes)
@@ -1220,7 +1219,7 @@ public class Settings {
                     .prerequisite(anyTrainerPokemonIsRandomRestriction)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_ALLOW_ALT_FORMES,
+                    Name.TRAINERS_NO_ALT_FORMES,
                     Category.TRAINERS_SPECIES_BANS)
                     .prerequisite(anyTrainerPokemonIsRandomRestriction)
                     .supported(RomHandler::hasFunctionalFormes)
@@ -1505,7 +1504,7 @@ public class Settings {
                     .supported(RomHandler::hasTotemPokemon)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TOTEMS_ALLOW_ALT_FORMES,
+                    Name.TOTEMS_NO_ALT_FORMES,
                     Category.TOTEM_POKEMON)
                     .supported(RomHandler::hasTotemPokemon)
                     .prerequisite(
@@ -1613,7 +1612,7 @@ public class Settings {
                     .prerequisite(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.WILD_ALLOW_ALT_FORMES,
+                    Name.WILD_NO_ALT_FORMES,
                     Category.WILD_GENERAL)
                     .prerequisite(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue)
                     .supported(RomHandler::hasWildAltFormes)
@@ -1691,7 +1690,7 @@ public class Settings {
                     .supported(rh -> rh.canChangeStaticPokemon() && rh.hasMainGameLegendaries())
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_ALLOW_ALT_FORMES,
+                    Name.STATICS_NO_ALT_FORMES,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .supported(rh -> rh.canChangeStaticPokemon() && rh.hasStaticAltFormes())

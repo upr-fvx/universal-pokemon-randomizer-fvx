@@ -132,7 +132,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         s.set(Settings.Name.RANDOMIZE_WILD_ENCOUNTERS, true);
         s.set(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.SINGLE_ENCOUNTER);
         s.set(Settings.Name.WILD_REMOVE_TIME_BASED, false);
-        s.set(Settings.Name.WILD_ALLOW_ALT_FORMES,getGenerationNumberOf(romName) >= 5); //idk why 5 and not 3 but w/e
+        s.set(Settings.Name.WILD_NO_ALT_FORMES, getGenerationNumberOf(romName) < 5); //idk why 5 and not 3 but w/e
         s.set(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES, true);
         s.set(Settings.Name.WILD_NO_LEGENDARIES, false);
         return s;
@@ -145,7 +145,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager settings = getStandardSettings(romName);
-        settings.set(Settings.Name.WILD_ALLOW_ALT_FORMES, false);
+        settings.set(Settings.Name.WILD_NO_ALT_FORMES, true);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -617,7 +617,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         SettingsManager settings = getStandardSettings(romName);
         settings.set(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.ENCOUNTER_SET);
-        settings.set(Settings.Name.WILD_ALLOW_ALT_FORMES, false);
+        settings.set(Settings.Name.WILD_NO_ALT_FORMES, true);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1242,7 +1242,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         SettingsManager settings = getStandardSettings(romName);
         settings.set(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.NAMED_LOCATION);
-        settings.set(Settings.Name.WILD_ALLOW_ALT_FORMES, false);
+        settings.set(Settings.Name.WILD_NO_ALT_FORMES, true);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 
@@ -1562,7 +1562,7 @@ public class WildEncounterRandomizerTest extends RandomizerTest {
 
         SettingsManager settings = getStandardSettings(romName);
         settings.set(Settings.Name.WILD_REPLACEMENT_ZONE, Settings.WildPokemonZoneMod.GAME);
-        settings.set(Settings.Name.WILD_ALLOW_ALT_FORMES, false);
+        settings.set(Settings.Name.WILD_NO_ALT_FORMES, true);
 
         new WildEncounterRandomizer(romHandler, settings, RND).randomizeEncounters();
 

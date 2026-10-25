@@ -1302,15 +1302,15 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.noConvergenceCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="fb98c" class="javax.swing.JCheckBox" binding="peAllowAltFormesCheckBox">
+                          <component id="fb98c" class="javax.swing.JCheckBox" binding="peNoAltFormesCheckBox">
                             <constraints>
                               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.allowAltFormesCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.noAltFormesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="90756">
@@ -1713,15 +1713,15 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="cad77" class="javax.swing.JCheckBox" binding="spAllowAltFormesCheckBox">
+                      <component id="cad77" class="javax.swing.JCheckBox" binding="spNoAltFormesCheckBox">
                         <constraints>
                           <grid row="4" column="13" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d05d5" class="javax.swing.JCheckBox" binding="spNoLegendariesCheckBox">
@@ -3213,15 +3213,15 @@
                                   <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noLegendariesCheckBox.toolTipText"/>
                                 </properties>
                               </component>
-                              <component id="be65d" class="javax.swing.JCheckBox" binding="tpAllowAlternateFormesCheckBox">
+                              <component id="be65d" class="javax.swing.JCheckBox" binding="tpNoAlternateFormesCheckBox">
                                 <constraints>
                                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                   <gridbag weightx="0.0" weighty="0.0"/>
                                 </constraints>
                                 <properties>
                                   <enabled value="false"/>
-                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.allowAlternateFormesCheckBox.toolTipText"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noAlternateFormesCheckBox.toolTipText"/>
                                 </properties>
                               </component>
                               <component id="82ca5" class="javax.swing.JCheckBox" binding="tpUseLocalPokemonCheckBox">
@@ -3466,15 +3466,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomSimilarStrengthRadioButton.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="45461" class="javax.swing.JCheckBox" binding="totpAllowAltFormesCheckBox">
+                      <component id="45461" class="javax.swing.JCheckBox" binding="totpNoAltFormesCheckBox">
                         <constraints>
                           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <hspacer id="976f4">
@@ -3903,15 +3903,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.sosForAll.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="fc590" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">
+                      <component id="fc590" class="javax.swing.JCheckBox" binding="wpNoAltFormesCheckBox">
                         <constraints>
                           <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <vspacer id="2efca">
@@ -4085,15 +4085,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomize600BSTCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="d9fc" class="javax.swing.JCheckBox" binding="seAllowAltFormesCheckBox">
+                      <component id="d9fc" class="javax.swing.JCheckBox" binding="seNoAltFormesCheckBox">
                         <constraints>
                           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="9c5fc" class="javax.swing.JCheckBox" binding="seLimitMainGameLegendariesCheckBox">

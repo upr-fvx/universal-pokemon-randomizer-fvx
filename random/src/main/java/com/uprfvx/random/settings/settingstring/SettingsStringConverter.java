@@ -183,7 +183,7 @@ public class SettingsStringConverter {
                 ));
         loadBoolean(m, d, 4, 4, Settings.Name.STARTERS_RANDOMIZE_HELD_ITEMS);
         loadBoolean(m, d, 4, 5, Settings.Name.STARTERS_BAN_MINOR_HELD_ITEMS);
-        loadBoolean(m, d, 4, 6, Settings.Name.STARTERS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 4, 6, Settings.Name.STARTERS_NO_ALT_FORMES, true);
         loadBoolean(m, d, 4, 7, Settings.Name.STARTERS_BASIC_ONLY);
         if(restoreState(d[4], 3)) {
             //This bit was "Random Basic with Two Evos", which is now three independent settings.
@@ -314,7 +314,7 @@ public class SettingsStringConverter {
                 ));
         loadBoolean(m, d, 19, 4, Settings.Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES);
         loadBoolean(m, d, 19, 5, Settings.Name.STATICS_FULL_RANDOM_OVER_600_BST);
-        loadBoolean(m, d, 19, 6, Settings.Name.STATICS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 19, 6, Settings.Name.STATICS_NO_ALT_FORMES, true);
         loadBoolean(m, d, 19, 7, Settings.Name.STATICS_SWAP_MEGA_EVOLVABLES);
 
 
@@ -424,7 +424,7 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 28, 3, Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE);
         loadBoolean(m, d, 28, 4, Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES);
         loadBoolean(m, d, 28, 5, Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE);
-        loadBoolean(m, d, 28, 6, Settings.Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 28, 6, Settings.Name.SPECIES_EVOLUTIONS_NO_ALT_FORMES, true);
 
 
         // Byte 29: Trainer Pokémon
@@ -514,8 +514,8 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 41, 3, Settings.Name.MOVESETS_BAN_OVERPOWERED);
         loadBoolean(m, d, 41, 4, Settings.Name.TMS_BAN_OVERPOWERED);
         loadBoolean(m, d, 41, 5, Settings.Name.TUTORS_BAN_OVERPOWERED);
-        loadBoolean(m, d, 41, 6, Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
-        loadBoolean(m, d, 41, 7, Settings.Name.WILD_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 41, 6, Settings.Name.TRAINERS_NO_ALT_FORMES, true);
+        loadBoolean(m, d, 41, 7, Settings.Name.WILD_NO_ALT_FORMES, true);
 
 
         // Byte 42: Additional Trainer Pokémon
@@ -551,7 +551,7 @@ public class SettingsStringConverter {
                         5, Settings.AllyPokemonMod.SIMILAR_STRENGTH
                 ));
         loadBoolean(m, d, 44, 6, Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS);
-        loadBoolean(m, d, 44, 7, Settings.Name.TOTEMS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 44, 7, Settings.Name.TOTEMS_NO_ALT_FORMES, true);
 
 
         // Byte 45: Totem Pokémon level modifier

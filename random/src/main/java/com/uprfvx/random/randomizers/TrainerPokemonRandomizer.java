@@ -46,7 +46,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // settings used to immediately ban species, or immediately setup lists of conditionally banned species
         boolean noLegendaries = settings.get(Settings.Name.TRAINERS_NO_LEGENDARIES);
-        boolean includeFormes = settings.get(Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
+        boolean includeFormes = !(boolean) settings.get(Settings.Name.TRAINERS_NO_ALT_FORMES);
         boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);
         boolean abilitiesAreRandomized = abilitiesMod == Settings.AbilitiesMod.RANDOMIZE;

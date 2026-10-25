@@ -39,7 +39,10 @@ public class RandomizerTest {
 
     @AfterEach
     public void resetROMHandler() {
-        romHandler.reset();
+        // romHandler can be null if the only tests that have been run failed an assumption
+        if (romHandler != null) {
+            romHandler.reset();
+        }
     }
 
     private static void loadROM(String romName) {

@@ -24,7 +24,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.hasFunctionalFormes());
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_ALLOW_ALT_FORMES, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -45,7 +45,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         assumeTrue(getGenerationNumberOf(romName) >= 4);
         activateRomHandler(romName);
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_ALLOW_ALT_FORMES, false);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -294,7 +294,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.KEEP_THEMED);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -310,7 +311,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.KEEP_THEMED);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
         s.set(Settings.Name.TRAINERS_EVOLVE_POKEMON, true);
         s.set(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT, -50);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -331,7 +333,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         typeThemedTrainers.keySet().forEach(nonTypeThemedTrainers::remove);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.KEEP_THEME_OR_PRIMARY);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.KEEP_PRIMARY);
+        s.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, nonTypeThemedTrainers, false);
@@ -449,7 +453,9 @@ public class TrainerRandomizersTest extends RandomizerTest {
         SettingsManager s = createSettingsManager();
         s.set(Settings.Name.RANDOMIZE_SPECIES_TYPES, Settings.SpeciesTypesMod.COMPLETELY_RANDOM);
         new SpeciesTypeRandomizer(romHandler, s, RND).randomizeSpeciesTypes();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.KEEP_THEMED);
+
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         keepTypeThemedCheck(beforeTrainerStrings, typeThemedTrainers, false);
@@ -528,7 +534,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
     public void useLocalPokemonGuaranteesLocalPokemonOnly(String romName) {
         activateRomHandler(romName);
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_USE_LOCAL, true);
         s.set(Settings.Name.WILD_REMOVE_TIME_BASED, false);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -557,7 +563,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
         activateRomHandler(romName);
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_USE_LOCAL, true);
         s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, wantedNonLocal);
         s.set(Settings.Name.WILD_REMOVE_TIME_BASED, false); // should be at least 4 non-local Pokemon in each game
@@ -597,7 +603,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -610,7 +616,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_USE_LOCAL, true);
         s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         s.set(Settings.Name.WILD_REMOVE_TIME_BASED, false);
@@ -625,7 +631,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON,  Settings.TrainersMod.TYPE_THEMED);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.RANDOM_THEMES);
         s.set(Settings.Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, 1);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -680,7 +687,8 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.TYPE_THEMED);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.RANDOM_THEMES);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
         Map<String, List<Type>> e4Types = new HashMap<>();
@@ -786,7 +794,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS, true);
 
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
@@ -808,7 +816,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
         s.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
         s.set(Settings.Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES, true);
@@ -857,7 +865,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.UNCHANGED);
         addPossibleTrainerPokemon(s);
         s.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
         s.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
@@ -926,7 +933,6 @@ public class TrainerRandomizersTest extends RandomizerTest {
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.UNCHANGED);
         addPossibleTrainerPokemon(s);
         s.set(Settings.Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES, true);
         s.set(Settings.Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, true);
@@ -973,7 +979,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         Map<Trainer, Type> typeThemedTrainers = new HashMap<>();
         recordTypeThemeBefore(beforeTrainerStrings, typeThemedTrainers);
 
-        SettingsManager s = createSettingsManager(); //TrainersMod == UNCHANGED
+        SettingsManager s = createSettingsManager(); //RANDOMIZE_TRAINER_POKEMON == false
         addPossibleTrainerPokemon(s);
         new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
 
@@ -1028,11 +1034,11 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
         assumeTrue(romHandler.canAddPokemonToBossTrainers());
 
-        SettingsManager s = createSettingsManager(); //TrainersMod == UNCHANGED
+        SettingsManager s = createSettingsManager();
 
         addPossibleTrainerPokemon(s); // Fill all trainer teams to increase chance of duplicates if there is a bug
 
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_AVOID_DUPLICATES, true);
         // Restrict pool to make duplicates more likely if there is a bug
         s.set(Settings.Name.TRAINERS_USE_SIMILAR_STRENGTH, true);
@@ -1120,7 +1126,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER, true);
 
         TrainerPokemonRandomizer tpr = new TrainerPokemonRandomizer(romHandler, s, RND);
@@ -1170,7 +1176,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
         activateRomHandler(romName);
 
         SettingsManager s = createSettingsManager();
-        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, Settings.TrainersMod.RANDOM);
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
         s.set(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER, true);
 
         TrainerPokemonRandomizer tpr = new TrainerPokemonRandomizer(romHandler, s, RND);

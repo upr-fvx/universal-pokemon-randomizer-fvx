@@ -170,7 +170,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
     }
 
     private SpeciesSet getWonderGuardPokemon(boolean noEarlyWonderGuard) {
-        SpeciesSet wonderGuardPokemon = null;
+        SpeciesSet wonderGuardPokemon = new SpeciesSet();
         if(noEarlyWonderGuard) {
             wonderGuardPokemon = allowed.filter(pk -> pk.getAbility1() == AbilityIDs.wonderGuard
                     || pk.getAbility2() == AbilityIDs.wonderGuard

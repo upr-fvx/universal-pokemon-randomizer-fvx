@@ -746,7 +746,9 @@ public class SettingsStringConverter {
 
         // Byte 65: General Options
         loadBoolean(m, d, 65, 0, Settings.Name.COSMETIC_RANDOM_INTRO_MON, true);
-        loadBoolean(m, d, 65, 1, Settings.Name.RACE_MODE);
+        // (65, 1) held "Race Mode", which:
+        //         a) does not belong in the settings anymore,
+        //         b) never made sense to keep when updating settings to use in a newer version.
         // (65, 2) unused
         // (65, 3) is a generation restriction override
         if (restoreState(d[65], 3)) {

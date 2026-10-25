@@ -775,9 +775,6 @@ public class RandomizerGUI {
         //--foxoftheasterisk, August 2026
 
         List<SettingCoordinator<?, ?>> settingUICoordinators = List.of(
-                //TODO: remove I think
-                associateCheckBox(Name.RACE_MODE, raceModeCheckBox),
-
                 // *** GENERAL ***
                 //Cosmetic
                 associateCheckBox(Name.COSMETIC_RANDOM_INTRO_MON, coRandomIntroMonCheckBox),
@@ -2003,7 +2000,7 @@ public class RandomizerGUI {
                                       CustomPlayerGraphics cpg,
                                       boolean saveAsDirectory) {
         final SettingsManager settings = settingsManager;
-        final boolean raceMode = settings.get(Name.RACE_MODE);
+        final boolean raceMode = raceModeCheckBox.isSelected();
         final boolean batchRandomization = batchRandomizationSettings.isBatchRandomizationEnabled() && !presetMode;
         // Setup log
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();

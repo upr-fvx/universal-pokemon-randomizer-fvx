@@ -88,7 +88,6 @@ public class Settings {
     public enum Name {
         //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
         //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.
-        RACE_MODE, //TODO: remove after confirming is a GUI-only setting.
 
         // *** GENERAL ***
         //Cosmetic options
@@ -311,11 +310,6 @@ public class Settings {
     );
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.RACE_MODE,
-                    Category.COSMETIC_OPTIONS)
-                    .build(), //TODO: confirm safe to remove
-
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.COSMETIC_RANDOM_INTRO_MON,
                     Category.COSMETIC_OPTIONS)

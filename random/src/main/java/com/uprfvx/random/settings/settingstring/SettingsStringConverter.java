@@ -434,7 +434,7 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 29, 3, Settings.Name.TRAINERS_NO_LEGENDARIES);
         loadBoolean(m, d, 29, 4, Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
         loadBoolean(m, d, 29, 5, Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
-        loadBoolean(m, d, 29, 6, Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
+        loadBoolean(m, d, 29, 6, Settings.Name.COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON);
         loadBoolean(m, d, 29, 7, Settings.Name.TRAINERS_AVOID_DUPLICATES);
 
 

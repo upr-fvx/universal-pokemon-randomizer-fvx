@@ -112,6 +112,7 @@ public class RandomizerGUI {
     private JCheckBox coLowerCaseSpeciesNamesCheckBox;
     private JCheckBox coRandomizeTrainerNamesCheckBox;
     private JCheckBox coRandomizeTrainerClassNamesCheckBox;
+    private JCheckBox coRandomShinyTrainerPokemonCheckBox;
 
     //Limit Species
     private JPanel limitPanel;
@@ -335,7 +336,6 @@ public class RandomizerGUI {
     private JCheckBox tpDistributeSpeciesCheckBox;
     private JCheckBox tpDistributeInMainGameOnly;
     private JCheckBox tpSwapMegaEvosCheckBox;
-    private JCheckBox tpRandomShinyTrainerPokemonCheckBox;
     private JCheckBox tpRivalCarriesStarterCheckBox;
     private JCheckBox tpEliteFourUniquePokemonCheckBox;
     private JSpinner tpEliteFourUniquePokemonSpinner;
@@ -785,6 +785,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.COSMETIC_LOWER_CASE_SPECIES_NAMES, coLowerCaseSpeciesNamesCheckBox),
                 associateCheckBox(Name.COSMETIC_RANDOMIZE_TRAINER_NAMES, coRandomizeTrainerNamesCheckBox),
                 associateCheckBox(Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES, coRandomizeTrainerClassNamesCheckBox),
+                associateCheckBox(Name.COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON, coRandomShinyTrainerPokemonCheckBox),
 
                 //Limit Species
                 associateCheckBox(Name.LIMIT_BAN_GENERATION_1, lsBanGeneration1CheckBox),
@@ -1005,7 +1006,6 @@ public class RandomizerGUI {
                 associateCheckBox(Name.TRAINERS_DISTRIBUTE_SPECIES_EVENLY, tpDistributeSpeciesCheckBox),
                 associateCheckBox(Name.TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY, tpDistributeInMainGameOnly),
                 associateCheckBox(Name.TRAINERS_SWAP_MEGA_EVOLVABLES, tpSwapMegaEvosCheckBox),
-                associateCheckBox(Name.TRAINERS_RANDOM_SHINY_POKEMON, tpRandomShinyTrainerPokemonCheckBox),
                 associateCheckBox(Name.TRAINERS_RIVAL_CARRIES_STARTER, tpRivalCarriesStarterCheckBox),
                 associateSpinner(Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, tpEliteFourUniquePokemonSpinner,
                         tpEliteFourUniquePokemonCheckBox),

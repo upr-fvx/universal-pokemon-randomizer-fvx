@@ -611,7 +611,7 @@ public class GameRandomizer {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
         }
 
-        if (settings.get(Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON)) {
+        if (settings.get(Settings.Name.COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON)) {
             trainerPokeRandomizer.randomShinyTrainerPokemon();
         }
     }

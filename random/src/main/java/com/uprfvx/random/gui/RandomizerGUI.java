@@ -133,7 +133,6 @@ public class RandomizerGUI {
 
     //Quality of Life Tweaks
     private JPanel qolTweaksPanel;
-    private JLabel qoltNoneAvailableLabel;
     private JCheckBox qoltFastestTextCheckBox;
     private JCheckBox qoltRunIndoorsCheckBox;
     private JCheckBox qoltNationalDexCheckBox;
@@ -147,7 +146,6 @@ public class RandomizerGUI {
 
     //Balance Tweaks
     private JPanel balanceTweaksPanel;
-    private JLabel btNoneAvailableLabel;
     private JCheckBox btNerfXAccuracyCheckBox;
     private JCheckBox btUpdateCritRateCheckBox;
     private JCheckBox btScalingEXPCheckBox;
@@ -369,6 +367,7 @@ public class RandomizerGUI {
     private JRadioButton tbsUnchangedStyleRadioButton;
     private JRadioButton tbsRandomStyleRadioButton;
     private JCheckBox tbsExtendTeamsCheckBox;
+    private JLabel tbsExcludeLabel;
     private JCheckBox tbsExcludeSingleBattlesCheckBox;
     private JCheckBox tbsExcludeDoubleBattlesCheckBox;
     private JCheckBox tbsExcludeTripleBattlesCheckBox;
@@ -484,7 +483,6 @@ public class RandomizerGUI {
 
     //Tutors
     private JPanel tutorsPanel;
-    private JLabel mtNoExistLabel;
     //--Moves
     private JPanel mtMovesPanel;
     private JRadioButton mtmUnchangedRadioButton;
@@ -562,7 +560,6 @@ public class RandomizerGUI {
 
     //Species Palettes
     private JPanel palettesPanel;
-    private JLabel spalNotExistLabel;
     private JLabel spalPartiallyImplementedLabel;
     private JRadioButton spalUnchangedRadioButton;
     private JRadioButton spalRandomRadioButton;
@@ -625,12 +622,6 @@ public class RandomizerGUI {
     private boolean haveCheckedCustomNames, hasVisitedCustomNamesEditor;
     private boolean unloadGameOnSuccess;
     private final Map<String, String> gameUpdates = new TreeMap<>();
-
-    private final List<String> trainerSettings = new ArrayList<>();
-    private final List<String> trainerSettingToolTips = new ArrayList<>();
-
-    private final List<String> selectableBattleStyles = new ArrayList<>();
-    private final List<String> selectableBattleStylesTooltips = new ArrayList<>();
 
     private BatchRandomizationSettings batchRandomizationSettings;
 
@@ -1356,6 +1347,30 @@ public class RandomizerGUI {
                 component.addComponentListener(autoHidePanelListener);
             }
         }
+
+        // TODO: auto-disable tabbed panes
+
+        AutoHideListener.associate(tpTypeDiversityLabel, settingsManager,
+                Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
+                Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES,
+                Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES);
+        AutoHideListener.associate(tpAdditionalPokemonForLabel, settingsManager,
+                Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
+                Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
+                Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT);
+        AutoHideListener.associate(tpHeldItemsLabel, settingsManager,
+                Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES,
+                Name.TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT,
+                Name.TRAINERS_ADD_HELD_ITEMS_TO_REGULAR);
+        AutoHideListener.associate(tpBetterMovesetsLabel, settingsManager,
+                Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES,
+                Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
+                Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);
+        AutoHideListener.associate(tbsExcludeLabel, settingsManager,
+                Name.BATTLE_STYLE_BAN_SINGLE, Name.BATTLE_STYLE_BAN_DOUBLE,
+                Name.BATTLE_STYLE_BAN_DOUBLE, Name.BATTLE_STYLE_BAN_ROTATION);
+        AutoHideListener.associate(wpMinimumCatchRateLabel, settingsManager,
+                Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
     }
 
     private static class AutoHidePanelListener implements ComponentListener {
@@ -1501,9 +1516,6 @@ public class RandomizerGUI {
     private void initExplicit() {
 
         versionLabel.setText(String.format(bundle.getString("GUI.header.versionLabel.text"), Version.LATEST.name));
-        mtNoExistLabel.setVisible(false);
-        qoltNoneAvailableLabel.setVisible(false);
-        spalNotExistLabel.setVisible(false);
         spalPartiallyImplementedLabel.setVisible(false);
         cpgNotExistLabel.setVisible(false);
         websiteLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
@@ -1569,19 +1581,6 @@ public class RandomizerGUI {
                 100,
                 1
         ));
-
-        List<String> keys = new ArrayList<>(bundle.keySet());
-        Collections.sort(keys);
-        for (String k: keys) {
-            if (k.matches("^GUI\\.tpMain.*\\.text$")) {
-                trainerSettings.add(bundle.getString(k));
-                trainerSettingToolTips.add(k.replace("text","toolTipText"));
-            }
-            if (k.matches("^GUI\\.tpBattleStyle.*\\.text$")) {
-                selectableBattleStyles.add(bundle.getString(k));
-                selectableBattleStylesTooltips.add(k.replace("text","toolTipText"));
-            }
-        }
 
         tpAddToBossTrainersSpinner.setModel(bossTrainerModel);
         tpAddToImportantTrainersSpinner.setModel(importantTrainerModel);
@@ -2860,10 +2859,6 @@ public class RandomizerGUI {
         tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"), "--"));
 		tpAdditionalPokemonForLabel.setVisible(true);
 		tpHeldItemsLabel.setVisible(true);
-        mtNoExistLabel.setVisible(false);
-        qoltNoneAvailableLabel.setVisible(false);
-        btNoneAvailableLabel.setVisible(false);
-        spalNotExistLabel.setVisible(false);
         spalPartiallyImplementedLabel.setVisible(false);
     }
 
@@ -2978,31 +2973,7 @@ public class RandomizerGUI {
 
             settingsManager.unassociateGame();
             settingsManager.associateGame(romHandler);
-            // TODO: make sure settings are reset if not supported at this point
             // TODO: clean up
-
-            boolean canAddPokesToBoss = romHandler.canAddPokemonToBossTrainers();
-            boolean canAddPokesToImportant = romHandler.canAddPokemonToImportantTrainers();
-            boolean canAddPokesToRegular = romHandler.canAddPokemonToRegularTrainers();
-            boolean additionalPokemonAvailable = canAddPokesToBoss || canAddPokesToImportant || canAddPokesToRegular;
-
-            tpAdditionalPokemonForLabel.setVisible(additionalPokemonAvailable);
-
-            boolean canAddHeldItemsToBoss = romHandler.canAddHeldItemsToBossTrainers();
-            boolean canAddHeldItemsToImportant = romHandler.canAddHeldItemsToImportantTrainers();
-            boolean canAddHeldItemsToRegular = romHandler.canAddHeldItemsToRegularTrainers();
-            boolean heldItemsAvailable = canAddHeldItemsToBoss || canAddHeldItemsToImportant || canAddHeldItemsToRegular;
-
-            tpHeldItemsLabel.setVisible(heldItemsAvailable);
-
-
-            boolean canGiveMovesetsToBoss = romHandler.canGiveCustomMovesetsToBossTrainers();
-            boolean canGiveMovesetsToImportant = romHandler.canGiveCustomMovesetsToImportantTrainers();
-            boolean canGiveMovesetsToRegular = romHandler.canGiveCustomMovesetsToRegularTrainers();
-            boolean betterMovesetsAvailable = canGiveMovesetsToBoss || canGiveMovesetsToImportant || canGiveMovesetsToRegular;
-
-            tpBetterMovesetsLabel.setVisible(betterMovesetsAvailable);
-
 
             // Types
             boolean typeSupport = romHandler.hasTypeEffectivenessSupport();
@@ -3013,7 +2984,6 @@ public class RandomizerGUI {
 
             // Graphics
             boolean ppalSupport = romHandler.hasPokemonPaletteSupport();
-            spalNotExistLabel.setVisible(!ppalSupport);
             boolean ppalPartialSupport = romHandler.pokemonPaletteSupportIsPartial();
             spalPartiallyImplementedLabel.setVisible(ppalPartialSupport);
 
@@ -3877,23 +3847,6 @@ public class RandomizerGUI {
             return false;
         }
 
-    }
-
-    private String[] getTrainerSettingsForGeneration(int generation) {
-        List<String> result = new ArrayList<>(trainerSettings);
-        if (generation != 5) {
-            result.remove(bundle.getString("GUI.tpMain3RandomEvenDistributionMainGame.text"));
-        }
-        return result.toArray(new String[0]);
-    }
-
-    private String[] getBattleStylesForGeneration(int generation) {
-        List<String> result = new ArrayList<>(selectableBattleStyles);
-        if (generation <= 4 || generation >= 7) {
-            result.remove(bundle.getString("GUI.foeTab.trainersPanel.battleStylePanel.excludeTripleCheckBox.text"));
-            result.remove(bundle.getString("GUI.foeTab.trainersPanel.battleStylePanel.excludeRotationCheckBox.text"));
-        }
-        return result.toArray(new String[0]);
     }
 
     public static void main(String[] args) {

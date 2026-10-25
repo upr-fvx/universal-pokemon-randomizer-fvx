@@ -27,6 +27,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a Trainer as seen in battle; contains a list of their {@link TrainerPokemon},
@@ -369,6 +370,18 @@ public class Trainer implements Comparable<Trainer> {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns a type shared by all of this Trainer's Pokemon, or null.<br.
+     * If two types are shared, will return the primary type of an arbitrary Species owned by this Trainer,
+     * unless that type is Normal; in this case will return the secondary type.
+     * (essentially, bird trainers will return Flying)
+     */
+    public Type getSharedType() {
+        SpeciesSet trainerPokemonSpecies = this.getPokemon().stream().map(TrainerPokemon::getSpecies)
+                .collect(Collectors.toCollection(SpeciesSet::new));
+        return trainerPokemonSpecies.getSharedType(true);
     }
 
     public enum MultiBattleStatus {

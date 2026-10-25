@@ -323,8 +323,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
             if (group.contains("-")) {
                 group = group.substring(0, group.indexOf('-'));
             }
-            if (group.startsWith("GYM") || group.startsWith("ELITE") ||
-                    ((group.startsWith("CHAMPION") || group.startsWith("THEMED")) && !ignoreNonLeagueGroups)) {
+            if (group.startsWith("GYM") || group.startsWith("ELITE") || group.startsWith("CHAMPION")
+                    || (group.startsWith("THEMED")) && !ignoreNonLeagueGroups) {
                 // Yep this is a group
                 if (!groups.containsKey(group)) {
                     groups.put(group, new ArrayList<>());
@@ -356,9 +356,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         Type typeForTrainer = null;
 
         if (keepTypeThemes) {
-            SpeciesSet trainerPokemonSpecies = tr.getPokemon().stream().map(TrainerPokemon::getSpecies)
-                    .collect(Collectors.toCollection(SpeciesSet::new));
-            typeForTrainer = trainerPokemonSpecies.getSharedType(true);
+            typeForTrainer = tr.getSharedType();
         }
 
         if (randomTypeThemes && typeForTrainer == null) {

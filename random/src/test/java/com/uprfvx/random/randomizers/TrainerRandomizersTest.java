@@ -322,6 +322,53 @@ public class TrainerRandomizersTest extends RandomizerTest {
 
     @ParameterizedTest
     @MethodSource("getRomNames")
+    public void keepTypeThemes_And_RestrictTypeOnlyGymE4_GymE4StillUseHardCodedThemes(String romName) {
+        activateRomHandler(romName);
+
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
+        s.set(Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, true);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        Map<String, Type> hardCodedThemes = romHandler.getGymAndEliteTypeThemes();
+        for (Trainer tr : romHandler.getTrainers()) {
+            if (tr.getTag() == null) continue;
+            for (String group : hardCodedThemes.keySet()) {
+                if (tr.getTag().split("-")[0].equals(group)) {
+                    System.out.println(tr);
+                    Type type = hardCodedThemes.get(group);
+                    System.out.println("Expected type: " + type);
+                    for (TrainerPokemon tp : tr.getPokemon()) {
+                        assertTrue(tp.getSpecies().hasType(type, false));
+                    }
+                }
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void keepTypeThemes_And_RestrictTypeOnlyGymE4_OtherTrainersNotTypeThemed(String romName) {
+        activateRomHandler(romName);
+
+        List<Trainer> typeThemedBefore = romHandler.getTrainers().stream()
+                .filter(tr -> tr.getSharedType() != null).toList();
+
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
+        s.set(Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, true);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        List<Trainer> typeThemedAfter = romHandler.getTrainers().stream()
+                .filter(tr -> tr.getSharedType() != null).toList();
+
+        assertNotEquals(typeThemedBefore, typeThemedAfter);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
     public void keepTypeThemedOrPrimaryWorks(String romName) {
         activateRomHandler(romName);
 

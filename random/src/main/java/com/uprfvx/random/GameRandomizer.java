@@ -598,15 +598,14 @@ public class GameRandomizer {
             trainerPokeRandomizer.randomizeBattleStyle();
         }
 
-        Settings.TrainersMod trainersMod = settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
         Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
-        if ((trainersMod != Settings.TrainersMod.UNCHANGED
+        if (((boolean) settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON)
                 || startersMod != Settings.StartersMod.UNCHANGED)
                 && (boolean) settings.get(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER)) {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if(trainersMod != Settings.TrainersMod.UNCHANGED) {
+        if (settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON)) {
             trainerPokeRandomizer.randomizeTrainerPokes();
         } else if (settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON)) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();

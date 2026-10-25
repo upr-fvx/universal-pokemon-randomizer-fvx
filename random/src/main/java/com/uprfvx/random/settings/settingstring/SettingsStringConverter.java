@@ -225,17 +225,30 @@ public class SettingsStringConverter {
 
 
         // Byte 13: Trainer Pokemon
-        loadEnum(m, d, 13, Settings.Name.RANDOMIZE_TRAINER_POKEMON,
-                Map.of(
-                        0, Settings.TrainersMod.UNCHANGED,
-                        1, Settings.TrainersMod.RANDOM,
-                        2, Settings.TrainersMod.DISTRIBUTED,
-                        3, Settings.TrainersMod.MAINPLAYTHROUGH,
-                        4, Settings.TrainersMod.TYPE_THEMED,
-                        5, Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS,
-                        6, Settings.TrainersMod.KEEP_THEMED,
-                        7, Settings.TrainersMod.KEEP_THEME_OR_PRIMARY
-                ));
+        // Part of the trainer settings are stored as an enum. This enum was broken up with the introduction of the new settings.
+        // (13, 0) is UNCHANGED.
+        // (13, 1) is RANDOM.
+        // (13, 2) is DISTRIBUTED.
+        // (13, 3) is MAINPLAYTHROUGH.
+        // (13, 4) is TYPE_THEMED.
+        // (13, 5) is TYPE_THEMED_ELITE4_GYMS.
+        // (13, 6) is KEEP_THEMED.
+        // (13, 7) is KEEP_THEME_OR_PRIMARY.
+        loadBoolean(m, d, 13, 0, Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        if (restoreState(d[13], 2) || restoreState(d[13], 3)) {
+            m.set(Settings.Name.TRAINERS_DISTRIBUTE_SPECIES_EVENLY, true);
+        }
+        loadBoolean(m, d, 13, 3, Settings.Name.TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY);
+        if (restoreState(d[13], 4) || restoreState(d[13], 5)) {
+            m.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.RANDOM_THEMES);
+        }
+        loadBoolean(m, d, 13, 5, Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4);
+        if (restoreState(d[13], 6) || restoreState(d[13], 7)) {
+            m.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
+        }
+        if (restoreState(d[13], 7)) {
+            m.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.KEEP_PRIMARY);
+        }
 
 
         // Byte 14: Trainers Evolution Level Modifier

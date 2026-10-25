@@ -1768,7 +1768,7 @@ public class RandomizerGUI {
             return;
         }
         if (raceModeCheckBox.isSelected() &&
-                !settingsManager.get(Name.RANDOMIZE_TRAINER_POKEMON).equals(TrainersMod.UNCHANGED) &&
+                settingsManager.get(Name.RANDOMIZE_TRAINER_POKEMON).equals(true) &&
                 settingsManager.get(Name.RANDOMIZE_WILD_ENCOUNTERS).equals(true)) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.raceModeRequirementsDialog.message"));
             return;

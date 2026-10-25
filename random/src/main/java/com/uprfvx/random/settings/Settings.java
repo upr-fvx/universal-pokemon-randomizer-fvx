@@ -162,8 +162,7 @@ public class Settings {
 
         //Trainers Type Restrictions
         // TODO: finish the introduction of new trainer settings:
-        //  - reading the trainer settings from settingsstring
-        //  - rewrite trainer randomizer tests
+        //  - write more trainer randomizer tests to cover new settings/combinations
         //  - make sure all GUI elements have good names / hoverover text
         //Trainers General
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_USE_SIMILAR_STRENGTH, TRAINERS_AVOID_DUPLICATES,
@@ -1128,9 +1127,8 @@ public class Settings {
 
     //region foe pokemon
 
-    public enum TrainersMod {
-        UNCHANGED, RANDOM, DISTRIBUTED, MAINPLAYTHROUGH, TYPE_THEMED,
-        TYPE_THEMED_ELITE4_GYMS, KEEP_THEMED, KEEP_THEME_OR_PRIMARY
+    public enum TrainersTypeMod {
+        UNCHANGED, RANDOM_THEMES, KEEP_PRIMARY
     }
 
     public enum BattleStyleMod {
@@ -1154,10 +1152,6 @@ public class Settings {
 
     private static final Predicate<RomHandler> addHeldItemsToAnyTrainerSupport = rh ->
             rh.canAddHeldItemsToBossTrainers() || rh.canAddHeldItemsToImportantTrainers() || rh.canAddHeldItemsToRegularTrainers();
-
-    public enum TrainersTypeMod {
-        UNCHANGED, RANDOM_THEMES, KEEP_PRIMARY
-    }
 
     public enum TotemPokemonMod {
         UNCHANGED, RANDOM, SIMILAR_STRENGTH

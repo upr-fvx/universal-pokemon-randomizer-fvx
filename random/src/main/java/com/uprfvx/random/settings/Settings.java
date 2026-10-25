@@ -162,6 +162,9 @@ public class Settings {
 
         //Trainers Type Restrictions
         // TODO: finish the introduction of new trainer settings:
+        //  - make sure KEEP_PRIMARY_TYPE + TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4 works
+        //  - make sure TRAINERS_KEEP_TYPE_THEMES + TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4 works
+        //  - figure out how TRAINERS_KEEP_TYPE_THEMES + TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4 + DIVERSE_TYPES should work
         //  - write more trainer randomizer tests to cover new settings/combinations
         //  - make sure all GUI elements have good names / hoverover text
         //Trainers General
@@ -1280,12 +1283,18 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4,
                     Category.TRAINERS_TYPES)
-                    .prerequisite(Name.TRAINERS_TYPE_RESTRICTION, notMatchesEnum(TrainersTypeMod.UNCHANGED))
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            notMatchesEnum(TrainersTypeMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_KEEP_TYPE_THEMES, isTrue)))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_WEIGHT_TYPES,
                     Category.TRAINERS_TYPES)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.RANDOM_THEMES)),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, isFalse)))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,

@@ -883,9 +883,9 @@ public class Species implements Comparable<Species> {
     }
 
     /**
-     * Returns the {@link Species}'s secondary type. If it has no secondary type, it will return null.
+     * Returns the {@link Species}'s primary type. If it has no primary type, it will return null.
      * @param useOriginal Whether to use type data from before randomization.
-     * @return The {@link Species}'s secondary type.
+     * @return The {@link Species}'s primary type.
      */
     public Type getPrimaryType(boolean useOriginal) {
         if(useOriginal) {

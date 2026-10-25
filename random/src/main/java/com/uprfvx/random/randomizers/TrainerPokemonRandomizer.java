@@ -56,7 +56,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         Settings.TrainersTypeMod typeMod = settings.get(Settings.Name.TRAINERS_TYPE_RESTRICTION);
         boolean randomTypeThemes = typeMod == Settings.TrainersTypeMod.RANDOM_THEMES;
         boolean keepPrimaryTypes = typeMod == Settings.TrainersTypeMod.KEEP_PRIMARY;
-        boolean isTypeThemedEliteFourGymOnly = settings.get(Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4);
+        boolean typeRestrictEliteFourGymOnly = settings.get(Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4);
         boolean keepTypeThemes = settings.get(Settings.Name.TRAINERS_KEEP_TYPE_THEMES);
         boolean weightByFrequency = settings.get(Settings.Name.TRAINERS_WEIGHT_TYPES);
 
@@ -86,8 +86,8 @@ public class TrainerPokemonRandomizer extends Randomizer {
         }
 
         // Set up Pokemon pool
-        allowedByType = new TreeMap<>();
         allowed = new SpeciesSet(rSpecService.getSpecies(noLegendaries, includeFormes, false));
+        allowedByType = allowed.sortByType(false);
 
         maybeRestrictToOnlyLocal(useLocalPokemon);
 
@@ -107,7 +107,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
         List<Trainer> currentTrainers = romHandler.getTrainers();
 
         setupTrainerTypes(currentTrainers, randomTypeThemes, keepTypeThemes, weightByFrequency,
-                isTypeThemedEliteFourGymOnly, noLegendaries, includeFormes);
+                typeRestrictEliteFourGymOnly, noLegendaries, includeFormes);
 
         // Randomize the order trainers are randomized in.
         // Leads to less predictable results for various modifiers.
@@ -146,7 +146,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
 
         // Randomize Trainer Pokemon
         for (Trainer t : scrambledTrainers) {
-            chooseRandomPokemonForTrainer(t, keepPrimaryTypes, rivalCarriesStarter,
+            chooseRandomPokemonForTrainer(t, keepPrimaryTypes, typeRestrictEliteFourGymOnly, rivalCarriesStarter,
                     eliteFourUniquePokemon, eliteFourIndices, bossDiversity, importantDiversity, regularDiversity,
                     avoidDuplicates, skipOriginalTeamMembers, eliteFourUniquePokemonNumber, swapMegaEvos,
                     percentageEvoLvlModifier, evolveAsFarAsLegal, bannedFromUnique,
@@ -192,7 +192,6 @@ public class TrainerPokemonRandomizer extends Randomizer {
             return; // no themes to pick
         }
 
-        allowedByType = allowed.sortByType(false);
         typeWeightings = new TreeMap<>();
         totalTypeWeighting = 0;
         initTypeWeightings(noLegendaries, includeFormes);
@@ -378,7 +377,7 @@ public class TrainerPokemonRandomizer extends Randomizer {
      * Randomizes the {@link TrainerPokemon} of a given {@link Trainer}.
      */
     private void chooseRandomPokemonForTrainer(
-            Trainer t, boolean keepPrimaryTypes,
+            Trainer t, boolean keepPrimaryTypes, boolean typeRestrictEliteFourGymOnly,
             boolean rivalCarriesStarter, boolean eliteFourUniquePokemon, List<Integer> eliteFourIndices,
             boolean bossDiversity, boolean importantDiversity, boolean regularDiversity, boolean avoidDuplicates,
             boolean skipOriginalTeamMembers, int eliteFourUniquePokemonNumber, boolean swapMegaEvos,
@@ -411,6 +410,11 @@ public class TrainerPokemonRandomizer extends Randomizer {
         if (skipOriginalTeamMembers) {
             recordTypesAndSpeciesOfOriginalTeamMembers(usedTypes, alreadyPlaced,
                     forceTypeDiverse, avoidDuplicates, trainerPokemonList, typeForTrainer);
+        }
+
+        if (typeRestrictEliteFourGymOnly && keepPrimaryTypes) {
+            keepPrimaryTypes = t.getTag() != null && (t.getTag().startsWith("GYM") ||
+                    t.getTag().startsWith("ELITE") || t.getTag().startsWith("CHAMPION"));
         }
 
         for (int i = 0; i < trainerPokemonList.size(); i++) {

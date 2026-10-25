@@ -529,7 +529,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 }
             }
 
-            Type theme = getThemedTrainerType(tr);
+            Type theme = tr.getSharedType();
             if(gymTypeMap.containsKey(gymTag)) {
                 beforeStrings.add("Forced theme from " + gymTag);
                 theme = gymTypeMap.get(gymTag);
@@ -540,40 +540,75 @@ public class TrainerRandomizersTest extends RandomizerTest {
         }
     }
 
-    private Type getThemedTrainerType(Trainer tr) {
-        Species first = tr.getPokemon().getFirst().getSpecies();
-        Type primary = first.getPrimaryType(true);
-        Type secondary = first.getSecondaryType(true);
-        for (int i = 1; i < tr.getPokemon().size(); i++) {
-            Species pk = tr.getPokemon().get(i).getSpecies();
-            if (secondary != null) {
-                if (secondary != pk.getPrimaryType(true) && secondary != pk.getSecondaryType(true)) {
-                    secondary = null;
-                }
-            }
-            if (primary != pk.getPrimaryType(true) && primary != pk.getSecondaryType(true)) {
-                primary = secondary;
-                secondary = null;
-            }
-            if (primary == null) {
-                return null; //no type is shared, no need to look at the remaining pokémon
-            }
-        }
-
-        //we have a type theme!
-        if (primary == Type.NORMAL && secondary != null) {
-            //Bird override
-            //(Normal is less significant than other types, for example, Flying)
-            return secondary;
-        } else {
-            return primary;
-        }
-
-    }
-
     private void keepTypeThemedCheck(Map<Trainer, List<String>> beforeTrainerStrings, Map<Trainer, Type> typeThemedTrainers,
                                      boolean checkOnlyAdded) {
         keepTypeThemeOrPrimaryCheck(beforeTrainerStrings, typeThemedTrainers, null, checkOnlyAdded);
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void keepPrimaryType_And_RestrictTypeOnlyGymE4_GymE4TrainersKeepPrimaryType(String romName) {
+        activateRomHandler(romName);
+
+        List<Trainer> gymAndE4Trainers = romHandler.getTrainers().stream().filter(
+                tr -> tr.getTag() != null && (tr.getTag().startsWith("GYM") || tr.getTag().startsWith("ELITE")
+                        || tr.getTag().startsWith("CHAMPION")))
+                .toList();
+
+        Map<Trainer, List<Type>> before = getPrimaryTypeMap(gymAndE4Trainers);
+
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.KEEP_PRIMARY);
+        s.set(Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, true);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        for (Trainer tr : before.keySet()) {
+            System.out.println(tr);
+            System.out.println(before.get(tr));
+            for (int i = 0; i < tr.getPokemon().size(); i++) {
+                assertTrue(tr.getPokemon().get(i).getSpecies().hasType(before.get(tr).get(i), false));
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("getRomNames")
+    public void keepPrimaryType_And_RestrictTypeOnlyGymE4_OtherTrainersNotKeepPrimaryType(String romName) {
+        activateRomHandler(romName);
+
+        Map<Trainer, List<Type>> before = getPrimaryTypeMap(romHandler.getTrainers());
+
+        SettingsManager s = createSettingsManager();
+        s.set(Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        s.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.KEEP_PRIMARY);
+        s.set(Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, true);
+        new TrainerPokemonRandomizer(romHandler, s, RND).randomizeTrainerPokes();
+
+        boolean allPrimaryTypesKept = true;
+        for (Trainer tr : before.keySet()) {
+            System.out.println(tr);
+            System.out.println(before.get(tr));
+            for (int i = 0; i < tr.getPokemon().size(); i++) {
+                if (!tr.getPokemon().get(i).getSpecies().hasType(before.get(tr).get(i), false)) {
+                    System.out.println("PRIMARY NOT KEPT (good)");
+                    allPrimaryTypesKept = false;
+                }
+            }
+        }
+
+        assertFalse(allPrimaryTypesKept);
+    }
+
+    private static Map<Trainer, List<Type>> getPrimaryTypeMap(List<Trainer> gymAndE4Trainers) {
+        Map<Trainer, List<Type>> before = new HashMap<>();
+        for (Trainer tr : gymAndE4Trainers) {
+            List<Type> primaryTypes = tr.getPokemon().stream()
+                    .map(tp -> tp.getSpecies().getPrimaryType(false))
+                    .toList();
+            before.put(tr, primaryTypes);
+        }
+        return before;
     }
 
     @ParameterizedTest
@@ -745,7 +780,7 @@ public class TrainerRandomizersTest extends RandomizerTest {
                 if (!e4Types.containsKey(memberTag)) {
                     e4Types.put(memberTag, new ArrayList<>());
                 }
-                e4Types.get(memberTag).add(getThemedTrainerType(tr));
+                e4Types.get(memberTag).add(tr.getSharedType());
                 //TODO: add handling for double-theme battles (e.g. all pokemon are Fire-Fighting)
             }
         }

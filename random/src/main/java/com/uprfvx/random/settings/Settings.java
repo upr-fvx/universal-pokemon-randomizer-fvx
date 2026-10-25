@@ -161,10 +161,6 @@ public class Settings {
         //Trainers General
 
         //Trainers Type Restrictions
-        // TODO: finish the introduction of new trainer settings:
-        //  - figure out how TRAINERS_KEEP_TYPE_THEMES + TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4 + DIVERSE_TYPES should work
-        //  - write more trainer randomizer tests to cover new settings/combinations
-        //  - make sure all GUI elements have good names / hoverover text
         //Trainers General
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_USE_SIMILAR_STRENGTH, TRAINERS_AVOID_DUPLICATES,
         TRAINERS_DISTRIBUTE_SPECIES_EVENLY, TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY, TRAINERS_SWAP_MEGA_EVOLVABLES,

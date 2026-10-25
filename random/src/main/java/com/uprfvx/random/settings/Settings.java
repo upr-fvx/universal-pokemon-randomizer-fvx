@@ -163,7 +163,7 @@ public class Settings {
         //Trainers Type Restrictions
         // TODO: finish the introduction of new trainer settings:
         //  - reading the trainer settings from settingsstring
-        //  - rewriting trainer randomizer to use them / write related tests
+        //  - rewrite trainer randomizer tests
         //  - make sure all GUI elements have good names / hoverover text
         //Trainers General
         RANDOMIZE_TRAINER_POKEMON, TRAINERS_USE_SIMILAR_STRENGTH, TRAINERS_AVOID_DUPLICATES,
@@ -1299,28 +1299,37 @@ public class Settings {
                     Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
                     Category.TRAINERS_TYPES)
                     .prerequisite(
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
-                                            greaterThanValue(0))))
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
+                                            new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
+                                                    greaterThanValue(0))),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES,
                     Category.TRAINERS_TYPES)
                     .prerequisite(
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
-                                            greaterThanValue(0))))
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
+                                            new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
+                                                    greaterThanValue(0))),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.UNCHANGED))))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES,
                     Category.TRAINERS_TYPES)
                     .prerequisite(
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
-                                            greaterThanValue(0))))
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
+                                            new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
+                                                    greaterThanValue(0))),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.UNCHANGED))))
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(

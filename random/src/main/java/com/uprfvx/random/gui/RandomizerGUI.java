@@ -1419,10 +1419,12 @@ public class RandomizerGUI {
     }
 
     private void updateFullyEvolvedAtLvlLabel() {
-        if (tpTrainersEvolveTheirPokemonCheckbox.isSelected()) {
-            int highestEvoLvl = peMakeEvolutionsEasierCheckBox.isSelected()
-                    ? peMakeEvolutionsEasierLvlSlider.getValue() : romHandler.getHighestEvoLvl();
-            int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + tpPercentageEvolutionLevelModifierSpinSlider.getValue() / 100.0));
+        if (settingsManager.get(Name.TRAINERS_EVOLVE_POKEMON)) {
+            int highestEvoLvl = settingsManager.get(Name.SPECIES_EVOLUTIONS_MAKE_EASIER)
+                    ? settingsManager.get(Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL)
+                    : romHandler.getHighestEvoLvl();
+            int percMod = settingsManager.get(Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+            int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + percMod / 100.0));
             tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
                     bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"),
                     Math.clamp(modifiedLevel, 1, 100)));

@@ -1218,22 +1218,17 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 int numPokes = trainer[3] & 0xFF;
                 int pokeOffs = 0;
                 tr.setName(tnames.get(i - 1));
-                int battleType = trainer[2] & 0xFF;
-                switch (battleType) {
-                    case 0:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
-                        break;
-                    case 1:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
-                        originalDoubleTrainers.add(i);
-                        break;
-                    case 2:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.TRIPLE_BATTLE);
-                        break;
-                    case 3:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.ROTATION_BATTLE);
-                        break;
-                }
+
+                int battleStyleID = trainer[2] & 0xFF;
+                BattleStyle battleStyle = switch (battleStyleID) {
+                    case 0 -> BattleStyle.SINGLE_BATTLE;
+                    case 1 -> BattleStyle.DOUBLE_BATTLE;
+                    case 2 -> BattleStyle.TRIPLE_BATTLE;
+                    case 3 -> BattleStyle.ROTATION_BATTLE;
+                    default -> BattleStyle.SINGLE_BATTLE;
+                };
+                tr.setBattleStyle(battleStyle);
+
                 for (int poke = 0; poke < numPokes; poke++) {
                     // Structure is
                     // IV SB LV LV SP SP FRM FRM
@@ -1397,8 +1392,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                 int numPokes = tr.getPokemon().size();
                 trainer[3] = (byte) numPokes;
 
-                if (tr.isForcedDoubleBattle()) {
-                    switch (tr.getCurrBattleStyle().getStyle()) {
+                if (tr.isBattleStyleForciblyChanged()) {
+                    switch (tr.getBattleStyle()) {
                         case SINGLE_BATTLE:
                             if (trainer[2] != 0) {
                                 trainer[2] = 0;
@@ -1408,13 +1403,13 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
                         case DOUBLE_BATTLE:
                             if (trainer[2] != 1) {
                                 trainer[2] = 1;
-                                trainer[12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                                trainer[12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                             }
                             break;
                         case TRIPLE_BATTLE:
                             if (trainer[2] != 2) {
                                 trainer[2] = 2;
-                                trainer[12] |= 0x80; // Flag that needs to be set for trainers not to attack their own pokes
+                                trainer[12] |= (byte) 0x80; // Flag that needs to be set for trainers not to attack their own pokes
                             }
                             break;
                         case ROTATION_BATTLE:
@@ -2520,7 +2515,8 @@ public class Gen5RomHandler extends AbstractDSRomHandler {
         return romEntry.getIntValue("HMMovesForgettableFunctionOffset") != 0;
     }
 
-    private void applyForgettableHMsPatch() {
+    @Override
+    public void makeHMsForgettable() {
         // thanks to totally_anonymous and drayano60
         int offset = romEntry.getIntValue("HMMovesForgettableFunctionOffset");
         if (offset == 0) {

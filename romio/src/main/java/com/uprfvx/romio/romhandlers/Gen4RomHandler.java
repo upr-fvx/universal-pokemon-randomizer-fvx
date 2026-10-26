@@ -2734,7 +2734,7 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
                 int numPokes = trainer[3] & 0xFF;
                 int battleStyle = trainer[16] & 0xFF;
                 if (battleStyle != 0)
-                    tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
+                    tr.setBattleStyle(BattleStyle.DOUBLE_BATTLE);
                 int pokeOffs = 0;
 				tr.setName(tnames.get(i - 1));
                 for (int poke = 0; poke < numPokes; poke++) {
@@ -2860,13 +2860,13 @@ public class Gen4RomHandler extends AbstractDSRomHandler {
 				int numPokes = tr.getPokemon().size();
 				trainer[3] = (byte) numPokes;
 
-				if (tr.isForcedDoubleBattle()) {
+				if (tr.isBattleStyleForciblyChanged()) {
 					// If we set this flag for partner trainers (e.g., Cheryl), then the double wild
 					// battles will turn into trainer battles with glitchy trainers.
 					boolean excludedPartnerTrainer = romEntry.getRomType() != Gen4Constants.Type_HGSS
 							&& Gen4Constants.partnerTrainerIndices.contains(tr.getIndex());
 					if (!excludedPartnerTrainer) {
-						if (tr.getCurrBattleStyle().getStyle() == BattleStyle.Style.DOUBLE_BATTLE) {
+						if (tr.getBattleStyle() == BattleStyle.DOUBLE_BATTLE) {
 							if (trainer[16] == 0) {
 								trainer[16] |= 3;
 							}

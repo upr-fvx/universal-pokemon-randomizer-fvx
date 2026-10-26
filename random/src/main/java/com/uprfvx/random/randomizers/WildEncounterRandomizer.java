@@ -37,7 +37,7 @@ public class WildEncounterRandomizer extends Randomizer {
         boolean similarStrength = settings.get(Settings.Name.WILD_USE_SIMILAR_STRENGTH);
         boolean noLegendaries = settings.get(Settings.Name.WILD_NO_LEGENDARIES);
         boolean balanceShakingGrass = settings.get(Settings.Name.WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL);
-        boolean allowAltFormes = settings.get(Settings.Name.WILD_ALLOW_ALT_FORMES);
+        boolean allowAltFormes = !(boolean) settings.get(Settings.Name.WILD_NO_ALT_FORMES);
         boolean banIrregularAltFormes = settings.get(Settings.Name.LIMIT_NO_TEMPORARY_ALT_FORMES);
         boolean noPrematureEvolutions = settings.get(Settings.Name.LIMIT_NO_PREMATURE_EVOLUTIONS);
         Settings.AbilitiesMod abilitiesMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_ABILITIES);

@@ -4,7 +4,6 @@ import com.uprfvx.random.settings.definitions.*;
 import com.uprfvx.random.settings.restrictions.*;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.romio.constants.SpeciesIDs;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import com.uprfvx.romio.gamedata.Species;
 import com.uprfvx.romio.gamedata.Type;
@@ -89,12 +88,11 @@ public class Settings {
     public enum Name {
         //Note: Names may be rearranged without issue, but after release they should not be changed or removed from this list.
         //If you must rename a setting, keep the old Name in the enum and add it to REMOVED_SETTINGS.
-        RACE_MODE, //TODO: remove after confirming is a GUI-only setting.
 
         // *** GENERAL ***
         //Cosmetic options
         COSMETIC_RANDOM_INTRO_MON, COSMETIC_RANDOMIZE_CATCHING_TUTORIAL, COSMETIC_LOWER_CASE_SPECIES_NAMES,
-        COSMETIC_RANDOMIZE_TRAINER_NAMES, COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES,
+        COSMETIC_RANDOMIZE_TRAINER_NAMES, COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES, COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON,
         //Limit Pokemon
         LIMIT_BAN_GENERATION_1, LIMIT_BAN_GENERATION_2, LIMIT_BAN_GENERATION_3, LIMIT_BAN_GENERATION_4,
         LIMIT_BAN_GENERATION_5, LIMIT_BAN_GENERATION_6, LIMIT_BAN_GENERATION_7, LIMIT_ALLOW_RELATIVES,
@@ -126,7 +124,7 @@ public class Settings {
         //Species' Evolutions
         RANDOMIZE_SPECIES_EVOLUTIONS, SPECIES_EVOLUTIONS_USE_SIMILAR_STRENGTH, SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE,
         SPECIES_EVOLUTIONS_MAX_THREE_STAGES, SPECIES_EVOLUTIONS_NO_CONVERGENCE, SPECIES_EVOLUTIONS_FORCE_CHANGE,
-        SPECIES_EVOLUTIONS_FORCE_GROWTH, SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES, SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
+        SPECIES_EVOLUTIONS_FORCE_GROWTH, SPECIES_EVOLUTIONS_NO_ALT_FORMES, SPECIES_EVOLUTIONS_ADJUST_LEVELS_FOR_STRENGTH,
         SPECIES_EVOLUTIONS_MAKE_POSSIBLE, SPECIES_EVOLUTIONS_MAKE_EASIER, SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL,
         SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, SPECIES_EVOLUTIONS_REMOVE_TIME_BASED,
         SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION,
@@ -136,7 +134,7 @@ public class Settings {
         // *** GIVEN POKEMON ***
         //Starters General
         RANDOMIZE_STARTERS, STARTERS_NO_LEGENDARIES, STARTERS_RANDOMIZE_HELD_ITEMS, STARTERS_BAN_MINOR_HELD_ITEMS,
-        STARTERS_ALLOW_ALT_FORMES,
+        STARTERS_NO_ALT_FORMES,
         //Starters Custom
         STARTER_CUSTOM_1, STARTER_CUSTOM_2, STARTER_CUSTOM_3,
         //Starter Evolutions
@@ -146,8 +144,8 @@ public class Settings {
         //Starter BSTs
         STARTERS_BST_MINIMUM, STARTERS_BST_MAXIMUM,
         //In-Game Trades
-        RANDOMIZE_IN_GAME_TRADES, TRADES_RANDOMIZE_NICKNAMES, TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
-        TRADES_RANDOMIZE_IVS, TRADES_RANDOMIZE_HELD_ITEMS,
+        TRADES_RANDOMIZE_GIVEN, TRADES_RANDOMIZE_REQUESTED, TRADES_RANDOMIZE_NICKNAMES,
+        TRADES_RANDOMIZE_ORIGINAL_TRAINERS, TRADES_RANDOMIZE_IVS, TRADES_RANDOMIZE_HELD_ITEMS,
 
         // *** MOVES AND MOVESETS ***
         //Move Traits
@@ -160,12 +158,19 @@ public class Settings {
 
         // *** FOE POKEMON ***
         //Trainers General
-        RANDOMIZE_TRAINER_POKEMON, TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_USE_SIMILAR_STRENGTH,
-        TRAINERS_AVOID_DUPLICATES, TRAINERS_WEIGHT_TYPES, TRAINERS_USE_LOCAL, TRAINERS_NO_LEGENDARIES,
-        TRAINERS_NO_EARLY_WONDER_GUARD, TRAINERS_ALLOW_ALT_FORMES, TRAINERS_SWAP_MEGA_EVOLVABLES,
-        TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT, TRAINERS_EVOLVE_POKEMON,
-        TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
-        //That's a lot for one category. We should probably organize these more. TODO: that
+
+        //Trainers Type Restrictions
+        //Trainers General
+        RANDOMIZE_TRAINER_POKEMON, TRAINERS_USE_SIMILAR_STRENGTH, TRAINERS_AVOID_DUPLICATES,
+        TRAINERS_DISTRIBUTE_SPECIES_EVENLY, TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY, TRAINERS_SWAP_MEGA_EVOLVABLES,
+        TRAINERS_EVOLVE_POKEMON, TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER, TRAINERS_LEVEL_MODIFIER_PERCENT,
+        //Trainers Species Bans
+        TRAINERS_NO_LEGENDARIES, TRAINERS_NO_ALT_FORMES, TRAINERS_USE_LOCAL, TRAINERS_NO_EARLY_WONDER_GUARD,
+        //Trainers Specific Trainers
+        TRAINERS_RIVAL_CARRIES_STARTER, TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT,
+        //Trainers Types
+        TRAINERS_TYPE_RESTRICTION, TRAINERS_KEEP_TYPE_THEMES, TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, TRAINERS_WEIGHT_TYPES,
+        TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
         //Trainer Movesets
         TRAINERS_BETTER_MOVESETS_FOR_BOSSES, TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
         TRAINERS_BETTER_MOVESETS_FOR_REGULAR,
@@ -175,20 +180,17 @@ public class Settings {
         //Trainers Held Items
         TRAINERS_ADD_HELD_ITEMS_TO_BOSSES, TRAINERS_ADD_HELD_ITEMS_TO_IMPORTANT, TRAINERS_ADD_HELD_ITEMS_TO_REGULAR,
         TRAINERS_HELD_ITEMS_CONSUMABLE_ONLY, TRAINER_HELD_ITEMS_SENSIBLE_ONLY, TRAINERS_HELD_ITEMS_ACES_ONLY,
-        //Trainers Diverse Types
-        TRAINERS_BOSSES_USE_DIVERSE_TYPES, TRAINERS_IMPORTANT_USE_DIVERSE_TYPES, TRAINERS_REGULAR_USE_DIVERSE_TYPES,
-        //Trainers Cosmetic
-        TRAINERS_RANDOM_SHINY_POKEMON,
         //Trainers Battle Styles
-        TRAINERS_RANDOMIZE_BATTLE_STYLE, TRAINERS_SINGLE_STYLE_SELECTION,
+        TRAINERS_RANDOMIZE_BATTLE_STYLE, BATTLE_STYLE_EXTEND_TEAMS, BATTLE_STYLE_BAN_SINGLE, BATTLE_STYLE_BAN_DOUBLE,
+        BATTLE_STYLE_BAN_TRIPLE, BATTLE_STYLE_BAN_ROTATION,
         //Totem Pokemon
         RANDOMIZE_TOTEM_POKEMON, TOTEMS_RANDOMIZE_ALLIES, TOTEMS_RANDOMIZE_AURAS, TOTEMS_RANDOMIZE_HELD_ITEMS,
-        TOTEMS_ALLOW_ALT_FORMES, TOTEMS_LEVEL_MODIFIER_PERCENT,
+        TOTEMS_NO_ALT_FORMES, TOTEMS_LEVEL_MODIFIER_PERCENT,
 
         // *** WILD ENCOUNTERS ***
         //Wild General
         RANDOMIZE_WILD_ENCOUNTERS, WILD_NO_LEGENDARIES,  WILD_CATCH_EM_ALL, WILD_USE_SIMILAR_STRENGTH,
-        WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, WILD_ALLOW_ALT_FORMES,
+        WILD_SIMILAR_STRENGTH_BALANCE_LOW_LEVEL, WILD_NO_ALT_FORMES,
         //Wild Replacement Zone
         WILD_REPLACEMENT_ZONE, WILD_SPLIT_REPLACEMENT_ZONE_BY_ENCOUNTER_TYPES, WILD_REMOVE_TIME_BASED,
         //Wild Types
@@ -200,7 +202,7 @@ public class Settings {
         WILD_HELD_ITEMS_BAN_MINOR, WILD_LEVEL_MODIFIER_PERCENT, WILD_ALL_SPECIES_CALL_ALLIES,
         //Static Encounters
         RANDOMIZE_STATIC_ENCOUNTERS, STATICS_FULL_RANDOM_OVER_600_BST, STATICS_LIMIT_MAIN_GAME_LEGENDARIES,
-        STATICS_ALLOW_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC,
+        STATICS_NO_ALT_FORMES, STATICS_SWAP_MEGA_EVOLVABLES, STATICS_FIX_MUSIC,
         STATICS_LEVEL_MODIFIER_PERCENT, STATICS_BALANCE_FOSSIL_LEVELS,
 
         // *** MOVE TEACHERS ***
@@ -263,8 +265,8 @@ public class Settings {
         //(I mean, there's no room for it, so probably not, but logically... kinda?)
 
         // *** FOE POKEMON ***
-        TRAINERS_GENERAL, TRAINERS_MOVESETS, TRAINERS_ADDITIONAL_POKEMON, TRAINERS_HELD_ITEMS, TRAINERS_DIVERSE_TYPES,
-        TRAINERS_BATTLE_STYLE, TRAINERS_COSMETIC, TOTEM_POKEMON,
+        TRAINERS_GENERAL, TRAINERS_SPECIES_BANS, TRAINERS_SPECIFIC_TRAINERS, TRAINERS_TYPES, TRAINERS_MOVESETS,
+        TRAINERS_ADDITIONAL_POKEMON, TRAINERS_HELD_ITEMS, TRAINERS_BATTLE_STYLE, TRAINERS_COSMETIC, TOTEM_POKEMON,
 
         // *** WILD ENCOUNTERS ***
         WILD_GENERAL, WILD_REPLACEMENT_ZONE, WILD_TYPES, WILD_EVOLUTIONS, WILD_POST_TWEAKS, STATIC_ENCOUNTERS,
@@ -302,61 +304,12 @@ public class Settings {
 
     //region general options
 
-    //Limit Species restrictions
-    private static final SettingRestriction generation1SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_1, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_1, true)
-            ); //The support check shouldn't matter for Gen 1, but this future-proofs it for romhacks I guess?
-
-    private static final SettingRestriction generation2SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_2, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_2, true)
-            );
-
-    private static final SettingRestriction generation3SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_3, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_3, true)
-            );
-
-    private static final SettingRestriction generation4SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_4, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_4, true)
-            );
-
-    private static final SettingRestriction generation5SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_5, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_5, true)
-            );
-
-    private static final SettingRestriction generation6SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_6, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_6, true)
-            );
-
-    private static final SettingRestriction generation7SpeciesAvailable =
-            new MultiSettingRestriction(false, false,
-                    new SimpleSettingRestriction<>(Name.LIMIT_BAN_GENERATION_7, isFalse),
-                    new SettingSupportRestriction(Name.LIMIT_BAN_GENERATION_7, true)
-            );
-
-
     // needs to be up here since general options relies on it
     private static final SettingRestriction notEvolveEveryLevelRestriction = new SimpleSettingRestriction<>(
             Name.RANDOMIZE_SPECIES_EVOLUTIONS, notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL)
     );
 
     public static final List<SettingDefinition<?>> GENERAL_OPTIONS = List.of(
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.RACE_MODE,
-                    Category.COSMETIC_OPTIONS)
-                    .build(), //TODO: confirm safe to remove
-
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.COSMETIC_RANDOM_INTRO_MON,
                     Category.COSMETIC_OPTIONS)
@@ -376,85 +329,85 @@ public class Settings {
                     Name.LIMIT_BAN_GENERATION_1,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))  //Gen 2 because there's no sense letting a user ban ALL species
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_2,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(2))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_3,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(3))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_4,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(4))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_5,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(5))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation6SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_6,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_6,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(6))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation7SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_7))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_BAN_GENERATION_7,
                     Category.LIMIT_POKEMON)
                     .supported(atLeastGeneration(7))
-                    .prerequisite(new MultiSettingRestriction(true, false,
-                            generation1SpeciesAvailable,
-                            generation2SpeciesAvailable,
-                            generation3SpeciesAvailable,
-                            generation4SpeciesAvailable,
-                            generation5SpeciesAvailable,
-                            generation6SpeciesAvailable))
+                    .prerequisite(new SettingsAvailableRestriction(
+                            Name.LIMIT_BAN_GENERATION_1,
+                            Name.LIMIT_BAN_GENERATION_2,
+                            Name.LIMIT_BAN_GENERATION_3,
+                            Name.LIMIT_BAN_GENERATION_4,
+                            Name.LIMIT_BAN_GENERATION_5,
+                            Name.LIMIT_BAN_GENERATION_6))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.LIMIT_ALLOW_RELATIVES,
@@ -805,7 +758,7 @@ public class Settings {
                     .prerequisite(Name.RANDOMIZE_SPECIES_EVOLUTIONS, matchesEnum(EvolutionsMod.RANDOM))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES,
+                    Name.SPECIES_EVOLUTIONS_NO_ALT_FORMES,
                     Category.SPECIES_EVOLUTIONS)
                     .prerequisite(Name.RANDOMIZE_SPECIES_EVOLUTIONS, notMatchesEnum(EvolutionsMod.UNCHANGED))
                     .supported(ofGeneration(7))
@@ -925,10 +878,6 @@ public class Settings {
         UNCHANGED, RANDOM_MATCHING, COMPLETELY_RANDOM, SIMILAR_STRENGTH
     }
 
-    public enum InGameTradesMod {
-        UNCHANGED, RANDOMIZE_GIVEN, RANDOMIZE_GIVEN_AND_REQUESTED
-    }
-
     public static final List<SettingDefinition<?>> STARTERS_AND_TRADES = List.of(
             new EnumSettingDefinition.Builder<>(
                     Name.RANDOMIZE_STARTERS,
@@ -1004,7 +953,7 @@ public class Settings {
                     .prerequisite(anyStarterIsRandomRestriction)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STARTERS_ALLOW_ALT_FORMES,
+                    Name.STARTERS_NO_ALT_FORMES,
                     Category.STARTERS_GENERAL)
                     .prerequisite(anyStarterIsRandomRestriction)
                     .supported(RomHandler::hasStarterAltFormes)
@@ -1035,32 +984,31 @@ public class Settings {
                     .supportedMaximums(overrideForGeneration(1, BaseStats.STAT_MAX * 5))
                     .build(),
 
-            new SimpleSettingDefinition.Builder<>(
-                    Name.RANDOMIZE_IN_GAME_TRADES,
-                    Category.IN_GAME_TRADES,
-                    InGameTradesMod.UNCHANGED)
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRADES_RANDOMIZE_GIVEN,
+                    Category.IN_GAME_TRADES)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRADES_RANDOMIZE_REQUESTED,
+                    Category.IN_GAME_TRADES)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_NICKNAMES,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_IVS,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRADES_RANDOMIZE_HELD_ITEMS,
                     Category.IN_GAME_TRADES)
-                    .prerequisite(Name.RANDOMIZE_IN_GAME_TRADES, notMatchesEnum(InGameTradesMod.UNCHANGED))
                     .supported(notOfGeneration(1))
                     .build()
     );
@@ -1167,14 +1115,17 @@ public class Settings {
 
     //region foe pokemon
 
-    public enum TrainersMod {
-        UNCHANGED, RANDOM, DISTRIBUTED, MAINPLAYTHROUGH, TYPE_THEMED,
-        TYPE_THEMED_ELITE4_GYMS, KEEP_THEMED, KEEP_THEME_OR_PRIMARY
+    public enum TrainersTypeMod {
+        UNCHANGED, RANDOM_THEMES, KEEP_PRIMARY
+    }
+
+    public enum BattleStyleMod {
+        UNCHANGED, RANDOM
     }
 
     private static final SettingRestriction anyTrainerPokemonIsRandomRestriction = new MultiSettingRestriction(
             true, false,
-            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, notMatchesEnum(TrainersMod.UNCHANGED)),
+            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
             new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT, greaterThanValue(0)),
             new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT, greaterThanValue(0)),
             new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT, greaterThanValue(0))
@@ -1203,10 +1154,170 @@ public class Settings {
     }
 
     public static final List<SettingDefinition<?>> FOE_POKEMON = List.of(
-            new SimpleSettingDefinition.Builder<>(
+            new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.RANDOMIZE_TRAINER_POKEMON,
+                    Category.TRAINERS_GENERAL)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_USE_SIMILAR_STRENGTH,
+                    Category.TRAINERS_GENERAL)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_AVOID_DUPLICATES,
+                    Category.TRAINERS_GENERAL)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_DISTRIBUTE_SPECIES_EVENLY,
+                    Category.TRAINERS_GENERAL)
+                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY,
+                    Category.TRAINERS_GENERAL)
+                    .prerequisite(Name.TRAINERS_DISTRIBUTE_SPECIES_EVENLY, isTrue)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_SWAP_MEGA_EVOLVABLES,
+                    Category.TRAINERS_GENERAL)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .supported(RomHandler::hasMegaEvolutions)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_EVOLVE_POKEMON,
+                    Category.TRAINERS_GENERAL)
+                    .prerequisite(
+                            new MultiSettingRestriction(false, false,
+                                    notEvolveEveryLevelRestriction,
+                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
+                                            notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
+                    .build(),
+            new NumericSettingDefinition.Builder<>(
+                    Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER,
                     Category.TRAINERS_GENERAL,
-                    TrainersMod.UNCHANGED)
+                    0,
+                    -100, 155)
+                    .prerequisite(Name.TRAINERS_EVOLVE_POKEMON, isTrue)
+                    .build(),
+            new NumericSettingDefinition.Builder<>(
+                    Name.TRAINERS_LEVEL_MODIFIER_PERCENT,
+                    Category.TRAINERS_GENERAL,
+                    0,
+                    -100, 155)
+                    .build(),
+
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_NO_LEGENDARIES,
+                    Category.TRAINERS_SPECIES_BANS)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_NO_ALT_FORMES,
+                    Category.TRAINERS_SPECIES_BANS)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .supported(RomHandler::hasFunctionalFormes)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_USE_LOCAL,
+                    Category.TRAINERS_SPECIES_BANS)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_NO_EARLY_WONDER_GUARD,
+                    Category.TRAINERS_SPECIES_BANS)
+                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
+                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
+                    .build(),
+
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_RIVAL_CARRIES_STARTER,
+                    Category.TRAINERS_SPECIFIC_TRAINERS)
+                    .prerequisite(
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
+                                                    notMatchesEnum(StartersMod.UNCHANGED)),
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)),
+                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
+                                            notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
+                    .build(),
+            new NumericSettingDefinition.Builder<>(
+                    Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT,
+                    Category.TRAINERS_SPECIFIC_TRAINERS,
+                    0,
+                    0, 2)
+                    // This prerequisite can't be "anyTrainerPokemonIsRandomRestriction",
+                    // because it requires that the E4+Champion get 2 random mons (to force to be unique).
+                    // TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT might seem like it would do that,
+                    // but in most games the E4 members have 5 mons, and the Champion a full team of 6!
+                    // (and filling up a team beyond 6 is not allowed)
+                    // So that option doesn't give the E4+Champion 2 random mons.
+                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)
+                    .build(),
+
+            new SimpleSettingDefinition.Builder<>(
+                    Name.TRAINERS_TYPE_RESTRICTION,
+                    Category.TRAINERS_TYPES,
+                    TrainersTypeMod.UNCHANGED)
+                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_KEEP_TYPE_THEMES,
+                    Category.TRAINERS_TYPES)
+                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, isTrue)
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4,
+                    Category.TRAINERS_TYPES)
+                    .prerequisite(new MultiSettingRestriction(true, false,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            notMatchesEnum(TrainersTypeMod.UNCHANGED)),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_KEEP_TYPE_THEMES, isTrue)))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_WEIGHT_TYPES,
+                    Category.TRAINERS_TYPES)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.RANDOM_THEMES)),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4, isFalse)))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
+                    Category.TRAINERS_TYPES)
+                    .prerequisite(
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
+                                            new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
+                                                    greaterThanValue(0))),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.UNCHANGED))))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES,
+                    Category.TRAINERS_TYPES)
+                    .prerequisite(
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
+                                            new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
+                                                    greaterThanValue(0))),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.UNCHANGED))))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES,
+                    Category.TRAINERS_TYPES)
+                    .prerequisite(
+                            new MultiSettingRestriction(false, false,
+                                    new MultiSettingRestriction(true, false,
+                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON, isTrue),
+                                            new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
+                                                    greaterThanValue(0))),
+                                    new SimpleSettingRestriction<>(Name.TRAINERS_TYPE_RESTRICTION,
+                                            matchesEnum(TrainersTypeMod.UNCHANGED))))
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -1227,6 +1338,7 @@ public class Settings {
                     .prerequisite(noMetronomeModeRestriction)
                     .supported(RomHandler::canGiveCustomMovesetsToRegularTrainers)
                     .build(),
+
             new NumericSettingDefinition.Builder<>(
                     Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
                     Category.TRAINERS_ADDITIONAL_POKEMON,
@@ -1248,6 +1360,7 @@ public class Settings {
                     0, 5)
                     .supported(RomHandler::canAddPokemonToRegularTrainers)
                     .build(),
+
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.TRAINERS_ADD_HELD_ITEMS_TO_BOSSES,
                     Category.TRAINERS_HELD_ITEMS)
@@ -1281,151 +1394,70 @@ public class Settings {
                     .prerequisite(addHeldItemsToAnyTrainerRestriction)
                     .supported(addHeldItemsToAnyTrainerSupport)
                     .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
-                    Category.TRAINERS_DIVERSE_TYPES)
-                    .prerequisite(
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
-                                            notMatchesEnum(TrainersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT,
-                                            greaterThanValue(0))))
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES,
-                    Category.TRAINERS_DIVERSE_TYPES)
-                    .prerequisite(
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
-                                            notMatchesEnum(TrainersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_IMPORTANT_ADDITIONAL_POKEMON_COUNT,
-                                            greaterThanValue(0))))
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_REGULAR_USE_DIVERSE_TYPES,
-                    Category.TRAINERS_DIVERSE_TYPES)
-                    .prerequisite(
-                            new MultiSettingRestriction(true, false,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
-                                            notMatchesEnum(TrainersMod.UNCHANGED)),
-                                    new SimpleSettingRestriction<>(Name.TRAINERS_REGULAR_ADDITIONAL_POKEMON_COUNT,
-                                            greaterThanValue(0))))
-                    .build(),
-
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_RIVAL_CARRIES_STARTER,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(
-                            new MultiSettingRestriction(false, false,
-                                    new MultiSettingRestriction(true, false,
-                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_STARTERS,
-                                                    notMatchesEnum(StartersMod.UNCHANGED)),
-                                            new SimpleSettingRestriction<>(Name.RANDOMIZE_TRAINER_POKEMON,
-                                                    notMatchesEnum(TrainersMod.UNCHANGED))),
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
-                                            notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_USE_SIMILAR_STRENGTH,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_AVOID_DUPLICATES,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_WEIGHT_TYPES,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_USE_LOCAL,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_NO_LEGENDARIES,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_NO_EARLY_WONDER_GUARD,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .supported(rh -> rh.abilitiesPerSpecies() != 0)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_ALLOW_ALT_FORMES,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .supported(RomHandler::hasFunctionalFormes)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_SWAP_MEGA_EVOLVABLES,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .supported(RomHandler::hasMegaEvolutions)
-                    .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_RANDOM_SHINY_POKEMON,
-                    Category.TRAINERS_COSMETIC)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction)
-                    .supported(atLeastGeneration(7))
-                    .build(),
-            new NumericSettingDefinition.Builder<>(
-                    Name.TRAINERS_POKEMON_LEAGUE_UNIQUE_COUNT,
-                    Category.TRAINERS_GENERAL,
-                    0,
-                    0, 2)
-                    // This prerequisite can't be "anyTrainerPokemonIsRandomRestriction",
-                    // because it requires that the E4+Champion get 2 random mons (to force to be unique).
-                    // TRAINERS_BOSSES_ADDITIONAL_POKEMON_COUNT might seem like it would do that,
-                    // but in most games the E4 members have 5 mons, and the Champion a full team of 6!
-                    // (and filling up a team beyond 6 is not allowed)
-                    // So that option doesn't give the E4+Champion 2 random mons.
-                    .prerequisite(Name.RANDOMIZE_TRAINER_POKEMON, notMatchesEnum(TrainersMod.UNCHANGED))
-                    .build(),
-
-            new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TRAINERS_EVOLVE_POKEMON,
-                    Category.TRAINERS_GENERAL)
-                    .prerequisite(
-                            new MultiSettingRestriction(false, false,
-                                    notEvolveEveryLevelRestriction,
-                                    new SimpleSettingRestriction<>(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
-                                            notMatchesEnum(EvolutionsMod.RANDOM_EVERY_LEVEL))))
-                    .build(),
-            new NumericSettingDefinition.Builder<>(
-                    Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER,
-                    Category.TRAINERS_GENERAL,
-                    0,
-                    -100, 155)
-                    .prerequisite(Name.TRAINERS_EVOLVE_POKEMON, isTrue)
-                    .build(),
-            new NumericSettingDefinition.Builder<>(
-                    Name.TRAINERS_LEVEL_MODIFIER_PERCENT,
-                    Category.TRAINERS_GENERAL,
-                    0,
-                    -100, 155)
-                    .build(),
 
             new SimpleSettingDefinition.Builder<>(
                     Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
                     Category.TRAINERS_BATTLE_STYLE,
-                    BattleStyle.Modification.UNCHANGED)
+                    BattleStyleMod.UNCHANGED)
                     .supported(atLeastGeneration(3))
                     .build(),
-            new EnumSettingDefinition.Builder<>(
-                    Name.TRAINERS_SINGLE_STYLE_SELECTION,
-                    Category.TRAINERS_BATTLE_STYLE,
-                    BattleStyle.Style.SINGLE_BATTLE)
-                    .prerequisite(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyle.Modification.SINGLE_STYLE))
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_EXTEND_TEAMS,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM))
                     .supported(atLeastGeneration(3))
-                    .supportedStates(Map.of(
-                            BattleStyle.Style.TRIPLE_BATTLE, ofGeneration(5, 6),
-                            BattleStyle.Style.ROTATION_BATTLE, ofGeneration(5, 6)))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_SINGLE,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                                    Name.BATTLE_STYLE_BAN_TRIPLE,
+                                    Name.BATTLE_STYLE_BAN_ROTATION
+                            )))
+                    .supported(atLeastGeneration(3))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_SINGLE,
+                                    Name.BATTLE_STYLE_BAN_TRIPLE,
+                                    Name.BATTLE_STYLE_BAN_ROTATION
+                            )))
+                    .supported(atLeastGeneration(3))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_TRIPLE,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_SINGLE,
+                                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                                    Name.BATTLE_STYLE_BAN_ROTATION
+                            )))
+                    .supported(ofGeneration(5, 6))
+                    .build(),
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.BATTLE_STYLE_BAN_ROTATION,
+                    Category.TRAINERS_BATTLE_STYLE)
+                    .prerequisite(new MultiSettingRestriction(false, false,
+                            new SimpleSettingRestriction<>(
+                                    Name.TRAINERS_RANDOMIZE_BATTLE_STYLE, matchesEnum(BattleStyleMod.RANDOM)),
+                            new SettingsAvailableRestriction(
+                                    Name.BATTLE_STYLE_BAN_SINGLE,
+                                    Name.BATTLE_STYLE_BAN_DOUBLE,
+                                    Name.BATTLE_STYLE_BAN_TRIPLE
+                            )))
+                    .supported(ofGeneration(5, 6))
                     .build(),
 
             new SimpleSettingDefinition.BooleanBuilder<>(
@@ -1436,10 +1468,9 @@ public class Settings {
                     Name.COSMETIC_RANDOMIZE_TRAINER_CLASS_NAMES,
                     Category.TRAINERS_COSMETIC)
                     .build(),
-            new SimpleSettingDefinition.BooleanBuilder<>( // TODO: this appears twice. remedy
-                    Name.TRAINERS_RANDOM_SHINY_POKEMON,
+            new SimpleSettingDefinition.BooleanBuilder<>(
+                    Name.COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON,
                     Category.TRAINERS_COSMETIC)
-                    .prerequisite(anyTrainerPokemonIsRandomRestriction) //why does this need randomized Pokémon?
                     .supported(atLeastGeneration(7))
                     .build(),
 
@@ -1467,7 +1498,7 @@ public class Settings {
                     .supported(RomHandler::hasTotemPokemon)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.TOTEMS_ALLOW_ALT_FORMES,
+                    Name.TOTEMS_NO_ALT_FORMES,
                     Category.TOTEM_POKEMON)
                     .supported(RomHandler::hasTotemPokemon)
                     .prerequisite(
@@ -1575,7 +1606,7 @@ public class Settings {
                     .prerequisite(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.WILD_ALLOW_ALT_FORMES,
+                    Name.WILD_NO_ALT_FORMES,
                     Category.WILD_GENERAL)
                     .prerequisite(Name.RANDOMIZE_WILD_ENCOUNTERS, isTrue)
                     .supported(RomHandler::hasWildAltFormes)
@@ -1653,7 +1684,7 @@ public class Settings {
                     .supported(rh -> rh.canChangeStaticPokemon() && rh.hasMainGameLegendaries())
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
-                    Name.STATICS_ALLOW_ALT_FORMES,
+                    Name.STATICS_NO_ALT_FORMES,
                     Category.STATIC_ENCOUNTERS)
                     .prerequisite(Name.RANDOMIZE_STATIC_ENCOUNTERS, notMatchesEnum(StaticPokemonMod.UNCHANGED))
                     .supported(rh -> rh.canChangeStaticPokemon() && rh.hasStaticAltFormes())

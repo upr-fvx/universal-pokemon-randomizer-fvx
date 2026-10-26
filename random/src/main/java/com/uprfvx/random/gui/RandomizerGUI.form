@@ -246,28 +246,19 @@
                     <children>
                       <hspacer id="8051a">
                         <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.2" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <hspacer id="ae67">
                         <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="fbb46" class="javax.swing.JLabel" binding="qoltNoneAvailableLabel">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.tweaksNoneLabel.text"/>
-                        </properties>
-                      </component>
                       <component id="34c71" class="javax.swing.JCheckBox" binding="qoltFastestTextCheckBox">
                         <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -278,7 +269,7 @@
                       </component>
                       <component id="a438f" class="javax.swing.JCheckBox" binding="qoltRunIndoorsCheckBox">
                         <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -289,7 +280,7 @@
                       </component>
                       <component id="4d476" class="javax.swing.JCheckBox" binding="qoltNationalDexCheckBox">
                         <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -300,7 +291,7 @@
                       </component>
                       <component id="79820" class="javax.swing.JCheckBox" binding="qoltReusableTMsCheckBox">
                         <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -310,7 +301,7 @@
                       </component>
                       <component id="68e29" class="javax.swing.JCheckBox" binding="qoltForgettableHMsCheckBox">
                         <constraints>
-                          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -320,7 +311,7 @@
                       </component>
                       <vspacer id="80add">
                         <constraints>
-                          <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
@@ -332,7 +323,7 @@
                       </vspacer>
                       <component id="c9140" class="javax.swing.JCheckBox" binding="qoltRunWithoutRunningShoesCheckBox">
                         <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -343,7 +334,7 @@
                       </component>
                       <component id="996fe" class="javax.swing.JCheckBox" binding="qoltFasterHPAndEXPBarsCheckBox">
                         <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -354,7 +345,7 @@
                       </component>
                       <component id="2c54f" class="javax.swing.JCheckBox" binding="qoltFastDistortionWorldCheckBox">
                         <constraints>
-                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -365,7 +356,7 @@
                       </component>
                       <component id="4ae35" class="javax.swing.JCheckBox" binding="qoltDisableLowHPMusicCheckBox">
                         <constraints>
-                          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -376,7 +367,7 @@
                       </component>
                       <component id="cfa5e" class="javax.swing.JCheckBox" binding="qoltFastEggsCheckBox">
                         <constraints>
-                          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -396,7 +387,7 @@
                     <children>
                       <component id="95582" class="javax.swing.JCheckBox" binding="btNerfXAccuracyCheckBox">
                         <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -407,7 +398,7 @@
                       </component>
                       <component id="df016" class="javax.swing.JCheckBox" binding="btUpdateCritRateCheckBox">
                         <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -418,7 +409,7 @@
                       </component>
                       <component id="6befa" class="javax.swing.JCheckBox" binding="btScalingEXPCheckBox">
                         <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -429,7 +420,7 @@
                       </component>
                       <component id="84cb6" class="javax.swing.JCheckBox" binding="btForceChallengeModeCheckBox">
                         <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -440,31 +431,22 @@
                       </component>
                       <hspacer id="25c86">
                         <constraints>
-                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.1" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <vspacer id="782ee">
                         <constraints>
-                          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.1"/>
                         </constraints>
                       </vspacer>
                       <hspacer id="b72fe">
                         <constraints>
-                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="c64a2" class="javax.swing.JLabel" binding="btNoneAvailableLabel">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.tweaksNoneLabel.text"/>
-                        </properties>
-                      </component>
                       <vspacer id="a6e3c">
                         <constraints>
                           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
@@ -473,7 +455,7 @@
                       </vspacer>
                       <component id="2692d" class="javax.swing.JCheckBox" binding="btNoEVYieldsCheckBox">
                         <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -517,7 +499,7 @@
                       </hspacer>
                       <vspacer id="80831">
                         <constraints>
-                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="7" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.1"/>
                         </constraints>
                       </vspacer>
@@ -575,6 +557,17 @@
                           <enabled value="false"/>
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.cosmeticPanel.lowerCaseSpeciesNamesCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.cosmeticPanel.lowerCaseSpeciesNamesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="87931" class="javax.swing.JCheckBox" binding="coRandomShinyTrainerPokemonCheckBox">
+                        <constraints>
+                          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.cosmeticPanel.randomShiniesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.generalTab.cosmeticPanel.randomShiniesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                     </children>
@@ -1291,15 +1284,15 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.noConvergenceCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="fb98c" class="javax.swing.JCheckBox" binding="peAllowAltFormesCheckBox">
+                          <component id="fb98c" class="javax.swing.JCheckBox" binding="peNoAltFormesCheckBox">
                             <constraints>
                               <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
                               <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.allowAltFormesCheckBox.toolTipText"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.randomizePanel.noAltFormesCheckBox.toolTipText"/>
                             </properties>
                           </component>
                           <vspacer id="90756">
@@ -1702,15 +1695,15 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <component id="cad77" class="javax.swing.JCheckBox" binding="spAllowAltFormesCheckBox">
+                      <component id="cad77" class="javax.swing.JCheckBox" binding="spNoAltFormesCheckBox">
                         <constraints>
                           <grid row="4" column="13" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.startersPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="d05d5" class="javax.swing.JCheckBox" binding="spNoLegendariesCheckBox">
@@ -2024,7 +2017,7 @@
                     <children>
                       <hspacer id="963c8">
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -2034,6 +2027,62 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
+                      <vspacer id="d7f82">
+                        <constraints>
+                          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <component id="719e9" class="javax.swing.JCheckBox" binding="igtRandomizeOTsCheckBox">
+                        <constraints>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeOTsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeOTsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="e1478" class="javax.swing.JCheckBox" binding="igtRandomizeIVsCheckBox">
+                        <constraints>
+                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeIVsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeIVsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <hspacer id="40623">
+                        <constraints>
+                          <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.1" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <component id="5eee5" class="javax.swing.JCheckBox" binding="igtRandomizeNicknamesCheckBox">
+                        <constraints>
+                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeNicknamesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeNicknamesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <component id="2d4fb" class="javax.swing.JCheckBox" binding="igtRandomizeItemsCheckBox">
+                        <constraints>
+                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeItemsCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeItemsCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
                       <component id="9e02f" class="javax.swing.JCheckBox" binding="igtRandomizeGivenSpeciesCheckBox">
                         <constraints>
                           <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -2054,62 +2103,6 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeRequestedCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <vspacer id="d7f82">
-                        <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <component id="5eee5" class="javax.swing.JCheckBox" binding="igtRandomizeNicknamesCheckBox">
-                        <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeNicknamesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeNicknamesCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="719e9" class="javax.swing.JCheckBox" binding="igtRandomizeOTsCheckBox">
-                        <constraints>
-                          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeOTsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeOTsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="e1478" class="javax.swing.JCheckBox" binding="igtRandomizeIVsCheckBox">
-                        <constraints>
-                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeIVsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeIVsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="2d4fb" class="javax.swing.JCheckBox" binding="igtRandomizeItemsCheckBox">
-                        <constraints>
-                          <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeItemsCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.givenTab.tradesPanel.randomizeItemsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <hspacer id="40623">
-                        <constraints>
-                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.1" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                     </children>
                   </grid>
                   <component id="1f364" class="javax.swing.JLabel" binding="giftsInStaticsLabel">
@@ -2516,7 +2509,7 @@
                     <children>
                       <hspacer id="b875b">
                         <constraints>
-                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -2526,127 +2519,15 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <vspacer id="2342b">
-                        <constraints>
-                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <hspacer id="41124">
-                        <constraints>
-                          <grid row="0" column="9" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <component id="1ea47" class="javax.swing.JCheckBox" binding="tpRandomizeTrainerPokemonCheckBox">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomizeCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomizeCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <grid id="92f66" binding="tpTypesPanel" layout-manager="GridBagLayout">
-                        <constraints>
-                          <grid row="1" column="5" row-span="2" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties/>
-                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.foeTab.trainersPanel.typesPanel.title"/>
-                        <children>
-                          <component id="51709" class="javax.swing.JRadioButton" binding="tpTypesUnrestrictedRadioButton">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.noneRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.noneRadioButton.toolTipText"/>
-                            </properties>
-                          </component>
-                          <vspacer id="700ab">
-                            <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                          </vspacer>
-                          <component id="a9da3" class="javax.swing.JRadioButton" binding="tpRandomTypeThemesRadioButton">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.randomThemesRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.randomThemesRadioButton.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="9ff91" class="javax.swing.JRadioButton" binding="tpKeepTypeThemesRadioButton">
-                            <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <selected value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepThemesRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepThemesRadioButton.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="52acf" class="javax.swing.JRadioButton" binding="tpKeepThemesOrPrimaryRadioButton">
-                            <constraints>
-                              <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepThemesOrPrimaryRadioButton.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepThemesOrPrimaryRadioButton.toolTipText"/>
-                            </properties>
-                          </component>
-                          <hspacer id="20443">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                          </hspacer>
-                          <component id="5ff08" class="javax.swing.JCheckBox" binding="tpWeightTypesCheckBox">
-                            <constraints>
-                              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.weightTypesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.weightTypesCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="2815a" class="javax.swing.JCheckBox" binding="tpTypeGymsAndElitesOnlyCheckBox">
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.gymsAndElitesOnlyCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.gymsAndElitesOnlyCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
-                          <hspacer id="1539b">
-                            <constraints>
-                              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                          </hspacer>
-                        </children>
-                      </grid>
                       <hspacer id="8702a">
                         <constraints>
-                          <grid row="1" column="10" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.1" weighty="0.0"/>
+                          <grid row="3" column="7" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
-                      <grid id="df9fa" layout-manager="GridBagLayout">
+                      <grid id="df9fa" binding="tpBIRPanel" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="2" column="1" row-span="15" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="4" row-span="4" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -2838,41 +2719,9 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.heldItemsAceOnlyCheckBox.tooltip"/>
                             </properties>
                           </component>
-                          <component id="f6301" class="javax.swing.JLabel" binding="tpTypeDiversityLabel">
-                            <constraints>
-                              <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityLabel.text"/>
-                            </properties>
-                          </component>
-                          <component id="a8dcf" class="javax.swing.JCheckBox" binding="tpBossTrainersTypeDiversityCheckBox">
-                            <constraints>
-                              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.bossTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityBossTrainersCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="1e59a" class="javax.swing.JCheckBox" binding="tpImportantTrainersTypeDiversityCheckBox">
-                            <constraints>
-                              <grid row="9" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <selected value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.importantTrainersCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityImportantTrainersCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
                           <grid id="6ff4f" binding="tpBattleStylePanel" layout-manager="GridBagLayout">
                             <constraints>
-                              <grid row="10" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <grid row="8" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties/>
@@ -2902,7 +2751,7 @@
                                   <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.battleStylePanel.randomRadioButton.toolTipText"/>
                                 </properties>
                               </component>
-                              <component id="9e10f" class="javax.swing.JLabel">
+                              <component id="9e10f" class="javax.swing.JLabel" binding="tbsExcludeLabel">
                                 <constraints>
                                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                                   <gridbag weightx="0.0" weighty="0.0"/>
@@ -2924,7 +2773,7 @@
                               <hspacer id="31a6a">
                                 <constraints>
                                   <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                  <gridbag weightx="0.1" weighty="0.0"/>
                                 </constraints>
                               </hspacer>
                               <component id="6bae5" class="javax.swing.JCheckBox" binding="tbsExcludeDoubleBattlesCheckBox">
@@ -2969,9 +2818,136 @@
                               </component>
                             </children>
                           </grid>
-                          <component id="f705b" class="javax.swing.JCheckBox" binding="tpRegularTrainersTypeDiversityCheckBox">
+                          <vspacer id="12855">
                             <constraints>
-                              <grid row="9" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.1"/>
+                            </constraints>
+                          </vspacer>
+                        </children>
+                      </grid>
+                      <component id="1ea47" class="javax.swing.JCheckBox" binding="tpRandomizeTrainerPokemonCheckBox">
+                        <constraints>
+                          <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomizeCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomizeCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <grid id="92f66" binding="tpTypesPanel" layout-manager="GridBagLayout">
+                        <constraints>
+                          <grid row="3" column="1" row-span="1" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties/>
+                        <border type="none" title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.foeTab.trainersPanel.typesPanel.title"/>
+                        <children>
+                          <component id="51709" class="javax.swing.JRadioButton" binding="tpTypesUnrestrictedRadioButton">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.noneRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.noneRadioButton.toolTipText"/>
+                            </properties>
+                          </component>
+                          <vspacer id="700ab">
+                            <constraints>
+                              <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </vspacer>
+                          <component id="a9da3" class="javax.swing.JRadioButton" binding="tpRandomTypeThemesRadioButton">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.randomThemesRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.randomThemesRadioButton.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="52acf" class="javax.swing.JRadioButton" binding="tpKeepPrimaryRadioButton">
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepPrimaryRadioButton.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepPrimaryRadioButton.toolTipText"/>
+                            </properties>
+                          </component>
+                          <hspacer id="20443">
+                            <constraints>
+                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <component id="5ff08" class="javax.swing.JCheckBox" binding="tpWeightTypesCheckBox">
+                            <constraints>
+                              <grid row="2" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.weightTypesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.weightTypesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="2815a" class="javax.swing.JCheckBox" binding="tpTypeGymsAndElitesOnlyCheckBox">
+                            <constraints>
+                              <grid row="1" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.gymsAndElitesOnlyCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.gymsAndElitesOnlyCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="edff3" class="javax.swing.JLabel" binding="tpTypeDiversityLabel">
+                            <constraints>
+                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag top="5" left="0" bottom="0" right="0" weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityLabel.text"/>
+                            </properties>
+                          </component>
+                          <component id="ef939" class="javax.swing.JCheckBox" binding="tpImportantTrainersTypeDiversityCheckBox">
+                            <constraints>
+                              <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <selected value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.importantTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityImportantTrainersCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <hspacer id="5a0e7">
+                            <constraints>
+                              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.1" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <component id="5f1" class="javax.swing.JCheckBox" binding="tpBossTrainersTypeDiversityCheckBox">
+                            <constraints>
+                              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.common.bossTrainersCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityBossTrainersCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="be4f" class="javax.swing.JCheckBox" binding="tpRegularTrainersTypeDiversityCheckBox">
+                            <constraints>
+                              <grid row="6" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -2980,62 +2956,44 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typeDiversityRegularTrainersCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <vspacer id="12855">
+                          <vspacer id="172b9">
                             <constraints>
-                              <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.1"/>
+                              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </vspacer>
+                          <component id="40c1c" class="javax.swing.JCheckBox" binding="tpKeepTypeThemesCheckBox">
+                            <constraints>
+                              <grid row="0" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepThemesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.typesPanel.keepThemesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
                         </children>
                       </grid>
-                      <hspacer id="4e1ca">
+                      <vspacer id="9730b">
                         <constraints>
-                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <hspacer id="ce08e">
-                        <constraints>
-                          <grid row="2" column="8" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.1" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
-                      <vspacer id="a34a5">
-                        <constraints>
-                          <grid row="17" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="11" column="3" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="28e4c" class="javax.swing.JCheckBox" binding="tpEliteFourUniquePokemonCheckBox">
+                      <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpTrainersEvolveTheirPokemonCheckbox">
                         <constraints>
-                          <grid row="4" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="5" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <selected value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.eliteFourUniquePokemonCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.eliteFourUniquePokemonCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.trainersEvolveTheirPokemonCheckbox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.trainersEvolveTheirPokemonCheckbox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
-                        <constraints>
-                          <grid row="5" column="7" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                        </properties>
-                      </component>
-                      <hspacer id="5a3c8">
-                        <constraints>
-                          <grid row="5" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </hspacer>
                       <component id="abcd1" class="javax.swing.JLabel" binding="tpCalculatedFullyEvolvedLvlLabel">
                         <constraints>
-                          <grid row="11" column="7" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="7" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3046,7 +3004,7 @@
                       </component>
                       <component id="63823" class="com.uprfvx.random.gui.SpinSlider" binding="tpPercentageEvolutionLevelModifierSpinSlider" default-binding="true">
                         <constraints>
-                          <grid row="9" column="7" row-span="2" col-span="3" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3055,20 +3013,20 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.PercentageEvolutionLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="d6ea4" class="javax.swing.JCheckBox" binding="tpTrainersEvolveTheirPokemonCheckbox">
+                      <component id="670de" class="com.uprfvx.random.gui.SpinSlider" binding="tpPercentageLevelModifierSpinSlider" default-binding="true">
                         <constraints>
-                          <grid row="8" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="10" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.trainersEvolveTheirPokemonCheckbox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.trainersEvolveTheirPokemonCheckbox.toolTipText"/>
+                          <enabled value="true"/>
+                          <preferredSize width="225" height="47"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierSpinSlider.toolTipText"/>
                         </properties>
                       </component>
                       <component id="8428b" class="javax.swing.JCheckBox" binding="tpPercentageLevelModifierCheckBox" default-binding="true">
                         <constraints>
-                          <grid row="13" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="9" column="4" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3077,9 +3035,27 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierCheckBox.toolTipText"/>
                         </properties>
                       </component>
+                      <vspacer id="7c29c">
+                        <constraints>
+                          <grid row="8" column="5" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
+                      <hspacer id="9fdd">
+                        <constraints>
+                          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.1" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
+                      <vspacer id="cb147">
+                        <constraints>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                      </vspacer>
                       <grid id="3dc4f" binding="tpInnerPanel" layout-manager="GridBagLayout">
                         <constraints>
-                          <grid row="3" column="5" row-span="13" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                          <grid row="4" column="1" row-span="7" col-span="2" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties/>
@@ -3087,57 +3063,25 @@
                         <children>
                           <hspacer id="52fe3">
                             <constraints>
-                              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
+                              <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.1" weighty="0.0"/>
                             </constraints>
                           </hspacer>
-                          <component id="34a10" class="javax.swing.JCheckBox" binding="tpRandomShinyTrainerPokemonCheckBox">
-                            <constraints>
-                              <grid row="10" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomShiniesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.randomShiniesCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
                           <vspacer id="5dc62">
                             <constraints>
-                              <grid row="11" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
+                              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.1"/>
                             </constraints>
                           </vspacer>
-                          <component id="886ea" class="javax.swing.JCheckBox" binding="tpDistributeInMainGameOnly">
-                            <constraints>
-                              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.distributeInMainGameOnlyCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.distributeInMainGameOnlyCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
                           <hspacer id="ed520">
                             <constraints>
-                              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                           </hspacer>
-                          <component id="25cfb" class="javax.swing.JCheckBox" binding="tpAvoidDuplicatesCheckBox">
-                            <constraints>
-                              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.avoidDuplicatesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.avoidDuplicatesCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
                           <component id="b329c" class="javax.swing.JCheckBox" binding="tpDistributeSpeciesCheckBox">
                             <constraints>
-                              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3145,53 +3089,9 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.distributeSpeciesCheckBox.toolTipText"/>
                             </properties>
                           </component>
-                          <component id="82ca5" class="javax.swing.JCheckBox" binding="tpUseLocalPokemonCheckBox">
-                            <constraints>
-                              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.useLocalPokemon.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.useLocalPokemon.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="acf1a" class="javax.swing.JCheckBox" binding="tpDontUseLegendariesCheckBox" default-binding="true">
-                            <constraints>
-                              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noLegendariesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noLegendariesCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="d0471" class="javax.swing.JCheckBox" binding="tpNoEarlyWonderGuardCheckBox">
-                            <constraints>
-                              <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noEarlyWonderGuardCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noEarlyWonderGuardCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
-                          <component id="be65d" class="javax.swing.JCheckBox" binding="tpAllowAlternateFormesCheckBox">
-                            <constraints>
-                              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                              <gridbag weightx="0.0" weighty="0.0"/>
-                            </constraints>
-                            <properties>
-                              <enabled value="false"/>
-                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.allowAlternateFormesCheckBox.toolTipText"/>
-                            </properties>
-                          </component>
                           <component id="af4d1" class="javax.swing.JCheckBox" binding="tpSwapMegaEvosCheckBox">
                             <constraints>
-                              <grid row="9" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="4" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3202,7 +3102,7 @@
                           </component>
                           <component id="22cfb" class="javax.swing.JCheckBox" binding="tpSimilarStrengthCheckBox">
                             <constraints>
-                              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3211,9 +3111,30 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.similarStrengthCheckBox.toolTipText"/>
                             </properties>
                           </component>
+                          <component id="25cfb" class="javax.swing.JCheckBox" binding="tpAvoidDuplicatesCheckBox">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.avoidDuplicatesCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.avoidDuplicatesCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="886ea" class="javax.swing.JCheckBox" binding="tpDistributeInMainGameOnly">
+                            <constraints>
+                              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.distributeInMainGameOnlyCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.distributeInMainGameOnlyCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
                           <component id="c6902" class="javax.swing.JCheckBox" binding="tpRivalCarriesStarterCheckBox">
                             <constraints>
-                              <grid row="8" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <grid row="6" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                               <gridbag weightx="0.0" weighty="0.0"/>
                             </constraints>
                             <properties>
@@ -3222,37 +3143,101 @@
                               <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.rivalCarriesStarterCheckBox.toolTipText"/>
                             </properties>
                           </component>
+                          <component id="28e4c" class="javax.swing.JCheckBox" binding="tpEliteFourUniquePokemonCheckBox">
+                            <constraints>
+                              <grid row="7" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                              <selected value="false"/>
+                              <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.eliteFourUniquePokemonCheckBox.text"/>
+                              <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.eliteFourUniquePokemonCheckBox.toolTipText"/>
+                            </properties>
+                          </component>
+                          <component id="727d5" class="javax.swing.JSpinner" binding="tpEliteFourUniquePokemonSpinner">
+                            <constraints>
+                              <grid row="7" column="2" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties>
+                              <enabled value="false"/>
+                            </properties>
+                          </component>
+                          <hspacer id="bd848">
+                            <constraints>
+                              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </hspacer>
+                          <vspacer id="65703">
+                            <constraints>
+                              <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                          </vspacer>
+                          <grid id="536a9" binding="tpBanSpeciesPanel" layout-manager="GridBagLayout">
+                            <constraints>
+                              <grid row="0" column="3" row-span="7" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                              <gridbag weightx="0.0" weighty="0.0"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="acf1a" class="javax.swing.JCheckBox" binding="tpDontUseLegendariesCheckBox" default-binding="true">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <enabled value="false"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noLegendariesCheckBox.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noLegendariesCheckBox.toolTipText"/>
+                                </properties>
+                              </component>
+                              <component id="be65d" class="javax.swing.JCheckBox" binding="tpNoAlternateFormesCheckBox">
+                                <constraints>
+                                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <enabled value="false"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noAlternateFormesCheckBox.toolTipText"/>
+                                </properties>
+                              </component>
+                              <component id="82ca5" class="javax.swing.JCheckBox" binding="tpUseLocalPokemonCheckBox">
+                                <constraints>
+                                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <enabled value="false"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.useLocalPokemon.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.useLocalPokemon.toolTipText"/>
+                                </properties>
+                              </component>
+                              <component id="d0471" class="javax.swing.JCheckBox" binding="tpNoEarlyWonderGuardCheckBox">
+                                <constraints>
+                                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.0"/>
+                                </constraints>
+                                <properties>
+                                  <enabled value="false"/>
+                                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noEarlyWonderGuardCheckBox.text"/>
+                                  <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.noEarlyWonderGuardCheckBox.toolTipText"/>
+                                </properties>
+                              </component>
+                              <vspacer id="5bed4">
+                                <constraints>
+                                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                                  <gridbag weightx="0.0" weighty="0.1"/>
+                                </constraints>
+                              </vspacer>
+                            </children>
+                          </grid>
                         </children>
                       </grid>
-                      <vspacer id="55f50">
-                        <constraints>
-                          <grid row="16" column="5" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <vspacer id="bc04a">
-                        <constraints>
-                          <grid row="7" column="7" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <vspacer id="ed09f">
-                        <constraints>
-                          <grid row="12" column="7" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
-                      <component id="670de" class="com.uprfvx.random.gui.SpinSlider" binding="tpPercentageLevelModifierSpinSlider" default-binding="true">
-                        <constraints>
-                          <grid row="14" column="7" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="true"/>
-                          <preferredSize width="225" height="47"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.trainersPanel.percentageLevelModifierSpinSlider.toolTipText"/>
-                        </properties>
-                      </component>
                     </children>
                   </grid>
                   <hspacer id="66d2">
@@ -3302,7 +3287,7 @@
                       </component>
                       <hspacer id="d7892">
                         <constraints>
-                          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -3412,7 +3397,7 @@
                       </grid>
                       <component id="ab28f" class="com.uprfvx.random.gui.SpinSlider" binding="totpPercentageLevelModifierSpinSlider">
                         <constraints>
-                          <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="5" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3421,7 +3406,7 @@
                       </component>
                       <component id="69ebe" class="javax.swing.JCheckBox" binding="totpPercentageLevelModifierCheckBox">
                         <constraints>
-                          <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -3432,24 +3417,13 @@
                       </component>
                       <component id="94ffc" class="javax.swing.JCheckBox" binding="totpRandomizeHeldItemsCheckBox">
                         <constraints>
-                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.randomizeHeldItemsCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomizeHeldItemsCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="555b9" class="javax.swing.JCheckBox" binding="totpAllowAltFormesCheckBox">
-                        <constraints>
-                          <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.allowAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="ddde3" class="javax.swing.JRadioButton" binding="totpRandomRadioButton">
@@ -3474,6 +3448,23 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.randomSimilarStrengthRadioButton.toolTipText"/>
                         </properties>
                       </component>
+                      <component id="45461" class="javax.swing.JCheckBox" binding="totpNoAltFormesCheckBox">
+                        <constraints>
+                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.0" weighty="0.0"/>
+                        </constraints>
+                        <properties>
+                          <enabled value="false"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.foeTab.totemPanel.noAltFormesCheckBox.toolTipText"/>
+                        </properties>
+                      </component>
+                      <hspacer id="976f4">
+                        <constraints>
+                          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <gridbag weightx="0.1" weighty="0.0"/>
+                        </constraints>
+                      </hspacer>
                     </children>
                   </grid>
                 </children>
@@ -3894,15 +3885,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.sosForAll.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="fc590" class="javax.swing.JCheckBox" binding="wpAllowAltFormesCheckBox">
+                      <component id="fc590" class="javax.swing.JCheckBox" binding="wpNoAltFormesCheckBox">
                         <constraints>
                           <grid row="5" column="5" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.randomPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <vspacer id="2efca">
@@ -4076,15 +4067,15 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.randomize600BSTCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="d9fc" class="javax.swing.JCheckBox" binding="seAllowAltFormesCheckBox">
+                      <component id="d9fc" class="javax.swing.JCheckBox" binding="seNoAltFormesCheckBox">
                         <constraints>
                           <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
                           <enabled value="false"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.allowAlternateFormesCheckBox.text"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.allowAltFormesCheckBox.toolTipText"/>
+                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.common.noAlternateFormesCheckBox.text"/>
+                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.wildTab.staticsPanel.noAltFormesCheckBox.toolTipText"/>
                         </properties>
                       </component>
                       <component id="9c5fc" class="javax.swing.JCheckBox" binding="seLimitMainGameLegendariesCheckBox">
@@ -4631,16 +4622,6 @@
                           </component>
                         </children>
                       </grid>
-                      <component id="5bbc3" class="javax.swing.JLabel" binding="mtNoExistLabel">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <enabled value="true"/>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.teachingTab.tutorsPanel.movesPanel.noExistLabel.text"/>
-                        </properties>
-                      </component>
                     </children>
                   </grid>
                 </children>
@@ -5350,15 +5331,6 @@
                           <enabled value="false"/>
                           <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.shinyFromNormalCheckBox.text"/>
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.shinyFromNormalCheckBox.toolTipText"/>
-                        </properties>
-                      </component>
-                      <component id="75dcd" class="javax.swing.JLabel" binding="spalNotExistLabel">
-                        <constraints>
-                          <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.palettesPanel.notExistLabel"/>
                         </properties>
                       </component>
                       <component id="7a268" class="javax.swing.JLabel" binding="spalPartiallyImplementedLabel">

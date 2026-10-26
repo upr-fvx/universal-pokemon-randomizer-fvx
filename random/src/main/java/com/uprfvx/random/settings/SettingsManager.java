@@ -695,7 +695,7 @@ public class SettingsManager {
      */
     private <T extends Serializable> void valueTypeCheck(T value, SettingDefinition<?> definition) {
         if(value.getClass() != definition.getType()) {
-            throw new IllegalArgumentException("Wrong type given for setting \"" + definition.getName() +
+            throw new IllegalArgumentException("Wrong type given for setting \"" + definition.getName() + "\n" +
                     "Type given: " + value.getClass().getName() + "\n" +
                     "Type needed: " + definition.getType().getName());
         }

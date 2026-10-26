@@ -28,11 +28,7 @@ public class TrainerMovesetRandomizer extends Randomizer {
     public void randomizeTrainerMovesets() {
         Settings.EvolutionsMod evolutionsMod = settings.get(Settings.Name.RANDOMIZE_SPECIES_EVOLUTIONS);
         boolean isCyclicEvolutions = evolutionsMod == Settings.EvolutionsMod.RANDOM_EVERY_LEVEL;
-        BattleStyle battleStyle = new BattleStyle(
-                settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE),
-                settings.get(Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION)
-        );
-        boolean isOnlyMultiBattles = battleStyle.isOnlyMultiBattles();
+        boolean isOnlyMultiBattles = settings.get(Settings.Name.BATTLE_STYLE_BAN_SINGLE);
         boolean betterBossMovesets = settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES);
         boolean betterImportantMovesets = settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT);
         boolean betterRegularMovesets = settings.get(Settings.Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);

@@ -17,8 +17,8 @@ public class TradeRandomizer extends Randomizer {
     }
 
     public void randomizeIngameTrades() {
-        Settings.InGameTradesMod mod = settings.get(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
-        boolean randomizeRequest = mod == Settings.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED;
+        boolean randomizeGiven = settings.get(Settings.Name.TRADES_RANDOMIZE_GIVEN);
+        boolean randomizeRequest = settings.get(Settings.Name.TRADES_RANDOMIZE_REQUESTED);
         boolean randomNickname = settings.get(Settings.Name.TRADES_RANDOMIZE_NICKNAMES);
         boolean randomOT = settings.get(Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
         boolean randomStats = settings.get(Settings.Name.TRADES_RANDOMIZE_IVS);
@@ -65,27 +65,31 @@ public class TradeRandomizer extends Randomizer {
         for (InGameTrade trade : trades) {
             // pick new given pokemon
             Species oldgiven = trade.getGivenSpecies();
-            Species given = rSpecService.randomSpecies(random);
-            while (usedGivens.contains(given)) {
-                given = rSpecService.randomSpecies(random);
+            if (randomizeGiven) {
+                Species given = rSpecService.randomSpecies(random);
+                while (usedGivens.contains(given)) {
+                    given = rSpecService.randomSpecies(random);
+                }
+                usedGivens.add(given);
+                trade.getGivenSpeciesHolder().setSpecies(given);
+                randomizeGivenCosmeticForme(trade);
+                changesMade = true;
             }
-            usedGivens.add(given);
-            trade.getGivenSpeciesHolder().setSpecies(given);
-            randomizeGivenCosmeticForme(trade);
 
             // requested pokemon?
             if (oldgiven == trade.getRequestedSpecies()) {
                 // preserve trades for the same pokemon
-                trade.setRequestedSpecies(given);
+                trade.setRequestedSpecies(trade.getGivenSpecies());
             } else if (randomizeRequest) {
                 if (trade.getRequestedSpecies() != null) {
                     Species request = rSpecService.randomSpecies(random);
-                    while (usedRequests.contains(request) || request == given) {
+                    while (usedRequests.contains(request) || request == trade.getGivenSpecies()) {
                         request = rSpecService.randomSpecies(random);
                     }
                     usedRequests.add(request);
                     trade.setRequestedSpecies(request);
                 }
+                changesMade = true;
             }
 
             // nickname?
@@ -96,6 +100,7 @@ public class TradeRandomizer extends Randomizer {
                 }
                 usedNicknames.add(nickname);
                 trade.setNickname(nickname);
+                changesMade = true;
             } else if (trade.getNickname().equalsIgnoreCase(oldgiven.getName())) {
                 // change the name for sanity
                 trade.setNickname(trade.getGivenSpecies().getName());
@@ -109,6 +114,7 @@ public class TradeRandomizer extends Randomizer {
                 usedOTs.add(ot);
                 trade.setOtName(ot);
                 trade.setOtId(random.nextInt(65536));
+                changesMade = true;
             }
 
             if (randomStats) {
@@ -116,16 +122,17 @@ public class TradeRandomizer extends Randomizer {
                 for (int i = 0; i < trade.getIVs().length; i++) {
                     trade.getIVs()[i] = random.nextInt(maxIV);
                 }
+                changesMade = true;
             }
 
             if (randomItem) {
                 trade.setHeldItem(possibleItems.get(random.nextInt(possibleItems.size())));
+                changesMade = true;
             }
         }
 
         // things that the game doesn't support should just be ignored
         romHandler.setInGameTrades(trades);
-        changesMade = true;
     }
 
     /**

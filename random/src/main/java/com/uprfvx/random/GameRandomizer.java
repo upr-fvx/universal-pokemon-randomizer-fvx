@@ -32,7 +32,6 @@ import com.uprfvx.random.updaters.MoveUpdater;
 import com.uprfvx.random.updaters.SpeciesBaseStatUpdater;
 import com.uprfvx.random.updaters.TypeEffectivenessUpdater;
 import com.uprfvx.random.updaters.Updater;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -179,7 +178,7 @@ public class GameRandomizer {
                 evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer, moveNameRandomizer,
                 speciesMovesetRandomizer, trainerPokeRandomizer, trainerMovesetRandomizer, trainerNameRandomizer,
                 wildEncounterRandomizer, encHeldItemRandomizer, tmtMoveRandomizer, tmhmtCompRandomizer, itemRandomizer,
-                typeEffRandomizer, paletteRandomizer, miscTweakRandomizer);
+                typeEffRandomizer, paletteRandomizer);
     }
 
     public Results randomize(final String filename) {
@@ -581,6 +580,7 @@ public class GameRandomizer {
         // 3. Set trainers to be double battles and add extra Pokemon if necessary
         // 4. Modify rivals to carry starters
         // 5. Randomize Trainer Pokemon (or evolve if not randomizing, i.e., UNCHANGED and no additional Pkmn)
+        // 6. Randomly set Trainer Pokemon to be shiny
 
         if (!settings.isDefault(Settings.Name.TRAINERS_LEVEL_MODIFIER_PERCENT)) {
             trainerPokeRandomizer.applyTrainerLevelModifier();
@@ -593,23 +593,26 @@ public class GameRandomizer {
             trainerPokeRandomizer.addTrainerPokemon();
         }
 
-        BattleStyle.Modification battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
-        if (battleStyleMod != BattleStyle.Modification.UNCHANGED) {
-            trainerPokeRandomizer.modifyBattleStyle();
+        Settings.BattleStyleMod battleStyleMod = settings.get(Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE);
+        if (battleStyleMod != Settings.BattleStyleMod.UNCHANGED) {
+            trainerPokeRandomizer.randomizeBattleStyle();
         }
 
-        Settings.TrainersMod trainersMod = settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON);
         Settings.StartersMod startersMod = settings.get(Settings.Name.RANDOMIZE_STARTERS);
-        if ((trainersMod != Settings.TrainersMod.UNCHANGED
+        if (((boolean) settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON)
                 || startersMod != Settings.StartersMod.UNCHANGED)
                 && (boolean) settings.get(Settings.Name.TRAINERS_RIVAL_CARRIES_STARTER)) {
             trainerPokeRandomizer.makeRivalCarryStarter();
         }
 
-        if(trainersMod != Settings.TrainersMod.UNCHANGED) {
+        if (settings.get(Settings.Name.RANDOMIZE_TRAINER_POKEMON)) {
             trainerPokeRandomizer.randomizeTrainerPokes();
         } else if (settings.get(Settings.Name.TRAINERS_EVOLVE_POKEMON)) {
             trainerPokeRandomizer.evolveTrainerPokemonAsFarAsLegal();
+        }
+
+        if (settings.get(Settings.Name.COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON)) {
+            trainerPokeRandomizer.randomShinyTrainerPokemon();
         }
     }
 
@@ -697,12 +700,7 @@ public class GameRandomizer {
     }
 
     private void maybeRandomizeInGameTrades() {
-        Settings.InGameTradesMod mod = settings.get(Settings.Name.RANDOMIZE_IN_GAME_TRADES);
-        switch (mod) {
-            case RANDOMIZE_GIVEN:
-            case RANDOMIZE_GIVEN_AND_REQUESTED:
-                tradeRandomizer.randomizeIngameTrades();
-        }
+        tradeRandomizer.randomizeIngameTrades();
     }
 
     private void maybeRandomizeFieldItems() {

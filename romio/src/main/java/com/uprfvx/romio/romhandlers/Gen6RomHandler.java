@@ -1916,21 +1916,15 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 int trClassID = isORAS ? readWord(trainer,2) : trainer[1] & 0xFF;
                 tr.setTrainerclass(trainerClasses.get(trClassID));
                 int offset = isORAS ? 6 : 2;
-                int battleType = trainer[offset] & 0xFF;
-                switch (battleType) {
-                    case 0:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.SINGLE_BATTLE);
-                        break;
-                    case 1:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.DOUBLE_BATTLE);
-                        break;
-                    case 2:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.TRIPLE_BATTLE);
-                        break;
-                    case 3:
-                        tr.getCurrBattleStyle().setStyle(BattleStyle.Style.ROTATION_BATTLE);
-                        break;
-                }
+                int battleStyleID = trainer[offset] & 0xFF;
+                BattleStyle battleStyle = switch (battleStyleID) {
+                    case 0 -> BattleStyle.SINGLE_BATTLE;
+                    case 1 -> BattleStyle.DOUBLE_BATTLE;
+                    case 2 -> BattleStyle.TRIPLE_BATTLE;
+                    case 3 -> BattleStyle.ROTATION_BATTLE;
+                    default -> BattleStyle.SINGLE_BATTLE;
+                };
+                tr.setBattleStyle(battleStyle);
                 int numPokes = trainer[offset+1] & 0xFF;
                 boolean healer = trainer[offset+13] != 0;
                 int pokeOffs = 0;
@@ -2059,8 +2053,8 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                 int numPokes = tr.getPokemon().size();
                 trainer[offset+3] = (byte) numPokes;
 
-                if (tr.isForcedDoubleBattle()) {
-                    switch (tr.getCurrBattleStyle().getStyle()) {
+                if (tr.isBattleStyleForciblyChanged()) {
+                    switch (tr.getBattleStyle()) {
                         case SINGLE_BATTLE:
                             if (trainer[offset + 2] != 0) {
                                 trainer[offset + 2] = 0;

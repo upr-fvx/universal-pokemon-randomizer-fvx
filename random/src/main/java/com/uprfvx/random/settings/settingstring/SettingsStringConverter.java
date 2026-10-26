@@ -1,12 +1,9 @@
 package com.uprfvx.random.settings.settingstring;
 
-// TODO: what is the version?
-
 import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.SettingsUpdater;
-import com.uprfvx.romio.gamedata.BattleStyle;
 import com.uprfvx.romio.gamedata.ExpCurve;
 import filefunctions.IOFunctions;
 
@@ -113,7 +110,7 @@ public class SettingsStringConverter {
 
         if ((int) checksum.getValue() != crc) {
             throw new IllegalArgumentException("Checksum mismatch");
-        };
+        }
     }
 
     // m and d are short so they take less space in the function calls
@@ -186,7 +183,7 @@ public class SettingsStringConverter {
                 ));
         loadBoolean(m, d, 4, 4, Settings.Name.STARTERS_RANDOMIZE_HELD_ITEMS);
         loadBoolean(m, d, 4, 5, Settings.Name.STARTERS_BAN_MINOR_HELD_ITEMS);
-        loadBoolean(m, d, 4, 6, Settings.Name.STARTERS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 4, 6, Settings.Name.STARTERS_NO_ALT_FORMES, true);
         loadBoolean(m, d, 4, 7, Settings.Name.STARTERS_BASIC_ONLY);
         if(restoreState(d[4], 3)) {
             //This bit was "Random Basic with Two Evos", which is now three independent settings.
@@ -228,17 +225,30 @@ public class SettingsStringConverter {
 
 
         // Byte 13: Trainer Pokemon
-        loadEnum(m, d, 13, Settings.Name.RANDOMIZE_TRAINER_POKEMON,
-                Map.of(
-                        0, Settings.TrainersMod.UNCHANGED,
-                        1, Settings.TrainersMod.RANDOM,
-                        2, Settings.TrainersMod.DISTRIBUTED,
-                        3, Settings.TrainersMod.MAINPLAYTHROUGH,
-                        4, Settings.TrainersMod.TYPE_THEMED,
-                        5, Settings.TrainersMod.TYPE_THEMED_ELITE4_GYMS,
-                        6, Settings.TrainersMod.KEEP_THEMED,
-                        7, Settings.TrainersMod.KEEP_THEME_OR_PRIMARY
-                ));
+        // Part of the trainer settings are stored as an enum. This enum was broken up with the introduction of the new settings.
+        // (13, 0) is UNCHANGED.
+        // (13, 1) is RANDOM.
+        // (13, 2) is DISTRIBUTED.
+        // (13, 3) is MAINPLAYTHROUGH.
+        // (13, 4) is TYPE_THEMED.
+        // (13, 5) is TYPE_THEMED_ELITE4_GYMS.
+        // (13, 6) is KEEP_THEMED.
+        // (13, 7) is KEEP_THEME_OR_PRIMARY.
+        loadBoolean(m, d, 13, 0, Settings.Name.RANDOMIZE_TRAINER_POKEMON, true);
+        if (restoreState(d[13], 2) || restoreState(d[13], 3)) {
+            m.set(Settings.Name.TRAINERS_DISTRIBUTE_SPECIES_EVENLY, true);
+        }
+        loadBoolean(m, d, 13, 3, Settings.Name.TRAINERS_DISTRIBUTE_EVENLY_MAINGAME_ONLY);
+        if (restoreState(d[13], 4) || restoreState(d[13], 5)) {
+            m.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.RANDOM_THEMES);
+        }
+        loadBoolean(m, d, 13, 5, Settings.Name.TRAINERS_ONLY_TYPE_RESTRICT_GYMS_E4);
+        if (restoreState(d[13], 6) || restoreState(d[13], 7)) {
+            m.set(Settings.Name.TRAINERS_KEEP_TYPE_THEMES, true);
+        }
+        if (restoreState(d[13], 7)) {
+            m.set(Settings.Name.TRAINERS_TYPE_RESTRICTION, Settings.TrainersTypeMod.KEEP_PRIMARY);
+        }
 
 
         // Byte 14: Trainers Evolution Level Modifier
@@ -304,7 +314,7 @@ public class SettingsStringConverter {
                 ));
         loadBoolean(m, d, 19, 4, Settings.Name.STATICS_LIMIT_MAIN_GAME_LEGENDARIES);
         loadBoolean(m, d, 19, 5, Settings.Name.STATICS_FULL_RANDOM_OVER_600_BST);
-        loadBoolean(m, d, 19, 6, Settings.Name.STATICS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 19, 6, Settings.Name.STATICS_NO_ALT_FORMES, true);
         loadBoolean(m, d, 19, 7, Settings.Name.STATICS_SWAP_MEGA_EVOLVABLES);
 
 
@@ -366,16 +376,17 @@ public class SettingsStringConverter {
 
 
         // Byte 25: In-game trades
-        loadEnum(m, d, 25, Settings.Name.RANDOMIZE_IN_GAME_TRADES,
-                Map.of(
-                        0, Settings.InGameTradesMod.RANDOMIZE_GIVEN_AND_REQUESTED,
-                        1, Settings.InGameTradesMod.RANDOMIZE_GIVEN,
-                        6, Settings.InGameTradesMod.UNCHANGED
-                ));
+        // In-game trades are stored as an enum. This enum was broken up with the introduction of the new settings.
+        // (25, 0) is RANDOMIZE_GIVEN_AND_REQUESTED.
+        loadBoolean(m, d, 25, 0, Settings.Name.TRADES_RANDOMIZE_REQUESTED);
+        // (25, 1) is RANDOMIZE_GIVEN.
+        boolean randomizeGiven = restoreState(d[25], 0) || restoreState(d[25], 1);
+        m.set(Settings.Name.TRADES_RANDOMIZE_GIVEN, randomizeGiven);
         loadBoolean(m, d, 25, 2, Settings.Name.TRADES_RANDOMIZE_HELD_ITEMS);
         loadBoolean(m, d, 25, 3, Settings.Name.TRADES_RANDOMIZE_IVS);
         loadBoolean(m, d, 25, 4, Settings.Name.TRADES_RANDOMIZE_NICKNAMES);
         loadBoolean(m, d, 25, 5, Settings.Name.TRADES_RANDOMIZE_ORIGINAL_TRAINERS);
+        // (25, 6) is UNCHANGED of the above mention enum.
         // (25, 7) unused
 
 
@@ -413,7 +424,7 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 28, 3, Settings.Name.SPECIES_EVOLUTIONS_STAGES_MUST_SHARE_TYPE);
         loadBoolean(m, d, 28, 4, Settings.Name.SPECIES_EVOLUTIONS_MAX_THREE_STAGES);
         loadBoolean(m, d, 28, 5, Settings.Name.SPECIES_EVOLUTIONS_FORCE_CHANGE);
-        loadBoolean(m, d, 28, 6, Settings.Name.SPECIES_EVOLUTIONS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 28, 6, Settings.Name.SPECIES_EVOLUTIONS_NO_ALT_FORMES, true);
 
 
         // Byte 29: Trainer Pokémon
@@ -423,7 +434,7 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 29, 3, Settings.Name.TRAINERS_NO_LEGENDARIES);
         loadBoolean(m, d, 29, 4, Settings.Name.TRAINERS_NO_EARLY_WONDER_GUARD);
         loadBoolean(m, d, 29, 5, Settings.Name.TRAINERS_SWAP_MEGA_EVOLVABLES);
-        loadBoolean(m, d, 29, 6, Settings.Name.TRAINERS_RANDOM_SHINY_POKEMON);
+        loadBoolean(m, d, 29, 6, Settings.Name.COSMETIC_TRAINERS_RANDOM_SHINY_POKEMON);
         loadBoolean(m, d, 29, 7, Settings.Name.TRAINERS_AVOID_DUPLICATES);
 
 
@@ -503,8 +514,8 @@ public class SettingsStringConverter {
         loadBoolean(m, d, 41, 3, Settings.Name.MOVESETS_BAN_OVERPOWERED);
         loadBoolean(m, d, 41, 4, Settings.Name.TMS_BAN_OVERPOWERED);
         loadBoolean(m, d, 41, 5, Settings.Name.TUTORS_BAN_OVERPOWERED);
-        loadBoolean(m, d, 41, 6, Settings.Name.TRAINERS_ALLOW_ALT_FORMES);
-        loadBoolean(m, d, 41, 7, Settings.Name.WILD_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 41, 6, Settings.Name.TRAINERS_NO_ALT_FORMES, true);
+        loadBoolean(m, d, 41, 7, Settings.Name.WILD_NO_ALT_FORMES, true);
 
 
         // Byte 42: Additional Trainer Pokémon
@@ -540,7 +551,7 @@ public class SettingsStringConverter {
                         5, Settings.AllyPokemonMod.SIMILAR_STRENGTH
                 ));
         loadBoolean(m, d, 44, 6, Settings.Name.TOTEMS_RANDOMIZE_HELD_ITEMS);
-        loadBoolean(m, d, 44, 7, Settings.Name.TOTEMS_ALLOW_ALT_FORMES);
+        loadBoolean(m, d, 44, 7, Settings.Name.TOTEMS_NO_ALT_FORMES, true);
 
 
         // Byte 45: Totem Pokémon level modifier
@@ -682,19 +693,29 @@ public class SettingsStringConverter {
 
         
         // Byte 62: Battle style
+        // Some changes were made to battle style settings in the same go as creating the new settings system.
         loadEnum(m, d, 62, Settings.Name.TRAINERS_RANDOMIZE_BATTLE_STYLE,
                 Map.of(
-                        0, BattleStyle.Modification.UNCHANGED,
-                        1, BattleStyle.Modification.RANDOM,
-                        2, BattleStyle.Modification.SINGLE_STYLE
+                        0, Settings.BattleStyleMod.UNCHANGED,
+                        1, Settings.BattleStyleMod.RANDOM,
+                        2, Settings.BattleStyleMod.RANDOM
                 ));
-        loadEnum(m, d, 62, Settings.Name.TRAINERS_SINGLE_STYLE_SELECTION,
-                Map.of(
-                        3, BattleStyle.Style.SINGLE_BATTLE,
-                        4, BattleStyle.Style.DOUBLE_BATTLE,
-                        5, BattleStyle.Style.TRIPLE_BATTLE,
-                        6, BattleStyle.Style.ROTATION_BATTLE
-                ));
+        // BATTLE_STYLE_EXTEND_TEAMS is a new setting, which prior to this was always implied when randomizing.
+        loadBoolean(m, d, 62, 0, Settings.Name.BATTLE_STYLE_EXTEND_TEAMS, true);
+        // (62, 2) really is "SINGLE_STYLE", i.e, only use a given style for all trainers.
+        //         This was replaced by the ability to ban certain styles.
+        // (62, 3--6) then hold an enum for which style is the "single style".
+        if (restoreState(d[62], 2)) {
+            m.set(Settings.Name.BATTLE_STYLE_BAN_SINGLE, !restoreState(d[62], 3));
+            m.set(Settings.Name.BATTLE_STYLE_BAN_DOUBLE, !restoreState(d[62], 4));
+            m.set(Settings.Name.BATTLE_STYLE_BAN_TRIPLE, !restoreState(d[62], 5));
+            m.set(Settings.Name.BATTLE_STYLE_BAN_ROTATION, !restoreState(d[62], 6));
+        } else {
+            m.set(Settings.Name.BATTLE_STYLE_BAN_SINGLE, false);
+            m.set(Settings.Name.BATTLE_STYLE_BAN_DOUBLE, false);
+            m.set(Settings.Name.BATTLE_STYLE_BAN_TRIPLE, false);
+            m.set(Settings.Name.BATTLE_STYLE_BAN_ROTATION, false);
+        }
         // (62, 7) unused
 
 
@@ -725,7 +746,9 @@ public class SettingsStringConverter {
 
         // Byte 65: General Options
         loadBoolean(m, d, 65, 0, Settings.Name.COSMETIC_RANDOM_INTRO_MON, true);
-        loadBoolean(m, d, 65, 1, Settings.Name.RACE_MODE);
+        // (65, 1) held "Race Mode", which:
+        //         a) does not belong in the settings anymore,
+        //         b) never made sense to keep when updating settings to use in a newer version.
         // (65, 2) unused
         // (65, 3) is a generation restriction override
         if (restoreState(d[65], 3)) {

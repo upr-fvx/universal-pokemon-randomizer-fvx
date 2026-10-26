@@ -27,6 +27,7 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a Trainer as seen in battle; contains a list of their {@link TrainerPokemon},
@@ -110,11 +111,11 @@ public class Trainer implements Comparable<Trainer> {
     private TrainerClass trainerclass;
 
     private MultiBattleStatus multiBattleStatus = MultiBattleStatus.NEVER;
-    private boolean forcedDoubleBattle; // for doubleBattleMode
+    private boolean battleStyleForciblyChanged; // for doubleBattleMode
     private int forceStarterPosition = -1;
     // Certain trainers (e.g., trainers in the PWT in BW2) require unique held items for all of their Pokemon to prevent a game crash.
     private boolean requiresUniqueHeldItems;
-    private BattleStyle currBattleStyle = new BattleStyle(); // Defaults to "Unchanged", but need this per-trainer for the Random style option.
+    private BattleStyle battleStyle = BattleStyle.SINGLE_BATTLE;
 
     public Trainer() { }
 
@@ -130,10 +131,10 @@ public class Trainer implements Comparable<Trainer> {
         this.name = original.name;
         this.trainerclass = original.trainerclass;
         this.multiBattleStatus = original.multiBattleStatus;
-        this.forcedDoubleBattle = original.forcedDoubleBattle;
+        this.battleStyleForciblyChanged = original.battleStyleForciblyChanged;
         this.forceStarterPosition = original.forceStarterPosition;
         this.requiresUniqueHeldItems = original.requiresUniqueHeldItems;
-        this.currBattleStyle = original.currBattleStyle;
+        this.battleStyle = original.battleStyle;
     }
 
     @Override
@@ -145,8 +146,8 @@ public class Trainer implements Comparable<Trainer> {
         if (trainerclass != null) {
             sb.append("(").append(trainerclass.getID()).append(") - ");
         }
-        if (currBattleStyle.isBattleStyleChanged()) {
-            sb.append("(").append(currBattleStyle.getStyle().toString()).append(") - ");
+        if (battleStyleForciblyChanged) {
+            sb.append("(").append(battleStyle.toString()).append(") - ");
         }
         if (offset > 0) {
             sb.append(String.format("%x", offset));
@@ -281,12 +282,15 @@ public class Trainer implements Comparable<Trainer> {
         this.multiBattleStatus = multiBattleStatus;
     }
 
-    public boolean isForcedDoubleBattle() {
-        return forcedDoubleBattle;
+    public boolean isBattleStyleForciblyChanged() {
+        return battleStyleForciblyChanged;
     }
 
-    public void setForcedDoubleBattle(boolean forcedDoubleBattle) {
-        this.forcedDoubleBattle = forcedDoubleBattle;
+    public void setBattleStyleForciblyChanged(boolean battleStyleForciblyChanged) {
+        // This attribute might not be needed. It has been kept just because it touches RomHandler writing,
+        // and that is too delicate to have changes made to it in the middle of another refactor.
+        // So I am not doing it now. --voliol 2026-10-18
+        this.battleStyleForciblyChanged = battleStyleForciblyChanged;
     }
 
     public int getForceStarterPosition() {
@@ -305,12 +309,12 @@ public class Trainer implements Comparable<Trainer> {
         this.requiresUniqueHeldItems = requiresUniqueHeldItems;
     }
 
-    public BattleStyle getCurrBattleStyle() {
-        return currBattleStyle;
+    public BattleStyle getBattleStyle() {
+        return battleStyle;
     }
 
-    public void setCurrBattleStyle(BattleStyle currBattleStyle) {
-        this.currBattleStyle = currBattleStyle;
+    public void setBattleStyle(BattleStyle battleStyle) {
+        this.battleStyle = battleStyle;
     }
 
     public boolean isBoss() {
@@ -366,6 +370,18 @@ public class Trainer implements Comparable<Trainer> {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns a type shared by all of this Trainer's Pokemon, or null.<br.
+     * If two types are shared, will return the primary type of an arbitrary Species owned by this Trainer,
+     * unless that type is Normal; in this case will return the secondary type.
+     * (essentially, bird trainers will return Flying)
+     */
+    public Type getSharedType() {
+        SpeciesSet trainerPokemonSpecies = this.getPokemon().stream().map(TrainerPokemon::getSpecies)
+                .collect(Collectors.toCollection(SpeciesSet::new));
+        return trainerPokemonSpecies.getSharedType(true);
     }
 
     public enum MultiBattleStatus {

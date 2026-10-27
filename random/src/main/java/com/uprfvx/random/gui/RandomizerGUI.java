@@ -1757,6 +1757,39 @@ public class RandomizerGUI {
         }
     }
 
+    private enum RandomizeMode {
+        NORMAL, CREATE_RACE, BATCH, LOAD_PRESET
+    }
+
+    private void randomize(RomHandler romHandler, File destination,
+                           SettingsManager settingsManager, long seed,
+                           RandomizeMode mode,
+                           int batchNumber, boolean batchSaveLogs, String batchLogSuffix,
+                           boolean racePreset) {
+
+        int batchSize = mode == RandomizeMode.BATCH ? batchNumber : 1;
+        // show throbber
+        for (int i = 0; i < batchSize; i++) {
+            if (mode == RandomizeMode.BATCH) {
+                // update throbber
+            }
+            // randomize
+
+            // save randomized file (update throbber)
+            if (mode == RandomizeMode.BATCH && batchSaveLogs) {
+                // save log file
+            }
+        }
+        // remove throbber
+
+        if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE) {
+            // ask save preset/log file
+            // save preset/log file
+        }
+
+        // final popup
+    }
+
     private void saveROM() {
         if (romHandler == null) {
             return; // none loaded

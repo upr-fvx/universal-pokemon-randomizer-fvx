@@ -1761,26 +1761,37 @@ public class RandomizerGUI {
         NORMAL, CREATE_RACE, BATCH, LOAD_PRESET
     }
 
-    private void randomize(RomHandler romHandler, File destination,
-                           SettingsManager settingsManager, long seed,
+    private void randomize(RomHandler romHandler, String fileName, boolean saveAsDirectory,
+                           SettingsManager settings, long seed,
                            RandomizeMode mode,
-                           int batchNumber, boolean batchSaveLogs, String batchLogSuffix,
+                           int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                            boolean racePreset) {
+        // TODO: finish this method
+        // TODO: link up to randomize/save button and preset loading
+        // TODO: account for every place things can go wrong
+
+        CustomPlayerGraphics cpg = null;
 
         int batchSize = mode == RandomizeMode.BATCH ? batchNumber : 1;
-        // show throbber
-        for (int i = 0; i < batchSize; i++) {
-            if (mode == RandomizeMode.BATCH) {
-                // update throbber
-            }
-            // randomize
 
-            // save randomized file (update throbber)
+        opDialog = new OperationDialog("", frame, true);
+        for (int i = 0; i < batchSize; i++) {
+            updateOPDialogRandomize(i, batchSize);
+
+            fileName = prepareFileName(fileName, romHandler, saveAsDirectory,
+                    mode == RandomizeMode.BATCH, batchNumber + batchNumberNameOffset);
+            GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
+            GameRandomizer.Results results = randomizer.randomize(fileName, seed);
+
             if (mode == RandomizeMode.BATCH && batchSaveLogs) {
-                // save log file
+                try {
+                    saveLogFile(fileName, batchLogSuffix, results.getLogBAOS().toByteArray());
+                } catch (IOException e) {
+                    // TODO: what to do here
+                }
             }
         }
-        // remove throbber
+        opDialog.setVisible(false);
 
         if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE) {
             // ask save preset/log file
@@ -1788,6 +1799,31 @@ public class RandomizerGUI {
         }
 
         // final popup
+    }
+
+    private void updateOPDialogRandomize(int current, int batchSize) {
+        String text;
+        if (batchSize == 1) {
+            text = bundle.getString("GUI.saveROM.savingDialog.message");
+        } else {
+            text = String.format(bundle.getString("GUI.batchRandomization.progressDialog.message"),
+                    current + 1, batchSize);
+        }
+        opDialog.setLoadingLabelText(text);
+    }
+
+    private String prepareFileName(String originalFN, RomHandler romHandler, boolean saveAsDirectory,
+                                   boolean batchMode, int batchSuffix) {
+        String fileName = originalFN.split("\\.")[0];
+        if (batchMode) {
+            fileName += batchSuffix;
+        }
+        if (saveAsDirectory) {
+            boolean _ = new File(fileName).mkdirs();
+        } else {
+            fileName += "." + romHandler.getDefaultExtension();
+        }
+        return fileName;
     }
 
     private void saveROM() {

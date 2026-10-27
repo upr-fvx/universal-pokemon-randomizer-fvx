@@ -36,6 +36,7 @@ import com.uprfvx.romio.gamedata.GenRestrictions;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -56,6 +57,7 @@ public class GameRandomizer {
         private Exception e;
         private Exception logE;
         private int checkValue;
+        private ByteArrayOutputStream logBAOS = new ByteArrayOutputStream();
 
         private Results() {}
 
@@ -83,6 +85,10 @@ public class GameRandomizer {
 
         public int getCheckValue() {
             return checkValue;
+        }
+
+        public ByteArrayOutputStream getLogBAOS() {
+            return logBAOS;
         }
     }
 
@@ -182,20 +188,17 @@ public class GameRandomizer {
     }
 
     public Results randomize(final String filename) {
-        return randomize(filename, new PrintStream(new OutputStream() {
-            @Override
-            public void write(int b) {
-            }
-        }));
-    }
-
-    public Results randomize(final String filename, final PrintStream log) {
         long seed = SeedPicker.pickSeed();
         // long seed = 123456789;    // TESTING
-        return randomize(filename, log, seed);
+        return randomize(filename, seed);
     }
 
-    public Results randomize(final String filename, final PrintStream log, long seed) {
+    @Deprecated
+    public Results randomize(final String filename, PrintStream log, long seed) {
+        throw new UnsupportedOperationException(); // TODO: remove
+    }
+
+    public Results randomize(final String filename, long seed) {
         Results results = new Results();
         try {
             final long startTime = System.currentTimeMillis();
@@ -214,6 +217,8 @@ public class GameRandomizer {
             boolean couldSave = romHandler.saveRom(filename, seed, saveAsDirectory);
 
             try {
+                results.logBAOS = new ByteArrayOutputStream();
+                PrintStream log = new PrintStream(results.logBAOS);
                 logger.logResults(log, startTime);
             } catch (Exception e) {
                 results.logE = e;

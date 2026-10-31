@@ -38,4 +38,10 @@ public class SysConstants {
 
     public static final String cpgDirectory = "data/custom_player_graphics";
 
+    // Arbitrary numbers to make cheating via editing a preset file slightly harder.
+    // They are today's date and Wormadam(my favorite mon)'s Pokédex num repeated.
+    // (doesn't matter they are non-random, because the code is open source anyways)
+    // -- voliol 2026-10-31
+    public static final long RACE_MODE_SEED_ADDEND = 2026103120261031L;
+    public static final long RACE_MODE_SEED_LOG_ADDEND = 413413413413413413L;
 }

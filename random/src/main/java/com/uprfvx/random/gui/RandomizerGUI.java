@@ -1761,6 +1761,8 @@ public class RandomizerGUI {
         NORMAL, CREATE_RACE, BATCH, LOAD_PRESET
     }
 
+    private record LogPresetDialogResults(boolean createLog, boolean createPreset) {}
+
     private void randomize(RomHandler romHandler, String fileName, boolean saveAsDirectory,
                            SettingsManager settings, long seed,
                            RandomizeMode mode,
@@ -1774,6 +1776,7 @@ public class RandomizerGUI {
 
         int batchSize = mode == RandomizeMode.BATCH ? batchNumber : 1;
 
+        GameRandomizer.Results results = null;
         opDialog = new OperationDialog("", frame, true);
         for (int i = 0; i < batchSize; i++) {
             updateOPDialogRandomize(i, batchSize);
@@ -1781,7 +1784,7 @@ public class RandomizerGUI {
             fileName = prepareFileName(fileName, romHandler, saveAsDirectory,
                     mode == RandomizeMode.BATCH, batchNumber + batchNumberNameOffset);
             GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
-            GameRandomizer.Results results = randomizer.randomize(fileName, seed);
+            results = randomizer.randomize(fileName, seed);
 
             if (mode == RandomizeMode.BATCH && batchSaveLogs) {
                 try {
@@ -1794,8 +1797,7 @@ public class RandomizerGUI {
         opDialog.setVisible(false);
 
         if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE) {
-            // ask save preset/log file
-            // save preset/log file
+            promptSaveLogOrPreset(mode, fileName, results.getLogBAOS(), results.getLogException(), seed, racePreset);
         }
 
         // final popup
@@ -1806,7 +1808,7 @@ public class RandomizerGUI {
         if (batchSize == 1) {
             text = bundle.getString("GUI.saveROM.savingDialog.message");
         } else {
-            text = String.format(bundle.getString("GUI.batchRandomization.progressDialog.message"),
+            text = String.format(bundle.getString("GUI.saveROM.savingDialog.batchMessage"),
                     current + 1, batchSize);
         }
         opDialog.setLoadingLabelText(text);
@@ -1824,6 +1826,68 @@ public class RandomizerGUI {
             fileName += "." + romHandler.getDefaultExtension();
         }
         return fileName;
+    }
+
+    private void promptSaveLogOrPreset(RandomizeMode mode, String fileName,
+                                       ByteArrayOutputStream logBAOS, Exception logException,
+                                       long seed, boolean racePreset) {
+        LogPresetDialogResults lpdResults = saveLogOrPresetDialog(mode == RandomizeMode.CREATE_RACE);
+        if (lpdResults.createLog) {
+            if (logException != null) {
+                attemptToLogException(logException,
+                        "GUI.saveROM.logFailedDialog.message",
+                        "GUI.saveROM.logFailedNoLogDialog.message",
+                        true, settingsManager.toStringOld(), Long.toString(seed));
+            }
+            try {
+                saveLogFile(fileName, ".log", logBAOS.toByteArray());
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
+            }
+        }
+        if (lpdResults.createPreset) {
+            try {
+                savePresetFile(fileName, seed, racePreset, lpdResults.createLog);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(frame,
+                        bundle.getString("GUI.saveROM.presetSaveFailedDialog.message"));
+            }
+        }
+    }
+
+    private LogPresetDialogResults saveLogOrPresetDialog(boolean createRaceMode) {
+        if (createRaceMode) {
+            int choice = JOptionPane.showOptionDialog(frame,
+                    bundle.getString("GUI.saveROM.logOrPresetDialog.raceModeMessage"),
+                    null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, new Object[] {
+                            bundle.getString("GUI.saveROM.createLogAndPreset"),
+                            bundle.getString("GUI.saveROM.createPreset"),
+                            bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
+                    }, null);
+            if (choice == 0) {
+                return new LogPresetDialogResults(true, true);
+            } else {
+                return new LogPresetDialogResults(false, true);
+            }
+        } else {
+            int choice = JOptionPane.showOptionDialog(frame,
+                    bundle.getString("GUI.saveROM.logOrPresetDialog.message"),
+                    null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+                    null, new Object[] {
+                            bundle.getString("GUI.saveROM.createLog"),
+                            bundle.getString("GUI.saveROM.createPreset"),
+                            bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
+                    }, null);
+            if (choice == 0) {
+                return new LogPresetDialogResults(true, false);
+            } else if (choice == 1) {
+                return new LogPresetDialogResults(false, true);
+            } else {
+                return new LogPresetDialogResults(false, false);
+            }
+        }
     }
 
     private void saveROM() {
@@ -2188,7 +2252,7 @@ public class RandomizerGUI {
             if (choice == 0) {
                 attemptSaveLog(filename, seed, logBAOS, logException);
             } else if (choice == 1) {
-                savePresetFile(filename, seed);
+                // savePresetFile(filename, seed);
             }
         }
 
@@ -2228,21 +2292,25 @@ public class RandomizerGUI {
         fos.close();
     }
 
-    private void savePresetFile(String filename, long seed) {
+    private void savePresetFile(String filename, long seed, boolean raceMode, boolean raceLogCreated)
+            throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(baos, false, StandardCharsets.UTF_8);
         ps.println("[ Universal Pokémon Randomizer FVX - Randomized Game Preset ]");
+        if (raceMode) {
+            ps.println("Race mode!");
+            seed += SysConstants.RACE_MODE_SEED_ADDEND;
+            if (raceLogCreated) {
+                ps.println("Race log created.");
+                seed += SysConstants.RACE_MODE_SEED_LOG_ADDEND;
+            }
+        }
         ps.println("Random seed: " + seed);
         ps.println(settingsManager.toString());
 
         try (FileOutputStream fos = new FileOutputStream(filename + ".preset")) {
             fos.write(baos.toByteArray());
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(frame,
-                    bundle.getString("GUI.saveROM.presetSaveFailedDialog.message"));
         }
-        JOptionPane.showMessageDialog(frame,
-                String.format(bundle.getString("GUI.saveROM.presetSavedDialog.message"), filename));
     }
 
     private void recordCPGAsLastUsed(CustomPlayerGraphics cpg) {

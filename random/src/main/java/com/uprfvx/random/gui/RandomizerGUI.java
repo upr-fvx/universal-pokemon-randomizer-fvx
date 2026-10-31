@@ -1767,7 +1767,7 @@ public class RandomizerGUI {
                            SettingsManager settings, long seed,
                            RandomizeMode mode,
                            int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
-                           boolean racePreset) {
+                           boolean racePreset, boolean racePresetLogExists) {
         // TODO: finish this method
         // TODO: link up to randomize/save button and preset loading
         // TODO: account for every place things can go wrong
@@ -1796,11 +1796,12 @@ public class RandomizerGUI {
         }
         opDialog.setVisible(false);
 
-        if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE) {
+        if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE
+                || (mode == RandomizeMode.LOAD_PRESET && !racePreset)) {
             promptSaveLogOrPreset(mode, fileName, results.getLogBAOS(), results.getLogException(), seed, racePreset);
         }
 
-        // final popup
+        showRandomizationDoneDialog(mode, batchNumber, batchSaveLogs, racePreset, racePresetLogExists);
     }
 
     private void updateOPDialogRandomize(int current, int batchSize) {
@@ -1808,7 +1809,7 @@ public class RandomizerGUI {
         if (batchSize == 1) {
             text = bundle.getString("GUI.saveROM.savingDialog.message");
         } else {
-            text = String.format(bundle.getString("GUI.saveROM.savingDialog.batchMessage"),
+            text = String.format(bundle.getString("GUI.saveROM.savingDialogBatch.message"),
                     current + 1, batchSize);
         }
         opDialog.setLoadingLabelText(text);
@@ -1831,7 +1832,8 @@ public class RandomizerGUI {
     private void promptSaveLogOrPreset(RandomizeMode mode, String fileName,
                                        ByteArrayOutputStream logBAOS, Exception logException,
                                        long seed, boolean racePreset) {
-        LogPresetDialogResults lpdResults = saveLogOrPresetDialog(mode == RandomizeMode.CREATE_RACE);
+        // TODO: account for creating a log while mode == LOAD_PRESET
+        LogPresetDialogResults lpdResults = showSaveLogOrPresetDialog(mode == RandomizeMode.CREATE_RACE);
         if (lpdResults.createLog) {
             if (logException != null) {
                 attemptToLogException(logException,
@@ -1856,10 +1858,10 @@ public class RandomizerGUI {
         }
     }
 
-    private LogPresetDialogResults saveLogOrPresetDialog(boolean createRaceMode) {
+    private LogPresetDialogResults showSaveLogOrPresetDialog(boolean createRaceMode) {
         if (createRaceMode) {
             int choice = JOptionPane.showOptionDialog(frame,
-                    bundle.getString("GUI.saveROM.logOrPresetDialog.raceModeMessage"),
+                    bundle.getString("GUI.saveROM.logOrPresetDialogRaceMode.message"),
                     null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
                     null, new Object[] {
                             bundle.getString("GUI.saveROM.createLogAndPreset"),
@@ -1887,6 +1889,28 @@ public class RandomizerGUI {
             } else {
                 return new LogPresetDialogResults(false, false);
             }
+        }
+    }
+
+    private void showRandomizationDoneDialog(RandomizeMode mode,
+                                             int batchNumber, boolean batchSaveLogs,
+                                             boolean racePreset, boolean racePresetLogExists) {
+        String key = switch (mode) {
+            case NORMAL -> "GUI.saveROM.randomizationDoneDialog.normal.message";
+            case CREATE_RACE -> "GUI.saveROM.randomizationDoneDialog.createRace.message";
+            case BATCH -> batchSaveLogs ?
+                    "GUI.saveROM.randomizationDoneDialog.batchMode.message" :
+                    "GUI.saveROM.randomizationDoneDialog.batchModeWithLog.message";
+            case LOAD_PRESET -> racePreset ?
+                    (racePresetLogExists ?
+                     "GUI.saveROM.randomizationDoneDialog.racePresetWithLog.message" :
+                     "GUI.saveROM.randomizationDoneDialog.racePreset.message") :
+                    "GUI.saveROM.randomizationDoneDialog.normal.message";
+        };
+        if (mode == RandomizeMode.BATCH) {
+            JOptionPane.showMessageDialog(frame, String.format(bundle.getString(key), batchNumber));
+        } else {
+            JOptionPane.showMessageDialog(frame, bundle.getString(key));
         }
     }
 

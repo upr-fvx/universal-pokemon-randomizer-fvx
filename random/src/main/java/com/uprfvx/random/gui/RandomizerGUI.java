@@ -51,10 +51,7 @@ import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -719,7 +716,7 @@ public class RandomizerGUI {
                 }
             }
         });
-        randomizeSaveButton.addActionListener(_ -> saveROM());
+        randomizeSaveButton.addActionListener(this::randomizeButtonPressed);
         premadeSeedButton.addActionListener(_ -> presetLoader());
         loadSettingsButton.addActionListener(_ -> loadQS());
         saveSettingsButton.addActionListener(_ -> saveQS());
@@ -1761,6 +1758,54 @@ public class RandomizerGUI {
         NORMAL, CREATE_RACE, BATCH, LOAD_PRESET
     }
 
+    private void randomizeButtonPressed(ActionEvent e) {
+        if (romHandler == null) {
+            return; // none loaded
+        }
+        if (raceModeCheckBox.isSelected() && batchRandomizationSettings.isBatchRandomizationEnabled()) {
+            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.batchRandomization.requirementsDialog.message"));
+            return;
+        }
+
+        boolean saveAsDirectory = askToSaveAsDirectory();
+        File file = null;
+        boolean allowed = false;
+
+        int fileSelectionMode = saveAsDirectory ? JFileChooser.DIRECTORIES_ONLY : JFileChooser.FILES_AND_DIRECTORIES;
+        romSaveChooser.setFileSelectionMode(fileSelectionMode);
+        int returnVal = romSaveChooser.showSaveDialog(frame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            file = romSaveChooser.getSelectedFile();
+            allowed = true;
+
+            if (!saveAsDirectory &&
+                    (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler)) {
+                String currentFN = romHandler.loadedFilename();
+                if (currentFN.equals(file.getAbsolutePath())) {
+                    JOptionPane.showMessageDialog(frame,
+                            bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
+                    allowed = false;
+                }
+            }
+        }
+
+        if (!allowed) {
+            return;
+        }
+
+        saveDirectory = file.getParentFile().getAbsolutePath();
+        attemptWriteConfig();
+
+        long seed = SeedPicker.pickSeed();
+
+        RandomizeMode mode = raceModeCheckBox.isSelected() ?
+                RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
+
+        randomize(romHandler, file.getAbsolutePath(), saveAsDirectory, settingsManager, seed, mode,
+                // args that don't matter here v
+                0, 0, false, null, false, false);
+    }
+
     private record LogPresetDialogResults(boolean createLog, boolean createPreset) {}
 
     private void randomize(RomHandler romHandler, String fileName, boolean saveAsDirectory,
@@ -1768,8 +1813,7 @@ public class RandomizerGUI {
                            RandomizeMode mode,
                            int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                            boolean racePreset, boolean racePresetLogExists) {
-        // TODO: finish this method
-        // TODO: link up to randomize/save button and preset loading
+        // TODO: link up to preset loading (and CLI?)
         // TODO: account for every place things can go wrong
 
         CustomPlayerGraphics cpg = null;
@@ -1793,15 +1837,26 @@ public class RandomizerGUI {
                     // TODO: what to do here
                 }
             }
+            if (mode == RandomizeMode.BATCH) {
+                reinitializeRomHandler(true);
+            }
         }
         opDialog.setVisible(false);
 
         if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE
                 || (mode == RandomizeMode.LOAD_PRESET && !racePreset)) {
-            promptSaveLogOrPreset(mode, fileName, results.getLogBAOS(), results.getLogException(), seed, racePreset);
+            Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
+            promptSaveLogOrPreset(mode, fileName, results.getLogBAOS(), logException, seed, racePreset);
         }
 
         showRandomizationDoneDialog(mode, batchNumber, batchSaveLogs, racePreset, racePresetLogExists);
+
+        if (unloadGameOnSuccess) {
+            unloadRomHandler();
+            initialState();
+        } else {
+            reinitializeRomHandler(false);
+        }
     }
 
     private void updateOPDialogRandomize(int current, int batchSize) {
@@ -1842,7 +1897,7 @@ public class RandomizerGUI {
                         true, settingsManager.toStringOld(), Long.toString(seed));
             }
             try {
-                saveLogFile(fileName, ".log", logBAOS.toByteArray());
+                saveLogFile(fileName, "log", logBAOS.toByteArray());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(frame,
                         bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
@@ -1936,7 +1991,7 @@ public class RandomizerGUI {
         }
          */
 
-        SaveType outputType = askForSaveType();
+        SaveType outputType = askToSaveAsDirectoryOld();
         romSaveChooser.setSelectedFile(null);
         boolean allowed = false;
         File fh = null;
@@ -2368,7 +2423,7 @@ public class RandomizerGUI {
                 unloadRomHandler();
                 initialState();
             }
-            SaveType outputType = askForSaveType();
+            SaveType outputType = askToSaveAsDirectoryOld();
             romSaveChooser.setSelectedFile(null);
             boolean allowed = false;
             File fh = null;
@@ -2414,18 +2469,21 @@ public class RandomizerGUI {
 
     }
 
-
     private enum SaveType {
         FILE, DIRECTORY, INVALID
     }
 
-    private SaveType askForSaveType() {
-        SaveType saveType = SaveType.FILE;
+    private SaveType askToSaveAsDirectoryOld() {
+        throw new UnsupportedOperationException();
+    }
+
+    private boolean askToSaveAsDirectory() {
+        boolean saveAsDirectory = false;
         if (romHandler.hasGameUpdateLoaded()) {
             String text = bundle.getString("GUI.saveROM.savingWithGameUpdate.message");
             String url = SysConstants.WIKI_3DS_INFO_URL + "#managing-game-updates";
             showMessageDialogWithLink(text, url);
-            saveType = SaveType.DIRECTORY;
+            saveAsDirectory = true;
         } else if (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7) {
             Object[] options3DS = {"CXI", "LayeredFS"};
             String question = "Would you like to output your 3DS game as a CXI file or as a LayeredFS directory?";
@@ -2451,13 +2509,9 @@ public class RandomizerGUI {
                     null,
                     options3DS,
                     null);
-            if (returnVal3DS < 0) {
-                saveType = SaveType.INVALID;
-            } else {
-                saveType = SaveType.values()[returnVal3DS];
-            }
+            saveAsDirectory = returnVal3DS == 1;
         }
-        return saveType;
+        return saveAsDirectory;
     }
 
     private void customNamesEditorMenuItemActionPerformed() {

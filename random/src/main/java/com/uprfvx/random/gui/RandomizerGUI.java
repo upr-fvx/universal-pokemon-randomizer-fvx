@@ -22,10 +22,7 @@ package com.uprfvx.random.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.BatchRandomizationSettings;
-import com.uprfvx.random.GameRandomizer;
-import com.uprfvx.random.SysConstants;
-import com.uprfvx.random.Version;
+import com.uprfvx.random.*;
 import com.uprfvx.random.cli.CliRandomizer;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
@@ -68,7 +65,7 @@ import java.util.stream.IntStream;
 /**
  * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
  */
-public class RandomizerGUI {
+public class RandomizerGUI implements RandomizerUI {
 
     //region JComponent Declarations
 
@@ -1798,68 +1795,24 @@ public class RandomizerGUI {
 
         long seed = SeedPicker.pickSeed();
 
-        RandomizeMode mode = raceModeCheckBox.isSelected() ?
-                RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
+        RandomizationCoordinator.RandomizeMode mode = raceModeCheckBox.isSelected() ?
+                RandomizationCoordinator.RandomizeMode.CREATE_RACE :
+                RandomizationCoordinator.RandomizeMode.NORMAL;
 
-        randomize(romHandler, file.getAbsolutePath(), saveAsDirectory, settingsManager, seed, mode,
+        RandomizationCoordinator rc = new RandomizationCoordinator(this);
+        rc.randomize(romHandler, file.getAbsolutePath(), saveAsDirectory, unloadGameOnSuccess,
+                settingsManager, seed, mode,
                 // args that don't matter here v
                 0, 0, false, null, false, false);
     }
 
-    private record LogPresetDialogResults(boolean createLog, boolean createPreset) {}
-
-    private void randomize(RomHandler romHandler, String fileName, boolean saveAsDirectory,
-                           SettingsManager settings, long seed,
-                           RandomizeMode mode,
-                           int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
-                           boolean racePreset, boolean racePresetLogExists) {
-        // TODO: link up to preset loading (and CLI?)
-        // TODO: account for every place things can go wrong
-
-        CustomPlayerGraphics cpg = null;
-
-        int batchSize = mode == RandomizeMode.BATCH ? batchNumber : 1;
-
-        GameRandomizer.Results results = null;
+    @Override
+    public void displayRandomizationStarted() {
         opDialog = new OperationDialog("", frame, true);
-        for (int i = 0; i < batchSize; i++) {
-            updateOPDialogRandomize(i, batchSize);
-
-            fileName = prepareFileName(fileName, romHandler, saveAsDirectory,
-                    mode == RandomizeMode.BATCH, batchNumber + batchNumberNameOffset);
-            GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
-            results = randomizer.randomize(fileName, seed);
-
-            if (mode == RandomizeMode.BATCH && batchSaveLogs) {
-                try {
-                    saveLogFile(fileName, batchLogSuffix, results.getLogBAOS().toByteArray());
-                } catch (IOException e) {
-                    // TODO: what to do here
-                }
-            }
-            if (mode == RandomizeMode.BATCH) {
-                reinitializeRomHandler(true);
-            }
-        }
-        opDialog.setVisible(false);
-
-        if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE
-                || (mode == RandomizeMode.LOAD_PRESET && !racePreset)) {
-            Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
-            promptSaveLogOrPreset(mode, fileName, results.getLogBAOS(), logException, seed, racePreset);
-        }
-
-        showRandomizationDoneDialog(mode, batchNumber, batchSaveLogs, racePreset, racePresetLogExists);
-
-        if (unloadGameOnSuccess) {
-            unloadRomHandler();
-            initialState();
-        } else {
-            reinitializeRomHandler(false);
-        }
     }
 
-    private void updateOPDialogRandomize(int current, int batchSize) {
+    @Override
+    public void displayRandomizationProgress(int current, int batchSize) {
         String text;
         if (batchSize == 1) {
             text = bundle.getString("GUI.saveROM.savingDialog.message");
@@ -1870,50 +1823,33 @@ public class RandomizerGUI {
         opDialog.setLoadingLabelText(text);
     }
 
-    private String prepareFileName(String originalFN, RomHandler romHandler, boolean saveAsDirectory,
-                                   boolean batchMode, int batchSuffix) {
-        String fileName = originalFN.split("\\.")[0];
-        if (batchMode) {
-            fileName += batchSuffix;
-        }
-        if (saveAsDirectory) {
-            boolean _ = new File(fileName).mkdirs();
-        } else {
-            fileName += "." + romHandler.getDefaultExtension();
-        }
-        return fileName;
+    @Override
+    public void displayRandomizationEnded() {
+        opDialog.setVisible(false);
     }
 
-    private void promptSaveLogOrPreset(RandomizeMode mode, String fileName,
-                                       ByteArrayOutputStream logBAOS, Exception logException,
-                                       long seed, boolean racePreset) {
-        // TODO: account for creating a log while mode == LOAD_PRESET
-        LogPresetDialogResults lpdResults = showSaveLogOrPresetDialog(mode == RandomizeMode.CREATE_RACE);
-        if (lpdResults.createLog) {
-            if (logException != null) {
-                attemptToLogException(logException,
-                        "GUI.saveROM.logFailedDialog.message",
-                        "GUI.saveROM.logFailedNoLogDialog.message",
-                        true, seed);
-            }
-            try {
-                saveLogFile(fileName, "log", logBAOS.toByteArray());
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
-            }
-        }
-        if (lpdResults.createPreset) {
-            try {
-                savePresetFile(fileName, seed, racePreset, lpdResults.createLog);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(frame,
-                        bundle.getString("GUI.saveROM.presetSaveFailedDialog.message"));
-            }
-        }
+    @Override
+    public void displayLoggingFailure(Exception logException, long seed) {
+        attemptToLogException(logException,
+                "GUI.saveROM.logFailedDialog.message",
+                "GUI.saveROM.logFailedNoLogDialog.message",
+                true, seed);
     }
 
-    private LogPresetDialogResults showSaveLogOrPresetDialog(boolean createRaceMode) {
+    @Override
+    public void displayLogFileSaveFailure() {
+        JOptionPane.showMessageDialog(frame,
+                bundle.getString("GUI.saveROM.logSaveFailedDialog.message"));
+    }
+
+    @Override
+    public void displayPresetFileSaveFailure() {
+        JOptionPane.showMessageDialog(frame,
+                bundle.getString("GUI.saveROM.presetSaveFailedDialog.message"));
+    }
+
+    @Override
+    public RandomizationCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
         if (createRaceMode) {
             int choice = JOptionPane.showOptionDialog(frame,
                     bundle.getString("GUI.saveROM.logOrPresetDialogRaceMode.message"),
@@ -1924,9 +1860,9 @@ public class RandomizerGUI {
                             bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
                     }, null);
             if (choice == 0) {
-                return new LogPresetDialogResults(true, true);
+                return new RandomizationCoordinator.LogPresetPromptResults(true, true);
             } else {
-                return new LogPresetDialogResults(false, true);
+                return new RandomizationCoordinator.LogPresetPromptResults(false, true);
             }
         } else {
             int choice = JOptionPane.showOptionDialog(frame,
@@ -1938,18 +1874,19 @@ public class RandomizerGUI {
                             bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
                     }, null);
             if (choice == 0) {
-                return new LogPresetDialogResults(true, false);
+                return new RandomizationCoordinator.LogPresetPromptResults(true, false);
             } else if (choice == 1) {
-                return new LogPresetDialogResults(false, true);
+                return new RandomizationCoordinator.LogPresetPromptResults(false, true);
             } else {
-                return new LogPresetDialogResults(false, false);
+                return new RandomizationCoordinator.LogPresetPromptResults(false, false);
             }
         }
     }
 
-    private void showRandomizationDoneDialog(RandomizeMode mode,
-                                             int batchNumber, boolean batchSaveLogs,
-                                             boolean racePreset, boolean racePresetLogExists) {
+    @Override
+    public void displayRandomizationCoordinationDone(RandomizationCoordinator.RandomizeMode mode,
+                                                     int batchNumber, boolean batchSaveLogs,
+                                                     boolean racePreset, boolean racePresetLogExists) {
         String key = switch (mode) {
             case NORMAL -> "GUI.saveROM.randomizationDoneDialog.normal.message";
             case CREATE_RACE -> "GUI.saveROM.randomizationDoneDialog.createRace.message";
@@ -1962,7 +1899,7 @@ public class RandomizerGUI {
                      "GUI.saveROM.randomizationDoneDialog.racePreset.message") :
                     "GUI.saveROM.randomizationDoneDialog.normal.message";
         };
-        if (mode == RandomizeMode.BATCH) {
+        if (mode == RandomizationCoordinator.RandomizeMode.BATCH) {
             JOptionPane.showMessageDialog(frame, String.format(bundle.getString(key), batchNumber));
         } else {
             JOptionPane.showMessageDialog(frame, bundle.getString(key));
@@ -2115,7 +2052,8 @@ public class RandomizerGUI {
      * <br><br>
      * (Having a resource open for a long time is indeed risky, but allows for worthwhile RAM optimizations)
      */
-    private void unloadRomHandler() {
+    @Override
+    public void unloadRomHandler() {
         if (romHandler == null) return;
         if (romHandler.getResourceLifetime() == RomHandler.ResourceLifetime.SAME_AS_ROMHANDLER) {
             try {
@@ -2248,7 +2186,7 @@ public class RandomizerGUI {
                                            ByteArrayOutputStream logBAOS, PrintStream log,
                                            boolean raceMode, boolean batchRandomization, boolean saveAsDirectory) {
         SwingUtilities.invokeLater(() -> opDialog.setVisible(!batchRandomization));
-        GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, bundle, saveAsDirectory);
+        GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, saveAsDirectory);
         GameRandomizer.Results results = randomizer.randomize(filename, log, seed);
 
         if (results.wasSaveSuccessful()) {
@@ -2672,7 +2610,8 @@ public class RandomizerGUI {
     // iterations when batch randomization is enabled. It assumes that the game has already been loaded once, and we just need
     // to reload the same game to reinitialize the RomHandler. Don't use this for other purposes unless you know what
     // you're doing.
-    private void reinitializeRomHandler(boolean batchRandomization) {
+    @Override
+    public void reinitializeRomHandler(boolean batchRandomization) {
         File romFile = new File(romHandler.loadedFilename());
         Thread t = openRom(romFile, true);
         if (batchRandomization) {
@@ -3081,7 +3020,8 @@ public class RandomizerGUI {
         }
     }
 
-    private void initialState() {
+    @Override
+    public void initialState() {
 
         romNameLabel.setText(bundle.getString("GUI.header.romInformationPanel.noRomLoaded"));
         romCodeLabel.setText("");

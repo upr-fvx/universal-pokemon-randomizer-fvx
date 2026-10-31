@@ -71,7 +71,7 @@ public class RandomizationLogger {
 
     private PrintStream log;
 
-    public RandomizationLogger(RandomSource randomSource, SettingsManager settings, RomHandler romHandler, ResourceBundle bundle,
+    public RandomizationLogger(RandomSource randomSource, SettingsManager settings, RomHandler romHandler,
                                SpeciesBaseStatUpdater speciesBSUpdater, MoveUpdater moveUpdater,
                                TypeEffectivenessUpdater typeEffUpdater, IntroPokemonRandomizer introPokeRandomizer,
                                SpeciesBaseStatRandomizer speciesBSRandomizer, SpeciesTypeRandomizer speciesTypeRandomizer,
@@ -87,7 +87,7 @@ public class RandomizationLogger {
         this.randomSource = randomSource;
         this.settings = settings;
         this.romHandler = romHandler;
-        this.bundle = bundle;
+        this.bundle = ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
 
         this.originalMTMoves = romHandler.getMoveTutorMoves();
         this.originalTrainerNames = getTrainerNames(romHandler.getTrainers());

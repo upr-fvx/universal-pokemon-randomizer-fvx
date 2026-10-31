@@ -129,7 +129,7 @@ public class GameRandomizer {
     private final MiscTweakRandomizer miscTweakRandomizer;
 
     public GameRandomizer(SettingsManager settings, CustomPlayerGraphics customPlayerGraphics, RomHandler romHandler,
-                          ResourceBundle bundle, boolean saveAsDirectory) {
+                          boolean saveAsDirectory) {
         this.settings = settings;
         this.customPlayerGraphics = customPlayerGraphics;
         this.romHandler = romHandler;
@@ -178,7 +178,7 @@ public class GameRandomizer {
         }
         this.miscTweakRandomizer = new MiscTweakRandomizer(romHandler, settings, randomSource.getNonCosmetic());
 
-        this.logger = new RandomizationLogger(randomSource, settings, romHandler, bundle,
+        this.logger = new RandomizationLogger(randomSource, settings, romHandler,
                 speciesBSUpdater, moveUpdater, typeEffUpdater,
                 introPokeRandomizer, speciesBSRandomizer, speciesTypeRandomizer, speciesAbilityRandomizer,
                 evoRandomizer, starterRandomizer, staticPokeRandomizer, tradeRandomizer, moveDataRandomizer, moveNameRandomizer,

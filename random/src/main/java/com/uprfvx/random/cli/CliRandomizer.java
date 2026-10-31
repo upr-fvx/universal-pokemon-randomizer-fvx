@@ -1,9 +1,9 @@
 package com.uprfvx.random.cli;
 
-import com.uprfvx.random.GameRandomizer;
-import com.uprfvx.random.settings.Settings;
-import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.RandomizationCoordinator;
+import com.uprfvx.random.RandomizerUI;
 import com.uprfvx.random.gui.CPGSelection;
+import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.graphics.packs.GraphicsPack;
@@ -11,10 +11,9 @@ import com.uprfvx.romio.romhandlers.Abstract3DSRomHandler;
 import com.uprfvx.romio.romhandlers.AbstractDSRomHandler;
 import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romio.RomOpener;
-import filefunctions.FileNameFunctions;
 
-import java.io.*;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -22,7 +21,7 @@ import java.util.ResourceBundle;
 /**
  * A class with functions for randomizing from the command line.
  */
-public class CliRandomizer {
+public class CliRandomizer implements RandomizerUI {
 
     // TODO: Why is this class fully static? It gives bad vibes since it's also in Java. Is it really fine like this?
 
@@ -30,90 +29,123 @@ public class CliRandomizer {
 
     private final static RomOpener romOpener = new RomOpener();
 
-    private static boolean performDirectRandomization(String sourceRomFilePath, String destinationRomFilePath,
-                                                      SettingsManager settings, long seed,
-                                                      String cpgName, PlayerCharacterType cpgType,
-                                                      boolean saveAsDirectory,
-                                                      String updateFilePath, boolean saveLog) {
+    private boolean saveLog;
 
-        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream log;
-        try {
-            log = new PrintStream(baos, false, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log = new PrintStream(baos);
-        }
-
-        final PrintStream verboseLog = log;
+    private boolean performDirectRandomization(String sourceRomFilePath, String destinationRomFilePath,
+                                               SettingsManager settings, long seed,
+                                               String cpgName, PlayerCharacterType cpgType,
+                                               boolean saveAsDirectory,
+                                               String updateFilePath, boolean saveLog) {
+        this.saveLog = saveLog;
 
         try {
             File romFile = new File(sourceRomFilePath);
 
             RomOpener.Results results = romOpener.openRomFile(romFile);
-            if (results.wasOpeningSuccessful()) {
-                RomHandler romHandler = results.getRomHandler();
-                CustomPlayerGraphics cpg = prepareCPG(romHandler, cpgName, cpgType);
-
-                if (updateFilePath != null && (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7)) {
-                    romHandler.loadGameUpdate(updateFilePath);
-                    if (!saveAsDirectory) {
-                        printWarning("Forcing save as directory since a game update was supplied.");
-                    }
-                    saveAsDirectory = true;
-                }
-                if (saveAsDirectory && romHandler.generationOfPokemon() != 6 && romHandler.generationOfPokemon() != 7) {
-                    saveAsDirectory = false;
-                    printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
-                }
-
-                CliRandomizer.displaySettingsWarnings(settings, romHandler);
-
-                File fh = new File(destinationRomFilePath);
-                if (!saveAsDirectory) {
-                    List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
-                    extensions.remove(romHandler.getDefaultExtension());
-
-                    fh = FileNameFunctions.fixFilename(fh, romHandler.getDefaultExtension(), extensions);
-                    if (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler) {
-                        String currentFN = romHandler.loadedFilename();
-                        if (currentFN.equals(fh.getAbsolutePath())) {
-                            printError(bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
-                            return false;
-                        }
-                    }
-                }
-
-                String filename = fh.getAbsolutePath();
-
-                GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, saveAsDirectory);
-                randomizer.randomize(filename, verboseLog, seed);
-                verboseLog.close();
-                byte[] out = baos.toByteArray();
-                if (saveLog) {
-                    try {
-                        FileOutputStream fos = new FileOutputStream(filename + ".log");
-                        fos.write(0xEF);
-                        fos.write(0xBB);
-                        fos.write(0xBF);
-                        fos.write(out);
-                        fos.close();
-                    } catch (IOException e) {
-                        printWarning("Could not write log.");
-                    }
-                }
-                System.out.println("Randomized successfully!");
-                // this is the only successful exit, everything else will return false at the end of the function
-                return true;
-
-            } else {
+            if (!results.wasOpeningSuccessful()) {
                 printError("Could not load " + romFile.getAbsolutePath() + "; " + results.getFailType());
                 return false;
             }
 
+            RomHandler romHandler = results.getRomHandler();
+            CustomPlayerGraphics cpg = prepareCPG(romHandler, cpgName, cpgType);
+
+            if (updateFilePath != null && (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7)) {
+                romHandler.loadGameUpdate(updateFilePath);
+                if (!saveAsDirectory) {
+                    printWarning("Forcing save as directory since a game update was supplied.");
+                }
+                saveAsDirectory = true;
+            }
+            if (saveAsDirectory && romHandler.generationOfPokemon() != 6 && romHandler.generationOfPokemon() != 7) {
+                saveAsDirectory = false;
+                printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
+            }
+
+            CliRandomizer.displaySettingsWarnings(settings, romHandler);
+
+            File fh = new File(destinationRomFilePath);
+            if (!saveAsDirectory) {
+                if (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler) {
+                    String currentFN = romHandler.loadedFilename();
+                    if (currentFN.equals(fh.getAbsolutePath())) {
+                        printError(bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
+                        return false;
+                    }
+                }
+            }
+
+            String filename = fh.getAbsolutePath();
+            RandomizationCoordinator.RandomizeMode mode = RandomizationCoordinator.RandomizeMode.LOAD_PRESET;
+
+            RandomizationCoordinator rc = new RandomizationCoordinator(this);
+            rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,
+                    // args that don't matter v
+                    0, 0, false, null, false, false);
+
+            System.out.println("Randomized successfully!");
+            // this is the only successful exit, everything else will return false at the end of the function
+            return true;
+
         } catch (Exception e) {
-            e.printStackTrace();
+            printError(Arrays.toString(e.getStackTrace()));
         }
         return false;
+    }
+
+    @Override
+    public void displayRandomizationStarted() {
+        System.out.println("Randomization started...");
+    }
+
+    @Override
+    public void displayRandomizationProgress(int current, int batchSize) {
+        // nothing, cuz no batch mode here yet
+    }
+
+    @Override
+    public void displayRandomizationEnded() {
+        System.out.println("Randomization ended successfully.");
+    }
+
+    @Override
+    public RandomizationCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
+        return new RandomizationCoordinator.LogPresetPromptResults(saveLog, false);
+    }
+
+    @Override
+    public void displayRandomizationCoordinationDone(RandomizationCoordinator.RandomizeMode mode, int batchNumber, boolean batchSaveLogs, boolean racePreset, boolean racePresetLogExists) {
+
+    }
+
+    @Override
+    public void displayLoggingFailure(Exception logException, long seed) {
+        printWarning("Logging partially failed.\n" + Arrays.toString(logException.getStackTrace()));
+    }
+
+    @Override
+    public void displayLogFileSaveFailure() {
+        printError("Could not save log file.");
+    }
+
+    @Override
+    public void displayPresetFileSaveFailure() {
+        printError("Could not save preset file.");
+    }
+
+    @Override
+    public void unloadRomHandler() {
+        // not relevant since the CLI is a one-off action
+    }
+
+    @Override
+    public void initialState() {
+        // not relevant since the CLI is a one-off action
+    }
+
+    @Override
+    public void reinitializeRomHandler(boolean batchMode) {
+        // this needs to work if batch mode is supported, but otherwise not
     }
 
     private static void displaySettingsWarnings(SettingsManager settings, RomHandler romHandler) {
@@ -276,7 +308,7 @@ public class CliRandomizer {
             }
         }
 
-        boolean processResult = CliRandomizer.performDirectRandomization(
+        boolean processResult = new CliRandomizer().performDirectRandomization(
                 sourceRomFilePath,
                 outputRomFilePath,
                 settings,

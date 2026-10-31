@@ -30,7 +30,7 @@ public class RandomizationCoordinator {
                           RandomizeMode mode,
                           int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                           boolean racePreset, boolean racePresetLogExists) {
-        // TODO: link up to preset loading (and CLI?)
+        // TODO: link up to preset loading
         // TODO: account for every place things can go wrong
 
         CustomPlayerGraphics cpg = null;

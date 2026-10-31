@@ -21,9 +21,7 @@ import java.util.ResourceBundle;
 /**
  * A class with functions for randomizing from the command line.
  */
-public class CliRandomizer implements RandomizerUI {
-
-    // TODO: Why is this class fully static? It gives bad vibes since it's also in Java. Is it really fine like this?
+public class RandomizerCLI implements RandomizerUI {
 
     private final static ResourceBundle bundle = java.util.ResourceBundle.getBundle("com/uprfvx/random/gui/Bundle");
 
@@ -62,7 +60,7 @@ public class CliRandomizer implements RandomizerUI {
                 printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
             }
 
-            CliRandomizer.displaySettingsWarnings(settings, romHandler);
+            RandomizerCLI.displaySettingsWarnings(settings, romHandler);
 
             File fh = new File(destinationRomFilePath);
             if (!saveAsDirectory) {
@@ -308,7 +306,7 @@ public class CliRandomizer implements RandomizerUI {
             }
         }
 
-        boolean processResult = new CliRandomizer().performDirectRandomization(
+        boolean processResult = new RandomizerCLI().performDirectRandomization(
                 sourceRomFilePath,
                 outputRomFilePath,
                 settings,

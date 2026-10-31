@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class CliRandomizerTest {
+public class RandomizerCLITest {
 
     static final String SOURCE_PATH = System.getProperty("romsPath") + "/Gold (U).gbc";
     static final String OUT_PATH = "build/test-results/cli_test_out.gbc";
@@ -25,7 +25,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_noSourcePathGiven_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH
         }));
@@ -33,7 +33,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_noOutputPathGiven_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-s", SETTINGS_PATH
         }));
@@ -41,7 +41,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_cannotReadSourcePath_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", RootPath.path + "NON_EXISTENT.gb",
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH
@@ -50,7 +50,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_cannotWriteOutputPathParentFolder_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", RootPath.path + "/NON_EXISTENT/cli_test_out.gb",
                 "-s", SETTINGS_PATH
@@ -59,7 +59,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_noSettingsGiven_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
         }));
@@ -67,7 +67,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_cannotOpenSettingsPath_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", RootPath.path + "/NON_EXISTENT/cli_clean.rnqs"
@@ -76,7 +76,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_invalidSettingsFile_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH_INVALID
@@ -85,7 +85,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_invalidSettingsString_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-S", SETTINGS_STRING_INVALID
@@ -94,7 +94,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_seedIsNotLong_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
@@ -104,7 +104,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_invalidCPGType_fails() {
-        assertEquals(1, CliRandomizer.invoke(new String[]{
+        assertEquals(1, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
@@ -114,7 +114,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_withSettingsPath_succeeds() {
-        assertEquals(0, CliRandomizer.invoke(new String[]{
+        assertEquals(0, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
@@ -123,7 +123,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_withSettingsString_succeeds() {
-        assertEquals(0, CliRandomizer.invoke(new String[]{
+        assertEquals(0, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-S", SETTINGS_STRING,
@@ -132,7 +132,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_withSeed_succeeds() {
-        assertEquals(0, CliRandomizer.invoke(new String[]{
+        assertEquals(0, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
@@ -142,14 +142,14 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_withSameSeed_givesIdenticalFiles() throws IOException {
-        CliRandomizer.invoke(new String[]{
+        RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
                 "-z", SEED_STRING
         });
         byte[] a = Files.readAllBytes(Paths.get(OUT_PATH));
-        CliRandomizer.invoke(new String[]{
+        RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
@@ -161,14 +161,14 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_withDifferentSeeds_givesDifferentFiles() throws IOException {
-        CliRandomizer.invoke(new String[]{
+        RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
                 "-z", SEED_STRING
         });
         byte[] a = Files.readAllBytes(Paths.get(OUT_PATH));
-        CliRandomizer.invoke(new String[]{
+        RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,
@@ -180,7 +180,7 @@ public class CliRandomizerTest {
 
     @Test
     public void invoke_withCPG_succeeds() {
-        assertEquals(0, CliRandomizer.invoke(new String[]{
+        assertEquals(0, RandomizerCLI.invoke(new String[]{
                 "-i", SOURCE_PATH,
                 "-o", OUT_PATH,
                 "-s", SETTINGS_PATH,

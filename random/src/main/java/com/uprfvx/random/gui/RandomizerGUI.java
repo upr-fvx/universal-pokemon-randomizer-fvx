@@ -23,7 +23,7 @@ package com.uprfvx.random.gui;
 /*----------------------------------------------------------------------------*/
 
 import com.uprfvx.random.*;
-import com.uprfvx.random.cli.CliRandomizer;
+import com.uprfvx.random.cli.RandomizerCLI;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
@@ -4032,7 +4032,7 @@ public class RandomizerGUI implements RandomizerUI {
         if (firstCliArg.equals("cli")) {
             // snip the "cli" flag arg off the args array and invoke command
             String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
-            int exitCode = CliRandomizer.invoke(commandArgs);
+            int exitCode = RandomizerCLI.invoke(commandArgs);
             System.exit(exitCode);
         } else {
             if (firstCliArg.equals("please-use-the-launcher")) usedLauncher = true;

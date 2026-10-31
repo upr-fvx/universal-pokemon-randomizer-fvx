@@ -1708,7 +1708,7 @@ public class RandomizerGUI {
                 SwingUtilities.invokeLater(() -> {
                     opDialog.setVisible(false);
                     initialState();
-                    attemptToLogException(e, "GUI.loadROM.loadFailedDialog.message", "GUI.loadROM.loadFailedNoLogDialog.message", null, null);
+                    attemptToLogException(e, "GUI.loadROM.loadFailedDialog.message", "GUI.loadROM.loadFailedNoLogDialog.message", null);
                 });
             }
         });
@@ -1894,7 +1894,7 @@ public class RandomizerGUI {
                 attemptToLogException(logException,
                         "GUI.saveROM.logFailedDialog.message",
                         "GUI.saveROM.logFailedNoLogDialog.message",
-                        true, settingsManager.toStringOld(), Long.toString(seed));
+                        true, seed);
             }
             try {
                 saveLogFile(fileName, "log", logBAOS.toByteArray());
@@ -2232,8 +2232,7 @@ public class RandomizerGUI {
             attemptToLogException(ex,
                     "GUI.saveROM.saveFailedDialog.message",
                     "GUI.saveROM.saveFailedNoLogDialog.message",
-                    settings.toStringOld(),
-                    Long.toString(seed));
+                    seed);
             log.close();
         }
     }
@@ -2261,13 +2260,13 @@ public class RandomizerGUI {
             Exception e = results.getException();
             if (e instanceof RandomizationException) {
                 attemptToLogException(e, "GUI.saveROM.saveFailedDialog.message", "GUI.saveROM.saveFailedNoLogDialog.message", true,
-                        settings.toStringOld(), Long.toString(seed));
+                        seed);
             } else if (e instanceof CannotWriteToLocationException) {
                 JOptionPane.showMessageDialog(mainPanel,
                         String.format(bundle.getString("GUI.saveROM.cannotWriteToLocationDialog.message"), filename));
             } else {
                 attemptToLogException(e, "GUI.saveROM.saveFailedIODialog.message", "GUI.saveROM.saveFailedIONoLogDialog.message",
-                        settings.toStringOld(), Long.toString(seed));
+                        seed);
             }
 
             SwingUtilities.invokeLater(() -> {
@@ -2350,7 +2349,7 @@ public class RandomizerGUI {
             attemptToLogException(logException,
                     "GUI.saveROM.logFailedDialog.message",
                     "GUI.saveROM.logFailedNoLogDialog.message",
-                    true, settingsManager.toStringOld(), Long.toString(seed));
+                    true, seed);
         }
         try {
             saveLogFile(filename, "log", logBAOS.toByteArray());
@@ -2680,7 +2679,8 @@ public class RandomizerGUI {
             try {
                 t.join();
             } catch (InterruptedException e) {
-                attemptToLogException(e, "GUI.loadROM.loadFailedDialog.message", "GUI.loadROM.loadFailedNoLogDialog.message", null, null);
+                attemptToLogException(e, "GUI.loadROM.loadFailedDialog.message",
+                        "GUI.loadROM.loadFailedNoLogDialog.message", null);
             }
         }
     }
@@ -3022,15 +3022,12 @@ public class RandomizerGUI {
         **/
     }
 
-    private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey,
-                                       String settingsString, String seedString) {
-        attemptToLogException(ex, baseMessageKey, noLogMessageKey, false, settingsString, seedString);
+    private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey, Long seed) {
+        attemptToLogException(ex, baseMessageKey, noLogMessageKey, false, seed);
     }
 
     private void attemptToLogException(Exception ex, String baseMessageKey, String noLogMessageKey, boolean showMessage,
-                                       String settingsString, String seedString) {
-        // TODO: rewrite somehow since we no longer have settingsString
-
+                                       Long seed) {
         // Make sure the operation dialog doesn't show up over the error
         // dialog
         SwingUtilities.invokeLater(() -> RandomizerGUI.this.opDialog.setVisible(false));
@@ -3041,11 +3038,11 @@ public class RandomizerGUI {
             String errlog = "error_" + ft.format(now) + ".txt";
             PrintStream ps = new PrintStream(new FileOutputStream(errlog));
             ps.println("Randomizer Version: " + Version.LATEST.name);
-            if (seedString != null) {
-                ps.println("Seed: " + seedString);
+            if (seed != null) {
+                ps.println("Seed: " + Long.toString(seed));
             }
-            if (settingsString != null) {
-                ps.println("Settings String: " + settingsString);
+            if (settingsManager != null) {
+                ps.println("Settings:\n" + settingsManager);
             }
             ps.println("Java Version: " + System.getProperty("java.version") + ", " + System.getProperty("java.vm.name"));
             PrintStream e1 = System.err;
@@ -3261,7 +3258,8 @@ public class RandomizerGUI {
                 romHandler.closeResources();
             }
         } catch (Exception e) {
-            attemptToLogException(e, "GUI.loadROM.processFailedDialog.message", "GUI.loadROM.processFailedNoLogDialog.message", null, null);
+            attemptToLogException(e, "GUI.loadROM.processFailedDialog.message",
+                    "GUI.loadROM.processFailedNoLogDialog.message", null);
             unloadRomHandler();
             initialState();
         }

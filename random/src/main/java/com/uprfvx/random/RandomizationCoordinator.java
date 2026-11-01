@@ -45,12 +45,15 @@ public class RandomizationCoordinator {
             GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, saveAsDirectory);
             results = randomizer.randomize(fileName, seed);
 
+            if (!results.wasSaveSuccessful()) {
+                ui.displayRandomizationFailure(results.getException(), seed);
+                return;
+            }
+
             if (mode == RandomizeMode.BATCH && batchSaveLogs) {
-                try {
-                    saveLogFile(fileName, batchLogSuffix, results.getLogBAOS().toByteArray());
-                } catch (IOException e) {
-                    // TODO: what to do here
-                }
+                Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
+                saveBatchLog(fileName, batchLogSuffix, i, batchSize,
+                        logException, results.getLogBAOS(), seed);
             }
             if (mode == RandomizeMode.BATCH) {
                 ui.reinitializeRomHandler(true);
@@ -67,6 +70,20 @@ public class RandomizationCoordinator {
         ui.displayRandomizationCoordinationDone(mode, batchNumber, batchSaveLogs, racePreset, racePresetLogExists);
 
         updateUIStateAfterSuccess(unloadGameOnSuccess);
+    }
+
+    private void saveBatchLog(String fileName, String batchLogSuffix,
+                              int currentBatch, int batchSize,
+                              Exception logException, ByteArrayOutputStream logBAOS,
+                              long seed) {
+        if (logException != null) {
+            ui.displayBatchLoggingFailure(logException, seed, currentBatch, batchSize);
+        }
+        try {
+            saveLogFile(fileName, batchLogSuffix, logBAOS.toByteArray());
+        } catch (IOException e) {
+            ui.displayBatchLogFileSaveFailure(currentBatch, batchSize);
+        }
     }
 
     private String prepareFileName(String originalFN, RomHandler romHandler, boolean saveAsDirectory,

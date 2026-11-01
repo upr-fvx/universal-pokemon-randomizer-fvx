@@ -1800,19 +1800,22 @@ public class RandomizerGUI implements RandomizerUI {
                 0, 0, false, null, false, false);
     }
 
+    private boolean showedBatchLogFailure;
+
     @Override
     public void displayRandomizationStarted() {
         opDialog = new OperationDialog("", frame, true);
+        showedBatchLogFailure = false;
     }
 
     @Override
-    public void displayRandomizationProgress(int current, int batchSize) {
+    public void displayRandomizationProgress(int currentBatch, int batchSize) {
         String text;
         if (batchSize == 1) {
             text = bundle.getString("GUI.saveROM.savingDialog.message");
         } else {
             text = String.format(bundle.getString("GUI.saveROM.savingDialogBatch.message"),
-                    current + 1, batchSize);
+                    currentBatch + 1, batchSize);
         }
         opDialog.setLoadingLabelText(text);
     }
@@ -1820,6 +1823,38 @@ public class RandomizerGUI implements RandomizerUI {
     @Override
     public void displayRandomizationEnded() {
         opDialog.setVisible(false);
+    }
+
+    @Override
+    public void displayRandomizationFailure(Exception exception, long seed) {
+        attemptToLogException(exception,
+                "GUI.saveROM.saveFailedDialog.message",
+                "GUI.saveROM.saveFailedNoLogDialog.message",
+                seed);
+    }
+
+    @Override
+    public void displayBatchLoggingFailure(Exception logException, long seed, int currentBatch, int batchSize) {
+        if (!showedBatchLogFailure) {
+            attemptToLogException(logException,
+                    "GUI.saveROM.logFailedDialog.message",
+                    "GUI.saveROM.logFailedNoLogDialog.message",
+                    true, seed);
+            String batchMessage = String.format(bundle.getString("GUI.saveROM.batchLogFailedDialog.message"),
+                    currentBatch + 1, batchSize);
+            JOptionPane.showMessageDialog(frame, batchMessage);
+            showedBatchLogFailure = true;
+        }
+    }
+
+    @Override
+    public void displayBatchLogFileSaveFailure(int currentBatch, int batchSize) {
+        if (!showedBatchLogFailure) {
+            String message = String.format(bundle.getString("GUI.saveROM.batchLogSaveFailedDialog.message"),
+                    currentBatch + 1, batchSize);
+            JOptionPane.showMessageDialog(frame, message);
+            showedBatchLogFailure = true;
+        }
     }
 
     @Override

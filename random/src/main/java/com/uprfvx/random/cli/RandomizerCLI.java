@@ -4,6 +4,7 @@ import com.uprfvx.random.RandomizationCoordinator;
 import com.uprfvx.random.RandomizeMode;
 import com.uprfvx.random.RandomizerUI;
 import com.uprfvx.random.gui.CPGSelection;
+import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -20,7 +21,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- * A class with functions for randomizing from the command line.
+ * A class with functions for randomizing from the command line.<br>
+ * This implements {@link RandomizerUI} but does currently not support batch mode or race mode.
  */
 public class RandomizerCLI implements RandomizerUI {
 
@@ -31,7 +33,7 @@ public class RandomizerCLI implements RandomizerUI {
     private boolean saveLog;
 
     private boolean performDirectRandomization(String sourceRomFilePath, String destinationRomFilePath,
-                                               SettingsManager settings, long seed,
+                                               SettingsManager settings, Long seed,
                                                String cpgName, PlayerCharacterType cpgType,
                                                boolean saveAsDirectory,
                                                String updateFilePath, boolean saveLog) {
@@ -75,14 +77,19 @@ public class RandomizerCLI implements RandomizerUI {
             }
 
             String filename = fh.getAbsolutePath();
-            RandomizeMode mode = RandomizeMode.LOAD_PRESET;
+
+            RandomizeMode mode;
+            if (seed == null) {
+                seed = SeedPicker.pickSeed();
+                mode = RandomizeMode.NORMAL;
+            } else {
+                mode = RandomizeMode.LOAD_PRESET;
+            }
 
             RandomizationCoordinator rc = new RandomizationCoordinator(this);
             rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,
                     // args that don't matter v
                     0, 0, false, null, false, false);
-
-            System.out.println("Randomized successfully!");
             // this is the only successful exit, everything else will return false at the end of the function
             return true;
 
@@ -98,8 +105,10 @@ public class RandomizerCLI implements RandomizerUI {
     }
 
     @Override
-    public void displayRandomizationProgress(int current, int batchSize) {
-        // nothing, cuz no batch mode here yet
+    public void displayRandomizationProgress(int currentBatch, int batchSize) {
+        if (batchSize != 1) {
+            System.out.printf("Randomizing game %d/%d...%n", currentBatch + 1, batchSize);
+        }
     }
 
     @Override
@@ -114,7 +123,23 @@ public class RandomizerCLI implements RandomizerUI {
 
     @Override
     public void displayRandomizationCoordinationDone(RandomizeMode mode, int batchNumber, boolean batchSaveLogs, boolean racePreset, boolean racePresetLogExists) {
+        System.out.println("Done!");
+    }
 
+    @Override
+    public void displayRandomizationFailure(Exception exception, long seed) {
+        printError("Randomization failed.\n" + Arrays.toString(exception.getStackTrace()));
+    }
+
+    @Override
+    public void displayBatchLoggingFailure(Exception logException, long seed, int currentBatch, int batchSize) {
+        printWarning(String.format("Logging partially failed for game %d/%d.\n%s",
+                currentBatch + 1, batchSize, logException.getMessage()));
+    }
+
+    @Override
+    public void displayBatchLogFileSaveFailure(int currentBatch, int batchSize) {
+        printError(String.format("Could not save log file for game %d/%d.", currentBatch + 1, batchSize));
     }
 
     @Override
@@ -189,7 +214,7 @@ public class RandomizerCLI implements RandomizerUI {
         String outputRomFilePath = null;
 
         SettingsManager settings;
-        long seed = -1;
+        Long seed = null;
         String settingsFilePath = null;
         String settingsString = null;
         String seedString = null;

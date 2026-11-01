@@ -8,14 +8,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Coordinates the randomization pipeline, accounting for features like
- * loading from a preset file, batch mode, and actually outputting log/preset files.
+ * Coordinates the randomization pipeline, though not the randomization itself (directly),
+ * since that is handled by the {@link GameRandomizer} class.<br>
+ * This class accounts for features like race mode, batch mode, and loading from a preset file,
+ * as well as actually outputting log/preset files.
  */
 public class RandomizationCoordinator {
-
-    public enum RandomizeMode {
-        NORMAL, CREATE_RACE, BATCH, LOAD_PRESET
-    }
 
     public record LogPresetPromptResults(boolean createLog, boolean createPreset) {}
 

@@ -1751,10 +1751,6 @@ public class RandomizerGUI implements RandomizerUI {
         }
     }
 
-    private enum RandomizeMode {
-        NORMAL, CREATE_RACE, BATCH, LOAD_PRESET
-    }
-
     private void randomizeButtonPressed(ActionEvent e) {
         if (romHandler == null) {
             return; // none loaded
@@ -1795,9 +1791,7 @@ public class RandomizerGUI implements RandomizerUI {
 
         long seed = SeedPicker.pickSeed();
 
-        RandomizationCoordinator.RandomizeMode mode = raceModeCheckBox.isSelected() ?
-                RandomizationCoordinator.RandomizeMode.CREATE_RACE :
-                RandomizationCoordinator.RandomizeMode.NORMAL;
+        RandomizeMode mode = raceModeCheckBox.isSelected() ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
 
         RandomizationCoordinator rc = new RandomizationCoordinator(this);
         rc.randomize(romHandler, file.getAbsolutePath(), saveAsDirectory, unloadGameOnSuccess,
@@ -1884,7 +1878,7 @@ public class RandomizerGUI implements RandomizerUI {
     }
 
     @Override
-    public void displayRandomizationCoordinationDone(RandomizationCoordinator.RandomizeMode mode,
+    public void displayRandomizationCoordinationDone(RandomizeMode mode,
                                                      int batchNumber, boolean batchSaveLogs,
                                                      boolean racePreset, boolean racePresetLogExists) {
         String key = switch (mode) {
@@ -1899,7 +1893,7 @@ public class RandomizerGUI implements RandomizerUI {
                      "GUI.saveROM.randomizationDoneDialog.racePreset.message") :
                     "GUI.saveROM.randomizationDoneDialog.normal.message";
         };
-        if (mode == RandomizationCoordinator.RandomizeMode.BATCH) {
+        if (mode == RandomizeMode.BATCH) {
             JOptionPane.showMessageDialog(frame, String.format(bundle.getString(key), batchNumber));
         } else {
             JOptionPane.showMessageDialog(frame, bundle.getString(key));

@@ -10,7 +10,7 @@ public interface RandomizerUI {
 
     RandomizationCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode);
 
-    void displayRandomizationCoordinationDone(RandomizationCoordinator.RandomizeMode mode,
+    void displayRandomizationCoordinationDone(RandomizeMode mode,
                                               int batchNumber, boolean batchSaveLogs,
                                               boolean racePreset, boolean racePresetLogExists);
 

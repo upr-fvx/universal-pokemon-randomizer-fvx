@@ -1,6 +1,7 @@
 package com.uprfvx.random.cli;
 
 import com.uprfvx.random.RandomizationCoordinator;
+import com.uprfvx.random.RandomizeMode;
 import com.uprfvx.random.RandomizerUI;
 import com.uprfvx.random.gui.CPGSelection;
 import com.uprfvx.random.settings.SettingsManager;
@@ -74,7 +75,7 @@ public class RandomizerCLI implements RandomizerUI {
             }
 
             String filename = fh.getAbsolutePath();
-            RandomizationCoordinator.RandomizeMode mode = RandomizationCoordinator.RandomizeMode.LOAD_PRESET;
+            RandomizeMode mode = RandomizeMode.LOAD_PRESET;
 
             RandomizationCoordinator rc = new RandomizationCoordinator(this);
             rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,
@@ -112,7 +113,7 @@ public class RandomizerCLI implements RandomizerUI {
     }
 
     @Override
-    public void displayRandomizationCoordinationDone(RandomizationCoordinator.RandomizeMode mode, int batchNumber, boolean batchSaveLogs, boolean racePreset, boolean racePresetLogExists) {
+    public void displayRandomizationCoordinationDone(RandomizeMode mode, int batchNumber, boolean batchSaveLogs, boolean racePreset, boolean racePresetLogExists) {
 
     }
 

@@ -40,6 +40,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 /**
@@ -218,7 +219,7 @@ public class GameRandomizer {
 
             try {
                 results.logBAOS = new ByteArrayOutputStream();
-                PrintStream log = new PrintStream(results.logBAOS);
+                PrintStream log = new PrintStream(results.logBAOS, false, StandardCharsets.UTF_8);
                 logger.logResults(log, startTime);
             } catch (Exception e) {
                 results.logE = e;

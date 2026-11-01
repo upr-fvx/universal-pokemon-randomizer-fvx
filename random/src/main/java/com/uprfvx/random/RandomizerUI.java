@@ -19,13 +19,13 @@ public interface RandomizerUI {
                                               int batchNumber, boolean batchSaveLogs,
                                               boolean racePreset, boolean racePresetLogExists);
 
-    void displayRandomizationFailure(Exception exception, long seed);
+    void displayRandomizationFailure(Exception e, long seed, String fileName);
 
-    void displayBatchLoggingFailure(Exception logException, long seed, int currentBatch, int batchSize);
+    void displayBatchLoggingFailure(Exception logE, long seed, int currentBatch, int batchSize);
 
     void displayBatchLogFileSaveFailure(int currentBatch, int batchSize);
 
-    void displayLoggingFailure(Exception logException, long seed);
+    void displayLoggingFailure(Exception logE, long seed);
 
     void displayLogFileSaveFailure();
 

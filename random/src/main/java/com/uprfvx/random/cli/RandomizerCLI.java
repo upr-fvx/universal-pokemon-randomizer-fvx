@@ -3,9 +3,11 @@ package com.uprfvx.random.cli;
 import com.uprfvx.random.RandomizationCoordinator;
 import com.uprfvx.random.RandomizeMode;
 import com.uprfvx.random.RandomizerUI;
+import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.gui.CPGSelection;
 import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.graphics.packs.GraphicsPack;
@@ -127,14 +129,20 @@ public class RandomizerCLI implements RandomizerUI {
     }
 
     @Override
-    public void displayRandomizationFailure(Exception exception, long seed) {
-        printError("Randomization failed.\n" + Arrays.toString(exception.getStackTrace()));
+    public void displayRandomizationFailure(Exception e, long seed, String fileName) {
+        if (e instanceof RandomizationException) {
+            printError("Randomization failed.\n" + Arrays.toString(e.getStackTrace()));
+        } else if (e instanceof CannotWriteToLocationException) {
+            printError("Could not write randomized file to " + fileName + ".");
+        } else {
+            printError("Randomization failed; likely an IO issue.\n" + Arrays.toString(e.getStackTrace()));
+        }
     }
 
     @Override
-    public void displayBatchLoggingFailure(Exception logException, long seed, int currentBatch, int batchSize) {
+    public void displayBatchLoggingFailure(Exception logE, long seed, int currentBatch, int batchSize) {
         printWarning(String.format("Logging partially failed for game %d/%d.\n%s",
-                currentBatch + 1, batchSize, logException.getMessage()));
+                currentBatch + 1, batchSize, logE.getMessage()));
     }
 
     @Override
@@ -143,8 +151,8 @@ public class RandomizerCLI implements RandomizerUI {
     }
 
     @Override
-    public void displayLoggingFailure(Exception logException, long seed) {
-        printWarning("Logging partially failed.\n" + Arrays.toString(logException.getStackTrace()));
+    public void displayLoggingFailure(Exception logE, long seed) {
+        printWarning("Logging partially failed.\n" + Arrays.toString(logE.getStackTrace()));
     }
 
     @Override

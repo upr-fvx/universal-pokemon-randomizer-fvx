@@ -1826,17 +1826,27 @@ public class RandomizerGUI implements RandomizerUI {
     }
 
     @Override
-    public void displayRandomizationFailure(Exception exception, long seed) {
-        attemptToLogException(exception,
-                "GUI.saveROM.saveFailedDialog.message",
-                "GUI.saveROM.saveFailedNoLogDialog.message",
-                seed);
+    public void displayRandomizationFailure(Exception e, long seed, String filename) {
+        if (e instanceof RandomizationException) {
+            attemptToLogException(e,
+                    "GUI.saveROM.saveFailedDialog.message",
+                    "GUI.saveROM.saveFailedNoLogDialog.message",
+                    true, seed);
+        } else if (e instanceof CannotWriteToLocationException) {
+            JOptionPane.showMessageDialog(mainPanel,
+                    String.format(bundle.getString("GUI.saveROM.cannotWriteToLocationDialog.message"), filename));
+        } else {
+            attemptToLogException(e,
+                    "GUI.saveROM.saveFailedIODialog.message",
+                    "GUI.saveROM.saveFailedIONoLogDialog.message",
+                    seed);
+        }
     }
 
     @Override
-    public void displayBatchLoggingFailure(Exception logException, long seed, int currentBatch, int batchSize) {
+    public void displayBatchLoggingFailure(Exception logE, long seed, int currentBatch, int batchSize) {
         if (!showedBatchLogFailure) {
-            attemptToLogException(logException,
+            attemptToLogException(logE,
                     "GUI.saveROM.logFailedDialog.message",
                     "GUI.saveROM.logFailedNoLogDialog.message",
                     true, seed);
@@ -1858,8 +1868,8 @@ public class RandomizerGUI implements RandomizerUI {
     }
 
     @Override
-    public void displayLoggingFailure(Exception logException, long seed) {
-        attemptToLogException(logException,
+    public void displayLoggingFailure(Exception logE, long seed) {
+        attemptToLogException(logE,
                 "GUI.saveROM.logFailedDialog.message",
                 "GUI.saveROM.logFailedNoLogDialog.message",
                 true, seed);

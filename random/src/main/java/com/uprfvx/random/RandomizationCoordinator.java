@@ -46,7 +46,7 @@ public class RandomizationCoordinator {
             results = randomizer.randomize(fileName, seed);
 
             if (!results.wasSaveSuccessful()) {
-                ui.displayRandomizationFailure(results.getException(), seed);
+                ui.displayRandomizationFailure(results.getException(), seed, fileName);
                 return;
             }
 

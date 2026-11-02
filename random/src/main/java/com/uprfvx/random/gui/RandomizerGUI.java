@@ -2004,10 +2004,10 @@ public class RandomizerGUI implements RandomizerUI {
 //                    }
                     this.restoreStateFromSettings(settings);
 
-                    if (settings.isUpdatedFromOldVersion()) {
-                        // show a warning dialog, but load it
-                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.settingsFileOlderDialog.message"));
-                    }
+//                    if (settings.isUpdatedFromOldVersion()) {
+//                        // show a warning dialog, but load it
+//                        JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.settingsFileOlderDialog.message"));
+//                    }
 
                     JOptionPane.showMessageDialog(frame,
                             String.format(bundle.getString("GUI.loadSettings.settingsLoadedDialog.message"), fh.getName()));

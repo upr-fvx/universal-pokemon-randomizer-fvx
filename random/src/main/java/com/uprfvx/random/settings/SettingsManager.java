@@ -42,8 +42,6 @@ import java.util.stream.Stream;
 import static com.uprfvx.random.settings.Settings.ALL_SETTINGS;
 import static com.uprfvx.random.settings.Settings.Name;
 import com.uprfvx.random.settings.Settings.Category;
-import ini.IniEntry;
-import ini.IniEntryReader;
 
 public class SettingsManager {
 
@@ -54,16 +52,11 @@ public class SettingsManager {
     //A reverse lookup of setting restrictions (full setting and value).
     //Needed so that dependent settings can be updated, and listeners alerted, when a setting is changed.
     private Map<Category, List<Name>> categorizedNames;
-    private Map<Name, Set<SettingChangeListener>> listeners;
+    private final Map<Name, Set<SettingChangeListener>> listeners;
 
-    private Set<SettingChangeListener> universalListeners;
+    private final Set<SettingChangeListener> universalListeners;
 
     private RomHandler game;
-
-    // TODO: break out into "results" record?
-    private boolean updatedFromOldVersion;
-    public enum GameMatch { NO_GAME_LOADED, NO_MATCH, MATCH }
-    private GameMatch loadedSettingsMatchGame;
 
     private boolean batchMode = false;
 
@@ -213,7 +206,7 @@ public class SettingsManager {
             throw new IllegalArgumentException("The setting \"" + settingName + "\" does not exist.");
 
         Set<SettingChangeListener> settingListeners = listeners.computeIfAbsent(settingName,
-                set -> new HashSet<>());
+                _ -> new HashSet<>());
         settingListeners.add(listener);
     }
 
@@ -555,13 +548,26 @@ public class SettingsManager {
         }
     }
 
+    public enum GameMatch { NO_GAME_LOADED, NO_MATCH, MATCH }
+
+    /**
+     * The results of {@link #populateFromIni(String)}.
+     * @param versionID The {@link Version} ID of the loaded ini.
+     * @param oldVersion Whether the ini's Version ID represents an old Version
+     *                   (relative the current one).
+     * @param romName The name of the ROM the loaded ini was created for.
+     * @param romNameMatchesAssociated Whether the ini's ROM name matches the name
+     *                                 of the ROM associated with the SettingsManager.
+     */
+    public record FromIniResults(int versionID, boolean oldVersion, String romName, GameMatch romNameMatchesAssociated) {}
+
     /**
      * Resets all settings to default, then reads a String ini format output by {@link #toString()},
      * and repopulates the setting states accordingly.<br>
-     * Sets {@link #updatedFromOldVersion} to true in case {@code Version} is an old version, false otherwise.<br>
+     * @return a {@link FromIniResults}.
      * @throws IllegalArgumentException in case the format is incorrect.
      */
-    public void populateFromIni(String ini) {
+    public FromIniResults populateFromIni(String ini) {
         SettingsIniEntry entry = SettingsIniEntry.readFromString(ini);
 
         resetAll();
@@ -574,17 +580,17 @@ public class SettingsManager {
         new SettingsUpdater().update(this, entry.getVersionID());
         batchFinalize();
 
-        if (entry.getVersionID() != Version.LATEST.id) {
-            updatedFromOldVersion = true;
-        }
+        boolean oldVersion = entry.getVersionID() < Version.LATEST.id;
+        GameMatch romNameMatchesAssociated;
         if (game == null) {
-            loadedSettingsMatchGame = GameMatch.NO_GAME_LOADED;
+            romNameMatchesAssociated = GameMatch.NO_GAME_LOADED;
         } else if (entry.getROMName().equals(game.getROMName())) {
-            loadedSettingsMatchGame = GameMatch.MATCH;
+            romNameMatchesAssociated = GameMatch.MATCH;
         } else {
-            loadedSettingsMatchGame = GameMatch.NO_MATCH;
+            romNameMatchesAssociated = GameMatch.NO_MATCH;
         }
 
+        return new FromIniResults(entry.getVersionID(), oldVersion, entry.getROMName(), romNameMatchesAssociated);
         // TODO: some other output depending on corrupted (but still legible) inis?
     }
 
@@ -747,7 +753,7 @@ public class SettingsManager {
             List<Name> settingsDependentOn = definition.getSettingsDependentOn();
             for (Name otherSetting : settingsDependentOn) {
                 Set<Name> otherSettingDependents = dependencies.computeIfAbsent(otherSetting,
-                        set -> new HashSet<>());
+                        _ -> new HashSet<>());
                 otherSettingDependents.add(name);
             }
 
@@ -973,7 +979,7 @@ public class SettingsManager {
             s = new SettingsStringUpdater().update(version, s);
         }
         SettingsManager settings = fromStringWithoutVersion(s);
-        settings.setUpdatedFromOldVersion(updated);
+        //settings.setUpdatedFromOldVersion(updated);
         return settings;
     }
 
@@ -1684,15 +1690,4 @@ public class SettingsManager {
         this.romName = romName;
     }
 
-    public boolean isUpdatedFromOldVersion() {
-        return updatedFromOldVersion;
-    }
-
-    private void setUpdatedFromOldVersion(boolean updatedFromOldVersion) {
-        this.updatedFromOldVersion = updatedFromOldVersion;
-    }
-
-    public GameMatch getLoadedSettingsMatchGame() {
-        return loadedSettingsMatchGame;
-    }
 }

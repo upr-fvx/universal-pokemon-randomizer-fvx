@@ -157,16 +157,24 @@ public class PresetLoadDialog extends JDialog {
                     seed -= SysConstants.RACE_MODE_SEED_LOG_ADDEND;
                 }
 
+                SettingsManager settings = new SettingsManager();
+                SettingsManager.FromIniResults results = settings.populateFromIni(
+                        Files.readString(fh.toPath(), StandardCharsets.UTF_8));
+                if (results.versionID() != Version.LATEST.id) {
+                    promptForDifferentRandomizerVersion(results.versionID());
+                    invalidPreset();
+                    return;
+                }
+
                 this.seed = seed;
                 this.raceMode = raceMode;
                 this.raceModeSavedLog = raceModeSavedLog;
-
-                SettingsManager settings = new SettingsManager();
-                // TODO: we want to read results here, to deny presets from wrong version, and request the right game
-                // important that populateFromIni can read (but deny) invalid settings, because we want
-                // it to not fail fully when reading too-new settings.
-                settings.populateFromIni(Files.readString(fh.toPath(), StandardCharsets.UTF_8));
                 this.settings = settings;
+
+                requiredName = results.romName();
+                romRequiredLabel.setText(String.format(
+                        bundle.getString("PresetLoadDialog.romRequiredLabel.textWithROM"), requiredName));
+                romButton.setEnabled(true);
 
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.loadingSeedFileFailed"));

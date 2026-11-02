@@ -788,7 +788,8 @@ public class SettingsStringConverter {
         // Byte 70+: ROM name
         int romNameLength = d[69] & 0xFF;
         String romName = new String(d, 70, romNameLength, StandardCharsets.US_ASCII);
-        m.setRomName(romName);
+        // m.setRomName(romName);
+        // TODO: some way of getting the ROM name out of here
     }
 
     private void loadBoolean(SettingsManager manager, byte[] data, int byteNum, int bitNum, Settings.Name name) {

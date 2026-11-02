@@ -40,8 +40,11 @@ public class SysConstants {
 
     // Arbitrary numbers to make cheating via editing a preset file slightly harder.
     // They are today's date and Wormadam(my favorite mon)'s Pokédex num repeated.
-    // (doesn't matter they are non-random, because the code is open source anyways)
+    // (doesn't matter they are non-random, because the code is open source anyway)
     // -- voliol 2026-10-31
     public static final long RACE_MODE_SEED_ADDEND = 2026103120261031L;
     public static final long RACE_MODE_SEED_LOG_ADDEND = 413413413413413413L;
+    public static final String RACE_MODE_IDENTIFIER = "Race mode!";
+    public static final String RACE_MODE_LOG_IDENTIFIER = "Race log created.";
+    public static final String SEED_IDENTIFIER = "Random seed: ";
 }

@@ -5,10 +5,6 @@
 package com.uprfvx.random.gui;
 
 /*----------------------------------------------------------------------------*/
-/*--  PresetFileFilter.java - a file filter for the "randomization presets" --*/
-/*--                          which allow the same random ROM to be produced--*/
-/*--                          on demand.                                    --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -32,7 +28,12 @@ package com.uprfvx.random.gui;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
+import java.util.List;
 
+/**
+ * A file filter for the "randomization presets" which allow
+ * the same random ROM to be produced on demand.
+ */
 public class PresetFileFilter extends FileFilter {
 
     @Override
@@ -46,12 +47,13 @@ public class PresetFileFilter extends FileFilter {
         }
         String extension = arg0.getName().substring(
                 arg0.getName().lastIndexOf('.') + 1);
-        return extension.toLowerCase().equals("rndp");
+        return List.of("preset", "log").contains(extension.toLowerCase())
+                || (filename.startsWith("error_") && extension.equalsIgnoreCase("txt"));
     }
 
     @Override
     public String getDescription() {
-        return "Pokemon Randomizer Preset (*.rndp)";
+        return "Pokémon Randomizer Preset, Log, or Error Log file (*.preset, *.log, error_*.txt)";
     }
 
 }

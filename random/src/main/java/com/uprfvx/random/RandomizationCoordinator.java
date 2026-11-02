@@ -140,14 +140,14 @@ public class RandomizationCoordinator {
         PrintStream ps = new PrintStream(baos, false, StandardCharsets.UTF_8);
         ps.println("[ Universal Pokémon Randomizer FVX - Randomized Game Preset ]");
         if (raceMode) {
-            ps.println("Race mode!");
+            ps.println(SysConstants.RACE_MODE_IDENTIFIER);
             seed += SysConstants.RACE_MODE_SEED_ADDEND;
             if (raceLogCreated) {
-                ps.println("Race log created.");
+                ps.println(SysConstants.RACE_MODE_LOG_IDENTIFIER);
                 seed += SysConstants.RACE_MODE_SEED_LOG_ADDEND;
             }
         }
-        ps.println("Random seed: " + seed);
+        ps.println(SysConstants.SEED_IDENTIFIER + seed);
         ps.println(settings.toString());
 
         try (FileOutputStream fos = new FileOutputStream(filename + ".preset")) {

@@ -44,7 +44,6 @@ import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.*;
 import com.uprfvx.romio.romio.ROMFilter;
 import com.uprfvx.romio.romio.RomOpener;
-import filefunctions.FileNameFunctions;
 
 import javax.swing.*;
 import java.awt.*;
@@ -587,7 +586,6 @@ public class RandomizerGUI implements RandomizerUI {
     private RomHandler romHandler;
 
     private Theme theme = Theme.DEFAULT;
-    private boolean presetMode = false;
     private boolean initialPopup = true;
     private boolean showInvalidRomPopup = true;
     private String openDirectory = RootPath.path;
@@ -1762,6 +1760,23 @@ public class RandomizerGUI implements RandomizerUI {
         // TODO: is there any reason to prevent race mode without trainer/wild randomization?
         //  It probably was due to the checksum depending on that, but is the checksum even used any more?
 
+        File saveFile = chooseSaveFile();
+        if (saveFile == null) return;
+
+        long seed = SeedPicker.pickSeed();
+
+        RandomizeMode mode = raceModeCheckBox.isSelected() ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
+
+        RandomizationCoordinator rc = new RandomizationCoordinator(this);
+        rc.randomize(romHandler, saveFile.getAbsolutePath(), saveFile.isDirectory(), unloadGameOnSuccess,
+                settingsManager, seed, mode,
+                // args that don't matter here v
+                0, 0, false, null, false, false);
+
+        // TODO: set "last used CPG"?
+    }
+
+    private File chooseSaveFile() {
         boolean saveAsDirectory = askToSaveAsDirectory();
         File file = null;
         boolean allowed = false;
@@ -1785,23 +1800,15 @@ public class RandomizerGUI implements RandomizerUI {
         }
 
         if (!allowed) {
-            return;
+            return null;
         }
 
         saveDirectory = file.getParentFile().getAbsolutePath();
         attemptWriteConfig();
-
-        long seed = SeedPicker.pickSeed();
-
-        RandomizeMode mode = raceModeCheckBox.isSelected() ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
-
-        RandomizationCoordinator rc = new RandomizationCoordinator(this);
-        rc.randomize(romHandler, file.getAbsolutePath(), saveAsDirectory, unloadGameOnSuccess,
-                settingsManager, seed, mode,
-                // args that don't matter here v
-                0, 0, false, null, false, false);
-
-        // TODO: set "last used CPG"?
+        if (!saveAsDirectory && file.isDirectory()) {
+            throw new IllegalStateException("Must not choose a directory.");
+        }
+        return file;
     }
 
     private boolean showedBatchLogFailure;
@@ -2043,13 +2050,6 @@ public class RandomizerGUI implements RandomizerUI {
          */
     }
 
-    @Deprecated
-    private void performRandomization(final String filename, final long seed,
-                                      CustomPlayerGraphics cpg,
-                                      boolean saveAsDirectory) {
-        throw new UnsupportedOperationException();
-    }
-
     private void recordCPGAsLastUsed(CustomPlayerGraphics cpg) {
         lastUsedCPGConfigs.put(romHandler.getROMName() + ".pack", cpg.getGraphicsPack().getName());
         lastUsedCPGConfigs.put(romHandler.getROMName() + ".type", cpg.getTypeToReplace().toString());
@@ -2060,79 +2060,29 @@ public class RandomizerGUI implements RandomizerUI {
         PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpenChooser, romOpener);
         if (pld.isCompleted()) {
             // Apply it
-            long seed = pld.getSeed();
-            String config = pld.getSettingsString();
-            unloadRomHandler();
-            this.romHandler = pld.getROM();
-            if (gameUpdates.containsKey(this.romHandler.getROMCode())) {
-                this.romHandler.loadGameUpdate(gameUpdates.get(this.romHandler.getROMCode()));
-            }
-            this.romLoaded();
-            SettingsManager settings;
-            CustomPlayerGraphics customPlayerGraphics = null;
-            try {
-                settings = SettingsManager.fromString(config);
-                customPlayerGraphics = pld.getCustomPlayerGraphics();
-                // settings.tweakForRom(this.romHandler);
-                this.restoreStateFromSettings(settings);
-            } catch (IllegalArgumentException e) {
-                // settings load failed
-                e.printStackTrace();
-                unloadRomHandler();
-                initialState();
-            }
-            SaveType outputType = askToSaveAsDirectoryOld();
-            romSaveChooser.setSelectedFile(null);
-            boolean allowed = false;
-            File fh = null;
-            if (outputType == SaveType.FILE) {
-                romSaveChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-                int returnVal = romSaveChooser.showSaveDialog(frame);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    fh = romSaveChooser.getSelectedFile();
-                    // Fix or add extension
-                    List<String> extensions = new ArrayList<>(Arrays.asList("sgb", "gbc", "gba", "nds", "cxi"));
-                    extensions.remove(this.romHandler.getDefaultExtension());
-                    fh = FileNameFunctions.fixFilename(fh, this.romHandler.getDefaultExtension(), extensions);
-                    allowed = true;
-                    if (this.romHandler instanceof AbstractDSRomHandler || this.romHandler instanceof Abstract3DSRomHandler) {
-                        String currentFN = this.romHandler.loadedFilename();
-                        if (currentFN.equals(fh.getAbsolutePath())) {
-                            JOptionPane.showMessageDialog(frame, bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
-                            allowed = false;
-                        }
-                    }
-                } else {
-                    unloadRomHandler();
-                    initialState();
-                }
-            } else if (outputType == SaveType.DIRECTORY) {
-                romSaveChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                int returnVal = romSaveChooser.showSaveDialog(frame);
-                if (returnVal == JFileChooser.APPROVE_OPTION) {
-                    fh = romSaveChooser.getSelectedFile();
-                    allowed = true;
-                } else {
-                    unloadRomHandler();
-                    initialState();
-                }
+            RomHandler rh = pld.getROM();
+            if (gameUpdates.containsKey(rh.getROMCode())) {
+                rh.loadGameUpdate(gameUpdates.get(rh.getROMCode()));
             }
 
-            if (allowed && fh != null) {
-                // Apply the seed we were given
-                presetMode = true;
-                performRandomization(fh.getAbsolutePath(), seed, customPlayerGraphics, outputType == SaveType.DIRECTORY);
+            File saveFile = chooseSaveFile();
+            if (saveFile == null) return;
+
+            RandomizationCoordinator rc = new RandomizationCoordinator(this);
+            rc.randomize(rh, saveFile.getAbsolutePath(), saveFile.isDirectory(), true,
+                    pld.getSettings(), pld.getSeed(), RandomizeMode.LOAD_PRESET,
+                    0, 0, false, "", // <- irrelevant args
+                    pld.isRaceMode(), pld.isRaceModeSavedLog());
+
+            if (rh.getResourceLifetime() != RomHandler.ResourceLifetime.NONE) {
+                try {
+                    rh.closeResources();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
-    }
-
-    private enum SaveType {
-        FILE, DIRECTORY, INVALID
-    }
-
-    private SaveType askToSaveAsDirectoryOld() {
-        throw new UnsupportedOperationException();
     }
 
     private boolean askToSaveAsDirectory() {
@@ -2695,14 +2645,14 @@ public class RandomizerGUI implements RandomizerUI {
         Date now = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
         try {
-            String errlog = "error_" + ft.format(now) + ".txt";
+            String errlog = "error_" + ft.format(now) + ".log";
             PrintStream ps = new PrintStream(new FileOutputStream(errlog));
             ps.println("Randomizer Version: " + Version.LATEST.name);
             if (seed != null) {
-                ps.println("Seed: " + seed);
+                ps.println(SysConstants.SEED_IDENTIFIER + seed);
             }
             if (settingsManager != null) {
-                ps.println("Settings:\n" + settingsManager);
+                ps.println(settingsManager);
             }
             ps.println("Java Version: " + System.getProperty("java.version") + ", " + System.getProperty("java.vm.name"));
             PrintStream e1 = System.err;

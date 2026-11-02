@@ -1,5 +1,6 @@
 package com.uprfvx.random.gui;
 
+import com.uprfvx.random.SysConstants;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.Version;
 import com.uprfvx.romio.RootPath;
@@ -10,17 +11,13 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romio.RomOpener;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
 
 /**
- * A {@link JDialog} to allow use of preset files or random seed/config string pairs to produce premade ROMs.
+ * A {@link JDialog} to allow use of preset files to produce premade ROMs.
  */
 public class PresetLoadDialog extends JDialog {
     // TODO: rework this class to mirror the removal of settings strings
@@ -31,8 +28,6 @@ public class PresetLoadDialog extends JDialog {
     private JButton presetFileButton;
     private JButton romButton;
     private JTextField presetFileField;
-    private JTextField settingsStringField;
-    private JTextField seedField;
     private JTextField romField;
     private JCheckBox cpgUseCheckButton;
     private JButton cpgSelectLastButton;
@@ -45,10 +40,13 @@ public class PresetLoadDialog extends JDialog {
     private final JFileChooser romFileChooser;
     private final RomOpener romOpener;
 
-    private boolean enforceFieldCheck = true;
     private CustomPlayerGraphics lastUsedCPG;
 
     private RomHandler currentROM;
+    private SettingsManager settings;
+    private long seed;
+    private boolean raceMode;
+    private boolean raceModeSavedLog;
     private CustomPlayerGraphics customPlayerGraphics;
     private String requiredName;
     private boolean completed;
@@ -85,10 +83,6 @@ public class PresetLoadDialog extends JDialog {
         presetFileButton.addActionListener(_ -> onPresetFileButton());
         romButton.addActionListener(_ -> onRomButton());
 
-        DocumentListener checkListener = new CheckDocumentListener();
-        seedField.getDocument().addDocumentListener(checkListener);
-        settingsStringField.getDocument().addDocumentListener(checkListener);
-
         cpgUseCheckButton.addActionListener(_ -> onCPGUseCheckButton());
         cpgSelectLastButton.addActionListener(_ -> onCPGSelectLastButton());
 
@@ -96,101 +90,6 @@ public class PresetLoadDialog extends JDialog {
         cancelButton.addActionListener(_ -> dispose());
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-    }
-
-    private class CheckDocumentListener implements DocumentListener {
-
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            if (enforceFieldCheck) checkValues();
-        }
-
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            if (enforceFieldCheck) checkValues();
-        }
-
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            if (enforceFieldCheck) checkValues();
-        }
-    }
-
-    private boolean checkValues() {
-        String name;
-        try {
-            Long.parseLong(seedField.getText());
-        } catch (NumberFormatException ex) {
-            invalidValues();
-            return false;
-        }
-
-        // 161 onwards: look for version number
-        String configString = settingsStringField.getText();
-        if (configString.length() < 3) {
-            invalidValues();
-            return false;
-        }
-
-        try {
-            int presetVersionNumber = Integer.parseInt(configString.substring(0, 3));
-            if (presetVersionNumber != Version.LATEST.id) {
-                promptForDifferentRandomizerVersion(presetVersionNumber);
-                safelyClearFields();
-                invalidValues();
-                return false;
-            }
-        } catch (NumberFormatException ex) {
-            invalidValues();
-            return false;
-        }
-
-        try {
-            name = getValidRequiredROMName(configString.substring(3));
-        } catch (Exception ex) {
-            safelyClearFields();
-            invalidValues();
-            return false;
-        }
-        if (name == null) {
-            invalidValues();
-            return false;
-        }
-        requiredName = name;
-        romRequiredLabel.setText(String.format(bundle.getString("PresetLoadDialog.romRequiredLabel.textWithROM"),
-                name));
-        romButton.setEnabled(true);
-
-        if (currentROM != null && !currentROM.getROMName().equals(name)) {
-            currentROM = null;
-            applyButton.setEnabled(false);
-            romField.setText("");
-            disableCPGSelection();
-        }
-        return true;
-    }
-
-    private String getValidRequiredROMName(String config) {
-        validateConfigString(config);
-        byte[] data = Base64.getDecoder().decode(config);
-
-        int nameLength = data[SettingsManager.LENGTH_OF_SETTINGS_DATA] & 0xFF;
-        if (data.length != SettingsManager.TOTAL_LENGTH_EXCEPT_NAME + nameLength) {
-            return null; // not valid length
-        }
-        return new String(data, SettingsManager.LENGTH_OF_SETTINGS_DATA + SettingsManager.LENGTH_OF_NAME_LENGTH, nameLength,
-                StandardCharsets.US_ASCII);
-    }
-
-    private void validateConfigString(String config) {
-        byte[] data = Base64.getDecoder().decode(config);
-
-        if (data.length < SettingsManager.TOTAL_LENGTH_EXCEPT_NAME) {
-            throw new IllegalArgumentException("The preset config is too short to be valid");
-        }
-//        if (SettingsManager.hasInvalidChecksum(data)) {
-//            throw new IllegalArgumentException("Checksum failure.");
-//        }
     }
 
     private void promptForDifferentRandomizerVersion(int presetVN) {
@@ -214,17 +113,7 @@ public class PresetLoadDialog extends JDialog {
         }
     }
 
-
-    private void safelyClearFields() {
-        SwingUtilities.invokeLater(() -> {
-            enforceFieldCheck = false;
-            settingsStringField.setText("");
-            seedField.setText("");
-            enforceFieldCheck = true;
-        });
-    }
-
-    private void invalidValues() {
+    private void invalidPreset() {
         currentROM = null;
         romField.setText("");
         romRequiredLabel.setText(bundle.getString("PresetLoadDialog.romRequiredLabel.text"));
@@ -239,38 +128,51 @@ public class PresetLoadDialog extends JDialog {
         int returnVal = presetFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fh = presetFileChooser.getSelectedFile();
+
             try {
-                DataInputStream dis = new DataInputStream(Files.newInputStream(fh.toPath()));
-                // VERY old preset files might not have version in configString,
-                // so we check it at the start of the file too, to be able to prompt for the right version.
-                int checkInt = dis.readInt();
-                if (checkInt != Version.LATEST.id) {
-                    dis.close();
-                    promptForDifferentRandomizerVersion(checkInt);
+                Long seed = null;
+                boolean raceMode = false;
+                boolean raceModeSavedLog = false;
+                List<String> lines = Files.readAllLines(fh.toPath(), StandardCharsets.UTF_8);
+                for (String line : lines) {
+                    if (line.startsWith(SysConstants.SEED_IDENTIFIER)) {
+                        seed = Long.parseLong(line.substring(SysConstants.SEED_IDENTIFIER.length()));
+                    }
+                    if (line.equals(SysConstants.RACE_MODE_IDENTIFIER)) {
+                        raceMode = true;
+                    }
+                    if (line.equals(SysConstants.RACE_MODE_LOG_IDENTIFIER)) {
+                        raceModeSavedLog = true;
+                    }
+                }
+                if (seed == null) {
+                    JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
+                    invalidPreset();
                     return;
                 }
-                long seed = dis.readLong();
-                String preset = dis.readUTF();
-                enforceFieldCheck = false;
-                seedField.setText(Long.toString(seed));
-                settingsStringField.setText(preset);
-                enforceFieldCheck = true;
-                if (checkValues()) {
-                    seedField.setEnabled(false);
-                    settingsStringField.setEnabled(false);
-                    presetFileField.setText(fh.getAbsolutePath());
-                } else {
-                    seedField.setText("");
-                    settingsStringField.setText("");
-                    seedField.setEnabled(true);
-                    settingsStringField.setEnabled(true);
-                    presetFileField.setText("");
-                    JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
+                if (raceMode) {
+                    seed -= SysConstants.RACE_MODE_SEED_ADDEND;
                 }
-                dis.close();
+                if (raceModeSavedLog) {
+                    seed -= SysConstants.RACE_MODE_SEED_LOG_ADDEND;
+                }
+
+                this.seed = seed;
+                this.raceMode = raceMode;
+                this.raceModeSavedLog = raceModeSavedLog;
+
+                SettingsManager settings = new SettingsManager();
+                // TODO: we want to read results here, to deny presets from wrong version, and request the right game
+                // important that populateFromIni can read (but deny) invalid settings, because we want
+                // it to not fail fully when reading too-new settings.
+                settings.populateFromIni(Files.readString(fh.toPath(), StandardCharsets.UTF_8));
+                this.settings = settings;
+
             } catch (IOException ex) {
                 JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.loadingSeedFileFailed"));
             }
+
+            presetFileField.setText(fh.getAbsolutePath());
         }
     }
 
@@ -406,11 +308,19 @@ public class PresetLoadDialog extends JDialog {
     }
 
     public long getSeed() {
-        return Long.parseLong(seedField.getText());
+        return seed;
     }
 
-    public String getSettingsString() {
-        return settingsStringField.getText();
+    public boolean isRaceMode() {
+        return raceMode;
+    }
+
+    public boolean isRaceModeSavedLog() {
+        return raceModeSavedLog;
+    }
+
+    public SettingsManager getSettings() {
+        return settings;
     }
 
     public CustomPlayerGraphics getCustomPlayerGraphics() {

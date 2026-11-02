@@ -320,6 +320,9 @@ public class RandomizationLogger {
 
     private void logSettings() {
         printSectionTitle("settings");
+        // redundant print of seed, to guarantee the log file can be read as a preset file
+        // even if the bundle is changed/translated
+        log.println(SysConstants.SEED_IDENTIFIER + randomSource.getSeed());
         log.print(settings);
         printSectionSeparator();
     }

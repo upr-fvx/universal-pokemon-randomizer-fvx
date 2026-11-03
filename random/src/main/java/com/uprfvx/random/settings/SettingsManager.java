@@ -552,14 +552,22 @@ public class SettingsManager {
 
     /**
      * The results of {@link #populateFromIni(String)}.
+     * @param success Whether populating succeeded or not. If false, most of the other attributes are irrelevant.
+     * @param exception The exception causing failure.
      * @param versionID The {@link Version} ID of the loaded ini.
-     * @param oldVersion Whether the ini's Version ID represents an old Version
-     *                   (relative the current one).
      * @param romName The name of the ROM the loaded ini was created for.
      * @param romNameMatchesAssociated Whether the ini's ROM name matches the name
      *                                 of the ROM associated with the SettingsManager.
      */
-    public record FromIniResults(int versionID, boolean oldVersion, String romName, GameMatch romNameMatchesAssociated) {}
+    public record FromIniResults(boolean success, Exception exception, int versionID,
+                                 String romName, GameMatch romNameMatchesAssociated) {
+        private static FromIniResults failure(Exception e) {
+            return new FromIniResults(false, e,0, null, null);
+        }
+        private static FromIniResults success(int versionID, String romName, GameMatch romNameMatchesAssociated) {
+            return new FromIniResults(true, null, versionID, romName, romNameMatchesAssociated);
+        }
+    }
 
     /**
      * Resets all settings to default, then reads a String ini format output by {@link #toString()},
@@ -568,30 +576,32 @@ public class SettingsManager {
      * @throws IllegalArgumentException in case the format is incorrect.
      */
     public FromIniResults populateFromIni(String ini) {
-        SettingsIniEntry entry = SettingsIniEntry.readFromString(ini);
+        try {
+            SettingsIniEntry entry = SettingsIniEntry.readFromString(ini);
 
-        resetAll();
+            resetAll();
 
-        Map<Name, Serializable> nonDefaultSettings = entry.getSettingValues();
-        for (Name name : nonDefaultSettings.keySet()) {
-            batchSet(name, nonDefaultSettings.get(name));
+            Map<Name, Serializable> nonDefaultSettings = entry.getSettingValues();
+            for (Name name : nonDefaultSettings.keySet()) {
+                batchSet(name, nonDefaultSettings.get(name));
+            }
+
+            new SettingsUpdater().update(this, entry.getVersionID());
+            batchFinalize();
+
+            GameMatch romNameMatchesAssociated;
+            if (game == null) {
+                romNameMatchesAssociated = GameMatch.NO_GAME_LOADED;
+            } else if (entry.getROMName().equals(game.getROMName())) {
+                romNameMatchesAssociated = GameMatch.MATCH;
+            } else {
+                romNameMatchesAssociated = GameMatch.NO_MATCH;
+            }
+
+            return FromIniResults.success(entry.getVersionID(), entry.getROMName(), romNameMatchesAssociated);
+        } catch (IllegalArgumentException e) {
+            return FromIniResults.failure(e);
         }
-
-        new SettingsUpdater().update(this, entry.getVersionID());
-        batchFinalize();
-
-        boolean oldVersion = entry.getVersionID() < Version.LATEST.id;
-        GameMatch romNameMatchesAssociated;
-        if (game == null) {
-            romNameMatchesAssociated = GameMatch.NO_GAME_LOADED;
-        } else if (entry.getROMName().equals(game.getROMName())) {
-            romNameMatchesAssociated = GameMatch.MATCH;
-        } else {
-            romNameMatchesAssociated = GameMatch.NO_MATCH;
-        }
-
-        return new FromIniResults(entry.getVersionID(), oldVersion, entry.getROMName(), romNameMatchesAssociated);
-        // TODO: some other output depending on corrupted (but still legible) inis?
     }
 
     /**

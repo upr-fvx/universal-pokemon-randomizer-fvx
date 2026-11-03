@@ -1,8 +1,8 @@
 package com.uprfvx.random.gui;
 
-import com.uprfvx.random.SysConstants;
-import com.uprfvx.random.settings.SettingsManager;
+import com.uprfvx.random.RandomizationCoordinator;
 import com.uprfvx.random.Version;
+import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.RootPath;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
@@ -11,17 +11,18 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romio.RomOpener;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 
 /**
  * A {@link JDialog} to allow use of preset files to produce premade ROMs.
  */
 public class PresetLoadDialog extends JDialog {
-    // TODO: rework this class to mirror the removal of settings strings
-
     private JPanel contentPane;
     private JButton applyButton;
     private JButton cancelButton;
@@ -128,59 +129,33 @@ public class PresetLoadDialog extends JDialog {
         int returnVal = presetFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fh = presetFileChooser.getSelectedFile();
-
-            try {
-                Long seed = null;
-                boolean raceMode = false;
-                boolean raceModeSavedLog = false;
-                List<String> lines = Files.readAllLines(fh.toPath(), StandardCharsets.UTF_8);
-                for (String line : lines) {
-                    if (line.startsWith(SysConstants.SEED_IDENTIFIER)) {
-                        seed = Long.parseLong(line.substring(SysConstants.SEED_IDENTIFIER.length()));
-                    }
-                    if (line.equals(SysConstants.RACE_MODE_IDENTIFIER)) {
-                        raceMode = true;
-                    }
-                    if (line.equals(SysConstants.RACE_MODE_LOG_IDENTIFIER)) {
-                        raceModeSavedLog = true;
-                    }
-                }
-                if (seed == null) {
-                    JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.invalidSeedFile"));
-                    invalidPreset();
-                    return;
-                }
-                if (raceMode) {
-                    seed -= SysConstants.RACE_MODE_SEED_ADDEND;
-                }
-                if (raceModeSavedLog) {
-                    seed -= SysConstants.RACE_MODE_SEED_LOG_ADDEND;
-                }
-
-                SettingsManager settings = new SettingsManager();
-                SettingsManager.FromIniResults results = settings.populateFromIni(
-                        Files.readString(fh.toPath(), StandardCharsets.UTF_8));
-                if (results.versionID() != Version.LATEST.id) {
-                    promptForDifferentRandomizerVersion(results.versionID());
-                    invalidPreset();
-                    return;
-                }
-
-                this.seed = seed;
-                this.raceMode = raceMode;
-                this.raceModeSavedLog = raceModeSavedLog;
-                this.settings = settings;
+            RandomizationCoordinator rc = new RandomizationCoordinator(parentGUI);
+            RandomizationCoordinator.ReadPresetResults results = rc.readPresetFile(fh);
+            if (results.success()) {
+                this.seed = results.seed();
+                this.raceMode = results.raceMode();
+                this.raceModeSavedLog = results.raceModeLogExists();
+                this.settings = results.settings();
 
                 requiredName = results.romName();
                 romRequiredLabel.setText(String.format(
                         bundle.getString("PresetLoadDialog.romRequiredLabel.textWithROM"), requiredName));
                 romButton.setEnabled(true);
 
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this, bundle.getString("PresetLoadDialog.loadingSeedFileFailed"));
-            }
+                presetFileField.setText(fh.getAbsolutePath());
 
-            presetFileField.setText(fh.getAbsolutePath());
+            } else {
+                switch (results.exception().getType()) {
+                    case IO_ERROR -> JOptionPane.showMessageDialog(this,
+                            bundle.getString("PresetLoadDialog.loadingSeedFileFailed"));
+                    case NO_SEED -> JOptionPane.showMessageDialog(this,
+                            bundle.getString("PresetLoadDialog.invalidSeedFile"));
+                    case INVALID_SETTINGS -> JOptionPane.showMessageDialog(this,
+                            bundle.getString("PresetLoadDialog.invalidSeedFile")); // TODO: string for this
+                    case WRONG_VERSION -> promptForDifferentRandomizerVersion(results.versionID());
+                }
+                invalidPreset();
+            }
         }
     }
 

@@ -1,11 +1,15 @@
 package com.uprfvx.random;
 
+import com.uprfvx.random.exceptions.ReadPresetException;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
+import javax.swing.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
 
 /**
  * Coordinates the randomization pipeline, though not the randomization itself (directly),
@@ -15,6 +19,28 @@ import java.nio.charset.StandardCharsets;
  */
 public class RandomizationCoordinator {
 
+    public record ReadPresetResults(boolean success, ReadPresetException exception, int versionID,
+                                    long seed, boolean raceMode, boolean raceModeLogExists,
+                                    SettingsManager settings, String romName) {
+
+        private static ReadPresetResults failure(ReadPresetException.Type exceptionType, Exception cause) {
+            return new ReadPresetResults(false, new ReadPresetException(exceptionType, cause), 0,
+                    0, false, false, null, null);
+        }
+
+        private static ReadPresetResults versionFailure(int versionID) {
+            return new ReadPresetResults(false,
+                    new ReadPresetException(ReadPresetException.Type.WRONG_VERSION, null), versionID,
+                    0, false, false, null, null);
+        }
+
+        private static ReadPresetResults success(long seed, boolean raceMode, boolean raceModeLogExists,
+                                                 SettingsManager settings, String romName) {
+            return new ReadPresetResults(true, null, 0,
+                    seed, raceMode, raceModeLogExists, settings, romName);
+        }
+    }
+
     public record LogPresetPromptResults(boolean createLog, boolean createPreset) {}
 
     private final RandomizerUI ui;
@@ -23,14 +49,56 @@ public class RandomizationCoordinator {
         this.ui = ui;
     }
 
+    public ReadPresetResults readPresetFile(File presetFile) {
+        try {
+            Long seed = null;
+            boolean raceMode = false;
+            boolean raceModeLogExists = false;
+            List<String> lines = Files.readAllLines(presetFile.toPath(), StandardCharsets.UTF_8);
+            for (String line : lines) {
+                if (line.startsWith(SysConstants.SEED_IDENTIFIER)) {
+                    seed = Long.parseLong(line.substring(SysConstants.SEED_IDENTIFIER.length()));
+                }
+                if (line.equals(SysConstants.RACE_MODE_IDENTIFIER)) {
+                    raceMode = true;
+                }
+                if (line.equals(SysConstants.RACE_MODE_LOG_IDENTIFIER)) {
+                    raceModeLogExists = true;
+                }
+            }
+            if (seed == null) {
+                return ReadPresetResults.failure(ReadPresetException.Type.NO_SEED, null);
+            }
+            if (raceMode) {
+                seed -= SysConstants.RACE_MODE_SEED_ADDEND;
+            }
+            if (raceModeLogExists) {
+                seed -= SysConstants.RACE_MODE_SEED_LOG_ADDEND;
+            }
+
+            SettingsManager settings = new SettingsManager();
+            SettingsManager.FromIniResults results = settings.populateFromIni(
+                        Files.readString(presetFile.toPath(), StandardCharsets.UTF_8));
+            if (!results.success()) {
+                return ReadPresetResults.failure(ReadPresetException.Type.NO_SEED, results.exception());
+            }
+            if (results.versionID() != Version.LATEST.id) {
+                return ReadPresetResults.versionFailure(results.versionID());
+            }
+
+            return ReadPresetResults.success(seed, raceMode, raceModeLogExists, settings, results.romName());
+
+        } catch (IOException e) {
+            return ReadPresetResults.failure(ReadPresetException.Type.IO_ERROR, e);
+        }
+    }
+
     public void randomize(RomHandler romHandler, String fileName, boolean saveAsDirectory, boolean unloadGameOnSuccess,
                           SettingsManager settings, long seed,
                           RandomizeMode mode,
                           int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                           boolean racePreset, boolean racePresetLogExists) {
-        // TODO: link up to preset loading
-        // TODO: account for every place things can go wrong
-
+        // TODO: account for CPG
         CustomPlayerGraphics cpg = null;
 
         int batchSize = mode == RandomizeMode.BATCH ? batchNumber : 1;

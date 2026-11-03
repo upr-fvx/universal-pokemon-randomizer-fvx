@@ -3703,7 +3703,7 @@ public class RandomizerGUI implements RandomizerUI {
         if (firstCliArg.equals("cli")) {
             // snip the "cli" flag arg off the args array and invoke command
             String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
-            int exitCode = RandomizerCLI.invoke(commandArgs);
+            int exitCode = new RandomizerCLI().invoke(commandArgs);
             System.exit(exitCode);
         } else {
             if (firstCliArg.equals("please-use-the-launcher")) usedLauncher = true;

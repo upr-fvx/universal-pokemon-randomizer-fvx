@@ -1,8 +1,9 @@
 package com.uprfvx.random.cli;
 
-import com.uprfvx.random.RandomizerCoordinator;
 import com.uprfvx.random.RandomizeMode;
+import com.uprfvx.random.RandomizerCoordinator;
 import com.uprfvx.random.RandomizerUI;
+import com.uprfvx.random.Version;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.gui.CPGSelection;
 import com.uprfvx.random.random.SeedPicker;
@@ -17,7 +18,10 @@ import com.uprfvx.romio.romhandlers.RomHandler;
 import com.uprfvx.romio.romio.RomOpener;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,7 +39,9 @@ public class RandomizerCLI implements RandomizerUI {
     private boolean saveLog;
 
     private boolean performDirectRandomization(String sourceRomFilePath, String destinationRomFilePath,
+                                               RandomizeMode mode,
                                                SettingsManager settings, Long seed,
+                                               boolean racePreset, boolean racePresetLogExists,
                                                String cpgName, PlayerCharacterType cpgType,
                                                boolean saveAsDirectory,
                                                String updateFilePath, boolean saveLog) {
@@ -80,18 +86,14 @@ public class RandomizerCLI implements RandomizerUI {
 
             String filename = fh.getAbsolutePath();
 
-            RandomizeMode mode;
-            if (seed == null) {
+            if (mode != RandomizeMode.LOAD_PRESET) {
                 seed = SeedPicker.pickSeed();
-                mode = RandomizeMode.NORMAL;
-            } else {
-                mode = RandomizeMode.LOAD_PRESET;
             }
 
             RandomizerCoordinator rc = new RandomizerCoordinator(this);
             rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,
-                    // args that don't matter v
-                    0, 0, false, null, false, false);
+                    0, 0, false, null, // <- irrelevant args
+                    racePreset, racePresetLogExists);
             // this is the only successful exit, everything else will return false at the end of the function
             return true;
 
@@ -217,15 +219,18 @@ public class RandomizerCLI implements RandomizerUI {
         return new CustomPlayerGraphics(pack, type);
     }
 
-    public static int invoke(String[] args) {
+    public int invoke(String[] args) {
         String sourceRomFilePath = null;
         String outputRomFilePath = null;
 
+        RandomizeMode mode;
         SettingsManager settings;
         Long seed = null;
+        boolean racePreset = false;
+        boolean racePresetLogExists = false;
+
+        String presetFilePath = null;
         String settingsFilePath = null;
-        String settingsString = null;
-        String seedString = null;
 
         String cpgName = null;
         String cpgTypeString = null;
@@ -235,7 +240,7 @@ public class RandomizerCLI implements RandomizerUI {
         String updateFilePath = null;
         boolean saveLog = false;
 
-        List<String> allowedFlags = Arrays.asList("-i", "-o", "-s", "-S", "-z", "-c", "-d", "-u", "-l", "-h", "--help");
+        List<String> allowedFlags = Arrays.asList("-i", "-o", "-p", "-s", "-c", "-d", "-u", "-l", "-h", "--help");
         for (int i = 0; i < args.length; i++) {
             if (allowedFlags.contains(args[i])) {
                 switch (args[i]) {
@@ -245,14 +250,11 @@ public class RandomizerCLI implements RandomizerUI {
                     case "-o":
                         outputRomFilePath = args[i + 1];
                         break;
+                    case "-p":
+                        presetFilePath = args[i + 1];
+                        break;
                     case "-s":
                         settingsFilePath = args[i + 1];
-                        break;
-                    case "-S":
-                        settingsString = args[i + 1];
-                        break;
-                    case "-z":
-                        seedString = args[i + 1];
                         break;
                     case "-c":
                         cpgName = args[i + 1];
@@ -295,41 +297,56 @@ public class RandomizerCLI implements RandomizerUI {
             return usageError("Destination ROM path not writable");
         }
 
-        if (settingsFilePath == null && settingsString == null) {
-            return usageError("Missing settings argument");
+        if (presetFilePath == null && settingsFilePath == null) {
+            return usageError("Missing preset/settings file argument");
         }
-        if (settingsFilePath != null) {
-            if (settingsString != null) {
-                printWarning("Both settings file path (-s) and settings string (-S) were given. " +
-                        "The settings file path will be used.");
+        if (presetFilePath != null) {
+            if (settingsFilePath != null) {
+                printWarning("Both preset file path (-p) and settings file path (-s) were given. " +
+                        "The preset file will be used.");
             }
-            if (!new File(settingsFilePath).exists()) {
-                return usageError("Could not read settings file");
-            }
-            try {
-                File fh = new File(settingsFilePath);
-                FileInputStream fis = new FileInputStream(fh);
-                settings = SettingsManager.readFromFileFormat(fis);
-                fis.close();
-            } catch (Exception e) {
-                e.printStackTrace(System.out);
-                return usageError("Invalid settings file.");
+            File rh = new File(presetFilePath);
+            RandomizerCoordinator rc = new RandomizerCoordinator(this);
+            RandomizerCoordinator.ReadPresetResults results = rc.readPresetFile(rh);
+            if (results.success()) {
+                mode = RandomizeMode.LOAD_PRESET;
+                seed = results.seed();
+                racePreset = results.raceMode();
+                racePresetLogExists = results.raceModeLogExists();
+                settings = results.settings();
+            } else {
+                switch (results.exception().getType()) {
+                    case IO_ERROR -> usageError("Could not read preset file.");
+                    case NO_SEED -> usageError("Preset file contained no seed.");
+                    case INVALID_SETTINGS -> usageError("Preset file contained invalid settings.");
+                    case WRONG_VERSION -> {
+                        if (results.versionID() < Version.LATEST.id) {
+                            usageError(String.format(
+                                    "Preset file is for an old Randomizer version. Expected: %d, was: %d",
+                                    Version.LATEST.id, results.versionID()));
+                        } else {
+                            usageError(String.format(
+                                    "Preset file is for a newer Randomizer version. Expected: %d, was: %d",
+                                    Version.LATEST.id, results.versionID()));
+                        }
+                    }
+                }
+                return 1;
             }
         } else {
+            String settingsText;
             try {
-                settings = SettingsManager.fromString(settingsString);
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace(System.out);
-                return usageError("Invalid settings string.");
+                settingsText = Files.readString(Path.of(settingsFilePath), StandardCharsets.UTF_8);
+            } catch (IOException e) {
+                return usageError("Could not read settings file.\n" + Arrays.toString(e.getStackTrace()));
             }
-        }
-
-        if (seedString != null) {
-            try {
-                seed = Long.parseLong(seedString);
-            } catch (NumberFormatException e) {
-                return usageError("Invalid seed - could not parse as long");
+            settings = new SettingsManager();
+            SettingsManager.FromIniResults results = settings.populateFromIni(settingsText);
+            if (!results.success()) {
+                return usageError("Invalid settings file.\n"
+                        + Arrays.toString(results.exception().getStackTrace()));
             }
+            mode = RandomizeMode.NORMAL;
         }
 
         if (cpgName != null) {
@@ -340,11 +357,12 @@ public class RandomizerCLI implements RandomizerUI {
             }
         }
 
-        boolean processResult = new RandomizerCLI().performDirectRandomization(
+        boolean processResult = performDirectRandomization(
                 sourceRomFilePath,
                 outputRomFilePath,
-                settings,
-                seed,
+                mode,
+                settings, seed,
+                racePreset, racePresetLogExists,
                 cpgName, cpgType,
                 saveAsDirectory,
                 updateFilePath,
@@ -372,10 +390,9 @@ public class RandomizerCLI implements RandomizerUI {
 
     private static void printUsage() {
         System.out.println("Usage: java [-Xmx4096M] -jar UPR-FVX.jar cli -i <path to source ROM> -o <path for output ROM>\n" +
-                           "       {-s <path to settings file> | -S <settings string> } [options]");
+                           "       {-p <path to preset file> | -s <path to settings file>} [options]");
         System.out.println("Optional flags: ");
         System.out.println("-Xmx4096M          : Increase the amount of RAM available to Java. Required for 3DS games.");
-        System.out.println("-z <seed>          : Use the given seed.");
         System.out.println("-c <name> <type>   : Use a Custom Player Graphics. \"name\" must match a CPG defined in the\n" +
                            "                     data folder. \"type\" denotes which player character will be replaced,\n" +
                            "                     and must be either PC1 or PC2.");
@@ -383,5 +400,6 @@ public class RandomizerCLI implements RandomizerUI {
         System.out.println("-u <path to update>: Apply the given 3DS game update before randomization.");
         System.out.println("-l                 : Generate a detailed log file.");
         System.out.println("-h --help          : Print usage/help info.");
+        System.out.println("Note: if using a settings file instead of a preset file, a random seed will be used.");
     }
 }

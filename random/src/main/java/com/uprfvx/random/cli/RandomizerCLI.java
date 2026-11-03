@@ -1,6 +1,6 @@
 package com.uprfvx.random.cli;
 
-import com.uprfvx.random.RandomizationCoordinator;
+import com.uprfvx.random.RandomizerCoordinator;
 import com.uprfvx.random.RandomizeMode;
 import com.uprfvx.random.RandomizerUI;
 import com.uprfvx.random.exceptions.RandomizationException;
@@ -88,7 +88,7 @@ public class RandomizerCLI implements RandomizerUI {
                 mode = RandomizeMode.LOAD_PRESET;
             }
 
-            RandomizationCoordinator rc = new RandomizationCoordinator(this);
+            RandomizerCoordinator rc = new RandomizerCoordinator(this);
             rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,
                     // args that don't matter v
                     0, 0, false, null, false, false);
@@ -119,8 +119,8 @@ public class RandomizerCLI implements RandomizerUI {
     }
 
     @Override
-    public RandomizationCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
-        return new RandomizationCoordinator.LogPresetPromptResults(saveLog, false);
+    public RandomizerCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
+        return new RandomizerCoordinator.LogPresetPromptResults(saveLog, false);
     }
 
     @Override

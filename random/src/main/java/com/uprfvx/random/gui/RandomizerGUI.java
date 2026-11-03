@@ -1767,7 +1767,7 @@ public class RandomizerGUI implements RandomizerUI {
 
         RandomizeMode mode = raceModeCheckBox.isSelected() ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
 
-        RandomizationCoordinator rc = new RandomizationCoordinator(this);
+        RandomizerCoordinator rc = new RandomizerCoordinator(this);
         rc.randomize(romHandler, saveFile.getAbsolutePath(), saveFile.isDirectory(), unloadGameOnSuccess,
                 settingsManager, seed, mode,
                 // args that don't matter here v
@@ -1899,7 +1899,7 @@ public class RandomizerGUI implements RandomizerUI {
     }
 
     @Override
-    public RandomizationCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
+    public RandomizerCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
         if (createRaceMode) {
             int choice = JOptionPane.showOptionDialog(frame,
                     bundle.getString("GUI.saveROM.logOrPresetDialogRaceMode.message"),
@@ -1910,9 +1910,9 @@ public class RandomizerGUI implements RandomizerUI {
                             bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
                     }, null);
             if (choice == 0) {
-                return new RandomizationCoordinator.LogPresetPromptResults(true, true);
+                return new RandomizerCoordinator.LogPresetPromptResults(true, true);
             } else {
-                return new RandomizationCoordinator.LogPresetPromptResults(false, true);
+                return new RandomizerCoordinator.LogPresetPromptResults(false, true);
             }
         } else {
             int choice = JOptionPane.showOptionDialog(frame,
@@ -1924,11 +1924,11 @@ public class RandomizerGUI implements RandomizerUI {
                             bundle.getString("GUI.saveROM.createNeitherLogOrPreset")
                     }, null);
             if (choice == 0) {
-                return new RandomizationCoordinator.LogPresetPromptResults(true, false);
+                return new RandomizerCoordinator.LogPresetPromptResults(true, false);
             } else if (choice == 1) {
-                return new RandomizationCoordinator.LogPresetPromptResults(false, true);
+                return new RandomizerCoordinator.LogPresetPromptResults(false, true);
             } else {
-                return new RandomizationCoordinator.LogPresetPromptResults(false, false);
+                return new RandomizerCoordinator.LogPresetPromptResults(false, false);
             }
         }
     }
@@ -2068,7 +2068,7 @@ public class RandomizerGUI implements RandomizerUI {
             File saveFile = chooseSaveFile();
             if (saveFile == null) return;
 
-            RandomizationCoordinator rc = new RandomizationCoordinator(this);
+            RandomizerCoordinator rc = new RandomizerCoordinator(this);
             rc.randomize(rh, saveFile.getAbsolutePath(), saveFile.isDirectory(), true,
                     pld.getSettings(), pld.getSeed(), RandomizeMode.LOAD_PRESET,
                     0, 0, false, "", // <- irrelevant args

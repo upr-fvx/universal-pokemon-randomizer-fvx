@@ -5,7 +5,6 @@ import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
 
-import javax.swing.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -15,9 +14,18 @@ import java.util.List;
  * Coordinates the randomization pipeline, though not the randomization itself (directly),
  * since that is handled by the {@link GameRandomizer} class.<br>
  * This class accounts for features like race mode, batch mode, and loading from a preset file,
- * as well as actually outputting log/preset files.
+ * as well as actually outputting log/preset files.<br><br>
+ * It also allows for reading preset files, using {@link #readPresetFile(File)}.
  */
-public class RandomizationCoordinator {
+public class RandomizerCoordinator {
+    // The ultimate plan is for this class to work as a (state-full)
+    // coordinator for everything core to the Randomizer,
+    // with the UI classes only taking care of... UI.
+    // This should own the RomHandler, the SettingsManager, etc.
+    // However, we are not there yet. In the meanwhile,
+    // this class contains methods that should be available to
+    // both current UIs (the Swing GUI and the CLI),
+    // and is essentially stateless.
 
     public record ReadPresetResults(boolean success, ReadPresetException exception, int versionID,
                                     long seed, boolean raceMode, boolean raceModeLogExists,
@@ -45,7 +53,7 @@ public class RandomizationCoordinator {
 
     private final RandomizerUI ui;
 
-    public RandomizationCoordinator(RandomizerUI ui) {
+    public RandomizerCoordinator(RandomizerUI ui) {
         this.ui = ui;
     }
 

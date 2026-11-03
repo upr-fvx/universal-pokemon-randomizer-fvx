@@ -13,7 +13,7 @@ public interface RandomizerUI {
 
     void displayRandomizationEnded();
 
-    RandomizationCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode);
+    RandomizerCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode);
 
     void displayRandomizationCoordinationDone(RandomizeMode mode,
                                               int batchNumber, boolean batchSaveLogs,

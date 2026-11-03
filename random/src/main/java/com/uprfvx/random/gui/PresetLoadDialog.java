@@ -1,6 +1,6 @@
 package com.uprfvx.random.gui;
 
-import com.uprfvx.random.RandomizationCoordinator;
+import com.uprfvx.random.RandomizerCoordinator;
 import com.uprfvx.random.Version;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.RootPath;
@@ -129,8 +129,8 @@ public class PresetLoadDialog extends JDialog {
         int returnVal = presetFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File fh = presetFileChooser.getSelectedFile();
-            RandomizationCoordinator rc = new RandomizationCoordinator(parentGUI);
-            RandomizationCoordinator.ReadPresetResults results = rc.readPresetFile(fh);
+            RandomizerCoordinator rc = new RandomizerCoordinator(parentGUI);
+            RandomizerCoordinator.ReadPresetResults results = rc.readPresetFile(fh);
             if (results.success()) {
                 this.seed = results.seed();
                 this.raceMode = results.raceMode();

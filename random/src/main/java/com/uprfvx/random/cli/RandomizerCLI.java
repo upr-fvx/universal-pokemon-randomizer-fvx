@@ -122,7 +122,7 @@ public class RandomizerCLI implements RandomizerUI {
 
     @Override
     public RandomizerCoordinator.LogPresetPromptResults promptSaveLogOrPresetFiles(boolean createRaceMode) {
-        return new RandomizerCoordinator.LogPresetPromptResults(saveLog, false);
+        return new RandomizerCoordinator.LogPresetPromptResults(saveLog, createRaceMode);
     }
 
     @Override
@@ -232,6 +232,8 @@ public class RandomizerCLI implements RandomizerUI {
         String presetFilePath = null;
         String settingsFilePath = null;
 
+        boolean createRace = false;
+
         String cpgName = null;
         String cpgTypeString = null;
         PlayerCharacterType cpgType = null;
@@ -240,42 +242,42 @@ public class RandomizerCLI implements RandomizerUI {
         String updateFilePath = null;
         boolean saveLog = false;
 
-        List<String> allowedFlags = Arrays.asList("-i", "-o", "-p", "-s", "-c", "-d", "-u", "-l", "-h", "--help");
         for (int i = 0; i < args.length; i++) {
-            if (allowedFlags.contains(args[i])) {
-                switch (args[i]) {
-                    case "-i":
-                        sourceRomFilePath = args[i + 1];
-                        break;
-                    case "-o":
-                        outputRomFilePath = args[i + 1];
-                        break;
-                    case "-p":
-                        presetFilePath = args[i + 1];
-                        break;
-                    case "-s":
-                        settingsFilePath = args[i + 1];
-                        break;
-                    case "-c":
-                        cpgName = args[i + 1];
-                        cpgTypeString = args[i + 2];
-                        break;
-                    case "-d":
-                        saveAsDirectory = true;
-                        break;
-                    case "-u":
-                        updateFilePath = args[i + 1];
-                        break;
-                    case "-l":
-                        saveLog = true;
-                        break;
-                    case "-h":
-                    case "--help":
-                        printUsage();
-                        return 0;
-                    default:
-                        break;
-                }
+            switch (args[i]) {
+                case "-i":
+                    sourceRomFilePath = args[i + 1];
+                    break;
+                case "-o":
+                    outputRomFilePath = args[i + 1];
+                    break;
+                case "-p":
+                    presetFilePath = args[i + 1];
+                    break;
+                case "-s":
+                    settingsFilePath = args[i + 1];
+                    break;
+                case "-r":
+                    createRace = true;
+                    break;
+                case "-c":
+                    cpgName = args[i + 1];
+                    cpgTypeString = args[i + 2];
+                    break;
+                case "-d":
+                    saveAsDirectory = true;
+                    break;
+                case "-u":
+                    updateFilePath = args[i + 1];
+                    break;
+                case "-l":
+                    saveLog = true;
+                    break;
+                case "-h":
+                case "--help":
+                    printUsage();
+                    return 0;
+                default:
+                    break;
             }
         }
 
@@ -304,6 +306,9 @@ public class RandomizerCLI implements RandomizerUI {
             if (settingsFilePath != null) {
                 printWarning("Both preset file path (-p) and settings file path (-s) were given. " +
                         "The preset file will be used.");
+            }
+            if (createRace) {
+                usageError("Cannot use Race Mode while loading a preset file.");
             }
             File rh = new File(presetFilePath);
             RandomizerCoordinator rc = new RandomizerCoordinator(this);
@@ -346,7 +351,7 @@ public class RandomizerCLI implements RandomizerUI {
                 return usageError("Invalid settings file.\n"
                         + Arrays.toString(results.exception().getStackTrace()));
             }
-            mode = RandomizeMode.NORMAL;
+            mode = createRace ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
         }
 
         if (cpgName != null) {
@@ -390,9 +395,11 @@ public class RandomizerCLI implements RandomizerUI {
 
     private static void printUsage() {
         System.out.println("Usage: java [-Xmx4096M] -jar UPR-FVX.jar cli -i <path to source ROM> -o <path for output ROM>\n" +
-                           "       {-p <path to preset file> | -s <path to settings file>} [options]");
+                           "       {-s <path to settings file> | -p <path to preset file>} [options]");
         System.out.println("Optional flags: ");
         System.out.println("-Xmx4096M          : Increase the amount of RAM available to Java. Required for 3DS games.");
+        System.out.println("-r                 : Race Mode. Generate a preset file to send to other players for racing." +
+                           "                     Cannot be used if loading a preset file.");
         System.out.println("-c <name> <type>   : Use a Custom Player Graphics. \"name\" must match a CPG defined in the\n" +
                            "                     data folder. \"type\" denotes which player character will be replaced,\n" +
                            "                     and must be either PC1 or PC2.");

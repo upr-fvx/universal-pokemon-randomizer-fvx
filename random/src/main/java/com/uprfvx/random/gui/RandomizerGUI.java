@@ -1753,26 +1753,48 @@ public class RandomizerGUI implements RandomizerUI {
         if (romHandler == null) {
             return; // none loaded
         }
-        if (raceModeCheckBox.isSelected() && batchRandomizationSettings.isBatchRandomizationEnabled()) {
+        BatchRandomizationSettings brs = batchRandomizationSettings; // for brevity
+        if (raceModeCheckBox.isSelected() && brs.isBatchRandomizationEnabled()) {
             JOptionPane.showMessageDialog(frame, bundle.getString("GUI.batchRandomization.requirementsDialog.message"));
             return;
         }
         // TODO: is there any reason to prevent race mode without trainer/wild randomization?
         //  It probably was due to the checksum depending on that, but is the checksum even used any more?
 
-        File saveFile = chooseSaveFile();
-        if (saveFile == null) return;
+        String fileName;
+        boolean saveAsDirectory;
+        if (brs.isBatchRandomizationEnabled()) {
+            fileName = brs.getOutputDirectory() + "/" + brs.getFileNamePrefix();
+            saveAsDirectory = false;
+        } else {
+            File saveFile = chooseSaveFile();
+            if (saveFile == null) return;
+            fileName = saveFile.getAbsolutePath();
+            saveAsDirectory = saveFile.isDirectory();
+        }
 
         long seed = SeedPicker.pickSeed();
 
-        RandomizeMode mode = raceModeCheckBox.isSelected() ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
+        RandomizeMode mode;
+        if (raceModeCheckBox.isSelected()) {
+            mode = RandomizeMode.CREATE_RACE;
+        } else if (brs.isBatchRandomizationEnabled()) {
+            mode = RandomizeMode.BATCH;
+        } else {
+            mode = RandomizeMode.NORMAL;
+        }
 
         RandomizerCoordinator rc = new RandomizerCoordinator(this);
-        rc.randomize(romHandler, saveFile.getAbsolutePath(), saveFile.isDirectory(), unloadGameOnSuccess,
+        rc.randomize(romHandler, fileName, saveAsDirectory, unloadGameOnSuccess,
                 settingsManager, seed, mode,
+                brs.getNumberOfRandomizedROMs(), brs.getStartingIndex(),
+                brs.shouldGenerateLogFile(), brs.getLogFileEnding(),
                 // args that don't matter here v
-                0, 0, false, null, false, false);
+                false, false);
 
+        if (brs.shouldAutoAdvanceStartingIndex()) {
+            brs.setStartingIndex(brs.getStartingIndex() + brs.getNumberOfRandomizedROMs());
+        }
         // TODO: set "last used CPG"?
     }
 

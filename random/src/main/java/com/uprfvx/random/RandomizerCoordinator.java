@@ -101,23 +101,23 @@ public class RandomizerCoordinator {
         }
     }
 
-    public void randomize(RomHandler romHandler, String fileName, boolean saveAsDirectory, boolean unloadGameOnSuccess,
+    public void randomize(RomHandler romHandler, String baseFileName, boolean saveAsDirectory, boolean unloadGameOnSuccess,
                           SettingsManager settings, long seed,
                           RandomizeMode mode,
-                          int batchNumber, int batchNumberNameOffset, boolean batchSaveLogs, String batchLogSuffix,
+                          int batchCount, int batchCountNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                           boolean racePreset, boolean racePresetLogExists) {
         // TODO: account for CPG
         CustomPlayerGraphics cpg = null;
 
-        int batchSize = mode == RandomizeMode.BATCH ? batchNumber : 1;
+        int batchSize = mode == RandomizeMode.BATCH ? batchCount : 1;
 
         GameRandomizer.Results results = null;
         ui.displayRandomizationStarted();
         for (int i = 0; i < batchSize; i++) {
             ui.displayRandomizationProgress(i, batchSize);
 
-            fileName = prepareFileName(fileName, romHandler, saveAsDirectory,
-                    mode == RandomizeMode.BATCH, batchNumber + batchNumberNameOffset);
+            String fileName = prepareFileName(baseFileName, romHandler, saveAsDirectory,
+                    mode == RandomizeMode.BATCH, i + batchCountNameOffset);
             GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, saveAsDirectory);
             results = randomizer.randomize(fileName, seed);
 
@@ -140,10 +140,10 @@ public class RandomizerCoordinator {
         if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE
                 || (mode == RandomizeMode.LOAD_PRESET && !racePreset)) {
             Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
-            maybeSaveLogOrPreset(mode, fileName, results.getLogBAOS(), logException, settings, seed, racePreset);
+            maybeSaveLogOrPreset(mode, baseFileName, results.getLogBAOS(), logException, settings, seed, racePreset);
         }
 
-        ui.displayRandomizationCoordinationDone(mode, batchNumber, batchSaveLogs, racePreset, racePresetLogExists);
+        ui.displayRandomizationCoordinationDone(mode, batchCount, batchSaveLogs, racePreset, racePresetLogExists);
 
         updateUIStateAfterSuccess(unloadGameOnSuccess);
     }

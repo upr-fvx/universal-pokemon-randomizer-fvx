@@ -36,37 +36,37 @@ public class RandomizerCLI implements RandomizerUI {
 
     private final static RomOpener romOpener = new RomOpener();
 
+    private File romFile;
+    private String updateFilePath;
     private boolean saveLog;
+
+    private RomHandler romHandler;
 
     private boolean performDirectRandomization(String sourceRomFilePath, String destinationRomFilePath,
                                                RandomizeMode mode,
                                                SettingsManager settings, Long seed,
                                                boolean racePreset, boolean racePresetLogExists,
+                                               int batchCount, int batchCountNameOffset,
                                                String cpgName, PlayerCharacterType cpgType,
                                                boolean saveAsDirectory,
                                                String updateFilePath, boolean saveLog) {
+        this.romFile = new File(sourceRomFilePath);
+        this.updateFilePath = updateFilePath;
         this.saveLog = saveLog;
 
         try {
-            File romFile = new File(sourceRomFilePath);
 
-            RomOpener.Results results = romOpener.openRomFile(romFile);
-            if (!results.wasOpeningSuccessful()) {
-                printError("Could not load " + romFile.getAbsolutePath() + "; " + results.getFailType());
-                return false;
-            }
+            if (!openRomFile()) return false;
 
-            RomHandler romHandler = results.getRomHandler();
             CustomPlayerGraphics cpg = prepareCPG(romHandler, cpgName, cpgType);
 
-            if (updateFilePath != null && (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7)) {
-                romHandler.loadGameUpdate(updateFilePath);
+            if (updateFilePath != null && romHandler instanceof Abstract3DSRomHandler) {
                 if (!saveAsDirectory) {
                     printWarning("Forcing save as directory since a game update was supplied.");
                 }
                 saveAsDirectory = true;
             }
-            if (saveAsDirectory && romHandler.generationOfPokemon() != 6 && romHandler.generationOfPokemon() != 7) {
+            if (saveAsDirectory && !(romHandler instanceof Abstract3DSRomHandler)) {
                 saveAsDirectory = false;
                 printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
             }
@@ -92,7 +92,7 @@ public class RandomizerCLI implements RandomizerUI {
 
             RandomizerCoordinator rc = new RandomizerCoordinator(this);
             rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,
-                    0, 0, false, null, // <- irrelevant args
+                    batchCount, batchCountNameOffset, saveLog, "log",
                     racePreset, racePresetLogExists);
             // this is the only successful exit, everything else will return false at the end of the function
             return true;
@@ -101,6 +101,25 @@ public class RandomizerCLI implements RandomizerUI {
             printError(Arrays.toString(e.getStackTrace()));
         }
         return false;
+    }
+
+    /**
+     * Initializes the romHandler by opening the rom file, as well as the update file if relevant.
+     * @return whether the opening was successful
+     */
+    private boolean openRomFile() {
+        RomOpener.Results results = romOpener.openRomFile(romFile);
+        if (!results.wasOpeningSuccessful()) {
+            printError("Could not load " + romFile.getAbsolutePath() + "; " + results.getFailType());
+            return false;
+        }
+
+        romHandler = results.getRomHandler();
+
+        if (updateFilePath != null && romHandler instanceof Abstract3DSRomHandler) {
+            romHandler.loadGameUpdate(updateFilePath);
+        }
+        return true;
     }
 
     @Override
@@ -169,7 +188,13 @@ public class RandomizerCLI implements RandomizerUI {
 
     @Override
     public void unloadRomHandler() {
-        // not relevant since the CLI is a one-off action
+        if (romHandler.getResourceLifetime() != RomHandler.ResourceLifetime.NONE) {
+            try {
+                romHandler.closeResources();
+            } catch (IOException e) {
+                printWarning("Could not close RomHandler resources.");
+            }
+        }
     }
 
     @Override
@@ -179,7 +204,12 @@ public class RandomizerCLI implements RandomizerUI {
 
     @Override
     public void reinitializeRomHandler(boolean batchMode) {
-        // this needs to work if batch mode is supported, but otherwise not
+        // not relevant to reinitialize the RomHandler if not doing it for batch reasons,
+        // since the CLI is a one-off action
+        if (batchMode) {
+            unloadRomHandler();
+            openRomFile();
+        }
     }
 
     private static void displaySettingsWarnings(SettingsManager settings, RomHandler romHandler) {
@@ -233,6 +263,9 @@ public class RandomizerCLI implements RandomizerUI {
         String settingsFilePath = null;
 
         boolean createRace = false;
+        boolean batchMode = false;
+        int batchCount = -1;
+        int batchCountNameOffset = -1;
 
         String cpgName = null;
         String cpgTypeString = null;
@@ -258,6 +291,15 @@ public class RandomizerCLI implements RandomizerUI {
                     break;
                 case "-r":
                     createRace = true;
+                    break;
+                case "-b":
+                    batchMode = true;
+                    try {
+                        batchCount = Integer.parseInt(args[i + 1]);
+                        batchCountNameOffset = Integer.parseInt(args[i + 2]);
+                    } catch (NumberFormatException e) {
+                        return usageError("arguments for -b must be integers");
+                    }
                     break;
                 case "-c":
                     cpgName = args[i + 1];
@@ -300,15 +342,18 @@ public class RandomizerCLI implements RandomizerUI {
         }
 
         if (presetFilePath == null && settingsFilePath == null) {
-            return usageError("Missing preset/settings file argument");
+            return usageError("Missing settings/preset file argument");
         }
         if (presetFilePath != null) {
             if (settingsFilePath != null) {
-                printWarning("Both preset file path (-p) and settings file path (-s) were given. " +
+                printWarning("Both settings file path (-s) and preset file path (-p) were given. " +
                         "The preset file will be used.");
             }
             if (createRace) {
-                usageError("Cannot use Race Mode while loading a preset file.");
+                return usageError("Cannot use Race Mode while loading a preset file.");
+            }
+            if (batchMode) {
+                return usageError("Cannot use Batch Mode while loading a preset file.");
             }
             File rh = new File(presetFilePath);
             RandomizerCoordinator rc = new RandomizerCoordinator(this);
@@ -351,7 +396,17 @@ public class RandomizerCLI implements RandomizerUI {
                 return usageError("Invalid settings file.\n"
                         + Arrays.toString(results.exception().getStackTrace()));
             }
-            mode = createRace ? RandomizeMode.CREATE_RACE : RandomizeMode.NORMAL;
+
+            if (createRace && batchMode) {
+                return usageError("Cannot use Race Mode alongside Batch Mode.");
+            }
+            if (createRace) {
+                mode = RandomizeMode.CREATE_RACE;
+            } else if (batchMode) {
+                mode = RandomizeMode.BATCH;
+            } else {
+                mode = RandomizeMode.NORMAL;
+            }
         }
 
         if (cpgName != null) {
@@ -368,6 +423,7 @@ public class RandomizerCLI implements RandomizerUI {
                 mode,
                 settings, seed,
                 racePreset, racePresetLogExists,
+                batchCount, batchCountNameOffset,
                 cpgName, cpgType,
                 saveAsDirectory,
                 updateFilePath,
@@ -398,8 +454,12 @@ public class RandomizerCLI implements RandomizerUI {
                            "       {-s <path to settings file> | -p <path to preset file>} [options]");
         System.out.println("Optional flags: ");
         System.out.println("-Xmx4096M          : Increase the amount of RAM available to Java. Required for 3DS games.");
-        System.out.println("-r                 : Race Mode. Generate a preset file to send to other players for racing." +
-                           "                     Cannot be used if loading a preset file.");
+        System.out.println("-r                 : Race Mode. Generate a preset file to send to other players for racing.\n" +
+                           "                     Cannot be used if loading a preset file, or alongside Batch Mode.");
+        System.out.println("-b <count> <start> : Batch Mode. Generate multiple randomized ROMs at once.\n" +
+                           "                     \"count\" denotes how many ROMs should be generated.\n" +
+                           "                     \"start\" denotes the number to start counting from, when naming files.\n" +
+                           "                     Cannot be used if loading a preset file, or alongside Race Mode.");
         System.out.println("-c <name> <type>   : Use a Custom Player Graphics. \"name\" must match a CPG defined in the\n" +
                            "                     data folder. \"type\" denotes which player character will be replaced,\n" +
                            "                     and must be either PC1 or PC2.");

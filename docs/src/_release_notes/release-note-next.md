@@ -10,7 +10,7 @@
      For redditors, /u/namehere works for brevity. 
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
-[Every person who submitted a merged pull request] for your code contributions,
+[Every person who submitted a merged pull request] @A5b84 for your code contributions,
 [Every person who submitted a solved issue] @SpacePelican and @SevenDLA for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
@@ -47,6 +47,7 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 <!-- Features that don't fit in any of the GUI tabs go in "Misc.". Not to be confused with "Misc. Tweaks". -->
 ### Misc.
+- Made the CLI seed random by default (Pull Request #282)
 - [The description of some miscellaneous feature (new or changed) here.]
 
 ## Bugfixes

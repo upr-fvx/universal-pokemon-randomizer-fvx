@@ -4,6 +4,7 @@ import com.uprfvx.random.GameRandomizer;
 import com.uprfvx.random.Settings;
 import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.gui.CPGSelection;
+import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.graphics.packs.GraphicsPack;
@@ -153,7 +154,7 @@ public class CliRandomizer {
         String outputRomFilePath = null;
 
         Settings settings;
-        long seed = -1;
+        long seed = SeedPicker.pickSeed();
         String settingsFilePath = null;
         String settingsString = null;
         String seedString = null;

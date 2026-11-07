@@ -2275,7 +2275,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             List<Integer> skipIndices = new ArrayList<>(
                     Arrays.stream(romEntry.getArrayValue("TotemPokemonIndices")).boxed().toList());
             skipIndices.addAll(Arrays.stream(romEntry.getArrayValue("AllyPokemonIndices")).boxed().toList());
-            skipIndices.add(romEntry.getIntValue("PikipekStaticIndex"));skipIndices.add(romEntry.getIntValue("PikipekStaticIndex"));
             skipIndices.add(Gen7Constants.route1PikipekStaticIndex);
             Iterator<StaticEncounter> staticIter = staticPokemon.iterator();
 

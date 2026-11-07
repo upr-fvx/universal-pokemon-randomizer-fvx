@@ -48,5 +48,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 
 ## Bugfixes
 - (Gen 6) Fixed female Espurr evolving into a glitch Pokémon instead of Meowstic-F. (Issue #285)
+- (Gen 6) Fixed the first encounter in ORAS on Route 101 (lvl 3 Wurmple in Vanilla). It now matches the encounters on that route, instead of being counted as a Static Pokémon.
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

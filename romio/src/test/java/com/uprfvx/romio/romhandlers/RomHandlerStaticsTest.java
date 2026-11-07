@@ -45,7 +45,7 @@ public class RomHandlerStaticsTest extends RomHandlerTest {
             }
         }
         for (Map.Entry<Integer, StaticEncounter> entry : bad.entrySet()) {
-            System.out.print(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().getLinkedEncounters());
+            System.out.println(entry.getKey() + " ->\t" + entry.getValue() + " " + entry.getValue().getLinkedEncounters());
         }
         assertTrue(bad.isEmpty());
     }

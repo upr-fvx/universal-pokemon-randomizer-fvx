@@ -218,6 +218,8 @@ public class Gen6Constants {
         };
     }
 
+    public static final int route101EncAreaIndex = 33, route101WurmpleEncIndex = 0, route101WurmpleStaticIndex = 55;
+
     public static final int noDamageTargetTrappingEffect = 106, noDamageFieldTrappingEffect = 354,
             damageAdjacentFoesTrappingEffect = 373;
 

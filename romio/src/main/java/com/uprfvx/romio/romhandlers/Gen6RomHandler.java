@@ -722,7 +722,7 @@ public class Gen6RomHandler extends Abstract3DSRomHandler {
                     }
                     writeWord(evoEntry, evosWritten * 6, method);
                     writeWord(evoEntry, evosWritten * 6 + 2, evo.getExtraInfo());
-                    writeWord(evoEntry, evosWritten * 6 + 4, evo.getTo().getNumber());
+                    writeWord(evoEntry, evosWritten * 6 + 4, evo.getTo().getBaseNumber());
                     evosWritten++;
                     if (evosWritten == 8) {
                         break;

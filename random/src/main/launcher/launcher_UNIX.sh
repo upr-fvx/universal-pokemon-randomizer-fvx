@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# ^ checks the user's PATH variables to see if they have bash installed, using bash from there rather than /bin/bash
 
 # pipes all logging to also go to console_output.log
 exec 1> >(tee -a console_output.log >&1)

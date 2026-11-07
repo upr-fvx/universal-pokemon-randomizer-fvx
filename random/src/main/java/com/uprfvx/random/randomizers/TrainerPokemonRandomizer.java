@@ -138,7 +138,10 @@ public class TrainerPokemonRandomizer extends Randomizer {
             scrambledTrainers.sort((t1, t2) ->
                     Boolean.compare(eliteFourIndices.contains(currentTrainers.indexOf(t2) + 1), eliteFourIndices.contains(currentTrainers.indexOf(t1) + 1)));
             if (rivalCarriesStarter) {
-                List<Species> starterList = romHandler.getStarters().subList(0, 3);
+                // starter list can be larger than 3, but then we expect those are "bonus starters" like
+                // the kanto starters in X/Y, not starters that a rival/friend can pick
+                int starterCountForRivalPickings = Math.min(romHandler.getStarters().size(), 3);
+                List<Species> starterList = romHandler.getStarters().subList(0, starterCountForRivalPickings);
                 for (Species starter : starterList) {
                     // If rival/friend carries starter, the starters cannot be set as unique
                     // (Excepting the final evolution, which is done later.)

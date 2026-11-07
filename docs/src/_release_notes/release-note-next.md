@@ -11,8 +11,8 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] @A5b84 for your code contributions,
-[Every person who submitted a solved issue] @SpacePelican and @SevenDLA for reporting Issues,
-[Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
+[Every person who submitted a solved issue] @SpacePelican, @SevenDLA, and @agmcleod for reporting Issues,
+[Any person on e.g. Reddit who reported solved bugs or suggested implemented features] /u/ShrishtheFish and /u/Zander1611 for reporting bugs [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
 [Etc.]!
@@ -53,5 +53,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 ## Bugfixes
 - Fixed "Random Move Names" causing randomization failure. (Issue #276)
 - Fixed alt formes not getting randomized abilities. (Issue #246)
+- (Gen 1) Fixed crash caused by abbreviated trainer names being written to the wrong location. (Issue #278)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

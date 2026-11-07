@@ -1200,7 +1200,7 @@ public class Gen1RomHandler extends AbstractGBCRomHandler {
                 for (int tcID : Gen1Constants.abbreviatedTrainerClasses) {
                     int oldLength = lengthOfStringAt(abbNameOffset, false);
                     String newName = trainerClasses.get(tcID - 1).getName();
-                    writeFixedLengthString(newName, nameOffset, oldLength);
+                    writeFixedLengthString(newName, abbNameOffset, oldLength);
                     abbNameOffset += oldLength;
                 }
             }

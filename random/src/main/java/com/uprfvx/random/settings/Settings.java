@@ -313,6 +313,7 @@ public class Settings {
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.COSMETIC_RANDOM_INTRO_MON,
                     Category.COSMETIC_OPTIONS)
+                    .supported(RomHandler::canSetIntroPokemon)
                     .build(),
             new SimpleSettingDefinition.BooleanBuilder<>(
                     Name.COSMETIC_LOWER_CASE_SPECIES_NAMES,

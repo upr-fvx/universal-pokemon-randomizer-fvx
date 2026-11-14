@@ -6,7 +6,6 @@ import com.uprfvx.random.RandomizerUI;
 import com.uprfvx.random.Version;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.gui.CPGSelection;
-import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.exceptions.CannotWriteToLocationException;
 import com.uprfvx.romio.gamedata.PlayerCharacterType;
@@ -86,10 +85,6 @@ public class RandomizerCLI implements RandomizerUI {
             }
 
             String filename = fh.getAbsolutePath();
-
-            if (mode != RandomizeMode.LOAD_PRESET) {
-                seed = SeedPicker.pickSeed();
-            }
 
             RandomizerCoordinator rc = new RandomizerCoordinator(this);
             rc.randomize(romHandler, filename, saveAsDirectory, false, settings, seed, mode,

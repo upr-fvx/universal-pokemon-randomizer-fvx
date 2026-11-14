@@ -1,6 +1,7 @@
 package com.uprfvx.random;
 
 import com.uprfvx.random.exceptions.ReadPresetException;
+import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.romio.graphics.packs.CustomPlayerGraphics;
 import com.uprfvx.romio.romhandlers.RomHandler;
@@ -121,7 +122,9 @@ public class RandomizerCoordinator {
      *                            If false, the {@link RandomizerUI} will instead be asked to reinitialize it.
      * @param settings The {@link SettingsManager} holding all settings for the randomization itself.
      *                 Must be associated with romHandler.
-     * @param seed The seed to use for everything random.
+     * @param seed The seed to use for everything random. If null, the seed itself will be randomly picked.<br>
+     *             Note that normal use expects this to be non-null only when mode==RandomizeMode.LOAD_PRESET.
+     *             Having the ability to set a seed for all modes is left as an option for testing.
      * @param mode The {@link RandomizeMode} decides what kind of randomization is being done.
      * @param batchCount The number of games to randomize.
      * @param batchCountNameOffset When naming batch files, they are enumerated counting up.
@@ -133,42 +136,51 @@ public class RandomizerCoordinator {
      * @param racePresetLogExists If true, the person who created the preset for racing, also saved a log file.
      *                            Only relevant if {@code racePreset}==true.
      * @throws IllegalArgumentException if settings has not been associated with romHandler.
+     * @throws IllegalArgumentException if mode == RandomizeMode.BATCH && batchCount <= 0.
      */
     public void randomize(RomHandler romHandler, String baseFileName, boolean saveAsDirectory, boolean unloadGameOnSuccess,
-                          SettingsManager settings, long seed,
+                          SettingsManager settings, Long seed,
                           RandomizeMode mode,
                           int batchCount, int batchCountNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                           boolean racePreset, boolean racePresetLogExists) {
         if (settings.getAssociatedGame() != romHandler) {
             // the reason the game must be associated, is so that the game is included in the settings log
-            throw new IllegalArgumentException("Settings must be associated with RomHandler");
+            throw new IllegalArgumentException("settings must be associated with romHandler");
         }
-        // TODO: games in a batch should not get the same seed...
+        if (mode == RandomizeMode.BATCH && batchCount <= 0) {
+            throw new IllegalArgumentException("batchCount must be at least 1");
+        }
+        if (seed == null && mode != RandomizeMode.LOAD_PRESET) {
+            System.out.println("seed == null, mode != LOAD_PRESET. This is bad unless you're in a test case.");
+        }
 
         // TODO: account for CPG
         CustomPlayerGraphics cpg = null;
 
         int batchSize = mode == RandomizeMode.BATCH ? batchCount : 1;
 
+        long seedToUse = -1;
         GameRandomizer.Results results = null;
         ui.displayRandomizationStarted();
         for (int i = 0; i < batchSize; i++) {
             ui.displayRandomizationProgress(i, batchSize);
 
+            seedToUse = seed == null ? SeedPicker.pickSeed() : seed;
+
             String fileName = prepareFileName(baseFileName, romHandler, saveAsDirectory,
                     mode == RandomizeMode.BATCH, i + batchCountNameOffset);
             GameRandomizer randomizer = new GameRandomizer(settings, cpg, romHandler, saveAsDirectory);
-            results = randomizer.randomize(fileName, seed);
+            results = randomizer.randomize(fileName, seedToUse);
 
             if (!results.wasSaveSuccessful()) {
-                ui.displayRandomizationFailure(results.getException(), seed, fileName);
+                ui.displayRandomizationFailure(results.getException(), seedToUse, fileName);
                 return;
             }
 
             if (mode == RandomizeMode.BATCH && batchSaveLogs) {
                 Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
                 saveBatchLog(fileName, batchLogSuffix, i, batchSize,
-                        logException, results.getLogBAOS(), seed);
+                        logException, results.getLogBAOS(), seedToUse);
             }
             if (mode == RandomizeMode.BATCH) {
                 ui.reinitializeRomHandler(true);
@@ -179,7 +191,7 @@ public class RandomizerCoordinator {
         if (mode == RandomizeMode.NORMAL || mode == RandomizeMode.CREATE_RACE
                 || (mode == RandomizeMode.LOAD_PRESET && !racePreset)) {
             Exception logException = results.wasLogSuccessful() ? null : results.getLogException();
-            maybeSaveLogOrPreset(mode, baseFileName, results.getLogBAOS(), logException, settings, seed, racePreset);
+            maybeSaveLogOrPreset(mode, baseFileName, results.getLogBAOS(), logException, settings, seedToUse, racePreset);
         }
 
         ui.displayRandomizationCoordinationDone(mode, batchCount, batchSaveLogs, racePreset, racePresetLogExists);

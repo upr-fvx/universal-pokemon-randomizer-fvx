@@ -28,7 +28,6 @@ import com.uprfvx.random.customnames.CustomNamesSet;
 import com.uprfvx.random.customnames.OldCustomNamesImporter;
 import com.uprfvx.random.exceptions.RandomizationException;
 import com.uprfvx.random.gui.SettingElementCoordinators.*;
-import com.uprfvx.random.random.SeedPicker;
 import com.uprfvx.random.settings.Settings;
 import com.uprfvx.random.settings.Settings.*;
 import com.uprfvx.random.settings.SettingsManager;
@@ -62,7 +61,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 /**
- * The main GUI for the Universal Pokemon Randomizer FVX, containing the various options available and such.
+ * The main GUI for the Universal Pokémon Randomizer FVX, containing the various options available and such.
  */
 public class RandomizerGUI implements RandomizerUI {
 
@@ -1777,8 +1776,6 @@ public class RandomizerGUI implements RandomizerUI {
             saveAsDirectory = saveFile.isDirectory();
         }
 
-        long seed = SeedPicker.pickSeed();
-
         RandomizeMode mode;
         if (raceModeCheckBox.isSelected()) {
             mode = RandomizeMode.CREATE_RACE;
@@ -1792,12 +1789,12 @@ public class RandomizerGUI implements RandomizerUI {
             @Override
             protected Void doInBackground() {
                 RandomizerCoordinator rc = new RandomizerCoordinator(RandomizerGUI.this);
-                rc.randomize(romHandler,fileName,saveAsDirectory,unloadGameOnSuccess,
-                        settingsManager,seed,mode,
-                        brs.getNumberOfRandomizedROMs(),brs.getStartingIndex(),
-                        brs.shouldGenerateLogFile(),brs.getLogFileEnding(),
+                rc.randomize(romHandler, fileName, saveAsDirectory, unloadGameOnSuccess,
+                        settingsManager, null, mode,
+                        brs.getNumberOfRandomizedROMs(), brs.getStartingIndex(),
+                        brs.shouldGenerateLogFile(), brs.getLogFileEnding(),
                         // args that don't matter here v
-                        false,false);
+                        false, false);
 
                 return null;
             }

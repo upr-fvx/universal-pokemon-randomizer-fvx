@@ -2091,7 +2091,6 @@ public class RandomizerGUI implements RandomizerUI {
     }
 
     private void presetLoader() {
-        // TODO: fix log/preset created after a preset; they don't use the right romhandler/settings
         PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpenChooser, romOpener);
         if (pld.isCompleted()) {
             // Apply it
@@ -2099,6 +2098,7 @@ public class RandomizerGUI implements RandomizerUI {
             if (gameUpdates.containsKey(rh.getROMCode())) {
                 rh.loadGameUpdate(gameUpdates.get(rh.getROMCode()));
             }
+            pld.getSettings().associateGame(rh);
 
             File saveFile = chooseSaveFile(rh);
             if (saveFile == null) return;

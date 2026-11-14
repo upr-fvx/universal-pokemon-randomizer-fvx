@@ -315,6 +315,14 @@ public class SettingsManager {
     }
 
     /**
+     * Returns the associated game ({@link RomHandler}), or null if no game is associated.<br>
+     * (See {@link #associateGame(RomHandler)}, {@link #unassociateGame()})
+     */
+    public RomHandler getAssociatedGame() {
+        return game;
+    }
+
+    /**
      * Finds the minimum value currently settable to the setting requested.
      * @param settingName The setting to find the minimum for.
      * @return The minimum settable value for the setting.

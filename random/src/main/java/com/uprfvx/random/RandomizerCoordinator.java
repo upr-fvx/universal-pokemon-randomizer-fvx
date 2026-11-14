@@ -101,11 +101,50 @@ public class RandomizerCoordinator {
         }
     }
 
+    /**
+     * Randomizes the given {@link RomHandler}, using a number of arguments to decide how.
+     * <br><br>
+     * Some arguments are only relevant/used given a specific {@link RandomizeMode} for mode.<br>
+     * {@link RandomizeMode#BATCH}: {@code batchCount}, {@code batchCountNameOffset}, {@code batchSaveLogs},
+     * {@code batchLogSuffix}.<br>
+     * {@link RandomizeMode#LOAD_PRESET}: {@code racePreset}, {@code racePresetLogExists}.
+     * <br><br>
+     * {@code settings} must have {@link SettingsManager#getAssociatedGame() its associated game} be {@code romHandler}.
+     * This method does not associate them. This is to have fewer side effects, and so that the caller is free to
+     * associate them whenever.
+     *
+     * @param romHandler The {@link RomHandler} to randomize. Is modified in the process.
+     * @param baseFileName The name/path of the output file(s). May have a file extension, but it will be ignored.
+     * @param saveAsDirectory Whether to save as a directory, rather than a single file.
+     *                        Note that not all RomHandlers can be saved as a directory.
+     * @param unloadGameOnSuccess If true, the {@link RandomizerUI} will be asked to unload romHandler when done.
+     *                            If false, the {@link RandomizerUI} will instead be asked to reinitialize it.
+     * @param settings The {@link SettingsManager} holding all settings for the randomization itself.
+     *                 Must be associated with romHandler.
+     * @param seed The seed to use for everything random.
+     * @param mode The {@link RandomizeMode} decides what kind of randomization is being done.
+     * @param batchCount The number of games to randomize.
+     * @param batchCountNameOffset When naming batch files, they are enumerated counting up.
+     *                             This is the number to start counting from.
+     * @param batchSaveLogs If true, batch-randomized games will have logs saved.
+     * @param batchLogSuffix The suffix/file extension to use for batch log files.
+     *                       Only relevant if {@code batchSaveLogs}==true.
+     * @param racePreset If true, the preset loaded is meant to be part of a race.
+     * @param racePresetLogExists If true, the person who created the preset for racing, also saved a log file.
+     *                            Only relevant if {@code racePreset}==true.
+     * @throws IllegalArgumentException if settings has not been associated with romHandler.
+     */
     public void randomize(RomHandler romHandler, String baseFileName, boolean saveAsDirectory, boolean unloadGameOnSuccess,
                           SettingsManager settings, long seed,
                           RandomizeMode mode,
                           int batchCount, int batchCountNameOffset, boolean batchSaveLogs, String batchLogSuffix,
                           boolean racePreset, boolean racePresetLogExists) {
+        if (settings.getAssociatedGame() != romHandler) {
+            // the reason the game must be associated, is so that the game is included in the settings log
+            throw new IllegalArgumentException("Settings must be associated with RomHandler");
+        }
+        // TODO: games in a batch should not get the same seed...
+
         // TODO: account for CPG
         CustomPlayerGraphics cpg = null;
 

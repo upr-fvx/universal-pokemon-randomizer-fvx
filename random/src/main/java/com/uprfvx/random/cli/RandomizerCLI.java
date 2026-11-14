@@ -71,6 +71,7 @@ public class RandomizerCLI implements RandomizerUI {
                 printWarning("Saving as directory does not make sense for non-3DS games, ignoring \"-d\" flag...");
             }
 
+            settings.associateGame(romHandler);
             RandomizerCLI.displaySettingsWarnings(settings, romHandler);
 
             File fh = new File(destinationRomFilePath);

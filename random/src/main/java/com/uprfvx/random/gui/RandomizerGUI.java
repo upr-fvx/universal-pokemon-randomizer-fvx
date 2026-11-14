@@ -578,7 +578,7 @@ public class RandomizerGUI implements RandomizerUI {
 
     public static boolean usedLauncher = false;
 
-    private OperationDialog opDialog;
+    private OperationDialog opDialog = new OperationDialog("", frame, true);
 
     private final ResourceBundle bundle;
     private final ResourceBundle nameBundle;
@@ -1678,9 +1678,13 @@ public class RandomizerGUI implements RandomizerUI {
     private Thread openRom(File f, boolean reinitialize) {
         // A rather simple method - make the romOpener open the file and react to its results -
         // complicated by the need of an animated loading dialog and thus multithreading...
-        opDialog = new OperationDialog(bundle.getString("GUI.loadROM.loadingDialog.message"), frame, true);
         Thread t = new Thread(() -> {
-            SwingUtilities.invokeLater(() -> opDialog.setVisible(!reinitialize));
+            SwingUtilities.invokeLater(() -> {
+                if (!reinitialize) {
+                    opDialog.setLoadingLabelText(bundle.getString("GUI.loadROM.loadingDialog.message"));
+                    opDialog.setVisible(true);
+                }
+            });
             try {
                 RomOpener.Results results = romOpener.openRomFile(f);
 
@@ -1784,13 +1788,20 @@ public class RandomizerGUI implements RandomizerUI {
             mode = RandomizeMode.NORMAL;
         }
 
-        RandomizerCoordinator rc = new RandomizerCoordinator(this);
-        rc.randomize(romHandler, fileName, saveAsDirectory, unloadGameOnSuccess,
-                settingsManager, seed, mode,
-                brs.getNumberOfRandomizedROMs(), brs.getStartingIndex(),
-                brs.shouldGenerateLogFile(), brs.getLogFileEnding(),
-                // args that don't matter here v
-                false, false);
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                RandomizerCoordinator rc = new RandomizerCoordinator(RandomizerGUI.this);
+                rc.randomize(romHandler,fileName,saveAsDirectory,unloadGameOnSuccess,
+                        settingsManager,seed,mode,
+                        brs.getNumberOfRandomizedROMs(),brs.getStartingIndex(),
+                        brs.shouldGenerateLogFile(),brs.getLogFileEnding(),
+                        // args that don't matter here v
+                        false,false);
+
+                return null;
+            }
+        }.execute();
 
         if (brs.shouldAutoAdvanceStartingIndex()) {
             brs.setStartingIndex(brs.getStartingIndex() + brs.getNumberOfRandomizedROMs());
@@ -1837,25 +1848,27 @@ public class RandomizerGUI implements RandomizerUI {
 
     @Override
     public void displayRandomizationStarted() {
-        opDialog = new OperationDialog("", frame, true);
-        showedBatchLogFailure = false;
+        SwingUtilities.invokeLater(() -> showedBatchLogFailure = false);
     }
 
     @Override
     public void displayRandomizationProgress(int currentBatch, int batchSize) {
-        String text;
-        if (batchSize == 1) {
-            text = bundle.getString("GUI.saveROM.savingDialog.message");
-        } else {
-            text = String.format(bundle.getString("GUI.saveROM.savingDialogBatch.message"),
-                    currentBatch + 1, batchSize);
-        }
-        opDialog.setLoadingLabelText(text);
+        SwingUtilities.invokeLater(() -> {
+            String text;
+            if (batchSize == 1) {
+                text = bundle.getString("GUI.saveROM.savingDialog.message");
+            } else {
+                text = String.format(bundle.getString("GUI.saveROM.savingDialogBatch.message"),
+                        currentBatch + 1, batchSize);
+            }
+            opDialog.setLoadingLabelText(text);
+            opDialog.setVisible(true);
+        });
     }
 
     @Override
     public void displayRandomizationEnded() {
-        opDialog.setVisible(false);
+        SwingUtilities.invokeLater(() -> opDialog.setVisible(false));
     }
 
     @Override

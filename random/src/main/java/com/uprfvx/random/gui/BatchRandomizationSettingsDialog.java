@@ -25,8 +25,6 @@ package com.uprfvx.random.gui;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
-import com.uprfvx.random.BatchRandomizationSettings;
-
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;

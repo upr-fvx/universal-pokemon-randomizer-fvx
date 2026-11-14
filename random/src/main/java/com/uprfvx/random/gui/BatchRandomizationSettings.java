@@ -1,9 +1,6 @@
-package com.uprfvx.random;
+package com.uprfvx.random.gui;
 
 /*----------------------------------------------------------------------------*/
-/*--  BatchRandomizationSettings.java - handles functionality related to    --*/
-/*--                                    batch randomization.                --*/
-/*--                                                                        --*/
 /*--  Part of "Universal Pokemon Randomizer ZX" by the UPR-ZX team          --*/
 /*--  Originally part of "Universal Pokemon Randomizer" by Dabomstew        --*/
 /*--  Pokemon and any associated names and the like are                     --*/
@@ -25,10 +22,16 @@ package com.uprfvx.random;
 /*--  along with this program. If not, see <http://www.gnu.org/licenses/>.  --*/
 /*----------------------------------------------------------------------------*/
 
+import com.uprfvx.random.RandomizerCoordinator;
 import com.uprfvx.romio.RootPath;
 
 import java.util.StringJoiner;
 
+/**
+ * Holds settings for batch randomization. This is done at the GUI level only,
+ * e.g. {@link RandomizerCoordinator} purposefully does not use
+ * this class.
+ */
 public class BatchRandomizationSettings implements Cloneable {
     private Boolean batchRandomizationEnabled;
     private Boolean generateLogFile;

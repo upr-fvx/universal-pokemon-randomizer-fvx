@@ -1771,7 +1771,7 @@ public class RandomizerGUI implements RandomizerUI {
             fileName = brs.getOutputDirectory() + "/" + brs.getFileNamePrefix();
             saveAsDirectory = false;
         } else {
-            File saveFile = chooseSaveFile();
+            File saveFile = chooseSaveFile(romHandler);
             if (saveFile == null) return;
             fileName = saveFile.getAbsolutePath();
             saveAsDirectory = saveFile.isDirectory();
@@ -1809,8 +1809,8 @@ public class RandomizerGUI implements RandomizerUI {
         // TODO: set "last used CPG"?
     }
 
-    private File chooseSaveFile() {
-        boolean saveAsDirectory = askToSaveAsDirectory();
+    private File chooseSaveFile(RomHandler rh) {
+        boolean saveAsDirectory = askToSaveAsDirectory(rh);
         File file = null;
         boolean allowed = false;
 
@@ -1821,9 +1821,8 @@ public class RandomizerGUI implements RandomizerUI {
             file = romSaveChooser.getSelectedFile();
             allowed = true;
 
-            if (!saveAsDirectory &&
-                    (romHandler instanceof AbstractDSRomHandler || romHandler instanceof Abstract3DSRomHandler)) {
-                String currentFN = romHandler.loadedFilename();
+            if (!saveAsDirectory && (rh instanceof AbstractDSRomHandler || rh instanceof Abstract3DSRomHandler)) {
+                String currentFN = rh.loadedFilename();
                 if (currentFN.equals(file.getAbsolutePath())) {
                     JOptionPane.showMessageDialog(frame,
                             bundle.getString("GUI.saveROM.cantOverwriteDSDialog.message"));
@@ -2092,6 +2091,7 @@ public class RandomizerGUI implements RandomizerUI {
     }
 
     private void presetLoader() {
+        // TODO: fix log/preset created after a preset; they don't use the right romhandler/settings
         PresetLoadDialog pld = new PresetLoadDialog(this, frame, romOpenChooser, romOpener);
         if (pld.isCompleted()) {
             // Apply it
@@ -2100,34 +2100,39 @@ public class RandomizerGUI implements RandomizerUI {
                 rh.loadGameUpdate(gameUpdates.get(rh.getROMCode()));
             }
 
-            File saveFile = chooseSaveFile();
+            File saveFile = chooseSaveFile(rh);
             if (saveFile == null) return;
 
-            RandomizerCoordinator rc = new RandomizerCoordinator(this);
-            rc.randomize(rh, saveFile.getAbsolutePath(), saveFile.isDirectory(), true,
-                    pld.getSettings(), pld.getSeed(), RandomizeMode.LOAD_PRESET,
-                    0, 0, false, "", // <- irrelevant args
-                    pld.isRaceMode(), pld.isRaceModeSavedLog());
-
-            if (rh.getResourceLifetime() != RomHandler.ResourceLifetime.NONE) {
-                try {
-                    rh.closeResources();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+            new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() {
+                    RandomizerCoordinator rc = new RandomizerCoordinator(RandomizerGUI.this);
+                    rc.randomize(rh, saveFile.getAbsolutePath(), saveFile.isDirectory(), true,
+                            pld.getSettings(), pld.getSeed(), RandomizeMode.LOAD_PRESET,
+                            0, 0, false, "", // <- irrelevant args
+                            pld.isRaceMode(), pld.isRaceModeSavedLog());
+                    if (rh.getResourceLifetime()!=RomHandler.ResourceLifetime.NONE) {
+                        try {
+                            rh.closeResources();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    return null;
                 }
-            }
+            }.execute();
         }
 
     }
 
-    private boolean askToSaveAsDirectory() {
+    private boolean askToSaveAsDirectory(RomHandler rh) {
         boolean saveAsDirectory = false;
-        if (romHandler.hasGameUpdateLoaded()) {
+        if (rh.hasGameUpdateLoaded()) {
             String text = bundle.getString("GUI.saveROM.savingWithGameUpdate.message");
             String url = SysConstants.WIKI_3DS_INFO_URL + "#managing-game-updates";
             showMessageDialogWithLink(text, url);
             saveAsDirectory = true;
-        } else if (romHandler.generationOfPokemon() == 6 || romHandler.generationOfPokemon() == 7) {
+        } else if (rh instanceof Abstract3DSRomHandler) {
             Object[] options3DS = {"CXI", "LayeredFS"};
             String question = "Would you like to output your 3DS game as a CXI file or as a LayeredFS directory?";
             JLabel label = new JLabel("<html><a href=\"" +  SysConstants.WIKI_3DS_INFO_URL + "#changes-to-saving-a-rom-when-working-with-3ds-games\">For more information, click here.</a>");

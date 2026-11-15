@@ -265,7 +265,8 @@ tasks.register<Exec>("relaunch") {
 
 tasks.named<Test>("test") {
     filter {
-        excludeTestsMatching("*Randomizer*Test")
+        excludeTestsMatching("*RandomizerTest")
+        excludeTestsMatching("*RandomizersTest")
         excludeTestsMatching("*Updater*Test")
         excludeTestsMatching("*Support*Test")
     }

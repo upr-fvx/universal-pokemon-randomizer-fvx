@@ -158,27 +158,27 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
     @Test
     public void populateFromIni_NoGameLoaded_NoGameInIni_GameMatchIsNoGameLoaded() {
         SettingsManager manager = new SettingsManager();
-        manager.populateFromIni(String.format("""
+        SettingsManager.FromIniResults results = manager.populateFromIni(String.format("""
                         [Settings]
                         VersionID=%d
                         ROMName=NONE
                         Setting<UPDATE_MOVES>=true
                         [Settings_end]
                         """, Version.LATEST.id));
-        assertEquals(SettingsManager.GameMatch.NO_GAME_LOADED, manager.getLoadedSettingsMatchGame());
+        assertEquals(SettingsManager.GameMatch.NO_GAME_LOADED, results.romNameMatchesAssociated());
     }
 
     @Test
     public void populateFromIni_NoGameLoaded_GameInIni_GameMatchIsNoGameLoaded() {
         SettingsManager manager = new SettingsManager();
-        manager.populateFromIni(String.format("""
+        SettingsManager.FromIniResults results = manager.populateFromIni(String.format("""
                         [Settings]
                         VersionID=%d
                         ROMName=Red (U)
                         Setting<UPDATE_MOVES>=true
                         [Settings_end]
                         """, Version.LATEST.id));
-        assertEquals(SettingsManager.GameMatch.NO_GAME_LOADED, manager.getLoadedSettingsMatchGame());
+        assertEquals(SettingsManager.GameMatch.NO_GAME_LOADED, results.romNameMatchesAssociated());
     }
 
     @Test
@@ -187,14 +187,14 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Red (U)");
         manager.associateGame(romHandler);
 
-        manager.populateFromIni(String.format("""
+        SettingsManager.FromIniResults results = manager.populateFromIni(String.format("""
                         [Settings]
                         VersionID=%d
                         ROMName=NONE
                         Setting<UPDATE_MOVES>=true
                         [Settings_end]
                         """, Version.LATEST.id));
-        assertEquals(SettingsManager.GameMatch.NO_MATCH, manager.getLoadedSettingsMatchGame());
+        assertEquals(SettingsManager.GameMatch.NO_MATCH, results.romNameMatchesAssociated());
     }
 
     @Test
@@ -203,14 +203,14 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Red (U)");
         manager.associateGame(romHandler);
 
-        manager.populateFromIni(String.format("""
+        SettingsManager.FromIniResults results = manager.populateFromIni(String.format("""
                         [Settings]
                         VersionID=%d
                         ROMName=Yellow (U)
                         Setting<UPDATE_MOVES>=true
                         [Settings_end]
                         """, Version.LATEST.id));
-        assertEquals(SettingsManager.GameMatch.NO_MATCH, manager.getLoadedSettingsMatchGame());
+        assertEquals(SettingsManager.GameMatch.NO_MATCH, results.romNameMatchesAssociated());
     }
 
     @Test
@@ -219,13 +219,13 @@ public class SettingsManagerSupportTest extends RomHandlerTest {
         loadROM("Red (U)");
         manager.associateGame(romHandler);
 
-        manager.populateFromIni(String.format("""
+        SettingsManager.FromIniResults results = manager.populateFromIni(String.format("""
                         [Settings]
                         VersionID=%d
                         ROMName=Red (U)
                         Setting<UPDATE_MOVES>=true
                         [Settings_end]
                         """, Version.LATEST.id));
-        assertEquals(SettingsManager.GameMatch.NO_MATCH, manager.getLoadedSettingsMatchGame());
+        assertEquals(SettingsManager.GameMatch.NO_MATCH, results.romNameMatchesAssociated());
     }
 }

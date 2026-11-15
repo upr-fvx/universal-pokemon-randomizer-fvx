@@ -598,27 +598,15 @@ public class SettingsManagerTest {
     }
 
     @Test
-    public void populateFromIni_LatestVersion_NotUpdated() {
+    public void populateFromIni_NotLatestVersion_VersionIDMatchesIni() {
         SettingsManager manager = new SettingsManager();
-        manager.populateFromIni(String.format("""
-                        [Settings]
-                        VersionID=%d
-                        ROMName=NONE
-                        [Settings_end]
-                        """, Version.LATEST.id));
-        assertFalse(manager.isUpdatedFromOldVersion());
-    }
-
-    @Test
-    public void populateFromIni_NotLatestVersion_IsUpdated() {
-        SettingsManager manager = new SettingsManager();
-        manager.populateFromIni(String.format("""
+        SettingsManager.FromIniResults results = manager.populateFromIni(String.format("""
                         [Settings]
                         VersionID=%d
                         ROMName=NONE
                         [Settings_end]
                         """, Version.FVX_1_6_1.id));
-        assertTrue(manager.isUpdatedFromOldVersion());
+        assertEquals(Version.FVX_1_6_1.id, results.versionID());
     }
 
     @Test

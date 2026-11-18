@@ -581,7 +581,9 @@ public class RandomizerGUI {
     //region *** Info ***
 
     private JPanel infoTab;
+    private JPanel editSettingsPanel;
     private JButton editSettingsButton;
+    private JLabel infoLabel;
 
     //endregion
 
@@ -2858,12 +2860,10 @@ public class RandomizerGUI {
         setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton);
         enableButtons(openROMButton, premadeSeedButton, settingsButton);
 
+        infoLabel.setText(bundle.getString("GUI.infoTab.infoLabel.openROM.text"));
         disableSettingsEditing();
 
-        // the buttons in the main part of the gui (randomization options):
-        // TODO: set all settings to default (should set the connected GUI elements accordingly)
-
-        // TODO: relabel the relevant spin boxes (i.e. starter selection)
+        settingsManager.resetAll();
 
         // TODO: look at these labels closer
         tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
@@ -2883,6 +2883,8 @@ public class RandomizerGUI {
         for (int i = 0; i < randomizationSettingsTabbedPane.getTabCount(); i++) {
             randomizationSettingsTabbedPane.setEnabledAt(i, i == infoIndex);
         }
+
+        editSettingsPanel.setVisible(true);
     }
 
     private void enableSettingsEditing() {
@@ -2891,10 +2893,11 @@ public class RandomizerGUI {
         int generalIndex = randomizationSettingsTabbedPane.indexOfComponent(generalTab);
         randomizationSettingsTabbedPane.setSelectedIndex(generalIndex);
 
-        int infoIndex = randomizationSettingsTabbedPane.indexOfComponent(infoTab);
         for (int i = 0; i < randomizationSettingsTabbedPane.getTabCount(); i++) {
-            randomizationSettingsTabbedPane.setEnabledAt(i, i != infoIndex);
+            randomizationSettingsTabbedPane.setEnabledAt(i, true);
         }
+
+        editSettingsPanel.setVisible(false);
     }
 
     /**
@@ -3000,6 +3003,8 @@ public class RandomizerGUI {
                 romCodeLabel.setForeground(Color.BLACK);
                 romSupportLabel.setForeground(Color.BLACK);
             }
+
+            infoLabel.setText(bundle.getString("GUI.infoTab.infoLabel.saveROM.text"));
 
             enableSettingsEditing();
             raceModeCheckBox.setEnabled(true);

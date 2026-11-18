@@ -28,7 +28,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <scrollpane id="15901">
+          <scrollpane id="15901" binding="generalTab">
             <constraints>
               <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.generalTab.title"/>
             </constraints>
@@ -5459,6 +5459,55 @@
               </grid>
             </children>
           </scrollpane>
+          <grid id="4bb37" binding="infoTab" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title-resource-bundle="com/uprfvx/random/gui/Bundle" title-key="GUI.infoTab.title"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="9ca53" class="javax.swing.JLabel">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <horizontalAlignment value="0"/>
+                  <horizontalTextPosition value="0"/>
+                  <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.infoTab.openRomLabel.text"/>
+                  <verticalAlignment value="0"/>
+                </properties>
+              </component>
+              <grid id="e2e28" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints border-constraint="South"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="4cd9b" class="javax.swing.JLabel">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <horizontalAlignment value="10"/>
+                      <horizontalTextPosition value="11"/>
+                      <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.infoTab.editSettingsLabel.text"/>
+                    </properties>
+                  </component>
+                  <vspacer id="d947d">
+                    <constraints>
+                      <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                  </vspacer>
+                  <component id="1e635" class="javax.swing.JButton" binding="editSettingsButton" default-binding="true">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.infoTab.editSettingsButton.text"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
         </children>
       </tabbedpane>
       <component id="a7e2c" class="javax.swing.JButton" binding="openROMButton" default-binding="true">

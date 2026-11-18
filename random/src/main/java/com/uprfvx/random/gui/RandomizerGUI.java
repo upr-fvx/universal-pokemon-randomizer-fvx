@@ -105,6 +105,8 @@ public class RandomizerGUI {
 
     //region *** General tab ***
 
+    private JScrollPane generalTab;
+
     //Cosmetic options
     private JPanel cosmeticPanel;
     private JCheckBox coRandomIntroMonCheckBox;
@@ -574,8 +576,12 @@ public class RandomizerGUI {
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
 
-
     //endregion
+
+    //region *** Info ***
+
+    private JPanel infoTab;
+    private JButton editSettingsButton;
 
     //endregion
 
@@ -721,6 +727,7 @@ public class RandomizerGUI {
         });
         randomizeSaveButton.addActionListener(_ -> saveROM());
         premadeSeedButton.addActionListener(_ -> presetLoader());
+        editSettingsButton.addActionListener(_ -> enableSettingsEditing());
         loadSettingsButton.addActionListener(_ -> loadQS());
         saveSettingsButton.addActionListener(_ -> saveQS());
         settingsButton.addActionListener(_ -> settingsMenu.show(settingsButton,0,settingsButton.getHeight()));
@@ -2848,9 +2855,10 @@ public class RandomizerGUI {
 
         gameMascotLabel.setIcon(emptyIcon);
 
-        setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton,
-                loadSettingsButton, saveSettingsButton);
+        setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton);
         enableButtons(openROMButton, premadeSeedButton, settingsButton);
+
+        disableSettingsEditing();
 
         // the buttons in the main part of the gui (randomization options):
         // TODO: set all settings to default (should set the connected GUI elements accordingly)
@@ -2864,6 +2872,29 @@ public class RandomizerGUI {
 		tpAdditionalPokemonForLabel.setVisible(true);
 		tpHeldItemsLabel.setVisible(true);
         spalPartiallyImplementedLabel.setVisible(false);
+    }
+
+    private void disableSettingsEditing() {
+        setInitialButtonState(loadSettingsButton, saveSettingsButton);
+
+        int infoIndex = randomizationSettingsTabbedPane.indexOfComponent(infoTab);
+        randomizationSettingsTabbedPane.setSelectedIndex(infoIndex);
+
+        for (int i = 0; i < randomizationSettingsTabbedPane.getTabCount(); i++) {
+            randomizationSettingsTabbedPane.setEnabledAt(i, i == infoIndex);
+        }
+    }
+
+    private void enableSettingsEditing() {
+        enableButtons(loadSettingsButton, saveSettingsButton);
+
+        int generalIndex = randomizationSettingsTabbedPane.indexOfComponent(generalTab);
+        randomizationSettingsTabbedPane.setSelectedIndex(generalIndex);
+
+        int infoIndex = randomizationSettingsTabbedPane.indexOfComponent(infoTab);
+        for (int i = 0; i < randomizationSettingsTabbedPane.getTabCount(); i++) {
+            randomizationSettingsTabbedPane.setEnabledAt(i, i != infoIndex);
+        }
     }
 
     /**
@@ -2970,15 +3001,13 @@ public class RandomizerGUI {
                 romSupportLabel.setForeground(Color.BLACK);
             }
 
+            enableSettingsEditing();
             raceModeCheckBox.setEnabled(true);
-
-            loadSettingsButton.setEnabled(true);
-            saveSettingsButton.setEnabled(true);
-
             randomizeSaveButton.setEnabled(true);
 
             settingsManager.unassociateGame();
             settingsManager.associateGame(romHandler);
+
             // TODO: clean up
 
             // Types

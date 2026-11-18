@@ -753,6 +753,8 @@ public class RandomizerGUI {
             }
         });
         batchRandomizationMenuItem.addActionListener(_ -> batchRandomizationSettingsDialog());
+
+        initialState();
     }
 
     private void associateSettingControls() {
@@ -2848,7 +2850,7 @@ public class RandomizerGUI {
 
         setInitialButtonState(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton,
                 loadSettingsButton, saveSettingsButton);
-        enableButtons(openROMButton, randomizeSaveButton, premadeSeedButton, settingsButton);
+        enableButtons(openROMButton, premadeSeedButton, settingsButton);
 
         // the buttons in the main part of the gui (randomization options):
         // TODO: set all settings to default (should set the connected GUI elements accordingly)
@@ -2972,6 +2974,8 @@ public class RandomizerGUI {
 
             loadSettingsButton.setEnabled(true);
             saveSettingsButton.setEnabled(true);
+
+            randomizeSaveButton.setEnabled(true);
 
             settingsManager.unassociateGame();
             settingsManager.associateGame(romHandler);

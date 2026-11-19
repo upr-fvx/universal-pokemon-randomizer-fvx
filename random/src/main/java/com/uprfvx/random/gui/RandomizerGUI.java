@@ -65,6 +65,7 @@ import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -106,6 +107,7 @@ public class RandomizerGUI {
     //region *** General tab ***
 
     private JScrollPane generalTab;
+    private JPanel generalTabPanel;
 
     //Cosmetic options
     private JPanel cosmeticPanel;
@@ -157,6 +159,8 @@ public class RandomizerGUI {
     //endregion
 
     //region *** Species Traits tab ***
+
+    private JPanel traitsTabPanel;
 
     //Base Stats
     private JPanel statsPanel;
@@ -238,6 +242,8 @@ public class RandomizerGUI {
 
     //region *** Given Pokemon tab ***
 
+    private JPanel givenTabPanel;
+
     //Starter Pokemon
     private JPanel startersPanel;
     private JRadioButton spUnchangedRadioButton;
@@ -285,6 +291,8 @@ public class RandomizerGUI {
 
     //region *** Moves and Movesets ***
 
+    private JPanel movesTabPanel;
+
     //Move Traits
     private JPanel moveTraitsPanel;
     private JCheckBox mtRandomizeMovePowerCheckBox;
@@ -313,6 +321,8 @@ public class RandomizerGUI {
     //endregion
 
     //region *** Foe Pokemon ***
+
+    private JPanel foeTabPanel;
 
     //Trainer Pokemon
     private JPanel trainersPanel;
@@ -405,6 +415,8 @@ public class RandomizerGUI {
 
     //region *** Wild Pokemon ***
 
+    private JPanel wildTabPanel;
+
     //Random Encounters
     private JPanel wpPanel;
     private JCheckBox wpRandomizeWildPokemonCheckBox;
@@ -463,6 +475,8 @@ public class RandomizerGUI {
 
     //region *** Move Teaching ***
 
+    private JPanel teachingTabPanel;
+
     //TMs & HMs
     private JPanel tmsPanel;
     //--Moves
@@ -506,6 +520,8 @@ public class RandomizerGUI {
 
     //region *** Items ***
 
+    private JPanel itemsTabPanel;
+
     //General
     private JPanel generalItemsPanel;
     private JCheckBox giBanLuckyEggCheckBox;
@@ -546,6 +562,8 @@ public class RandomizerGUI {
 
     //region *** Types ***
 
+    private JPanel typesTabPanel;
+
     //Type Effectiveness
     private JPanel effectivenessPanel;
     private JRadioButton teUnchangedRadioButton;
@@ -560,6 +578,8 @@ public class RandomizerGUI {
 
     //region *** Graphics ***
 
+    private JPanel graphicsTabPanel;
+
     //Species Palettes
     private JPanel palettesPanel;
     private JLabel spalPartiallyImplementedLabel;
@@ -571,7 +591,6 @@ public class RandomizerGUI {
 
     //Custom Player Graphics
     private JPanel customPlayerPanel;
-    private JLabel cpgNotExistLabel;
     private JRadioButton cpgUnchangedRadioButton;
     private JRadioButton cpgCustomRadioButton;
     private CPGSelection cpgSelection;
@@ -599,6 +618,8 @@ public class RandomizerGUI {
     private final ResourceBundle nameBundle;
     protected RomHandler.Factory[] checkHandlers;
     private RomHandler romHandler;
+
+    private boolean settingsEditingEnabled;
 
     private Theme theme = Theme.DEFAULT;
     private boolean presetMode = false;
@@ -921,7 +942,6 @@ public class RandomizerGUI {
                         this::getSpeciesNameOrRandom),
                 associateIntComboBoxUsingDisplayFunction(Name.STARTER_CUSTOM_3, spCustom3ComboBox,
                         this::getSpeciesNameOrRandom),
-                //TODO: figure out how to handle species combo boxes
                 associateSpinner(Name.STARTERS_BST_MINIMUM, spBSTMinimumSpinner, spBSTMinimumCheckbox),
                 associateSpinner(Name.STARTERS_BST_MAXIMUM, spBSTMaximumSpinner, spBSTMaximumCheckbox),
                 associateCheckBox(Name.STARTERS_NO_LEGENDARIES, spNoLegendariesCheckBox),
@@ -1327,7 +1347,24 @@ public class RandomizerGUI {
     //endregion
 
     private void initVisibilityListeners() {
+        // all tabs panels should be here
+        // (excluding "info")
+        // (tab panels instead of the tab components directly, because then we can
+        //  reuse the logic for listening to panel components being visible.)
+        List<JPanel> tabs = List.of(
+                generalTabPanel, traitsTabPanel, givenTabPanel, movesTabPanel, foeTabPanel, wildTabPanel,
+                teachingTabPanel, itemsTabPanel, typesTabPanel, graphicsTabPanel
+        );
+        for (JPanel tabPanel : tabs) {
+            ComponentListener autoDisableTabListener = new AnyComponentVisibleListener(
+                    tabPanel, (anyComponentsVisible) -> enableTab(tabPanel, anyComponentsVisible));
+            for (Component component : tabPanel.getComponents()) {
+                component.addComponentListener(autoDisableTabListener);
+            }
+        }
+
         // all panels in the tabs should be here
+        // (excluding anything in "info")
         List<JPanel> panels = List.of(
                 // General Options
                 cosmeticPanel, limitPanel, banSpeciesPanel, qolTweaksPanel, balanceTweaksPanel,
@@ -1353,14 +1390,15 @@ public class RandomizerGUI {
                 palettesPanel, customPlayerPanel
         );
         for (JPanel panel : panels) {
-            ComponentListener autoHidePanelListener = new AutoHidePanelListener(panel);
+            ComponentListener autoHidePanelListener = new AnyComponentVisibleListener(
+                    panel, panel::setVisible);
             for (Component component : panel.getComponents()) {
                 component.addComponentListener(autoHidePanelListener);
             }
         }
 
-        // TODO: auto-disable tabbed panes
-
+        // Some labels relate to Settings, should only show up when those Settings do.
+        // Those connections need to be hard-coded here.
         AutoHideListener.associate(tpTypeDiversityLabel, settingsManager,
                 Name.TRAINERS_BOSSES_USE_DIVERSE_TYPES,
                 Name.TRAINERS_IMPORTANT_USE_DIVERSE_TYPES,
@@ -1384,12 +1422,34 @@ public class RandomizerGUI {
                 Name.WILD_MINIMUM_CATCH_RATE_SELECTION);
     }
 
-    private static class AutoHidePanelListener implements ComponentListener {
+    /**
+     * Enable/disable the tab in {@link #randomizationSettingsTabbedPane} that contains the given tabPanel.<br>
+     * If settingsEditingEnabled == false, this does nothing.
+     */
+    private void enableTab(JPanel tabPanel, Boolean enable) {
+        if (!settingsEditingEnabled) return;
+
+        // The tabPanel should be inside a JViewport, inside a JScrollPane.
+        // The JScrollPane should be a component of randomizationSettingsTabbedPane, representing a tab.
+        Container tab = tabPanel.getParent().getParent();
+        int tabIndex = randomizationSettingsTabbedPane.indexOfComponent(tab);
+        randomizationSettingsTabbedPane.setEnabledAt(tabIndex, enable);
+    }
+
+    private static class AnyComponentVisibleListener implements ComponentListener {
 
         private final JPanel panel;
+        private final Consumer<Boolean> action;
 
-        public AutoHidePanelListener(JPanel panel) {
+        /**
+         * Creates a new {@link AnyComponentVisibleListener}.
+         * @param panel The {@link JPanel} whose components should be listened to.
+         * @param action The action to do when any component is shown/hidden.
+         *               Takes a boolean representing any component being visible.
+         */
+        public AnyComponentVisibleListener(JPanel panel, Consumer<Boolean> action) {
             this.panel = panel;
+            this.action = action;
         }
 
         @Override
@@ -1399,7 +1459,7 @@ public class RandomizerGUI {
 
         @Override
         public void componentShown(ComponentEvent e) {
-            panel.setVisible(true);
+            action.accept(true);
         }
 
         @Override
@@ -1413,7 +1473,7 @@ public class RandomizerGUI {
                     break;
                 }
             }
-            panel.setVisible(anyComponentVisible);
+            action.accept(anyComponentVisible);
         }
     }
 
@@ -1530,7 +1590,6 @@ public class RandomizerGUI {
 
         versionLabel.setText(String.format(bundle.getString("GUI.header.versionLabel.text"), Version.LATEST.name));
         spalPartiallyImplementedLabel.setVisible(false);
-        cpgNotExistLabel.setVisible(false);
         websiteLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         wikiLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
 
@@ -2883,6 +2942,7 @@ public class RandomizerGUI {
         for (int i = 0; i < randomizationSettingsTabbedPane.getTabCount(); i++) {
             randomizationSettingsTabbedPane.setEnabledAt(i, i == infoIndex);
         }
+        settingsEditingEnabled = false;
 
         editSettingsPanel.setVisible(true);
     }
@@ -2896,6 +2956,7 @@ public class RandomizerGUI {
         for (int i = 0; i < randomizationSettingsTabbedPane.getTabCount(); i++) {
             randomizationSettingsTabbedPane.setEnabledAt(i, true);
         }
+        settingsEditingEnabled = true;
 
         editSettingsPanel.setVisible(false);
     }
@@ -3015,20 +3076,11 @@ public class RandomizerGUI {
 
             // TODO: clean up
 
-            // Types
-            boolean typeSupport = romHandler.hasTypeEffectivenessSupport();
-            //typesPanel.setVisible(typeSupport);
-            //We shouldn't use setVisible on the panels directly in the tabbedPane; it causes strange bleedover
-            //Disable it instead
-            randomizationSettingsTabbedPane.setEnabledAt(7, typeSupport);
-
             // Graphics
-            boolean ppalSupport = romHandler.hasPokemonPaletteSupport();
             boolean ppalPartialSupport = romHandler.pokemonPaletteSupportIsPartial();
             spalPartiallyImplementedLabel.setVisible(ppalPartialSupport);
 
             boolean cpgSupport = romHandler.hasCustomPlayerGraphicsSupport();
-            cpgNotExistLabel.setVisible(!cpgSupport);
             cpgUnchangedRadioButton.setVisible(cpgSupport);
             cpgUnchangedRadioButton.setEnabled(cpgSupport);
             cpgUnchangedRadioButton.setSelected(true);
@@ -3040,8 +3092,6 @@ public class RandomizerGUI {
             }
             boolean cpgReplaceChoiceSupport = cpgSupport && romHandler.hasMultiplePlayerCharacters();
             cpgSelection.setReplaceChoiceVisible(cpgReplaceChoiceSupport);
-
-            randomizationSettingsTabbedPane.setEnabledAt(8, ppalSupport || cpgSupport);
 
             applyGameUpdateMenuItem.setVisible(romHandler.generationOfPokemon() >= 6);
 

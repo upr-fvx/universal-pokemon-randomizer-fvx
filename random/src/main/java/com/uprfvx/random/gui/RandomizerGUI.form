@@ -35,7 +35,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="a7178" layout-manager="GridBagLayout">
+              <grid id="a7178" binding="generalTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties/>
                 <border type="none"/>
@@ -586,7 +586,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="54bda" layout-manager="GridBagLayout">
+              <grid id="54bda" binding="traitsTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties/>
                 <border type="none"/>
@@ -1522,7 +1522,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="313b7" layout-manager="GridBagLayout">
+              <grid id="313b7" binding="givenTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties/>
                 <border type="none"/>
@@ -2143,7 +2143,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="f599e" layout-manager="GridBagLayout">
+              <grid id="f599e" binding="movesTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties/>
                 <border type="none"/>
@@ -2492,7 +2492,7 @@
             </properties>
             <border type="none"/>
             <children>
-              <grid id="c4c9e" layout-manager="GridBagLayout">
+              <grid id="c4c9e" binding="foeTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties/>
                 <border type="none"/>
@@ -3478,7 +3478,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="59ef3" layout-manager="GridBagLayout">
+              <grid id="59ef3" binding="wildTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>
@@ -4136,7 +4136,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="c0784" layout-manager="GridBagLayout">
+              <grid id="c0784" binding="teachingTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>
@@ -4635,7 +4635,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="42a4d" layout-manager="GridBagLayout">
+              <grid id="42a4d" binding="itemsTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>
@@ -5080,7 +5080,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="653db" layout-manager="GridBagLayout">
+              <grid id="653db" binding="typesTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>
@@ -5235,7 +5235,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <grid id="900f1" layout-manager="GridBagLayout">
+              <grid id="900f1" binding="graphicsTabPanel" layout-manager="GridBagLayout">
                 <constraints/>
                 <properties>
                   <enabled value="false"/>
@@ -5388,7 +5388,7 @@
                     <children>
                       <component id="a712d" class="javax.swing.JRadioButton" binding="cpgUnchangedRadioButton">
                         <constraints>
-                          <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag top="0" left="0" bottom="0" right="140" weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -5399,13 +5399,13 @@
                       </component>
                       <hspacer id="5010d">
                         <constraints>
-                          <grid row="3" column="3" row-span="2" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="3" row-span="2" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.1" weighty="0.0"/>
                         </constraints>
                       </hspacer>
                       <hspacer id="5fde0">
                         <constraints>
-                          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </hspacer>
@@ -5415,30 +5415,15 @@
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <vspacer id="65044">
-                        <constraints>
-                          <grid row="2" column="1" row-span="1" col-span="3" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                      </vspacer>
                       <vspacer id="ec8b7">
                         <constraints>
-                          <grid row="5" column="2" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="2" row-span="1" col-span="2" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </vspacer>
-                      <component id="b827b" class="javax.swing.JLabel" binding="cpgNotExistLabel">
-                        <constraints>
-                          <grid row="1" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                          <gridbag weightx="0.0" weighty="0.0"/>
-                        </constraints>
-                        <properties>
-                          <text resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.graphicsTab.customPlayerPanel.notExistLabel"/>
-                        </properties>
-                      </component>
                       <component id="77b87" class="javax.swing.JRadioButton" binding="cpgCustomRadioButton">
                         <constraints>
-                          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="9" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
@@ -5449,7 +5434,7 @@
                       </component>
                       <nested-form id="c55e0" form-file="com/uprfvx/random/gui/CPGSelection.form" binding="cpgSelection">
                         <constraints>
-                          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                       </nested-form>

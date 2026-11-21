@@ -1381,22 +1381,14 @@
                           <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.makeEasierCheckBox.toolTipText"/>
                         </properties>
                       </component>
-                      <component id="65825" class="javax.swing.JSlider" binding="peMakeEvolutionsEasierLvlSlider">
+                      <component id="45c81" class="com.uprfvx.random.gui.SpinSlider" binding="peMakeEvolutionsEasierLvlSpinSlider">
                         <constraints>
-                          <grid row="3" column="4" row-span="2" col-span="1" vsize-policy="0" hsize-policy="6" anchor="9" fill="1" indent="0" use-parent-layout="false"/>
+                          <grid row="3" column="4" row-span="2" col-span="2" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                           <gridbag weightx="0.0" weighty="0.0"/>
                         </constraints>
                         <properties>
-                          <enabled value="false"/>
-                          <majorTickSpacing value="5"/>
-                          <maximum value="55"/>
-                          <minimum value="30"/>
-                          <minorTickSpacing value="1"/>
-                          <paintLabels value="true"/>
-                          <paintTicks value="true"/>
-                          <snapToTicks value="true"/>
-                          <toolTipText resource-bundle="com/uprfvx/random/gui/Bundle" key="GUI.traitsTab.evolutionPanel.makeEasierLevelSlider.toolTipText"/>
-                          <value value="40"/>
+                          <enabled value="true"/>
+                          <value value="0"/>
                         </properties>
                       </component>
                     </children>

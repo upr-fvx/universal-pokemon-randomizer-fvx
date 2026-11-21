@@ -215,7 +215,7 @@ public class RandomizerGUI {
     private JCheckBox peAllowPikachuEvolutionCheckBox;
     private JCheckBox peUseEstimatedInsteadOfHardcodedLevelsCheckBox;
     private JCheckBox peMakeEvolutionsEasierCheckBox;
-    private JSlider peMakeEvolutionsEasierLvlSlider;
+    private SpinSlider peMakeEvolutionsEasierLvlSpinSlider;
     //--Randomize
     private JPanel evolutionInnerPanel;
     private JRadioButton peUnchangedRadioButton;
@@ -905,7 +905,7 @@ public class RandomizerGUI {
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_ALLOW_PIKACHU_EVOLUTION, peAllowPikachuEvolutionCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_CHANGES_USE_ESTIMATED_LEVELS, peUseEstimatedInsteadOfHardcodedLevelsCheckBox),
                 associateCheckBox(Name.SPECIES_EVOLUTIONS_MAKE_EASIER, peMakeEvolutionsEasierCheckBox),
-                associateSlider(Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL, peMakeEvolutionsEasierLvlSlider),
+                associateSpinSlider(Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL, peMakeEvolutionsEasierLvlSpinSlider),
                 //--Randomize
                 associateButtonSet(Name.RANDOMIZE_SPECIES_EVOLUTIONS,
                         Map.of(
@@ -1504,7 +1504,7 @@ public class RandomizerGUI {
         tpTrainersEvolveTheirPokemonCheckbox.addActionListener(_ -> updateFullyEvolvedAtLvlLabel());
         tpPercentageEvolutionLevelModifierSpinSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
         peMakeEvolutionsEasierCheckBox.addActionListener(_ -> updateFullyEvolvedAtLvlLabel());
-        peMakeEvolutionsEasierLvlSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
+        peMakeEvolutionsEasierLvlSpinSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
     }
 
     private void updateFullyEvolvedAtLvlLabel() {

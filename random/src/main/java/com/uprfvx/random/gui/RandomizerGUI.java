@@ -681,42 +681,46 @@ public class RandomizerGUI {
             checkCustomNames();
         }
 
-        new Thread(() -> {
-            String latestVersionString = "???";
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                String latestVersionString = "???";
 
-            try {
+                try {
 
-                URL url = new URI(SysConstants.RELEASES_API_URL).toURL();
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "application/json");
-                conn.setConnectTimeout(2000);
-                conn.setReadTimeout(2000);
+                    URL url = new URI(SysConstants.RELEASES_API_URL).toURL();
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setRequestProperty("Accept", "application/json");
+                    conn.setConnectTimeout(2000);
+                    conn.setReadTimeout(2000);
 
-                BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-                String output;
-                while ((output = br.readLine()) != null) {
-                    String[] a = output.split("tag_name\":\"");
-                    if (a.length > 1) {
-                        latestVersionString = a[1].split("\",")[0];
+                    String output;
+                    while ((output = br.readLine()) != null) {
+                        String[] a = output.split("tag_name\":\"");
+                        if (a.length > 1) {
+                            latestVersionString = a[1].split("\",")[0];
+                        }
                     }
+
+                    conn.disconnect();
+
+                } catch (Exception e) {
+                    System.err.println("Could not find latest version using the internet. " + e.getMessage());
                 }
 
-                conn.disconnect();
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                // If the release version is newer than this version, bold it to make it more obvious.
+                if (Version.isReleaseVersionNewer(latestVersionString)) {
+                    latestVersionString = String.format("<b>%s</b>", latestVersionString);
+                }
+                String finalLatestVersionString = latestVersionString;
+                SwingUtilities.invokeLater(() -> websiteLinkLabel.setText(
+                        String.format(bundle.getString("GUI.header.websiteLinkLabel.text"), finalLatestVersionString)));
+                return null;
             }
-
-            // If the release version is newer than this version, bold it to make it more obvious.
-            if (Version.isReleaseVersionNewer(latestVersionString)) {
-                latestVersionString = String.format("<b>%s</b>", latestVersionString);
-            }
-            String finalLatestVersionString = latestVersionString;
-            SwingUtilities.invokeLater(() -> websiteLinkLabel.setText(
-                    String.format(bundle.getString("GUI.header.websiteLinkLabel.text"), finalLatestVersionString)));
-        }).run();
+        }.execute();
 
         frame.setTitle(String.format(bundle.getString("GUI.windowTitle"),Version.LATEST.name));
 
@@ -733,7 +737,7 @@ public class RandomizerGUI {
                 try {
                     desktop.browse(new URI(SysConstants.RELEASES_URL));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.out.println("Could not open the Releases web page. " + ex.getMessage());
                 }
             }
         });
@@ -744,7 +748,7 @@ public class RandomizerGUI {
                 try {
                     desktop.browse(new URI(SysConstants.WIKI_HOME_URL));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.out.println("Could not open the Wiki web page. " + ex.getMessage());
                 }
             }
         });
@@ -1520,7 +1524,7 @@ public class RandomizerGUI {
                     try {
                         desktop.browse(new URI(SysConstants.WIKI_IMPORTANT_INFO_URL));
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        System.out.println("Could not open the Wiki web page. " + ex.getMessage());
                     }
                 }
             });
@@ -2030,13 +2034,10 @@ public class RandomizerGUI {
                             String.format(bundle.getString("GUI.loadSettings.settingsLoadedDialog.message"), fh.getName()));
                 });
             } catch (UnsupportedOperationException ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(frame, ex.getMessage());
             } catch (IllegalArgumentException ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.invalidSettingsFileDialog.message"));
             } catch (IOException ex) {
-                ex.printStackTrace();
                 JOptionPane.showMessageDialog(frame, bundle.getString("GUI.loadSettings.settingsLoadFailedDialog.message"));
             }
         }
@@ -2243,7 +2244,7 @@ public class RandomizerGUI {
                 this.restoreStateFromSettings(settings);
             } catch (IllegalArgumentException e) {
                 // settings load failed
-                e.printStackTrace();
+                System.out.println("Could not load settings. " + e.getMessage());
                 unloadRomHandler();
                 initialState();
             }
@@ -2316,7 +2317,7 @@ public class RandomizerGUI {
                     try {
                         desktop.browse(new URI(SysConstants.WIKI_3DS_INFO_URL  + "#changes-to-saving-a-rom-when-working-with-3ds-games"));
                     } catch (Exception ex) {
-                        ex.printStackTrace();
+                        System.out.println("Could not open the Wiki web page about 3DS saving. " + ex.getMessage());
                     }
                 }
             });
@@ -2479,7 +2480,7 @@ public class RandomizerGUI {
                 try {
                     desktop.browse(new URI(url));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    System.err.println("Could not open web page: " + url + " . " + ex.getMessage());
                 }
             }
         });
@@ -2872,8 +2873,6 @@ public class RandomizerGUI {
                 ps.println("Settings String: " + settingsString);
             }
             ps.println("Java Version: " + System.getProperty("java.version") + ", " + System.getProperty("java.vm.name"));
-            PrintStream e1 = System.err;
-            System.setErr(ps);
             if (this.romHandler != null) {
                 try {
                     ps.println("ROM: " + romHandler.getROMName());
@@ -2884,14 +2883,13 @@ public class RandomizerGUI {
                     // Do nothing, just don't fail
                 }
             }
-            ex.printStackTrace();
+            ex.printStackTrace(ps);
             ps.println();
             ps.println("--ROM Diagnostics--");
             if (!romHandler.isRomValid(null)) {
                 ps.println(bundle.getString("Log.InvalidRomLoaded"));
             }
             romHandler.printRomDiagnostics(ps);
-            System.setErr(e1);
             ps.close();
             if (showMessage) {
                 JOptionPane.showMessageDialog(mainPanel,
@@ -3897,7 +3895,7 @@ public class RandomizerGUI {
             }
             sc.close();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("Could not read config file. " + ex.getMessage());
         }
     }
 

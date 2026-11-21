@@ -1,3 +1,5 @@
+#!/bin/zsh
+
 # pipes all logging to also go to console_output.log
 exec 1> >(tee -a console_output.log >&1)
 exec 2> >(tee -a console_output.log >&2)

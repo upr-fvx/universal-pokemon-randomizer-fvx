@@ -108,12 +108,17 @@ public abstract class SettingCoordinator<V extends Serializable, U extends UIMan
 
         boolean isEnabled = manager.isEnabled(setting);
         element.setEnabled(unlatched && isEnabled);
+
         if (latch != null) {
             latch.setEnabled(isEnabled);
             if (!isEnabled && latch.isSelected()) {
                 latch.setSelected(false);
                 latchValueChanged(null);
             }
+        }
+
+        if (!unlatched) {
+            manager.automaticReset(setting);
         }
     }
 

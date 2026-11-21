@@ -752,7 +752,16 @@ public class RandomizerGUI {
 
         try {
             javax.swing.UIManager.setLookAndFeel(theme.getLaf());
-            SwingUtilities.updateComponentTreeUI(mainPanel);
+            // All new components will use the UIManager's Laf automatically,
+            // but the ones that are already present (i.e. GUI class attributes),
+            // and are at the root of their component trees,
+            // need to be manually updated.
+            List<JComponent> alreadyPresentRootComponents = List.of(
+                    mainPanel, settingsMenu, romOpenChooser, romSaveChooser,
+                    qsOpenChooser, qsSaveChooser, qsUpdateChooser, gameUpdateChooser
+            );
+            alreadyPresentRootComponents.forEach(SwingUtilities::updateComponentTreeUI);
+
         } catch (UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(RandomizerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null,
                     ex);

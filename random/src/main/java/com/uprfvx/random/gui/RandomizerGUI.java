@@ -727,6 +727,7 @@ public class RandomizerGUI {
         settingsManager = new SettingsManager();
         associateSettingControls();
         initVisibilityListeners();
+        initLabelValueListeners();
 
         openROMButton.addActionListener(_ -> selectAndOpenRom());
 
@@ -1419,6 +1420,8 @@ public class RandomizerGUI {
                 Name.TRAINERS_BETTER_MOVESETS_FOR_BOSSES,
                 Name.TRAINERS_BETTER_MOVESETS_FOR_IMPORTANT,
                 Name.TRAINERS_BETTER_MOVESETS_FOR_REGULAR);
+        AutoHideListener.associate(tpCalculatedFullyEvolvedLvlLabel, settingsManager,
+                Name.TRAINERS_EVOLVE_POKEMON);
         AutoHideListener.associate(tbsExcludeLabel, settingsManager,
                 Name.BATTLE_STYLE_BAN_SINGLE, Name.BATTLE_STYLE_BAN_DOUBLE,
                 Name.BATTLE_STYLE_BAN_DOUBLE, Name.BATTLE_STYLE_BAN_ROTATION);
@@ -1493,17 +1496,37 @@ public class RandomizerGUI {
         }
     }
 
+    /**
+     * Initializes listeners for labels that need to change their values
+     * depending on the state of other GUI elements/settings.
+     */
+    private void initLabelValueListeners() {
+        tpTrainersEvolveTheirPokemonCheckbox.addActionListener(_ -> updateFullyEvolvedAtLvlLabel());
+        tpPercentageEvolutionLevelModifierSpinSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
+        peMakeEvolutionsEasierCheckBox.addActionListener(_ -> updateFullyEvolvedAtLvlLabel());
+        peMakeEvolutionsEasierLvlSlider.addChangeListener(_ -> updateFullyEvolvedAtLvlLabel());
+    }
+
     private void updateFullyEvolvedAtLvlLabel() {
+        String levelString = "--";
+        tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
         if (settingsManager.get(Name.TRAINERS_EVOLVE_POKEMON)) {
-            int highestEvoLvl = settingsManager.get(Name.SPECIES_EVOLUTIONS_MAKE_EASIER)
-                    ? settingsManager.get(Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL)
-                    : romHandler.getHighestEvoLvl();
-            int percMod = settingsManager.get(Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
-            int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + percMod / 100.0));
-            tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
-                    bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"),
-                    Math.clamp(modifiedLevel, 1, 100)));
+            boolean easierEvos = settingsManager.get(Name.SPECIES_EVOLUTIONS_MAKE_EASIER);
+
+            if (easierEvos || romHandler != null) {
+                int highestEvoLvl = settingsManager.get(Name.SPECIES_EVOLUTIONS_MAKE_EASIER)
+                        ? settingsManager.get(Name.SPECIES_EVOLUTIONS_EASIER_SCALING_LEVEL)
+                        : romHandler.getHighestEvoLvl();
+                int percMod = settingsManager.get(Name.TRAINERS_EVOLVE_LEVEL_PERCENT_MODIFIER);
+                System.out.println("high=" + highestEvoLvl + " | perc=" + percMod);
+                int modifiedLevel = (int) Math.ceil(highestEvoLvl * (1 + percMod / 100.0));
+                levelString = "" + Math.clamp(modifiedLevel, 1, 100);
+                tpCalculatedFullyEvolvedLvlLabel.setEnabled(true);
+            }
         }
+        tpCalculatedFullyEvolvedLvlLabel.setText(String.format(
+                bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"),
+                levelString));
     }
 
     private void showInitialPopup() {
@@ -1593,7 +1616,6 @@ public class RandomizerGUI {
     private void initExplicit() {
 
         versionLabel.setText(String.format(bundle.getString("GUI.header.versionLabel.text"), Version.LATEST.name));
-        spalPartiallyImplementedLabel.setVisible(false);
         websiteLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
         wikiLinkLabel.setCursor(new java.awt.Cursor(Cursor.HAND_CURSOR));
 
@@ -2923,11 +2945,7 @@ public class RandomizerGUI {
         settingsManager.resetAll();
 
         // TODO: look at these labels closer
-        tpCalculatedFullyEvolvedLvlLabel.setVisible(true);
-        tpCalculatedFullyEvolvedLvlLabel.setEnabled(false);
         tpCalculatedFullyEvolvedLvlLabel.setText(String.format(bundle.getString("GUI.foeTab.trainersPanel.calculatedFullyEvolvedLvlLabel.text"), "--"));
-		tpAdditionalPokemonForLabel.setVisible(true);
-		tpHeldItemsLabel.setVisible(true);
         spalPartiallyImplementedLabel.setVisible(false);
     }
 

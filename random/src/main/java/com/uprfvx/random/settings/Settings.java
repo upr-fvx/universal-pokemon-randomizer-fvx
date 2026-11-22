@@ -61,8 +61,7 @@ import static com.uprfvx.random.settings.SettingUtils.*;
  * There are also some other setting definitions for more specific cases: {@link RangeLimitDefinition},
  * {@link SpeciesIndexSettingDefinition}, {@link TypeOrRandomSettingDefinition}.
  * <br><br>
- * Support is determined by a simple {@link Predicate}({@link RomHandler}).<br>
- * <b>NOTE:</b> the predicates must not throw exceptions, at any part of the RomHandler's life cycle.
+ * Support is determined by a simple {@link Predicate}({@link RomHandler}).
  * <br><br>
  * Enabled/Disabled state is determined by {@link SettingRestriction}s, which contain two parts:
  * The setting(s) which must be checked, and the function to check them against. Most cases can be
@@ -77,7 +76,6 @@ import static com.uprfvx.random.settings.SettingUtils.*;
  * <br><br>
  */
 public class Settings {
-    // TODO: go through RomHandler methods used to check support, and make sure they don't throw
 
     public static final List<SettingDefinition<? extends Serializable>> ALL_SETTINGS;
     public static final List<SettingDefinition<? extends Serializable>> REMOVED_SETTINGS;

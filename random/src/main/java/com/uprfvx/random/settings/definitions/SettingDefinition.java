@@ -5,6 +5,7 @@ import com.uprfvx.random.settings.SettingsManager;
 import com.uprfvx.random.settings.restrictions.SettingRestriction;
 import com.uprfvx.random.settings.restrictions.SimpleSettingRestriction;
 import com.uprfvx.romio.romhandlers.RomHandler;
+import miscutils.Pair;
 
 import java.io.Serializable;
 import java.util.*;
@@ -88,6 +89,7 @@ public abstract class SettingDefinition<V extends Serializable> {
     //The conditions of the RomHandler (that is to say, the game) required for this setting to be applicable.
     //If the conditions are not met, the setting will be hidden and ignored.
     private final Predicate<RomHandler> supported;
+    private Pair<RomHandler, Boolean> cachedSupport = new Pair<>(null, false);
 
     //A function that returns a variable default value depending on RomHandler.
     //If it returns null, defaultValue will be used.
@@ -173,7 +175,9 @@ public abstract class SettingDefinition<V extends Serializable> {
 
     /**
      * Checks to see if the setting is supported by the RomHandler given.
-     * Does not check if specific values are supported.
+     * Does not check if specific values are supported.<br>
+     * The return value is cached for the latest RomHandler used,
+     * so the check will only run once.
      * @param game The game (RomHandler) to check against.
      * @return True if the setting is supported, false otherwise.
      */
@@ -181,7 +185,19 @@ public abstract class SettingDefinition<V extends Serializable> {
         if (supported == null) {
             return true;
         }
-        return supported.test(game);
+
+        // The primary reason for the caching is so that if a RomHandler closes the resource
+        // needed for the supported predicate to work, then it can still know what the support should be
+        // (granted it was checked once).
+        // This *could* be considered a workaround, the truer solution being enforcing that all methods
+        // used for support predicates never throw as long as the RomHandler is around.
+        if (cachedSupport.getKey() == game) {
+            return cachedSupport.getValue();
+        } else {
+            boolean support = supported.test(game);
+            cachedSupport = new Pair<>(game, support);
+            return support;
+        }
     }
 
     /**

@@ -23,7 +23,7 @@ public class ThemeSelectionDialog extends JDialog {
         ButtonGroup buttonGroup = new ButtonGroup();
         for (Theme t : Theme.values()) {
             JRadioButton rb = new JRadioButton(t.getUiName());
-            rb.addActionListener(e -> selectedTheme = t);
+            rb.addActionListener(_ -> selectedTheme = t);
             rb.setEnabled(t.isInstalled());
             mainPanel.setLayout(new FlowLayout());
             mainPanel.add(rb);
@@ -41,9 +41,9 @@ public class ThemeSelectionDialog extends JDialog {
         setLocationRelativeTo(frame);
         getRootPane().setDefaultButton(okButton);
 
-        okButton.addActionListener(e -> onOK());
-        cancelButton.addActionListener(e -> onCancel());
-        applyButton.addActionListener(e -> onApply());
+        okButton.addActionListener(_ -> onOK());
+        cancelButton.addActionListener(_ -> onCancel());
+        applyButton.addActionListener(_ -> onApply());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -54,7 +54,7 @@ public class ThemeSelectionDialog extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(e -> onCancel(),
+        contentPane.registerKeyboardAction(_ -> onCancel(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
@@ -74,5 +74,7 @@ public class ThemeSelectionDialog extends JDialog {
 
     private void onApply() {
         parentGUI.setTheme(selectedTheme);
+        SwingUtilities.updateComponentTreeUI(this);
+        pack();
     }
 }

@@ -4185,6 +4185,15 @@ public class RandomizerGUI {
             launcherInput = firstCliArg;
             if (launcherInput.equals("please-use-the-launcher")) usedLauncher = true;
             SwingUtilities.invokeLater(() -> {
+                try {
+                    UIManager.setLookAndFeel(Theme.DEFAULT.getLaf());
+                } catch (UnsupportedLookAndFeelException e) {
+                    System.err.println("Could not find/use the default Look-and-Feel. " +
+                            "The GUI might look weird as a consequence. " +
+                            "Please report this bug if you see it.");
+                    System.err.println(Arrays.toString(e.getStackTrace()));
+                }
+
                 frame = new JFrame("RandomizerGUI");
                 frame.setContentPane(new RandomizerGUI().mainPanel);
                 frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

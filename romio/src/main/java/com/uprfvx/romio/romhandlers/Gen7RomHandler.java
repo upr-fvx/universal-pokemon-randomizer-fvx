@@ -428,17 +428,19 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
                         int extraInfo = readWord(evoEntry, i * 8 + 2);
                         int forme = evoEntry[i * 8 + 6];
 
-                        // forme == -1 is used internally to mean "keep the forme upon evolving".
+                        // forme == -1 is used internally to mean "carry the forme upon evolving".
                         // Most mons use this value, and it is what makes e.g. Burmy->Wormadam,
                         // Flabébé->Floette->Florges, and Pumpkaboo->Gourgeist work as expected.
                         if (forme == -1) {
+                            // there is no support in the Evolution class for explicitly carrying the forme,
+                            // we flatten them into forme 0.
                             if (pkFrom.isBaseForme()) {
                                 forme = 0;
                             } else {
                                 // The alt formes with evo data with forme == -1
                                 // are all problematic (see Gen6RomHandler) so we ignore them,
                                 // though making note of them so we can write the evo data later.
-                                // And entirely ignore Floette-Eternal, it doesn't evolve.
+                                // And entirely ignore Floette-Eternal; it doesn't evolve.
                                 if (pokes[species].isValidFormeNumber(pkFrom.getFormeNumber())) {
                                     formesThatCopyBaseEvolutions.add(pkFrom);
                                 }
@@ -755,11 +757,11 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
 
                 int evosWritten = 0;
                 List<Evolution> evolutionsFrom = pk.getEvolutionsFrom();
-                boolean evosCarryForme = false;
                 if (formesThatCopyBaseEvolutions.contains(pk)) {
                     evolutionsFrom = pk.getBaseForme().getEvolutionsFrom();
-                    evosCarryForme = true;
                 }
+                boolean evosCarryForme = isEvolutionsCarryForme(pk);
+
                 for (Evolution evo : evolutionsFrom) {
                     if (evo.getType() == EvolutionType.NONE) continue; // should not be written to ROM
 
@@ -803,6 +805,28 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
             throw new RomIOException(e);
         }
         mergeLevelItemEvolutions();
+    }
+
+    private boolean isEvolutionsCarryForme(Species pkFrom) {
+        if (formesThatCopyBaseEvolutions.contains(pkFrom)) {
+            return true;
+        }
+        // filters out e.g. Burmy's false evolutions into Wormadam
+        List<Evolution> validEvos = pkFrom.getEvolutionsFrom().stream()
+                .filter(ev -> ev.getType() != EvolutionType.NONE)
+                .toList();
+        for (Evolution evo : validEvos) {
+            if (evo.getTo().getFormeNumber() != pkFrom.getFormeNumber()) {
+                return false;
+            }
+            // this second statement should not be needed for functional parity,
+            // e.g. Diglett-Alolan should evolve into Dugtrio-Alolan also if formes are carried.
+            // but it keeps byte parity which is nice just in case.
+            if (!evo.getTo().isBaseForme()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private byte getGameSpecificExtraInfo(EvolutionType type) {
@@ -1188,7 +1212,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     public List<Item> getStarterHeldItems() {
         List<Item> starterHeldItems = new ArrayList<>();
         try {
-            System.out.println("\ngetStarterHeldItems");
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             byte[] giftsFile = staticGarc.getFile(0);
             for (int i = 0; i < 3; i++) {
@@ -1205,7 +1228,6 @@ public class Gen7RomHandler extends Abstract3DSRomHandler {
     @Override
     public void setStarterHeldItems(List<Item> items) {
         try {
-            System.out.println("\nsetStarterHeldItems");
             GARCArchive staticGarc = readGARC(romEntry.getFile("StaticPokemon"), true);
             byte[] giftsFile = staticGarc.getFile(0);
             for (int i = 0; i < 3; i++) {

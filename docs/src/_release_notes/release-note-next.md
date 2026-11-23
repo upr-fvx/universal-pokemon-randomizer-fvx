@@ -11,7 +11,7 @@
      For people from all other forums, their forum username should be used alongside the forum's name. E.g. "Jane Doe from Spriter's Resource". -->
 Thanks to 
 [Every person who submitted a merged pull request] @lhvy for your code contributions,
-[Every person who submitted a solved issue] @AxelElric8, @Zander251 and @GHTheroux for reporting Issues,
+[Every person who submitted a solved issue] @AxelElric8, @Zander251, @GHTheroux, and @lhvy for reporting Issues,
 [Any person on e.g. Reddit who reported solved bugs or suggested implemented features] for [whatever they did],
 [Every person who made a new CPG] for the CPG sprites, and
 [Community members who helped with some feature] for help with [feature]
@@ -52,5 +52,6 @@ Download the Randomizer below by clicking on `UPR_FVX-[VERSION]-[OS].zip`. If yo
 - (Gen 1) Fixed randomization failure in Yellow when "Rival Carries Starter" and "Pokemon League Has Unique Pokemon" are used together. (Issue #287)
 - Fixed Mac launcher failing to open, due to incompatible shell script interpreter. (Issue #292) 
 - (Gen 7) Fixed some Pokémon like Flabébé always evolving into the base forme. (Issue #291)
+- (GUI) Fixed GUI themes not being applied to all parts of the GUI, and the default theme not being used when first opening the program. (Issue #294)
 - (Gen [N]) Fixed [...]. 
 - (GUI) Fixed [...].

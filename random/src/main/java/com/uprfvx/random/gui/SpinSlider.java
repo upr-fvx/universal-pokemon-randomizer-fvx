@@ -4,12 +4,10 @@ package com.uprfvx.random.gui;
 // Posted by trashgod, modified by community. See post 'Timeline' for change history
 // Retrieved 2026-03-07, License - CC BY-SA 3.0
 
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.util.Dictionary;
 
 public class SpinSlider extends JPanel {
     private final JSpinner spinner = new JSpinner();
@@ -17,20 +15,18 @@ public class SpinSlider extends JPanel {
 
     public SpinSlider() {
         // Set up slider
-        slider.addChangeListener(e -> {
+        slider.addChangeListener(_ -> {
             if (slider.getValueIsAdjusting()) {
                 spinner.setValue(slider.getValue());
             }
         });
-        slider.setMinorTickSpacing(5);
-        slider.setMajorTickSpacing(50);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
 
         // Set up Spinner
         JSpinner.NumberEditor editor = new JSpinner.NumberEditor(spinner, "0'%'");
         spinner.setEditor(editor);
-        spinner.addChangeListener(e -> slider.setValue((Integer) spinner.getValue()));
+        spinner.addChangeListener(_ -> slider.setValue((Integer) spinner.getValue()));
         spinner.setPreferredSize(new Dimension(80, 30));
         spinner.setModel(new SpinnerNumberModel(0, null, null, 1));
 
@@ -40,13 +36,8 @@ public class SpinSlider extends JPanel {
         JPanel spinnerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         spinnerPanel.add(spinner);
         this.add(spinnerPanel, BorderLayout.EAST);
-    }
 
-    public void setModel(SpinnerNumberModel model) {
-        slider.setMinimum((Integer) model.getMinimum());
-        slider.setMaximum((Integer) model.getMaximum());
-        spinner.setModel(model);
-        setValue((Integer) model.getValue());
+        adjustTickSpacing();
     }
 
     public void setValue(int value) {
@@ -63,17 +54,35 @@ public class SpinSlider extends JPanel {
         SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
         model.setMinimum(minimum);
         slider.setMinimum(minimum);
+        adjustTickSpacing();
     }
 
     public void setMaximum(int maximum) {
         SpinnerNumberModel model = (SpinnerNumberModel) spinner.getModel();
         model.setMaximum(maximum);
         slider.setMaximum(maximum);
+        adjustTickSpacing();
     }
 
     public void setExtents(int minimum, int maximum) {
         setMinimum(minimum);
         setMaximum(maximum);
+    }
+
+    private void adjustTickSpacing() {
+        // Spacing is a bit arbitrary, merely what looks good on the spinsliders that exist
+        int range = slider.getMaximum() - slider.getMinimum();
+        slider.setMinorTickSpacing(5);
+        Dictionary<Integer, JComponent> labels;
+        if (range >= 50) {
+            slider.setMajorTickSpacing(50);
+            labels = slider.createStandardLabels(50);
+        } else {
+            slider.setMajorTickSpacing(range);
+            labels = slider.createStandardLabels(range);
+        }
+
+        slider.setLabelTable(labels);
     }
 
     public int getMinimum() {

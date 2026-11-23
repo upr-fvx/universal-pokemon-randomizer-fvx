@@ -357,8 +357,7 @@ public class StarterRandomizer extends Randomizer {
      */
     private Set<List<Type>> findTypeTriangles() {
         TypeTable typeTable = romHandler.getTypeTable();
-        Set<List<Type>> typeTriangles;
-        typeTriangles = new HashSet<>();
+        Set<List<Type>> typeTriangles = new LinkedHashSet<>();
         for (Type typeOne : typeTable.getTypes()) {
             List<Type> superEffectiveOne = typeTable.superEffectiveWhenAttacking(typeOne);
             superEffectiveOne.remove(typeOne);

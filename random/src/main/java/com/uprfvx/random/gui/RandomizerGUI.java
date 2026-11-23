@@ -3033,17 +3033,6 @@ public class RandomizerGUI {
         }
     }
 
-    private void guaranteeMaximumValueTick(JSlider slider) {
-        // Create standard labels (only up to the last multiple)
-        Dictionary<Integer, JComponent> table = slider.createStandardLabels(slider.getMajorTickSpacing(), slider.getMinimum());
-
-        // Force label at the exact maximum
-        int max = slider.getMaximum();
-        table.put(max, new JLabel(String.valueOf(max)));
-
-        slider.setLabelTable(table);
-    }
-
     private void setRomNameLabel() {
         if (romHandler.hasGameUpdateLoaded()) {
             romNameLabel.setText(romHandler.getROMName() + " (" + romHandler.getGameUpdateVersion() + ")");
